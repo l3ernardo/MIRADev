@@ -2,7 +2,7 @@ applications:
 - path: .
   memory: 256M
   instances: 1
-  domain: mybluemix.net
-  name: mira-v1
-  host: mira-v1
+  domain: w3ibm.mybluemix.net
+  name: mira
+  host: mira
   disk_quota: 1024M
