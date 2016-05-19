@@ -1,0 +1,50 @@
+<script src="./js/show_index.js" type="text/javascript"></script>
+<div id="ibm-leadspace-head" class="ibm-alternate">
+	<div id="ibm-leadspace-body">
+		<h1 class="ibm-small">MIRA Login</h1>
+	</div>
+</div>
+<div class="ibm-container-body">
+	<div class="ibm-columns">
+		<div class="ibm-col-6-4">
+			<p>
+			Please enter your IBM Intranet ID and password, then click Submit to login. Required fields are marked with an asterik (
+			<span class="ibm-required">*</span>
+			).
+			</p>
+			<br>
+			<form action="/login" method="post" class="ibm-column-form ibm-styled-form" >
+				<p>
+					<label id="UsernameLabel" style="font-size: 1.3em;" for="username">
+						IBM intranet ID:
+						<span class="ibm-required">*</span>
+					</label>
+					<span>
+						<input id="username" type="text" title="Username (ex: jdoe@us.ibm.com)" size="40" maxlength="256" tabindex="3" value="" name="username" aria-required="true">
+						(e.g. jdoe@us.ibm.com)
+					</span>
+				</p>
+				<p>
+					<label id="PasswordLabel" style="font-size: 1.3em;" for="password">
+						Password:
+						<span class="ibm-required">*</span>
+					</label>
+					<span>
+						<input id="password" type="password" title="Password" size="40" maxlength="256" tabindex="4" value="" name="password">
+						<a class="ibm-external-link" target="_BLANK" href="https://w3.ibm.com/profile/update/password/index.html"> Forgot your password?</a>
+					</span>
+				</p>
+				<p>
+					<span id="ErrorLabel" style="color:Red;">{{message}}</span>
+				</p>
+				<div class="ibm-buttons-row">
+					<p>
+						<input id="bSubmit" class="ibm-btn-arrow-pri" type="submit" style="font-size: 1.3em;" tabindex="5" value="Submit" name="bSubmit">
+							<span class="ibm-sep"> </span>
+						<input id="bCancel" class="ibm-btn-cancel-sec" type="button" style="font-size: 1.3em;" tabindex="6" value="Cancel" name="bCancel">
+					</p>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

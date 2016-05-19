@@ -1,0 +1,85 @@
+<script src="./js/setup.js"></script>
+<h2>Initial Parameters Setup</h2>
+<div class="ibm-container">
+	<div><p/></div>
+	<div class="ibm-columns ibm-graphic-tabs">
+	  <div class="ibm-tab-section">
+	      <h2 class="ibm-access">Tab navigation</h2>
+	      <ul class="ibm-tabs">
+	          <li class="ibm-first-tab ibm-highlight-tab" id="tabBU"><a href="#" onclick="changeTabBU()">Business Unit</a><span class="ibm-access">- selected tab,</span></li>
+	          <li id="tabCM"><a href="#" onclick="changeTabCM()">Categorized Menu</a></li>
+	      </ul>
+	  </div>
+	  <div class="ibm-col-1-1">
+	    <form id="formsetup" class="ibm-column-form ibm-styled-form" name="formsetup" method="POST" action="/saveSetup">
+				<div class="ibm-col-6-2">
+					<div id="divBU">
+	            <input type="hidden" id="idBU" name="idBU">
+	            <input type="hidden" id="revBU" name="revBU">
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label for="title" class="ibm-form-grp-lbl">Name:</label>
+	                <span class="ibm-input-group">
+	                    <input type="text" id="fldname" name="fldname">
+	                </span>
+	            </p>
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label id="lblEnable" class="ibm-form-grp-lbl">Active:</label>
+	                <span class="ibm-input-group">
+	                    <input type="radio" name="fldtrue" value="true" checked ><label for="fldtrue">True</label>
+	                    <input type="radio" name="fldtrue" value="false" ><label for="fldtrue">False</label>
+	                </span>
+	            </p>
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label for="fldvalue" class="ibm-form-grp-lbl">Value:    </label>
+	                <span class="ibm-input-group">
+										<textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea>
+									</span>
+	            </p>
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label for="flddescM" class="ibm-form-grp-lbl">Description:</label>
+	                <span class="ibm-input-group">
+	                  <input type="text" id="flddesc" name="flddesc" size="30" class="text">
+	                </span>
+	            </p>
+	        </div>
+	        <div id="divCM" style="display:none">
+	            <input type="hidden" id="idCM" name="idCM">
+	            <input type="hidden" id="revCM" name="revCM">
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label for="title" class="ibm-form-grp-lbl">Name:</label>
+	                <span class="ibm-input-group">
+	                    <input type="text" id="fldnameM" name="fldnameM">
+	                </span>
+	            </p>
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label id="lblEnable" class="ibm-form-grp-lbl">Active:</label>
+	                <span class="ibm-input-group">
+	                    <input type="radio" name="fldtrueM" value="true" checked ><label for="fldtrue">True</label>
+	                    <input type="radio" name="fldtrueM" value="false" ><label for="fldtrue">False</label>
+	                </span>
+	            </p>
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label for="scheduleTime" class="ibm-form-grp-lbl">Value:    </label>
+	                <span class="ibm-input-group">
+	                  <textarea id="fldvalueM" name="fldvalueM" rows="5" cols="50"></textarea>
+	                </span>
+	            </p>
+	            <p style="text-align:left" class="ibm-form-elem-grp">
+	                <label for="flddescM" class="ibm-form-grp-lbl">Description:</label>
+	                <span class="ibm-input-group">
+	                  <input type="text" id="flddescM" name="flddescM" size="30" class="text">
+	                </span>
+	            </p>
+	        </div>
+	        <div class="ibm-rule"><hr/></div>
+	        <div class="ibm-buttons-row">
+	            <input class="ibm-btn-pri" type="button" id="btn_submit" value="Submit" />
+	            <span class="ibm-sep"> </span>
+	            <input class="ibm-btn-sec" type="button" id="btn_cancel" value="Cancel" />
+	            <br>
+	        </div>
+				</div>
+	    </form>
+	  </div>
+	</div>
+</div>

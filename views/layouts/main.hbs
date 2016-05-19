@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US" >
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="schema.DC" href="http://purl.org/DC/elements/1.0/"/>
+		<link rel="SHORTCUT ICON" href="//w3.ibm.com/favicon.ico"/>
+		<link href="http://w3.ibm.com/" rel="canonical" />
+		<meta name="IBM.Effective" content="2015-11-25" scheme="W3CDTF" />
+		<meta name="Description" content="MIRA WEB"  />
+		<meta name="DC.Subject" content="IBM_SubjectTaxonomy" scheme="IBM_SubjectTaxonomy" />
+		<meta name="DC.Type" content="IBM_ContentClassTaxonomy" scheme="IBM_ContentClassTaxonomy" />
+		<meta name="DC.Date" content="2015-11-25" scheme="iso8601" />
+		<meta name="Security" content="internal use only"  />
+		<meta name="Keywords" content="MIRA Web, MIRA, Web"  />
+		<meta name="DC.Publisher" content="IBM Corporation"  />
+		<meta name="Source" content="IBM" />
+		<meta name="DC.Rights" content="© Copyright IBM Corp. 2015" />
+		<meta name="DC.Language" scheme="rfc1766" content="en-US" />
+		<meta name="Robots" content="index,follow" />
+		<meta name="Owner" content="" />
+		<meta name="IBM.Country" content="US" />
+		<title>{{varConf.conTitle}}</title>
+
+		<link href="//1.w3.s81c.com/common/v17/css/w3.css" rel="stylesheet" title="w3" type="text/css" />
+		<!--<style type="text/css" media="screen">
+		  @import '/css/style.css';
+		</style>-->
+		<script src="//1.w3.s81c.com/common/js/dojo/w3.js" type="text/javascript">//</script>
+
+		<script src='./lib/jquery-2.1.1.min.js'></script>
+		<script src="./lib/jquery-ui.min.js"></script>
+		<!--<link href='./css/index.css' rel='stylesheet' />-->
+		
+	</head>
+	<body id="ibm-com">
+		<div id="ibm-top" class="">
+			<!-- MASTHEAD_BEGIN -->
+			{{>masthead}}
+			<!-- MASTHEAD_END -->
+			<div id="ibm-pcon" style="width:80%">
+				<!-- CONTENT_BEGIN -->
+				<div id="ibm-content">
+					<div id="ibm-leadspace-head" class="ibm-alternate">
+						<div id="ibm-leadspace-body">
+							<h1>MSAC Integrated Reporting Application</h1>
+							<h5>&nbsp;&nbsp;&nbsp;R1.0 Test</h5>
+						</div>
+						<div position="static" align="right">IBM Confidential</div>
+					</div>
+					<!-- CONTENT_BODY -->
+					<div id="ibm-content-body" style="width:100%">
+						<div id="ibm-content-main"  style="width:100%">
+							<!-- LEADSPACE_BEGIN -->
+							{{{body}}}
+							<!-- LEADSPACE_END -->
+						</div>
+						<!-- FEATURES_BEGIN -->
+						<div id="ibm-content-sidebar">
+							<div id="ibm-contact-module">
+								<!--IBM Contact Module-->
+							</div>
+							<div id="ibm-merchandising-module">
+								<!--IBM Web Merchandising Module-->
+							</div>
+							<!--sidebarspace -->
+						</div>
+						<!-- FEATURES_END -->
+					</div>
+					<!-- CONTENT_BODY_END -->
+				</div>
+				<!-- CONTENT_END -->
+				<!-- NAVIGATION_BEGIN -->
+				{{>leftnav}}
+				<!-- NAVIGATION_END -->
+			</div>
+			<div id="ibm-related-content"></div>
+			<!-- FOOTER_BEGIN -->
+			{{>footer}}
+			<!-- FOOTER_END -->
+		</div>
+		<div id="ibm-metrics">
+			<script src="//w3.ibm.com/w3webmetrics/js/ntpagetag.js" type="text/javascript">//</script>
+		</div>
+	</body>
+</html>

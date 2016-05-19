@@ -1,0 +1,65 @@
+<link  href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<script src="./lib/jquery.dataTables.js"></script>
+<script src="./js/parameters.js"/></script>
+<h2>Parameters</h2>
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<div class="ibm-buttons-row">
+			<p>
+				<span class="ibm-sep"> </span>
+				<input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="new_param" name="new_param" value="New Parameter">
+			</p>
+		</div>
+		<div class="ibm-buttons-row">
+		</div>
+		<iframe id="txtArea1" style="display:none"></iframe>
+		<table id="reports_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="display nowrap">
+			<thead>
+				<th scope="col">Key Name</th>
+				<th scope="col">Active</th>
+				<th scope="col">Description</th>
+			</thead>	 
+			<tbody>
+				{{#each logList}}
+				<tr>
+					<td><a href="javascript:void(0)" onclick="editParam('{{id}}')">{{ keyName }}</a></td>
+					<td>{{ active }}</td>
+					<td>{{ description }}</td>
+				</tr>
+				{{/each }}
+			</tbody>
+		</table>
+		<div id="paramContent" title="Param Details" style="display:none;">
+			<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/saveParam">
+				<input type="hidden" id="id" name="id">
+				<input type="hidden" id="rev" name="rev">
+				<p style="text-align:left">
+					<label for="title">Name:<span class="ibm-required">*</span></label>
+					<span><input type="text" id="fldname" name="fldname"></span>
+				</p>
+				<p style="text-align:left" class="ibm-form-elem-grp">
+					<label id="lblEnable" class="ibm-form-grp-lbl">Active:<span class="ibm-required">*</span></label>
+					<span class="ibm-input-group">
+						<input type="radio" name="fldtrue" value="true" checked ><label for="fldtrue">True</label>
+						<input type="radio" name="fldtrue" value="false" ><label for="fldtrue">False</label>
+					</span>
+				</p>
+				<p style="text-align:left">
+					<label for="fldvalue" align="left">Value:<span class="ibm-required">*</span></label>      
+					<span><textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea></span>
+				</p>
+				<p style="text-align:left">
+					<label for="flddescM">Description:<span class="ibm-required">*</span></label>
+					<span><input type="text" id="flddesc" name="flddesc" size="30" class="text"></span>
+				</p>
+				<div class="ibm-rule"><hr/></div>
+				<div class="ibm-buttons-row">
+					<input class="ibm-btn-pri" type="submit" id="btn_submit" value="Submit" />
+					<span class="ibm-sep"> </span>
+					<input class="ibm-btn-sec" type="button" id="btn_cancel" value="Cancel" />
+					<br/>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
