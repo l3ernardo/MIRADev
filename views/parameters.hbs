@@ -5,10 +5,13 @@
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
 		<div class="ibm-buttons-row">
+			<br/>
 			<p>
 				<span class="ibm-sep"> </span>
-				<input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="new_param" name="new_param" value="New Parameter">
+				<a href="#" onclick="ibmweb.overlay.show('Overlay_Parameter',this); newParam();" value="New Parameter" name="new_param" id="new_param" class="ibm-add1-link">New Parameter</a>
+				<!-- <input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="new_param" name="new_param" value="New Parameter" onclick="ibmweb.overlay.show('Overlay_Parameter',this); newParam();"> -->
 			</p>
+			<br/>
 		</div>
 		<div class="ibm-buttons-row">
 		</div>
@@ -22,44 +25,62 @@
 			<tbody>
 				{{#each logList}}
 				<tr>
-					<td><a href="javascript:void(0)" onclick="editParam('{{id}}')">{{ keyName }}</a></td>
+					<td><a class="ibm-popup-link" href="Overlay_Parameter" onclick="ibmweb.overlay.show('Overlay_Parameter',this); editParam('{{id}}');return false;">{{ keyName }}</a></td>
 					<td>{{ active }}</td>
 					<td>{{ description }}</td>
 				</tr>
 				{{/each }}
 			</tbody>
 		</table>
-		<div id="paramContent" title="Param Details" style="display:none;">
-			<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/saveParam">
-				<input type="hidden" id="id" name="id">
-				<input type="hidden" id="rev" name="rev">
-				<p style="text-align:left">
-					<label for="title">Name:<span class="ibm-required">*</span></label>
-					<span><input type="text" id="fldname" name="fldname"></span>
-				</p>
-				<p style="text-align:left" class="ibm-form-elem-grp">
-					<label id="lblEnable" class="ibm-form-grp-lbl">Active:<span class="ibm-required">*</span></label>
-					<span class="ibm-input-group">
-						<input type="radio" name="fldtrue" value="true" checked ><label for="fldtrue">True</label>
-						<input type="radio" name="fldtrue" value="false" ><label for="fldtrue">False</label>
-					</span>
-				</p>
-				<p style="text-align:left">
-					<label for="fldvalue" align="left">Value:<span class="ibm-required">*</span></label>      
-					<span><textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea></span>
-				</p>
-				<p style="text-align:left">
-					<label for="flddescM">Description:<span class="ibm-required">*</span></label>
-					<span><input type="text" id="flddesc" name="flddesc" size="30" class="text"></span>
-				</p>
-				<div class="ibm-rule"><hr/></div>
-				<div class="ibm-buttons-row">
-					<input class="ibm-btn-pri" type="submit" id="btn_submit" value="Submit" />
-					<span class="ibm-sep"> </span>
-					<input class="ibm-btn-sec" type="button" id="btn_cancel" value="Cancel" />
-					<br/>
+	</div>
+</div>
+<div class="ibm-common-overlay ibm-overlay-alt" id="Overlay_Parameter">
+	<div class="ibm-head">
+		<p><a id="closeBtn" class="ibm-common-overlay-close" href="#close">Close [x]</a></p>
+	</div>
+	<div class="ibm-body">
+		<div class="ibm-main">
+			<div class="ibm-title ibm-subtitle">
+				<h2>Parameter</h2>
+			</div>
+			<div class="ibm-rule"><hr/></div>
+			<div class="ibm-container ibm-alternate ibm-buttons-last">
+				<div class="ibm-container-body">
+					<div id="paramContent" title="Param Details" style="display:;">
+						<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/saveParam">
+							<input type="hidden" id="id" name="id">
+							<input type="hidden" id="rev" name="rev">
+							<p style="text-align:left">
+								<label for="title">Name:<span class="ibm-required">*</span></label>
+								<span><input type="text" id="fldname" name="fldname"></span>
+							</p>
+							<p style="text-align:left" class="ibm-form-elem-grp">
+								<label id="lblEnable" class="ibm-form-grp-lbl">Active:<span class="ibm-required">*</span></label>
+								<span class="ibm-input-group">
+									<input type="radio" name="fldtrue" value="true" checked ><label for="fldtrue">True</label>
+									<input type="radio" name="fldtrue" value="false" ><label for="fldtrue">False</label>
+								</span>
+							</p>
+							<p style="text-align:left">
+								<label for="fldvalue" align="left">Value:<span class="ibm-required">*</span></label>      
+								<span><textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea></span>
+							</p>
+							<p style="text-align:left">
+								<label for="flddescM">Description:<span class="ibm-required">*</span></label>
+								<span><input type="text" id="flddesc" name="flddesc" size="30" class="text"></span>
+							</p>
+							<div class="ibm-rule"><hr/></div>
+							<div class="ibm-buttons-row">
+								<p>
+									<input class="ibm-btn-arrow-pri" type="submit" id="btn_submit" value="Submit" />
+									<span class="ibm-sep">&nbsp;</span>
+									<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Cancel" />
+								</p>
+							</div>
+						</form>
+					</div>
 				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 </div>

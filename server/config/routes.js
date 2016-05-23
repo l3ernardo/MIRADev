@@ -23,7 +23,7 @@ router.get('/login', function(req, res) {
 	else if (message=='Invalid username/password'){
 		message='Wrong IBM Intranet ID and/or password.';  
 	}
-	res.render('/login',{message});
+	res.render('login',{message});
 	//res.render('login',{message});
 	/*res.render('login',{
 	message: req.flash('error'),
@@ -31,14 +31,15 @@ router.get('/login', function(req, res) {
 	})  */
 });
 
-router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticate('ldapauth' , { failureRedirect: './login',failureFlash: true}),function (req,res){
+router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticate('ldapauth' , { failureRedirect: '/login',failureFlash: true}),function (req,res){
 	if(req.user.hasAccess) {
 		console.log("[BG NAME]: " + bluegroup.bgname);
 		req.session.user = req.user;
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
 		console.info("[routes][login] - roles: " + req.user.groupName);
-		res.render('index');
+		//res.render('index');
+		res.redirect('setup');
 	}
 	else {
 		console.log("[routes][login] - Access Denied");
@@ -87,7 +88,36 @@ router.get('/calendars', function(req, res, next) {
 
 //get setup
 router.get('/setup', function(req, res, next) {
-  res.render('setup', { siteIndex:'' });
+	//res.render('setup', { siteIndex:'' });
+	db.view('setup', 'view-setup', {include_docs: true}).then(function(data) {
+		var len = data.body.rows.length;
+		if ( len > 0 ) {
+			var varMenu = "";
+			var varBU = "";
+			for (var i = 0; i < len; i++) {
+				var exist = data.body.rows[i].doc;
+				if (exist.keyName == 'Menu'){
+					varMenu = "exist";
+				}
+				else if(exist.keyName == 'BusinessUnit') {
+					varBU = "exist";
+				}
+			}
+			if (varMenu == "" || varBU == "") {
+				console.info("[routes][setup] - menu: " + varMenu + " businnessUnit: " + varBU);
+				res.render('setup');
+			}
+			else{
+				res.redirect('index');
+			}
+		} 
+		else {
+			console.info("[routes][setup] - There are no needed parameters");
+			res.render('setup');
+		}	
+	}).catch(function(err) {
+		console.log("[routes][setup] - " + err);
+	});
 }); 
 //save setup data into db
 router.post('/saveSetup', function(req, res){
@@ -126,25 +156,39 @@ router.post('/saveSetup', function(req, res){
 		db.save(obj2).then(function(data2){
 			console.log("obj2 saved successfully");
 		}).catch(function(error){
-			console.log(error);
+			console.log("[routes][saveSetup] - " + error);
 		});
 	}).catch(function(error){
-		console.log(error);
+		console.log("[routes][saveSetup] - " + error);
 	});
 
-	res.redirect('/');
+	res.redirect('index');
 });
 //load data from db and show in event window
 router.get('/loadSetup', function(req, res) {
 	db.view('setup', 'view-setup', {include_docs: true}).then(function(data){
 		var len = data.body.rows.length;
-		
-		console.log("[routes] data length: " + len);
-		res.send(data.body);
+		var keyName = req.query.keyName;
+		var value = [];
+		keyNameM = varConf.keyNameM;
+		keyNameBU = varConf.keyNameBU;
+		console.log(keyNameM);
+		console.log(keyNameBU);
+		console.log("[routes] data length one: " + len);
+		if ( len > 0 ) {
+			for (var i = 0; i < len; i++) {
+				var doc = data.body.rows[i].doc;
+				if (keyNameM == data.body.rows[i].doc.keyName || keyNameBU == data.body.rows[i].doc.keyName){
+					console.log("exist " + data.body.rows[i].doc.keyName);
+					value.push(data.body.rows[i].doc);
+				}
+			}
+		}
+		res.send(value);
 	}).catch(function(err) {
 		console.log(err);
 	});
-});
+}); 
 //load data from db and show in event window
 router.get('/getParam', function(req, res) {
 	db.view('setup', 'view-setup', {include_docs: true}).then(function(data){
@@ -164,7 +208,7 @@ router.get('/getParam', function(req, res) {
 		}
 		res.send(value);
 	}).catch(function(err) {
-		console.log(err);
+		console.log("[routes][getParam] - " + err);
 	});
 });
 //Load parameters 
@@ -237,7 +281,7 @@ router.get('/loadParam', function(req, res) {
 			res.send(doc);
 		}
 	}).catch(function(err) {
-		console.log(err);
+		console.log("[routes][loadParam] - " + err);
 	});
 });
 //save param in db
@@ -257,7 +301,7 @@ router.post('/saveParam', function(req, res) {
 	db.save(obj).then(function(data){
 		console.log("obj saved successfully");
 	}).catch(function(error){
-		console.log(error);
+		console.log("[routes][saveParam] - " + error);
 	});
 	res.redirect('/parameter');
 })

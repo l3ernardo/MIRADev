@@ -4,17 +4,11 @@ function hide_divs(){
 		document.getElementById('ibm-navigation').style.display="none";
 	}
 }
-window.onload = function(){
+$(document).ready(function() {
 	hide_divs();
-	//document.getElementById('username').focus();
-};
+	$('#bCancel').click(function() {
+		$('#username').val('');
+		$('#password').val('');
+	});
+});
 
-/*document.getElementById('username').addEventListener('focus',function()
-{
-    document.getElementById('ErrorLabel').style.display="none";
-},true);
-
-document.getElementById('username').addEventListener('click',function()
-{
-    document.getElementById('ErrorLabel').style.display="none";
-},true);*/

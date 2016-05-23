@@ -13,39 +13,34 @@ $(document).ready(function(){
         }
     });
 
-    $.ajax({
-        url: '/loadSetup',
-        type: 'GET',
-        success: function(resp) {
-            if (resp.rows[1]) {
-                var BU = resp.rows[1].doc;
-				//alert(JSON.stringify(resp.rows[0].doc));
-
-                $('#idBU').val(BU._id);
-                $('#revBU').val(BU._rev);
-                $('#fldname').val(BU.keyName);
-                $('#fldtrue').val(BU.active);
-                $('#fldvalue').val(JSON.stringify(BU.value));
-                $('#flddesc').val(BU.description);
-            }
-            if (resp.rows[0]) {
-                var CM = resp.rows[0].doc;
-
-                $('#idCM').val(CM._id);
-                $('#revCM').val(CM._rev);
-                $('#fldnameM').val(CM.keyName);
-                $('#fldtrueM').val(CM.active);
-                $('#fldvalueM').val(JSON.stringify(CM.value));
-                $('#flddescM').val(CM.description);
-            }
-        },
-        error: function(e) {
-        alert('error: ' + e);
-        }
-    });
-
-
-
+	$.ajax({
+		url: '/loadSetup',
+		type: 'GET',
+		success: function(resp) {
+			if (resp[0]) {
+				var CM = resp[0];
+				$('#idCM').val(CM._id);
+				$('#revCM').val(CM._rev);
+				$('#fldnameM').val(CM.keyName);
+				$('#fldtrueM').val(CM.active);
+				$('#fldvalueM').val(JSON.stringify(CM.value));
+				$('#flddescM').val(CM.description);
+			}
+			if (resp[1]) {
+				var BU = resp[1];
+				//alert(JSON.stringify(resp[0]));
+				$('#idBU').val(BU._id);
+				$('#revBU').val(BU._rev);
+				$('#fldname').val(BU.keyName);
+				$('#fldtrue').val(BU.active);
+				$('#fldvalue').val(JSON.stringify(BU.value));
+				$('#flddesc').val(BU.description);
+			}
+		},
+		error: function(e) {
+			alert('error: ' + e);
+		}
+	});
 });
 
 function IsJsonString(str) {
