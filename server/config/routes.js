@@ -10,6 +10,7 @@ var db = require('../../conn.js');
 var moment = require('moment');
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
+var varConf = require('../../configuration');
 
 router.get('/', function(req, res) {
 	res.render('login');
