@@ -88,19 +88,20 @@ router.get('/calendars', function(req, res, next) {
 });
 
 //get setup
-router.get('/setup', function(req, res, next) {
-	//res.render('setup', { siteIndex:'' });
+router.get('/setup', function(req, res, next){
 	db.view('setup', 'view-setup', {include_docs: true}).then(function(data) {
 		var len = data.body.rows.length;
+		keyNameM = varConf.keyNameM;
+		keyNameBU = varConf.keyNameBU;
 		if ( len > 0 ) {
 			var varMenu = "";
 			var varBU = "";
 			for (var i = 0; i < len; i++) {
 				var exist = data.body.rows[i].doc;
-				if (exist.keyName == 'Menu'){
+				if (exist.keyName == keyNameM){
 					varMenu = "exist";
 				}
-				else if(exist.keyName == 'BusinessUnit') {
+				else if(exist.keyName == keyNameBU) {
 					varBU = "exist";
 				}
 			}
@@ -119,7 +120,7 @@ router.get('/setup', function(req, res, next) {
 	}).catch(function(err) {
 		console.log("[routes][setup] - " + err);
 	});
-}); 
+});  
 //save setup data into db
 router.post('/saveSetup', function(req, res){
 	var value1 = JSON.parse(req.body.fldvalue);
@@ -173,21 +174,17 @@ router.get('/loadSetup', function(req, res) {
 		var value = [];
 		keyNameM = varConf.keyNameM;
 		keyNameBU = varConf.keyNameBU;
-		console.log(keyNameM);
-		console.log(keyNameBU);
-		console.log("[routes] data length one: " + len);
 		if ( len > 0 ) {
 			for (var i = 0; i < len; i++) {
 				var doc = data.body.rows[i].doc;
 				if (keyNameM == data.body.rows[i].doc.keyName || keyNameBU == data.body.rows[i].doc.keyName){
-					console.log("exist " + data.body.rows[i].doc.keyName);
 					value.push(data.body.rows[i].doc);
 				}
 			}
 		}
 		res.send(value);
 	}).catch(function(err) {
-		console.log(err);
+		console.log("[routes][loadSetup] - " + err);
 	});
 }); 
 //load data from db and show in event window
