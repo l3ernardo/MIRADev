@@ -118,7 +118,12 @@ router.get('/setup', function(req, res, next){
 			res.render('setup');
 		}	
 	}).catch(function(err) {
-		console.log("[routes][setup] - " + err);
+			console.log("[routes][setup] - " + err);
+			// This code get the error description to configuration.js ( error of db )
+			res.render('error.hbs', {
+			errorDescription: varConf.error_500,
+			errorCode: 500
+			});
 	});
 });  
 //save setup data into db
@@ -185,8 +190,65 @@ router.get('/loadSetup', function(req, res) {
 		res.send(value);
 	}).catch(function(err) {
 		console.log("[routes][loadSetup] - " + err);
+			// This code get the error description to configuration.js ( error of db )
+			res.render('error.hbs', {
+			errorDescription: varConf.error_500,
+			errorCode: 500
+			});
 	});
 }); 
+
+
+//read data from db and show the error in error form
+router.get('/loadError', function(req, res) {
+	console.log("[loadError] int to loadError: ");
+	var errorCode = req.query.errorCode;
+
+	db.view('setup', 'view-setup', {include_docs: true}).then(function(data){
+		var len = data.body.rows.length;
+		var errorDescription;
+		
+		//console.log("len: " + len);
+		//console.log("errorCode: " + errorCode);
+		
+		for (var i = 0; i < len; i++) {
+			var exist = data.body.rows[i].doc;
+			var keyNameE = exist.keyName;
+			//console.log("keyNameE: " + keyNameE);
+			if (keyNameE == "ErrorCodes") {
+				var errors = exist.value;
+				var lenErrors = errors.length;
+	
+				//console.log("errors: " + errors[0].id);
+
+				for (var j = 0; j < lenErrors; j++) {
+					if (errorCode == errors[j].id) {
+						errorDescription = errors[j].description;
+						//console.log("errorDescription: " + errorDescription);
+						res.render('error.hbs', {errorDescription: errorDescription})
+
+					}
+				}
+				
+			}
+		}
+	}).catch(function(err) {
+			//console.log(err);
+			// This code get the error description to configuration.js ( error of db )
+			res.render('error.hbs', {
+			errorDescription: varConf.error_500,
+			errorCode: 500
+			});
+	});
+});
+		// This code get the error description to cloudant db
+		//console.log("[routes][loadParam] - " + err);
+		//var errorCode = 501
+		//res.redirect('/loadError?errorCode=' + errorCode)
+
+
+
+
 //load data from db and show in event window
 router.get('/getParam', function(req, res) {
 	db.view('setup', 'view-setup', {include_docs: true}).then(function(data){
@@ -252,7 +314,11 @@ router.get('/parameter', function(req, res){
 			});
 		}else{
 			//if there is no data in the DB, then redirects to addnew form
-			error = 'There is no data in database. Add a new data to database.';
+			// This code get the error description to configuration.js ( error of db )
+			res.render('error.hbs', {
+			errorDescription: varConf.error_500,
+			errorCode: 501
+			});
 		}
 	}).catch(function(error){ //dbView catch
 		//res.json(error);
@@ -280,6 +346,11 @@ router.get('/loadParam', function(req, res) {
 		}
 	}).catch(function(err) {
 		console.log("[routes][loadParam] - " + err);
+			// This code get the error description to configuration.js ( error of db )
+			res.render('error.hbs', {
+			errorDescription: varConf.error_501,
+			errorCode: 501
+			});
 	});
 });
 //save param in db
