@@ -71,9 +71,9 @@ SETUP FUNCTIONALITY
 ***************************************************************/
 /* Setup will validate if required parameters were created */
 router.get('/setup', isAuthenticated, function(req, res, next){
-	setup.getSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
+	setup.listSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
 		if(data.status==200 & !data.error) {
-			if(data.numDocs < 2) {
+			if(data.numDocs <= 2) {
 				res.render('setup');
 			} else {
 				res.redirect('index');
@@ -90,7 +90,7 @@ router.get('/setup', isAuthenticated, function(req, res, next){
 
 /* Load needed parameters data in setup page */
 router.get('/loadSetup', isAuthenticated, function(req, res, next){
-	setup.getLoadSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
+	setup.getSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.value)
 		} else {
@@ -134,7 +134,7 @@ router.get('/parameter', isAuthenticated, function(req, res){
 	})
 });
 /* Load specific parameter data */
-router.get('/loadParam', isAuthenticated, function(req, res) {
+router.get('/getParam', isAuthenticated, function(req, res) {
 	parameter.getParam(req,res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send( data.doc )
@@ -164,9 +164,9 @@ router.post('/saveParam', isAuthenticated, function(req, res) {
 });
 /* Get parameter by keyName */
 router.get('/getParameter',isAuthenticated, function(req, res) {
-	parameter.getParamValue(req,res, db).then(function(data) {
+	parameter.getParam(req,res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.send(data.value);
+			res.send(data.doc.value);
 		} else {
 			res.render('error.hbs',{errorDescription: data.error})
 			console.log("[routes][getParameter] - " + data.error);

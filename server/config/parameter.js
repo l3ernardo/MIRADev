@@ -58,7 +58,9 @@ var parameters = {
 		var deferred = q.defer();		
 		var obj = {
 			selector : {
-				"_id": req.query.id
+				//"_id": req.query.id
+				"_id": {"$gt":0},
+				keyName: req.query.keyName
 			}};
 		db.find(obj).then(function(data){
 			var doc = data.body.docs[0];
@@ -93,23 +95,5 @@ var parameters = {
 		});
 		return deferred.promise;		
 	},
-	/* Get parameter's json value by keyName */
-	getParamValue: function(req, res, db) {
-		var deferred = q.defer();
-		var obj = {
-			selector : {
-				"_id": {"$gt":0},
-				keyName: req.query.keyName
-			}};
-		db.find(obj).then(function(data){
-			var doc = data.body.docs[0];
-			var value = doc.value;
-			deferred.resolve({"status": 200, "value": value})
-		}).catch(function(err) {
-			console.log("[routes][getParam] - " + err.error);
-			deferred.reject({"status": 500, "error": err});
-		});	
-		return deferred.promise;		
-	}
 };
 module.exports = parameters;

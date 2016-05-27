@@ -9,8 +9,8 @@
 var q  = require("q");
 
 var setup = {
-	/* getSetup will get if exist required parameters */
-	getSetup: function(req, res, db, keyNameM, keyNameBU) {
+	/* listSetup will get if exist required parameters */
+	listSetup: function(req, res, db, keyNameM, keyNameBU) {
 		var deferred = q.defer();
 		var obj = {
 			selector:{
@@ -29,7 +29,7 @@ var setup = {
 		return deferred.promise;
 	},
 	/* Load needed parameters data in setup page */
-	getLoadSetup: function(req, res, db, keyNameM, keyNameBU ) {
+	getSetup: function(req, res, db, keyNameM, keyNameBU ) {
 		var deferred = q.defer();
 		var obj = {
 		selector:{

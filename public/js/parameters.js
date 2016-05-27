@@ -32,7 +32,7 @@ function newParam() {
 }
 function editParam(id) {
 	$.ajax({
-		url: '/loadParam?id=' + id,
+		url: '/getParam?keyName=' + id,
 		type: 'GET',
 		success: function(resp) {
 			if (resp) {
