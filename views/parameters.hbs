@@ -9,7 +9,6 @@
 			<p>
 				<span class="ibm-sep"> </span>
 				<a href="#" onclick="ibmweb.overlay.show('Overlay_Parameter',this); newParam();" value="New Parameter" name="new_param" id="new_param" class="ibm-add1-link">New Parameter</a>
-				<!-- <input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="new_param" name="new_param" value="New Parameter" onclick="ibmweb.overlay.show('Overlay_Parameter',this); newParam();"> -->
 			</p>
 			<br/>
 		</div>
@@ -25,7 +24,7 @@
 			<tbody>
 				{{#each logList}}
 				<tr>
-					<td><a class="ibm-popup-link" href="Overlay_Parameter" onclick="ibmweb.overlay.show('Overlay_Parameter',this); editParam('{{id}}');return false;">{{ keyName }}</a></td>
+					<td><a class="ibm-popup-link" href="Overlay_Parameter" onclick="ibmweb.overlay.show('Overlay_Parameter',this); editParam('{{keyName}}');return false;">{{ keyName }}</a></td>
 					<td>{{ active }}</td>
 					<td>{{ description }}</td>
 				</tr>
@@ -67,7 +66,7 @@
 							</p>
 							<p style="text-align:left">
 								<label for="flddescM">Description:<span class="ibm-required">*</span></label>
-								<span><input type="text" id="flddesc" name="flddesc" size="30" class="text"></span>
+								<span><input type="text" id="flddesc" name="flddesc" size="50" class="text"></span>
 							</p>
 							<div class="ibm-rule"><hr/></div>
 							<div class="ibm-buttons-row">
