@@ -73,7 +73,7 @@ SETUP FUNCTIONALITY
 router.get('/setup', isAuthenticated, function(req, res, next){
 	setup.listSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
 		if(data.status==200 & !data.error) {
-			if(data.numDocs <= 2) {
+			if(data.numDocs < 2) {
 				res.render('setup');
 			} else {
 				res.redirect('index');
