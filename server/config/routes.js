@@ -8,6 +8,17 @@ var q  = require("q");
 var db = require('../../conn.js');
 var varConf = require('../../configuration');
 
+// Add functionalities from other JS files
+var parameter = require('./parameter.js');
+var setup = require('./setup.js');
+
+/** Validate if the user is authenticated **/
+function isAuthenticated(req, res, next) {
+	if (req.session.isAuthenticated)
+        return next();
+    res.redirect('/');
+};
+
 router.get('/', function(req, res) {
 	res.render('login');
 });
@@ -33,7 +44,6 @@ router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticat
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
 		console.info("[routes][login] - roles: " + req.user.groupName);
-		//Redirect to setup
 		res.redirect('setup');
 	}
 	else {
@@ -41,7 +51,6 @@ router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticat
 		req.logout();
 		req.session.user = null;
 		req.session.isAuthenticated = null;
-		//res.redirect('./login');
 		res.render('login');
 	}
 });
@@ -54,276 +63,118 @@ router.get('/logout', function(req, res) {
 });
 
 /* Index page displayed */
-router.get('/index', function(req, res) {
-	if(req.session.isAuthenticated){
-		res.render('index', { siteIndex:'' });
-	}
-	else{
-		console.info('[INFO] User not authenticated!!! Redirecting to login page.');
-		res.render('login');
-	}
+router.get('/index', isAuthenticated, function(req, res) {
+	res.render('index', { siteIndex:'' });
 });
 /**************************************************************
 SETUP FUNCTIONALITY
 ***************************************************************/
 /* Setup will validate if required parameters were created */
-router.get('/setup', function(req, res, next){
-	var keyNameM = varConf.keyNameM;
-	var keyNameBU = varConf.keyNameBU;
-	var obj = {
-		selector:{
-			"_id": {"$gt":0},
-			"keyName": {
-					"$in": [keyNameBU, keyNameM]
-				}
-		}
-	};
-	db.find(obj).then(function(data){
-		var numDocs = data.body.docs.length;
-		if(numDocs <= 2) {
-			res.render('setup');
-		}
-		else{
-			res.redirect('index');
-		}
-	}).catch(function(err) {
-		console.log("[routes][setup] - " + err.error);
-	});
-}); 
-/* Load needed parameters data in setup page */
-router.get('/loadSetup', function(req, res, next){
-	var keyNameBU = varConf.keyNameBU;
-	var keyNameM = varConf.keyNameM;
-	var obj = {
-		selector:{
-			"_id": {"$gt":0},
-			"keyName": {
-					"$in": [keyNameBU, keyNameM]
-				}
-		}
-	};
-	db.find(obj).then(function(data){
-		var numDocs = data.body.docs.length;
-		var value = [];
-		if(numDocs <= 2) {
-			for(var i = 0; i < numDocs; i++) {
-				var doc = data.body.docs[i];
-				if(doc.keyName == keyNameBU || doc.keyName == keyNameM){
-					value.push(data.body.docs[i]);
-				}
+router.get('/setup', isAuthenticated, function(req, res, next){
+	setup.listSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.numDocs < 2) {
+				res.render('setup');
+			} else {
+				res.redirect('index');
 			}
-			res.send(value);
-		}
-		else{
-			res.redirect('index');
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][setup] - " + data.error);
 		}
 	}).catch(function(err) {
-		console.log("[routes][loadSetup] - " + err.error);
-	});
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][setup] - " + err.error);
+	})
+}); 
+
+/* Load needed parameters data in setup page */
+router.get('/loadSetup', isAuthenticated, function(req, res, next){
+	setup.getSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.value)
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][loadsetup] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][loadsetup] - " + err.error);
+	})
 });  
 /* Save setup parameters in cloudant */
-router.post('/saveSetup', function(req, res){
-	var value1 = JSON.parse(req.body.fldvalue);
-	var value2 = JSON.parse(req.body.fldvalueM);
-
-	var obj1 = {
-			"docType": "setup",
-			"keyName": req.body.fldname,
-			"active": req.body.fldtrue,
-			"value": value1,
-			"description": req.body.flddesc
-	};
-
-	if (req.body.idBU != '') {
-		obj1._id = req.body.idBU;
-		obj1._rev = req.body.revBU;
-	}
-
-	var obj2 = {
-			"docType": "setup",
-			"keyName": req.body.fldnameM,
-			"active": req.body.fldtrueM,
-			"value": value2,	
-			"description": req.body.flddescM
-	};
-
-	if (req.body.idCM != '') {
-		obj2._id = req.body.idCM;
-		obj2._rev = req.body.revCM;
-	}
-
-	db.save(obj1).then(function(data1){
-		console.log("obj1 saved successfully");
-		
-		db.save(obj2).then(function(data2){
-			console.log("obj2 saved successfully");
-		}).catch(function(err){
-			console.log("[routes][saveSetup] - " + err.error);
-		});
-	}).catch(function(err){
+router.post('/saveSetup', isAuthenticated, function(req, res){
+	setup.saveSetup(req,res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.redirect('index');
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][saveSetup] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error.hbs',{errorDescription: err.error})
 		console.log("[routes][saveSetup] - " + err.error);
-	});
-
-	res.redirect('index');
+	})
 });
 /**************************************************************
 PARAMETERS FUNCTIONALITY
 ***************************************************************/
 /* Load all parameters in view*/
-router.get('/parameter', function(req, res){
-	db.view('setup', 'view-setup', {include_docs: true}).then(function(data) {
-		var len = data.body.rows.length;
-		//if DB contains data, then list it
-		if(len > 0){ 
-			totalLog = len;
-			pageSize = 20;
-			pageCount = Math.ceil(totalLog/pageSize);
-			currentPage = 1;
-			log = [];
-			logArray = [];
-			logList = [];
-			//generate list of parameters
-			for (var i = 0; i < totalLog; i++) {
-			//console.log(data.body.rows[i].doc)
-				log.push({
-					id: data.body.rows[i].doc._id,
-					keyName: data.body.rows[i].doc.keyName,
-					active: data.body.rows[i].doc.active, 
-					description: data.body.rows[i].doc.description
-				});
-			}
-			//split list into groups
-			while (log.length > 0) {
-				logArray.push(log.splice(0, pageSize));
-			}
-			//set current page if specifed as get variable (eg: /?page=2)
-			if (typeof req.query.page !== 'undefined') {
-				currentPage = +req.query.page;
-			}
-			//show list of parameters from group
-			logList = logArray[+currentPage - 1];
-			//render log.ejs page
-			res.render('parameters.hbs', {
-				logList: logList,
-				pageSize: pageSize,
-				totalLog: totalLog,
-				pageCount: pageCount,
-				currentPage: currentPage
-			});
-		}else{
-			//if there is no data in the DB, then redirects to addnew form
-			// This code get the error description to configuration.js ( error of db )
-			res.render('error.hbs', {
-				errorDescription: varConf.error_500,
-				errorCode: 501
-			});
+router.get('/parameter', isAuthenticated, function(req, res){
+	parameter.listParam(req,res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.render('parameters.hbs', data.parameters )
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][parameter] - " + data.error);
 		}
-	}).catch(function(error){ //dbView catch
-		//res.json(error);
-		res.render('error.hbs', {
-			errortitle: "error  "
-		});
-	});
+	}).catch(function(err) {
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][parameter] - " + err.error);
+	})
 });
 /* Load specific parameter data */
-router.get('/loadParam', function(req, res) {
-	var obj = {
-		selector : {
-			"_id": req.query.id
-	}};
-	db.find(obj).then(function(data){
-		var doc = data.body.docs[0];
-		res.send(doc);
-	}).catch(function(err) {
-		console.log("[routes][loadParam] - " + err.error);
-		// This code get the error description to configuration.js ( error of db )
-		res.render('error.hbs', {
-			errorDescription: varConf.error_501,
-			errorCode: 501
-		});
-	});
-});
-/* Save parameter in cloudant */
-router.post('/saveParam', function(req, res) {
-	var value = JSON.parse(req.body.fldvalue);
-	var obj = {
-		"docType": "setup",
-		"keyName": req.body.fldname,
-		"active": req.body.fldtrue,
-		"value": value,
-		"description": req.body.flddesc
-	};
-	if (req.body.id != '') {
-		obj._id = req.body.id;
-		obj._rev = req.body.rev;
-	}
-	db.save(obj).then(function(data){
-		console.log("obj saved successfully");
-	}).catch(function(err){
-		console.log("[routes][saveParam] - " + err.error);
-	});
-	res.redirect('/parameter');
-});
-
-/* Get parameter by keyName */
-router.get('/getParameter', function(req, res) {
-	var obj = {
-		selector : {
-			"_id": {"$gt":0},
-			keyName: req.query.keyName
-	}};
-	db.find(obj).then(function(data){
-		var doc = data.body.docs[0];
-		var value = doc.value;
-		res.send(value);
-	}).catch(function(err) {
-		console.log("[routes][getParam] - " + err.error);
-	});
-});
-/**************************************************************
-ERROR FUNCTIONALITY
-***************************************************************/
-/* Read data from db and show the error in error form */
-router.get('/loadError', function(req, res) {
-	console.log("[loadError] int to loadError: ");
-	var errorCode = req.query.errorCode;
-
-	db.view('setup', 'view-setup', {include_docs: true}).then(function(data){
-		var len = data.body.rows.length;
-		var errorDescription;
-		
-		//console.log("len: " + len);
-		//console.log("errorCode: " + errorCode);
-		
-		for (var i = 0; i < len; i++) {
-			var exist = data.body.rows[i].doc;
-			var keyNameE = exist.keyName;
-			//console.log("keyNameE: " + keyNameE);
-			if (keyNameE == "ErrorCodes") {
-				var errors = exist.value;
-				var lenErrors = errors.length;
-	
-				//console.log("errors: " + errors[0].id);
-
-				for (var j = 0; j < lenErrors; j++) {
-					if (errorCode == errors[j].id) {
-						errorDescription = errors[j].description;
-						//console.log("errorDescription: " + errorDescription);
-						res.render('error.hbs', {errorDescription: errorDescription})
-
-					}
-				}
-				
-			}
+router.get('/getParam', isAuthenticated, function(req, res) {
+	parameter.getParam(req,res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send( data.doc )
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][loadParam] - " + data.error);
 		}
 	}).catch(function(err) {
-			//console.log(err);
-			// This code get the error description to configuration.js ( error of db )
-		res.render('error.hbs', {
-			errorDescription: varConf.error_500,
-			errorCode: 500
-		});
-	});
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][loadParam] - " + err.error);
+	})
+});
+/* Save parameter in cloudant */
+router.post('/saveParam', isAuthenticated, function(req, res) {
+	parameter.saveParam(req,res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.redirect('/parameter');
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][saveParam] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][saveParam] - " + err.error);
+	})
+
+});
+/* Get parameter by keyName */
+router.get('/getParameter',isAuthenticated, function(req, res) {
+	parameter.getParam(req,res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.doc.value);
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][getParameter] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][getParameter] - " + err.error);
+	})
 });
 
 module.exports = router;
