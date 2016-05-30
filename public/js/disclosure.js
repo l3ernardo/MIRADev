@@ -4,7 +4,7 @@ $(document).ready(function() {
 		window.location.href ='./businessunit';
 	});
 	$('#bCancel').click(function() {
-		window.location.href='/login';
+		window.location.href='/logout';
 	});
 });
 function hide_divs(){
