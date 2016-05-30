@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	$('h1#pageTitle').text("Setup");
     $('#btn_submit').click(function() {
         if ($('#fldname').val() != '' && $('#fldvalue').val() != '' && $('#flddesc').val() != '' && $('#fldnameM').val() != '' && $('#fldvalueM').val() != '' && $('#flddescM').val() != '') {
             if (IsJsonString($('#fldvalue').val()) && IsJsonString($('#fldvalueM').val())) {

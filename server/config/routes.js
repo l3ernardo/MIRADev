@@ -23,6 +23,7 @@ function isAuthenticated(req, res, next) {
 router.get('/', function(req, res) {
 	res.render('login');
 });
+
 /**************************************************************
 LOGIN FUNCTIONALITY
 ***************************************************************/
@@ -45,7 +46,7 @@ router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticat
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
 		console.info("[routes][login] - roles: " + req.user.groupName);
-		res.redirect('disclosure');
+		res.redirect('setup');
 	}
 	else {
 		console.log("[routes][login] - Access Denied");
@@ -54,25 +55,6 @@ router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticat
 		req.session.isAuthenticated = null;
 		res.render('login');
 	}
-});
-
-/* Disclosure screen */
-router.get('/disclosure', function(req, res) {
-	dialog.displayNonDisclosure(req, res, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			if(data.doc) {
-				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
-			} else {
-				es.render('error.hbs',{errorDescription: data.error})
-			}
-		} else {
-			res.render('error.hbs',{errorDescription: data.error})
-			console.log("[routes][setup] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
-		console.log("[routes][setup] - " + err.error);
-	})	
 });
 
 /* Logout function to reset user session */
@@ -109,7 +91,7 @@ router.get('/setup', isAuthenticated, function(req, res, next){
 			if(data.numDocs < 2) {
 				res.render('setup');
 			} else {
-				res.redirect('index');
+				res.redirect('disclosure');
 			}
 		} else {
 			res.render('error.hbs',{errorDescription: data.error})
@@ -148,6 +130,36 @@ router.post('/saveSetup', isAuthenticated, function(req, res){
 		res.render('error.hbs',{errorDescription: err.error})
 		console.log("[routes][saveSetup] - " + err.error);
 	})
+});
+/**************************************************************
+LOAD HEADER FUNCTIONALITY
+***************************************************************/
+router.get('/name', isAuthenticated, function(req, res) {
+	if (req.session.user != undefined)
+		return res.json({ uname: req.session.user.cn });
+	else
+		return res.json({ uname: '' });
+});
+/**************************************************************
+DISCLOSURE FUNCTIONALITY
+***************************************************************/
+/* Disclosure screen */
+router.get('/disclosure', function(req, res) {
+	dialog.displayNonDisclosure(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
+			} else {
+				es.render('error.hbs',{errorDescription: data.error})
+			}
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][setup] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][setup] - " + err.error);
+	})	
 });
 /**************************************************************
 PARAMETERS FUNCTIONALITY
