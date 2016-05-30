@@ -12,6 +12,7 @@ var varConf = require('../../configuration');
 var parameter = require('./parameter.js');
 var setup = require('./setup.js');
 var dialog = require('./dialog.js');
+var businessunit = require('./businessunit.js');
 
 /** Validate if the user is authenticated **/
 function isAuthenticated(req, res, next) {
@@ -23,6 +24,7 @@ function isAuthenticated(req, res, next) {
 router.get('/', function(req, res) {
 	res.render('login');
 });
+
 /**************************************************************
 LOGIN FUNCTIONALITY
 ***************************************************************/
@@ -45,34 +47,17 @@ router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticat
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
 		console.info("[routes][login] - roles: " + req.user.groupName);
-		res.redirect('disclosure');
+		req.session.businessunit = "";
+		res.redirect('setup');
 	}
 	else {
 		console.log("[routes][login] - Access Denied");
 		req.logout();
 		req.session.user = null;
 		req.session.isAuthenticated = null;
+		req.session.businessunit = null;
 		res.render('login');
 	}
-});
-
-/* Disclosure screen */
-router.get('/disclosure', function(req, res) {
-	dialog.displayNonDisclosure(req, res, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			if(data.doc) {
-				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
-			} else {
-				es.render('error.hbs',{errorDescription: data.error})
-			}
-		} else {
-			res.render('error.hbs',{errorDescription: data.error})
-			console.log("[routes][setup] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
-		console.log("[routes][setup] - " + err.error);
-	})	
 });
 
 /* Logout function to reset user session */
@@ -109,14 +94,14 @@ router.get('/setup', isAuthenticated, function(req, res, next){
 			if(data.numDocs < 2) {
 				res.render('setup');
 			} else {
-				res.redirect('index');
+				res.redirect('disclosure');
 			}
 		} else {
-			res.render('error.hbs',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error})
 			console.log("[routes][setup] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error})
 		console.log("[routes][setup] - " + err.error);
 	})
 }); 
@@ -127,11 +112,11 @@ router.get('/loadSetup', isAuthenticated, function(req, res, next){
 		if(data.status==200 & !data.error) {
 			res.send(data.value)
 		} else {
-			res.render('error.hbs',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error})
 			console.log("[routes][loadsetup] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error})
 		console.log("[routes][loadsetup] - " + err.error);
 	})
 });  
@@ -141,14 +126,67 @@ router.post('/saveSetup', isAuthenticated, function(req, res){
 		if(data.status==200 & !data.error) {
 			res.redirect('index');
 		} else {
-			res.render('error.hbs',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error})
 			console.log("[routes][saveSetup] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error})
 		console.log("[routes][saveSetup] - " + err.error);
 	})
 });
+/**************************************************************
+LOAD HEADER FUNCTIONALITY
+***************************************************************/
+router.get('/name', isAuthenticated, function(req, res) {
+	if (req.session.user != undefined)
+		return res.json({ uname: req.session.user.cn });
+	else
+		return res.json({ uname: '' });
+});
+/**************************************************************
+DISCLOSURE FUNCTIONALITY
+***************************************************************/
+/* Disclosure screen */
+router.get('/disclosure', function(req, res) {
+	dialog.displayNonDisclosure(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
+			} else {
+				es.render('error',{errorDescription: data.error})
+			}
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][setup] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][setup] - " + err.error);
+	})	
+});
+/**************************************************************
+BUSINESS UNIT FUNCTIONALITY
+***************************************************************/
+/* List Business Unit */
+router.get('/businessunit', isAuthenticated, function(req, res){
+	res.render('businessunit');
+});
+/* Save Business Unit */
+router.post('/savebunit', isAuthenticated, function(req, res){
+	businessunit.saveBU(req,res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			req.session.businessunit = data.bunit;
+			res.render('index');
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][businessunit] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][businessunit] - " + err.error);
+	})
+});
+
 /**************************************************************
 PARAMETERS FUNCTIONALITY
 ***************************************************************/
@@ -156,13 +194,13 @@ PARAMETERS FUNCTIONALITY
 router.get('/parameter', isAuthenticated, function(req, res){
 	parameter.listParam(req,res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.render('parameters.hbs', data.parameters )
+			res.render('parameters', data.parameters )
 		} else {
-			res.render('error.hbs',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error})
 			console.log("[routes][parameter] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error})
 		console.log("[routes][parameter] - " + err.error);
 	})
 });
@@ -172,11 +210,11 @@ router.get('/getParam', isAuthenticated, function(req, res) {
 		if(data.status==200 & !data.error) {
 			res.send( data.doc )
 		} else {
-			res.render('error.hbs',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error})
 			console.log("[routes][loadParam] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error})
 		console.log("[routes][loadParam] - " + err.error);
 	})
 });
@@ -186,11 +224,11 @@ router.post('/saveParam', isAuthenticated, function(req, res) {
 		if(data.status==200 & !data.error) {
 			res.redirect('/parameter');
 		} else {
-			res.render('error.hbs',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error})
 			console.log("[routes][saveParam] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error})
 		console.log("[routes][saveParam] - " + err.error);
 	})
 
@@ -201,11 +239,11 @@ router.get('/getParameter',isAuthenticated, function(req, res) {
 		if(data.status==200 & !data.error) {
 			res.send(data.doc.value);
 		} else {
-			res.render('error.hbs',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error})
 			console.log("[routes][getParameter] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error.hbs',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error})
 		console.log("[routes][getParameter] - " + err.error);
 	})
 });

@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	$('h1#pageTitle').text("Parameter");
 	$('#btn_submit').click(function() {
 		if ($('#fldname').val() != '' && $('#fldvalue').val() != '' && $('#flddesc').val() != '') {
 			if (IsJsonString($('#fldvalue').val())) {
