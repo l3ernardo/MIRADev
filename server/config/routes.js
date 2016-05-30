@@ -11,6 +11,7 @@ var varConf = require('../../configuration');
 // Add functionalities from other JS files
 var parameter = require('./parameter.js');
 var setup = require('./setup.js');
+var dialog = require('./dialog.js');
 
 /** Validate if the user is authenticated **/
 function isAuthenticated(req, res, next) {
@@ -44,7 +45,7 @@ router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticat
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
 		console.info("[routes][login] - roles: " + req.user.groupName);
-		res.redirect('setup');
+		res.redirect('disclosure');
 	}
 	else {
 		console.log("[routes][login] - Access Denied");
@@ -54,6 +55,26 @@ router.post('/login',middleware.urlEncodedParser,middleware.passport.authenticat
 		res.render('login');
 	}
 });
+
+/* Disclosure screen */
+router.get('/disclosure', function(req, res) {
+	dialog.displayNonDisclosure(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
+			} else {
+				es.render('error.hbs',{errorDescription: data.error})
+			}
+		} else {
+			res.render('error.hbs',{errorDescription: data.error})
+			console.log("[routes][setup] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error.hbs',{errorDescription: err.error})
+		console.log("[routes][setup] - " + err.error);
+	})	
+});
+
 /* Logout function to reset user session */
 router.get('/logout', function(req, res) {
 	req.logout();
@@ -64,7 +85,19 @@ router.get('/logout', function(req, res) {
 
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
-	res.render('index', { siteIndex:'' });
+	dialog.displayBulletin(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+				if(data.doc) {
+					res.render('index', { doc });
+				} else {
+					res.render('index',{siteIndex:''})
+				}
+			} else {
+				res.render('index',{siteIndex:''})
+			}
+		}).catch(function(err) {
+			res.render('index',{siteIndex:''})
+		})
 });
 /**************************************************************
 SETUP FUNCTIONALITY

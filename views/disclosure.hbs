@@ -1,0 +1,54 @@
+<div id="ibm-leadspace-head" class="ibm-alternate">
+<div id="ibm-leadspace-body">
+<h1 class="ibm-small">MIRA Non-Disclosure</h1>
+</div>
+</div>
+<div class="ibm-container-body">
+<div class="ibm-columns">
+<div class="ibm-col-6-4">
+<!DOCTYPE HTML>
+<html>
+    	<head>
+    		<meta charset="UTF-8">
+    		<title>MIRA Web</title>
+
+            <script>
+                function redirect(action){
+                    if(action == 'OK'){
+                            window.location.href='/index';
+                        } else {
+                            window.location.href='/login';
+						}
+                }
+            </script>
+
+    	</head>
+    	<body>
+			<script type="text/javascript" language="javascript">
+				function hide_divs(){
+					if (document.getElementById){
+						document.getElementById('ibm-leadspace-head').style.display="none";
+						document.getElementById('ibm-navigation').style.display="none";
+					}
+				}
+				window.onload = function(){
+				hide_divs();
+				}
+			</script>
+
+            <hr/>
+        <DIV style="float:left">
+			<script>document.write(unescape({{{disclosure}}}))</script>
+        </DIV>
+			<hr/>
+        <DIV style="float: right; width: 90px;">
+            <input type="button" value="OK" style="width: 80px;" onclick="javascript:redirect('OK');">
+            <BR/>
+            <input type="button" value="CANCEL" style="width: 80px;" onclick="javascript:redirect('cancel');">
+        </DIV>
+            </DIV>
+    	</body>
+</html>
+</div>
+</div>
+</div>
