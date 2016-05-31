@@ -64,5 +64,9 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 });
 
 //Site variables
+
 app.use(require('./server/lib/auth'));
 app.use(require('./server/config/routes.js'));
+app.use(require('./server/config/security.js'));
+app.use(require('./server/config/administration.js'));
+
