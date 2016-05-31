@@ -55,7 +55,12 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 	//init database
 	console.log("[app] init database");
 	var cloudant = require('./conn');
-	cloudant.connect('miradb');
+	// Connect to db in Bluemix if it's running over there; otherwise
+	if (process.env.VCAP_SERVICES) {
+		cloudant.connect('miradb');	
+	} else {
+		cloudant.connect('miradbtest');
+	} 
 });
 
 //Site variables
