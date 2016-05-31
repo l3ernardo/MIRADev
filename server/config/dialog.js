@@ -29,13 +29,12 @@ var dialog = {
 	/* Display Bulletin */
 	displayBulletin: function(req, res, db) {
 		var deferred = q.defer();
-		/*		
 		// Display Bulletin if available
-		if(req.user.BusinessUnit) {
+		if(req.session.businessunit) {
 			var obj = {
 				selector:{
 					"_id": {"$gt":0},
-					"keyName": req.user.BusinessUnit + "_Bulletin"
+					"keyName": req.session.businessunit + "_Bulletin"
 				}
 			};
 			db.find(obj).then(function(data){
@@ -47,9 +46,6 @@ var dialog = {
 		} else {
 			deferred.reject({"status": 500, "error": "n/a"});
 		}
-		return deferred.promise;
-		*/
-		deferred.resolve({"status": 200, "doc": "doc"});
 		return deferred.promise;
 	}
 }
