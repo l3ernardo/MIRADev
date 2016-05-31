@@ -1,20 +1,20 @@
 $(document).ready(function() {
 	$('h1#pageTitle').text("Parameter");
-	$('#btn_submit').click(function(event) {
+	$('#btn_submit').click(function(evt) {
 		if ($('#fldname').val() != '' && $('#fldvalue').val() != '' && $('#flddesc').val() != '') {
 			if (IsJsonString($('#fldvalue').val())) {
 				$('#form').submit();
 			}
 			else {
 				alert('Please check the JSON format in Value fields');
-				event.preventDefault();
-				event.stopPropagation();
+				evt.preventDefault();
+				evt.stopPropagation();
 			}
 		}
 		else {
 			alert('Please fill up all of the fields!');
-			event.preventDefault();
-			event.stopPropagation();
+			evt.preventDefault();
+			evt.stopPropagation();
 		}
 	});
 	$('#reports_table').DataTable({
