@@ -32,17 +32,17 @@ function hide_divs(){
 	$('div#ibm-navigation').hide();
 };
 function fillBU(arrBU) {
-	var container = document.getElementById('divBU');
+	var container = $('#divBU');
 	var count = 0;
 	var tbody = '';
 	
-	tbody += '<label id="lblBU">Business Unit:   </label>';
-	tbody += '<select id="selectBU">';
-
+	tbody += '<select id="selectBU" class="ibm-styled">';
+	
 	for (var i in arrBU) {
-		tbody += '<option id="BU' + i + '" name="selBU" type="select">' + arrBU[i] + '</option>';
+		tbody += '<option value="' + arrBU[i] + '">' + arrBU[i] + '</option>';
 		count++;
 	}
 	tbody += '</select>';
-	container.innerHTML = tbody;
+	container.html(tbody);
 };
+
