@@ -70,20 +70,16 @@ router.get('/logout', function(req, res) {
 
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
-	dialog.displayBulletin(req, res, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-				if(data.doc) {
-					res.render('index', { doc });
-				} else {
-					res.render('index',{siteIndex:''})
-				}
-			} else {
-				res.render('index',{siteIndex:''})
-			}
-		}).catch(function(err) {
-			res.render('index',{siteIndex:''})
-		})
+	console.info('[routes][index]');
+	res.render('index')
 });
+
+/* Bulletin page displayed */
+router.get('/bulletin', isAuthenticated, function(req, res) {
+	console.info('[routes][bulletin]');
+	res.render('bulletin')
+});
+
 /**************************************************************
 SETUP FUNCTIONALITY
 ***************************************************************/
@@ -176,7 +172,20 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 	businessunit.saveBU(req,res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			req.session.businessunit = data.bunit;
-			res.render('index');
+			// Control the bulletin message to be displayed
+			dialog.displayBulletin(req, res, db).then(function(data) {
+				if(data.status==200 & !data.error) {
+						if(data.doc) {
+							res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+						} else {
+							res.render('index',{siteIndex:''})
+						}
+					} else {
+						res.render('index',{siteIndex:''})
+					}
+				}).catch(function(err) {
+					res.render('index',{siteIndex:''})
+				})				
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][businessunit] - " + data.error);
@@ -211,11 +220,11 @@ router.get('/getParam', isAuthenticated, function(req, res) {
 			res.send( data.doc )
 		} else {
 			res.render('error',{errorDescription: data.error})
-			console.log("[routes][loadParam] - " + data.error);
+			console.log("[routes][getParam] - " + data.error);
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
-		console.log("[routes][loadParam] - " + err.error);
+		console.log("[routes][getParam] - " + err.error);
 	})
 });
 /* Save parameter in cloudant */
@@ -240,11 +249,11 @@ router.get('/getParameter',isAuthenticated, function(req, res) {
 			res.send(data.doc.value);
 		} else {
 			res.render('error',{errorDescription: data.error})
-			console.log("[routes][getParameter] - " + data.error);
+			//console.log("[routes][getParameter] - " + data.error);
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
-		console.log("[routes][getParameter] - " + err.error);
+		//console.log("[routes][getParameter] - " + err.error);
 	})
 });
 
