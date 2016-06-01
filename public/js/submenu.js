@@ -17,7 +17,7 @@ $(document).ready(function(){
 			//updateUserName('');
 		}
 	});
-	show_submenus();
+	
 });
 
 function updateSubMenu(menutitle,calendars,dashboards,reports,references,archive) {
@@ -46,24 +46,11 @@ function updateSubMenu(menutitle,calendars,dashboards,reports,references,archive
 		
 };
 
-/*
-function show_hide(name){
-     if( $('#calendar-options').is(":visible") )
-	 {
-		 
-		   $('#calendar-options').hide()
-	 }
-	  else {$('#calendar-options').show(); $("#calendars").addClass("ibm-active");}
-	}
-}*/
-
-function show_submenus(){
-$('#calendars').click($('#calendar-options').show());
+/*$('#calendars').click($('#calendars-options').show());
 $('#dashboards').click($('#dashboards-options').show());
 $('#reports').click($('#reports-options').show());
 $('#references').click($('#references.options').show());
-$('#archive').click($('#archive-options').show());
-}
+$('#archive').click($('#archive-options').show());*/
 
 
 
