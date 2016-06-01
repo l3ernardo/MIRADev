@@ -13,7 +13,7 @@ var setup = require('./js/setup.js');
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
         return next();
-    res.redirect('/');
+    res.redirect('/login');
 };
 
 

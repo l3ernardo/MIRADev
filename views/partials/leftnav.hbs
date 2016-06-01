@@ -1,45 +1,45 @@
 <script src="./js/submenu.js"/></script>
 <div id="ibm-navigation" >
-     <ul id="ibm-primary-links">
-     <li id="ibm-parent-link"> <a href="./index">MIRA</a></li><li id='ibm-overview'><a id='ibm-overview-1' href="./index">{{menuTitle}}</a>
-</li>
-<li id="calendars" ><a  href="./calendars">Calendars</a>
-  <ul id="calendar-options" style='display : none' >
-    {{#each dataCalendars}}
-       <li> <a href='{{link}}'>{{name}}</a></li>
-  {{/each }}
- </ul>
-</li>
-<li id="dashboards"><a  href="./dashboards">Dashboards</a>
-  <ul id="dashboards-options" style='display : none' >
-    {{#each dataDashboards}}
-       <li> <a href='{{link}}'>{{name}}</a></li>
-    {{/each }}
- </ul>
-</li>
-<li id="reports"><a  href="./reports">Reports</a>
-  <ul id="reports-options" style='display : none' >
-    {{#each dataReports}}
-       <li> <a href='{{link}}'>{{name}}</a></li>
-    {{/each }}
- </ul>
-</li>
-<li id="references"><a  href="./references">References</a>
-  <ul id="references-options" style='display : none' >
-    {{#each dataReferences}}
-       <li> <a href='{{link}}'>{{name}}</a></li>
-    {{/each }}
- </ul>
-</li>
-<li id="archive"><a  href="./archives">Archive</a>
-  <ul id="achive-options" style='display : none' >
-    {{#each dataArchive}}
-       <li><a href='{{link}}'>{{name}}</a></li>
-    {{/each }}
- </ul>
-</li>
-</ul>
-  <!--script src="/public/js/click_event.js" type="text/javascript">//</script-->
+	<ul id="ibm-primary-links">
+		<li id='ibm-overview'>
+			<a id='ibm-overview-1' href="./index">{{menuTitle}}</a>
+		</li>
+		<li id="calendars" ><a  href="./calendars">Calendars</a>
+			<ul id="calendar-options" style='display : none' >
+			{{#each dataCalendars}}
+				<li> <a href='{{link}}'>{{name}}</a></li>
+			{{/each }}
+			</ul>
+		</li>
+		<li id="dashboards"><a  href="./dashboards">Dashboards</a>
+			<ul id="dashboards-options" style='display : none' >
+			{{#each dataDashboards}}
+				<li> <a href='{{link}}'>{{name}}</a></li>
+			{{/each }}
+			</ul>
+		</li>
+		<li id="reports"><a  href="./reports">Reports</a>
+			<ul id="reports-options" style='display : none' >
+			{{#each dataReports}}
+				<li> <a href='{{link}}'>{{name}}</a></li>
+			{{/each }}
+			</ul>
+		</li>
+		<li id="references"><a  href="./references">References</a>
+			<ul id="references-options" style='display : none' >
+			{{#each dataReferences}}
+				<li> <a href='{{link}}'>{{name}}</a></li>
+			{{/each }}
+			</ul>
+		</li>
+		<li id="archive"><a  href="./archives">Archive</a>
+			<ul id="achive-options" style='display : none' >
+			{{#each dataArchive}}
+				<li><a href='{{link}}'>{{name}}</a></li>
+			{{/each }}
+			</ul>
+		</li>
+	</ul>
 	<!-- SECONDARY NAVIGATION SECTION -->
 	<div id="ibm-secondary-navigation">
 		<h2 >Related links</h2>
