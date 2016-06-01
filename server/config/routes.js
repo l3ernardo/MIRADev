@@ -8,6 +8,7 @@ var varConf = require('../../configuration');
 // Add functionalities from other JS files
 var dialog = require('./js/dialog.js');
 var businessunit = require('./js/businessunit.js');
+var submenu = require('./submenu.js');
 
 
 function isAuthenticated(req, res, next) {
@@ -30,10 +31,32 @@ LOAD HEADER FUNCTIONALITY
 ***************************************************************/
 router.get('/name', isAuthenticated, function(req, res) {
 	if (req.session.user != undefined)
-		return res.json({ uname: req.session.user.cn });
+		return res.json({ uname: req.session.user.notesId});
 	else
 		return res.json({ uname: '' });
 });
+
+/**************************************************************
+SUBMENU FUNCTIONALITY
+***************************************************************/
+
+router.get('/submenu', isAuthenticated, function(req, res) {
+	submenu.listMenu(req,res,db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			console.info("[routes][submenulist]");
+			res.json({menu: data.submenu})
+	   } else {
+			//res.render('error',{errorDescription: data.error})
+			console.log("[routes][submenulist]" + data.error);
+		}
+	}).catch(function(err) {
+		//res.render('error',{errorDescription: err.error})
+		console.log("[routes][submenulist] - " + err.error);
+	})
+	
+	
+});
+
 /**************************************************************
 DISCLOSURE FUNCTIONALITY
 ***************************************************************/
