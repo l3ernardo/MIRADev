@@ -38,12 +38,8 @@ app.set('view engine', '.hbs');
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
 app.use('/public',express.static(__dirname + '/public'));
-//set variables
-var varConf = require('./configuration');
 
 //global variables
-app.locals.submenus = require('./public/submenus.json');
-//app.locals.varConf = varConf;
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();

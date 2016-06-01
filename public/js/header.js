@@ -21,17 +21,23 @@ $(document).ready(function(){
 			updateHeader(response.title, response.version);
 		},
 		error: function(e) {
-			//updateUI('');
+			updateHeader('','');
 		}
 	});
 });
 /* Update user name with login data*/
 function updateUserName(name) {
-	$('strong#username').text(name);
-	if(name != '')
+	if(name != ''){
+		name = name.split('/');
+		name = name[0].split('=');
+		name = name[1];
 		$('div#ibm-profile-links').show();
-	else
+	}
+	else{
 		$('div#ibm-profile-links').hide();
+	}
+	
+	$('strong#username').text(name);
 };
 /* Update site name and version*/
 function updateHeader(title, version) {
