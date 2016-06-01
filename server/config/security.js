@@ -5,12 +5,17 @@ var middleware = require('../lib/middleware.js')(passport);
 var bluegroup = require('../lib/bluegroups.js');
 var varConf = require('../../configuration');
 
-
+function isAuthenticated(req, res, next) {
+	if (req.session.isAuthenticated)
+		res.redirect('/logout');    
+	else
+		return next();
+};
 /**************************************************************
 LOGIN FUNCTIONALITY
 ***************************************************************/
 /* Validate in Login page */
-security.get('/login', function(req, res) {
+security.get('/login', isAuthenticated, function(req, res) {
 	var message = req.flash('error');
 	if(message == 'Missing credentials'){
 		message = varConf.msgIdPassR;
@@ -46,7 +51,7 @@ security.get('/logout', function(req, res) {
 	req.logout();
 	req.session.user = null;
 	req.session.isAuthenticated = null;
-	res.render('login');
+	res.redirect('login');
 });
 
 
