@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	$('h1#pageTitle').text("Setup");
     $('#btn_submit').click(function() {
         if ($('#fldname').val() != '' && $('#fldvalue').val() != '' && $('#flddesc').val() != '' && $('#fldnameM').val() != '' && $('#fldvalueM').val() != '' && $('#flddescM').val() != '') {
             if (IsJsonString($('#fldvalue').val()) && IsJsonString($('#fldvalueM').val())) {
@@ -12,11 +13,19 @@ $(document).ready(function(){
             alert('Please fill up all of the fields!');
         }
     });
-
-	$.ajax({
+	 $.ajax({
 		url: '/loadSetup',
 		type: 'GET',
 		success: function(resp) {
+			if (resp[1]) {
+				var BU = resp[1];
+				$('#idBU').val(BU._id);
+				$('#revBU').val(BU._rev);
+				$('#fldname').val(BU.keyName);
+				$('#fldtrue').val(BU.active);
+				$('#fldvalue').val(JSON.stringify(BU.value));
+				$('#flddesc').val(BU.description);
+			}
 			if (resp[0]) {
 				var CM = resp[0];
 				$('#idCM').val(CM._id);
@@ -25,16 +34,6 @@ $(document).ready(function(){
 				$('#fldtrueM').val(CM.active);
 				$('#fldvalueM').val(JSON.stringify(CM.value));
 				$('#flddescM').val(CM.description);
-			}
-			if (resp[1]) {
-				var BU = resp[1];
-				//alert(JSON.stringify(resp[0]));
-				$('#idBU').val(BU._id);
-				$('#revBU').val(BU._rev);
-				$('#fldname').val(BU.keyName);
-				$('#fldtrue').val(BU.active);
-				$('#fldvalue').val(JSON.stringify(BU.value));
-				$('#flddesc').val(BU.description);
 			}
 		},
 		error: function(e) {

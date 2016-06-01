@@ -1,8 +1,8 @@
 function hide_divs(){
-	if (document.getElementById){
-		document.getElementById('ibm-leadspace-head').style.display="none";
-		document.getElementById('ibm-navigation').style.display="none";
-	}
+	$('div#ibm-leadspace-head').hide();
+	$('div#ibm-navigation').hide();
+	$('div#ibm-profile-links').hide();
+	$('p#ibm-site-title').html('');
 }
 $(document).ready(function() {
 	hide_divs();
