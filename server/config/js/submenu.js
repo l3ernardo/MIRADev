@@ -26,86 +26,130 @@ var submenu = {
 					var lenTitle = data.body.rows[i].doc.value.length;					
 				}				
 			}
-			
+						
 		    for (var i = 0; i < lenTitle; i++) { 
 			  if (data.body.rows[index].doc.value[i].businessUnit==req.session.businessunit){
 				  dataValue=data.body.rows[index].doc.value[i];
 				  menuTitle=dataValue.menutitle;
 				  calendars=dataValue.calendars; 	
-				  lenCal=calendars.length;  
-				  
-				  
+				  lenCal=calendars.length;  			  
 					for(var j = 0; j < lenCal; j++){
 						obj_calendar=data.body.rows[index].doc.value[i].calendars[j].role;
-						var flag1=0, flag2=0, flag3=0;
-						for(var k=0;k<obj_calendar[k];k++)
+						len_objcalendar=obj_calendar.length;
+						var flag=0;
+						for(var k=0;k<len_objcalendar;k++)
 						{
-							if(obj_calendar[k]=='Admin')
+							if(obj_calendar[k]==req.session.BG)
 							{
-								flag3=1;
-							}
-							else if(obj_calendar[k]=='Editor')
-							     {
-								    flag2=2;
-					        	}
-								else if(obj_calendar[k]=='Reader')
-							       {
-								     flag1=1;
-					        	   }							
-							
+								flag=1;
+							}				   
 						}
-						
-   						dataCalendars.push({
-			             id: data.body.rows[index].doc.value[i].calendars[j].id,
-					     name: data.body.rows[index].doc.value[i].calendars[j].name,
-						 link: data.body.rows[index].doc.value[i].calendars[j].link,
-						 role: data.body.rows[index].doc.value[i].calendars[j].role
-					     })						  
-
+					    if(flag=='1')
+							{						
+								dataCalendars.push({
+									id: data.body.rows[index].doc.value[i].calendars[j].id,
+									name: data.body.rows[index].doc.value[i].calendars[j].name,
+									link: data.body.rows[index].doc.value[i].calendars[j].link,
+									role: data.body.rows[index].doc.value[i].calendars[j].role
+								})	
+							}						 
 					 }	
 
                     dashboards=dataValue.dashboards; 	
 				    lenDash=dashboards.length;   
 					for(var j = 0; j < lenDash; j++){
-				       dataDashboards.push({
-			             id: data.body.rows[index].doc.value[i].dashboards[j].id,
-					     name: data.body.rows[index].doc.value[i].dashboards[j].name,
-						 link: data.body.rows[index].doc.value[i].dashboards[j].link,
-						 role: data.body.rows[index].doc.value[i].dashboards[j].role
-					     })	
+					    obj_dashboard=data.body.rows[index].doc.value[i].dashboards[j].role;
+						len_objdashboard=obj_dashboard.length;
+						var flag=0;
+						for(var k=0;k<len_objdashboard;k++)
+						{  
+							if(obj_dashboard[k]==req.session.BG)
+							{
+								flag=1;
+							}							
+						}										   
+					    if(flag=='1')
+							{	
+								dataDashboards.push({
+									id: data.body.rows[index].doc.value[i].dashboards[j].id,
+									name: data.body.rows[index].doc.value[i].dashboards[j].name,
+									link: data.body.rows[index].doc.value[i].dashboards[j].link,
+									role: data.body.rows[index].doc.value[i].dashboards[j].role
+							    })	  
+					        }
 					 }
-
+					 
+					 
                     reports=dataValue.reports; 	
 				    lenReport=reports.length;   
 					for(var j = 0; j < lenReport; j++){
-				       dataReports.push({
-			             id: data.body.rows[index].doc.value[i].reports[j].id,
-					     name: data.body.rows[index].doc.value[i].reports[j].name,
-						 link: data.body.rows[index].doc.value[i].reports[j].link,
-						 role: data.body.rows[index].doc.value[i].reports[j].role
-					     })	
+						obj_report=data.body.rows[index].doc.value[i].reports[j].role;
+						len_objreport=obj_report.length;
+						var flag=0;
+						for(var k=0;k<len_objreport;k++)
+						{  
+							if(obj_report[k]==req.session.BG)
+							{
+								flag=1;
+							}							
+						}		
+						if(flag=='1')
+					     {	
+						 	    dataReports.push({
+			                         id: data.body.rows[index].doc.value[i].reports[j].id,
+					                 name: data.body.rows[index].doc.value[i].reports[j].name,
+						             link: data.body.rows[index].doc.value[i].reports[j].link,
+						             role: data.body.rows[index].doc.value[i].reports[j].role
+					            })
+					     }						 
 					 }	
 
                     references=dataValue.references; 	
 				    lenReference=references.length;   
 					for(var j = 0; j < lenReference; j++){
-				       dataReferences.push({
-			             id: data.body.rows[index].doc.value[i].references[j].id,
-					     name: data.body.rows[index].doc.value[i].references[j].name,
-						 link: data.body.rows[index].doc.value[i].references[j].link,
-						 role: data.body.rows[index].doc.value[i].references[j].role
-					     })	
+						obj_reference=data.body.rows[index].doc.value[i].references[j].role;
+						len_objreference=obj_reference.length;
+						var flag=0;
+						for(var k=0;k<len_objreference;k++)
+						{  
+							if(obj_reference[k]==req.session.BG)
+							{
+								flag=1;
+							}							
+						}			    
+						if(flag=='1')
+					     {	
+								dataReferences.push({
+										id: data.body.rows[index].doc.value[i].references[j].id,
+										name: data.body.rows[index].doc.value[i].references[j].name,
+										link: data.body.rows[index].doc.value[i].references[j].link,
+										role: data.body.rows[index].doc.value[i].references[j].role
+					            })	
+						 }
 					 }
 
                     archive=dataValue.archive; 	
 				    lenArchive=archive.length;   
 					for(var j = 0; j < lenArchive; j++){
-				       dataArchive.push({
-			             id: data.body.rows[index].doc.value[i].archive[j].id,
-					     name: data.body.rows[index].doc.value[i].archive[j].name,
-						 link: data.body.rows[index].doc.value[i].archive[j].link,
-						 role: data.body.rows[index].doc.value[i].archive[j].role
+						obj_archive=data.body.rows[index].doc.value[i].archive[j].role;
+						len_objarchive=obj_archive.length;
+						var flag=0;
+						for(var k=0;k<len_objarchive;k++)
+						{  
+							if(obj_archive[k]==req.session.BG)
+							{
+								flag=1;
+							}							
+						}			 
+						if(flag=='1')
+					     {
+								dataArchive.push({
+									id: data.body.rows[index].doc.value[i].archive[j].id,
+									name: data.body.rows[index].doc.value[i].archive[j].name,
+									link: data.body.rows[index].doc.value[i].archive[j].link,
+									role: data.body.rows[index].doc.value[i].archive[j].role
 					     })	
+						 }
 					 }					 
 			  }
           }           
