@@ -8,20 +8,20 @@ var varConf = require('../../configuration');
 // Add functionalities from other JS files
 var dialog = require('./js/dialog.js');
 var businessunit = require('./js/businessunit.js');
+var submenu = require('./js/submenu.js');
 
 
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
         return next();
-    res.redirect('/');
+    res.redirect('/login');
 };
 
 router.get('/', function(req, res) {
-	res.render('login');
+	res.redirect('index');
 });
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
-	console.info('[routes][index]');
 	res.render('index')
 });
 
@@ -30,10 +30,29 @@ LOAD HEADER FUNCTIONALITY
 ***************************************************************/
 router.get('/name', isAuthenticated, function(req, res) {
 	if (req.session.user != undefined)
-		return res.json({ uname: req.session.user.cn });
+		return res.json({ uname: req.session.user.notesId});
 	else
 		return res.json({ uname: '' });
 });
+
+/**************************************************************
+SUBMENU FUNCTIONALITY
+***************************************************************/
+
+router.get('/submenu', isAuthenticated, function(req, res) {
+	submenu.listMenu(req,res,db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.json({menu: data.submenu})
+		} else {
+			//res.render('error',{errorDescription: data.error})
+			console.log("[routes][submenulist]" + data.error);
+		}
+	}).catch(function(err) {
+		//res.render('error',{errorDescription: err.error})
+		console.log("[routes][submenulist] - " + err.error);
+	})
+});
+
 /**************************************************************
 DISCLOSURE FUNCTIONALITY
 ***************************************************************/
@@ -44,7 +63,7 @@ router.get('/disclosure', function(req, res) {
 			if(data.doc) {
 				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
 			} else {
-				es.render('error',{errorDescription: data.error})
+				res.render('error',{errorDescription: data.error})
 			}
 		} else {
 			res.render('error',{errorDescription: data.error})
@@ -95,7 +114,6 @@ BULLETIN FUNCTIONALITY
 ***************************************************************/
 /* Bulletin page displayed */
 router.get('/bulletin', isAuthenticated, function(req, res) {
-	console.info('[routes][bulletin]');
 	res.render('bulletin')
 });
 
