@@ -17,12 +17,12 @@ function isAuthenticated(req, res, next) {
     res.redirect('/login');
 };
 
-router.get('/', function(req, res) {
-	res.redirect('index');
+router.get('/', isAuthenticated, function(req, res) {
+	res.redirect('disclosure');
 });
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
-	res.render('index')
+	res.render('index');
 });
 
 /**************************************************************
@@ -42,7 +42,7 @@ SUBMENU FUNCTIONALITY
 router.get('/submenu', isAuthenticated, function(req, res) {
 	submenu.listMenu(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.json({menu: data.submenu})
+			res.json({menu: data.submenu});
 		} else {
 			//res.render('error',{errorDescription: data.error})
 			console.log("[routes][submenulist]" + data.error);
@@ -63,14 +63,14 @@ router.get('/disclosure', function(req, res) {
 			if(data.doc) {
 				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
 			} else {
-				res.render('error',{errorDescription: data.error})
+				res.render('error',{errorDescription: data.error});
 			}
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			console.log("[routes][disclosure] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		console.log("[routes][disclosure] - " + err.error);
 	})	
 });
@@ -92,20 +92,20 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 						if(data.doc) {
 							res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
 						} else {
-							res.render('index',{siteIndex:''})
+							res.render('index');
 						}
 					} else {
-						res.render('index',{siteIndex:''})
+						res.render('index');
 					}
 				}).catch(function(err) {
-					res.render('index',{siteIndex:''})
+					res.render('index');
 				})				
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			console.log("[routes][businessunit] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		console.log("[routes][businessunit] - " + err.error);
 	})
 });
@@ -114,7 +114,7 @@ BULLETIN FUNCTIONALITY
 ***************************************************************/
 /* Bulletin page displayed */
 router.get('/bulletin', isAuthenticated, function(req, res) {
-	res.render('bulletin')
+	res.render('bulletin');
 });
 
 module.exports = router;
