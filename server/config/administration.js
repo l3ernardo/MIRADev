@@ -43,13 +43,13 @@ administration.get('/setup', isAuthenticated, function(req, res, next){
 administration.get('/loadSetup', isAuthenticated, function(req, res, next){
 	setup.getSetup(req,res, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.send(data.value)
+			res.send(data.value);
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			console.log("[routes][loadsetup] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		console.log("[routes][loadsetup] - " + err.error);
 	})
 });  
@@ -59,11 +59,11 @@ administration.post('/saveSetup', isAuthenticated, function(req, res){
 		if(data.status==200 & !data.error) {
 			res.redirect('index');
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			console.log("[routes][saveSetup] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		console.log("[routes][saveSetup] - " + err.error);
 	})
 });
@@ -77,11 +77,11 @@ administration.get('/parameter', isAuthenticated, function(req, res){
 		if(data.status==200 & !data.error) {
 			res.render('parameters', data.parameters )
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			console.log("[routes][parameter] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		console.log("[routes][parameter] - " + err.error);
 	})
 });
@@ -89,13 +89,13 @@ administration.get('/parameter', isAuthenticated, function(req, res){
 administration.get('/getParam', isAuthenticated, function(req, res) {
 	parameter.getParam(req,res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.send( data.doc )
+			res.send( data.doc );
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			console.log("[routes][getParam] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		console.log("[routes][getParam] - " + err.error);
 	})
 });
@@ -105,11 +105,11 @@ administration.post('/saveParam', isAuthenticated, function(req, res) {
 		if(data.status==200 & !data.error) {
 			res.redirect('/parameter');
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			console.log("[routes][saveParam] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		console.log("[routes][saveParam] - " + err.error);
 	})
 
@@ -120,11 +120,11 @@ administration.get('/getParameter',isAuthenticated, function(req, res) {
 		if(data.status==200 & !data.error) {
 			res.send(data.doc.value);
 		} else {
-			res.render('error',{errorDescription: data.error})
+			res.render('error',{errorDescription: data.error});
 			//console.log("[routes][getParameter] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error})
+		res.render('error',{errorDescription: err.error});
 		//console.log("[routes][getParameter] - " + err.error);
 	})
 });
