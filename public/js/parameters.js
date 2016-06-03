@@ -1,15 +1,20 @@
 $(document).ready(function() {
-	$('#btn_submit').click(function() {
+	$('h1#pageTitle').text("Parameter");
+	$('#btn_submit').click(function(evt) {
 		if ($('#fldname').val() != '' && $('#fldvalue').val() != '' && $('#flddesc').val() != '') {
 			if (IsJsonString($('#fldvalue').val())) {
 				$('#form').submit();
 			}
 			else {
 				alert('Please check the JSON format in Value fields');
+				evt.preventDefault();
+				evt.stopPropagation();
 			}
 		}
 		else {
 			alert('Please fill up all of the fields!');
+			evt.preventDefault();
+			evt.stopPropagation();
 		}
 	});
 	$('#reports_table').DataTable({
@@ -32,7 +37,7 @@ function newParam() {
 }
 function editParam(id) {
 	$.ajax({
-		url: '/loadParam?id=' + id,
+		url: '/getParam?keyName=' + id,
 		type: 'GET',
 		success: function(resp) {
 			if (resp) {
@@ -47,6 +52,7 @@ function editParam(id) {
 		},
 		error: function(e) {
 			alert('error: ' + e);
+			return false;
 		}  
 	}); 
 }

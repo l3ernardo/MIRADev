@@ -1,0 +1,36 @@
+<script src="./js/businessunit.js"/></script>
+<div class="ibm-container-body">
+	<div class="ibm-columns">
+		<div class="ibm-col-1-1">
+			<br/>
+			<h1 class="ibm-small">MIRA Business Unit</h1>
+			<div class="ibm-rule"><hr/></div>
+			<br/>
+			<p>
+			Please select the Business Unit and click Submit to continue. Required fields are marked with an asterik (
+			<span class="ibm-required">*</span>
+			).
+			</p>
+			<br/><br/>
+			<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebunit">
+				<div style="text-align:left" class="ibm-form-elem-grp">
+					<label id="BULabel" style="font-size: 1.3em;" for="username">
+						Business Unit:
+						<span class="ibm-required">*</span>
+					</label>
+					<span>
+						<input type="hidden" id="selectedBU" name="selectedBU">
+						<span id="divBU"></span>
+					</span>
+				</div>
+				<br/><br/>
+				<div class="ibm-buttons-row">
+					<p>
+					
+						<input id="btn_submit" class="ibm-btn-arrow-pri" type="button" style="font-size: 1.3em;" tabindex="5" value="Submit" name="btn_submit">
+					</p>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
