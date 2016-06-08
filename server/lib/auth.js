@@ -36,7 +36,7 @@ passport.use(
     passReqToCallback:true
   },
   function(req, user, done) {
-
+	var bg = [];
     console.info("[INFO] Received valid login for "+ req.body.username);
     //importar/require bluegroups y ejecutar getMembersByBG pasandole el user.
       bluegroup.getMembersByBG(req.body.username).then(function(data){
@@ -44,8 +44,11 @@ passport.use(
         if (data[0][0].msg == "Success"){
 
             user.hasAccess = true;
-            user.groupName = data[0][0].groupName;
-
+			for(var i=0;i<data.length;i++) {
+				bg.push(data[i][0].groupName);
+			}
+			user.groupName = bg;
+			
           }else{
 
             user.hasAccess = false;
