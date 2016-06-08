@@ -9,7 +9,7 @@ var varConf = require('../../configuration');
 var dialog = require('./js/dialog.js');
 var businessunit = require('./js/businessunit.js');
 var submenu = require('./js/submenu.js');
-
+var utility = require('./js/utility.js');
 
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
@@ -115,6 +115,40 @@ BULLETIN FUNCTIONALITY
 /* Bulletin page displayed */
 router.get('/bulletin', isAuthenticated, function(req, res) {
 	res.render('bulletin');
+});
+/**************************************************************
+BLUEPAGES FUNCTIONALITY
+***************************************************************/
+/* Get Person data */
+router.get('/bpdata', function(req, res) {
+	utility.getPersonData(req,res).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.doc)
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][bpdata] - " + data.error);
+		}			
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][bpdata] - " + err.error);
+	})
+});
+/* Get People data */
+router.get('/bplist', function(req, res) {
+	utility.getPeopleData(req,res).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.doc)
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][bpdata] - " + data.error);
+		}			
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][bpdata] - " + err.error);
+	})
+});
+router.get('/bluepages', function(req, res) {
+	res.render('bluepages');
 });
 
 module.exports = router;
