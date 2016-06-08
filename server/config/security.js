@@ -28,7 +28,7 @@ security.get('/login', isAuthenticated, function(req, res) {
 /* Post Login function to validate user access and store in a session */
 security.post('/login',middleware.urlEncodedParser,middleware.passport.authenticate('ldapauth' , { failureRedirect: '/login',failureFlash: true}),function (req,res){
 	if(req.user.hasAccess) {
-		console.log("[BG NAME]: " + bluegroup.bgname);
+		console.log("[BG NAME]: " + req.user.groupName);
 		req.session.user = req.user;
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
