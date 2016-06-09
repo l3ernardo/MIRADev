@@ -63,7 +63,7 @@ var Bluegroups = function() {
       //read db to get the BG names.
       db.view('bluegroups', 'view-bluegroups', {include_docs: true}).then(function(data){
           var len = data.body.rows[0].doc.bg.length;
-		  var count = 0;
+
           //for each bluegroup name in DB, create an URL and pass it to
           //requestBlueGroups funtion to be checked the group name
 
@@ -74,18 +74,16 @@ var Bluegroups = function() {
           //checks the BG name and if user is member of the BG.
             requestBlueGroups(urlBG).then(function(data) {
 
-			if(data[0].msg == 'Success'){
-				count++;
-				bluegroups.push(data);
-					if(count==len-1) {
-						deferred.resolve(bluegroups);	
-					}
-				}
+               if(data[0].msg == 'Success'){
+                bluegroups.push(data);
+
+                deferred.resolve(bluegroups);
+              }
+
             });
-			
+
           } //end FOR
 
-		
         }).catch(function(error){
               res.json(error);
             }); //end db.view
