@@ -12,8 +12,8 @@ var util = {
 	/* Get person data from faces */
 	getPersonData: function(req, res) {
 		var deferred = q.defer();
-		//url = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(cn="+req.query.search+"*).search/byjson"
-		url = varConf.bpURL.replace('%t',req.query.search);
+		//url = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(mail="+req.query.search+").search/byjson"
+		url = varConf.bpURLmail.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
 			deferred.resolve({"status": 200, "doc": body});
 		})
@@ -23,7 +23,7 @@ var util = {
 		var deferred = q.defer();
 		var member = [];
 		//url = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(cn="+req.query.search+"*).search/byjson"
-		url = varConf.bpURL.replace('%t',req.query.search);
+		url = varConf.bpURLcn.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
 			if (err) {
 				deferred.resolve({"status": 500, "error": err});
