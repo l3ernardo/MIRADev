@@ -7,6 +7,7 @@ $(document).ready(function() {
 		window.location.href='/logout';
 	});
 });
+
 function hide_divs(){
 	$('div#ibm-leadspace-head').hide();
 	$('div#ibm-navigation').hide();
