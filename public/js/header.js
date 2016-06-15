@@ -25,6 +25,7 @@ $(document).ready(function(){
 		}
 	});
 });
+
 /* Update user name with login data*/
 function updateUserName(name) {
 	if(name != ''){
@@ -39,6 +40,7 @@ function updateUserName(name) {
 	
 	$('strong#username').text(name);
 };
+
 /* Update site name and version*/
 function updateHeader(title, version) {
 	$('p#ibm-site-title').html('<em>' + title + " " + version + '</em>');
