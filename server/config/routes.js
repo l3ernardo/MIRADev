@@ -151,4 +151,19 @@ router.get('/bluepages', function(req, res) {
 	res.render('bluepages');
 });
 
+
+/**************************************************************
+***************************************************************/
+router.get('/testsectionv1', isAuthenticated, function(req, res) {
+	if (req.session.BG != undefined)
+		res.render('testsectionv1', {
+		bg: req.session.BG	
+	});
+	else
+		res.render('testsectionv1', {
+		bg: ''		
+	});
+});
+
+
 module.exports = router;
