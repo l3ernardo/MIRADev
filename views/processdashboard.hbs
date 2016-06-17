@@ -1,0 +1,36 @@
+<div class="ibm-container-body" style="width: 80%;">
+	<div class="ibm-columns">
+		<div class="ibm-col-6-4">
+
+			<!-- DOCUMENT HEADER -->
+			<h2>Process Dashboard</h2>
+			<br/>
+
+			<table class="ibm-data-table">
+				<tr>
+					<th>Type</th>
+					<th>Prior Q</th>
+					<th>Curr Q</th>
+					<th>Next Qtr</th>
+					<th>Target to Sat</th>
+					<th>MIRA</th>
+					<th>WWBCIT</th>
+					<th>Assessable Unit</th>
+				</tr>
+				{{#each doc}}
+				<tr>
+					<td>{{DocSubType}}</td>
+					<td>{{PeriodRatingPrev}}</td>
+					<td>{{PeriodRating}}</td>
+					<td>{{AUNextQtrRating}}</td>
+					<td>{{Target2Sat}}</td>
+					<td>{{MIRAAssessmentStatus}}</td>
+					<td>{{WWBCITAssessmentStatus}}</td>
+					<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
+				</tr>
+				{{/each}}
+			</table>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,226 @@
+<script src="/public/js/assessableunit.js" type="text/javascript"></script>
+
+<div class="ibm-container-body" style="width: 70%;">
+	<div class="ibm-body">
+		<div class="ibm-main">
+
+			<!-- DOCUMENT HEADER -->
+			<div class="ibm-title ibm-subtitle">
+				<h2>
+					{{DocType}} ({{DocSubType}})
+					<br/>
+					<font color="#FF421E">{{Name}}</font>
+				</h2>
+			</div>
+
+			<br />
+
+			<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebuau">
+				<input type="hidden" name="docid" value="{{_id}}">
+
+				<!-- BASICS SECTION -->
+				<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<caption class="mira-caption"><em>Basics</em></caption>
+					<tr>
+						<td width="25%">Status:</td><td>{{Status}}</td>
+					</tr>
+					<tr>
+						<td>Business Unit:</td><td>{{BusinessUnit}}</td>
+					</tr>
+					<tr>
+						<td>Current reporting period:</td><td>{{CurrentPeriod}}</td>
+					</tr>
+				</table>
+
+				<!-- ADMIN TABLE -->
+				<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+					<tr>
+						<td width="25%"><label for="RGRollup">Reporting group rollup included in this assessment:</label></td>
+						<td>
+							<span><input type="text" name="RGRollup" value="{{RGRollup}}" size="60" maxlength="300"></span>
+	          </td>
+					</tr>
+				</table>
+
+				<!-- ACCESS SECTION -->
+				<table id="access_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<caption class="mira-caption"><em>Contact/Access</em></caption>
+					<tr>
+						<td width="25%">Owner:</td><td>{{Owner}}</td>
+					</tr>
+					<tr>
+						<td>Focals:</td><td>{{Focals}}</td>
+					</tr>
+					<tr>
+						<td>Coordinators:</td><td>{{Coordinators}}</td>
+					</tr>
+					<tr>
+						<td>Readers:</td><td>{{Readers}}</td>
+					</tr>
+					<tr>
+						<td>Additional editors:</td><td>{{AdditionalEditors}}</td>
+					</tr>
+					<tr>
+						<td>Additional readers:</td><td>{{AdditionalReaders}}</td>
+					</tr>
+				</table>
+
+				<!-- ASSESSMENT SECTION -->
+				<table id="assessment_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<caption class="mira-caption"><em>Holistic Assessment</em></caption>
+					<tr>
+						<td width="25%"><font color="#FF421E">{{CurrentPeriod}}</font> Rating justification:</td><td>{{Owner}}</td>
+					</tr>
+				</table>
+				<!-- assessment view -->
+				<div class="ibm-columns ibm-graphic-tabs">
+					<table id="assessmentview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+						<thead class="mira-basic">
+							<th scope="col">Period</th>
+							<th scope="col">Rating</th>
+							<th scope="col">Assessed by</th>
+							<th scope="col">Target to Sat</th>
+						</thead>
+						{{#each AssessmentData}}
+						<tr>
+							{{#each col}}<td>{{this}}</td>{{/each}}
+						</tr>
+						{{/each}}
+					</table>
+				</div>
+
+				<!-- CONSTITUENT SECTION -->
+				<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
+				</table>
+				<div class="ibm-columns ibm-graphic-tabs">
+					<ul class="ibm-tabs">
+						<li id="GlobalProcess-li" class="mira-highlight-tab"><span><a href="#constituents" class="mira-assessment-tab">Global Process&nbsp;&nbsp;</a></span></li>
+						<li id="BUIOTs-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">BU IOTs&nbsp;&nbsp;</a></span></li>
+						<li id="BUReportingGroups-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">BU Reporting Groups&nbsp;&nbsp;</a></span></li>
+						<li id="ControllableUnits-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">Controllable Units&nbsp;&nbsp;</a></span></li>
+					</ul>
+					<div id="GlobalProcess" class="ibm-tabs-content">
+						<table id="globalprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="mira-basic">
+								<th scope="col">Name</th>
+								<th scope="col">Status</th>
+								<th scope="col">Prior Qtr</th>
+								<th scope="col">Current Qtr</th>
+								<th scope="col">Outlook</th>
+								<th scope="col">Target to Sat</th>
+							</thead>
+							{{#each GPData}}
+							<tr>
+								{{#each col}}
+									{{#if @first}}
+										<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+									{{else}}
+										<td>{{this}}</td>
+									{{/if}}
+								{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+					<div id="BUIOTs" class="ibm-tabs-content" style='display : none'>
+						<table id="iots_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="bu-iot">
+								<th scope="col">Name</th>
+								<th scope="col">Status</th>
+								<th scope="col">Prior Qtr</th>
+								<th scope="col">Current Qtr</th>
+								<th scope="col">Outlook</th>
+								<th scope="col">Target to Sat</th>
+							</thead>
+							{{#each BUIOTData}}
+							<tr>
+								{{#each col}}
+									{{#if @first}}
+										<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+									{{else}}
+										<td>{{this}}</td>
+									{{/if}}
+								{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+					<div id="BUReportingGroups" class="ibm-tabs-content" style='display : none'>
+						<table id="reportinggroups_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="reporting-group">
+								<th scope="col">Type</th>
+								<th scope="col">Name</th>
+								<th scope="col">Status</th>
+								<th scope="col">Prior Qtr</th>
+								<th scope="col">Current Qtr</th>
+								<th scope="col">Outlook</th>
+								<th scope="col">Target to Sat</th>
+							</thead>
+							{{#each RGData}}
+							<tr>
+								{{#each col}}
+									{{#if @first}}
+										<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+									{{else}}
+										<td>{{this}}</td>
+									{{/if}}
+								{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+					<div id="ControllableUnits" class="ibm-tabs-content" style='display : none'>
+						<table id="controallableunits_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="controllable-unit">
+								<th scope="col">Name</th>
+								<th scope="col">Status</th>
+								<th scope="col">Prior Qtr</th>
+								<th scope="col">Current Qtr</th>
+								<th scope="col">Outlook</th>
+								<th scope="col">Target to Sat</th>
+							</thead>
+							{{#each CUData}}
+							<tr>
+								{{#each col}}
+									{{#if @first}}
+										<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+									{{else}}
+										<td>{{this}}</td>
+									{{/if}}
+								{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+	      <script src="/public/js/show_hide.js" type="text/javascript"></script>
+	      <link href="/public/css/mirastyle.css" rel="stylesheet" type="text/css" />
+	      </div>
+
+				<!-- NOTES & LINKS SECTION -->
+				<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<tr>
+						<td width="20%"><label for="Notes">Notes:</label></td>
+						<td>
+							<span><textarea id="Notes" type="text" name="Notes" cols="125" rows="8">{{Notes}}</textarea></span>
+	          </td>
+					</tr>
+					<tr>
+						<td width="20%">Links:</td><td>{{Links}}</td>
+					</tr>
+				</table>
+				<br />
+
+				<div class="ibm-buttons-row">
+					<p>
+					<input class="ibm-btn-arrow-pri" id="bsave" type="submit" value="Save" style="width: 60px;">
+					</p>
+				</div>
+				<br />
+
+			</form>
+
+		</div>
+	</div>
+</div>
