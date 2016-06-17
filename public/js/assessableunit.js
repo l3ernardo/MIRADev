@@ -1,8 +1,10 @@
 $(document).ready(function(){
 	hide_divs();
+	$('#btn_cancel').click(function() {
+		window.location.href = "/processdashboard";
+	});
 });
 
 function hide_divs(){
-	$('div#ibm-leadspace-head').hide();
 	$('div#ibm-navigation').hide();
 };
