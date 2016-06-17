@@ -10,6 +10,7 @@ var dialog = require('./js/dialog.js');
 var businessunit = require('./js/businessunit.js');
 var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
+var assessableunit = require('./js/assessableunit.js');
 
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
@@ -72,7 +73,7 @@ router.get('/disclosure', function(req, res) {
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][disclosure] - " + err.error);
-	})	
+	})
 });
 /**************************************************************
 BUSINESS UNIT FUNCTIONALITY
@@ -99,7 +100,7 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 					}
 				}).catch(function(err) {
 					res.render('index');
-				})				
+				})
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][businessunit] - " + data.error);
@@ -127,7 +128,7 @@ router.get('/bpdata', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bpdata] - " + data.error);
-		}			
+		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bpdata] - " + err.error);
@@ -141,7 +142,7 @@ router.get('/bplist', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bpdata] - " + data.error);
-		}			
+		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bpdata] - " + err.error);
@@ -157,13 +158,89 @@ router.get('/bluepages', function(req, res) {
 router.get('/testsectionv1', isAuthenticated, function(req, res) {
 	if (req.session.BG != undefined)
 		res.render('testsectionv1', {
-		bg: req.session.BG	
+		bg: req.session.BG
 	});
 	else
 		res.render('testsectionv1', {
-		bg: ''		
+		bg: ''
 	});
 });
 
+/**************************************************************
+ASSESSABLE UNITS - Business Unit type
+***************************************************************/
+
+/* View assessable unit documents */
+router.get('/processdashboard', function(req, res) {
+	assessableunit.listAU(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('processdashboard', data );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][processdashboard] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][processdashboard] - " + err.error);
+	})
+});
+
+
+/* Display BU assessable unit document */
+router.get('/assessableunit', function(req, res) {
+	assessableunit.getAUbyID(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('aubusinessunit', data.doc[0] );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][assessableunit] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][assessableunit] - " + err.error);
+	})
+});
+
+/* Save BU assessable unit document */
+router.post('/savebuau', isAuthenticated, function(req, res){
+	assessableunit.saveAUBU(req, res, db).then(function(data) {
+		req.query.id = req.body.docid;
+		if(data.status==200 & !data.error) {
+			if(data.body) {
+				assessableunit.getAUbyID(req, res, db).then(function(data) {
+					if(data.status==200 & !data.error) {
+						if(data.doc) {
+							res.render('aubusinessunit', data.doc[0] );
+						} else {
+							res.render('error',{errorDescription: data.error});
+						}
+					} else {
+						res.render('error',{errorDescription: data.error});
+						console.log("[routes][getassessableunitbyID] - " + data.error);
+					}
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][getassessableunitbyID] - " + err.error);
+				})
+				// res.render('aubusinessunit', data.body );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+	})
+
+});
 
 module.exports = router;
