@@ -10,6 +10,7 @@ var dialog = require('./js/dialog.js');
 var businessunit = require('./js/businessunit.js');
 var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
+var assessableunit = require('./js/assessableunit.js');
 
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
@@ -153,17 +154,151 @@ router.get('/bluepages', function(req, res) {
 
 
 /**************************************************************
+DYNAMIC SECTIONS FUNCTIONALITY
 ***************************************************************/
 router.get('/testsectionv1', isAuthenticated, function(req, res) {
 	if (req.session.BG != undefined)
-		res.render('testsectionv1', {
-		bg: req.session.BG	
-	});
+		res.render('testsectionv1', {bg: req.session.BG});
 	else
-		res.render('testsectionv1', {
-		bg: ''		
+		res.render('testsectionv1', {bg: ''});
+});
+
+router.get('/sectionwidget', isAuthenticated, function(req, res) {
+	if (req.session.BG != undefined)
+		res.render('sectionwidget', {bg: req.session.BG});
+	else
+		res.render('sectionwidget', {bg: ''});
+});
+/**************************************************************
+ASSESSABLE UNITS - Business Unit type
+***************************************************************/
+
+/* View assessable unit documents */
+router.get('/processdashboard', function(req, res) {
+	assessableunit.listAU(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('processdashboard', data );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][processdashboard] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][processdashboard] - " + err.error);
+	})
+});
+
+
+/* Display BU assessable unit document */
+router.get('/assessableunit', function(req, res) {
+	assessableunit.getAUbyID(req, res, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('aubusinessunit', data.doc[0] );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][assessableunit] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][assessableunit] - " + err.error);
+	})
+});
+
+/* Save BU assessable unit document */
+router.post('/savebuau', isAuthenticated, function(req, res){
+	assessableunit.saveAUBU(req, res, db).then(function(data) {
+		req.query.id = req.body.docid;
+		if(data.status==200 & !data.error) {
+			if(data.body) {
+				assessableunit.getAUbyID(req, res, db).then(function(data) {
+					if(data.status==200 & !data.error) {
+						if(data.doc) {
+							res.render('aubusinessunit', data.doc[0] );
+						} else {
+							res.render('error',{errorDescription: data.error});
+						}
+					} else {
+						res.render('error',{errorDescription: data.error});
+						console.log("[routes][getassessableunitbyID] - " + data.error);
+					}
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][getassessableunitbyID] - " + err.error);
+				})
+				// res.render('aubusinessunit', data.body );
+			} else {
+				res.render('error',{errorDescription: data.error});
+				console.log("[routes][savebuau] - " + data.error);
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][savebuau] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][savebuau] - " + err.error);
+	})
+
+});
+
+/**************************************************************
+FILE UPLOAD FUNCTIONALITY
+***************************************************************/
+/* Save attachement */
+router.post('/saveAttachment', multipartMiddleware, function(req, res) {
+	var parentIdValueField = req.body.parentIdHidden;
+	utility.uploadFile(parentIdValueField, req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.json({attachId:data.doc.id, attachName:data.doc.name});
+		} else {
+			console.log("[routes][saveAttachment] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][saveAttachment] - " + err.error);
+	})
+
+});
+/* Load example attachment page*/
+router.get('/attachment', function(req, res) {
+	res.render('attachment');
+});
+
+/* Download attachment */
+router.get('/download', function(req, res){
+	var id = req.query.id;
+	var filename = req.query.filename; console.log('dowload  id:'+id+' download file:'+filename);
+	db.getattachment(id, filename, {}).then(function(resp){
+		res.download(resp.body);
+	}).catch(function(err) {
+		console.log(err);
 	});
 });
 
+/* Delete attachment */
+router.get('/deleteAttachment', function(req, res){
+	var names=req.query.filename
+	var id = req.query.id; console.log('this is id:'+id+'this is file:'+names);
+    db.get(id, {attachments: true}).then(function(existingdoc) {
+		var rev = existingdoc.body._rev;
+			db.del(id, rev).then(function(resp) {console.log('1');
+			   console.log("Document deleted successfully");
+				res.end();
+			}).catch(function(err) {
+				console.log(err);
+			});
+	}).catch(function(err) {
+		console.log(err);
+	});	
+	
+});
 
 module.exports = router;

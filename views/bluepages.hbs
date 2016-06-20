@@ -9,12 +9,11 @@
 	</style>
 <h2>Bluepages lookup</h2>
 <div class="ibm-container"  style="width:100%">
-<iframe id="txtArea1" style="display:none"></iframe>
 	<h2> JQuery UI </h2>
 	<div class="ui-widget">
 		<label for="bpname">Type the name: </label>
 		<input id="bpname" class="ui-autocomplete-input" autocomplete="off" >
-		<a class="ibm-delete-link" href="javascript:removeItem($('#bpname'),$('#bplist'))">DELETE</a>
+		<a class="ibm-delete-link" href="#" onclick="removeItem($('#bpname'),$('#bplist'))">DELETE</a>
 		<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>		
 	</div>
 	<div>
@@ -24,7 +23,7 @@
 	<div class="ui-widget">
 		<label for="namelookup">Perform search: </label>
 		<input id="namelookup" class="ui-autocomplete-input" autocomplete="off" >
-		<a class="ibm-delete-link" href="javascript:removeItem($('#namelookup'),$('#namelist'))">DELETE</a>
+		<a class="ibm-delete-link" href="#" onclick="removeItem($('#namelookup'),$('#namelist'))">DELETE</a>
 		<script>$(document).ready(function() {bpLookup('#namelookup','#namelist');});</script>		
 	</div>
 	<div>
