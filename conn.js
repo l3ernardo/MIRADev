@@ -165,7 +165,59 @@ var DB = {
 	      this.db = cloudant.use(database);
 	      status = "connected";
 	    }
-	}
+	},
+//ATTACH
+  attach: function(id, filename, data, filetype, params) {
+    console.log("[db] attach");
+    var deferred = q.defer();
+    this.db.attachment.insert(id, filename, data, filetype, params, function(err, doc) {
+      if(err) {
+        deferred.reject({"status": 500, "body": {}, "error": err});
+      } else{
+        deferred.resolve({"status": 200, "body": doc});
+      }
+    });
+    return deferred.promise;
+  },
+
+  //GET ATTACHMENT
+  getattachment: function(id, filename, params) {
+	var newPath = "/public" + filename.toString();
+//	var newPath = __dirname + "/public/public/uploads/" + filename.toString();
+    var deferred = q.defer();
+
+    this.db.attachment.get(id, filename, params, function(err, file) { 
+      if(err) { 
+        deferred.reject({"status": 500, "body": {}, "error": err});
+      } else { 
+        fs.writeFile(newPath, file, function(error) { console.log("[db] fs.write..."+newPath);
+			if (error) {
+				deferred.reject({"status": 500, "body": {}, "error": err});
+			}
+			else {
+				deferred.resolve({"status": 200, "body": newPath});
+			}
+		});
+      }
+    });
+    return deferred.promise;
+  },
+
+  //DELETE ATTACHMENT
+  delattachment: function(id, filename, params) {
+    console.log("[db] delete attachment");
+    var deferred = q.defer();
+
+    this.db.attachment.destroy(id, filename, params, function(err, body) {
+      if(err) {
+        deferred.reject({"status": 500, "body": {}, "error": err});
+      } else {
+        deferred.resolve({"status": 200, "body": body});
+      }
+    });
+    return deferred.promise;
+  }
+	
 
 };
 
