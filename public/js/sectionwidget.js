@@ -1,8 +1,8 @@
 /**************************************************************************************************
  * 
  * Section widget for MIRA Web
- * Developed by :                                                
- * Date:20 June 2016
+ * Developed by: Valdenir Silva                                                
+ * Date: 20 June 2016
  * 
  */
  
