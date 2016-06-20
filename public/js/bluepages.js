@@ -37,7 +37,8 @@ function bpLookup(fldInput,fldOutput) {
 			event.preventDefault();
 			// populate the field
 			this.value = '';
-			fldOutput.val( fldOutput.val()?( ( fldOutput.val()+","+ ui.item.label).split(",")) : ui.item.label );
+			var rtn = ui.item.name + " (" + ui.item.email + ")";
+			fldOutput.val( fldOutput.val()?( ( fldOutput.val()+","+ rtn).split(",")) : rtn );
 			fldOutput.val( $.unique((fldOutput.val().split(',')).sort()) );
 		},
 		open: function() {
@@ -46,7 +47,12 @@ function bpLookup(fldInput,fldOutput) {
 		close: function() {
 			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		}
-	});
+	}).data("ui-autocomplete")._renderItem = function(ul, item) {
+		var $a = $("<a></a>");
+		$("<img src='https://images.tap.ibm.com:20002/image/"+(item.email)+"' style='width:32px; height:32px'></img>").addClass("img").appendTo($a);
+		$("<span class='ibm-bullet-list' style='font-size:75%'></span>").text(item.name + " ("+item.email+")").appendTo($a);
+		return $("<li></li>").append($a).appendTo(ul);		
+	};
 //});
 }
 function showSelectedValues(fldOutput) {
