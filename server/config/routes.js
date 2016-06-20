@@ -236,14 +236,69 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				// res.render('aubusinessunit', data.body );
 			} else {
 				res.render('error',{errorDescription: data.error});
+				console.log("[routes][savebuau] - " + data.error);
 			}
 		} else {
 			res.render('error',{errorDescription: data.error});
+			console.log("[routes][savebuau] - " + data.error);
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
+		console.log("[routes][savebuau] - " + err.error);
 	})
 
+});
+
+/**************************************************************
+FILE UPLOAD FUNCTIONALITY
+***************************************************************/
+/* Save attachement */
+router.post('/saveAttachment', multipartMiddleware, function(req, res) {
+	var parentIdValueField = req.body.parentIdHidden;
+	utility.uploadFile(parentIdValueField, req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.json({attachId:data.doc.id, attachName:data.doc.name});
+		} else {
+			console.log("[routes][saveAttachment] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][saveAttachment] - " + err.error);
+	})
+
+});
+/* Load example attachment page*/
+router.get('/attachment', function(req, res) {
+	res.render('attachment');
+});
+
+/* Download attachment */
+router.get('/download', function(req, res){
+	var id = req.query.id;
+	var filename = req.query.filename; console.log('dowload  id:'+id+' download file:'+filename);
+	db.getattachment(id, filename, {}).then(function(resp){
+		res.download(resp.body);
+	}).catch(function(err) {
+		console.log(err);
+	});
+});
+
+/* Delete attachment */
+router.get('/deleteAttachment', function(req, res){
+	var names=req.query.filename
+	var id = req.query.id; console.log('this is id:'+id+'this is file:'+names);
+    db.get(id, {attachments: true}).then(function(existingdoc) {
+		var rev = existingdoc.body._rev;
+			db.del(id, rev).then(function(resp) {console.log('1');
+			   console.log("Document deleted successfully");
+				res.end();
+			}).catch(function(err) {
+				console.log(err);
+			});
+	}).catch(function(err) {
+		console.log(err);
+	});	
+	
 });
 
 module.exports = router;

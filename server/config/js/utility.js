@@ -38,6 +38,45 @@ var util = {
 			
 		})
 	return deferred.promise;		
+	},
+	/* Upload a file*/
+	uploadFile: function (parentid, req, db){
+		var deferred = q.defer();
+		var object;
+		var date = new Date();
+		var filenames = req.files.upload;	
+
+		object = {
+			"parentid": parentid,
+			"type": "Attachments",
+			"creation_date": moment(date).format("DD-MM-YYYY HH:mm")
+		};
+
+		db.save(object).then(function(doc) {
+			if (filenames) {
+				var file = filenames;
+				fs.readFile(file.path, function(err, data) {
+					if (!err) { 
+						if (file) {
+							db.attach(doc.body.id, file.name, data, file.type, {rev: doc.body.rev}).then(function(obj) {
+								doc.body.name= file.name;
+								deferred.resolve({"status": 200, "doc": doc.body})
+							}).catch(function(error){
+								deferred.reject({"status": 500, "error": err});
+							});
+						}
+					}
+					else { 
+						deferred.reject({"status": 500, "error": err});
+					}
+				});
+			}else {
+				deferred.resolve({"status": 200, "doc":doc.body});
+			}				
+		}).catch(function(error) {
+			deferred.reject({"status": 500, "error": err});
+		})
+		return deferred.promise;
 	}
 }
 module.exports = util;
