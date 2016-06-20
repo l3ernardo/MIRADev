@@ -10,6 +10,7 @@ var dialog = require('./js/dialog.js');
 var businessunit = require('./js/businessunit.js');
 var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
+var assessableunit = require('./js/assessableunit.js');
 
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
