@@ -6,6 +6,6 @@ module.exports = {
 	keyNameBU: 'BusinessUnit',
 	msgIdPassR: 'IBM Intranet ID and/or password is required',
 	msgIdPassW: 'Wrong IBM Intranet ID and/or password.',
-	bpURLcn: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(cn=%t*).search/byjson',
-	bpURLmail: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(mail=%t).search/byjson'
+	bpURLcn: 'http://faces.tap.ibm.com/api/find/?q=%t',
+	bpURLmail: 'http://faces.tap.ibm.com/api/find/?q=%t'
 }
