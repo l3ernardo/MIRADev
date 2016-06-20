@@ -16,8 +16,8 @@ app.use(passport.session());
 app.use(sessions({
 	cookieName: 'session',
 	secret: 'asdfgmirahjklmiraxpto',
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000
+	duration: 1 * 60 * 60 * 1000,
+	activeDuration: 1000 * 60 * 5
 }));
 app.use(flash());
 
