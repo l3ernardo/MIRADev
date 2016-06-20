@@ -1,0 +1,30 @@
+<script src="./js/attachments.js"/></script>
+<div id="Overlay_attachment">
+    <div class="ibm-body"> 
+		<div class="ibm-main"> 
+			<div class="ibm-title"> 
+				<h2>Attachment section</h2> 
+			</div> 
+			<div class="ibm-container ibm-alternate ibm-buttons-last"> 
+				<div class="ibm-container-body"> 
+					<div class="ibm-buttons-row"> 
+					</div>
+						<p style="text-align:left">
+							<label for="title">Parent ID:<span class="ibm-required">*</span></label>
+							<span><input type="text" id="parentid" name="parentid" size="30"></span>
+						</p>
+						<p style="text-align:left">
+							This field will be hidden.<br>
+							<textarea id='attachIDs' cols='80'></textarea>
+						</p>
+						<div class="ibm-buttons-row">
+							<a id="link_attachments" class="ibm-add1-link" href="#" onclick="addAttachments($('#parentid').val(), this.id);">Add Attachments</a>
+						</div>
+						<div class="ibm-rule"><hr/></div>
+						<div id="divDownload"></div>
+				</div> 
+			</div> 
+		</div> 
+     </div>
+</div> 
+
