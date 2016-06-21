@@ -39,6 +39,13 @@
 			{{/each }}
 			</ul>
 		</li>
+		<li id="administration"><a  href="./administration">Administration</a>
+			<ul id="administration-options" style='display : none' >
+			{{#each dataAdministration}}
+				<li><a href='{{link}}'>{{name}}</a></li>
+			{{/each }}
+			</ul>
+		</li>
 	</ul>
 	<!-- SECONDARY NAVIGATION SECTION -->
 	<div id="ibm-secondary-navigation">
