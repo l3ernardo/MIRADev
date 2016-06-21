@@ -1,9 +1,17 @@
-//***************
+/**************************************************************************************************
+ * 
+ * Attachment widget for MIRA Web
+ * Developed by: Wendy Villa - Valdenir Silva - Carlos Kenji Takata - Gabriela S. Pailiacho G.
+ * Date: 20 June 2016
+ * 
+ */
+ 
 var s=0;
 var docs_id=[];
 var names=[];
+var result=[];
 
-
+/* Save the attachment to cloudant */
 function saveAttach(){
 	$('#formAttachment').submit(function(e) {
 		e.preventDefault();
@@ -11,7 +19,7 @@ function saveAttach(){
 		var form = $('#formAttachment')[0];
 		var formData = new FormData(form);
 
-		$.ajax({			
+		$.ajax({
 			url: e.currentTarget.action,
 			type: "POST",
 			data: formData,
@@ -19,21 +27,22 @@ function saveAttach(){
 			processData: false,			
 			success: function (data) {
 				s=0;
-				$("#divUpload").empty();
+				$("#divUpload").val('');
 				docs_id.push(data.attachId);
 				names.push(data.attachName);
-				populateDownload(docs_id, names);
-				$("#attachIDs").val(JSON.stringify(data));
+				result.push(data);
+				$("#attachIDs").val(JSON.stringify(result));
 				$('#upload').val('').clone(true);
 				ibmweb.overlay.hide("Overlay_Attachments");
+				populateDownload(docs_id, names);
 			},
 			error: function() {
-				alert("There was an error when saving the File");
+				alert("There was an error when saving the Attachment");
 			}
 		});	
 	});
 };
-
+/* Load the Attachments overlay after an idElement*/
 function addAttachments(parentIdValue, idElement){
 
 	var divOverlay = document.getElementById('Overlay_Attachments');
@@ -90,7 +99,7 @@ function addAttachments(parentIdValue, idElement){
 
 	ibmweb.overlay.show('Overlay_Attachments');
 };
-
+/* Fill in the main document the list of attached documents */
 function populateDownload(id, array) {
 
 	var container = document.getElementById('divDownload');
@@ -118,7 +127,7 @@ function populateDownload(id, array) {
 	tbody += '<div class="ibm-rule"><hr/></div>';
 	container.innerHTML = tbody;
 };
-
+/* Delete the selected attachment */
 function deleteAttachment(index, id, filename) {
 	var r = confirm("Are you sure you want to delete the attachment?");
 	if (r == true) {

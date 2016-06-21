@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * 
  * Parameters code for MIRA Web
- * Developed by :                                                
+ * Developed by :   Gabriela S. Pailiacho G.
  * Date:25 May 2016
  * 
  */
