@@ -1,6 +1,8 @@
 var express = require("express");
 var passport = require('passport');
 var router = express.Router();
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 var app = express();
 var db = require('../../conn.js');
 var varConf = require('../../configuration');
@@ -274,30 +276,31 @@ router.get('/attachment', function(req, res) {
 
 /* Download attachment */
 router.get('/download', function(req, res){
-	var id = req.query.id;
-	var filename = req.query.filename; console.log('dowload  id:'+id+' download file:'+filename);
-	db.getattachment(id, filename, {}).then(function(resp){
-		res.download(resp.body);
+	utility.downloadFile(req,res,db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.download(res.body); 
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[error - download file]" + data.error);
+		}
 	}).catch(function(err) {
-		console.log(err);
-	});
+		console.log("[routes 2] - " + err.error);
+	})
 });
 
-/* Delete attachment */
+
+//delete attachment
 router.get('/deleteAttachment', function(req, res){
-	var names=req.query.filename
-	var id = req.query.id; console.log('this is id:'+id+'this is file:'+names);
-    db.get(id, {attachments: true}).then(function(existingdoc) {
-		var rev = existingdoc.body._rev;
-			db.del(id, rev).then(function(resp) {console.log('1');
-			   console.log("Document deleted successfully");
-				res.end();
-			}).catch(function(err) {
-				console.log(err);
-			});
+	utility.downloadFile(req,res,db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.end();
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[error - delete attachment]" + data.error);
+		}
 	}).catch(function(err) {
-		console.log(err);
-	});	
+		console.log("[routes 2] - " + err.error);
+	})
 	
 });
 
