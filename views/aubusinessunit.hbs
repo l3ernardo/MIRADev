@@ -10,7 +10,7 @@
 </script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
-		<span style="color: #5C87C4">Created by</span> {{XXXX}} <span style="color: #5C87C4">on</span> {{XXXX}} <span style="color: #5C87C4">at</span> {{XXXX}}
+		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
 	<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" value="{{_id}}">
@@ -69,7 +69,7 @@
 		<!-- assessment view -->
 		<div class="ibm-columns ibm-graphic-tabs">
 			<table id="assessmentview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="mira-basic">
+				<thead class="mira-subtable">
 					<th scope="col">Period</th>
 					<th scope="col">Rating</th>
 					<th scope="col">Assessed by</th>

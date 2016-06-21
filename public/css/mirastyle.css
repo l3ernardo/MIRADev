@@ -43,6 +43,11 @@
   text-align: left;
   color: white;
 }
+.ibm-data-table .mira-subtable {
+  background-color: gray;
+  text-align: left;
+  color: white;
+}
 .ibm-data-table .bu-iot {
   background-color: #71b2cf;
   text-align: left;

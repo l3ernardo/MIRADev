@@ -6,7 +6,27 @@
  *
  */
 
- var q  = require("q");
+ function formatAMPM(dt) {
+   var hours = dt.getHours();
+   var minutes = dt.getMinutes();
+   var ampm = hours >= 12 ? 'PM' : 'AM';
+   hours = hours % 12;
+   hours = hours ? hours : 12;
+   minutes = minutes < 10 ? '0'+minutes : minutes;
+   return hours + ':' + minutes + ampm;
+ };
+
+ function pad(n) {return n < 10 ? "0"+n : n;};
+
+ function getTZ(now) {
+   var TZ = now.indexOf('(') > -1 ?
+   now.match(/\([^\)]+\)/)[0].match(/[A-Z]/g).join('') :
+   now.match(/[A-Z]{3,4}/)[0];
+   if (TZ == "GMT" && /(GMT\W*\d{4})/.test(now)) TZ = RegExp.$1;
+   return TZ;
+ }
+
+var q  = require("q");
 
 var assessableunit = {
 
@@ -132,8 +152,13 @@ var assessableunit = {
 
 	/* Update assessable unit */
 	saveAUBU: function(req, res, db) {
-
 		var deferred = q.defer();
+    var dt = new Date();
+    var addlog = {
+      "name": req.session.user.cn[0],
+      "date": pad((dt.getMonth() + 1)) + "/" + pad(dt.getDate()) + "/" + pad(dt.getFullYear()),
+      "time": formatAMPM(dt) + ' ' + getTZ(dt.toString())
+    };
 		var docid = req.body.docid;
 		var obj = {
 			selector:{
@@ -146,9 +171,10 @@ var assessableunit = {
 
 			// Update Admin Section
 			doc[0].RGRollup = req.body.RGRollup;
-
 			// Update notes
 			doc[0].Notes = req.body.Notes;
+      // Update logs
+      doc[0].Log.push(addlog);
 
 			db.save(doc[0]).then(function(data){
 				deferred.resolve(data);
