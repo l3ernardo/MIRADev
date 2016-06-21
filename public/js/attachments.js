@@ -19,25 +19,33 @@ function saveAttach(){
 		var form = $('#formAttachment')[0];
 		var formData = new FormData(form);
 
+		$('input#upload').attr('disabled','disabled');
+		$('input#btn_saveAttachment').attr('disabled','disabled');
+		$('input#btn_cancelOverlay').attr('disabled','disabled');
+		$('div#loadingImage').show();
+
 		$.ajax({
 			url: e.currentTarget.action,
 			type: "POST",
 			data: formData,
 			contentType: false,
-			processData: false,			
+			processData: false,
 			success: function (data) {
-				s=0;
 				$("#divUpload").val('');
 				docs_id.push(data.attachId);
 				names.push(data.attachName);
-				result.push(data);
+				result.push(data);				
 				$("#attachIDs").val(JSON.stringify(result));
 				$('#upload').val('').clone(true);
 				ibmweb.overlay.hide("Overlay_Attachments");
+				$('input#upload').removeAttr("disabled");
+				$('input#btn_saveAttachment').removeAttr("disabled");
+				$('input#btn_cancelOverlay').removeAttr("disabled");
+				$('div#loadingImage').hide();
 				populateDownload(docs_id, names);
 			},
 			error: function() {
-				alert("There was an error when saving the Attachment");
+				alert("There was an error when saving the File");
 			}
 		});	
 	});
@@ -58,8 +66,7 @@ function addAttachments(parentIdValue, idElement){
 			'class':'ibm-common-overlay ibm-overlay-alt'
 		});
 
-		$(formOverlay).attr({
-			
+		$(formOverlay).attr({			
 			'name': 'formAttachment',
 			'enctype':'multipart/form-data',
 			'method': 'POST',
@@ -75,7 +82,7 @@ function addAttachments(parentIdValue, idElement){
 			'value': parentIdValue
 		})
 
-		var templateString = '<div class="ibm-head"><p><a id="closeBtn" class="ibm-common-overlay-close" href="#close">Close [x]</a></p></div><div class="ibm-body"><div class="ibm-main"><div class="ibm-container ibm-alternate ibm-buttons-last"><div class="ibm-container-body">';
+		var templateString = '<div class="ibm-head"> <p><a id="closeBtn" class="ibm-common-overlay-close" href="#close">Close [x]</a></p></div><div class="ibm-body"><div class="ibm-main"><div class="ibm-container ibm-alternate ibm-buttons-last"><div class="ibm-container-body">';
 		var templateStringEnd = '<div class="ibm-rule"><hr/></div><span class="ibm-sep"> </span></p></div></div></div></div>';
 		var linkAdd = '<label for="btnAddFiles">Upload Files:</label><span> <br> <div id="divUpload"><input type="file" id="upload" name="upload" class="ibm-btn-small"></div></span>';
 		var divBtns = '<div class="ibm-buttons-row"><p><input id="btn_saveAttachment"/><span class="ibm-sep">&nbsp;</span><input id="btn_cancelOverlay"/><span class="ibm-sep">&nbsp;</span></p></div>';
@@ -95,6 +102,18 @@ function addAttachments(parentIdValue, idElement){
 			'value': 'CANCEL',
 			'onclick': 'ibmweb.overlay.hide(\'Overlay_Attachments\')'
 		});
+
+
+		//show loading image while saving...
+		var divLoading = document.createElement('div');
+		$(divLoading).attr({
+			'id':'loadingImage',
+			'style':'display:none'
+		})
+		var spinnerImage = '<p class="ibm-spinner-large" href="#"></p><br><center><strong>Uploading...</strong></center>';
+		$(divLoading).append(spinnerImage);
+		$('#divUpload').after(divLoading);
+
 	}
 
 	ibmweb.overlay.show('Overlay_Attachments');

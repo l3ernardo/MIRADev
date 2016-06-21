@@ -1,6 +1,8 @@
 $(document).ready(function() {
+	var editor;
 	$('h1#pageTitle').text("Parameter");
 	$('#btn_submit').click(function(evt) {
+		$('#fldvalue').val(JSON.stringify(editor.get(), null, 2));
 		if ($('#fldname').val() != '' && $('#fldvalue').val() != '' && $('#flddesc').val() != '') {
 			if (IsJsonString($('#fldvalue').val())) {
 				$('#form').submit();
@@ -34,6 +36,7 @@ function newParam() {
 	$('#fldtrue').val('');
 	$('#fldvalue').val('');
 	$('#flddesc').val('');
+	editor.set({});
 }
 function editParam(id) {
 	$.ajax({
@@ -48,6 +51,7 @@ function editParam(id) {
 				$('#fldtrue').val(resp.active);
 				$('#fldvalue').val(JSON.stringify(resp.value));
 				$('#flddesc').val(resp.description);
+				editor.set(resp.value);
 			}
 		},
 		error: function(e) {
@@ -55,6 +59,22 @@ function editParam(id) {
 			return false;
 		}  
 	}); 
+}
+
+function JSONEdit(fldname) {
+  var container = document.getElementById('jsoneditor');
+  var options = {
+    mode: 'text',
+    modes: ['code', 'text', 'view'], // allowed modes
+    onError: function (err) {
+      alert(err.toString());
+    },
+    onModeChange: function (newMode, oldMode) {
+      console.log('Mode switched from', oldMode, 'to', newMode);
+    }
+  };
+  var json = document.getElementById(fldname).innerHTML
+  editor = new JSONEditor(container, options, json);
 }
 
 function IsJsonString(str) {

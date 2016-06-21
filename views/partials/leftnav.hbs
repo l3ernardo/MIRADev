@@ -4,37 +4,44 @@
 		<li id='ibm-overview'>
 			<a id='ibm-overview-1' href="./index">{{menuTitle}}</a>
 		</li>
-		<li id="calendars" ><a  href="./calendars">Calendars</a>
+		<li id="calendars" ><a  href="./index">Calendars</a>
 			<ul id="calendar-options" style='display : none' >
 			{{#each dataCalendars}}
 				<li> <a href='{{link}}'>{{name}}</a></li>
 			{{/each }}
 			</ul>
 		</li>
-		<li id="dashboards"><a  href="./dashboards">Dashboards</a>
+		<li id="dashboards"><a  href="./index">Dashboards</a>
 			<ul id="dashboards-options" style='display : none' >
 			{{#each dataDashboards}}
 				<li> <a href='{{link}}'>{{name}}</a></li>
 			{{/each }}
 			</ul>
 		</li>
-		<li id="reports"><a  href="./reports">Reports</a>
+		<li id="reports"><a  href="./index">Reports</a>
 			<ul id="reports-options" style='display : none' >
 			{{#each dataReports}}
 				<li> <a href='{{link}}'>{{name}}</a></li>
 			{{/each }}
 			</ul>
 		</li>
-		<li id="references"><a  href="./references">References</a>
+		<li id="references"><a  href="./index">References</a>
 			<ul id="references-options" style='display : none' >
 			{{#each dataReferences}}
 				<li> <a href='{{link}}'>{{name}}</a></li>
 			{{/each }}
 			</ul>
 		</li>
-		<li id="archive"><a  href="./archives">Archive</a>
+		<li id="archive"><a  href="./index">Archive</a>
 			<ul id="achive-options" style='display : none' >
 			{{#each dataArchive}}
+				<li><a href='{{link}}'>{{name}}</a></li>
+			{{/each }}
+			</ul>
+		</li>
+		<li id="administration"><a  href="./index">Administration</a>
+			<ul id="administration-options" style='display : none' >
+			{{#each dataAdministration}}
 				<li><a href='{{link}}'>{{name}}</a></li>
 			{{/each }}
 			</ul>

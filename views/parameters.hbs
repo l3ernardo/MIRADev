@@ -1,5 +1,7 @@
 <link  href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<link href="../css/jsoneditor.css" rel="stylesheet" type="text/css">
 <script src="./lib/jquery.dataTables.js"></script>
+<script src="./lib/jsoneditor.min.js"></script>
 <script src="./js/parameters.js"/></script>
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
@@ -31,7 +33,7 @@
 		</table>
 	</div>
 </div>
-<div class="ibm-common-overlay ibm-overlay-alt" id="Overlay_Parameter">
+<div class="ibm-common-overlay ibm-overlay-alt-two" id="Overlay_Parameter">
 	<div class="ibm-head">
 		<p><a id="closeBtn" class="ibm-common-overlay-close" href="#close">Close [x]</a></p>
 	</div>
@@ -60,7 +62,10 @@
 							</p>
 							<p style="text-align:left">
 								<label for="fldvalue" align="left">Value:<span class="ibm-required">*</span></label>      
-								<span><textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea></span>
+								<span style="display:none;"><textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea></span>
+								<div id="jsoneditor"></div>
+								<script>$(document).ready(function() {JSONEdit("fldvalue");});</script>
+								
 							</p>
 							<p style="text-align:left">
 								<label for="flddescM">Description:<span class="ibm-required">*</span></label>
@@ -81,3 +86,4 @@
 		</div>
 	</div>
 </div>
+	
