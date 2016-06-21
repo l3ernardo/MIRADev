@@ -1,6 +1,8 @@
 var express = require("express");
 var passport = require('passport');
 var router = express.Router();
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
 var app = express();
 var db = require('../../conn.js');
 var varConf = require('../../configuration');
@@ -73,7 +75,7 @@ router.get('/disclosure', function(req, res) {
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][disclosure] - " + err.error);
-	})
+	})	
 });
 /**************************************************************
 BUSINESS UNIT FUNCTIONALITY
@@ -100,7 +102,7 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 					}
 				}).catch(function(err) {
 					res.render('index');
-				})
+				})				
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][businessunit] - " + data.error);
@@ -128,7 +130,7 @@ router.get('/bpdata', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bpdata] - " + data.error);
-		}
+		}			
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bpdata] - " + err.error);
@@ -142,7 +144,7 @@ router.get('/bplist', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bpdata] - " + data.error);
-		}
+		}			
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bpdata] - " + err.error);
@@ -154,18 +156,21 @@ router.get('/bluepages', function(req, res) {
 
 
 /**************************************************************
+DYNAMIC SECTIONS FUNCTIONALITY
 ***************************************************************/
 router.get('/testsectionv1', isAuthenticated, function(req, res) {
 	if (req.session.BG != undefined)
-		res.render('testsectionv1', {
-		bg: req.session.BG
-	});
+		res.render('testsectionv1', {bg: req.session.BG});
 	else
-		res.render('testsectionv1', {
-		bg: ''
-	});
+		res.render('testsectionv1', {bg: ''});
 });
 
+router.get('/sectionwidget', isAuthenticated, function(req, res) {
+	if (req.session.BG != undefined)
+		res.render('sectionwidget', {bg: req.session.BG});
+	else
+		res.render('sectionwidget', {bg: ''});
+});
 /**************************************************************
 ASSESSABLE UNITS - Business Unit type
 ***************************************************************/
@@ -233,14 +238,70 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				// res.render('aubusinessunit', data.body );
 			} else {
 				res.render('error',{errorDescription: data.error});
+				console.log("[routes][savebuau] - " + data.error);
 			}
 		} else {
 			res.render('error',{errorDescription: data.error});
+			console.log("[routes][savebuau] - " + data.error);
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
+		console.log("[routes][savebuau] - " + err.error);
 	})
 
+});
+
+/**************************************************************
+FILE UPLOAD FUNCTIONALITY
+***************************************************************/
+/* Save attachement */
+router.post('/saveAttachment', multipartMiddleware, function(req, res) {
+	var parentIdValueField = req.body.parentIdHidden;
+	utility.uploadFile(parentIdValueField, req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.json({attachId:data.doc.id, attachName:data.doc.name});
+		} else {
+			console.log("[routes][saveAttachment] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][saveAttachment] - " + err.error);
+	})
+
+});
+/* Load example attachment page*/
+router.get('/attachment', function(req, res) {
+	res.render('attachment');
+});
+
+/* Download attachment */
+router.get('/download', function(req, res){
+	utility.downloadFile(req,res,db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.download(res.body); 
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[error - download file]" + data.error);
+		}
+	}).catch(function(err) {
+		console.log("[routes 2] - " + err.error);
+	})
+});
+
+
+//delete attachment
+router.get('/deleteAttachment', function(req, res){
+	utility.downloadFile(req,res,db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.end();
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[error - delete attachment]" + data.error);
+		}
+	}).catch(function(err) {
+		console.log("[routes 2] - " + err.error);
+	})
+	
 });
 
 module.exports = router;

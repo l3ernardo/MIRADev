@@ -1,18 +1,18 @@
 /**************************************************************************************************
  * 
  * Utility code for MIRA Web
- * Developed by :                                                
+ * Developed by : Carlos Kenji Takata                                               
  * Date:01 June 2016
  * 
  */
 var varConf = require('../../../configuration');
 var q  = require("q");
+var moment = require('moment');
 
 var util = {
 	/* Get person data from faces */
 	getPersonData: function(req, res) {
 		var deferred = q.defer();
-		//url = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(mail="+req.query.search+").search/byjson"
 		url = varConf.bpURLmail.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
 			deferred.resolve({"status": 200, "doc": body});
@@ -22,7 +22,6 @@ var util = {
 	getPeopleData: function(req, res) {
 		var deferred = q.defer();
 		var member = [];
-		//url = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(cn="+req.query.search+"*).search/byjson"
 		url = varConf.bpURLcn.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
 			if (err) {
@@ -30,59 +29,8 @@ var util = {
 			}
 			try {
 				var doc = JSON.parse(body);	
-				console.log('Found: ' + (doc.search.return.count) + ' records')
-				for (var i = 0; i < doc.search.return.count; i++) {
-					//console.log(doc.search.entry[i].dn)
-					var callupname = '';
-					var cn = '';
-					var ibmserialnumber = '';
-					var serialnumber = '';
-					var notesemail = '';
-					var uid = '';
-					var mail = '';
-					var internalmaildrop = '';				
-					for(var j=0;j<doc.search.entry[i].attribute.length;j++) {
-						//console.log(doc.search.entry[i].attribute.length);
-						switch(doc.search.entry[i].attribute[j].name) {
-							case 'callupname':
-								callupname = doc.search.entry[i].attribute[j].value[0];
-								break;
-							case 'cn':
-								cn = doc.search.entry[i].attribute[j].value[0];
-								break;
-							case 'ibmserialnumber':
-								ibmserialnumber = doc.search.entry[i].attribute[j].value[0];
-								break;
-							case 'serialnumber':
-								serialnumber = doc.search.entry[i].attribute[j].value[0];
-								break;
-							case 'notesemail':
-								notesemail = doc.search.entry[i].attribute[j].value[0];
-								break;
-							case 'uid':
-								uid = doc.search.entry[i].attribute[j].value[0];
-								break;
-							case 'mail':
-								mail = doc.search.entry[i].attribute[j].value[0];
-								break;
-							case 'internalmaildrop':
-								internalmaildrop = doc.search.entry[i].attribute[j].value[0];
-								break;									
-						}
-					}
-					/*
-					member.push({
-						"callupname": callupname,
-						"cn": cn,
-						"ibmserialnumber": ibmserialnumber,
-						"serialnumber": serialnumber,
-						"notesemail": notesemail,
-						"uid": uid,
-						"mail": mail,
-						"internalmaildrop": internalmaildrop
-					});				
-					*/
-					member.push(cn+" ("+mail+")");
+				for (var i = 0; i < doc.length; i++) {
+					member.push({"name": doc[i].name, "email":doc[i].email});
 				}
 				deferred.resolve({"status": 200, "doc": member});
 			} catch(e) {
@@ -91,6 +39,77 @@ var util = {
 			
 		})
 	return deferred.promise;		
+	},
+	/* Upload a file*/
+	uploadFile: function (parentid, req, db){
+		var deferred = q.defer();
+		var object;
+		var date = new Date();
+		var filenames = req.files.upload;	
+
+		object = {
+			"parentid": parentid,
+			"type": "Attachments",
+			"creation_date": moment(date).format("DD-MM-YYYY HH:mm")
+		};
+
+		db.save(object).then(function(doc) {
+			if (filenames) {
+				var file = filenames; console.log('filenames:'+filenames); 
+				fs.readFile(file.path, function(err, data) {
+					if (!err) { 
+						if (file) { console.log('id del file: '+doc.body.id+'  file.name: '+file.name);
+							db.attach(doc.body.id, file.name, data, file.type, {rev: doc.body.rev}).then(function(obj) {
+								doc.body.name= file.name;
+								deferred.resolve({"status": 200, "doc": doc.body})
+							}).catch(function(error){
+								deferred.reject({"status": 500, "error": err});
+							});
+						}
+					}
+					else { 
+						deferred.reject({"status": 500, "error": err});
+					}
+				});
+			}else {
+				deferred.resolve({"status": 200, "doc":doc.body});
+			}				
+		}).catch(function(error) {
+			deferred.reject({"status": 500, "error": err});
+		})
+		return deferred.promise;
+	},
+	downloadFile: function (req, res,db){
+		var deferred = q.defer();
+		var id = req.query.id;
+		var filename = req.query.filename; console.log('download  id:'+id+' download file:'+filename);
+		db.getattachment(id, filename, {}).then(function(resp){
+			        res.body = resp.body;
+			        deferred.resolve({"status": 200});					
+		}).catch(function(err) {
+			    deferred.reject({"status": 500, "error - download file": err});
+				console.log(err);
+				});		
+		return deferred.promise;	
+	},
+	deleteAttachment: function (req, res,db){
+		var deferred = q.defer();
+		var names=req.query.filename
+		var id = req.query.id; console.log('this is id:'+id+'this is file:'+names);
+		db.get(id, {attachments: true}).then(function(existingdoc) {
+		var rev = existingdoc.body._rev;
+				db.del(id, rev).then(function(resp) {console.log('1');
+					console.log("Document deleted successfully");
+					deferred.resolve({"status": 200});
+				}).catch(function(err) {console.log('2');
+				         deferred.reject({"status": 500, "error": err});
+							console.log(err);
+					});
+			}).catch(function(err) {console.log('3');
+			        deferred.reject({"status": 500, "error": err});
+					console.log(err);
+		});		
+		return deferred.promise;	
 	}
 }
 module.exports = util;
