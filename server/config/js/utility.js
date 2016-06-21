@@ -13,8 +13,18 @@ var util = {
 	/* Get person data from faces */
 	getPersonData: function(req, res) {
 		var deferred = q.defer();
-		url = varConf.bpURLmail.replace('%t',req.query.search);
+		url = varConf.facesURLmail.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
+			if (err) {
+				url = varConf.bpURLmail.replace('%t',req.query.search);
+				require('request').get(url, function(err, response, body) {
+					if(err) {
+						deferred.resolve({"status": 500, "error": err});
+					}
+					deferred.resolve({"status": 200, "doc": body});
+				});
+				return deferred.promise;
+			}			
 			deferred.resolve({"status": 200, "doc": body});
 		});
 		return deferred.promise;
@@ -22,10 +32,38 @@ var util = {
 	getPeopleData: function(req, res) {
 		var deferred = q.defer();
 		var member = [];
-		url = varConf.bpURLcn.replace('%t',req.query.search);
+		url = varConf.facesURLcn.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
 			if (err) {
-				deferred.resolve({"status": 500, "error": err});
+				url = varConf.bpURLcn.replace('%t',req.query.search);
+				require('request').get(url, function(err, response, body) {
+					if(err) {
+						deferred.resolve({"status": 500, "error": err});
+					}
+					try {
+						var doc = JSON.parse(body);
+						//console.log(doc.search.return.count);
+						for (var i = 0; i < doc.search.return.count; i++) {
+							var cn = '';
+							var mail = '';							
+							for(var j=0;j<doc.search.entry[i].attribute.length;j++) {
+								switch(doc.search.entry[i].attribute[j].name) {
+									case 'cn':
+										cn = doc.search.entry[i].attribute[j].value[0];
+										break;
+									case 'mail':
+										mail = doc.search.entry[i].attribute[j].value[0];
+										break;										
+								}
+							}
+							member.push({"name": cn, "email":mail});
+						}
+						deferred.resolve({"status": 200, "doc": member});
+					} catch(e) {
+						deferred.resolve({"status": 500, "error": e});
+					}
+				});
+				return deferred.promise;
 			}
 			try {
 				var doc = JSON.parse(body);	
@@ -35,8 +73,7 @@ var util = {
 				deferred.resolve({"status": 200, "doc": member});
 			} catch(e) {
 				deferred.resolve({"status": 500, "error": e});
-			}
-			
+			}			
 		});
 		return deferred.promise;
 	},
