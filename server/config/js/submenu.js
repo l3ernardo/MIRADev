@@ -12,11 +12,12 @@ var submenu = {
 	/* Load all submenus in view*/
 	listMenu: function(req, res, db) {			
 		var deferred = q.defer();         
-        dataCalendars = [];
+		dataCalendars = [];
 		dataDashboards = [];
 		dataReports = [];
 		dataReferences = [];
 		dataArchive = [];
+		dataAdministration = [];
 		db.view('setup', 'view-setup', {include_docs: true}).then(function(data) {
 			var len= data.body.rows.length;
 			if(len > 0){	
@@ -28,11 +29,12 @@ var submenu = {
 				}
 							
 				for (var i = 0; i < lenTitle; i++) { 
-				  if (data.body.rows[index].doc.value[i].businessUnit==req.session.businessunit){
-					  dataValue=data.body.rows[index].doc.value[i];
-					  menuTitle=dataValue.menutitle;
-					  calendars=dataValue.calendars; 	
-					  lenCal=calendars.length;  			  
+					if (data.body.rows[index].doc.value[i].businessUnit==req.session.businessunit){
+						dataValue=data.body.rows[index].doc.value[i];
+						menuTitle = dataValue.menutitle;
+						//Build Calendar menu
+						calendars = dataValue.calendars; 	
+						lenCal = calendars.length;  			  
 						for(var j = 0; j < lenCal; j++){
 							obj_calendar=data.body.rows[index].doc.value[i].calendars[j].role;
 							len_objcalendar=obj_calendar.length;
@@ -53,8 +55,8 @@ var submenu = {
 										role: data.body.rows[index].doc.value[i].calendars[j].role
 									})	
 								}						 
-						 }	
-
+						}
+						//Build Dashboard menu
 						dashboards=dataValue.dashboards; 	
 						lenDash=dashboards.length;   
 						for(var j = 0; j < lenDash; j++){
@@ -79,7 +81,7 @@ var submenu = {
 								}
 						 }
 						 
-						 
+						//Build Reports menu
 						reports=dataValue.reports; 	
 						lenReport=reports.length;   
 						for(var j = 0; j < lenReport; j++){
@@ -103,7 +105,7 @@ var submenu = {
 									})
 							 }						 
 						 }	
-
+						//Build References menu
 						references=dataValue.references; 	
 						lenReference=references.length;   
 						for(var j = 0; j < lenReference; j++){
@@ -127,7 +129,7 @@ var submenu = {
 									})	
 							 }
 						 }
-
+						//Build Archive menu
 						archive=dataValue.archive; 	
 						lenArchive=archive.length;   
 						for(var j = 0; j < lenArchive; j++){
@@ -150,7 +152,31 @@ var submenu = {
 										role: data.body.rows[index].doc.value[i].archive[j].role
 							 })	
 							 }
-						 }					 
+						}
+						//Build Administration menu
+						administration=dataValue.administration; 	
+						lenAdministration=administration.length;   
+						for(var j = 0; j < lenAdministration; j++){
+							obj_administration=data.body.rows[index].doc.value[i].administration[j].role;
+							len_objadministration=obj_administration.length;
+							var flag=0;
+							for(var k=0;k<len_objadministration;k++)
+							{  
+								if(obj_administration[k]==req.session.BG)
+								{
+									flag=1;
+								}							
+							}			 
+							if(flag=='1')
+							 {
+									dataAdministration.push({
+										id: data.body.rows[index].doc.value[i].administration[j].id,
+										name: data.body.rows[index].doc.value[i].administration[j].name,
+										link: data.body.rows[index].doc.value[i].administration[j].link,
+										role: data.body.rows[index].doc.value[i].administration[j].role
+							 })	
+							 }
+						}
 				  }
 				}
 				deferred.resolve({"status": 200, "submenu":{
@@ -159,7 +185,8 @@ var submenu = {
 					dataDashboards: dataDashboards,
 					dataReports: dataReports,
 					dataReferences: dataReferences,
-					dataArchive: dataArchive
+					dataArchive: dataArchive,
+					dataAdministration: dataAdministration
 				}});
 			}
 			else {
