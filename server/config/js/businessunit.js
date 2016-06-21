@@ -1,8 +1,8 @@
 /**************************************************************************************************
  * 
  * Business Unit code for MIRA Web
- * Developed by :                                                
- * Date:25 May 2016
+ * Developed by : Gabriel Fuentes
+ * Date: 25 May 2016
  * 
  */
 

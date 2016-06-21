@@ -14,12 +14,13 @@ var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
 var assessableunit = require('./js/assessableunit.js');
 
+/* Verify if the user is authenticated */
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
         return next();
     res.redirect('/login');
 };
-
+/* Redirect to disclouse when go to / */
 router.get('/', isAuthenticated, function(req, res) {
 	res.redirect('disclosure');
 });
@@ -264,7 +265,6 @@ router.post('/saveAttachment', multipartMiddleware, function(req, res) {
 			console.log("[routes][saveAttachment] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
 		console.log("[routes][saveAttachment] - " + err.error);
 	})
 
@@ -273,33 +273,28 @@ router.post('/saveAttachment', multipartMiddleware, function(req, res) {
 router.get('/attachment', function(req, res) {
 	res.render('attachment');
 });
-
 /* Download attachment */
 router.get('/download', function(req, res){
 	utility.downloadFile(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.download(res.body); 
 		} else {
-			res.render('error',{errorDescription: data.error})
-			console.log("[error - download file]" + data.error);
+			console.log("[routes][downloadFile] - " + data.error);
 		}
 	}).catch(function(err) {
-		console.log("[routes 2] - " + err.error);
+		console.log("[routes][downloadFile] - " + err.error);
 	})
 });
-
-
-//delete attachment
+/* Delete attachment */
 router.get('/deleteAttachment', function(req, res){
 	utility.downloadFile(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.end();
 		} else {
-			res.render('error',{errorDescription: data.error})
-			console.log("[error - delete attachment]" + data.error);
+			console.log("[routes][deleteAttachment] - " + data.error);
 		}
 	}).catch(function(err) {
-		console.log("[routes 2] - " + err.error);
+		console.log("[routes][deleteAttachment] - " + err.error);
 	})
 	
 });

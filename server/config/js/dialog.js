@@ -1,8 +1,8 @@
 /**************************************************************************************************
  * 
  * Dialog code for MIRA Web
- * Developed by :                                                
- * Date:27 May 2016
+ * Developed by : Carlos Kenji Takata
+ * Date: 27 May 2016
  * 
  */
 
