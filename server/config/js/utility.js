@@ -54,7 +54,6 @@ var util = {
 		};
 
 		db.save(object).then(function(doc) {
-			console.log(filenames);
 			if (filenames) {
 				var file = filenames;
 				fs.readFile(file.path, function(err, data) {
