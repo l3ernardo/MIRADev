@@ -13,18 +13,11 @@ var util = {
 	/* Get person data from faces */
 	getPersonData: function(req, res) {
 		var deferred = q.defer();
-		url = varConf.facesURLmail.replace('%t',req.query.search);
+		url = varConf.bpURLmail.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
-			if (err) {
-				url = varConf.bpURLmail.replace('%t',req.query.search);
-				require('request').get(url, function(err, response, body) {
-					if(err) {
-						deferred.resolve({"status": 500, "error": err});
-					}
-					deferred.resolve({"status": 200, "doc": body});
-				});
-				return deferred.promise;
-			}			
+			if(err) {
+				deferred.resolve({"status": 500, "error": err});
+			}
 			deferred.resolve({"status": 200, "doc": body});
 		});
 		return deferred.promise;
