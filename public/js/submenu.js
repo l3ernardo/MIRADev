@@ -57,7 +57,7 @@ function updateSubMenu(menutitle,calendars,dashboards,reports,references,archive
 	for(i=0;i<archive.length;i++){
 		 divs=divs+'<li><a href="'+archive[i].link+'">'+archive[i].name+'</a></li>';
 	}
-	$('#rarchive-options').append(divs);divs='';
+	$('#archive-options').append(divs);divs='';
 	if(archive.length == 0)
 		$('#archive').css('display', 'none');
 	
