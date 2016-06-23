@@ -15,10 +15,12 @@
 						</p>
 						<p style="text-align:left">
 							This field will be hidden.<br>
-							<textarea id='attachIDs' cols='80'></textarea>
+							<span id='attachIDs' cols='80' style='display:block'></span>
 						</p>
 						<div class="ibm-buttons-row">
-							<a id="link_attachments" class="ibm-add1-link" href="#" onclick="addAttachments($('#parentid').val(), this.id);">Add Attachments</a>
+							<span id="attachments"></span>
+							<script>$(document).ready(function() {linkAttachments('attachments','parentid'); loadAttachments('attachIDs');});</script>
+							<!-- <a id="link_attachments" class="ibm-add1-link" href="#" onclick="addAttachments($('#parentid').val(), this.id);">Add Attachments</a> -->
 						</div>
 						<div class="ibm-rule"><hr/></div>
 						<div id="divDownload"></div>

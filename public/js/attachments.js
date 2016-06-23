@@ -11,6 +11,12 @@ var docs_id=[];
 var names=[];
 var result=[];
 
+/* Create the attachment link  */
+function linkAttachments(idSpan, idParent){
+	var spanElement = document.getElementById(idSpan.toString());
+	$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="#" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
+	$(spanElement).before('<div id="divDownload"></div>');
+};
 /* Save the attachment to cloudant */
 function saveAttach(){
 	$('#formAttachment').submit(function(e) {
@@ -34,8 +40,8 @@ function saveAttach(){
 				$("#divUpload").val('');
 				docs_id.push(data.attachId);
 				names.push(data.attachName);
-				result.push(data);				
-				$("#attachIDs").val(JSON.stringify(result));
+				result.push(data);
+				$("#attachIDs").html(JSON.stringify(result));
 				$('#upload').val('').clone(true);
 				ibmweb.overlay.hide("Overlay_Attachments");
 				$('input#upload').removeAttr("disabled");
@@ -125,24 +131,19 @@ function populateDownload(id, array) {
 	var tbody = '';
 	var count = 1;
 
-	tbody += '<p style="text-align:left">';
-	tbody += '<label for="divDownload"><b>Attachments:</b></label></br></br>';
-	tbody += '<span>';
-
 	if (!array) {
 		tbody += '';
 	}
 
 	for (var i in array) {
+		tbody += '<p style="text-align:left">';
 		tbody += '<a class="ibm-download-link" id="downloadAttachment' + count + '" href="/download?id=' + id[i] + '&filename=' + array[i] + '">' + array[i] + '</a>';
 		tbody += '&nbsp;&nbsp;&nbsp;';
 		tbody += '<a class="ibm-delete-link" id="deleteAttachment' + count + '" href="javascript:void(0)" onclick="deleteAttachment(' + count + ', \'' + id[i] + '\', \'' + array[i] + '\')">Delete</a>';
-		tbody += '<br>';
+		tbody += '</p>';
 		count++;
 	}
 
-	tbody += '</span>';
-	tbody += '</p>';
 	tbody += '<div class="ibm-rule"><hr/></div>';
 	container.innerHTML = tbody;
 };
@@ -150,14 +151,6 @@ function populateDownload(id, array) {
 function deleteAttachment(index, id, filename) {
 	var r = confirm("Are you sure you want to delete the attachment?");
 	if (r == true) {
-
-		var fieldValue = $('#attachIDs').val().split(',');
-		var index = fieldValue.indexOf(id);
-			if(index > -1){
-				fieldValue.splice(index,1);
-        		$('#attachIDs').val(fieldValue);
-			}
-
 		$.ajax({
 			url: "/deleteAttachment",
 			type: 'GET',
@@ -166,19 +159,34 @@ function deleteAttachment(index, id, filename) {
 			success: function (response) {
 				$('#downloadAttachment' + index).remove();
 				$('#deleteAttachment' + index).remove();
-                var index = names.indexOf(filename);
-				if (index > -1) {
-                      names.splice(index, 1);console.log(names);
-                }
-				var index2 = docs_id.indexOf(id);
-				if (index2 > -1) {
-                      docs_id.splice(index2, 1);console.log(docs_id);
-                }
-				populateDownload(docs_id, names);
+                var index = docs_id.indexOf(id);
+				if(index > -1){
+					docs_id.splice(index,1);
+					names.splice(index,1);
+					result.splice(index,1);
+					$("#attachIDs").html(JSON.stringify(result));
+					populateDownload(docs_id, names);
+				}
+				
 			},
 			error: function() {
 				alert("There was an error when deleting the Attachment");
 			}
 		});
+	}
+};
+/* Load existant attachments */
+function loadAttachments(idLinksJson){
+	var linksJson = eval("$('#"+idLinksJson+"')");
+	
+	if(linksJson.html() != ''){
+		var arrLinks = $.parseJSON( linksJson.html());
+		for(i=0; i<arrLinks.length; i++){
+			docs_id.push(arrLinks[i].attachId);
+			names.push(arrLinks[i].attachName);
+			result.push({"attachId": arrLinks[i].attachId, "attachName": arrLinks[i].attachName})
+		}
+		populateDownload(docs_id, names);
+		linksJson.html(JSON.stringify(arrLinks));
 	}
 };
