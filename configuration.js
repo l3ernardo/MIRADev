@@ -8,6 +8,7 @@ module.exports = {
 	msgIdPassW: 'Wrong IBM Intranet ID and/or password.',
 	facesURLcn: 'https://faces.tap.ibm.com/api/find/?q=%t',
 	facesURLmail: 'https://faces.tap.ibm.com/api/find/?q=%t',
-	bpURLemail: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(mail=%t).search/byjson',
-	bpURLcn: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(cn=%t).search/byjson'
+	bpURL: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(%f=%t).search/byjson',
+	bpOrgURL: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmorganization/hrOrganizationCode=%t.search/byjson',
+	bpDivURL: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmdivdept/dept=%t.search/byjson'
 }

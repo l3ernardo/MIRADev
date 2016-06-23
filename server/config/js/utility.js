@@ -10,24 +10,51 @@ var q  = require("q");
 var moment = require('moment');
 
 var util = {
-	/* Get person data from faces */
+	/* Get data from faces & bluepages */
+	getPersonOrg: function(req, res) {
+		var deferred = q.defer();
+		try {
+			url = varConf.bpOrgURL.replace('%t',req.query.search);
+			require('request').get(url, function(err, response, body) {
+				if(err) {
+					deferred.resolve({"status": 500, "error": err});
+				}
+				deferred.resolve({"status": 200, "doc": body});
+			});
+			return deferred.promise;
+		} catch(e) {
+			deferred.resolve({"status": 500, "error": e});
+		}
+	},
+	getPersonDiv: function(req, res) {
+		var deferred = q.defer();
+		try {		
+			url = varConf.bpDivURL.replace('%t',req.query.search);
+			require('request').get(url, function(err, response, body) {
+				if(err) {
+					deferred.resolve({"status": 500, "error": err});
+				}
+				deferred.resolve({"status": 200, "doc": body});
+			});
+			return deferred.promise;
+		} catch(e) {
+			deferred.resolve({"status": 500, "error": e});
+		}		
+	},	
 	getPersonData: function(req, res) {
 		var deferred = q.defer();
-		url = varConf.facesURLmail.replace('%t',req.query.search);
-		require('request').get(url, function(err, response, body) {
-			if (err) {
-				url = varConf.bpURLmail.replace('%t',req.query.search);
-				require('request').get(url, function(err, response, body) {
-					if(err) {
-						deferred.resolve({"status": 500, "error": err});
-					}
-					deferred.resolve({"status": 200, "doc": body});
-				});
-				return deferred.promise;
-			}			
-			deferred.resolve({"status": 200, "doc": body});
-		});
-		return deferred.promise;
+		try {		
+			url = varConf.bpURL.replace('%t',req.query.search).replace('%f',req.query.field);
+			require('request').get(url, function(err, response, body) {
+				if(err) {
+					deferred.resolve({"status": 500, "error": err});
+				}
+				deferred.resolve({"status": 200, "doc": body});
+			});
+			return deferred.promise;
+		} catch(e) {
+			deferred.resolve({"status": 500, "error": e});
+		}		
 	},
 	getPeopleData: function(req, res) {
 		var deferred = q.defer();
@@ -35,7 +62,7 @@ var util = {
 		url = varConf.facesURLcn.replace('%t',req.query.search);
 		require('request').get(url, function(err, response, body) {
 			if (err) {
-				url = varConf.bpURLcn.replace('%t',req.query.search);
+				url = varConf.bpURL.replace('%t',req.query.search).replace('%f','cn');
 				require('request').get(url, function(err, response, body) {
 					if(err) {
 						deferred.resolve({"status": 500, "error": err});
@@ -45,7 +72,7 @@ var util = {
 						//console.log(doc.search.return.count);
 						for (var i = 0; i < doc.search.return.count; i++) {
 							var cn = '';
-							var mail = '';							
+							var mail = '';
 							for(var j=0;j<doc.search.entry[i].attribute.length;j++) {
 								switch(doc.search.entry[i].attribute[j].name) {
 									case 'cn':
@@ -53,7 +80,7 @@ var util = {
 										break;
 									case 'mail':
 										mail = doc.search.entry[i].attribute[j].value[0];
-										break;										
+										break;
 								}
 							}
 							member.push({"name": cn, "email":mail});
