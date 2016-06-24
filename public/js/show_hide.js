@@ -9,10 +9,6 @@ function font_white(searchText){
   }
 }
 
-function background_tabs(id,color){
-     document.getElementById(id).style.background=color;
-}
-
 document.getElementById('GlobalProcess-li').addEventListener('click',function()
 {
     document.getElementById('GlobalProcess').style.display="";
@@ -20,10 +16,10 @@ document.getElementById('GlobalProcess-li').addEventListener('click',function()
     document.getElementById('BUReportingGroups').style.display="none";
     document.getElementById('ControllableUnits').style.display="none";
 
-    document.getElementById('GlobalProcess-li').className="mira-highlight-tab";
-    document.getElementById('BUIOTs-li').className="mira-standard-tab";
-    document.getElementById('BUReportingGroups-li').className="mira-standard-tab";
-    document.getElementById('ControllableUnits-li').className="mira-standard-tab";
+    document.getElementById('GlobalProcess-li').className="ibm-active";
+    document.getElementById('BUIOTs-li').className="";
+    document.getElementById('BUReportingGroups-li').className="";
+    document.getElementById('ControllableUnits-li').className="";
 },true);
 
 document.getElementById('BUIOTs-li').addEventListener('click',function()
@@ -33,10 +29,10 @@ document.getElementById('BUIOTs-li').addEventListener('click',function()
   document.getElementById('BUReportingGroups').style.display="none";
   document.getElementById('ControllableUnits').style.display="none";
 
-  document.getElementById('GlobalProcess-li').className="mira-standard-tab";
-  document.getElementById('BUIOTs-li').className="mira-highlight-tab";
-  document.getElementById('BUReportingGroups-li').className="mira-standard-tab";
-  document.getElementById('ControllableUnits-li').className="mira-standard-tab";
+  document.getElementById('GlobalProcess-li').className="";
+  document.getElementById('BUIOTs-li').className="ibm-active";
+  document.getElementById('BUReportingGroups-li').className="";
+  document.getElementById('ControllableUnits-li').className="";
 },true);
 
 document.getElementById('BUReportingGroups-li').addEventListener('click',function()
@@ -46,10 +42,10 @@ document.getElementById('BUReportingGroups-li').addEventListener('click',functio
   document.getElementById('BUReportingGroups').style.display="";
   document.getElementById('ControllableUnits').style.display="none";
 
-  document.getElementById('GlobalProcess-li').className="mira-standard-tab";
-  document.getElementById('BUIOTs-li').className="mira-standard-tab";
-  document.getElementById('BUReportingGroups-li').className="mira-highlight-tab";
-  document.getElementById('ControllableUnits-li').className="mira-standard-tab";
+  document.getElementById('GlobalProcess-li').className="";
+  document.getElementById('BUIOTs-li').className="";
+  document.getElementById('BUReportingGroups-li').className="ibm-active";
+  document.getElementById('ControllableUnits-li').className="";
 },true);
 
 document.getElementById('ControllableUnits-li').addEventListener('click',function()
@@ -59,10 +55,10 @@ document.getElementById('ControllableUnits-li').addEventListener('click',functio
   document.getElementById('BUReportingGroups').style.display="none";
   document.getElementById('ControllableUnits').style.display="";
 
-  document.getElementById('GlobalProcess-li').className="mira-standard-tab";
-  document.getElementById('BUIOTs-li').className="mira-standard-tab";
-  document.getElementById('BUReportingGroups-li').className="mira-standard-tab";
-  document.getElementById('ControllableUnits-li').className="mira-highlight-tab";
+  document.getElementById('GlobalProcess-li').className="";
+  document.getElementById('BUIOTs-li').className="";
+  document.getElementById('BUReportingGroups-li').className="";
+  document.getElementById('ControllableUnits-li').className="ibm-active";
 },true);
 
 function init(){
@@ -93,19 +89,6 @@ function init(){
     }
   }
 
-//paint tabs on load event
-  if(document.getElementById('GlobalProcess-li')){
-    background_tabs('GlobalProcess-li','#4181C0');
-  }
-  if(document.getElementById('BUIOTs-li')){
-    background_tabs('BUIOTs-li','#71B2CF');
-  }
-  if(document.getElementById('BUReportingGroups-li')){
-    background_tabs('BUReportingGroups-li','#00C196');
-  }
-  if(document.getElementById('ControllableUnits-li')){
-    background_tabs('ControllableUnits-li','#FF8080');
-  }
 }
 
 window.addEventListener("load", init());

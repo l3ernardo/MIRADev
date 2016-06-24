@@ -2,7 +2,7 @@
 <script src="./js/attachments.js"/></script>
 <script src="./js/owner.js"/></script>
 <script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
-<link rel="stylesheet" href="./css/style.css"> 
+<link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <link rel="stylesheet" href="./css/jquery-ui.min.css">
 
@@ -14,6 +14,20 @@
 	//Load document's business unit
 	$('h3#pageSubTitle').text($('input#docSubTitle').val());
 </script>
+
+<!-- JS and CSS for rich text edit -->
+		<script src="./js/bootstrap.min.js"></script>
+		<script src="./js/editor.js"></script>
+		<script>
+			$(document).ready(function() {
+				$("#Notes").Editor();
+			});
+		</script>
+		<link rel="stylesheet" href="./css/bootstrap.min.css">
+		<link rel="stylesheet" href="./css/font-awesome-4.6.3/css/font-awesome.min.css">
+		<link href="./css/editor.css" type="text/css" rel="stylesheet"/>
+<!-- end rich text -->
+
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
@@ -66,7 +80,7 @@
 					<div class="ui-widget">
 					<input id="editorname" class="ui-autocomplete-input" autocomplete="off" >
 					<a class="ibm-delete-link" href="#" onclick="removeItem($('#editorname'),$('#editorlist'))">Delete</a>
-					<script>$(document).ready(function() {bpLookup('#editorname','#editorlist');});</script>		
+					<script>$(document).ready(function() {bpLookup('#editorname','#editorlist');});</script>
 					</div>
 					<textarea id="editorlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
 				</td>
@@ -77,7 +91,7 @@
 					<div class="ui-widget">
 						<input id="readername" class="ui-autocomplete-input" autocomplete="off" >
 						<a class="ibm-delete-link" href="#" onclick="removeItem($('#readername'),$('#readerlist'))">Delete</a>
-						<script>$(document).ready(function() {bpLookup('#readername','#readerlist');});</script>		
+						<script>$(document).ready(function() {bpLookup('#readername','#readerlist');});</script>
 					</div>
 					<textarea id="readerlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
 				</td>
@@ -111,12 +125,14 @@
 			<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
 		</table>
 		<div class="ibm-columns ibm-graphic-tabs">
-			<ul class="ibm-tabs">
-				<li id="GlobalProcess-li" class="mira-highlight-tab"><span><a href="#constituents" class="mira-assessment-tab">Global Process&nbsp;&nbsp;</a></span></li>
-				<li id="BUIOTs-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">BU IOTs&nbsp;&nbsp;</a></span></li>
-				<li id="BUReportingGroups-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">BU Reporting Groups&nbsp;&nbsp;</a></span></li>
-				<li id="ControllableUnits-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">Controllable Units&nbsp;&nbsp;</a></span></li>
-			</ul>
+			<div class="ibm-tab-section">
+				<ul class="ibm-tabs">
+					<li id="GlobalProcess-li" class="ibm-active"><a href="#constituents">Global Process</a></li>
+					<li id="BUIOTs-li"><a href="#constituents">BU IOTs</a></li>
+					<li id="BUReportingGroups-li"><a href="#constituents">BU Reporting Groups</a></li>
+					<li id="ControllableUnits-li"><a href="#constituents">Controllable Units</a></li>
+				</ul>
+			</div>			
 			<div id="GlobalProcess" class="ibm-tabs-content">
 				<table id="globalprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 					<thead class="mira-basic">
