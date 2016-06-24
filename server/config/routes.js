@@ -14,12 +14,13 @@ var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
 var assessableunit = require('./js/assessableunit.js');
 
+/* Verify if the user is authenticated */
 function isAuthenticated(req, res, next) {
 	if (req.session.isAuthenticated)
         return next();
     res.redirect('/login');
 };
-
+/* Redirect to disclouse when go to / */
 router.get('/', isAuthenticated, function(req, res) {
 	res.redirect('disclosure');
 });
@@ -122,6 +123,34 @@ router.get('/bulletin', isAuthenticated, function(req, res) {
 /**************************************************************
 BLUEPAGES FUNCTIONALITY
 ***************************************************************/
+/* Get Person Organization */
+router.get('/bporg', function(req, res) {
+	utility.getPersonOrg(req,res).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.doc)
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][bporg] - " + data.error);
+		}			
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][bporg] - " + err.error);
+	})
+});
+/* Get Person Division */
+router.get('/bpdiv', function(req, res) {
+	utility.getPersonDiv(req,res).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.doc)
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][bpdiv] - " + data.error);
+		}			
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][bpdiv] - " + err.error);
+	})
+});
 /* Get Person data */
 router.get('/bpdata', function(req, res) {
 	utility.getPersonData(req,res).then(function(data) {
@@ -176,7 +205,7 @@ ASSESSABLE UNITS - Business Unit type
 ***************************************************************/
 
 /* View assessable unit documents */
-router.get('/processdashboard', function(req, res) {
+router.get('/processdashboard', isAuthenticated, function(req, res) {
 	assessableunit.listAU(req, res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
@@ -196,7 +225,7 @@ router.get('/processdashboard', function(req, res) {
 
 
 /* Display BU assessable unit document */
-router.get('/assessableunit', function(req, res) {
+router.get('/assessableunit', isAuthenticated, function(req, res) {
 	assessableunit.getAUbyID(req, res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
@@ -255,7 +284,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 FILE UPLOAD FUNCTIONALITY
 ***************************************************************/
 /* Save attachement */
-router.post('/saveAttachment', multipartMiddleware, function(req, res) {
+router.post('/saveAttachment', isAuthenticated, multipartMiddleware, function(req, res) {
 	var parentIdValueField = req.body.parentIdHidden;
 	utility.uploadFile(parentIdValueField, req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
@@ -264,42 +293,36 @@ router.post('/saveAttachment', multipartMiddleware, function(req, res) {
 			console.log("[routes][saveAttachment] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
 		console.log("[routes][saveAttachment] - " + err.error);
 	})
 
 });
 /* Load example attachment page*/
-router.get('/attachment', function(req, res) {
+router.get('/attachment', isAuthenticated, function(req, res) {
 	res.render('attachment');
 });
-
 /* Download attachment */
-router.get('/download', function(req, res){
+router.get('/download', isAuthenticated, function(req, res){
 	utility.downloadFile(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.download(res.body); 
 		} else {
-			res.render('error',{errorDescription: data.error})
-			console.log("[error - download file]" + data.error);
+			console.log("[routes][downloadFile] - " + data.error);
 		}
 	}).catch(function(err) {
-		console.log("[routes 2] - " + err.error);
+		console.log("[routes][downloadFile] - " + err.error);
 	})
 });
-
-
-//delete attachment
-router.get('/deleteAttachment', function(req, res){
+/* Delete attachment */
+router.get('/deleteAttachment', isAuthenticated, function(req, res){
 	utility.downloadFile(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.end();
 		} else {
-			res.render('error',{errorDescription: data.error})
-			console.log("[error - delete attachment]" + data.error);
+			console.log("[routes][deleteAttachment] - " + data.error);
 		}
 	}).catch(function(err) {
-		console.log("[routes 2] - " + err.error);
+		console.log("[routes][deleteAttachment] - " + err.error);
 	})
 	
 });

@@ -1,4 +1,10 @@
 <script src="/public/js/assessableunit.js" type="text/javascript"></script>
+<script src="./js/attachments.js"/></script>
+<script src="./js/owner.js"/></script>
+<script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="./css/style.css"> 
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
 
 <input type="hidden" id="docTitle" value="{{DocType}} ({{DocSubType}})">
 <input type="hidden" id="docSubTitle" value="{{Name}}">
@@ -41,7 +47,9 @@
 		<table id="access_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 			<caption class="mira-caption"><em>Contact/Access</em></caption>
 			<tr>
-				<td width="25%">Owner:</td><td>{{Owner}}</td>
+				<td width="25%">Owner:</td><td><div id="Owner">{{Owner}}</div>
+				<script>$(document).ready(function() {updateOwner();});</script>
+				</td>
 			</tr>
 			<tr>
 				<td>Focals:</td><td>{{Focals}}</td>
@@ -53,10 +61,26 @@
 				<td>Readers:</td><td>{{Readers}}</td>
 			</tr>
 			<tr>
-				<td>Additional editors:</td><td>{{AdditionalEditors}}</td>
+				<td>Additional editors:</td>
+				<td>
+					<div class="ui-widget">
+					<input id="editorname" class="ui-autocomplete-input" autocomplete="off" >
+					<a class="ibm-delete-link" href="#" onclick="removeItem($('#editorname'),$('#editorlist'))">Delete</a>
+					<script>$(document).ready(function() {bpLookup('#editorname','#editorlist');});</script>		
+					</div>
+					<textarea id="editorlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
+				</td>
 			</tr>
 			<tr>
-				<td>Additional readers:</td><td>{{AdditionalReaders}}</td>
+				<td>Additional readers:</td>
+				<td>
+					<div class="ui-widget">
+						<input id="readername" class="ui-autocomplete-input" autocomplete="off" >
+						<a class="ibm-delete-link" href="#" onclick="removeItem($('#readername'),$('#readerlist'))">Delete</a>
+						<script>$(document).ready(function() {bpLookup('#readername','#readerlist');});</script>		
+					</div>
+					<textarea id="readerlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
+				</td>
 			</tr>
 		</table>
 		<!-- ASSESSMENT SECTION -->
@@ -198,7 +222,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="20%">Links:</td><td>{{Links}}</td>
+				<td width="20%">Links:</td><td>
+				<span id='attachIDs' cols='80' style='display:none'></span>
+				<span id="attachments"></span>
+				<script>$(document).ready(function() {linkAttachments('attachments','docid'); loadAttachments('attachIDs');});</script>
+				</td>
 			</tr>
 		</table>
 		<!-- BUTTONS AREA -->

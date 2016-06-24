@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * 
  * Setup code for MIRA Web
- * Developed by :                                                
+ * Developed by : Gabriel Fuentes
  * Date:27 May 2016
  * 
  */

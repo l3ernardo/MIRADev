@@ -3,6 +3,9 @@ Theme Name: jqueryui-com
 Template: jquery
 */
 
+.ui-autocomplete-loading {
+	background: white url("/images/animated-progress-20x20b.gif") right center no-repeat;
+}
 a,
 .title {
 	color: #b24926;

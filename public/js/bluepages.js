@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * 
  * Bluepages widget for MIRA Web
- * Developed by :                                                
+ * Developed by : Carlos Kenji Takata
  * Date:08 June 2016
  * 
  */
