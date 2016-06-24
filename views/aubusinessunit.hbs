@@ -1,4 +1,14 @@
-<script src="/public/js/assessableunit.js" type="text/javascript"></script>
+<script src="/js/assessableunit.js" type="text/javascript"></script>
+<script src="/js/constituent_section.js" type="text/javascript"></script>
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+<!-- JS for attachments widget -->
+<script src="./js/attachments.js"/></script>
+<!-- JS and CSS for owner, editors and readers / bluepages widget -->
+<script src="./js/owner.js"/></script>
+<script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
 
 <input type="hidden" id="docTitle" value="{{DocType}} ({{DocSubType}})">
 <input type="hidden" id="docSubTitle" value="{{Name}}">
@@ -8,6 +18,7 @@
 	//Load document's business unit
 	$('h3#pageSubTitle').text($('input#docSubTitle').val());
 </script>
+
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
@@ -41,7 +52,9 @@
 		<table id="access_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 			<caption class="mira-caption"><em>Contact/Access</em></caption>
 			<tr>
-				<td width="25%">Owner:</td><td>{{Owner}}</td>
+				<td width="25%">Owner:</td><td><div id="Owner">{{Owner}}</div>
+				<script>$(document).ready(function() {updateOwner();});</script>
+				</td>
 			</tr>
 			<tr>
 				<td>Focals:</td><td>{{Focals}}</td>
@@ -53,10 +66,26 @@
 				<td>Readers:</td><td>{{Readers}}</td>
 			</tr>
 			<tr>
-				<td>Additional editors:</td><td>{{AdditionalEditors}}</td>
+				<td>Additional editors:</td>
+				<td>
+					<div class="ui-widget">
+					<input id="editorname" class="ui-autocomplete-input" autocomplete="off" >
+					<a class="ibm-delete-link" href="#" onclick="removeItem($('#editorname'),$('#editorlist'))">Delete</a>
+					<script>$(document).ready(function() {bpLookup('#editorname','#editorlist');});</script>
+					</div>
+					<textarea id="editorlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
+				</td>
 			</tr>
 			<tr>
-				<td>Additional readers:</td><td>{{AdditionalReaders}}</td>
+				<td>Additional readers:</td>
+				<td>
+					<div class="ui-widget">
+						<input id="readername" class="ui-autocomplete-input" autocomplete="off" >
+						<a class="ibm-delete-link" href="#" onclick="removeItem($('#readername'),$('#readerlist'))">Delete</a>
+						<script>$(document).ready(function() {bpLookup('#readername','#readerlist');});</script>
+					</div>
+					<textarea id="readerlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
+				</td>
 			</tr>
 		</table>
 		<!-- ASSESSMENT SECTION -->
@@ -87,12 +116,14 @@
 			<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
 		</table>
 		<div class="ibm-columns ibm-graphic-tabs">
-			<ul class="ibm-tabs">
-				<li id="GlobalProcess-li" class="mira-highlight-tab"><span><a href="#constituents" class="mira-assessment-tab">Global Process&nbsp;&nbsp;</a></span></li>
-				<li id="BUIOTs-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">BU IOTs&nbsp;&nbsp;</a></span></li>
-				<li id="BUReportingGroups-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">BU Reporting Groups&nbsp;&nbsp;</a></span></li>
-				<li id="ControllableUnits-li" class="mira-standard-tab"><span><a href="#constituents" class="mira-assessment-tab">Controllable Units&nbsp;&nbsp;</a></span></li>
-			</ul>
+			<div class="ibm-tab-section">
+				<ul class="ibm-tabs">
+					<li id="GlobalProcess-li" class="ibm-active"><a href="#constituents">Global Process</a></li>
+					<li id="BUIOTs-li"><a href="#constituents">BU IOTs</a></li>
+					<li id="BUReportingGroups-li"><a href="#constituents">BU Reporting Groups</a></li>
+					<li id="ControllableUnits-li"><a href="#constituents">Controllable Units</a></li>
+				</ul>
+			</div>			
 			<div id="GlobalProcess" class="ibm-tabs-content">
 				<table id="globalprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 					<thead class="mira-basic">
@@ -186,8 +217,7 @@
 					{{/each}}
 				</table>
 			</div>
-		<script src="/public/js/show_hide.js" type="text/javascript"></script>
-		<link href="/public/css/mirastyle.css" rel="stylesheet" type="text/css" />
+		
 		</div>
 		<!-- NOTES & LINKS SECTION -->
 		<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
@@ -198,7 +228,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="20%">Links:</td><td>{{Links}}</td>
+				<td width="20%">Links:</td><td>
+				<span id='attachIDs' cols='80' style='display:none'></span>
+				<span id="attachments"></span>
+				<script>$(document).ready(function() {linkAttachments('attachments','docid'); loadAttachments('attachIDs');});</script>
+				</td>
 			</tr>
 		</table>
 		<!-- BUTTONS AREA -->

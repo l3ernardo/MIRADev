@@ -123,6 +123,34 @@ router.get('/bulletin', isAuthenticated, function(req, res) {
 /**************************************************************
 BLUEPAGES FUNCTIONALITY
 ***************************************************************/
+/* Get Person Organization */
+router.get('/bporg', function(req, res) {
+	utility.getPersonOrg(req,res).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.doc)
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][bporg] - " + data.error);
+		}			
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][bporg] - " + err.error);
+	})
+});
+/* Get Person Division */
+router.get('/bpdiv', function(req, res) {
+	utility.getPersonDiv(req,res).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send(data.doc)
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[routes][bpdiv] - " + data.error);
+		}			
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[routes][bpdiv] - " + err.error);
+	})
+});
 /* Get Person data */
 router.get('/bpdata', function(req, res) {
 	utility.getPersonData(req,res).then(function(data) {
