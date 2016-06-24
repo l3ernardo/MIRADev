@@ -17,7 +17,15 @@ This application consolidates information from MSAC (Management Self Assessment 
 
 ## Usage:
 
-You should have one of these bluegroups MIRA-ACCESS, MIRA-ADMIN, MIRA-MINI-ADMIN to access the application.
+You should have one of these bluegroups:
+```
+MIRA-ACCESS : Regular access to the application as user
+MIRA-ADMIN : Can do anything inside the application
+MIRA-GRANT-ACCESS : Has the ability to give access to anyone (access to the Add readers and Add editors field) for THEIR OWN assessments
+MIRA-RESET-STATUS : Will grant ability to reset status from FINAL to DRAFT for THEIR OWN assessments
+MIRA-CU-ADMIN-DATA : Can change admin section for THEIR OWN assessments
+```
+
 Links to test some of the features:
 
 ```
