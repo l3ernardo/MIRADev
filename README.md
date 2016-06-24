@@ -16,15 +16,22 @@ Usage:
 You should have one of these bluegroups MIRA-ACCESS, MIRA-ADMIN, MIRA-MINI-ADMIN to access the application.
 Links to test some of the features:
 /processdashboard
+
 /bluepages
+
 /sectionwidget
+
 /attachment
+
 /setup
+
 
 Contact:
 
 Business Owner: Martin Pablo Lugo Garcia (plugo@mx1.ibm.com)
+
 Application Owner: Julio Ruben Robles Wong (juliorw@mx1.ibm.com)
+
 Project Manager: Monica Paez Trujillo (mpaez@pe.ibm.com)
 
 
