@@ -1,5 +1,4 @@
-# mira
-MIRA Web development
+#MIRA Web development
 
 MIRA - MSAC Integrated Reporting Tool
 Used by Control Business - v17 standard compliance
