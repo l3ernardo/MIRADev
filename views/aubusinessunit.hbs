@@ -14,6 +14,20 @@
 	//Load document's business unit
 	$('h3#pageSubTitle').text($('input#docSubTitle').val());
 </script>
+
+<!-- JS and CSS for rich text edit -->
+		<script src="./js/bootstrap.min.js"></script>
+		<script src="./js/editor.js"></script>
+		<script>
+			$(document).ready(function() {
+				$("#Notes").Editor();
+			});
+		</script>
+		<link rel="stylesheet" href="./css/bootstrap.min.css">
+		<link rel="stylesheet" href="./css/font-awesome-4.6.3/css/font-awesome.min.css">
+		<link href="./css/editor.css" type="text/css" rel="stylesheet"/>
+<!-- end rich text -->
+
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
