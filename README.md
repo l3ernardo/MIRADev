@@ -5,13 +5,14 @@ Used by Control Business - v17 standard compliance
 
 Version 1.0
 
-Purpose: This application consolidates information from MSAC (Management Self Assessment Controls)
+## Purpose:
+This application consolidates information from MSAC (Management Self Assessment Controls)
 
-Patch notes (June 24th, 2016):
+## Patch notes (June 24th, 2016):
 
 - Added Assessable Unit form with widgets (i.e. Attachments, Bluepages lookup);
 
-Usage:
+## Usage:
 
 You should have one of these bluegroups MIRA-ACCESS, MIRA-ADMIN, MIRA-MINI-ADMIN to access the application.
 Links to test some of the features:
@@ -26,7 +27,7 @@ Links to test some of the features:
 /setup
 
 
-Contact:
+## Contact:
 
 Business Owner: Martin Pablo Lugo Garcia (plugo@mx1.ibm.com)
 
