@@ -10,8 +10,8 @@ var q  = require("q");
 
 var submenu = {
 	/* Load all submenus in view*/
-	listMenu: function(req, res, db) {			
-		var deferred = q.defer();         
+	listMenu: function(req, res, db) {
+		var deferred = q.defer();
 		dataCalendars = [];
 		dataDashboards = [];
 		dataReports = [];
@@ -23,18 +23,18 @@ var submenu = {
 			if(len > 0){	
 				for (var i = 0; i < len; i++){
 					if (data.body.rows[i].doc.keyName=='MenuTitle'){
-						var index=i;					
-						var lenTitle = data.body.rows[i].doc.value.length;					
-					}				
+						var index=i;
+						var lenTitle = data.body.rows[i].doc.value.length;
+					}
 				}
-							
+				
 				for (var i = 0; i < lenTitle; i++) { 
 					if (data.body.rows[index].doc.value[i].businessUnit==req.session.businessunit){
 						dataValue=data.body.rows[index].doc.value[i];
 						menuTitle = dataValue.menutitle;
 						//Build Calendar menu
-						calendars = dataValue.calendars; 	
-						lenCal = calendars.length;  			  
+						calendars = dataValue.calendars;
+						lenCal = calendars.length;
 						for(var j = 0; j < lenCal; j++){
 							obj_calendar=data.body.rows[index].doc.value[i].calendars[j].role;
 							len_objcalendar=obj_calendar.length;
