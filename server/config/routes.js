@@ -44,17 +44,22 @@ SUBMENU FUNCTIONALITY
 ***************************************************************/
 
 router.get('/submenu', isAuthenticated, function(req, res) {
-	submenu.listMenu(req,res,db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			res.json({menu: data.submenu});
-		} else {
-			//res.render('error',{errorDescription: data.error})
-			console.log("[routes][submenulist]" + data.error);
-		}
-	}).catch(function(err) {
-		//res.render('error',{errorDescription: err.error})
-		console.log("[routes][submenulist] - " + err.error);
-	})
+	if(req.session.businessunit != ""){
+		submenu.listMenu(req,res,db).then(function(data) {
+			if(data.status==200 & !data.error) {
+				res.json({menu: data.submenu});
+			} else {
+				//res.render('error',{errorDescription: data.error})
+				console.log("[routes][submenulist]" + data.error);
+			}
+		}).catch(function(err) {
+			//res.render('error',{errorDescription: err.error})
+			console.log("[routes][submenulist] - " + err.error);
+		})
+	}
+	else{
+		res.json({menu: ""});
+	}
 });
 
 /**************************************************************
@@ -327,4 +332,32 @@ router.get('/deleteAttachment', isAuthenticated, function(req, res){
 	
 });
 
+/**************************************************************
+CALENDARS
+***************************************************************/
+/* Load calendar page*/
+router.get('/calendar', isAuthenticated, function(req, res) {
+	res.render('calendar');
+});
+/**************************************************************
+REPORTS
+***************************************************************/
+/* Load report assessable unit file page*/
+router.get('/reportaufile', isAuthenticated, function(req, res) {
+	res.render('reportaufile');
+});
+/**************************************************************
+REFERENCES
+***************************************************************/
+/* Load reference by category page*/
+router.get('/referencebycat', isAuthenticated, function(req, res) {
+	res.render('referencebycat');
+});
+/**************************************************************
+ARCHIVE
+***************************************************************/
+/* Load archive page*/
+router.get('/archive', isAuthenticated, function(req, res) {
+	res.render('archive');
+});
 module.exports = router;
