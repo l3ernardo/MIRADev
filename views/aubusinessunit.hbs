@@ -20,42 +20,22 @@
 </script>
 
 <!-- JS and CSS for rich text edit -->
-<link rel="stylesheet" type="text/css" href="/public/css/skin.css">
+<link rel="stylesheet" type="text/css" href="./css/skin.css">
 <!-- Utility Dependencies -->
-<script src="./js/yahoo-dom-event.js"></script>
-<script src="./js/element-min.js"></script>
+<script src="./lib/yahoo-dom-event.js"></script>
+<script src="./lib/element-min.js"></script>
 <!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
-<script src="./js/container_core-min.js"></script>
+<script src="./lib/container_core-min.js"></script>
 <!-- Source file for Rich Text Editor-->
-<script src="./js/simpleeditor-min.js"></script>
-<script src="./js/yui-min.js"></script>
+<script src="./lib/simpleeditor-min.js"></script>
+<script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
-
-<script>
-(function() { 
-		//Setup some private variables 
-	    var Dom = YAHOO.util.Dom, 
-	        Event = YAHOO.util.Event; 
-	 
-	        //The SimpleEditor config 
-	        var myConfig = { 
-	            height: '200px', 
-	            width: '600px', 
-	            dompath: true, 
-	            focusAtStart: true 
-	        }; 
-	 
-	    //Now let's load the SimpleEditor.. 
-	    var myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig); 
-	    myEditor.render(); 
-	})(); 
-</script>
 
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
-	<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebuau">
+	<form id="assessableunit" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" value="{{_id}}">
 		<!-- BASICS SECTION -->
 		<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
@@ -105,7 +85,7 @@
 					<a class="ibm-delete-link" href="#" onclick="removeItem($('#editorname'),$('#editorlist'))">Delete</a>
 					<script>$(document).ready(function() {bpLookup('#editorname','#editorlist');});</script>
 					</div>
-					<textarea id="editorlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
+					<textarea id="editorlist" name="editorlist" rows="4" cols="100" onfocus="this.blur()">{{AdditionalEditors}}</textarea>
 				</td>
 			</tr>
 			<tr>
@@ -116,7 +96,7 @@
 						<a class="ibm-delete-link" href="#" onclick="removeItem($('#readername'),$('#readerlist'))">Delete</a>
 						<script>$(document).ready(function() {bpLookup('#readername','#readerlist');});</script>
 					</div>
-					<textarea id="readerlist" rows="4" cols="100" readonly>{{AdditionalEditors}}</textarea>
+					<textarea id="readerlist" name="readerlist" rows="4" cols="100" onfocus="this.blur()">{{AdditionalReaders}}</textarea>
 				</td>
 			</tr>
 		</table>
@@ -272,7 +252,7 @@
 		<!-- BUTTONS AREA -->
 		<div class="ibm-buttons-row">
 			<p>
-				<input class="ibm-btn-arrow-pri" type="submit" id="bsave" value="Submit" />
+				<input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Submit"/>
 				<span class="ibm-sep">&nbsp;</span>
 				<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Cancel" />
 			</p>
