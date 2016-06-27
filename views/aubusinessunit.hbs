@@ -19,6 +19,38 @@
 	$('h3#pageSubTitle').text($('input#docSubTitle').val());
 </script>
 
+<!-- JS and CSS for rich text edit -->
+<link rel="stylesheet" type="text/css" href="/public/css/skin.css">
+<!-- Utility Dependencies -->
+<script src="./js/yahoo-dom-event.js"></script>
+<script src="./js/element-min.js"></script>
+<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+<script src="./js/container_core-min.js"></script>
+<!-- Source file for Rich Text Editor-->
+<script src="./js/simpleeditor-min.js"></script>
+<script src="./js/yui-min.js"></script>
+<!-- end rich text -->
+
+<script>
+(function() { 
+		//Setup some private variables 
+	    var Dom = YAHOO.util.Dom, 
+	        Event = YAHOO.util.Event; 
+	 
+	        //The SimpleEditor config 
+	        var myConfig = { 
+	            height: '200px', 
+	            width: '600px', 
+	            dompath: true, 
+	            focusAtStart: true 
+	        }; 
+	 
+	    //Now let's load the SimpleEditor.. 
+	    var myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig); 
+	    myEditor.render(); 
+	})(); 
+</script>
+
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
@@ -224,7 +256,9 @@
 			<tr>
 				<td width="20%"><label for="Notes">Notes:</label></td>
 				<td>
-					<span><textarea id="Notes" type="text" name="Notes" cols="125" rows="8">{{Notes}}</textarea></span>
+					<div class='yui-skin-sam'>
+						<span><textarea id="Notes" type="text" name="Notes" cols="125" rows="8">{{Notes}}</textarea></span>
+					</div>
 				</td>
 			</tr>
 			<tr>
