@@ -257,7 +257,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				assessableunit.getAUbyID(req, res, db).then(function(data) {
 					if(data.status==200 & !data.error) {
 						if(data.doc) {
-							res.render('aubusinessunit', data.doc[0] );
+							res.redirect('/assessableunit?id=' + data.doc[0]._id);
 						} else {
 							res.render('error',{errorDescription: data.error});
 						}
@@ -268,7 +268,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				}).catch(function(err) {
 					res.render('error',{errorDescription: err.error});
 					console.log("[routes][getassessableunitbyID] - " + err.error);
-				})
+				});
 				// res.render('aubusinessunit', data.body );
 			} else {
 				res.render('error',{errorDescription: data.error});
