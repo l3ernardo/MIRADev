@@ -153,10 +153,14 @@ var assessableunit = {
 
 			// Update Admin Section
 			doc[0].RGRollup = req.body.RGRollup;
+			// Update Additional Readers
+			doc[0].AdditionalReaders = req.body.readerlist;
+			// Update Additional Editors
+			doc[0].AdditionalEditors = req.body.editorlist;
 			// Update notes
 			doc[0].Notes = req.body.Notes;
-      // Update logs
-      doc[0].Log.push(addlog);
+			// Update logs
+			doc[0].Log.push(addlog);
 
 			db.save(doc[0]).then(function(data){
 				deferred.resolve(data);
