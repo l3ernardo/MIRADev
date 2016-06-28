@@ -42,7 +42,7 @@ passport.use(
       bluegroup.getMembersByBG(req.body.username).then(function(data){
 
         if (data[0][0].msg == "Success"){
-
+            
             user.hasAccess = true;
             user.groupName = data[0][0].groupName;
 
