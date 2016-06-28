@@ -13,16 +13,10 @@ var businessunit = require('./js/businessunit.js');
 var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
 var assessableunit = require('./js/assessableunit.js');
+var isAuthenticated = require('./authentication.js');
 
-/* Verify if the user is authenticated */
-function isAuthenticated(req, res, next) {
-	if (req.session.isAuthenticated)
-        return next();
-    res.redirect('/login');
-};
-/* Redirect to disclouse when go to / */
 router.get('/', isAuthenticated, function(req, res) {
-	res.redirect('disclosure');
+	res.redirect('login');
 });
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
@@ -99,12 +93,45 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 			dialog.displayBulletin(req, res, db).then(function(data) {
 				if(data.status==200 & !data.error) {
 						if(data.doc) {
-							res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+							//Redirect to original URL, if available
+							console.log('URL requested: ' + req.session.returnTo);
+							if(typeof req.session.returnTo!='undefined') {
+								if(req.session.returnTo!='' && req.session.returnTo!='/') {
+									res.redirect(req.session.returnTo);
+									req.session.returnTo = '';	
+								} else {
+									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});	
+								}								
+							} else {
+								res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});	
+							}
+						} else {
+							//Redirect to original URL, if available
+							console.log('URL requested: ' + req.session.returnTo);
+							if(typeof req.session.returnTo!='undefined') {
+								if(req.session.returnTo!='' && req.session.returnTo!='/') {
+									res.redirect(req.session.returnTo);
+									req.session.returnTo = '';	
+								} else {
+									res.render('index');
+								}								
+							} else {
+								res.render('index');
+							}
+						}
+					} else {
+						//Redirect to original URL, if available
+						console.log('URL requested: ' + req.session.returnTo);
+						if(typeof req.session.returnTo!='undefined') {
+							if(req.session.returnTo!='' && req.session.returnTo!='/') {
+								res.redirect(req.session.returnTo);
+								req.session.returnTo = '';	
+							} else {
+								res.render('index');
+							}								
 						} else {
 							res.render('index');
 						}
-					} else {
-						res.render('index');
 					}
 				}).catch(function(err) {
 					res.render('index');
