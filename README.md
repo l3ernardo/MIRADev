@@ -11,6 +11,10 @@ This application consolidates information from MSAC (Management Self Assessment 
 ## Patch notes:
 
 ```
+June 28th, 2016
+- Added initial store page;
+- Changed bluegroups check to parameters instead its own design doc;
+
 June 27th, 2016
 - Added YAHOO Text Editor;
 - Fixed Page redirect once Assessment Unit document is saved;
