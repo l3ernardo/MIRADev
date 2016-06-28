@@ -66,3 +66,7 @@ app.use(require('./server/config/routes.js'));
 app.use(require('./server/config/security.js'));
 app.use(require('./server/config/administration.js'));
 
+/* Redirect to an error page if no page exists */
+app.get('*', function (req, res) {
+    res.render('error',{errorDescription: req.url + ' does not exist.'});
+}); 
