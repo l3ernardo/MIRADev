@@ -353,7 +353,7 @@ router.get('/download', isAuthenticated, function(req, res){
 });
 /* Delete attachment */
 router.get('/deleteAttachment', isAuthenticated, function(req, res){
-	utility.downloadFile(req,res,db).then(function(data) {
+	utility.deleteFile(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.end();
 		} else {
@@ -363,14 +363,6 @@ router.get('/deleteAttachment', isAuthenticated, function(req, res){
 		console.log("[routes][deleteAttachment] - " + err.error);
 	})
 	
-});
-
-/**************************************************************
-CALENDARS
-***************************************************************/
-/* Load calendar page*/
-router.get('/calendar', isAuthenticated, function(req, res) {
-	res.render('calendar');
 });
 /**************************************************************
 REPORTS

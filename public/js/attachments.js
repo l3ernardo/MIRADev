@@ -14,7 +14,7 @@ var result=[];
 /* Create the attachment link  */
 function linkAttachments(idSpan, idParent){
 	var spanElement = document.getElementById(idSpan.toString());
-	$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="#" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
+	$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="javascript:void(0)" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
 	$(spanElement).before('<div id="divDownload"></div>');
 };
 /* Save the attachment to cloudant */
@@ -72,7 +72,7 @@ function addAttachments(parentIdValue, idElement){
 			'class':'ibm-common-overlay ibm-overlay-alt'
 		});
 
-		$(formOverlay).attr({			
+		$(formOverlay).attr({
 			'name': 'formAttachment',
 			'enctype':'multipart/form-data',
 			'method': 'POST',

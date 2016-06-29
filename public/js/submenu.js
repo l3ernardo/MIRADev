@@ -30,7 +30,7 @@ function updateSubMenu(menutitle,calendars,dashboards,reports,references,archive
 	if(calendars.length > 0){
 		$('a#calendars-a').attr({'href':calendars[0].link});
 		for(i=0;i<calendars.length;i++){
-			divs=divs+'<li><a id="'+calendars[i].link.replace('/','')+'" href="'+calendars[i].link+'">'+calendars[i].name+'</a></li>';
+			divs=divs+'<li><a id="'+calendars[i].link.replace('/','').replace('?','').replace('=','')+'" href="'+calendars[i].link+'">'+calendars[i].name+'</a></li>';
 		}
 		$('#calendars-options').append(divs);divs='';
 	}else{
@@ -92,6 +92,7 @@ function selectedMenuOption(){
 	var url = parent.location.href;
 	url = url.split('/');
 	url = url[url.length -1];
+	url = url.replace('?','').replace('=','');
 	var selLink = document.getElementById(url);
 	if(selLink != null){
 		selLink = eval("$('a#"+url+"')");
