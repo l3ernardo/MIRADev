@@ -97,8 +97,10 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 							console.log('URL requested: ' + req.session.returnTo);
 							if(typeof req.session.returnTo!='undefined') {
 								if(req.session.returnTo!='' && req.session.returnTo!='/') {
-									res.redirect(req.session.returnTo);
-									req.session.returnTo = '';	
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');
+									res.redirect(rtn);									
 								} else {
 									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});	
 								}								
@@ -110,8 +112,10 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 							console.log('URL requested: ' + req.session.returnTo);
 							if(typeof req.session.returnTo!='undefined') {
 								if(req.session.returnTo!='' && req.session.returnTo!='/') {
-									res.redirect(req.session.returnTo);
-									req.session.returnTo = '';	
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');									
+									res.redirect(rtn);	
 								} else {
 									res.render('index');
 								}								
@@ -124,8 +128,10 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 						console.log('URL requested: ' + req.session.returnTo);
 						if(typeof req.session.returnTo!='undefined') {
 							if(req.session.returnTo!='' && req.session.returnTo!='/') {
-								res.redirect(req.session.returnTo);
-								req.session.returnTo = '';	
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');									
+									res.redirect(rtn);	
 							} else {
 								res.render('index');
 							}								
