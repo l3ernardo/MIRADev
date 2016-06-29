@@ -11,6 +11,9 @@ This application consolidates information from MSAC (Management Self Assessment 
 ## Patch notes:
 
 ```
+June 29th, 2016
+- Fixed initial store page;
+
 June 28th, 2016
 - Added initial store page;
 - Changed bluegroups check to parameters instead its own design doc;
