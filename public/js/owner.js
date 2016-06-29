@@ -24,7 +24,7 @@ bpDivURL: 'http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmdivdept/dept=%t.sea
 function updateOwner() {
 	var member = [];
 	var email = $("#Owner").html().split("(")[1].split(")")[0];
-	email = "rodrigok@br.ibm.com" // for test purposes
+	//email = "rodrigok@br.ibm.com" // for test purposes
 	if(email!="") {
 		// Owner info
 		var div = '';
