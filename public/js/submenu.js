@@ -92,8 +92,9 @@ function selectedMenuOption(){
 	var url = parent.location.href;
 	url = url.split('/');
 	url = url[url.length -1];
-	var selLink = eval("$('a#"+url+"')");
-	if(selLink){
+	var selLink = document.getElementById(url);
+	if(selLink != null){
+		selLink = eval("$('a#"+url+"')");
 		selLink.addClass('ibm-active'); //a
 		selLink.parent().parent().show() //ul
 		selLink.parent().parent().parent().addClass('ibm-active') //li

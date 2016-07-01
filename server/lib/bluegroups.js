@@ -61,34 +61,37 @@ var Bluegroups = function() {
     var bluegroups = [];
 
       //read db to get the BG names.
-      db.view('bluegroups', 'view-bluegroups', {include_docs: true}).then(function(data){
-          var len = data.body.rows[0].doc.bg.length;
+      
+        var deferred = q.defer();
+        var obj = {
+          selector:{
+            "_id": {"$gt":0},
+            "keyName": "Bluegroups"
+          }
+        };
 
-          //for each bluegroup name in DB, create an URL and pass it to
-          //requestBlueGroups funtion to be checked the group name
+        db.find(obj).then(function(data){
+          var len = data.body.docs[0].value.bg.length;
+          var doc = data.body.docs;
 
           for (var i = 0; i < len; i++) {
-              var bgname = data.body.rows[0].doc.bg[i].bgname;
-           var urlBG = require('util').format(_urlBG, username, bgname);
+            var bgname = data.body.docs[0].value.bg[i].bgname;
+            var urlBG = require('util').format(_urlBG, username, bgname);
 
-          //checks the BG name and if user is member of the BG.
+            //checks the BG name and if user is member of the BG.
             requestBlueGroups(urlBG).then(function(data) {
-
-               if(data[0].msg == 'Success'){
+              if(data[0].msg == 'Success'){
                 bluegroups.push(data);
-
                 deferred.resolve(bluegroups);
               }
-
             });
-
           } //end FOR
 
-        }).catch(function(error){
-              res.json(error);
-            }); //end db.view
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err});
+        });
 
-    return deferred.promise;
+        return deferred.promise;
 
   }; //end this.getMembersByBG
 

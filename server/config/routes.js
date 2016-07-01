@@ -13,16 +13,10 @@ var businessunit = require('./js/businessunit.js');
 var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
 var assessableunit = require('./js/assessableunit.js');
+var isAuthenticated = require('./authentication.js');
 
-/* Verify if the user is authenticated */
-function isAuthenticated(req, res, next) {
-	if (req.session.isAuthenticated)
-        return next();
-    res.redirect('/login');
-};
-/* Redirect to disclouse when go to / */
 router.get('/', isAuthenticated, function(req, res) {
-	res.redirect('disclosure');
+	res.redirect('login');
 });
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
@@ -99,12 +93,51 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 			dialog.displayBulletin(req, res, db).then(function(data) {
 				if(data.status==200 & !data.error) {
 						if(data.doc) {
-							res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+							//Redirect to original URL, if available
+							console.log('URL requested: ' + req.session.returnTo);
+							if(typeof req.session.returnTo!='undefined') {
+								if(req.session.returnTo!='' && req.session.returnTo!='/') {
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');
+									res.redirect(rtn);									
+								} else {
+									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});	
+								}								
+							} else {
+								res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});	
+							}
+						} else {
+							//Redirect to original URL, if available
+							console.log('URL requested: ' + req.session.returnTo);
+							if(typeof req.session.returnTo!='undefined') {
+								if(req.session.returnTo!='' && req.session.returnTo!='/') {
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');									
+									res.redirect(rtn);	
+								} else {
+									res.render('index');
+								}								
+							} else {
+								res.render('index');
+							}
+						}
+					} else {
+						//Redirect to original URL, if available
+						console.log('URL requested: ' + req.session.returnTo);
+						if(typeof req.session.returnTo!='undefined') {
+							if(req.session.returnTo!='' && req.session.returnTo!='/') {
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');									
+									res.redirect(rtn);	
+							} else {
+								res.render('index');
+							}								
 						} else {
 							res.render('index');
 						}
-					} else {
-						res.render('index');
 					}
 				}).catch(function(err) {
 					res.render('index');
@@ -257,7 +290,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				assessableunit.getAUbyID(req, res, db).then(function(data) {
 					if(data.status==200 & !data.error) {
 						if(data.doc) {
-							res.render('aubusinessunit', data.doc[0] );
+							res.redirect('/assessableunit?id=' + data.doc[0]._id);
 						} else {
 							res.render('error',{errorDescription: data.error});
 						}
@@ -268,7 +301,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				}).catch(function(err) {
 					res.render('error',{errorDescription: err.error});
 					console.log("[routes][getassessableunitbyID] - " + err.error);
-				})
+				});
 				// res.render('aubusinessunit', data.body );
 			} else {
 				res.render('error',{errorDescription: data.error});

@@ -8,14 +8,7 @@ var varConf = require('../../configuration');
 // Add functionalities from other JS files
 var parameter = require('./js/parameter.js');
 var setup = require('./js/setup.js');
-
-
-function isAuthenticated(req, res, next) {
-	if (req.session.isAuthenticated)
-        return next();
-    res.redirect('/login');
-};
-
+var isAuthenticated = require('./authentication.js');
 
 /**************************************************************
 SETUP FUNCTIONALITY
