@@ -16,7 +16,7 @@ var assessableunit = require('./js/assessableunit.js');
 var isAuthenticated = require('./authentication.js');
 
 router.get('/', isAuthenticated, function(req, res) {
-	res.redirect('login');
+	res.redirect('index');
 });
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
@@ -96,16 +96,16 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 							//Redirect to original URL, if available
 							console.log('URL requested: ' + req.session.returnTo);
 							if(typeof req.session.returnTo!='undefined') {
-								if(req.session.returnTo!='' && req.session.returnTo!='/') {
+								if(req.session.returnTo!='' && req.session.returnTo!='/' && req.session.returnTo!='-') {
 									var rtn = req.session.returnTo;
 									req.session.returnTo = '-';
 									req.flash('url', '-');
-									res.redirect(rtn);									
+									res.redirect(rtn);
 								} else {
-									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});	
-								}								
+									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+								}
 							} else {
-								res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});	
+								res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
 							}
 						} else {
 							//Redirect to original URL, if available

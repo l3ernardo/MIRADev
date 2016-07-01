@@ -7,6 +7,8 @@
  */
 
 var q  = require("q");
+var moment = require('moment');
+var mtz = require('moment-timezone');
 
 var calendar = {
 	/* Get all calendars */
@@ -69,14 +71,14 @@ var calendar = {
 			var obj = {
 				selector : {
 					"_id": {"$gt":0},
-					"type": {"$or":["Meeting","Milestone"]},
+					"eventType": {"$or":["Meeting/Event","Milestone"]},
 				}
 			};
 		}else{
 			var obj = {
 				selector : {
 					"_id": {"$gt":0},
-					"type": {"$or":["Meeting","Milestone"]},
+					"eventType": {"$or":["Meeting/Event","Milestone"]},
 					"ownerId": ownerCalendar
 				}
 			};
@@ -96,42 +98,46 @@ var calendar = {
 	},
 	/*Save event*/
 	saveEvent: function(req, res, db){
+		var deferred = q.defer();
 		var object;
-		var date = new Date();
-		
+		var now = moment(new Date());
+		object = {
+			"title" : req.body.title,
+			"type" : "Event",
+			"start" : req.body.startDate,
+			"end" : req.body.endDate,
+			"eventType" : req.body.eventType,
+			"eventInfo" : req.body.eventInfo,
+			"owner" : req.body.owner,
+			"ownerId" : req.body.ownerId,
+			"targetCalendar" : req.body.chkTarCal,
+			"attachIDs" : req.body.attachIDs
+		};
 		if (req.body.id != "") {
 			object._id = req.body.id;
 			object._rev = req.body.rev;
+		}else{
+			object.creationBy = req.session.user.notesId;
+			object.creationDate = now.format("MM/DD/YYYY");
+			object.creationTime = now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr();
 		}
-		
-		object.eventName = req.body.eventName;
-		object.type = req.body.eventType;
-		object.startDate = req.body.startDate;
-		object.endDate = req.body.endDate;
-		object.eventType = req.body.eventType;
-		object.eventInfo = req.body.eventInfo;
-		object.owner = req.body.onwer;
-		object.ownerId = req.body.onwerId
-		object.creationBy = req.session.user.cn[0];
-		object.creationDate =  moment(date).format("DD-MM-YYYY HH:mm");
-		object.targetCalendar = req.body.chkTarCal;
-		object.attachIDs = req.body.attachIDs;
 		// save doc
 		db.save(object).then(function(data){
-			//update files with parent id
-			deferred.resolve(data);
+			deferred.resolve({"status": 200, "msg": "OK"});
 		}).catch(function(err) {
+			console.log("error"+err);
 			deferred.reject({"status": 500, "error": err});
 		});
+		return deferred.promise;
 	},
 	/*Delete event*/
 	deleteEvent: function(req, res, db){
 		var object;
-		var date = new Date();
 		
-		object._id = req.body.id;
-		object._rev = req.body.rev;
-		
+		object = {
+			"_id" : req.body.id,
+			"_rev" : req.body.rev
+		}
 		// save doc
 		db.removeDoc(object).then(function(data){
 			//delete files
@@ -139,6 +145,7 @@ var calendar = {
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
+		return deferred.promise;
 	}
 };
 module.exports = calendar;

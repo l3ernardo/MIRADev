@@ -9,12 +9,15 @@
 
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
-		<div class="ibm-buttons-row">
+		<span><br/></span>
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row" style="display:none">
 			<p>
-				<input class="ibm-btn-sec" type="button" id="btn_meeting" value="New Meeting" />
 				<span class="ibm-sep"> </span>
-				<input class="ibm-btn-sec" type="button" id="btn_milestone" value="Milestone" />
+				<a href="javascript:void(0);" value="New Meeting/Event" name="btn_meeting" id="btn_meeting" class="ibm-add1-link">New Meeting/Event</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="New Parameter" name="btn_milestone" id="btn_milestone" class="ibm-add1-link">New Milestone</a>
 			</p>
+			<br/>
 		</div>
 		<div id='calendar'></div>
 		<div id="loader" style="display:none">
@@ -32,18 +35,20 @@
 			<div class="ibm-container ibm-alternate ibm-buttons-last">
 				<div class="ibm-container-body">
 					<div>
-						<form id="formCalendar" class="ibm-column-form ibm-styled-form" name="formCalendar" method="POST" enctype="multipart/form-data" action="/saveEvent">
+						<form id="formCalendar" class="ibm-column-form ibm-styled-form" name="formCalendar" method="POST" action="/saveEvent">
 							<input type="hidden" id="id" name="id">
 							<input type="hidden" id="rev" name="rev">
 							<input type="hidden" id="eventType" name="eventType">
 							<p style="text-align:left">
-								<label for="eventName">Name:<span class="ibm-required">*</span></label>
-								<span><input type="text" id="eventName" name="eventName" size="50"></span>
+								<label for="title">Name:<span class="ibm-required">*</span></label>
+								<span><input type="text" id="title" name="title" size="50"></span>
 							</p>
 							<p style="text-align:left">
 								<label for="ownercal">Owner calendar:</label>
-								<span id="owner" name="owner"></span>
-								<input type="hidden" id="ownerId" name="ownerId">
+								<span>
+									<input id="owner" name="owner" readonly>
+									<input type="hidden" id="ownerId" name="ownerId">
+								</span>
 							</p>
 							<p style="text-align:left" class="ibm-form-elem-grp">
 								<label id="lblTarCal" class="ibm-form-grp-lbl" style="width:19%">Other target calendars:</label>
@@ -65,7 +70,7 @@
 							<table>
 								<tr>
 								<td style="width:52%"><label for="btnAddFiles">Links:</label><td>
-								<td><span id="attachIDs" name ="attachIDs" cols="80" style="display:none"></span>
+								<td><input id="attachIDs" name ="attachIDs" type="hidden">
 								<span id="attachments"></span>
 								<script>$(document).ready(function() {linkAttachments('attachments','id');});</script>
 								</td>
@@ -74,7 +79,7 @@
 							<div class="ibm-rule"><hr/></div>
 							<div class="ibm-buttons-row">
 								<p>
-									<input class="ibm-btn-pri" type="submit" id="btn_submit" value="Submit" />
+									<input class="ibm-btn-pri" type="submit" id="btn_submit" value="Submit" onclick="saveEvent()"/>
 									<span class="ibm-sep">&nbsp;</span>
 									<input class="ibm-btn-sec" type="button" id="btn_delete" value="Delete" />
 									<span class="ibm-sep">&nbsp;</span>

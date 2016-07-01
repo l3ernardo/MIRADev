@@ -6,10 +6,8 @@
  *
  */
 var express = require("express");
-var passport = require('passport');
 var calendars = express.Router();
 var db = require('../../conn.js');
-var submenu = require('./js/submenu.js');
 var calendar = require('./js/calendar.js');
 var isAuthenticated = require('./authentication.js');
 
@@ -21,7 +19,7 @@ calendars.get('/calendar', isAuthenticated, function(req, res) {
 	res.render('calendar');
 });
 //load data from db and show in calendar
-calendars.get('/getEvents', function(req, res) {
+calendars.get('/getEvents', isAuthenticated, function(req, res) {
 	calendar.getEvents(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.events);
@@ -45,10 +43,10 @@ calendars.get('/getTargetCalendars', isAuthenticated, function(req, res){
 	});
 });
 //Save event
-calendars.post('/saveEvent', function(req, res) {
+calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 	calendar.saveEvent(req, res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.end();
+			res.redirect("/calendar?id=all");
 		} else {
 			console.log("[calendars][saveEvent] - " + data.error);
 		}
@@ -57,15 +55,15 @@ calendars.post('/saveEvent', function(req, res) {
 	})
 });
 //Delete event
-calendars.post('/saveEvent', function(req, res) {
+calendars.post('/deleteEvent', isAuthenticated, function(req, res) {
 	calendar.deleteEvent(req, res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.end();
 		} else {
-			console.log("[calendars][saveEvent] - " + data.error);
+			console.log("[calendars][deleteEvent] - " + data.error);
 		}
 	}).catch(function(err) {
-		console.log("[calendars][saveEvent] - " + err.error);
+		console.log("[calendars][deleteEvent] - " + err.error);
 	})
 }); 
 
