@@ -55,10 +55,10 @@ calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 	})
 });
 //Delete event
-calendars.post('/deleteEvent', isAuthenticated, function(req, res) {
+calendars.get('/deleteEvent', isAuthenticated, function(req, res) {
 	calendar.deleteEvent(req, res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.end();
+			res.redirect("/calendar?id=all");
 		} else {
 			console.log("[calendars][deleteEvent] - " + data.error);
 		}

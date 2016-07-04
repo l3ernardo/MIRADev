@@ -25,6 +25,32 @@ $(document).ready(function() {
 		$('#endDate').val($(this).val());
 	});
 
+	//button submit
+	$('#btn_submit').click(function() {
+		var opt = parent.location.href;
+		if ($('#title').val() != '' && $('#startDate').val() != '') {
+			var form = $('#formCalendar');
+			$.ajax({
+				url: "/saveEvent",
+				type: 'POST',
+				data: form.serialize(),
+				processData: false,
+				success: function (data) {
+					ibmweb.overlay.hide('Overlay_Event');
+					$('#calendar').fullCalendar('refetchEvents');
+					alert("Event saved successfully");
+				},
+				error: function() {
+					alert("There was an error when saving the Event");
+					e.preventDefault();
+					e.stopImmediatePropagation();
+				}
+			});
+		}else {
+			alert('Please fill out all of the required fields.');
+		}
+	});
+	
 	//button cancel
 	$('#btn_cancel').click(function() {
 		ibmweb.overlay.hide('Overlay_Event');
@@ -36,20 +62,17 @@ $(document).ready(function() {
 		var r = confirm("Are you sure you want to delete the event?");
 		
 		if (r == true) {
-			//$.blockUI({ message: $('#loader') });
 			$.ajax({
 				url: "/deleteEvent",
 				type: 'GET',
 				data: { id: $('#id').val(), rev: $('#rev').val() },
 				contentType: 'application/json',
-				success: function (response) {
+				success: function (data) {
 					ibmweb.overlay.hide('Overlay_Event');
 					$('#calendar').fullCalendar('refetchEvents');
-					//$.unblockUI();
 					alert("Event deleted successfully");
 				},
 				error: function() {
-					//$.unblockUI();
 					alert("There was an error when deleting the Event");
 				}
 			});
@@ -86,6 +109,7 @@ $(document).ready(function() {
 		eventRender: function (event, element) {
 			element.attr('href', 'javascript:void(0);');
 			element.click(function() {
+				clearFields();
 				//enable submit and cancel button if they are disabled
 				$('#btn_submit').prop("disabled", false);
 				$('#btn_cancel').prop("disabled", false);
@@ -104,7 +128,6 @@ $(document).ready(function() {
 				$('#attachIDs').val(event.attachIDs);
 				$('input[type=checkbox]').prop('checked', false);
 				$('#eTitle').text(event.eventType);
-				ibmweb.overlay.show('Overlay_Event');
 				if (event.targetCalendar) {
 					var regions = event.targetCalendar;
 					if (typeof regions === 'string') {
@@ -120,6 +143,7 @@ $(document).ready(function() {
 					}
 				}
 				loadAttachments('attachIDs');
+				ibmweb.overlay.show('Overlay_Event');
 			});
 		}
 	}); //end var calendar
@@ -138,8 +162,8 @@ $(document).ready(function() {
 					arrTCalenIds.push(resp[i].id);
 				}
 				else{
-					$('#owner').html(resp[i].name);
-					$('#ownerId').html(resp[i].id);
+					$('#owner').val(resp[i].name);
+					$('#ownerId').val(resp[i].id);
 					$('h1#pageTitle').text(resp[i].name);
 				}
 					
@@ -166,42 +190,11 @@ function clearFields(){
 	$('#end').val('');
 	$('#eventInfo').val('');
 	$('#attachIDs').val('');
-	$('#divDownload').val('');
+	$('#divDownload').html('');
+	resetAttachments();
 	$('input[type=checkbox]').prop('checked', false);
 }
-//submit form
-function saveEvent(){
-	var opt = parent.location.href;
-	if ($('#title').val() != '' && $('#startDate').val() != '') {
-		$('#formCalendar').submit(function(e) {
-			var form = $('#formCalendar')[0];
-			var formData = new FormData(form);
-			$.ajax({
-				url: e.currentTarget.action,
-				type: 'POST',
-				data: formData,
-				contentType: false,
-				processData: false,
-				success: function (data) {
-					
-					ibmweb.overlay.hide('Overlay_Event');
-					$('#calendar').fullCalendar('refetchEvents');
-					alert("Event saved successfully");
-					
-					//e.preventDefault();
-					//e.stopPropagation();
-				},
-				error: function() {
-					alert("There was an error when saving the Event");
-					e.preventDefault();
-					e.stopImmediatePropagation();
-				}
-			});
-		});
-	}else {
-		alert('Please fill out all of the required fields.');
-	}
-}
+
 function loadTargetCalendars(names, ids) {
 	var opt = parent.location.href;
 	opt = opt.split('id=');
