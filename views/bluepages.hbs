@@ -1,0 +1,32 @@
+<script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
+	<style>
+		.ui-autocomplete-loading {
+			background: white url("./images/animated-progress-20x20b.gif") right center no-repeat;
+		}
+	</style>
+<h2>Bluepages lookup</h2>
+<div class="ibm-container"  style="width:100%">
+	<h2> JQuery UI </h2>
+	<div class="ui-widget">
+		<label for="bpname">Type the name: </label>
+		<input id="bpname" class="ui-autocomplete-input" autocomplete="off" >
+		<a class="ibm-delete-link" href="#" onclick="removeItem($('#bpname'),$('#bplist'))">DELETE</a>
+		<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>		
+	</div>
+	<div>
+		<textarea id="bplist" rows="4" cols="100" readonly></textarea>
+	</div>	
+	<hr>	
+	<div class="ui-widget">
+		<label for="namelookup">Perform search: </label>
+		<input id="namelookup" class="ui-autocomplete-input" autocomplete="off" >
+		<a class="ibm-delete-link" href="#" onclick="removeItem($('#namelookup'),$('#namelist'))">DELETE</a>
+		<script>$(document).ready(function() {bpLookup('#namelookup','#namelist');});</script>		
+	</div>
+	<div>
+		<textarea id="namelist" rows="4" cols="100" readonly></textarea>
+	</div>		
+</div>

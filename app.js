@@ -16,8 +16,8 @@ app.use(passport.session());
 app.use(sessions({
 	cookieName: 'session',
 	secret: 'asdfgmirahjklmiraxpto',
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000
+	duration: 1 * 60 * 60 * 1000,
+	activeDuration: 1000 * 60 * 5
 }));
 app.use(flash());
 
@@ -65,4 +65,9 @@ app.use(require('./server/lib/auth'));
 app.use(require('./server/config/routes.js'));
 app.use(require('./server/config/security.js'));
 app.use(require('./server/config/administration.js'));
+app.use(require('./server/config/calendars.js'));
 
+/* Redirect to an error page if no page exists */
+app.get('*', function (req, res) {
+    res.render('error',{errorDescription: req.url + ' does not exist.'});
+}); 

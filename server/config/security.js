@@ -4,19 +4,16 @@ var security = express.Router();
 var middleware = require('../lib/middleware.js')(passport);
 var bluegroup = require('../lib/bluegroups.js');
 var varConf = require('../../configuration');
+var isAuthenticated = require('./authentication.js');
 
-function isAuthenticated(req, res, next) {
-	if (req.session.isAuthenticated)
-		res.redirect('/logout');    
-	else
-		return next();
-};
 /**************************************************************
 LOGIN FUNCTIONALITY
 ***************************************************************/
 /* Validate in Login page */
-security.get('/login', isAuthenticated, function(req, res) {
+security.get('/login', function(req, res) {
 	var message = req.flash('error');
+	// Store the initial url
+	if(typeof req.session.returnTo=='undefined') req.session.returnTo = req.flash('url');
 	if(message == 'Missing credentials'){
 		message = varConf.msgIdPassR;
 	}
@@ -28,7 +25,9 @@ security.get('/login', isAuthenticated, function(req, res) {
 /* Post Login function to validate user access and store in a session */
 security.post('/login',middleware.urlEncodedParser,middleware.passport.authenticate('ldapauth' , { failureRedirect: '/login',failureFlash: true}),function (req,res){
 	if(req.user.hasAccess) {
-		console.log("[BG NAME]: " + bluegroup.bgname);
+		console.log("[BG NAME]: " + req.user.groupName);
+		// Store the initial url
+		if(req.session.returnTo=='') req.session.returnTo = req.flash('url');
 		req.session.user = req.user;
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
@@ -37,7 +36,7 @@ security.post('/login',middleware.urlEncodedParser,middleware.passport.authentic
 		res.redirect('setup');
 	}
 	else {
-		console.log("[routes][login] - Access Denied");
+		//console.log("[routes][login] - Access Denied");
 		req.logout();
 		req.session.user = null;
 		req.session.isAuthenticated = null;

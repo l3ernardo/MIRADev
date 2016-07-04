@@ -1,0 +1,236 @@
+.mira-highlight-tab
+{
+    background-clip: border-box;
+    color: #000 !important;
+    border-top-color: #454545 !important;
+    border-top-style: solid !important;
+    border-top-width: 2.5px !important;
+    border-bottom-color: #454545 !important;
+    border-bottom-style: solid !important;
+    border-bottom-width: 2.5px !important;
+}
+
+.mira-standard-tab
+{
+    border-bottom-color: #ffffff !important;
+    border-bottom-style: solid !important;
+    border-bottom-width: 1.5px !important;
+    color: #fff !important;
+}
+
+.mira-assessment-tab
+{
+    color: #fff !important;
+}
+
+.td_icon_empty {
+  background-image: url(/public/images/cancel.png);
+  background-repeat:no-repeat;
+  background-position:center;
+}
+.td_icon_edit {
+  background-image: url(/public/images/pencil.png);
+  background-repeat:no-repeat;
+  background-position: center;
+}
+.td_icon_check {
+  background: url(/public/images/check.png);
+  background-repeat:no-repeat;
+  background-position:center;
+}
+.ibm-data-table .mira-basic {
+  background-color: #4181c0;
+  text-align: left;
+  color: white;
+}
+.ibm-data-table .mira-subtable {
+  background-color: gray;
+  text-align: left;
+  color: white;
+}
+.ibm-data-table .bu-iot {
+  background-color: #71b2cf;
+  text-align: left;
+  color: white;
+}
+.ibm-data-table .reporting-group {
+  background-color: #00c196;
+  text-align: left;
+  color: white;
+}
+.ibm-data-table .controllable-unit {
+  background-color: #ff8080;
+  text-align: left;
+  color: white;
+}
+.ibm-data-table .mira-caption {
+  background-color: #4181c0;
+  text-align: left;
+  color: white;
+  padding-left: 3px;
+}
+
+
+/*table for dashboard*/
+caption {
+  text-align: left;
+}
+
+th {
+  text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table.mira-dashboard-table {
+    border-bottom-color: #cccccc;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+table.mira-dashboard-table thead tr, table.ibm-data-table thead tr th {
+    border-top-color: #dddddd;
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+table.mira-dashboard-table td, table.ibm-data-table th {
+    border-top-color: #eee;
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+table.mira-dashboard-table tbody th, table.mira-dashboard-view tbody td {
+    border-left-color: #fff;
+    border-left-style: solid;
+    border-left-width: 3px;
+    border-top-color: #dddddd;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #555555;
+    padding-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 5px;
+    padding-top: 8px;
+}
+
+table.mira-dashboard-table td, table.mira-dashboard-table th {
+    padding-bottom: 10px;
+    padding-left: 3px;
+    padding-right: 5px;
+    padding-top: 10px;
+    vertical-align: top;
+}
+
+.mira_checkbox{
+    opacity: 0.90;
+ 	  background-position: center center;
+    background-repeat: no-repeat;
+    border-bottom-color: -moz-use-text-color;
+    border-bottom-style: none;
+    border-bottom-width: 0;
+    border-image-outset: 0 0 0 0;
+    border-image-repeat: stretch stretch;
+    border-image-slice: 100% 100% 100% 100%;
+    border-image-source: none;
+    border-image-width: 1 1 1 1;
+    border-left-color: -moz-use-text-color;
+    border-left-style: none;
+    border-left-width: 0;
+    border-right-color: -moz-use-text-color;
+    border-right-style: none;
+    border-right-width: 0;
+    border-top-color: -moz-use-text-color;
+    border-top-style: none;
+    border-top-width: 0;
+    height: 13px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+	  margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    width: 16px;
+
+}
+.mira_checkbox_flat{
+  opacity: 0.90;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-bottom-color: -moz-use-text-color;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-image-outset: 0 0 0 0;
+  border-image-repeat: stretch stretch;
+  border-image-slice: 100% 100% 100% 100%;
+  border-image-source: none;
+  border-image-width: 1 1 1 1;
+  border-left-color: -moz-use-text-color;
+  border-left-style: none;
+  border-left-width: 0;
+  border-right-color: -moz-use-text-color;
+  border-right-style: none;
+  border-right-width: 0;
+  border-top-color: -moz-use-text-color;
+  border-top-style: none;
+  border-top-width: 0;
+  height: 13px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  width: 16px;
+}
+.mira_checkbox_tree{
+  opacity: 0.90;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-bottom-color: -moz-use-text-color;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-image-outset: 0 0 0 0;
+  border-image-repeat: stretch stretch;
+  border-image-slice: 100% 100% 100% 100%;
+  border-image-source: none;
+  border-image-width: 1 1 1 1;
+  border-left-color: -moz-use-text-color;
+  border-left-style: none;
+  border-left-width: 0;
+  border-right-color: -moz-use-text-color;
+  border-right-style: none;
+  border-right-width: 0;
+  border-top-color: -moz-use-text-color;
+  border-top-style: none;
+  border-top-width: 0;
+  height: 13px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  width: 16px;
+}
+.scrollit {
+    overflow:scroll;
+    height:250px;
+}
+/

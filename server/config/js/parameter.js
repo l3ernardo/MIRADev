@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * 
  * Parameters code for MIRA Web
- * Developed by :                                                
+ * Developed by :   Gabriela S. Pailiacho G.
  * Date:25 May 2016
  * 
  */
@@ -87,13 +87,12 @@ var parameters = {
 			obj._rev = req.body.rev;
 		}
 		db.save(obj).then(function(data){
-			console.log("obj saved successfully");
 			deferred.resolve({"status": 200, "msg": "OK"})
 		}).catch(function(err){
 			console.log("[routes][saveParam] - " + err.error);
 			deferred.reject({"status": 500, "error": err});
 		});
-		return deferred.promise;		
-	},
+		return deferred.promise;
+	}
 };
 module.exports = parameters;
