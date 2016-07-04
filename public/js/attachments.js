@@ -14,7 +14,7 @@ var result=[];
 /* Create the attachment link  */
 function linkAttachments(idSpan, idParent){
 	var spanElement = document.getElementById(idSpan.toString());
-	$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="#" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
+	$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="javascript:void(0)" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
 	$(spanElement).before('<div id="divDownload"></div>');
 };
 /* Save the attachment to cloudant */
@@ -41,7 +41,7 @@ function saveAttach(){
 				docs_id.push(data.attachId);
 				names.push(data.attachName);
 				result.push(data);
-				$("#attachIDs").html(JSON.stringify(result));
+				$("#attachIDs").val(JSON.stringify(result));
 				$('#upload').val('').clone(true);
 				ibmweb.overlay.hide("Overlay_Attachments");
 				$('input#upload').removeAttr("disabled");
@@ -72,7 +72,7 @@ function addAttachments(parentIdValue, idElement){
 			'class':'ibm-common-overlay ibm-overlay-alt'
 		});
 
-		$(formOverlay).attr({			
+		$(formOverlay).attr({
 			'name': 'formAttachment',
 			'enctype':'multipart/form-data',
 			'method': 'POST',
@@ -164,7 +164,7 @@ function deleteAttachment(index, id, filename) {
 					docs_id.splice(index,1);
 					names.splice(index,1);
 					result.splice(index,1);
-					$("#attachIDs").html(JSON.stringify(result));
+					$("#attachIDs").val(JSON.stringify(result));
 					populateDownload(docs_id, names);
 				}
 				
@@ -179,14 +179,14 @@ function deleteAttachment(index, id, filename) {
 function loadAttachments(idLinksJson){
 	var linksJson = eval("$('#"+idLinksJson+"')");
 	
-	if(linksJson.html() != ''){
-		var arrLinks = $.parseJSON( linksJson.html());
+	if(linksJson.val() != ''){
+		var arrLinks = $.parseJSON( linksJson.val());
 		for(i=0; i<arrLinks.length; i++){
 			docs_id.push(arrLinks[i].attachId);
 			names.push(arrLinks[i].attachName);
 			result.push({"attachId": arrLinks[i].attachId, "attachName": arrLinks[i].attachName})
 		}
 		populateDownload(docs_id, names);
-		linksJson.html(JSON.stringify(arrLinks));
+		linksJson.val(JSON.stringify(arrLinks));
 	}
 };
