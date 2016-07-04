@@ -1,4 +1,96 @@
-<script>
-	//Load document's name
-	$('h1#pageTitle').text("Integrated Calendar");
-</script>
+<link href='./css/fullcalendar.min.css' rel='stylesheet' />
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<script src='./lib/moment.min.js'></script>
+<script src='./lib/fullcalendar.min.js'></script>
+<script src='./lib/scheduler.min.js'></script>
+<script src='./js/calendar.js'></script>
+<!-- JS for attachments widget -->
+<script src="./js/attachments.js"/></script>
+
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<span><br/></span>
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row" style="display:none">
+			<p>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="New Meeting/Event" name="btn_meeting" id="btn_meeting" class="ibm-add1-link">New Meeting/Event</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="New Parameter" name="btn_milestone" id="btn_milestone" class="ibm-add1-link">New Milestone</a>
+			</p>
+			<br/>
+		</div>
+		<div id='calendar'></div>
+		<div id="loader" style="display:none">
+			<p class="ibm-spinner-large" href="javascript:void(0)">&nbsp;</p>
+		</div>
+	</div>
+</div>
+<div id="Overlay_Event" title="Event Details" class="ibm-common-overlay ibm-overlay-alt-two" >
+	<div class="ibm-body">
+		<div class="ibm-main">
+			<div class="ibm-title ibm-subtitle">
+				<h2 id="eTitle" name="eTitle"></h2>
+			</div>
+			<div class="ibm-rule"><hr/></div>
+			<div class="ibm-container ibm-alternate ibm-buttons-last">
+				<div class="ibm-container-body">
+					<div>
+						<form id="formCalendar" class="ibm-column-form ibm-styled-form" name="formCalendar" method="POST" action="/saveEvent">
+							<input type="hidden" id="id" name="id">
+							<input type="hidden" id="rev" name="rev">
+							<input type="hidden" id="eventType" name="eventType">
+							<p style="text-align:left">
+								<label for="title">Name:<span class="ibm-required">*</span></label>
+								<span><input type="text" id="title" name="title" size="50"></span>
+							</p>
+							<p style="text-align:left">
+								<label for="ownercal">Owner calendar:</label>
+								<span>
+									<input id="owner" name="owner" readonly>
+									<input type="hidden" id="ownerId" name="ownerId">
+								</span>
+							</p>
+							<p style="text-align:left" class="ibm-form-elem-grp">
+								<label id="lblTarCal" class="ibm-form-grp-lbl" style="width:19%">Other target calendars:</label>
+								<span id="divTarCal" class="ibm-input-group"></span>
+							</p>
+							<div class="ibm-rule"><hr/></div>
+							<p style="text-align:left">
+								<label for="startDate" align="left">Date:<span class="ibm-required">*</span></label>
+								<span>
+									<input type="date" id="startDate" name="startDate" size="30">
+									<input type="hidden" id="endDate" name="endDate">
+								</span>
+							</p>
+							<div class="ibm-rule"><hr/></div>
+							<p style="text-align:left">
+								<label for="eventInfo" align="left">Notes:</label>
+								<span><textarea id="eventInfo" name="eventInfo" cols="60" rows="3"></textarea></span>
+							</p>
+							<table>
+								<tr>
+								<td style="width:52%"><label for="btnAddFiles">Links:</label><td>
+								<td><input id="attachIDs" name ="attachIDs" type="hidden">
+								<span id="attachments"></span>
+								<script>$(document).ready(function() {linkAttachments('attachments','id');});</script>
+								</td>
+								</tr>
+							</table>
+							<div class="ibm-rule"><hr/></div>
+							<div class="ibm-buttons-row">
+								<p>
+									<input class="ibm-btn-pri" type="submit" id="btn_submit" value="Submit" onclick="saveEvent()"/>
+									<span class="ibm-sep">&nbsp;</span>
+									<input class="ibm-btn-sec" type="button" id="btn_delete" value="Delete" />
+									<span class="ibm-sep">&nbsp;</span>
+									<input class="ibm-btn-sec" type="button" id="btn_cancel" value="Cancel" />
+								</p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

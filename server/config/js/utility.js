@@ -157,7 +157,7 @@ var util = {
 		return deferred.promise;	
 	},
 	//Delete the selected file
-	deleteAttachment: function (req, res,db){
+	deleteFile: function (req, res,db){
 		var deferred = q.defer();
 		var names=req.query.filename
 		var id = req.query.id;
