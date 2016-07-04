@@ -13,16 +13,10 @@ var businessunit = require('./js/businessunit.js');
 var submenu = require('./js/submenu.js');
 var utility = require('./js/utility.js');
 var assessableunit = require('./js/assessableunit.js');
+var isAuthenticated = require('./authentication.js');
 
-/* Verify if the user is authenticated */
-function isAuthenticated(req, res, next) {
-	if (req.session.isAuthenticated)
-        return next();
-    res.redirect('/login');
-};
-/* Redirect to disclouse when go to / */
 router.get('/', isAuthenticated, function(req, res) {
-	res.redirect('disclosure');
+	res.redirect('index');
 });
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
@@ -44,17 +38,22 @@ SUBMENU FUNCTIONALITY
 ***************************************************************/
 
 router.get('/submenu', isAuthenticated, function(req, res) {
-	submenu.listMenu(req,res,db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			res.json({menu: data.submenu});
-		} else {
-			//res.render('error',{errorDescription: data.error})
-			console.log("[routes][submenulist]" + data.error);
-		}
-	}).catch(function(err) {
-		//res.render('error',{errorDescription: err.error})
-		console.log("[routes][submenulist] - " + err.error);
-	})
+	if(req.session.businessunit != ""){
+		submenu.listMenu(req,res,db).then(function(data) {
+			if(data.status==200 & !data.error) {
+				res.json({menu: data.submenu});
+			} else {
+				//res.render('error',{errorDescription: data.error})
+				console.log("[routes][submenulist]" + data.error);
+			}
+		}).catch(function(err) {
+			//res.render('error',{errorDescription: err.error})
+			console.log("[routes][submenulist] - " + err.error);
+		})
+	}
+	else{
+		res.json({menu: ""});
+	}
 });
 
 /**************************************************************
@@ -94,12 +93,51 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 			dialog.displayBulletin(req, res, db).then(function(data) {
 				if(data.status==200 & !data.error) {
 						if(data.doc) {
-							res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+							//Redirect to original URL, if available
+							console.log('URL requested: ' + req.session.returnTo);
+							if(typeof req.session.returnTo!='undefined') {
+								if(req.session.returnTo!='' && req.session.returnTo!='/' && req.session.returnTo!='-') {
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');
+									res.redirect(rtn);
+								} else {
+									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+								}
+							} else {
+								res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+							}
+						} else {
+							//Redirect to original URL, if available
+							console.log('URL requested: ' + req.session.returnTo);
+							if(typeof req.session.returnTo!='undefined') {
+								if(req.session.returnTo!='' && req.session.returnTo!='/') {
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');									
+									res.redirect(rtn);	
+								} else {
+									res.render('index');
+								}								
+							} else {
+								res.render('index');
+							}
+						}
+					} else {
+						//Redirect to original URL, if available
+						console.log('URL requested: ' + req.session.returnTo);
+						if(typeof req.session.returnTo!='undefined') {
+							if(req.session.returnTo!='' && req.session.returnTo!='/') {
+									var rtn = req.session.returnTo;
+									req.session.returnTo = '-';
+									req.flash('url', '-');									
+									res.redirect(rtn);	
+							} else {
+								res.render('index');
+							}								
 						} else {
 							res.render('index');
 						}
-					} else {
-						res.render('index');
 					}
 				}).catch(function(err) {
 					res.render('index');
@@ -252,7 +290,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				assessableunit.getAUbyID(req, res, db).then(function(data) {
 					if(data.status==200 & !data.error) {
 						if(data.doc) {
-							res.render('aubusinessunit', data.doc[0] );
+							res.redirect('/assessableunit?id=' + data.doc[0]._id);
 						} else {
 							res.render('error',{errorDescription: data.error});
 						}
@@ -263,7 +301,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 				}).catch(function(err) {
 					res.render('error',{errorDescription: err.error});
 					console.log("[routes][getassessableunitbyID] - " + err.error);
-				})
+				});
 				// res.render('aubusinessunit', data.body );
 			} else {
 				res.render('error',{errorDescription: data.error});
@@ -315,7 +353,7 @@ router.get('/download', isAuthenticated, function(req, res){
 });
 /* Delete attachment */
 router.get('/deleteAttachment', isAuthenticated, function(req, res){
-	utility.downloadFile(req,res,db).then(function(data) {
+	utility.deleteFile(req,res,db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.end();
 		} else {
@@ -326,5 +364,25 @@ router.get('/deleteAttachment', isAuthenticated, function(req, res){
 	})
 	
 });
-
+/**************************************************************
+REPORTS
+***************************************************************/
+/* Load report assessable unit file page*/
+router.get('/reportaufile', isAuthenticated, function(req, res) {
+	res.render('reportaufile');
+});
+/**************************************************************
+REFERENCES
+***************************************************************/
+/* Load reference by category page*/
+router.get('/referencebycat', isAuthenticated, function(req, res) {
+	res.render('referencebycat');
+});
+/**************************************************************
+ARCHIVE
+***************************************************************/
+/* Load archive page*/
+router.get('/archive', isAuthenticated, function(req, res) {
+	res.render('archive');
+});
 module.exports = router;

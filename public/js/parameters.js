@@ -1,5 +1,6 @@
+var editor;
 $(document).ready(function() {
-	var editor;
+	
 	$('h1#pageTitle').text("Parameter");
 	$('#btn_submit').click(function(evt) {
 		$('#fldvalue').val(JSON.stringify(editor.get(), null, 2));
