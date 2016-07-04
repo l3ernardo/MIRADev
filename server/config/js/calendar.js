@@ -136,9 +136,6 @@ var calendar = {
 	/*Delete event*/
 	deleteEvent: function(req, res, db){
 		var deferred = q.defer();
-		console.log(req.query.id);
-		console.log(req.query.rev);
-		
 		var id = req.query.id;
 		var rev = req.query.rev;
 		// delete event
