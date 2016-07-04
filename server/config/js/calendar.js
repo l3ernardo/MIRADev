@@ -103,7 +103,7 @@ var calendar = {
 		var now = moment(new Date());
 		object = {
 			"title" : req.body.title,
-			"type" : "Event",
+			"type" : "Calendar",
 			"start" : req.body.startDate,
 			"end" : req.body.endDate,
 			"eventType" : req.body.eventType,
@@ -116,12 +116,15 @@ var calendar = {
 		if (req.body.id != "") {
 			object._id = req.body.id;
 			object._rev = req.body.rev;
+			//object.creationBy = req.body.creationBy;
+			//object.creationDate = req.body.creationDate;
+			//object.creationTime = req.body.creationTime;
 		}else{
 			object.creationBy = req.session.user.notesId;
 			object.creationDate = now.format("MM/DD/YYYY");
 			object.creationTime = now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr();
 		}
-		// save doc
+		// save event
 		db.save(object).then(function(data){
 			deferred.resolve({"status": 200, "msg": "OK"});
 		}).catch(function(err) {
@@ -132,14 +135,14 @@ var calendar = {
 	},
 	/*Delete event*/
 	deleteEvent: function(req, res, db){
-		var object;
+		var deferred = q.defer();
+		console.log(req.query.id);
+		console.log(req.query.rev);
 		
-		object = {
-			"_id" : req.body.id,
-			"_rev" : req.body.rev
-		}
-		// save doc
-		db.removeDoc(object).then(function(data){
+		var id = req.query.id;
+		var rev = req.query.rev;
+		// delete event
+		db.del(id, rev).then(function(data){
 			//delete files
 			deferred.resolve(data);
 		}).catch(function(err) {
