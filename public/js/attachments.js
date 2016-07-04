@@ -5,8 +5,7 @@
  * Date: 20 June 2016
  * 
  */
- 
-var s=0;
+
 var docs_id=[];
 var names=[];
 var result=[];
@@ -190,3 +189,9 @@ function loadAttachments(idLinksJson){
 		linksJson.val(JSON.stringify(arrLinks));
 	}
 };
+/**/
+function resetAttachments(){
+	docs_id=[];
+	names=[];
+	result=[];
+}

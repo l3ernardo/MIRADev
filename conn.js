@@ -1,8 +1,7 @@
 /**************************************************************************************************
  * 
  * IBM Bluemix app with Cloudant service using Node.js
- * Developed by : Tinniam V Ganesh                                               
- * Date:15 Aug 2014
+ * Date: 09 May 2016
  * 
  */
 
@@ -116,14 +115,14 @@ var DB = {
 	},
 	//DELETE
 	del: function(id, rev){
-		//console.log("[db] delete");
+		//console.log("[db] delete" + id);
 		var deferred = q.defer();
-		this.db.destroy(id, rev, function(error, body, header) {
+		var doc = {"_id":id, "_rev":rev, "_deleted": true};
+		this.db.insert(doc, '', function(error, body) {
 			if (error) {
 				deferred.reject({"status": 500, "body": {}, "error": error});
 			}
 			deferred.resolve({"status": 200, "body": body});
-			console.log("Document successfully deleted: "+id);
 		});
 		return deferred.promise;
 	},
