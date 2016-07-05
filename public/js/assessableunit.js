@@ -1,6 +1,8 @@
 $(document).ready(function(){
 	//Hide left navigation
 	hide_divs();
+	//display notes
+ 	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	//Code for Cancel button
 	$('#btn_cancel').click(function() {
 		window.location.href = "/processdashboard";
@@ -12,19 +14,23 @@ $(document).ready(function(){
 		$('#Notes').val(YmyEditor);
 		$("#assessableunit").submit();
 	});
-	//Setup some private variables 
-	var Dom = YAHOO.util.Dom, 
+	//Code for Edit button
+	$('#btn_edit').click(function() {
+		window.location.href = "assessableunit?id=" + $("input[name='docid']").val() + "&edit";
+	});
+	//Setup some private variables
+	var Dom = YAHOO.util.Dom,
 		Event = YAHOO.util.Event;
-	//The SimpleEditor config 
-	var myConfig = { 
-		height: '200px', 
-		width: '100%', 
-		dompath: true, 
-		focusAtStart: true 
+	//The SimpleEditor config
+	var myConfig = {
+		height: '200px',
+		width: '100%',
+		dompath: true,
+		focusAtStart: true
 	};
 	//Load the SimpleEditor
-	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig); 
-	myEditor.render(); 	
+	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
+	myEditor.render();
 });
 
 function hide_divs(){
