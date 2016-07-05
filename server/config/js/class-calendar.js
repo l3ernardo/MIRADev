@@ -12,7 +12,7 @@ var mtz = require('moment-timezone');
 
 var calendar = {
 	/* Get all calendars */
-	getTargetCalendars: function(req, res, db) {
+	getTargetCalendars: function(req, db) {
 		var deferred = q.defer();
 		dataTargetCalendars = [];
 		var obj = {
@@ -63,7 +63,7 @@ var calendar = {
 		return deferred.promise;
 	},
 	/* Get events */
-	getEvents: function(req, res, db){
+	getEvents: function(req, db){
 		var deferred = q.defer();
 		var events = [];
 		var ownerCalendar = req.query.id;
@@ -97,7 +97,7 @@ var calendar = {
 		return deferred.promise;
 	},
 	/*Save event*/
-	saveEvent: function(req, res, db){
+	saveEvent: function(req, db){
 		var deferred = q.defer();
 		var object;
 		var now = moment(new Date());
@@ -134,7 +134,7 @@ var calendar = {
 		return deferred.promise;
 	},
 	/*Delete event*/
-	deleteEvent: function(req, res, db){
+	deleteEvent: function(req, db){
 		var deferred = q.defer();
 		var id = req.query.id;
 		var rev = req.query.rev;

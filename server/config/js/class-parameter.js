@@ -10,7 +10,7 @@ var q  = require("q");
 
 var parameters = {
 	/* Load all parameters in view*/
-	listParam: function(req, res, db) {
+	listParam: function(req, db) {
 		var deferred = q.defer();
 				
 		db.view('setup', 'view-setup', {include_docs: true}).then(function(data) {
@@ -54,8 +54,8 @@ var parameters = {
 		return deferred.promise;
 	},
 	/* Get specific parameter data by ID */
-	getParam: function(req, res, db) {
-		var deferred = q.defer();		
+	getParam: function(req, db) {
+		var deferred = q.defer();
 		var obj = {
 			selector : {
 				//"_id": req.query.id
@@ -72,7 +72,7 @@ var parameters = {
 		return deferred.promise;
 	},
 	/* Save parameter in cloudant */
-	saveParam: function(req, res, db) {
+	saveParam: function(req, db) {
 		var deferred = q.defer();		
 		var value = JSON.parse(req.body.fldvalue);
 		var obj = {
