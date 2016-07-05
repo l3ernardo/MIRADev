@@ -45,32 +45,6 @@ var assessableunit = {
 			var doc = data.body.docs;
 			var constiobj = {};
 			var toadd = {};
-			var usr = "(" + req.session.user.mail + ")";
-			var editors = doc[0].AdditionalReaders + doc[0].Owner + doc[0].Focals;
-
-			/* Add access roles and mode */
-			if(editors.indexOf(usr) !== -1) {
-				doc[0].editor = 1;
-				if(req.query.edit == '') {
-					doc[0].editmode = 1;
-					if(req.session.user.groupName == "MIRA-ADMIN") {
-						doc[0].admin = 1;
-						doc[0].grantaccess = 1;
-						doc[0].resetstatus = 1;
-						doc[0].cuadmin = 1;
-					} else {
-						if(req.session.user.groupName == "MIRA-GRANT-ACCESS") {
-							doc[0].grantaccess = 1;
-						}
-						if(req.session.user.groupName == "MIRA-RESET-STATUS") {
-							doc[0].resetstatus = 1;
-						}
-						if(req.session.user.groupName == "MIRA-CU-ADMIN-DATA") {
-							doc[0].cuadmin = 1;
-						}
-					}
-				}
-			}
 
 			/* Get Assessment Data */
 			doc[0].AssessmentData = [];
