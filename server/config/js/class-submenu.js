@@ -10,7 +10,7 @@ var q  = require("q");
 
 var submenu = {
 	/* Load all submenus in view*/
-	listMenu: function(req, res, db) {
+	listMenu: function(req, db) {
 		var deferred = q.defer();
 		dataCalendars = [];
 		dataDashboards = [];

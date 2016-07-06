@@ -13,7 +13,7 @@ var mtz = require('moment-timezone');
 var assessableunit = {
 
 	/* Display all Assessable Units */
-	listAU: function(req, res, db) {
+	listAU: function(req, db) {
 		var deferred = q.defer();
 		var obj = {
 			selector:{
@@ -32,7 +32,7 @@ var assessableunit = {
 	},
 
 	/* Get assessable unit by ID */
-	getAUbyID: function(req, res, db) {
+	getAUbyID: function(req, db) {
 		var deferred = q.defer();
 		var docid = req.query.id
 		var obj = {
@@ -45,6 +45,32 @@ var assessableunit = {
 			var doc = data.body.docs;
 			var constiobj = {};
 			var toadd = {};
+			var usr = "(" + req.session.user.mail + ")";
+			var editors = doc[0].AdditionalReaders + doc[0].Owner + doc[0].Focals;
+
+			/* Add access roles and mode */
+			if(editors.indexOf(usr) !== -1) {
+				doc[0].editor = 1;
+				if(req.query.edit == '') {
+					doc[0].editmode = 1;
+					if(req.session.user.groupName == "MIRA-ADMIN") {
+						doc[0].admin = 1;
+						doc[0].grantaccess = 1;
+						doc[0].resetstatus = 1;
+						doc[0].cuadmin = 1;
+					} else {
+						if(req.session.user.groupName == "MIRA-GRANT-ACCESS") {
+							doc[0].grantaccess = 1;
+						}
+						if(req.session.user.groupName == "MIRA-RESET-STATUS") {
+							doc[0].resetstatus = 1;
+						}
+						if(req.session.user.groupName == "MIRA-CU-ADMIN-DATA") {
+							doc[0].cuadmin = 1;
+						}
+					}
+				}
+			}
 
 			/* Get Assessment Data */
 			doc[0].AssessmentData = [];
@@ -133,14 +159,14 @@ var assessableunit = {
 	},
 
 	/* Update assessable unit */
-	saveAUBU: function(req, res, db) {
+	saveAUBU: function(req, db) {
 		var deferred = q.defer();
-    var now = moment(new Date());
-    var addlog = {
-      "name": req.session.user.cn[0],
-      "date": now.format("MM/DD/YYYY"),
-      "time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
-    };
+		var now = moment(new Date());
+		var addlog = {
+			"name": req.session.user.cn[0],
+			"date": now.format("MM/DD/YYYY"),
+			"time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
+		};
 		var docid = req.body.docid;
 		var obj = {
 			selector:{

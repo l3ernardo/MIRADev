@@ -4,16 +4,16 @@ var router = express.Router();
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
 var app = express();
-var db = require('../../conn.js');
+var db = require('./js/class-conn.js');
 var varConf = require('../../configuration');
 
 // Add functionalities from other JS files
-var dialog = require('./js/dialog.js');
-var businessunit = require('./js/businessunit.js');
-var submenu = require('./js/submenu.js');
-var utility = require('./js/utility.js');
-var assessableunit = require('./js/assessableunit.js');
-var isAuthenticated = require('./authentication.js');
+var dialog = require('./js/class-dialog.js');
+var businessunit = require('./js/class-businessunit.js');
+var submenu = require('./js/class-submenu.js');
+var utility = require('./js/class-utility.js');
+var assessableunit = require('./js/class-assessableunit.js');
+var isAuthenticated = require('./router-authentication.js');
 
 router.get('/', isAuthenticated, function(req, res) {
 	res.redirect('index');
@@ -39,7 +39,7 @@ SUBMENU FUNCTIONALITY
 
 router.get('/submenu', isAuthenticated, function(req, res) {
 	if(req.session.businessunit != ""){
-		submenu.listMenu(req,res,db).then(function(data) {
+		submenu.listMenu(req, db).then(function(data) {
 			if(data.status==200 & !data.error) {
 				res.json({menu: data.submenu});
 			} else {
@@ -61,7 +61,7 @@ DISCLOSURE FUNCTIONALITY
 ***************************************************************/
 /* Disclosure screen */
 router.get('/disclosure', function(req, res) {
-	dialog.displayNonDisclosure(req, res, db).then(function(data) {
+	dialog.displayNonDisclosure(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
@@ -86,11 +86,11 @@ router.get('/businessunit', isAuthenticated, function(req, res){
 });
 /* Save Business Unit */
 router.post('/savebunit', isAuthenticated, function(req, res){
-	businessunit.saveBU(req,res, db).then(function(data) {
+	businessunit.saveBU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			req.session.businessunit = data.bunit;
 			// Control the bulletin message to be displayed
-			dialog.displayBulletin(req, res, db).then(function(data) {
+			dialog.displayBulletin(req, db).then(function(data) {
 				if(data.status==200 & !data.error) {
 						if(data.doc) {
 							//Redirect to original URL, if available
@@ -244,7 +244,7 @@ ASSESSABLE UNITS - Business Unit type
 
 /* View assessable unit documents */
 router.get('/processdashboard', isAuthenticated, function(req, res) {
-	assessableunit.listAU(req, res, db).then(function(data) {
+	assessableunit.listAU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('processdashboard', data );
@@ -264,7 +264,7 @@ router.get('/processdashboard', isAuthenticated, function(req, res) {
 
 /* Display BU assessable unit document */
 router.get('/assessableunit', isAuthenticated, function(req, res) {
-	assessableunit.getAUbyID(req, res, db).then(function(data) {
+	assessableunit.getAUbyID(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('aubusinessunit', data.doc[0] );
@@ -283,11 +283,11 @@ router.get('/assessableunit', isAuthenticated, function(req, res) {
 
 /* Save BU assessable unit document */
 router.post('/savebuau', isAuthenticated, function(req, res){
-	assessableunit.saveAUBU(req, res, db).then(function(data) {
+	assessableunit.saveAUBU(req, db).then(function(data) {
 		req.query.id = req.body.docid;
 		if(data.status==200 & !data.error) {
 			if(data.body) {
-				assessableunit.getAUbyID(req, res, db).then(function(data) {
+				assessableunit.getAUbyID(req, db).then(function(data) {
 					if(data.status==200 & !data.error) {
 						if(data.doc) {
 							res.redirect('/assessableunit?id=' + data.doc[0]._id);
@@ -341,7 +341,7 @@ router.get('/attachment', isAuthenticated, function(req, res) {
 });
 /* Download attachment */
 router.get('/download', isAuthenticated, function(req, res){
-	utility.downloadFile(req,res,db).then(function(data) {
+	utility.downloadFile(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.download(res.body); 
 		} else {
@@ -353,7 +353,7 @@ router.get('/download', isAuthenticated, function(req, res){
 });
 /* Delete attachment */
 router.get('/deleteAttachment', isAuthenticated, function(req, res){
-	utility.deleteFile(req,res,db).then(function(data) {
+	utility.deleteFile(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.end();
 		} else {

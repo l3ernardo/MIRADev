@@ -10,7 +10,7 @@ var q  = require("q");
 
 var businessunit = {
 	/* Display Business Units */
-	listBU: function(req, res, db) {
+	listBU: function(req, db) {
 		var deferred = q.defer();
 		var obj = {
 			selector:{
@@ -27,7 +27,7 @@ var businessunit = {
 		return deferred.promise;
 	},
 	/* Save parameter in session */
-	saveBU: function(req, res, db) {
+	saveBU: function(req, db) {
 		var deferred = q.defer();
 		var value = req.body.selectedBU;
 		deferred.resolve({"status": 200, "bunit": value});

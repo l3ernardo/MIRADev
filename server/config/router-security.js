@@ -4,7 +4,7 @@ var security = express.Router();
 var middleware = require('../lib/middleware.js')(passport);
 var bluegroup = require('../lib/bluegroups.js');
 var varConf = require('../../configuration');
-var isAuthenticated = require('./authentication.js');
+var isAuthenticated = require('./router-authentication.js');
 
 /**************************************************************
 LOGIN FUNCTIONALITY
