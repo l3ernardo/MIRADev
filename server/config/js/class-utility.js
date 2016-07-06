@@ -172,6 +172,33 @@ var util = {
 			deferred.reject({"status": 500, "error": err});
 		});		
 		return deferred.promise;	
+	},
+	updateFilesParentID: function (parentid, filesIds, db){
+		var deferred = q.defer();
+		var object;
+		var doc;
+		var arrLinks = JSON.parse(filesIds);
+		for(i=0; i<arrLinks.length; i++){
+			object = {
+				selector:{
+					"_id": arrLinks[i].attachId,
+				}
+			};
+			db.find(object).then(function(data){
+				doc = data.body.docs;
+				// Update Parent ID
+				doc[0].parentid = parentid;
+
+				db.save(doc[0]).then(function(data){
+					deferred.resolve(data);
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err});
+				});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
+		}
+		return deferred.promise;
 	}
 }
 module.exports = util;

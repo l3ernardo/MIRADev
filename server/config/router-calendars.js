@@ -9,6 +9,7 @@ var express = require("express");
 var calendars = express.Router();
 var db = require('./js/class-conn.js');
 var calendar = require('./js/class-calendar.js');
+var utility = require('./js/class-utility.js');
 var isAuthenticated = require('./router-authentication.js');
 
 /**************************************************************
@@ -46,7 +47,15 @@ calendars.get('/getTargetCalendars', isAuthenticated, function(req, res){
 calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 	calendar.saveEvent(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect("/calendar?id=all");
+			utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(data) {
+				if(data.status==200 & !data.error) {
+					res.redirect("/calendar?id=all");
+				} else {
+					console.log("[calendars][saveEvent] - " + data.error);
+				}
+			}).catch(function(err) {
+				console.log("[calendars][saveEvent] - " + err.error);
+			})
 		} else {
 			console.log("[calendars][saveEvent] - " + data.error);
 		}
