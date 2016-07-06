@@ -7,11 +7,19 @@ $(document).ready(function(){
 	$('#btn_cancel').click(function() {
 		window.location.href = "/processdashboard";
 	});
-	//Code for Submit button
+	//Code for Save button
 	$('#btn_save').click(function() {
 		myEditor.saveHTML();
 		var YmyEditor = myEditor.get('element').value;
 		$('#Notes').val(YmyEditor);
+		$("#assessableunit").submit();
+	});
+	//Code for Save & Close button
+	$('#btn_save_close').click(function() {
+		myEditor.saveHTML();
+		var YmyEditor = myEditor.get('element').value;
+		$('#Notes').val(YmyEditor);
+		$('#close').val('1');
 		$("#assessableunit").submit();
 	});
 	//Code for Edit button
