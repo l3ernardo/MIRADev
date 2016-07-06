@@ -126,7 +126,7 @@ var calendar = {
 		}
 		// save event
 		db.save(object).then(function(data){
-			deferred.resolve({"status": 200, "msg": "OK"});
+			deferred.resolve({"status": 200, "body": data.body});
 		}).catch(function(err) {
 			console.log("error"+err);
 			deferred.reject({"status": 500, "error": err});

@@ -29,6 +29,7 @@ $(document).ready(function() {
 	$('#btn_submit').click(function() {
 		var opt = parent.location.href;
 		if ($('#title').val() != '' && $('#startDate').val() != '') {
+			ibmweb.overlay.show('divSavingImg');
 			var form = $('#formCalendar');
 			$.ajax({
 				url: "/saveEvent",
@@ -36,11 +37,13 @@ $(document).ready(function() {
 				data: form.serialize(),
 				processData: false,
 				success: function (data) {
+					ibmweb.overlay.hide('divSavingImg');
 					ibmweb.overlay.hide('Overlay_Event');
 					$('#calendar').fullCalendar('refetchEvents');
 					alert("Event saved successfully");
 				},
 				error: function() {
+					ibmweb.overlay.hide('divSavingImg');
 					alert("There was an error when saving the Event");
 					e.preventDefault();
 					e.stopImmediatePropagation();
@@ -60,19 +63,21 @@ $(document).ready(function() {
 	//button delete
 	$('#btn_delete').click(function() {
 		var r = confirm("Are you sure you want to delete the event?");
-		
 		if (r == true) {
+			ibmweb.overlay.show('divDeleteImg');
 			$.ajax({
 				url: "/deleteEvent",
 				type: 'GET',
 				data: { id: $('#id').val(), rev: $('#rev').val() },
 				contentType: 'application/json',
 				success: function (data) {
+					ibmweb.overlay.hide('divDeleteImg');
 					ibmweb.overlay.hide('Overlay_Event');
 					$('#calendar').fullCalendar('refetchEvents');
 					alert("Event deleted successfully");
 				},
 				error: function() {
+					ibmweb.overlay.hide('divDeleteImg');
 					alert("There was an error when deleting the Event");
 				}
 			});

@@ -285,12 +285,17 @@ router.get('/assessableunit', isAuthenticated, function(req, res) {
 router.post('/savebuau', isAuthenticated, function(req, res){
 	assessableunit.saveAUBU(req, db).then(function(data) {
 		req.query.id = req.body.docid;
+		var close = req.body.close;
 		if(data.status==200 & !data.error) {
 			if(data.body) {
 				assessableunit.getAUbyID(req, db).then(function(data) {
 					if(data.status==200 & !data.error) {
 						if(data.doc) {
-							res.redirect('/assessableunit?id=' + data.doc[0]._id);
+							if(close=='1') {
+								res.redirect('/processdashboard');
+							} else {
+								res.redirect('/assessableunit?id=' + data.doc[0]._id);	
+							}
 						} else {
 							res.render('error',{errorDescription: data.error});
 						}
