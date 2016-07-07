@@ -177,7 +177,7 @@ var DB = {
 	},
 	//GET ATTACHMENT
 	getattachment: function(id, filename, params) {
-		var newPath = "/public" + filename.toString();
+		var newPath = "/" + filename.toString();
 		//	var newPath = __dirname + "/public/public/uploads/" + filename.toString();
 		var deferred = q.defer();
 		this.db.attachment.get(id, filename, params, function(err, file) { 
