@@ -346,7 +346,7 @@ router.get('/attachment', isAuthenticated, function(req, res) {
 });
 /* Download attachment */
 router.get('/download', isAuthenticated, function(req, res){
-	utility.downloadFile(req, db).then(function(data) {
+	utility.downloadFile(req, res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.download(res.body); 
 		} else {

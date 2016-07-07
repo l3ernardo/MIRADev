@@ -144,7 +144,7 @@ var util = {
 		return deferred.promise;
 	},
 	//Download the selected file
-	downloadFile: function (req, db){
+	downloadFile: function (req, res, db){
 		var deferred = q.defer();
 		var id = req.query.id;
 		var filename = req.query.filename;
