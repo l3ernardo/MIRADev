@@ -47,16 +47,19 @@ var assessableunit = {
 			var constiobj = {};
 			var toadd = {};
 			var editors = doc[0].AdditionalReaders + doc[0].Owner + doc[0].Focals;
-			
+
 			/* Get access and roles */
-			accessrules.getRules(req,editors);			
+			accessrules.getRules(req,editors);
 			doc[0].editor = accessrules.rules.editor;
 			doc[0].admin = accessrules.rules.admin;
 			doc[0].grantaccess = accessrules.rules.grantaccess;
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
 			if(req.query.edit == '') doc[0].editmode = 1;
-			
+
+			/* Format Links */
+			doc[0].Links = JSON.stringify(doc[0].Links);
+
 			/* Get Assessment Data */
 			doc[0].AssessmentData = [];
 			toadd = {
@@ -170,6 +173,8 @@ var assessableunit = {
 			doc[0].AdditionalEditors = req.body.editorlist;
 			// Update notes
 			doc[0].Notes = req.body.Notes;
+			// Update links
+			doc[0].Links = eval(req.body.attachIDs);
 			// Update logs
 			doc[0].Log.push(addlog);
 

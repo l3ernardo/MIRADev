@@ -37,6 +37,7 @@
 	</p>
 	<form id="assessableunit" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" value="{{_id}}">
+		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="close" id="close" value="0">
 		<!-- BASICS SECTION -->
 		{{>aubusinessunit/basics}}
