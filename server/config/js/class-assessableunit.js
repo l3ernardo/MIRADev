@@ -9,11 +9,12 @@
 var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
+var accessrules = require('./class-accessrules.js');
 
 var assessableunit = {
 
 	/* Display all Assessable Units */
-	listAU: function(req, res, db) {
+	listAU: function(req, db) {
 		var deferred = q.defer();
 		var obj = {
 			selector:{
@@ -32,7 +33,7 @@ var assessableunit = {
 	},
 
 	/* Get assessable unit by ID */
-	getAUbyID: function(req, res, db) {
+	getAUbyID: function(req, db) {
 		var deferred = q.defer();
 		var docid = req.query.id
 		var obj = {
@@ -45,7 +46,17 @@ var assessableunit = {
 			var doc = data.body.docs;
 			var constiobj = {};
 			var toadd = {};
-
+			var editors = doc[0].AdditionalReaders + doc[0].Owner + doc[0].Focals;
+			
+			/* Get access and roles */
+			accessrules.getRules(req,editors);			
+			doc[0].editor = accessrules.rules.editor;
+			doc[0].admin = accessrules.rules.admin;
+			doc[0].grantaccess = accessrules.rules.grantaccess;
+			doc[0].resetstatus = accessrules.rules.resetstatus;
+			doc[0].cuadmin = accessrules.rules.cuadmin;
+			if(req.query.edit == '') doc[0].editmode = 1;
+			
 			/* Get Assessment Data */
 			doc[0].AssessmentData = [];
 			toadd = {
@@ -133,14 +144,14 @@ var assessableunit = {
 	},
 
 	/* Update assessable unit */
-	saveAUBU: function(req, res, db) {
+	saveAUBU: function(req, db) {
 		var deferred = q.defer();
-    var now = moment(new Date());
-    var addlog = {
-      "name": req.session.user.cn[0],
-      "date": now.format("MM/DD/YYYY"),
-      "time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
-    };
+		var now = moment(new Date());
+		var addlog = {
+			"name": req.session.user.cn[0],
+			"date": now.format("MM/DD/YYYY"),
+			"time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
+		};
 		var docid = req.body.docid;
 		var obj = {
 			selector:{

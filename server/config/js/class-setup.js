@@ -10,7 +10,7 @@ var q  = require("q");
 
 var setup = {
 	/* listSetup will get if exist required parameters */
-	listSetup: function(req, res, db, keyNameM, keyNameBU) {
+	listSetup: function(req, db, keyNameM, keyNameBU) {
 		var deferred = q.defer();
 		var obj = {
 			selector:{
@@ -29,7 +29,7 @@ var setup = {
 		return deferred.promise;
 	},
 	/* Load needed parameters data in setup page */
-	getSetup: function(req, res, db, keyNameM, keyNameBU ) {
+	getSetup: function(req, db, keyNameM, keyNameBU ) {
 		var deferred = q.defer();
 		var obj = {
 		selector:{
@@ -60,8 +60,8 @@ var setup = {
 		return deferred.promise;
 	},
 	/* Save setup parameters in cloudant */
-	saveSetup: function(req, res, db) {
-		var deferred = q.defer();		
+	saveSetup: function(req, db) {
+		var deferred = q.defer();
 		var value1 = JSON.parse(req.body.fldvalue);
 		var value2 = JSON.parse(req.body.fldvalueM);
 		var obj1 = {
@@ -87,16 +87,12 @@ var setup = {
 			obj2._rev = req.body.revCM;
 		}
 		db.save(obj1).then(function(data1){
-			console.log("obj1 saved successfully");			
 			db.save(obj2).then(function(data2){
-				console.log("obj2 saved successfully");
 				deferred.resolve({"status": 200, "msg": "OK"});
 			}).catch(function(err){
-				console.log("[routes][saveSetup] - " + err.error);
 				deferred.reject({"status": 500, "error": err});
 			});
 		}).catch(function(err){
-			console.log("[routes][saveSetup] - " + err.error);
 			deferred.reject({"status": 500, "error": err});
 		});
 		return deferred.promise;

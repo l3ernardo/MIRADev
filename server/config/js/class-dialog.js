@@ -10,7 +10,7 @@ var q  = require("q");
 
 var dialog = {
 	/* Display Non disclosure */
-	displayNonDisclosure: function(req, res, db) {
+	displayNonDisclosure: function(req, db) {
 		var deferred = q.defer();
 		var obj = {
 			selector:{
@@ -27,7 +27,7 @@ var dialog = {
 		return deferred.promise;
 	},
 	/* Display Bulletin */
-	displayBulletin: function(req, res, db) {
+	displayBulletin: function(req, db) {
 		var deferred = q.defer();
 		// Display Bulletin if available
 		if(req.session.businessunit) {

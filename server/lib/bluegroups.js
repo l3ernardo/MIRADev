@@ -1,7 +1,7 @@
 var express = require('express'),
     router = express.Router(),
     q  = require("q"),
-    db = require('../../conn.js');
+    db = require('../config/js/class-conn.js');
 
 
 var _membersURL = 'https://eapim-dev.w3ibm.mybluemix.net/devops/development/whitewater/bluegroups/%s/members?';
