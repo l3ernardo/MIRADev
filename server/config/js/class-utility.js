@@ -11,7 +11,7 @@ var moment = require('moment');
 
 var util = {
 	/* Get data from faces & bluepages */
-	getPersonOrg: function(req, res) {
+	getPersonOrg: function(req) {
 		var deferred = q.defer();
 		try {
 			url = varConf.bpOrgURL.replace('%t',req.query.search);
@@ -26,7 +26,7 @@ var util = {
 			deferred.resolve({"status": 500, "error": e});
 		}
 	},
-	getPersonDiv: function(req, res) {
+	getPersonDiv: function(req) {
 		var deferred = q.defer();
 		try {		
 			url = varConf.bpDivURL.replace('%t',req.query.search);
@@ -41,7 +41,7 @@ var util = {
 			deferred.resolve({"status": 500, "error": e});
 		}		
 	},	
-	getPersonData: function(req, res) {
+	getPersonData: function(req) {
 		var deferred = q.defer();
 		try {		
 			url = varConf.bpURL.replace('%t',req.query.search).replace('%f',req.query.field);
@@ -56,7 +56,7 @@ var util = {
 			deferred.resolve({"status": 500, "error": e});
 		}		
 	},
-	getPeopleData: function(req, res) {
+	getPeopleData: function(req) {
 		var deferred = q.defer();
 		var member = [];
 		url = varConf.facesURLcn.replace('%t',req.query.search);
@@ -144,7 +144,7 @@ var util = {
 		return deferred.promise;
 	},
 	//Download the selected file
-	downloadFile: function (req, res,db){
+	downloadFile: function (req, db){
 		var deferred = q.defer();
 		var id = req.query.id;
 		var filename = req.query.filename;
@@ -157,7 +157,7 @@ var util = {
 		return deferred.promise;	
 	},
 	//Delete the selected file
-	deleteFile: function (req, res,db){
+	deleteFile: function (req, db){
 		var deferred = q.defer();
 		var names=req.query.filename
 		var id = req.query.id;
@@ -172,6 +172,33 @@ var util = {
 			deferred.reject({"status": 500, "error": err});
 		});		
 		return deferred.promise;	
+	},
+	updateFilesParentID: function (parentid, filesIds, db){
+		var deferred = q.defer();
+		var object;
+		var doc;
+		var arrLinks = JSON.parse(filesIds);
+		for(i=0; i<arrLinks.length; i++){
+			object = {
+				selector:{
+					"_id": arrLinks[i].attachId,
+				}
+			};
+			db.find(object).then(function(data){
+				doc = data.body.docs;
+				// Update Parent ID
+				doc[0].parentid = parentid;
+
+				db.save(doc[0]).then(function(data){
+					deferred.resolve(data);
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err});
+				});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
+		}
+		return deferred.promise;
 	}
 }
 module.exports = util;

@@ -14,7 +14,7 @@ var result=[];
 function linkAttachments(idSpan, idParent){
 	var spanElement = document.getElementById(idSpan.toString());
 	$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="javascript:void(0)" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
-	$(spanElement).before('<div id="divDownload"></div>');
+	$(spanElement).before('<div id="divDownload"></div><div id="divDeleteImg" class="ibm-common-overlay"><center><p class="ibm-spinner-large"></p><strong>Deleting...</strong><p>&nbsp;</p></center></div>');
 };
 /* Save the attachment to cloudant */
 function saveAttach(){
@@ -115,7 +115,7 @@ function addAttachments(parentIdValue, idElement){
 			'id':'loadingImage',
 			'style':'display:none'
 		})
-		var spinnerImage = '<p class="ibm-spinner-large" href="#"></p><br><center><strong>Uploading...</strong></center>';
+		var spinnerImage = '<center><p class="ibm-spinner-large"></p><strong>Uploading...</strong></center>';
 		$(divLoading).append(spinnerImage);
 		$('#divUpload').after(divLoading);
 
@@ -150,12 +150,16 @@ function populateDownload(id, array) {
 function deleteAttachment(index, id, filename) {
 	var r = confirm("Are you sure you want to delete the attachment?");
 	if (r == true) {
+		//$('div#divDeleteImg').show();
+		ibmweb.overlay.show('divDeleteImg');
 		$.ajax({
 			url: "/deleteAttachment",
 			type: 'GET',
 			data: { id: id, filename: filename },
 			contentType: 'application/json',
 			success: function (response) {
+				//$('div#divDeleteImg').hide();
+				ibmweb.overlay.hide('divDeleteImg');
 				$('#downloadAttachment' + index).remove();
 				$('#deleteAttachment' + index).remove();
                 var index = docs_id.indexOf(id);
@@ -166,9 +170,10 @@ function deleteAttachment(index, id, filename) {
 					$("#attachIDs").val(JSON.stringify(result));
 					populateDownload(docs_id, names);
 				}
-				
 			},
 			error: function() {
+				//$('div#divDeleteImg').hide();
+				ibmweb.overlay.hide('divDeleteImg');
 				alert("There was an error when deleting the Attachment");
 			}
 		});
@@ -183,7 +188,7 @@ function loadAttachments(idLinksJson){
 		for(i=0; i<arrLinks.length; i++){
 			docs_id.push(arrLinks[i].attachId);
 			names.push(arrLinks[i].attachName);
-			result.push({"attachId": arrLinks[i].attachId, "attachName": arrLinks[i].attachName})
+			result.push({"attachId": arrLinks[i].attachId, "attachName": arrLinks[i].attachName});
 		}
 		populateDownload(docs_id, names);
 		linksJson.val(JSON.stringify(arrLinks));

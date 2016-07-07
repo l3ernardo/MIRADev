@@ -50,10 +50,10 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 	console.log("server starting on " + appEnv.url);
 	//init database
 	console.log("[app] init database");
-	var cloudant = require('./conn');
+	var cloudant = require('./server/config/js/class-conn');
 	// Connect to db in Bluemix if it's running over there; otherwise
 	if (process.env.VCAP_SERVICES) {
-		cloudant.connect('miradb');	
+		cloudant.connect('miradb');
 	} else {
 		cloudant.connect('miradbtest');
 	} 
@@ -62,10 +62,10 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 //Site variables
 
 app.use(require('./server/lib/auth'));
-app.use(require('./server/config/routes.js'));
-app.use(require('./server/config/security.js'));
-app.use(require('./server/config/administration.js'));
-app.use(require('./server/config/calendars.js'));
+app.use(require('./server/config/router.js'));
+app.use(require('./server/config/router-security.js'));
+app.use(require('./server/config/router-administration.js'));
+app.use(require('./server/config/router-calendars.js'));
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {

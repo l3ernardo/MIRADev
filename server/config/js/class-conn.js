@@ -213,4 +213,4 @@ var DB = {
 	}
 };
 
-module.exports = exports = DB;
+module.exports = DB;

@@ -1,0 +1,25 @@
+{{#if editmode}}
+{{!-- AUBUSINESSUNIT form - Buttons section - Edit Mode --}}
+	<div class="ibm-buttons-row">
+		<p>
+			<input class="ibm-btn-arrow-pri" type="button" id="btn_save_close" value="Save & Close"/>
+			<span class="ibm-sep">&nbsp;</span>
+			<input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Save"/>
+			<span class="ibm-sep">&nbsp;</span>			
+			<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
+		</p>
+	</div>
+{{else}}
+{{!-- AUBUSINESSUNIT form - Buttons section - Read Mode --}}
+	<div class="ibm-buttons-row">
+		<p>
+			{{#if editor}}
+				<input class="ibm-btn-arrow-pri" type="button" id="btn_edit" value="Edit"/>
+				<span class="ibm-sep">&nbsp;</span>
+				<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
+			{{else}}
+				<input class="ibm-btn-arrow-pri" type="button" id="btn_cancel" value="Close" />
+			{{/if}}
+		</p>
+	</div>
+{{/if}}

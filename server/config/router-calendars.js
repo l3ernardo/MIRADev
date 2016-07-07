@@ -7,9 +7,10 @@
  */
 var express = require("express");
 var calendars = express.Router();
-var db = require('../../conn.js');
-var calendar = require('./js/calendar.js');
-var isAuthenticated = require('./authentication.js');
+var db = require('./js/class-conn.js');
+var calendar = require('./js/class-calendar.js');
+var utility = require('./js/class-utility.js');
+var isAuthenticated = require('./router-authentication.js');
 
 /**************************************************************
 CALENDARS
@@ -20,7 +21,7 @@ calendars.get('/calendar', isAuthenticated, function(req, res) {
 });
 //load data from db and show in calendar
 calendars.get('/getEvents', isAuthenticated, function(req, res) {
-	calendar.getEvents(req,res,db).then(function(data) {
+	calendar.getEvents(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.events);
 		} else {
@@ -32,7 +33,7 @@ calendars.get('/getEvents', isAuthenticated, function(req, res) {
 });
 //Get all calendars
 calendars.get('/getTargetCalendars', isAuthenticated, function(req, res){
-	calendar.getTargetCalendars(req,res,db).then(function(data) {
+	calendar.getTargetCalendars(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.dataTargetCalendars);
 		} else {
@@ -44,9 +45,17 @@ calendars.get('/getTargetCalendars', isAuthenticated, function(req, res){
 });
 //Save event
 calendars.post('/saveEvent', isAuthenticated, function(req, res) {
-	calendar.saveEvent(req, res, db).then(function(data) {
+	calendar.saveEvent(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect("/calendar?id=all");
+			utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(data) {
+				if(data.status==200 & !data.error) {
+					res.redirect("/calendar?id=all");
+				} else {
+					console.log("[calendars][saveEvent] - " + data.error);
+				}
+			}).catch(function(err) {
+				console.log("[calendars][saveEvent] - " + err.error);
+			})
 		} else {
 			console.log("[calendars][saveEvent] - " + data.error);
 		}
@@ -56,7 +65,7 @@ calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 });
 //Delete event
 calendars.get('/deleteEvent', isAuthenticated, function(req, res) {
-	calendar.deleteEvent(req, res, db).then(function(data) {
+	calendar.deleteEvent(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.redirect("/calendar?id=all");
 		} else {
