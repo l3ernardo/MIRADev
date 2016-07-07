@@ -41,9 +41,11 @@ var assessableunit = {
 				"_id": docid,
 			}
 		};
-
-		db.find(obj).then(function(data){
-			var doc = data.body.docs;
+		//db.find(obj).then(function(data){
+		//var doc = data.body.docs
+		db.get(docid).then(function(data){
+			var doc = [];
+			doc.push(data.body);
 			var constiobj = {};
 			var toadd = {};
 			var editors = doc[0].AdditionalReaders + doc[0].Owner + doc[0].Focals;
@@ -162,9 +164,11 @@ var assessableunit = {
 			}
 		};
 
-		db.find(obj).then(function(data){
-			var doc = data.body.docs;
-
+		//db.find(obj).then(function(data){
+		//var doc = data.body.docs;
+		db.get(docid).then(function(data){
+			var doc = [];
+			doc.push(data.body);
 			// Update Admin Section
 			doc[0].RGRollup = req.body.RGRollup;
 			// Update Additional Readers

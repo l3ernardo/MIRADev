@@ -56,8 +56,27 @@ $(document).ready(function() {
 	
 	//button cancel
 	$('#btn_cancel').click(function() {
-		ibmweb.overlay.hide('Overlay_Event');
-		$('#btn_submit').prop("disabled", true);
+		if($('#id').val()=="" && $('#attachIDs').val()!="" && $('#attachIDs').val()!="[]"){
+			ibmweb.overlay.show('divDeleteImg');
+			$.ajax({
+				url: "/cancelEvent",
+				type: 'GET',
+				data: { attachIDs: $('#attachIDs').val() },
+				contentType: 'application/json',
+				success: function (data) {
+					ibmweb.overlay.hide('divDeleteImg');
+					ibmweb.overlay.hide('Overlay_Event');
+					$('#calendar').fullCalendar('refetchEvents');
+				},
+				error: function() {
+					ibmweb.overlay.hide('divDeleteImg');
+					alert("There was an error when deleting the Attachment(s)");
+				}
+			});
+		}else{
+			ibmweb.overlay.hide('Overlay_Event');
+			$('#btn_submit').prop("disabled", true);
+		}
 	});
 
 	//button delete
@@ -191,8 +210,8 @@ function clearFields(){
 	$('#id').val('');
 	$('#rev').val('');
 	$('#title').val('');
-	$('#start').val('');
-	$('#end').val('');
+	$('#startDate').val('');
+	$('#endDate').val('');
 	$('#eventInfo').val('');
 	$('#attachIDs').val('');
 	$('#divDownload').html('');
