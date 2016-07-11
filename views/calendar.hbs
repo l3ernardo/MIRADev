@@ -4,13 +4,14 @@
 <script src='./lib/fullcalendar.min.js'></script>
 <script src='./lib/scheduler.min.js'></script>
 <script src='./js/calendar.js'></script>
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <!-- JS for attachments widget -->
 <script src="./js/attachments.js"/></script>
 
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
 		<span><br/></span>
-		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row" style="display:none">
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
 			<p>
 				<span class="ibm-sep"> </span>
 				<a href="javascript:void(0);" value="New Meeting/Event" name="btn_meeting" id="btn_meeting" class="ibm-add1-link">New Meeting/Event</a>
@@ -20,12 +21,9 @@
 			<br/>
 		</div>
 		<div id='calendar'></div>
-		<div id="loader" style="display:none">
-			<p class="ibm-spinner-large" href="javascript:void(0)">&nbsp;</p>
-		</div>
 	</div>
 </div>
-<div id="Overlay_Event" title="Event Details" class="ibm-common-overlay ibm-overlay-alt-two" >
+<div id="Overlay_Event" title="Calendar Event Details" class="ibm-common-overlay ibm-overlay-alt-two">
 	<div class="ibm-body">
 		<div class="ibm-main">
 			<div class="ibm-title ibm-subtitle">
@@ -34,50 +32,58 @@
 			<div class="ibm-rule"><hr/></div>
 			<div class="ibm-container ibm-alternate ibm-buttons-last">
 				<div class="ibm-container-body">
-					<div>
+					<!-- <div> -->
+						<div style="text-align:right" id="creatorInfo">
+						</div>
 						<form id="formCalendar" class="ibm-column-form ibm-styled-form" name="formCalendar" method="POST" action="/saveEvent">
+							
 							<input type="hidden" id="id" name="id">
 							<input type="hidden" id="rev" name="rev">
 							<input type="hidden" id="eventType" name="eventType">
-							<p style="text-align:left">
-								<label for="title">Name:<span class="ibm-required">*</span></label>
-								<span><input type="text" id="title" name="title" size="50"></span>
-							</p>
-							<p style="text-align:left">
-								<label for="ownercal">Owner calendar:</label>
-								<span>
+							<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="95%" class="ibm-data-table">
+								<caption class="mira-caption"><em>Basics</em></caption>
+								<tr>
+									<td width="20%"><label for="title">Name:<span class="ibm-required">*</span></label></td>
+									<td><span><input type="text" id="title" name="title" size="50"></span></td>
+								</tr>
+								<tr>
+									<td><label for="ownercal">Owner calendar:</label></td>
+									<td><span>
 									<input id="owner" name="owner" readonly>
 									<input type="hidden" id="ownerId" name="ownerId">
-								</span>
-							</p>
-							<p style="text-align:left" class="ibm-form-elem-grp">
-								<label id="lblTarCal" class="ibm-form-grp-lbl" style="width:19%">Other target calendars:</label>
-								<span id="divTarCal" class="ibm-input-group"></span>
-							</p>
-							<div class="ibm-rule"><hr/></div>
-							<p style="text-align:left">
-								<label for="startDate" align="left">Date:<span class="ibm-required">*</span></label>
-								<span>
+									</span></td>
+								</tr>
+								<tr>
+									<td><label id="lblTarCal" class="ibm-form-grp-lbl">Other target calendars:</label></td>
+									<td><span id="divTarCal" class="ibm-input-group"></span></td>
+								</tr>
+								
+							</table>
+							<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="95%" class="ibm-data-table">
+								<caption class="mira-caption"><em>Details</em></caption>
+								<tr>
+									<td width="20%"><label for="startDate" align="left">Date:<span class="ibm-required">*</span></label></label></td>
+									<td><span>
 									<input type="date" id="startDate" name="startDate" size="30">
 									<input type="hidden" id="endDate" name="endDate">
-								</span>
-							</p>
-							<div class="ibm-rule"><hr/></div>
-							<p style="text-align:left">
-								<label for="eventInfo" align="left">Notes:</label>
-								<span><textarea id="eventInfo" name="eventInfo" cols="60" rows="3"></textarea></span>
-							</p>
-							<table>
-								<tr>
-								<td><label for="btnAddFiles">Links:</label><td>
-								<td><input id="attachIDs" name ="attachIDs" type="hidden">
-								<span id="attachments"></span>
-								<script>$(document).ready(function() {linkAttachments('attachments','id');});</script>
-								</td>
+								</span></td>
 								</tr>
+								<tr>
+									<td><label for="eventInfo" align="left">Notes:</label></td>
+									<td><span><textarea id="eventInfo" name="eventInfo" cols="60" rows="3"></textarea></span></td>
+								</tr>
+								<tr>
+									<td><label for="btnAddFiles">Links:</label></td>
+									<td>
+										<input id="attachIDs" name ="attachIDs" type="hidden">
+										<span id="attachments"></span>
+										<script>$(document).ready(function() {linkAttachments('attachments','id');});</script>
+									</td>
+								</tr>
+								
 							</table>
 							<div class="ibm-rule"><hr/></div>
-							<div class="ibm-buttons-row">
+							<div class="ibm-buttons-row" style="box-sizing: border-box; width:95%" >
 								<p>
 									<input class="ibm-btn-pri" type="button" id="btn_submit" value="Save & Close"/>
 									<span class="ibm-sep">&nbsp;</span>
@@ -87,7 +93,7 @@
 								</p>
 							</div>
 						</form>
-					</div>
+					<!-- </div> -->
 				</div>
 			</div>
 		</div>

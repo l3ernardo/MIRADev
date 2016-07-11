@@ -61,21 +61,40 @@ calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 		}
 	}).catch(function(err) {
 		console.log("[calendars][saveEvent] - " + err.error);
-	})
+	});
 });
 //Delete event
 calendars.get('/deleteEvent', isAuthenticated, function(req, res) {
-	calendar.deleteEvent(req, db).then(function(data) {
+	utility.deleteFilesParentID(req.query.id, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect("/calendar?id=all");
+			calendar.deleteEvent(req, db).then(function(data) {
+				if(data.status==200 & !data.error) {
+					res.redirect("/calendar?id=all");
+				} else {
+					console.log("[calendars][deleteEvent] - " + data.error);
+				}
+			}).catch(function(err) {
+				console.log("[calendars][deleteEvent] - " + err.error);
+			});
 		} else {
 			console.log("[calendars][deleteEvent] - " + data.error);
 		}
 	}).catch(function(err) {
 		console.log("[calendars][deleteEvent] - " + err.error);
-	})
+	});
 }); 
-
+//Cancel event
+calendars.get('/cancelEvent', isAuthenticated, function(req, res) {
+	utility.deleteFilesByIDs(req.query.attachIDs, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.redirect("/calendar?id=all");
+		} else {
+			console.log("[calendars][cancelEvent] - " + data.error);
+		}
+	}).catch(function(err) {
+		console.log("[calendars][cancelEvent] - " + err.error);
+	});
+}); 
 
 
 module.exports = calendars;

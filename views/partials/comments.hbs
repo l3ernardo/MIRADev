@@ -11,7 +11,7 @@
 		</tr>
 		<tr>
 			<td width="20%">Links:</td><td>
-			<input id='attachIDs' name='attachIDs' type="hidden">
+			<input id='attachIDs' name='attachIDs' value="{{Links}}" type="hidden">
 			<span id="attachments"></span>
 			<script>$(document).ready(function() {linkAttachments('attachments','docid'); loadAttachments('attachIDs');});</script>
 			</td>
@@ -30,8 +30,9 @@
 		<tr>
 			<td width="20%">Links:</td>
 			<td>
-				<input id='attachIDs' name='attachIDs' type="hidden">
-				<script>$(document).ready(function() { loadAttachments('attachIDs');});</script>
+				<input id='attachIDs' name='attachIDs' value="{{Links}}" type="hidden">
+				<span id="attachments"></span>
+				<script>$(document).ready(function() {linkAttachments('attachments','docid'); loadAttachments('attachIDs');});</script>
 			</td>
 			</td>
 		</tr>
