@@ -1,37 +1,89 @@
-<script>
-	//Load document's name
-	$('h1#pageTitle').text("Process Dashboard");
-</script>
+ <div class="ibm-buttons-row">
+  <p>
+  <iframe id="txtArea1" style="display:none"></iframe>
+  <span class="ibm-sep"> </span>
+  <input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="button_view" name="flat_view" value="Flat View">
+  <input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="button_export" name="export_table" value="Export to Excel">
+  <textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{view}}</textarea>
+  </p>
+</div>
 <div class="ibm-container-body" style="width: 100%;">
 	<div class="ibm-columns">
 		<div class="ibm-col-6-4">
-			<table class="ibm-data-table">
-				<tr>
-					<th>Type</th>
+			<table id="process_dashboard_treeview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" >
+			   <thead>
+				<tr> 
+				    <th scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
+				    <th>Assessable Unit</th>					
 					<th>Prior Q</th>
 					<th>Curr Q</th>
 					<th>Next Qtr</th>
 					<th>Target to Sat</th>
 					<th>MIRA</th>
 					<th>WWBCIT</th>
-					<th>Owner</th>
-					<th>Assessable Unit</th>
+					<th>Owner</th>	
+                    <th>Type</th>					
 				</tr>
+				</thead>
+				<tbody>
 				{{#each doc}}
-				<tr>
-					<td>{{DocSubType}}</td>
+				<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
+					<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_tree"/></th>			
+				    <td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>					
 					<td>{{PeriodRatingPrev}}</td>
 					<td>{{PeriodRating}}</td>
 					<td>{{AUNextQtrRating}}</td>
 					<td>{{Target2Sat}}</td>
 					<td>{{MIRAAssessmentStatus}}</td>
 					<td>{{WWBCITAssessmentStatus}}</td>
-					<th>{{Owner}}</th>
-					<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
+					<td>{{Owner}}</td>			
+                    <td>{{DocSubType}}</td>					
 				</tr>
 				{{/each}}
+				</tbody>
 			</table>
-
 		</div>
+			<table id="process_dashboard_flatview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" style='display : none'>
+		        <thead>
+				<tr> 
+				    <th scope="col"><input type="checkbox" class="mira_checkbox_flat" id="mira_checkbox_flat" name="mira_checkbox "/></th>					
+				    <th>Assessable Unit</th>					
+					<th>Prior Q</th>
+					<th>Curr Q</th>
+					<th>Next Qtr</th>
+					<th>Target to Sat</th>
+					<th>MIRA</th>
+					<th>WWBCIT</th>
+					<th>Owner</th>	
+                    <th>Type</th>					
+				</tr>
+				</thead>
+				<tbody>
+				{{#each doc}}
+				<tr>
+				    <th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>
+				    <td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>					
+					<td>{{PeriodRatingPrev}}</td>
+					<td>{{PeriodRating}}</td>
+					<td>{{AUNextQtrRating}}</td>
+					<td>{{Target2Sat}}</td>
+					<td>{{MIRAAssessmentStatus}}</td>
+					<td>{{WWBCITAssessmentStatus}}</td>
+					<td>{{Owner}}</td>			
+                    <td>{{DocSubType}}</td>					
+				</tr>
+				{{/each}}
+				</tbody>
+			</table>
 	</div>
+    <link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+    <link href="/public/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="./js/dashboards.js"/></script>
+<script>
+	//Load document's name
+	$('h1#pageTitle').text("Process Dashboard");
+	$("#process_dashboard_treeview").treetable({expandable: true });
+    $("#process_dashboard_flatview");
+</script>
 </div>
+
