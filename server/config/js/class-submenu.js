@@ -41,12 +41,12 @@ var submenu = {
 							var flag=0;
 							for(var k=0;k<len_objcalendar;k++)
 							{
-								if(obj_calendar[k]==req.session.BG)
+								if(req.session.BG.indexOf(obj_calendar[k])> '-1')
 								{
 									flag=1;
 								}				   
 							}
-							if(flag=='1')
+							if(flag>'0')
 								{						
 									dataCalendars.push({
 										id: data.body.rows[index].doc.value[i].calendars[j].id,
@@ -65,12 +65,12 @@ var submenu = {
 							var flag=0;
 							for(var k=0;k<len_objdashboard;k++)
 							{  
-								if(obj_dashboard[k]==req.session.BG)
+								if(req.session.BG.indexOf(obj_dashboard[k])> '-1')
 								{
-									flag=1;
+									flag++;
 								}							
 							}										   
-							if(flag=='1')
+							if(flag>'0')
 								{	
 									dataDashboards.push({
 										id: data.body.rows[index].doc.value[i].dashboards[j].id,
@@ -90,12 +90,12 @@ var submenu = {
 							var flag=0;
 							for(var k=0;k<len_objreport;k++)
 							{  
-								if(obj_report[k]==req.session.BG)
+								if(req.session.BG.indexOf(obj_report[k])> '-1')
 								{
-									flag=1;
+									flag++;
 								}							
 							}		
-							if(flag=='1')
+							if(flag>'0')
 							 {	
 									dataReports.push({
 										 id: data.body.rows[index].doc.value[i].reports[j].id,
@@ -114,12 +114,12 @@ var submenu = {
 							var flag=0;
 							for(var k=0;k<len_objreference;k++)
 							{  
-								if(obj_reference[k]==req.session.BG)
+							    if(req.session.BG.indexOf(obj_reference[k])> '-1')
 								{
-									flag=1;
+									flag++;
 								}							
 							}			    
-							if(flag=='1')
+							if(flag>'0')
 							 {	
 									dataReferences.push({
 											id: data.body.rows[index].doc.value[i].references[j].id,
@@ -137,13 +137,13 @@ var submenu = {
 							len_objarchive=obj_archive.length;
 							var flag=0;
 							for(var k=0;k<len_objarchive;k++)
-							{  
-								if(obj_archive[k]==req.session.BG)
+							{   
+								 if(req.session.BG.indexOf(obj_archive[k])> '-1')
 								{
-									flag=1;
+									flag++;
 								}							
-							}			 
-							if(flag=='1')
+							}						
+							if(flag>'0')
 							 {
 									dataArchive.push({
 										id: data.body.rows[index].doc.value[i].archive[j].id,
@@ -162,12 +162,12 @@ var submenu = {
 							var flag=0;
 							for(var k=0;k<len_objadministration;k++)
 							{  
-								if(obj_administration[k]==req.session.BG)
+								if(req.session.BG.indexOf(obj_administration)> '-1')
 								{
-									flag=1;
+									flag++;
 								}							
 							}			 
-							if(flag=='1')
+							if(flag>'0')
 							 {
 									dataAdministration.push({
 										id: data.body.rows[index].doc.value[i].administration[j].id,

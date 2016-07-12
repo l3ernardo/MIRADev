@@ -2,13 +2,85 @@
 Theme Name: jqueryui-com
 Template: jquery
 */
+td_icon_empty {
+  background-image: url(/public/images/cancel.png);
+  background-repeat:no-repeat;
+  background-position:center;
+}
+.td_icon_edit {
+  background-image: url(/public/images/pencil.png);
+  background-repeat:no-repeat;
+  background-position: center;
+}
+.td_icon_check {
+  background: url(/public/images/check.png);
+  background-repeat:no-repeat;
+   background-position:center;
+}
+/*table for dashboard*/
+caption, th {
+    text-align: left;
+}
+table {
+    border-collapse: collapse;
+}
+
+caption, th {
+    text-align: left;
+}
+table {
+    border-collapse: collapse;
+}
+
+table.mira-dashboard-table {
+    border-bottom-color: #cccccc;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+table.mira-dashboard-table thead tr, table.ibm-data-table thead tr th {
+    border-top-color: #dddddd;
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+table.mira-dashboard-table td, table.ibm-data-table th {
+    border-top-color: #eee;
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+table.mira-dashboard-table tbody th, table.mira-dashboard-view tbody td {
+    border-left-color: #fff;
+    border-left-style: solid;
+    border-left-width: 3px;
+    border-top-color: #dddddd;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #555555;
+    padding-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 5px;
+    padding-top: 8px;
+}
+
+table.mira-dashboard-table td, table.mira-dashboard-table th {
+    padding-bottom: 10px;
+    padding-left: 3px;
+    padding-right: 5px;
+    padding-top: 10px;
+    vertical-align: top;
+}
 
 .ui-autocomplete-loading {
 	background: white url("/images/animated-progress-20x20b.gif") right center no-repeat;
 }
 a,
 .title {
-	color: #b24926;
+     color: #b24926;
+	//color:#00649d;
 }
 
 #content a:hover {
