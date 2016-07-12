@@ -1,9 +1,9 @@
 /**************************************************************************************************
- * 
+ *
  * Attachment widget for MIRA Web
  * Developed by: Wendy Villa - Valdenir Silva - Carlos Kenji Takata - Gabriela S. Pailiacho G.
  * Date: 20 June 2016
- * 
+ *
  */
 
 var docs_id=[];
@@ -13,8 +13,12 @@ var result=[];
 /* Create the attachment link  */
 function linkAttachments(idSpan, idParent){
 	var spanElement = document.getElementById(idSpan.toString());
-	$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="javascript:void(0)" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
-	$(spanElement).before('<div id="divDownload"></div><div id="divDeleteImg" class="ibm-common-overlay"><center><p class="ibm-spinner-large"></p><strong>Deleting...</strong><p>&nbsp;</p></center></div>');
+	if ($("input[name='editmode']").val() == 1) {
+			$(spanElement).after('<a id="link_attachments" class="ibm-add1-link" href="javascript:void(0)" onclick="addAttachments($(\'#' + idParent.toString() + '\').val(), this.id);">Add Attachments</a>');
+			$(spanElement).before('<div id="divDownload"></div><div id="divDeleteImg" class="ibm-common-overlay"><center><p class="ibm-spinner-large"></p><strong>Deleting...</strong><p>&nbsp;</p></center></div>');
+	} else {
+		$(spanElement).before('<div id="divDownload"></div>');
+	}
 };
 /* Save the attachment to cloudant */
 function saveAttach(){
@@ -52,7 +56,7 @@ function saveAttach(){
 			error: function() {
 				alert("There was an error when saving the File");
 			}
-		});	
+		});
 	});
 };
 /* Load the Attachments overlay after an idElement*/
@@ -63,10 +67,10 @@ function addAttachments(parentIdValue, idElement){
 	if(divOverlay==null){
 		var linkAttach = document.getElementById(idElement.toString());
 		$(linkAttach).after( "<div id='Overlay_Attachments'><form id='formAttachment'></form></div>" );
-		
+
 		divOverlay = document.getElementById('Overlay_Attachments');
 		formOverlay = document.getElementById('formAttachment');
-		
+
 		$(divOverlay).attr({
 			'class':'ibm-common-overlay ibm-overlay-alt'
 		});
@@ -91,16 +95,16 @@ function addAttachments(parentIdValue, idElement){
 		var templateStringEnd = '<div class="ibm-rule"><hr/></div><span class="ibm-sep"> </span></p></div></div></div></div>';
 		var linkAdd = '<label for="btnAddFiles">Upload Files:</label><span> <br> <div id="divUpload"><input type="file" id="upload" name="upload" class="ibm-btn-small"></div></span>';
 		var divBtns = '<div class="ibm-buttons-row"><p><input id="btn_saveAttachment"/><span class="ibm-sep">&nbsp;</span><input id="btn_cancelOverlay"/><span class="ibm-sep">&nbsp;</span></p></div>';
-		
+
 		$(formOverlay).append(templateString+linkAdd+templateStringEnd+divBtns, parentIdValueField);
-		
+
 		$('input#btn_saveAttachment').attr({
 			'class':'ibm-btn-arrow-pri',
 			'type':'submit',
 			'value': 'SAVE',
 			'onclick': 'saveAttach()'
 		});
-		
+
 		$('input#btn_cancelOverlay').attr({
 			'class':'ibm-btn-cancel-sec',
 			'type':'button',
@@ -137,13 +141,15 @@ function populateDownload(id, array) {
 	for (var i in array) {
 		tbody += '<p style="text-align:left">';
 		tbody += '<a class="ibm-download-link" id="downloadAttachment' + count + '" href="/download?id=' + id[i] + '&filename=' + array[i] + '">' + array[i] + '</a>';
-		tbody += '&nbsp;&nbsp;&nbsp;';
-		tbody += '<a class="ibm-delete-link" id="deleteAttachment' + count + '" href="javascript:void(0)" onclick="deleteAttachment(' + count + ', \'' + id[i] + '\', \'' + array[i] + '\')">Delete</a>';
+		if ($("input[name='editmode']").val() == 1) {
+			tbody += '&nbsp;&nbsp;&nbsp;';
+			tbody += '<a class="ibm-delete-link" id="deleteAttachment' + count + '" href="javascript:void(0)" onclick="deleteAttachment(' + count + ', \'' + id[i] + '\', \'' + array[i] + '\')">Delete</a>';
+		}
 		tbody += '</p>';
 		count++;
 	}
 
-	tbody += '<div class="ibm-rule"><hr/></div>';
+	if ($("input[name='editmode']").val() == 1) tbody += '<div class="ibm-rule"><hr/></div>';
 	container.innerHTML = tbody;
 };
 /* Delete the selected attachment */
@@ -182,7 +188,7 @@ function deleteAttachment(index, id, filename) {
 /* Load existant attachments */
 function loadAttachments(idLinksJson){
 	var linksJson = eval("$('#"+idLinksJson+"')");
-	
+
 	if(linksJson.val() != ''){
 		var arrLinks = $.parseJSON( linksJson.val());
 		for(i=0; i<arrLinks.length; i++){
