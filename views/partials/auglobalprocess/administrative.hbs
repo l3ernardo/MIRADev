@@ -1,0 +1,38 @@
+{{#if editmode}}
+{{!-- AU Global Process form - Administrative Use Only section - Edit Mode --}}
+	<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+		{{#if admin}}
+			<tr>
+				<td width="25%"><label for="RGRollup">Reporting group rollup included in this assessment:</label></td>
+				<td>
+					<span><input type="text" name="RGRollup" value="{{RGRollup}}" size="100" maxlength="300"></span>
+				</td>
+			</tr>
+			<tr>
+				<td width="25%"><label for="BRGMembership">BU reporting groups:</label></td>
+				<td>
+					<span><input type="text" name="BRGMembership" value="{{BRGMembership}}" size="100" maxlength="300"></span>
+				</td>
+			</tr>
+		{{else}}
+		<tr>
+			<td width="25%">Reporting group rollup included in this assessment:</td><td>{{RGRollup}}</td>
+		</tr>
+		<tr>
+			<td>BU reporting groups:</td><td>{{BRGMembership}}</td>
+		</tr>
+		{{/if}}
+	</table>
+{{else}}
+{{!-- AU Global Process form - Administrative Use Only section - Read Mode --}}
+	<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+		<tr>
+			<td width="25%">Reporting group rollup included in this assessment:</td><td>{{RGRollup}}</td>
+		</tr>
+		<tr>
+			<td>BU reporting groups:</td><td>{{BRGMembership}}</td>
+		</tr>
+	</table>
+{{/if}}

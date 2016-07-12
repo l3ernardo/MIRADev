@@ -75,7 +75,7 @@ router.get('/disclosure', function(req, res) {
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][disclosure] - " + err.error);
-	})	
+	})
 });
 /**************************************************************
 BUSINESS UNIT FUNCTIONALITY
@@ -114,11 +114,11 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 								if(req.session.returnTo!='' && req.session.returnTo!='/') {
 									var rtn = req.session.returnTo;
 									req.session.returnTo = '-';
-									req.flash('url', '-');									
-									res.redirect(rtn);	
+									req.flash('url', '-');
+									res.redirect(rtn);
 								} else {
 									res.render('index');
-								}								
+								}
 							} else {
 								res.render('index');
 							}
@@ -130,18 +130,18 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 							if(req.session.returnTo!='' && req.session.returnTo!='/') {
 									var rtn = req.session.returnTo;
 									req.session.returnTo = '-';
-									req.flash('url', '-');									
-									res.redirect(rtn);	
+									req.flash('url', '-');
+									res.redirect(rtn);
 							} else {
 								res.render('index');
-							}								
+							}
 						} else {
 							res.render('index');
 						}
 					}
 				}).catch(function(err) {
 					res.render('index');
-				})				
+				})
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][businessunit] - " + data.error);
@@ -169,7 +169,7 @@ router.get('/bporg', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bporg] - " + data.error);
-		}			
+		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bporg] - " + err.error);
@@ -183,7 +183,7 @@ router.get('/bpdiv', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bpdiv] - " + data.error);
-		}			
+		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bpdiv] - " + err.error);
@@ -197,7 +197,7 @@ router.get('/bpdata', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bpdata] - " + data.error);
-		}			
+		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bpdata] - " + err.error);
@@ -211,7 +211,7 @@ router.get('/bplist', function(req, res) {
 		} else {
 			res.render('error',{errorDescription: data.error})
 			console.log("[routes][bpdata] - " + data.error);
-		}			
+		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][bpdata] - " + err.error);
@@ -267,7 +267,17 @@ router.get('/assessableunit', isAuthenticated, function(req, res) {
 	assessableunit.getAUbyID(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
-				res.render('aubusinessunit', data.doc[0] );
+				switch (data.doc[0].DocSubType) {
+					case "Business Unit":
+						res.render('aubusinessunit', data.doc[0] );
+						break;
+					case "Global Process":
+						res.render('auglobalprocess', data.doc[0] );
+						break;
+					case "BU IOT":
+						res.render('aubuiot', data.doc[0] );
+						break;
+				}
 			} else {
 				res.render('error',{errorDescription: data.error});
 			}
@@ -294,7 +304,7 @@ router.post('/savebuau', isAuthenticated, function(req, res){
 							if(close=='1') {
 								res.redirect('/processdashboard');
 							} else {
-								res.redirect('/assessableunit?id=' + data.doc[0]._id);	
+								res.redirect('/assessableunit?id=' + data.doc[0]._id);
 							}
 						} else {
 							res.render('error',{errorDescription: data.error});
@@ -348,7 +358,7 @@ router.get('/attachment', isAuthenticated, function(req, res) {
 router.get('/download', isAuthenticated, function(req, res){
 	utility.downloadFile(req, res, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.download(res.body); 
+			res.download(res.body);
 		} else {
 			console.log("[routes][downloadFile] - " + data.error);
 		}
@@ -367,7 +377,7 @@ router.get('/deleteAttachment', isAuthenticated, function(req, res){
 	}).catch(function(err) {
 		console.log("[routes][deleteAttachment] - " + err.error);
 	})
-	
+
 });
 /**************************************************************
 REPORTS
