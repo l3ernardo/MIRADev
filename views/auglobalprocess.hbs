@@ -1,5 +1,4 @@
 <script src="/js/assessableunit.js" type="text/javascript"></script>
-<script src="/js/constituent_section.js" type="text/javascript"></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <!-- JS for attachments widget -->
 <script src="./js/attachments.js"/></script>
@@ -41,16 +40,18 @@
 		<input type="hidden" name="docsubtype" value="{{DocSubType}}">
 		<input type="hidden" name="close" id="close" value="0">
 		<!-- BASICS SECTION -->
-		{{>aubusinessunit/basics}}
+		{{>auglobalprocess/basics}}
 		<!-- ADMIN TABLE -->
-		{{>aubusinessunit/administrative}}
-		<!-- ACCESS SECTION -->
-		{{>contact}}
+		{{>auglobalprocess/administrative}}
 		<!-- ASSESSMENT SECTION -->
 		{{>assessment}}
 		<!-- CONSTITUENT SECTION -->
-		{{>aubusinessunit/constituent}}
+		{{>auglobalprocess/constituent}}
+		<!-- ACCESS SECTION -->
+		{{>contact}}
 		<!-- NOTES & LINKS SECTION -->
+		<br />
+		<br />
 		{{>comments}}
 		<!-- BUTTONS AREA -->
 		{{>buttons}}
