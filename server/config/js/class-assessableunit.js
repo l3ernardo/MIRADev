@@ -16,15 +16,34 @@ var assessableunit = {
 	/* Display all Assessable Units */
 	listAU: function(req, db) {
 		var deferred = q.defer();
+		var view_dashboard=[];
 		var obj = {
 			selector:{
 				"_id": {"$gt":0},
-				"key": "Assessable Unit"
+				"key": "Assessable Unit",
+				$or: [  {"DocSubType": "Business Unit"},{"DocSubType": "Global Process"},{"DocSubType": "Country Process"}]
 			}
 		};
 		db.find(obj).then(function(data){
 			var doc = data.body.docs;
-			deferred.resolve({"status": 200, "doc": doc});
+			var len= doc.length;
+            if(len > 0){	
+				for (var i = 0; i < len; i++){
+					 view_dashboard.push({
+										assessableUnit: doc[i].Name,
+										priorQ: doc[i].PeriodRatingPrev,
+										currentQ: doc[i].PeriodRating,
+										nextQtr: doc[i].AUNextQtrRating,
+										targetToSat:doc[i].Target2Sat,
+										mira:doc[i].MIRAAssessmentStatus,
+										wwBcit:doc[i].WWBCITAssessmentStatus,
+										owner:doc[i].Owner,
+										type:doc[i].DocSubType,
+									})	
+				}
+			}
+			view=JSON.stringify(view_dashboard, 'utf8');
+			deferred.resolve({"status": 200, "doc": doc,"view":view});
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
