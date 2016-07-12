@@ -40,16 +40,15 @@ passport.use(
     console.info("[INFO] Received valid login for "+ req.body.username);
     //importar/require bluegroups y ejecutar getMembersByBG pasandole el user.
       bluegroup.getMembersByBG(req.body.username).then(function(data){
+		if (data.toString()!=''){
 
-        if (data[0][0].msg == "Success"){
-            
-            user.hasAccess = true;
-            user.groupName = data[0][0].groupName;
+			user.hasAccess = true;
+			user.groupName = data.toString();
 
-          }else{
+		  }else{
 
-            user.hasAccess = false;
-        }
+			user.hasAccess = false;
+		}
         // Will always have an authenticated user if we get here since passport will indicate the failure upstream.
           process.nextTick(function () {
             return done(null, user);

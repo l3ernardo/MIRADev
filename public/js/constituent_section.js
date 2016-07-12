@@ -1,15 +1,6 @@
-function font_white(searchText){
-  var tags = document.getElementsByTagName("a");
-  for (var i = 0; i < tags.length; i++) {
-    var1=tags[i].textContent;
-    if  (var1.indexOf(searchText)!=-1){
-      tags[i].style.color='#ffffff';
-      break;
-    }
-  }
-}
+/* Start of Business Unit Functions */
 // Add listeners to the constinuents tabs
-function addEventsConstituent(){
+function addEventsConstituentBU(){
 	document.getElementById('GlobalProcess-li').addEventListener('click',function()
 	{
 		document.getElementById('GlobalProcess').style.display="";
@@ -63,7 +54,7 @@ function addEventsConstituent(){
 	},true);
 }
 // Display the selected tab
-function displaySelectedConstituent(){
+function displaySelectedConstituentBU(){
   var url = parent.location.href;
   s=url.indexOf("GlobalProcess");
   if (s!=-1){
@@ -90,10 +81,58 @@ function displaySelectedConstituent(){
       document.getElementById('ControllableUnits').style.display="";
     }
   }
+}
+/* End of Business Unit Functions */
 
+/* Start of BU IOT Functions */
+// Add listeners to the constinuents tabs for BU IOT
+function addEventsConstituentBUIOT(){
+  document.getElementById('BUIMTs-li').addEventListener('click',function()
+	{
+	  document.getElementById('BUIMTs').style.display="";
+	  document.getElementById('IOTCUs').style.display="none";
+
+	  document.getElementById('BUIMTs-li').className="ibm-active";
+	  document.getElementById('IOTCUs-li').className="";
+	},true);
+  document.getElementById('IOTCUs-li').addEventListener('click',function()
+	{
+	  document.getElementById('BUIMTs').style.display="none";
+	  document.getElementById('IOTCUs').style.display="";
+
+	  document.getElementById('BUIMTs-li').className="";
+	  document.getElementById('IOTCUs-li').className="ibm-active";
+	},true);
 }
 
+// Display the selected tab
+function displaySelectedConstituentBUIOT(){
+  var url = parent.location.href;
+  if (url.indexOf("BUIMTs")!=-1){
+    obj= document.getElementById('BUIMTs-li');
+    if(obj){
+      document.getElementById('BUIMTs').style.display="";
+    }
+  }
+  if (url.indexOf("IOTCUs")!=-1){
+    obj= document.getElementById('IOTCUs-li');
+    if(obj){
+      document.getElementById('IOTCUs').style.display="";
+    }
+  }
+}
+/* End of BU IOT Functions */
+
+/* main */
 $(document).ready(function() {
-	addEventsConstituent();
-	window.addEventListener("load", displaySelectedConstituent());
+  switch ($("input[name='docsubtype']").val()) {
+    case "Business Unit":
+    	addEventsConstituentBU();
+    	window.addEventListener("load", displaySelectedConstituentBU());
+      break;
+    case "BU IOT":
+      addEventsConstituentBUIOT();
+    	window.addEventListener("load", displaySelectedConstituentBUIOT());
+      break;      
+  }
 });

@@ -11,6 +11,15 @@ This application consolidates information from MSAC (Management Self Assessment 
 ## Patch notes:
 
 ```
+July 7th, 2016
+- Fixed multi-groups in login;
+
+July 6th, 2016
+- Splitted main form to use partials;
+
+July 5th, 2016
+- Added calendar;
+
 June 29th, 2016
 - Fixed initial store page;
 

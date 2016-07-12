@@ -1,4 +1,11 @@
+var optCal = parent.location.href;
+optCal = optCal.split('id=');
+optCal = optCal[optCal.length -1];
+
 $(document).ready(function() {
+	if(optCal == "all"){
+		$('#eventLinks').html('');
+	}
 	//meeting button event
 	$('#btn_meeting').click(function() {
 		clearFields();
@@ -27,8 +34,8 @@ $(document).ready(function() {
 
 	//button submit
 	$('#btn_submit').click(function() {
-		var opt = parent.location.href;
 		if ($('#title').val() != '' && $('#startDate').val() != '') {
+			ibmweb.overlay.show('divSavingImg');
 			var form = $('#formCalendar');
 			$.ajax({
 				url: "/saveEvent",
@@ -36,11 +43,13 @@ $(document).ready(function() {
 				data: form.serialize(),
 				processData: false,
 				success: function (data) {
+					ibmweb.overlay.hide('divSavingImg');
 					ibmweb.overlay.hide('Overlay_Event');
 					$('#calendar').fullCalendar('refetchEvents');
 					alert("Event saved successfully");
 				},
 				error: function() {
+					ibmweb.overlay.hide('divSavingImg');
 					alert("There was an error when saving the Event");
 					e.preventDefault();
 					e.stopImmediatePropagation();
@@ -53,38 +62,52 @@ $(document).ready(function() {
 	
 	//button cancel
 	$('#btn_cancel').click(function() {
-		ibmweb.overlay.hide('Overlay_Event');
-		$('#btn_submit').prop("disabled", true);
+		if($('#id').val()=="" && $('#attachIDs').val()!="" && $('#attachIDs').val()!="[]"){
+			ibmweb.overlay.show('divDeleteImg');
+			$.ajax({
+				url: "/cancelEvent",
+				type: 'GET',
+				data: { attachIDs: $('#attachIDs').val() },
+				contentType: 'application/json',
+				success: function (data) {
+					ibmweb.overlay.hide('divDeleteImg');
+					ibmweb.overlay.hide('Overlay_Event');
+					$('#calendar').fullCalendar('refetchEvents');
+				},
+				error: function() {
+					ibmweb.overlay.hide('divDeleteImg');
+					alert("There was an error when deleting the Attachment(s)");
+				}
+			});
+		}else{
+			ibmweb.overlay.hide('Overlay_Event');
+			$('#btn_submit').prop("disabled", true);
+		}
 	});
 
 	//button delete
 	$('#btn_delete').click(function() {
 		var r = confirm("Are you sure you want to delete the event?");
-		
 		if (r == true) {
+			ibmweb.overlay.show('divDeleteImg');
 			$.ajax({
 				url: "/deleteEvent",
 				type: 'GET',
 				data: { id: $('#id').val(), rev: $('#rev').val() },
 				contentType: 'application/json',
 				success: function (data) {
+					ibmweb.overlay.hide('divDeleteImg');
 					ibmweb.overlay.hide('Overlay_Event');
 					$('#calendar').fullCalendar('refetchEvents');
 					alert("Event deleted successfully");
 				},
 				error: function() {
+					ibmweb.overlay.hide('divDeleteImg');
 					alert("There was an error when deleting the Event");
 				}
 			});
 		}
 	});
-
-	var opt = parent.location.href;
-	opt = opt.split('?');
-	opt = opt[opt.length -1];
-	if(opt != "id=all"){
-		$('#eventLinks').show();
-	}
 	
 	$('#calendar').fullCalendar({
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -104,7 +127,7 @@ $(document).ready(function() {
 		},
 
 		editable: true,
-		events: ('/getEvents?'+opt),
+		events: ('/getEvents?id='+optCal),
 
 		eventRender: function (event, element) {
 			element.attr('href', 'javascript:void(0);');
@@ -124,7 +147,8 @@ $(document).ready(function() {
 				$('#eventInfo').val(event.eventInfo);
 				$('#owner').val(event.owner);
 				$('#ownerId').val(event.ownerId);
-				// get creationBy and creationDate
+				var nameCreator = (event.log[0].name).split('/');
+				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + nameCreator[0].replace('CN=','') + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
 				$('#attachIDs').val(event.attachIDs);
 				$('input[type=checkbox]').prop('checked', false);
 				$('#eTitle').text(event.eventType);
@@ -138,9 +162,16 @@ $(document).ready(function() {
 							if (regions[i] == this.value) {
 								this.checked = true;
 							}
-							
+							//Hide the owner one
+							var lblOwner = eval("$('label[for="+this.value+"')");
+							lblOwner.show();
+							this.style = "";
 						});
 					}
+					var lblOwner = eval("$('label[for="+event.ownerId+"')");
+					lblOwner.hide();
+					var idOwner = eval("$('input[value="+event.ownerId+"')");
+					idOwner.hide();
 				}
 				loadAttachments('attachIDs');
 				ibmweb.overlay.show('Overlay_Event');
@@ -156,19 +187,12 @@ $(document).ready(function() {
 			var arrTCalenIds = [];
 			for (var i in resp) {
 				var url = parent.location.href;
-				//Load only the other calendars
-				if(url.indexOf(resp[i].link) < 0){
-					arrTCalen.push(resp[i].name);
-					arrTCalenIds.push(resp[i].id);
-				}
-				else{
-					$('#owner').val(resp[i].name);
-					$('#ownerId').val(resp[i].id);
+				//Load other calendars
+				arrTCalen.push(resp[i].name);
+				arrTCalenIds.push(resp[i].id);
+				if(url.indexOf(resp[i].link) >= 0){
 					$('h1#pageTitle').text(resp[i].name);
 				}
-					
-				
-				
 			}
 			loadTargetCalendars(arrTCalen, arrTCalenIds);
 		},
@@ -186,31 +210,41 @@ function clearFields(){
 	$('#id').val('');
 	$('#rev').val('');
 	$('#title').val('');
-	$('#start').val('');
-	$('#end').val('');
+	$('#startDate').val('');
+	$('#endDate').val('');
 	$('#eventInfo').val('');
 	$('#attachIDs').val('');
 	$('#divDownload').html('');
 	resetAttachments();
 	$('input[type=checkbox]').prop('checked', false);
+	
+	$('input[type=checkbox]').each(function() {
+		var lblOwner = eval("$('label[for="+this.id+"')");
+		if(this.value == optCal){
+			lblOwner.hide();
+			this.style = "display:none";
+		}else{
+			lblOwner.show();
+			this.style = "";
+		}
+	});
+	
+	$('#owner').val($('h1#pageTitle').text());
+	$('#ownerId').val(optCal);
+
 }
 
 function loadTargetCalendars(names, ids) {
-	var opt = parent.location.href;
-	opt = opt.split('id=');
-	opt = opt[opt.length -1];
 	var container = document.getElementById('divTarCal');
 	var count = 1;
 	var tbody = '';
 	for (var i in names) {
-		if(ids[i] != opt){
-			tbody += '<input id="' + ids[i] + '" name="chkTarCal" value="' + ids[i] + '" type="checkbox">';
-			tbody += '<label for="' + ids[i] + '">'  + names[i] + '</label>';
-			if ((count % 5) == 0) {
-				tbody += '<br/>';
-			}
-			count++;
+		tbody += '<input id="' + ids[i] + '" name="chkTarCal" value="' + ids[i] + '" type="checkbox">';
+		tbody += '<label for="' + ids[i] + '">'  + names[i] + '</label>';
+		if ((count % 5) == 0) {
+			tbody += '<br/>';
 		}
+		count++;
 	}
 	container.innerHTML = tbody;
 }

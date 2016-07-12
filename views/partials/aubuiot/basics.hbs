@@ -1,0 +1,33 @@
+{{#if editmode}}
+	{{!-- AU BU IOT assesable unit form - Basic section - Edit Mode --}}
+	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Basics</em></caption>
+		<tr>
+			<td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td>
+		</tr>
+		<tr>
+			<td><label for="BUIOT">BU IOT:<span class="ibm-required">*</span></label></td>
+			<td>
+				<span><input type="text" name="BUIOT" value="{{BUIOT}}" size="100" maxlength="300"></span>
+			</td>
+		</tr>
+		<tr>
+			<td>Current reporting period:</td><td>{{CurrentPeriod}}</td>
+		</tr>
+		<tr>
+			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
+			<td>
+				<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span>
+			</td>
+		</tr>
+	</table>
+{{else}}
+	{{!-- AU BU IOT assesable unit form - Basic section - Read Mode --}}
+	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>Basics</em></caption>
+		<tr><td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td></tr>
+		<tr><td>BU IOT:</td><td>{{BUIOT}}</td></tr>
+		<tr><td>Current reporting period:</td><td>{{CurrentPeriod}}</td></tr>
+		<tr><td>Status:</td><td>{{Status}}</td></tr>
+	</table>
+{{/if}}

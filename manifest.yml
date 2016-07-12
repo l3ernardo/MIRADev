@@ -3,6 +3,6 @@ applications:
   memory: 256M
   instances: 1
   domain: w3ibm.mybluemix.net
-  name: mira
-  host: mira
+  name: mira-dev
+  host: mira-dev
   disk_quota: 1024M

@@ -9,6 +9,7 @@
 var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
+var accessrules = require('./class-accessrules.js');
 
 var assessableunit = {
 
@@ -18,8 +19,7 @@ var assessableunit = {
 		var obj = {
 			selector:{
 				"_id": {"$gt":0},
-				"key": "Assessable Unit",
-				"DocSubType": "Business Unit"
+				"key": "Assessable Unit"
 			}
 		};
 		db.find(obj).then(function(data){
@@ -40,37 +40,24 @@ var assessableunit = {
 				"_id": docid,
 			}
 		};
-
-		db.find(obj).then(function(data){
-			var doc = data.body.docs;
+		db.get(docid).then(function(data){
+			var doc = [];
+			doc.push(data.body);
 			var constiobj = {};
 			var toadd = {};
-			var usr = "(" + req.session.user.mail + ")";
 			var editors = doc[0].AdditionalReaders + doc[0].Owner + doc[0].Focals;
 
-			/* Add access roles and mode */
-			if(editors.indexOf(usr) !== -1) {
-				doc[0].editor = 1;
-				if(req.query.edit == '') {
-					doc[0].editmode = 1;
-					if(req.session.user.groupName == "MIRA-ADMIN") {
-						doc[0].admin = 1;
-						doc[0].grantaccess = 1;
-						doc[0].resetstatus = 1;
-						doc[0].cuadmin = 1;
-					} else {
-						if(req.session.user.groupName == "MIRA-GRANT-ACCESS") {
-							doc[0].grantaccess = 1;
-						}
-						if(req.session.user.groupName == "MIRA-RESET-STATUS") {
-							doc[0].resetstatus = 1;
-						}
-						if(req.session.user.groupName == "MIRA-CU-ADMIN-DATA") {
-							doc[0].cuadmin = 1;
-						}
-					}
-				}
-			}
+			/* Get access and roles */
+			accessrules.getRules(req,editors);
+			doc[0].editor = accessrules.rules.editor;
+			doc[0].admin = accessrules.rules.admin;
+			doc[0].grantaccess = accessrules.rules.grantaccess;
+			doc[0].resetstatus = accessrules.rules.resetstatus;
+			doc[0].cuadmin = accessrules.rules.cuadmin;
+			if(req.query.edit == '') doc[0].editmode = 1;
+
+			/* Format Links */
+			doc[0].Links = JSON.stringify(doc[0].Links);
 
 			/* Get Assessment Data */
 			doc[0].AssessmentData = [];
@@ -91,35 +78,114 @@ var assessableunit = {
 			doc[0].AssessmentData.push(toadd);
 
 			/* Get Constituents Data*/
-			if (doc[0].DocSubType == "Business Unit"){
-				constiobj = {
-					selector:{
-						"_id": {"$gt":0},
-						"key": "Assessable Unit",
-						"DocSubType": {"$or":["Global Process","BU Reporting Group","Controllable Unit","BU IOT"]},
-						"BusinessUnit": doc[0].BusinessUnit
-					}
-				};
-				doc[0].GPData = [];
-				doc[0].BUIOTData = [];
-				doc[0].RGData = [];
-				doc[0].CUData = [];
-
-			} else {
-				/* Query here for constituents of other types*/
-				doc[0].GPData = [];
-				doc[0].BUIOTData = [];
-				doc[0].RGData = [];
-				doc[0].CUData = [];
-				var constiobj = {
-					selector:{
-						"_id": {"$gt":0},
-						"key": "Assessable Unit",
-						"DocSubType": {"$or":["Country Process"]}
-					}
-				};
-
-			};
+			switch (doc[0].DocSubType) {
+				case "Business Unit":
+					constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": {"$or":["Global Process","BU Reporting Group","Controllable Unit","BU IOT"]},
+							"BusinessUnit": doc[0].BusinessUnit
+						}
+					};
+					doc[0].GPData = [];
+					doc[0].BUIOTData = [];
+					doc[0].RGData = [];
+					doc[0].CUData = [];
+					break;
+				case "Global Process":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": "Country Process",
+							"BusinessUnit": doc[0].BusinessUnit,
+							"Global Process": doc[0].GlobalProcess
+						}
+					};
+					doc[0].CPData = [];
+					break;
+				case "BU IOT":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": {"$or":["Controllable Unit","BU IMT"]},
+							"BusinessUnit": doc[0].BusinessUnit,
+							"BUIOT": doc[0].BUIOT
+						}
+					};
+					doc[0].BUIMTData = [];
+					doc[0].CUData = [];
+					break;
+				case "BU IMT":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": {"$or":["Controllable Unit","BU Country"]},
+							"BusinessUnit": doc[0].BusinessUnit,
+							"BUIMT": doc[0].BUIMT
+						}
+					};
+					doc[0].BUCountryData = [];
+					doc[0].CUData = [];
+					break;
+				case "BU Country":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": {"$or":["Controllable Unit","Country Process"]},
+							"BusinessUnit": doc[0].BusinessUnit,
+							"BUCountry": doc[0].BUCountry
+						}
+					};
+					doc[0].CPData = [];
+					doc[0].CUData = [];
+					break;
+				case "Controllable Unit":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": "Account",
+							"BusinessUnit": doc[0].BusinessUnit,
+							"ControllableUnit": doc[0].ControllableUnit,
+						}
+					};
+					doc[0].AccountData = [];
+					break;
+				case "Country Process":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": "Account",
+							"BusinessUnit": doc[0].BusinessUnit
+						}
+					};
+					doc[0].ControlData = [];
+					doc[0].CUData = [];
+					break;
+				case "BU Reporting Group":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": {"$or":["Controllable Unit","Country Process","BU Country","BU IMT","BU IOT","GlobalProcess"]},
+							"BusinessUnit": doc[0].BusinessUnit,
+							"GroupName": doc[0].GroupName
+						}
+					};
+					doc[0].GPData = [];
+					doc[0].BUIOTData = [];
+					doc[0].BUIMTData = [];
+					doc[0].BUCountryData = [];
+					doc[0].CUData = [];
+					doc[0].CPData = [];
+					break;
+			}
 
 			db.find(constiobj).then(function(constidata) {
 				var constidocs = constidata.body.docs;
@@ -136,16 +202,12 @@ var assessableunit = {
 								constidocs[i].Target2Sat
 						]
 					};
-					if (constidocs[i].DocSubType == "Global Process") {
-						doc[0].GPData.push(toadd);
-					} else if(constidocs[i].DocSubType == "BU IOT") {
-						doc[0].BUIOTData.push(toadd);
-					} else if (constidocs[i].DocSubType == "BU Reporting Group") {
-						doc[0].RGData.push(toadd);
-					} else {
-						doc[0].CUData.push(toadd);
-					}
-				};
+					if (constidocs[i].DocSubType == "Global Process") doc[0].GPData.push(toadd);
+					else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
+					else if (constidocs[i].DocSubType == "BU Reporting Group") doc[0].RGData.push(toadd);
+					else if (constidocs[i].DocSubType == "Country Process") doc[0].CPData.push(toadd);
+					else doc[0].CUData.push(toadd);
+				}
 
 				deferred.resolve({"status": 200, "doc": doc});
 			}).catch(function(err) {
@@ -174,17 +236,32 @@ var assessableunit = {
 			}
 		};
 
-		db.find(obj).then(function(data){
-			var doc = data.body.docs;
-
+		db.get(docid).then(function(data){
+			var doc = [];
+			doc.push(data.body);
 			// Update Admin Section
-			doc[0].RGRollup = req.body.RGRollup;
+			switch (doc[0].DocSubType) {
+				case "Business Unit":
+					doc[0].RGRollup = req.body.RGRollup;
+					break;
+				case "Global Process":
+					doc[0].RGRollup = req.body.RGRollup;
+					doc[0].BRGMembership = req.body.BRGMembership;
+					break;
+				case "BU IOT":
+					doc[0].RGRollup = req.body.RGRollup;
+					doc[0].BRGMembership = req.body.BRGMembership;
+					doc[0].BUCountryIOT = req.body.BUCountryIOT;
+					break;
+			}
 			// Update Additional Readers
 			doc[0].AdditionalReaders = req.body.readerlist;
 			// Update Additional Editors
 			doc[0].AdditionalEditors = req.body.editorlist;
 			// Update notes
 			doc[0].Notes = req.body.Notes;
+			// Update links
+			doc[0].Links = eval(req.body.attachIDs);
 			// Update logs
 			doc[0].Log.push(addlog);
 

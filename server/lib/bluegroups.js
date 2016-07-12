@@ -1,7 +1,7 @@
 var express = require('express'),
     router = express.Router(),
     q  = require("q"),
-    db = require('../config/js/class-conn.js');
+     db = require('../config/js/class-conn.js');
 
 
 var _membersURL = 'https://eapim-dev.w3ibm.mybluemix.net/devops/development/whitewater/bluegroups/%s/members?';
@@ -36,7 +36,6 @@ var requestBlueGroups = function(url) {
     var groupName = xmlDoc.substring(xmlDoc.search('<groupName>') + lenGroup, xmlDoc.search('</groupName>'));
 
     memberBG.push({
-      "rc": rc,
       "msg": msg,
       "groupName": groupName
     });
@@ -59,6 +58,7 @@ var Bluegroups = function() {
   this.getMembersByBG = function(username) {
     var deferred = q.defer();
     var bluegroups = [];
+	var bgroups = [];
 
       //read db to get the BG names.
       
@@ -80,9 +80,14 @@ var Bluegroups = function() {
 
             //checks the BG name and if user is member of the BG.
             requestBlueGroups(urlBG).then(function(data) {
-              if(data[0].msg == 'Success'){
+              if(data){
                 bluegroups.push(data);
-                deferred.resolve(bluegroups);
+				if(data[0].msg=='Success') {
+					bgroups.push(data[0].groupName);
+				}
+                if(bluegroups.length==len) {
+					deferred.resolve(bgroups);
+				}
               }
             });
           } //end FOR

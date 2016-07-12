@@ -71,15 +71,15 @@ var calendar = {
 			var obj = {
 				selector : {
 					"_id": {"$gt":0},
-					"eventType": {"$or":["Meeting/Event","Milestone"]},
+					"type": "Calendar"
 				}
 			};
 		}else{
 			var obj = {
 				selector : {
 					"_id": {"$gt":0},
-					"eventType": {"$or":["Meeting/Event","Milestone"]},
-					"ownerId": ownerCalendar
+					"type": "Calendar",
+					$or: [ { "ownerId": ownerCalendar }, { "targetCalendar": { $in: [ownerCalendar] } } ]
 				}
 			};
 		}
@@ -99,38 +99,58 @@ var calendar = {
 	/*Save event*/
 	saveEvent: function(req, db){
 		var deferred = q.defer();
-		var object;
 		var now = moment(new Date());
-		object = {
-			"title" : req.body.title,
-			"type" : "Calendar",
-			"start" : req.body.startDate,
-			"end" : req.body.endDate,
-			"eventType" : req.body.eventType,
-			"eventInfo" : req.body.eventInfo,
-			"owner" : req.body.owner,
-			"ownerId" : req.body.ownerId,
-			"targetCalendar" : req.body.chkTarCal,
-			"attachIDs" : req.body.attachIDs
+		var addlog = {
+			"name": req.session.user.notesId,
+			"date": now.format("MM/DD/YYYY"),
+			"time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
 		};
+		
 		if (req.body.id != "") {
-			object._id = req.body.id;
-			object._rev = req.body.rev;
-			//object.creationBy = req.body.creationBy;
-			//object.creationDate = req.body.creationDate;
-			//object.creationTime = req.body.creationTime;
+			db.get(req.body.id).then(function(data){
+				var doc = [];
+				doc.push(data.body);
+				doc[0].eventInfo = req.body.eventInfo;
+				doc[0].attachIDs = req.body.attachIDs;
+				doc[0].log.push(addlog);
+				doc[0].start = req.body.startDate;
+				doc[0].end = req.body.endDate;
+				doc[0].eventInfo = req.body.eventInfo;
+				doc[0].targetCalendar = req.body.chkTarCal;
+
+				db.save(doc[0]).then(function(data){
+					deferred.resolve(data);
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err});
+				});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
 		}else{
-			object.creationBy = req.session.user.notesId;
-			object.creationDate = now.format("MM/DD/YYYY");
-			object.creationTime = now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr();
+			var log = [];
+			log.push(addlog);
+			var object = {
+				"title" : req.body.title,
+				"type" : "Calendar",
+				"start" : req.body.startDate,
+				"end" : req.body.endDate,
+				"eventType" : req.body.eventType,
+				"eventInfo" : req.body.eventInfo,
+				"owner" : req.body.owner,
+				"ownerId" : req.body.ownerId,
+				"targetCalendar" : req.body.chkTarCal,
+				"attachIDs" : req.body.attachIDs,
+				"log" : log
+			};
+			// save event
+			db.save(object).then(function(data){
+				deferred.resolve({"status": 200, "body": data.body});
+			}).catch(function(err) {
+				console.log("error"+err);
+				deferred.reject({"status": 500, "error": err});
+			});
 		}
-		// save event
-		db.save(object).then(function(data){
-			deferred.resolve({"status": 200, "msg": "OK"});
-		}).catch(function(err) {
-			console.log("error"+err);
-			deferred.reject({"status": 500, "error": err});
-		});
+		
 		return deferred.promise;
 	},
 	/*Delete event*/

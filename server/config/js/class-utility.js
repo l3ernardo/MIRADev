@@ -144,7 +144,7 @@ var util = {
 		return deferred.promise;
 	},
 	//Download the selected file
-	downloadFile: function (req, db){
+	downloadFile: function (req, res, db){
 		var deferred = q.defer();
 		var id = req.query.id;
 		var filename = req.query.filename;
@@ -172,6 +172,88 @@ var util = {
 			deferred.reject({"status": 500, "error": err});
 		});		
 		return deferred.promise;	
+	},
+	//Delete files by parentid
+	deleteFilesParentID: function (parentid, db){
+		var deferred = q.defer();
+		var doc;
+		var object = {
+			selector:{
+				"_id": {"$gt":0},
+				"parentid": parentid,
+				"type": "Attachments"
+			}
+		};
+		db.find(object).then(function(data){
+			doc = data.body.docs;
+			for (var i = 0; i < doc.length; ++i) {
+				db.del(doc[i]._id, doc[i]._rev).then(function(resp) {
+					deferred.resolve({"status": 200});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err});
+				});
+			}
+			deferred.resolve({"status": 200});
+		}).catch(function(err) {
+			deferred.reject({"status": 500, "error": err});
+		});
+		
+		return deferred.promise;
+	},
+	//Delete files by ids
+	deleteFilesByIDs: function (filesIds, db){
+		var deferred = q.defer();
+		var object;
+		var doc;
+		var arrLinks = JSON.parse(filesIds);
+		for(i=0; i<arrLinks.length; i++){
+			object = {
+				selector:{
+					"_id": arrLinks[i].attachId,
+					"type": "Attachments"
+				}
+			};
+			db.find(object).then(function(data){
+				doc = data.body.docs;
+				db.del(doc[0]._id, doc[0]._rev).then(function(resp) {
+					deferred.resolve({"status": 200});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err});
+				});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
+		}
+		return deferred.promise;
+	},
+	//Update Files with the parentid
+	updateFilesParentID: function (parentid, filesIds, db){
+		var deferred = q.defer();
+		var object;
+		var doc;
+		var arrLinks = JSON.parse(filesIds);
+		for(i=0; i<arrLinks.length; i++){
+			object = {
+				selector:{
+					"_id": arrLinks[i].attachId,
+					"type": "Attachments"
+				}
+			};
+			db.find(object).then(function(data){
+				doc = data.body.docs;
+				// Update Parent ID
+				doc[0].parentid = parentid;
+
+				db.save(doc[0]).then(function(data){
+					deferred.resolve(data);
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err});
+				});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
+		}
+		return deferred.promise;
 	}
 }
 module.exports = util;
