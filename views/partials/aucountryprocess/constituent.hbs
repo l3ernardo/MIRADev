@@ -1,0 +1,58 @@
+{{!-- AU BU IOT form - Constituent section - Edit/Read Mode --}}
+<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>Relevant CUs and Key Controls</em></caption>
+</table>
+<div class="ibm-columns ibm-graphic-tabs">
+	<div class="ibm-tab-section">
+		<ul class="ibm-tabs">
+			<li id="CPCUs-li" class="ibm-active"><a href="#constituents">Controllable Units</a></li>
+			<li id="CPKeyControls-li"><a href="#constituents">Key Controls</a></li>
+		</ul>
+	</div>
+	<div id="CPCUs" class="ibm-tabs-content">
+		<table id="CPCUs_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="controllable-unit">
+				<th scope="col">Name</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each CUData}}
+			<tr>
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
+				{{/each}}
+			</tr>
+			{{/each}}
+		</table>
+	</div>
+	<div id="CPKeyControls" class="ibm-tabs-content"  style='display : none'>
+		<table id="CPKeyControls_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="key-controls">
+				<th scope="col">Name</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each CPKCData}}
+			<tr>
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
+				{{/each}}
+			</tr>
+			{{/each}}
+		</table>
+	</div>
+</div>
