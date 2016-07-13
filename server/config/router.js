@@ -277,6 +277,9 @@ router.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "BU IOT":
 						res.render('aubuiot', data.doc[0] );
 						break;
+					case "Country Process":
+						res.render('aucountryprocess', data.doc[0] );
+						break;
 				}
 			} else {
 				res.render('error',{errorDescription: data.error});
