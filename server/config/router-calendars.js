@@ -17,7 +17,17 @@ CALENDARS
 ***************************************************************/
 /* Load calendar page*/
 calendars.get('/calendar', isAuthenticated, function(req, res) {
-	res.render('calendar');
+	calendar.getAccessRoles(req, db).then(function(data) {
+		if(data.status==200) {
+			res.render('calendar', data.doc);
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[calendars][getAccessCalendar] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[calendars][getAccessCalendar] - " + err.error);
+	});
 });
 //load data from db and show in calendar
 calendars.get('/getEvents', isAuthenticated, function(req, res) {
