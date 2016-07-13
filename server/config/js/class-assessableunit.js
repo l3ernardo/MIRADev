@@ -27,7 +27,7 @@ var assessableunit = {
 		db.find(obj).then(function(data){
 			var doc = data.body.docs;
 			var len= doc.length;
-            if(len > 0){	
+            if(len > 0){
 				for (var i = 0; i < len; i++){
 					 view_dashboard.push({
 										assessableUnit: doc[i].Name,
@@ -39,7 +39,7 @@ var assessableunit = {
 										wwBcit:doc[i].WWBCITAssessmentStatus,
 										owner:doc[i].Owner,
 										type:doc[i].DocSubType,
-									})	
+									})
 				}
 			}
 			view=JSON.stringify(view_dashboard, 'utf8');
@@ -74,6 +74,18 @@ var assessableunit = {
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
 			if(req.query.edit == '') doc[0].editmode = 1;
+
+			/* Field displays */
+			var createdby = doc[0].Log[0].name.split('/');
+			doc[0].Log[0].name = createdby[0].replace('CN=','');
+			if(doc[0].AuditableFlag == "Yes") {
+				doc[0].AuditableFlagYes = 1;
+				doc[0].SizeFlag = 1;
+			}
+			if(doc[0].CUFlag == "Yes") {
+				doc[0].CUFlagYes = 1;
+				doc[0].SizeFlag = 1;
+			}
 
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
@@ -180,7 +192,8 @@ var assessableunit = {
 						selector:{
 							"_id": {"$gt":0},
 							"key": "Assessable Unit",
-							"DocSubType": "Account",
+							"DocSubType": "Controllable Unit",
+							"RelevantCP": doc[0].Name,
 							"BusinessUnit": doc[0].BusinessUnit
 						}
 					};
@@ -225,6 +238,7 @@ var assessableunit = {
 					else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
 					else if (constidocs[i].DocSubType == "BU Reporting Group") doc[0].RGData.push(toadd);
 					else if (constidocs[i].DocSubType == "Country Process") doc[0].CPData.push(toadd);
+					else if (constidocs[i].DocSubType == "Controllable Unit") doc[0].CUData.push(toadd);
 					else doc[0].CUData.push(toadd);
 				}
 
@@ -244,7 +258,7 @@ var assessableunit = {
 		var deferred = q.defer();
 		var now = moment(new Date());
 		var addlog = {
-			"name": req.session.user.cn[0],
+			"name": req.session.user.notesId,
 			"date": now.format("MM/DD/YYYY"),
 			"time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
 		};
@@ -271,6 +285,13 @@ var assessableunit = {
 					doc[0].RGRollup = req.body.RGRollup;
 					doc[0].BRGMembership = req.body.BRGMembership;
 					doc[0].BUCountryIOT = req.body.BUCountryIOT;
+					break;
+				case "Country Process":
+					doc[0].BRGMembership = req.body.BRGMembership;
+					doc[0].AuditableFlag = req.body.AuditableFlag;
+					doc[0].CUFlag = req.body.CUFlag;
+					doc[0].AuditProgram = req.body.AuditProgram;
+					doc[0].CUSize = req.body.CUSize;
 					break;
 			}
 			// Update Additional Readers
