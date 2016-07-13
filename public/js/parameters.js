@@ -49,7 +49,11 @@ function editParam(id) {
 				$('#id').val(resp._id);
 				$('#rev').val(resp._rev);
 				$('#fldname').val(resp.keyName);
-				$('#fldtrue').val(resp.active);
+				$('input[name=fldtrue]').each(function() {
+					if (resp.active == this.value) {
+						this.click();
+					}
+				});
 				$('#fldvalue').val(JSON.stringify(resp.value));
 				$('#flddesc').val(resp.description);
 				editor.set(resp.value);

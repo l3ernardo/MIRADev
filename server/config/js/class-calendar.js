@@ -9,8 +9,22 @@
 var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
+var accessrules = require('./class-accessrules.js');
 
 var calendar = {
+	/* Get access and roles */
+	getAccessRoles: function(req, db){
+		var deferred = q.defer();
+		var doc = [];
+		accessrules.getRules(req, '');
+		doc.push(accessrules.rules);
+		if(doc[0]){
+			deferred.resolve({"status": 200, "doc": doc[0]});
+		}else{
+			deferred.reject({"status": 500, "error": 'Access roles error.'});
+		}
+		return deferred.promise;
+	},
 	/* Get all calendars */
 	getTargetCalendars: function(req, db) {
 		var deferred = q.defer();
@@ -34,21 +48,11 @@ var calendar = {
 						lenCal = calendars.length;
 						for(var j = 0; j < lenCal; j++){
 							if(dataValue.calendars[j].id != "all"){
-								obj_calendar = dataValue.calendars[j].role;
-								len_objcalendar = obj_calendar.length;
-								var flag = 0;
-								for(var k = 0; k < len_objcalendar; k++){
-									if(obj_calendar[k]==req.session.BG){
-										flag = 1;
-									}
-								}
-								if(flag == '1'){
-									dataTargetCalendars.push({
-										id: dataValue.calendars[j].id,
-										name: dataValue.calendars[j].name,
-										link: dataValue.calendars[j].link
-									});
-								}	
+								dataTargetCalendars.push({
+									id: dataValue.calendars[j].id,
+									name: dataValue.calendars[j].name,
+									link: dataValue.calendars[j].link
+								});
 							}
 						}
 					}
@@ -110,6 +114,7 @@ var calendar = {
 			db.get(req.body.id).then(function(data){
 				var doc = [];
 				doc.push(data.body);
+				doc[0].title = req.body.title;
 				doc[0].eventInfo = req.body.eventInfo;
 				doc[0].attachIDs = req.body.attachIDs;
 				doc[0].log.push(addlog);
