@@ -16,11 +16,11 @@
 				<td>
 					<span>
 						{{#if AuditableFlagYes}}
-							<input class="showsize" type="radio" id="AFYes" name="AuditableFlag" value="Yes" checked>Yes
-							<input type="radio" name="AuditableFlag" id="AFNo" value="No">No
+							<input type="radio" name="AuditableFlag" value="Yes" checked>Yes
+							<input type="radio" name="AuditableFlag" value="No">No
 						{{else}}
-							<input class="showsize" type="radio" id="AFYes" name="AuditableFlag" value="Yes">Yes
-							<input type="radio" name="AuditableFlag" id="AFNo" value="No" checked>No
+							<input type="radio" name="AuditableFlag" value="Yes">Yes
+							<input type="radio" name="AuditableFlag" value="No" checked>No
 						{{/if}}
 					</span>
 				</td>
@@ -39,14 +39,14 @@
 					</span>
 				</td>
 			</tr>
-
-			<tr class="size">
-				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-
+			{{#if SizeFlag}}
+				<tr>
+					<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
+					</td>
+				</tr>
+			{{/if}}
 			<tr>
 				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
