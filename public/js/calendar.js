@@ -134,24 +134,20 @@ $(document).ready(function() {
 			element.click(function() {
 				clearFields();
 				//enable submit and cancel button if they are disabled
-				$('#btn_submit').prop("disabled", false);
 				$('#btn_cancel').prop("disabled", false);
-				$('#btn_delete').prop("disabled", false);
-				$('#btn_delete').show();
-				$('#id').val(event._id);
-				$('#rev').val(event._rev);
-				$('#title').val(event.title);
-				$('#startDate').val(event.start.format("MM/DD/YYYY"));
-				$('#endDate').val(event.end.format("MM/DD/YYYY"));
-				$('#eventType').val(event.eventType);
-				$('#eventInfo').val(event.eventInfo);
-				$('#owner').val(event.owner);
-				$('#ownerId').val(event.ownerId);
+				
+				$('#eTitle').text(event.eventType);
 				var nameCreator = (event.log[0].name).split('/');
 				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + nameCreator[0].replace('CN=','') + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
+				$('#id').val(event._id);
+				$('#rev').val(event._rev);
+				$('#eventType').val(event.eventType);
+				$('#ownerId').val(event.ownerId);
+				
+				$('#eventInfo').val(event.eventInfo);
 				$('#attachIDs').val(event.attachIDs);
 				$('input[type=checkbox]').prop('checked', false);
-				$('#eTitle').text(event.eventType);
+				
 				if (event.targetCalendar) {
 					var regions = event.targetCalendar;
 					if (typeof regions === 'string') {
@@ -172,6 +168,22 @@ $(document).ready(function() {
 					lblOwner.hide();
 					var idOwner = eval("$('input[value="+event.ownerId+"')");
 					idOwner.hide();
+				}
+				if($('input[name=editmode]').val()==1){
+					$('#btn_submit').prop("disabled", false);
+					$('#btn_delete').prop("disabled", false);
+					$('#title').val(event.title);
+					$('#owner').val(event.owner);
+					$('#startDate').val(event.start.format("MM/DD/YYYY"));
+					$('#endDate').val(event.end.format("MM/DD/YYYY"));
+					$('input[type=checkbox]').prop('disabled', false);
+				
+				}else{
+					$('#title').html(event.title);
+					$('#owner').html(event.owner);
+					$('#startDate').html(event.start.format("MM/DD/YYYY"));
+					$('input[type=checkbox]').prop('disabled', true);
+				
 				}
 				loadAttachments('attachIDs');
 				ibmweb.overlay.show('Overlay_Event');
