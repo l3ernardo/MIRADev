@@ -1,0 +1,99 @@
+{{#if admin}}
+{{!-- Event form - Administrative Use Only - Edit Mode --}}
+	<input type="hidden" name="editmode" value="1">
+	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="95%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Basics</em></caption>
+		<tr>
+			<td width="20%"><label for="title">Name:<span class="ibm-required">*</span></label></td>
+			<td><span><input type="text" id="title" name="title" size="50"></span></td>
+		</tr>
+		<tr>
+			<td><label for="ownercal">Owner calendar:</label></td>
+			<td><span>
+			<input id="owner" name="owner" readonly>
+			<input type="hidden" id="ownerId" name="ownerId">
+			</span></td>
+		</tr>
+		<tr>
+			<td><label id="lblTarCal" class="ibm-form-grp-lbl">Other target calendars:</label></td>
+			<td><span id="divTarCal" class="ibm-input-group"></span></td>
+		</tr>
+		
+	</table>
+	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="95%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Details</em></caption>
+		<tr>
+			<td width="20%"><label for="startDate" align="left">Date:<span class="ibm-required">*</span></label></label></td>
+			<td><span>
+			<input type="date" id="startDate" name="startDate" size="30">
+			<input type="hidden" id="endDate" name="endDate">
+		</span></td>
+		</tr>
+		<tr>
+			<td><label for="eventInfo" align="left">Notes:</label></td>
+			<td><span><textarea id="eventInfo" name="eventInfo" cols="60" rows="3"></textarea></span></td>
+		</tr>
+		<tr>
+			<td><label for="btnAddFiles">Links:</label></td>
+			<td>
+				<input id="attachIDs" name ="attachIDs" type="hidden">
+				<span id="attachments"></span>
+				<script>$(document).ready(function() {linkAttachments('attachments','id');});</script>
+			</td>
+		</tr>
+	</table>
+	<div class="ibm-buttons-row" style="box-sizing: border-box; width:95%" >
+		<p>
+			<input class="ibm-btn-pri" type="button" id="btn_submit" value="Save & Close"/>
+			<span class="ibm-sep">&nbsp;</span>
+			<input class="ibm-btn-sec" type="button" id="btn_delete" value="Delete" />
+			<span class="ibm-sep">&nbsp;</span>
+			<input class="ibm-btn-sec" type="button" id="btn_cancel" value="Close" />
+		</p>
+	</div>
+{{else}}
+{{!-- Event form - Non Administrative Use Only - Read Mode --}}
+	<input type="hidden" name="editmode" value="0">
+	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="95%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Basics</em></caption>
+		<tr>
+			<td width="20%"><label for="title">Name:<span class="ibm-required">*</span></label></td>
+			<td><span id="title" name="title"></span></td>
+		</tr>
+		<tr>
+			<td><label for="ownercal">Owner calendar:</label></td>
+			<td><span id="owner" name="owner">
+			</span><input type="hidden" id="ownerId" name="ownerId">
+			</td>
+		</tr>
+		<tr>
+			<td><label id="lblTarCal" class="ibm-form-grp-lbl">Other target calendars:</label></td>
+			<td><span id="divTarCal" class="ibm-input-group"></span></td>
+		</tr>
+		
+	</table>
+	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="95%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Details</em></caption>
+		<tr>
+			<td width="20%"><label for="startDate" align="left">Date:<span class="ibm-required">*</span></label></label></td>
+			<td><span id="startDate" name="startDate"></span></td>
+		</tr>
+		<tr>
+			<td><label for="eventInfo" align="left">Notes:</label></td>
+			<td><span><textarea id="eventInfo" name="eventInfo" cols="60" rows="3" disabled></textarea></span></td>
+		</tr>
+		<tr>
+			<td><label for="btnAddFiles">Links:</label></td>
+			<td>
+				<input id="attachIDs" name ="attachIDs" type="hidden">
+				<span id="attachments"></span>
+				<script>$(document).ready(function() {linkAttachments('attachments','id');});</script>
+			</td>
+		</tr>
+	</table>
+	<div class="ibm-buttons-row" style="box-sizing: border-box; width:95%" >
+		<p>
+			<input class="ibm-btn-sec" type="button" id="btn_cancel" value="Close" />
+		</p>
+	</div>
+{{/if}}
