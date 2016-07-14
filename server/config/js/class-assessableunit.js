@@ -69,7 +69,8 @@ var assessableunit = {
 			/* Get access and roles */
 			accessrules.getRules(req,editors);
 			doc[0].editor = accessrules.rules.editor;
-			doc[0].admin = accessrules.rules.admin;
+			// doc[0].admin = accessrules.rules.admin;
+			doc[0].admin = 1;
 			doc[0].grantaccess = accessrules.rules.grantaccess;
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
