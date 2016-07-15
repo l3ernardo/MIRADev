@@ -17,7 +17,17 @@ CALENDARS
 ***************************************************************/
 /* Load calendar page*/
 calendars.get('/calendar', isAuthenticated, function(req, res) {
-	res.render('calendar');
+	calendar.getAccessRoles(req, db).then(function(data) {
+		if(data.status==200) {
+			res.render('calendar', data.doc);
+		} else {
+			res.render('error',{errorDescription: data.error})
+			console.log("[calendars][getAccessCalendar] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error})
+		console.log("[calendars][getAccessCalendar] - " + err.error);
+	});
 });
 //load data from db and show in calendar
 calendars.get('/getEvents', isAuthenticated, function(req, res) {
@@ -47,15 +57,19 @@ calendars.get('/getTargetCalendars', isAuthenticated, function(req, res){
 calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 	calendar.saveEvent(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(data) {
-				if(data.status==200 & !data.error) {
-					res.redirect("/calendar?id=all");
-				} else {
-					console.log("[calendars][saveEvent] - " + data.error);
-				}
-			}).catch(function(err) {
-				console.log("[calendars][saveEvent] - " + err.error);
-			})
+			if(req.body.attachIDs != ''){
+				utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(data) {
+					if(data.status==200 & !data.error) {
+						res.redirect("/calendar?id=all");
+					} else {
+						console.log("[calendars][saveEvent] - " + data.error);
+					}
+				}).catch(function(err) {
+					console.log("[calendars][saveEvent] - " + err.error);
+				})
+			}else{
+				res.redirect("/calendar?id=all");
+			}
 		} else {
 			console.log("[calendars][saveEvent] - " + data.error);
 		}

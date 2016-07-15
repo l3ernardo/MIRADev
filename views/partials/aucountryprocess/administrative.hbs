@@ -1,0 +1,99 @@
+<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+
+	{{#if editmode}}
+
+		{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with Admin Access --}}
+		{{#if admin}}
+			<tr>
+				<td width="25%"><label for="BRGMembership">BU reporting groups:</label></td>
+				<td>
+					<span><input type="text" name="BRGMembership" value="{{BRGMembership}}" size="100" maxlength="300"></span>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{#if AuditableFlagYes}}
+							<input class="showsize" type="radio" id="AFYes" name="AuditableFlag" value="Yes" checked>Yes
+							<input type="radio" name="AuditableFlag" id="AFNo" value="No">No
+						{{else}}
+							<input class="showsize" type="radio" id="AFYes" name="AuditableFlag" value="Yes">Yes
+							<input type="radio" name="AuditableFlag" id="AFNo" value="No" checked>No
+						{{/if}}
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="CUFlag">Controllable Unit?:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{#if CUFlagYes}}
+							<input type="radio" name="CUFlag" value="Yes" checked>Yes
+							<input type="radio" name="CUFlag" value="No">No
+						{{else}}
+							<input type="radio" name="CUFlag" value="Yes">Yes
+							<input type="radio" name="CUFlag" value="No" checked>No
+						{{/if}}
+					</span>
+				</td>
+			</tr>
+
+			<tr class="size">
+				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
+				</td>
+			</tr>
+
+			<tr>
+				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span><input type="text" name="AuditProgram" value="{{AuditProgram}}" size="100" maxlength="300"></span>
+				</td>
+			</tr>
+			{{#if AuditableFlagYes}}
+				<tr>
+					<td>Internal Audits:</td>
+					<td><!-- Internal Audits embedded view here --></td>
+				</tr>
+			{{/if}}
+
+		{{else}}
+
+			{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with no Admin Access --}}
+			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembership}}</td></tr>
+			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+			<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
+			{{#if SizeFlag}}
+				<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+			{{/if}}
+			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			{{#if AuditableFlagYes}}
+				<tr>
+					<td>Internal Audits:</td>
+					<td><!-- Internal Audits embedded view here --></td>
+				</tr>
+			{{/if}}
+		{{/if}}
+
+	{{else}}
+
+		{{!-- AU Country Process form - Administrative Use Only section - Read Mode --}}
+		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembership}}</td></tr>
+		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+		<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
+		{{#if SizeFlag}}
+			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+		{{/if}}
+		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		{{#if AuditableFlagYes}}
+			<tr>
+				<td>Internal Audits:</td>
+				<td><!-- Internal Audits embedded view here --></td>
+			</tr>
+		{{/if}}
+	{{/if}}
+
+</table>
