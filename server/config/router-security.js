@@ -29,13 +29,15 @@ security.post('/login',middleware.urlEncodedParser,middleware.passport.authentic
 		// Store the initial url
 		if(req.session.returnTo=='') req.session.returnTo = req.flash('url');
 		req.session.user = req.user;
+		var userID = req.session.user.notesId.split('/');
+		userID = userID[0].replace('CN=','');
+		req.session.user.notesId = userID;
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
 		console.info("[routes][login] - roles: " + req.user.groupName);
 		req.session.businessunit = "";
 		res.redirect('setup');
-	}
-	else {
+	}else{
 		//console.log("[routes][login] - Access Denied");
 		req.logout();
 		req.session.user = null;
