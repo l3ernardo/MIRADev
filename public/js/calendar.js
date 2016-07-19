@@ -128,7 +128,16 @@ $(document).ready(function() {
 		},
 
 		editable: true,
-		events: ('/getEvents?id='+optCal),
+		events: {
+			url:'/getEvents?id='+optCal, 
+			success: function(data){
+				for (var i in data) {
+					if(data[i].eventType == "Milestone"){
+						data[i].color = "#17af4b";
+					}
+				}
+			}
+		},
 
 		eventRender: function (event, element) {
 			element.attr('href', 'javascript:void(0);');
