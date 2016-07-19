@@ -188,6 +188,31 @@ $(document).ready(function() {
 				loadAttachments('attachIDs');
 				ibmweb.overlay.show('Overlay_Event');
 			});
+		},
+		
+		eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
+			var allow = $('input[name=editmode]').val();
+			if(allow == "1"){
+				if (!confirm(event.title + " was moved to: " + event.start.format("MM/DD/YYYY") + ". Are you sure about this change?")) {
+					$('#calendar').fullCalendar('refetchEvents');
+				}else{
+					var aLink = jsEvent.target.parentElement.parentElement;
+					var obj = eval("$('a#" + aLink.id + "')");
+					obj.click();
+					$('#btn_submit').click();
+				}
+			}else{
+				alert("You are not allowed to move a Calendar Event.");
+				$('#calendar').fullCalendar('eventRender');
+			}
+		},
+		loading: function (isLoading, view) {
+			console.log(isLoading);
+			if(isLoading){
+				console.log($('div#calendar'));
+			}else{
+				console.log($('div#calendar'));
+			}
 		}
 	}); //end var calendar
 
@@ -218,7 +243,6 @@ $(document).ready(function() {
 function clearFields(){
 	$('#btn_submit').prop("disabled", false);
 	$('#btn_cancel').prop("disabled", false);
-	$('#btn_delete').hide();
 	$('#id').val('');
 	$('#rev').val('');
 	$('#title').val('');
