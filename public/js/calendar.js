@@ -5,6 +5,7 @@ optCal = optCal[optCal.length -1];
 $(document).ready(function() {
 	if(optCal == "all"){
 		$('#eventLinks').html('');
+		$('h1#pageTitle').text("Integrated");
 	}
 	//meeting button event
 	$('#btn_meeting').click(function() {
@@ -137,8 +138,7 @@ $(document).ready(function() {
 				$('#btn_cancel').prop("disabled", false);
 				
 				$('#eTitle').text(event.eventType);
-				var nameCreator = (event.log[0].name).split('/');
-				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + nameCreator[0].replace('CN=','') + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
+				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + event.log[0].name + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
 				$('#id').val(event._id);
 				$('#rev').val(event._rev);
 				$('#eventType').val(event.eventType);
@@ -206,13 +206,8 @@ $(document).ready(function() {
 				$('#calendar').fullCalendar('eventRender');
 			}
 		},
-		loading: function (isLoading, view) {
-			console.log(isLoading);
-			if(isLoading){
-				console.log($('div#calendar'));
-			}else{
-				console.log($('div#calendar'));
-			}
+		loading: function(bool) {
+			$('#loading').toggle(bool);
 		}
 	}); //end var calendar
 
