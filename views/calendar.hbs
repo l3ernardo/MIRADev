@@ -2,14 +2,15 @@
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <script src='./lib/moment.min.js'></script>
 <script src='./lib/fullcalendar.min.js'></script>
-<script src='./lib/scheduler.min.js'></script>
 <script src='./js/calendar.js'></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <!-- JS for attachments widget -->
 <script src="./js/attachments.js"/></script>
+
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
 		<span><br/></span>
+		<div id="loading" style="display: none;"><center><p class="ibm-spinner-small"></p><strong>Loading...<br/></strong></center></div>
 		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
 			{{#if admin}}
 			<p>
@@ -21,6 +22,7 @@
 			<br/>
 			{{/if}}
 		</div>
+		
 		<div id='calendar'></div>
 	</div>
 </div>
