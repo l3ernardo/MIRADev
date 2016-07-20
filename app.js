@@ -34,6 +34,10 @@ app.set('views', path.join(__dirname, 'views'));
 //handlebars
 app.engine('.hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
 app.set('view engine', '.hbs');
+app.use(function(req,res,next){
+    res.locals.session = req.session;
+    next();
+});
 
 // serve the files out of ./public as our main files
 app.use(express.static(__dirname + '/public'));
