@@ -29,9 +29,6 @@ $(document).ready(function(){
 /* Update user name with login data*/
 function updateUserName(name) {
 	if(name != ''){
-		name = name.split('/');
-		name = name[0].split('=');
-		name = name[1];
 		$('div#ibm-profile-links').show();
 	}
 	else{

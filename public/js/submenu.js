@@ -14,6 +14,9 @@ $(document).ready(function(){
 				var archive = response.menu.dataArchive;
 				var administration = response.menu.dataAdministration;
 				updateSubMenu(menutitle,calendars,dashboards,reports,references,archive, administration);
+				//Update breadcrumb
+				addEventToMenu();
+				showBreadCrumb();
 			}
 		},
 		error: function(e) {
@@ -113,6 +116,29 @@ function selectedMenuOption(){
 		$('#administration-options').hide();
 		$('#administration-options').parent().removeClass();
 	}
+}
+function showBreadCrumb(){
+	$("#breadcrumb").html(sessionStorage.breadcrumb);
+}
+function addEventToMenu(){
+	$.each($("#ibm-primary-links > li > ul > li > a"), function(index, element){
+		$(element).click(function(event){
+			breadcrumbUpdate($(this).attr('id'), $(this).attr('href'), $(this).text());
+		});
+	});
+	$.each($("#ibm-primary-links > li > a"), function(index, element){
+		$(element).click(function(event){
+			var idLink = $(this).attr('href').replace('/','').replace('?','').replace('=','');
+			var firstLink = eval("$('#" + idLink + "')");
+			breadcrumbUpdate(idLink, $(this).attr('href'), firstLink.html());
+		});
+	});
+}
+function breadcrumbUpdate(aid, link, text) {
+	if (typeof (Storage) != "undefined") {
+		sessionStorage.breadcrumb = "<a id='"+aid+"' href='" + link + "'>" + text + "</a>";
+	}
+	showBreadCrumb();
 }
 
 
