@@ -64,7 +64,7 @@ var assessableunit = {
 			doc.push(data.body);
 			var constiobj = {};
 			var toadd = {};
-			var editors = doc[0].AdditionalReaders + doc[0].Owner + doc[0].Focals;
+			var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
 
 			/* Get access and roles */
 			accessrules.getRules(req,editors);
@@ -73,11 +73,10 @@ var assessableunit = {
 			doc[0].grantaccess = accessrules.rules.grantaccess;
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
+			if (accessrules.rules.editor && accessrules.rules.cuadmin) doc[0].admin = 1;
 			if(req.query.edit == '') doc[0].editmode = 1;
 
 			/* Field displays */
-			var createdby = doc[0].Log[0].name.split('/');
-			doc[0].Log[0].name = createdby[0].replace('CN=','');
 			if(doc[0].AuditableFlag == "Yes") {
 				doc[0].AuditableFlagYes = 1;
 				doc[0].SizeFlag = 1;

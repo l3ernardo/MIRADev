@@ -5,6 +5,7 @@ optCal = optCal[optCal.length -1];
 $(document).ready(function() {
 	if(optCal == "all"){
 		$('#eventLinks').html('');
+		$('h1#pageTitle').text("Integrated");
 	}
 	//meeting button event
 	$('#btn_meeting').click(function() {
@@ -127,7 +128,16 @@ $(document).ready(function() {
 		},
 
 		editable: true,
-		events: ('/getEvents?id='+optCal),
+		events: {
+			url:'/getEvents?id='+optCal, 
+			success: function(data){
+				for (var i in data) {
+					if(data[i].eventType == "Milestone"){
+						data[i].color = "#17af4b";
+					}
+				}
+			}
+		},
 
 		eventRender: function (event, element) {
 			element.attr('href', 'javascript:void(0);');
@@ -137,8 +147,7 @@ $(document).ready(function() {
 				$('#btn_cancel').prop("disabled", false);
 				
 				$('#eTitle').text(event.eventType);
-				var nameCreator = (event.log[0].name).split('/');
-				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + nameCreator[0].replace('CN=','') + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
+				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + event.log[0].name + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
 				$('#id').val(event._id);
 				$('#rev').val(event._rev);
 				$('#eventType').val(event.eventType);
@@ -188,6 +197,26 @@ $(document).ready(function() {
 				loadAttachments('attachIDs');
 				ibmweb.overlay.show('Overlay_Event');
 			});
+		},
+		
+		eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
+			var allow = $('input[name=editmode]').val();
+			if(allow == "1"){
+				if (!confirm(event.title + " was moved to: " + event.start.format("MM/DD/YYYY") + ". Are you sure about this change?")) {
+					$('#calendar').fullCalendar('refetchEvents');
+				}else{
+					var aLink = jsEvent.target.parentElement.parentElement;
+					var obj = eval("$('a#" + aLink.id + "')");
+					obj.click();
+					$('#btn_submit').click();
+				}
+			}else{
+				alert("You are not allowed to move a Calendar Event.");
+				$('#calendar').fullCalendar('eventRender');
+			}
+		},
+		loading: function(bool) {
+			$('#loading').toggle(bool);
 		}
 	}); //end var calendar
 
@@ -218,7 +247,6 @@ $(document).ready(function() {
 function clearFields(){
 	$('#btn_submit').prop("disabled", false);
 	$('#btn_cancel').prop("disabled", false);
-	$('#btn_delete').hide();
 	$('#id').val('');
 	$('#rev').val('');
 	$('#title').val('');
