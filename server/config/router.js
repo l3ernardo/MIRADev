@@ -89,6 +89,7 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 	businessunit.saveBU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			req.session.businessunit = data.bunit;
+			req.session.user.version = data.version;
 			// Control the bulletin message to be displayed
 			dialog.displayBulletin(req, db).then(function(data) {
 				if(data.status==200 & !data.error) {

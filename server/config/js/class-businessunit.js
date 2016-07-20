@@ -30,8 +30,19 @@ var businessunit = {
 	saveBU: function(req, db) {
 		var deferred = q.defer();
 		var value = req.body.selectedBU;
-		deferred.resolve({"status": 200, "bunit": value});
-		
+		var obj = {
+			selector:{
+				"_id": {"$gt":0},
+				"keyName": "MIRAVersion"
+			}
+		};
+		db.find(obj).then(function(data){
+			var doc = data.body.docs[0];
+			console.log(doc.value);
+			deferred.resolve({"status": 200, "bunit": value, "version": doc.value.title + " " + doc.value.version});
+		}).catch(function(err) {
+			deferred.reject({"status": 500, "error": err});
+		});	
 		return deferred.promise;		
 	}
 };
