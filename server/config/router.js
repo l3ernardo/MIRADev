@@ -89,6 +89,7 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 	businessunit.saveBU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			req.session.businessunit = data.bunit;
+			req.session.user.version = data.version;
 			// Control the bulletin message to be displayed
 			dialog.displayBulletin(req, db).then(function(data) {
 				if(data.status==200 & !data.error) {
@@ -279,6 +280,12 @@ router.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Country Process":
 						res.render('aucountryprocess', data.doc[0] );
+						break;
+					case "Controllable Unit":
+						res.render('aucontrollableunit', data.doc[0] );
+						break;
+					case "BU Reporting Group":
+						res.render('aureportinggroup', data.doc[0] );
 						break;
 				}
 			} else {

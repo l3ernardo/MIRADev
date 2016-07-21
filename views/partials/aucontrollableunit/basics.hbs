@@ -1,0 +1,112 @@
+{{!-- AUCONTROLLABLEUNIT form - Basic section - Edit/Read Mode --}}
+<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>Basics</em></caption>
+	{{#if editmode}}
+		{{!-- AU ControllableUnit form - Administrative Use Only section - Edit Mode with Admin Access --}}
+		{{#if admin}}
+	<tr>
+	    <td width="25%"><label for="BUIOT">Parent BU IOT:</label></td>
+				<td>
+					<span><input type="text" name="BUIOT" value="{{BUIOT}}" size="100" maxlength="300"></span>
+				</td>
+	</tr>
+    <tr>
+		<td>Business Unit:</td><td>{{BusinessUnit}}</td>
+	</tr>
+    <tr>
+		<td>Category:</td><td>{{Category}}</td>
+	</tr>
+	<tr>
+		<td>Subcategory:</td><td>{{Subcategory}}</td>
+	</tr>
+	<tr>
+		<td>Relevant country processes:</td><td>{{RelevantCountryProcesses}}</td>
+	</tr>
+	<tr>
+		<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
+	</tr>
+	<tr>
+	    <td><label for="Portfolio">Portfolio:<span class="ibm-required">*</span></label></td>
+		    <td>
+				<span>
+			    	{{#if PortfolioYes}}
+							<input class="showsize" type="radio" id="PortfolioYes" name="Portfolio" value="Yes" checked>Yes
+							<input type="radio" name="Portfolio" id="PortfolioNo" value="No">No
+					{{else}}
+							<input class="showsize" type="radio" id="PortfolioYes" name="Portfolio" value="Yes">Yes
+							<input type="radio" name="Portfolio" id="PortfolioNo" value="No" checked>No
+						{{/if}}
+				</span>
+			</td>
+	</tr>
+	<tr>
+		<td width="25%">Status:</td><td><b class="ibm-important">{{Status}}</b></td>
+	</tr>
+	    {{else}}
+	<tr>
+	    <td width="25%"><label for="BUIOT">Parent BU IOT:</label></td>
+				<td>
+					<span><input type="text" name="BUIOT" value="{{BUIOT}}" size="100" maxlength="300"></span>
+				</td>
+	</tr>
+    <tr>
+		<td>Business Unit:</td><td>{{BusinessUnit}}</td>
+	</tr>
+    <tr>
+		<td>Category:</td><td>{{Category}}</td>
+	</tr>
+	<tr>
+		<td>Subcategory:</td><td>{{Subcategory}}</td>
+	</tr>
+	<tr>
+		<td>Relevant country processes:</td><td>{{RelevantCountryProcesses}}</td>
+	</tr>
+	<tr>
+		<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
+	</tr>
+	<tr>
+	    <td><label for="Portfolio">Portfolio:<span class="ibm-required">*</span></label></td>
+		    <td>
+				<span>
+			    	{{#if PortfolioYes}}
+							<input class="showsize" type="radio" id="PortfolioYes" name="Portfolio" value="Yes" checked>Yes
+							<input type="radio" name="Portfolio" id="PortfolioNo" value="No">No
+					{{else}}
+							<input class="showsize" type="radio" id="PortfolioYes" name="Portfolio" value="Yes">Yes
+							<input type="radio" name="Portfolio" id="PortfolioNo" value="No" checked>No
+						{{/if}}
+				</span>
+			</td>
+	</tr>
+	<tr>
+		<td width="25%">Status:</td><td><b class="ibm-important">{{Status}}</b></td>
+	</tr>
+		{{/if}}
+	{{else}}
+	<tr>
+		<td width="25%">Parent BU IOT:</td><td>{{BUIOT}}</td>
+	</tr>
+	<tr>
+		<td>Business Unit:</td><td>{{BusinessUnit}}</td>
+	</tr>
+	<tr>
+		<td>Category:</td><td>{{Category}}</td>
+	</tr>
+	<tr>
+		<td>Subcategory:</td><td>{{Subcategory}}</td>
+	</tr>
+	<tr>
+		<td>Relevant country processes:</td><td>{{RelevantCountryProcesses}}</td>
+	</tr>
+	<tr>
+		<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
+	</tr>
+	<tr>
+		<td>Portfolio:</td><td>{{Portfolio}}</td>
+	</tr>
+	<tr>
+		<td width="25%">Status:</td><td><b class="ibm-important">{{Status}}</b></td>
+	</tr>
+	{{/if}}
+	
+</table>
