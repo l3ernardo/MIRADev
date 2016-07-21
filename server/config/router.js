@@ -24,39 +24,6 @@ router.get('/index', isAuthenticated, function(req, res) {
 });
 
 /**************************************************************
-LOAD HEADER FUNCTIONALITY
-***************************************************************/
-router.get('/name', isAuthenticated, function(req, res) {
-	if (req.session.user != undefined)
-		return res.json({ uname: req.session.user.notesId});
-	else
-		return res.json({ uname: '' });
-});
-
-/**************************************************************
-SUBMENU FUNCTIONALITY
-***************************************************************/
-
-router.get('/submenu', isAuthenticated, function(req, res) {
-	if(req.session.businessunit != ""){
-		submenu.listMenu(req, db).then(function(data) {
-			if(data.status==200 & !data.error) {
-				res.json({menu: data.submenu});
-			} else {
-				//res.render('error',{errorDescription: data.error})
-				console.log("[routes][submenulist]" + data.error);
-			}
-		}).catch(function(err) {
-			//res.render('error',{errorDescription: err.error})
-			console.log("[routes][submenulist] - " + err.error);
-		})
-	}
-	else{
-		res.json({menu: ""});
-	}
-});
-
-/**************************************************************
 DISCLOSURE FUNCTIONALITY
 ***************************************************************/
 /* Disclosure screen */

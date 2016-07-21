@@ -56,7 +56,7 @@ var businessunit = {
 		db.find(obj).then(function(data){
 			var doc = data.body.docs[0].value;
 			var submenu = [];
-			doc.value.forEach(function(bu) {
+			doc.forEach(function(bu) { 
 				if (bu.businessUnit==bunit){
 					submenu = bu;
 					//console.log('Menu Title:' + bu.menutitle);
@@ -82,7 +82,7 @@ var businessunit = {
 									delete submenu.menu[menuEntryIndex].entries[subEntryIndex];
 								}
 							}
-							subEntryIndex++;							
+							subEntryIndex++;
 						})
 						if(invalidEntry==subEntryIndex) {
 							if(submenu.menu[menuEntryIndex]) {
@@ -91,9 +91,9 @@ var businessunit = {
 							}
 						}
 						menuEntryIndex++;
-					})					
+					});
 				}
-			})
+			});
 			deferred.resolve({"status": 200,"submenu":submenu})	
 		}).catch(function(error){
 			console.log(error);
