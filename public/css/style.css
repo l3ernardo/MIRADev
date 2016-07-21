@@ -17,6 +17,10 @@ Template: jquery
   background-repeat:no-repeat;
    background-position:center;
 }
+/*TCV  color*/
+.td_tcv{
+	color: #66FF00;
+}
 /*table for dashboard*/
 caption, th {
     text-align: left;
