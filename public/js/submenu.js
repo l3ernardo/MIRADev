@@ -11,7 +11,6 @@ function selectedMenuOption(){
 	url = url[url.length -1];
 	url = url.replace('?','').replace('=','');
 	var selLink = document.getElementById(url);
-	console.log(url);
 	if(selLink != null){
 		selLink = eval("$('a#"+url+"')");
 		selLink.addClass('ibm-active'); //a
