@@ -1,0 +1,29 @@
+{{!-- AU Reporting Group form - Constituent section - Edit/Read Mode --}}
+<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
+</table>
+<div class="ibm-columns ibm-graphic-tabs">
+		<div id="BUReportingGroups" class="ibm-tabs-content">
+		<table id="reportinggroups_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="reporting-group">
+				<th scope="col">Name</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each RGData}}
+			<tr>
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
+				{{/each}}
+			</tr>
+			{{/each}}
+		</table>
+	</div>
+</div>
