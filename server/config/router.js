@@ -281,6 +281,12 @@ router.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "Country Process":
 						res.render('aucountryprocess', data.doc[0] );
 						break;
+					case "Controllable Unit":
+						res.render('aucontrollableunit', data.doc[0] );
+						break;
+					case "BU Reporting Group":
+						res.render('aureportinggroup', data.doc[0] );
+						break;
 				}
 			} else {
 				res.render('error',{errorDescription: data.error});
