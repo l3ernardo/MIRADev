@@ -32,7 +32,7 @@ var calendar = {
 		var obj = {
 			selector : {
 				"_id": {"$gt":0},
-				keyName: "MenuTitle",
+				keyName: "MIRAMenu",
 				docType: "setup"
 			}
 		};
@@ -42,21 +42,31 @@ var calendar = {
 				var lenValue = data.body.docs[0].value.length;
 				for (var i = 0; i < lenValue; i++){
 					var dataValue = data.body.docs[0].value[i];
+					
 					if (dataValue.businessUnit==req.session.businessunit){
-						//Get Calendars options
-						calendars = dataValue.calendars;
-						lenCal = calendars.length;
-						for(var j = 0; j < lenCal; j++){
-							if(dataValue.calendars[j].id != "all"){
-								dataTargetCalendars.push({
-									id: dataValue.calendars[j].id,
-									name: dataValue.calendars[j].name,
-									link: dataValue.calendars[j].link
-								});
+						console.log(dataValue.businessUnit);
+						var menu = dataValue.menu;
+						console.log(menu.length);
+						for (var j = 0; j < menu.length; j++){
+							var dataMenu = menu[j];
+							console.log(dataMenu);
+							//Get Calendars options
+							if (dataMenu.title=="Calendar"){
+								var dataCalendar = dataMenu.entries;
+								for(var k = 0; k < dataCalendar.length; k++){
+									if(dataCalendar[k].id != "calendaridall"){
+										dataTargetCalendars.push({
+											id: dataCalendar[k].id,
+											name: dataCalendar[k].name,
+											link: dataCalendar[k].link
+										});
+									}
+								}
 							}
 						}
 					}
 				}
+				console.log(dataTargetCalendars);
 				deferred.resolve({"status": 200, "dataTargetCalendars": dataTargetCalendars});
 			}else{
 				deferred.reject({"status": 500, "error": error});
