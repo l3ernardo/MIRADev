@@ -32,7 +32,18 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', path.join(__dirname, 'views'));
 
 //handlebars
-app.engine('.hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
+app.engine('.hbs', exphbs({defaultLayout: 'main', extname: '.hbs',
+	helpers:
+		{
+			submenu:
+				function () {
+					if(app.locals.submenu) {
+						return app.locals.submenu;
+					}
+				}
+		}
+	}));
+
 app.set('view engine', '.hbs');
 app.use(function(req,res,next){
     res.locals.session = req.session;
