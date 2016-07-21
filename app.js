@@ -81,6 +81,7 @@ app.use(require('./server/config/router.js'));
 app.use(require('./server/config/router-security.js'));
 app.use(require('./server/config/router-administration.js'));
 app.use(require('./server/config/router-calendars.js'));
+app.use(require('./server/config/router-interface.js'));
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {
