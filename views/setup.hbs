@@ -43,7 +43,7 @@
 							
 						</span>
 						<div id="jsoneditor"></div>
-						<script>$(document).ready(function() {  JSONEdit("fldvalue", "BU", "jsoneditor"); editor.set(JSON.parse($('#fldvalue').html()));});</script></td>
+						<script>$(document).ready(function() {  JSONEdit("fldvalue", "BU", "jsoneditor"); if($('#fldvalue').html() != "")editor.set(JSON.parse($('#fldvalue').html()));});</script></td>
 					</tr>
 					<tr>
 						<td><label for="flddescM" class="ibm-form-grp-lbl">Description:</label></td>
@@ -82,7 +82,7 @@
 						  <textarea id="fldvalueM" name="fldvalueM" rows="5" cols="50">{{Menu.0.value}}</textarea>
 						</span>
 						<div id="jsoneditorM"></div>
-						<script>$(document).ready(function() {  JSONEdit("fldvalueM", "Menu", "jsoneditorM"); editorM.set(JSON.parse($('#fldvalueM').html()));});</script></td>
+						<script>$(document).ready(function() {  JSONEdit("fldvalueM", "Menu", "jsoneditorM"); if($('#fldvalueM').html() != "") editorM.set(JSON.parse($('#fldvalueM').html()));});</script></td>
 					</tr>
 					<tr>
 						<td><label for="flddescM" class="ibm-form-grp-lbl">Description:</label></td>
