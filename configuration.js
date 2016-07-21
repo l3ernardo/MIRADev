@@ -4,6 +4,7 @@ module.exports = {
 	siteDesc: 'The MSAC Web Tool',
 	keyNameM: 'MIRAMenu',
 	keyNameBU: 'BusinessUnit',
+	keyIntCal: 'calendaridall',
 	msgIdPassR: 'IBM Intranet ID and/or password is required',
 	msgIdPassW: 'Wrong IBM Intranet ID and/or password.',
 	facesURLcn: 'https://faces.tap.ibm.com/api/find/?q=%t',

@@ -1,9 +1,11 @@
 var optCal = parent.location.href;
-optCal = optCal.split('id=');
+optCal = optCal.split('/');
 optCal = optCal[optCal.length -1];
+optCal = optCal.replace('?','').replace('=','');
+
 
 $(document).ready(function() {
-	if(optCal == "all"){
+	if(optCal == "calendaridall"){
 		$('#eventLinks').html('');
 		$('h1#pageTitle').text("Integrated");
 	}
