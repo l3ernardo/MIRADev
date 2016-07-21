@@ -1,34 +1,19 @@
 <script src="./js/submenu.js"/></script>
-
 <div id="ibm-navigation">
 	<ul id="ibm-primary-links">
 		<li id="ibm-overview">
-			<a id="ibm-overview-1">{{menuTitle}}</a>
+			<a id="ibm-overview-1">{{submenu.menutitle}}</a>
 		</li>
-		<li id="calendars">
-			<a id="calendars-a">Calendars</a>
-			<ul id="calendars-options" style="display:none"></ul>
-		</li>
-		<li id="dashboards">
-			<a id="dashboards-a">Dashboards</a>
-			<ul id="dashboards-options" style="display:none"></ul>
-		</li>
-		<li id="reports">
-			<a id="reports-a">Reports</a>
-			<ul id="reports-options" style="display:none"></ul>
-		</li>
-		<li id="references">
-			<a id="references-a">References</a>
-			<ul id="references-options" style="display:none"></ul>
-		</li>
-		<li id="archive">
-			<a id="archive-a">Archive</a>
-			<ul id="archive-options" style="display:none"></ul>
-		</li>
-		<li id="administration">
-			<a id="administration-a">Administration</a>
-			<ul id="administration-options" style="display:none"></ul>
-		</li>
+		{{#each	submenu.menu}}
+			<li id="{{this.id}}">
+				<a id="{{this.id}}-a" href="{{this.link}}">{{this.title}}</a>
+				<ul id="{{this.id}}-options" style="display:none">
+				{{#each	this.entries}}
+					<li><a href="{{this.link}}" id="{{this.id}}">{{this.name}}</a></li>
+				{{/each}}
+				</ul>
+			</li>		
+		{{/each}}
 	</ul>
 	<!-- SECONDARY NAVIGATION SECTION -->
 	<div id="ibm-secondary-navigation">
