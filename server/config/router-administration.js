@@ -15,10 +15,10 @@ SETUP FUNCTIONALITY
 ***************************************************************/
 /* Setup will validate if required parameters were created */
 administration.get('/setup', isAuthenticated, function(req, res, next){
-	setup.listSetup(req, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
+	setup.getSetup(req, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.numDocs < 2) {
-				res.render('setup');
+				res.render('setup', data.setup[0]);
 			} else {
 				res.redirect('disclosure');
 			}
@@ -30,22 +30,7 @@ administration.get('/setup', isAuthenticated, function(req, res, next){
 		res.render('error',{errorDescription: err.error})
 		console.log("[routes][setup] - " + err.error);
 	})
-}); 
-
-/* Load needed parameters data in setup page */
-administration.get('/loadSetup', isAuthenticated, function(req, res, next){
-	setup.getSetup(req, db, varConf.keyNameM, varConf.keyNameBU).then(function(data) {
-		if(data.status==200 & !data.error) {
-			res.send(data.value);
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][loadsetup] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][loadsetup] - " + err.error);
-	})
-});  
+});
 /* Save setup parameters in cloudant */
 administration.post('/saveSetup', isAuthenticated, function(req, res){
 	setup.saveSetup(req, db).then(function(data) {

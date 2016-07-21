@@ -1,6 +1,10 @@
+var editor;
+var editorM;
 $(document).ready(function(){
 	$('h1#pageTitle').text("Setup");
     $('#btn_submit').click(function() {
+		$('#fldvalue').val(JSON.stringify(editor.get(), null, 2));
+		$('#fldvalueM').val(JSON.stringify(editorM.get(), null, 2));
         if ($('#fldname').val() != '' && $('#fldvalue').val() != '' && $('#flddesc').val() != '' && $('#fldnameM').val() != '' && $('#fldvalueM').val() != '' && $('#flddescM').val() != '') {
             if (IsJsonString($('#fldvalue').val()) && IsJsonString($('#fldvalueM').val())) {
                 $('#formsetup').submit();
@@ -13,35 +17,27 @@ $(document).ready(function(){
             alert('Please fill up all of the fields!');
         }
     });
-	 $.ajax({
-		url: '/loadSetup',
-		type: 'GET',
-		success: function(resp) {
-			if (resp[1]) {
-				var BU = resp[1];
-				$('#idBU').val(BU._id);
-				$('#revBU').val(BU._rev);
-				$('#fldname').val(BU.keyName);
-				$('#fldtrue').val(BU.active);
-				$('#fldvalue').val(JSON.stringify(BU.value));
-				$('#flddesc').val(BU.description);
-			}
-			if (resp[0]) {
-				var CM = resp[0];
-				$('#idCM').val(CM._id);
-				$('#revCM').val(CM._rev);
-				$('#fldnameM').val(CM.keyName);
-				$('#fldtrueM').val(CM.active);
-				$('#fldvalueM').val(JSON.stringify(CM.value));
-				$('#flddescM').val(CM.description);
-			}
-		},
-		error: function(e) {
-			alert('error: ' + e);
-		}
-	});
 });
 
+function JSONEdit(fldname, type, container) {
+  var container = document.getElementById(container);
+  var options = {
+    mode: 'text',
+    modes: ['code', 'text', 'view'], // allowed modes
+    onError: function (err) {
+      alert(err.toString());
+    },
+    onModeChange: function (newMode, oldMode) {
+      console.log('Mode switched from', oldMode, 'to', newMode);
+    }
+  };
+  var json = document.getElementById(fldname).innerHTML
+  if(type=="BU"){
+	editor = new JSONEditor(container, options, json);
+  }else{
+	editorM = new JSONEditor(container, options, json);
+  }
+}
 function IsJsonString(str) {
     try {
         JSON.parse(str);
