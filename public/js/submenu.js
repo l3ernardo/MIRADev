@@ -11,14 +11,17 @@ function selectedMenuOption(){
 	url = url[url.length -1];
 	url = url.replace('?','').replace('=','');
 	var selLink = document.getElementById(url);
+	console.log(url);
 	if(selLink != null){
 		selLink = eval("$('a#"+url+"')");
 		selLink.addClass('ibm-active'); //a
 		selLink.parent().parent().show() //ul
 		selLink.parent().parent().parent().addClass('ibm-active') //li
 	}else{
-		$('#*-options').hide();
-		$('#*-options').parent().removeClass();
+		try {
+			$('#*-options').hide();
+			$('#*-options').parent().removeClass();
+		} catch(e) {}
 	}
 }
 
