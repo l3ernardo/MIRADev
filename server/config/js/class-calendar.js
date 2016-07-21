@@ -44,12 +44,9 @@ var calendar = {
 					var dataValue = data.body.docs[0].value[i];
 					
 					if (dataValue.businessUnit==req.session.businessunit){
-						console.log(dataValue.businessUnit);
 						var menu = dataValue.menu;
-						console.log(menu.length);
 						for (var j = 0; j < menu.length; j++){
 							var dataMenu = menu[j];
-							console.log(dataMenu);
 							//Get Calendars options
 							if (dataMenu.title=="Calendar"){
 								var dataCalendar = dataMenu.entries;
@@ -66,7 +63,6 @@ var calendar = {
 						}
 					}
 				}
-				console.log(dataTargetCalendars);
 				deferred.resolve({"status": 200, "dataTargetCalendars": dataTargetCalendars});
 			}else{
 				deferred.reject({"status": 500, "error": error});
