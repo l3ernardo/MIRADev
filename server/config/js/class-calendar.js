@@ -26,13 +26,13 @@ var calendar = {
 		return deferred.promise;
 	},
 	/* Get all calendars */
-	getTargetCalendars: function(req, db) {
+	getTargetCalendars: function(req, db, keyIntCal) {
 		var deferred = q.defer();
 		dataTargetCalendars = [];
 		var obj = {
 			selector : {
 				"_id": {"$gt":0},
-				keyName: "MenuTitle",
+				keyName: "MIRAMenu",
 				docType: "setup"
 			}
 		};
@@ -42,17 +42,23 @@ var calendar = {
 				var lenValue = data.body.docs[0].value.length;
 				for (var i = 0; i < lenValue; i++){
 					var dataValue = data.body.docs[0].value[i];
+					
 					if (dataValue.businessUnit==req.session.businessunit){
-						//Get Calendars options
-						calendars = dataValue.calendars;
-						lenCal = calendars.length;
-						for(var j = 0; j < lenCal; j++){
-							if(dataValue.calendars[j].id != "all"){
-								dataTargetCalendars.push({
-									id: dataValue.calendars[j].id,
-									name: dataValue.calendars[j].name,
-									link: dataValue.calendars[j].link
-								});
+						var menu = dataValue.menu;
+						for (var j = 0; j < menu.length; j++){
+							var dataMenu = menu[j];
+							//Get Calendars options
+							if (dataMenu.title=="Calendar"){
+								var dataCalendar = dataMenu.entries;
+								for(var k = 0; k < dataCalendar.length; k++){
+									if(dataCalendar[k].id != keyIntCal){
+										dataTargetCalendars.push({
+											id: dataCalendar[k].id,
+											name: dataCalendar[k].name,
+											link: dataCalendar[k].link
+										});
+									}
+								}
 							}
 						}
 					}
@@ -67,11 +73,11 @@ var calendar = {
 		return deferred.promise;
 	},
 	/* Get events */
-	getEvents: function(req, db){
+	getEvents: function(req, db, keyIntCal){
 		var deferred = q.defer();
 		var events = [];
 		var ownerCalendar = req.query.id;
-		if(ownerCalendar == "all"){
+		if(ownerCalendar == keyIntCal){
 			var obj = {
 				selector : {
 					"_id": {"$gt":0},

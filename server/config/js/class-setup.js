@@ -9,8 +9,8 @@
 var q  = require("q");
 
 var setup = {
-	/* listSetup will get if exist required parameters */
-	listSetup: function(req, db, keyNameM, keyNameBU) {
+	/* getSetup will get if exist required parameters and its data*/
+	getSetup: function(req, db, keyNameM, keyNameBU) {
 		var deferred = q.defer();
 		var obj = {
 			selector:{
@@ -22,37 +22,28 @@ var setup = {
 		};
 		db.find(obj).then(function(data){
 			var numDocs = data.body.docs.length;
-			deferred.resolve({"status": 200, "numDocs": numDocs});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
-		});
-		return deferred.promise;
-	},
-	/* Load needed parameters data in setup page */
-	getSetup: function(req, db, keyNameM, keyNameBU ) {
-		var deferred = q.defer();
-		var obj = {
-		selector:{
-			"_id": {"$gt":0},
-			"keyName": {
-					"$in": [keyNameBU, keyNameM]
-				}
-			}
-		};
-		db.find(obj).then(function(data){		
-			var numDocs = data.body.docs.length;
 			var value = [];
+			var dataBU = [];
+			var dataM = [];
 			if(numDocs <= 2) {
 				for(var i = 0; i < numDocs; i++) {
 					var doc = data.body.docs[i];
-					if(doc.keyName == keyNameBU || doc.keyName == keyNameM){
-						value.push(data.body.docs[i]);
+					data.body.docs[i].value = JSON.stringify(data.body.docs[i].value);
+					if(doc.keyName == keyNameBU){
+						dataBU.push(data.body.docs[i]);
+					}
+					if(doc.keyName == keyNameM){
+						dataM.push(data.body.docs[i]);
 					}
 				}
-				deferred.resolve({"status": 200, "value": value});
+				value.push({
+					BU : dataBU,
+					Menu : dataM
+				})
+				deferred.resolve({"status": 200, "setup": value, "numDocs": numDocs });
 			}
 			else{
-				deferred.reject({"status": 500, "error": err});
+				deferred.reject({"status": 200, "value": value, "numDocs": numDocs });
 			}
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});

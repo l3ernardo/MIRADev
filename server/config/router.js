@@ -24,39 +24,6 @@ router.get('/index', isAuthenticated, function(req, res) {
 });
 
 /**************************************************************
-LOAD HEADER FUNCTIONALITY
-***************************************************************/
-router.get('/name', isAuthenticated, function(req, res) {
-	if (req.session.user != undefined)
-		return res.json({ uname: req.session.user.notesId});
-	else
-		return res.json({ uname: '' });
-});
-
-/**************************************************************
-SUBMENU FUNCTIONALITY
-***************************************************************/
-
-router.get('/submenu', isAuthenticated, function(req, res) {
-	if(req.session.businessunit != ""){
-		submenu.listMenu(req, db).then(function(data) {
-			if(data.status==200 & !data.error) {
-				res.json({menu: data.submenu});
-			} else {
-				//res.render('error',{errorDescription: data.error})
-				console.log("[routes][submenulist]" + data.error);
-			}
-		}).catch(function(err) {
-			//res.render('error',{errorDescription: err.error})
-			console.log("[routes][submenulist] - " + err.error);
-		})
-	}
-	else{
-		res.json({menu: ""});
-	}
-});
-
-/**************************************************************
 DISCLOSURE FUNCTIONALITY
 ***************************************************************/
 /* Disclosure screen */
@@ -90,33 +57,52 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 		if(data.status==200 & !data.error) {
 			req.session.businessunit = data.bunit;
 			req.session.user.version = data.version;
-			// Control the bulletin message to be displayed
-			dialog.displayBulletin(req, db).then(function(data) {
-				if(data.status==200 & !data.error) {
-						if(data.doc) {
-							//Redirect to original URL, if available
-							console.log('URL requested: ' + req.session.returnTo);
-							if(typeof req.session.returnTo!='undefined') {
-								if(req.session.returnTo!='' && req.session.returnTo!='/' && req.session.returnTo!='-') {
-									var rtn = req.session.returnTo;
-									req.session.returnTo = '-';
-									req.flash('url', '-');
-									res.redirect(rtn);
+			businessunit.getMenu(req,db).then(function(data) {
+			if(data.status==200 & !data.error) {
+				req.app.locals.submenu = data.submenu;
+				// Control the bulletin message to be displayed
+				dialog.displayBulletin(req, db).then(function(data) {
+					if(data.status==200 & !data.error) {
+							if(data.doc) {
+								//Redirect to original URL, if available
+								console.log('URL requested: ' + req.session.returnTo);
+								if(typeof req.session.returnTo!='undefined') {
+									if(req.session.returnTo!='' && req.session.returnTo!='/' && req.session.returnTo!='-') {
+										var rtn = req.session.returnTo;
+										req.session.returnTo = '-';
+										req.flash('url', '-');
+										res.redirect(rtn);
+									} else {
+										res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+									}
 								} else {
 									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
 								}
 							} else {
-								res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+								//Redirect to original URL, if available
+								console.log('URL requested: ' + req.session.returnTo);
+								if(typeof req.session.returnTo!='undefined') {
+									if(req.session.returnTo!='' && req.session.returnTo!='/') {
+										var rtn = req.session.returnTo;
+										req.session.returnTo = '-';
+										req.flash('url', '-');
+										res.redirect(rtn);
+									} else {
+										res.render('index');
+									}
+								} else {
+									res.render('index');
+								}
 							}
 						} else {
 							//Redirect to original URL, if available
 							console.log('URL requested: ' + req.session.returnTo);
 							if(typeof req.session.returnTo!='undefined') {
 								if(req.session.returnTo!='' && req.session.returnTo!='/') {
-									var rtn = req.session.returnTo;
-									req.session.returnTo = '-';
-									req.flash('url', '-');
-									res.redirect(rtn);
+										var rtn = req.session.returnTo;
+										req.session.returnTo = '-';
+										req.flash('url', '-');
+										res.redirect(rtn);
 								} else {
 									res.render('index');
 								}
@@ -124,25 +110,11 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 								res.render('index');
 							}
 						}
-					} else {
-						//Redirect to original URL, if available
-						console.log('URL requested: ' + req.session.returnTo);
-						if(typeof req.session.returnTo!='undefined') {
-							if(req.session.returnTo!='' && req.session.returnTo!='/') {
-									var rtn = req.session.returnTo;
-									req.session.returnTo = '-';
-									req.flash('url', '-');
-									res.redirect(rtn);
-							} else {
-								res.render('index');
-							}
-						} else {
-							res.render('index');
-						}
-					}
-				}).catch(function(err) {
-					res.render('index');
-				})
+					}).catch(function(err) {
+						res.render('index');
+					})
+				}
+			})
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][businessunit] - " + data.error);
