@@ -73,8 +73,131 @@ var assessableunit = {
 			doc[0].grantaccess = accessrules.rules.grantaccess;
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
-			if (accessrules.rules.editor && accessrules.rules.cuadmin) doc[0].admin = 1;
-			if(req.query.edit == '') doc[0].editmode = 1;
+			if (accessrules.rules.editor && accessrules.rules.cuadmin && (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Controllable Unit")) doc[0].admin = 1;
+
+			if(req.query.edit == '') {
+				doc[0].editmode = 1;
+
+				switch (doc[0].DocSubType) {
+
+					case "Business Unit","BU IMT","BU Country","Controllable Unit","Country Process","Global Process":
+						/* get Reporting Group list */
+						doc[0].ReportingGroupList = [];
+						var searchobj = {
+							selector:{
+								"_id": {"$gt":0},
+								"key": "Assessable Unit",
+								"Status": "Active",
+								"BusinessUnit": doc[0].BusinessUnit,
+								"DocSubType": "BU Reporting Group",
+							}
+						};
+						db.find(searchobj).then(function(resdata) {
+							var resdocs = resdata.body.docs;
+							for (var i = 0; i < resdocs.length; ++i) {
+								doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+							}
+							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
+							console.log("[assessableunit][countrylist]" + resdata.error);
+						});
+					break;
+
+					case "BU IOT":
+						/* get BU Countries and Reporting Group list */
+						doc[0].BUCountryList = [];
+						doc[0].ReportingGroupList = [];
+						var searchobj = {
+							selector:{
+								"_id": {"$gt":0},
+								"key": "Assessable Unit",
+								"Status": "Active",
+								"BusinessUnit": doc[0].BusinessUnit,
+								$or: [{"DocSubType": "BU Country"},{"DocSubType": "BU Reporting Group"}]
+							}
+						};
+						db.find(searchobj).then(function(resdata) {
+							var resdocs = resdata.body.docs;
+							for (var i = 0; i < resdocs.length; ++i) {
+								if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+								if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+							}
+							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
+							console.log("[assessableunit][countrylist]" + resdata.error);
+						});
+						break;
+
+				}
+
+			} else {
+
+				/* start: get names of admin section IDs for display */
+				if(doc[0].DocSubType == "BU IOT" && (doc[0].BUCountryIOT != "" || doc[0].BRGMembership != "" || doc[0].RGRollup != "") ) {
+					var getadminsecID = false;
+					var $or = [];
+					var bucIDs = "", brgmIDs = "", rgrIDs = "";
+
+					if (doc[0].BUCountryIOT != "") {
+						bucIDs = doc[0].BUCountryIOT.split(',');
+						for (var i = 0; i < bucIDs.length; i++) {
+							$or.push({"_id":bucIDs[i]});
+						}
+					}
+					if (doc[0].BRGMembership != "") {
+						brgmIDs = doc[0].BRGMembership.split(',');
+						for (var i = 0; i < brgmIDs.length; i++) {
+							$or.push({"_id":brgmIDs[i]});
+						}
+					}
+					if (doc[0].RGRollup != "") {
+						rgrIDs = doc[0].RGRollup.split(',');
+						for (var i = 0; i < rgrIDs.length; i++) {
+							$or.push({"_id":rgrIDs[i]});
+						}
+					}
+
+					var searchobj = { selector: {"_id": {"$gt":0}, $or } };
+
+					db.find(searchobj).then(function(resdata) {
+						var resdocs = resdata.body.docs;
+						var bucNames = "", brgmNames = "", rgrNames = "";
+
+						for (var i = 0; i < resdocs.length; ++i) {
+
+							for (var j = 0; j < bucIDs.length; j++) {
+								if (bucIDs[j] == resdocs[i]._id) {
+									if ( bucNames == "" ) bucNames = resdocs[i].Name;
+									else bucNames = bucNames + ", " + resdocs[i].Name;
+								}
+							}
+							for (var j = 0; j < brgmIDs.length; j++) {
+								if (brgmIDs[j] == resdocs[i]._id) {
+									if ( brgmNames == "" ) brgmNames = resdocs[i].Name;
+									else brgmNames = brgmNames + ", " + resdocs[i].Name;
+								}
+							}
+							for (var j = 0; j < rgrIDs.length; j++) {
+								if (rgrIDs[j] == resdocs[i]._id) {
+									if (rgrNames == "") rgrNames = resdocs[i].Name;
+									else rgrNames = rgrNames + ", " + resdocs[i].Name;
+								}
+							}
+
+						}
+
+						doc[0].BUCountryIOTDisp = bucNames;
+						doc[0].BRGMembershipDisp = brgmNames;
+						doc[0].RGRollupDisp = rgrNames;
+						deferred.resolve({"status": 200, "doc": doc});
+
+					}).catch(function(err) {
+						console.log("[assessableunit][countrylistIncluded]" + resdata.error);
+					});
+				}
+				/* end: get names of admin section IDs for display */
+
+			}
 
 			/* Field displays */
 			if(doc[0].AuditableFlag == "Yes") {
@@ -88,7 +211,7 @@ var assessableunit = {
 			if(doc[0].Portfolio == "Yes") {
 				doc[0].PortfolioYes = 1;
 			}
-            
+
 			if(doc[0].DocSubType == "Controllable Unit") {
 				doc[0].CUFlag = 1;
             }
@@ -310,21 +433,21 @@ var assessableunit = {
 					doc[0].AuditableFlag = req.body.AuditableFlag;
 					doc[0].AuditProgram = req.body.AuditProgram;
 					doc[0].Portfolio = req.body.Portfolio;
-                    // Update Focals, Coordinators & Readers 
-					doc[0].PEDPE = req.body.pedpelist;	
-					doc[0].IMTVP = req.body.imtvpedpelist;	
-                    doc[0].SCAGEOLead = req.body.scageoleadlist;				
+                    // Update Focals, Coordinators & Readers
+					doc[0].PEDPE = req.body.pedpelist;
+					doc[0].IMTVP = req.body.imtvpedpelist;
+                    doc[0].SCAGEOLead = req.body.scageoleadlist;
 					break;
 				case "BU Reporting Group":
 					doc[0].GroupLOB = req.body.GroupLOB;
-					doc[0].AuditProgram = req.body.AuditProgram;	
+					doc[0].AuditProgram = req.body.AuditProgram;
                     doc[0].GroupLOB = req.body.GroupLOB;
 					doc[0].Name = req.body.Name;
-					doc[0].Status = req.body.Status;	
-                    // Update Focals, Coordinators & Readers 
-					doc[0].Focals = req.body.focalslist;	
-					doc[0].Coordinators = req.body.coordinatorslist;	
-                    doc[0].Readers = req.body.readerslist;						
+					doc[0].Status = req.body.Status;
+                    // Update Focals, Coordinators & Readers
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+                    doc[0].Readers = req.body.readerslist;
 					break;
 			}
 			// Update Additional Readers
