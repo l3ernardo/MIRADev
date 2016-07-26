@@ -21,7 +21,7 @@ var assessableunit = {
 			selector:{
 				"_id": {"$gt":0},
 				"key": "Assessable Unit",
-				$or: [  {"DocSubType": "Business Unit"},{"DocSubType": "Global Process"},{"DocSubType": "Country Process"},{"DocSubType": "Controllable Unit"},{"DocSubType": "BU Reporting Group"}]
+				"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT"]}
 			}
 		};
 		db.find(obj).then(function(data){
@@ -54,11 +54,7 @@ var assessableunit = {
 	getAUbyID: function(req, db) {
 		var deferred = q.defer();
 		var docid = req.query.id
-		var obj = {
-			selector:{
-				"_id": docid,
-			}
-		};
+		
 		db.get(docid).then(function(data){
 			var doc = [];
 			doc.push(data.body);
@@ -74,131 +70,7 @@ var assessableunit = {
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
 			if (accessrules.rules.editor && accessrules.rules.cuadmin && (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Controllable Unit")) doc[0].admin = 1;
-
-			if(req.query.edit == '') {
-				doc[0].editmode = 1;
-
-				switch (doc[0].DocSubType) {
-
-					case "Business Unit","BU IMT","BU Country","Controllable Unit","Country Process","Global Process":
-						/* get Reporting Group list */
-						doc[0].ReportingGroupList = [];
-						var searchobj = {
-							selector:{
-								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"Status": "Active",
-								"BusinessUnit": doc[0].BusinessUnit,
-								"DocSubType": "BU Reporting Group",
-							}
-						};
-						db.find(searchobj).then(function(resdata) {
-							var resdocs = resdata.body.docs;
-							for (var i = 0; i < resdocs.length; ++i) {
-								doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-							}
-							deferred.resolve({"status": 200, "doc": doc});
-						}).catch(function(err) {
-							console.log("[assessableunit][countrylist]" + resdata.error);
-						});
-					break;
-
-					case "BU IOT":
-						/* get BU Countries and Reporting Group list */
-						doc[0].BUCountryList = [];
-						doc[0].ReportingGroupList = [];
-						var searchobj = {
-							selector:{
-								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"Status": "Active",
-								"BusinessUnit": doc[0].BusinessUnit,
-								$or: [{"DocSubType": "BU Country"},{"DocSubType": "BU Reporting Group"}]
-							}
-						};
-						db.find(searchobj).then(function(resdata) {
-							var resdocs = resdata.body.docs;
-							for (var i = 0; i < resdocs.length; ++i) {
-								if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-								if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-							}
-							deferred.resolve({"status": 200, "doc": doc});
-						}).catch(function(err) {
-							console.log("[assessableunit][countrylist]" + resdata.error);
-						});
-						break;
-
-				}
-
-			} else {
-
-				/* start: get names of admin section IDs for display */
-				if(doc[0].DocSubType == "BU IOT" && (doc[0].BUCountryIOT != "" || doc[0].BRGMembership != "" || doc[0].RGRollup != "") ) {
-					var getadminsecID = false;
-					var $or = [];
-					var bucIDs = "", brgmIDs = "", rgrIDs = "";
-
-					if (doc[0].BUCountryIOT != "") {
-						bucIDs = doc[0].BUCountryIOT.split(',');
-						for (var i = 0; i < bucIDs.length; i++) {
-							$or.push({"_id":bucIDs[i]});
-						}
-					}
-					if (doc[0].BRGMembership != "") {
-						brgmIDs = doc[0].BRGMembership.split(',');
-						for (var i = 0; i < brgmIDs.length; i++) {
-							$or.push({"_id":brgmIDs[i]});
-						}
-					}
-					if (doc[0].RGRollup != "") {
-						rgrIDs = doc[0].RGRollup.split(',');
-						for (var i = 0; i < rgrIDs.length; i++) {
-							$or.push({"_id":rgrIDs[i]});
-						}
-					}
-
-					var searchobj = { selector: {"_id": {"$gt":0}, $or } };
-
-					db.find(searchobj).then(function(resdata) {
-						var resdocs = resdata.body.docs;
-						var bucNames = "", brgmNames = "", rgrNames = "";
-
-						for (var i = 0; i < resdocs.length; ++i) {
-
-							for (var j = 0; j < bucIDs.length; j++) {
-								if (bucIDs[j] == resdocs[i]._id) {
-									if ( bucNames == "" ) bucNames = resdocs[i].Name;
-									else bucNames = bucNames + ", " + resdocs[i].Name;
-								}
-							}
-							for (var j = 0; j < brgmIDs.length; j++) {
-								if (brgmIDs[j] == resdocs[i]._id) {
-									if ( brgmNames == "" ) brgmNames = resdocs[i].Name;
-									else brgmNames = brgmNames + ", " + resdocs[i].Name;
-								}
-							}
-							for (var j = 0; j < rgrIDs.length; j++) {
-								if (rgrIDs[j] == resdocs[i]._id) {
-									if (rgrNames == "") rgrNames = resdocs[i].Name;
-									else rgrNames = rgrNames + ", " + resdocs[i].Name;
-								}
-							}
-
-						}
-
-						doc[0].BUCountryIOTDisp = bucNames;
-						doc[0].BRGMembershipDisp = brgmNames;
-						doc[0].RGRollupDisp = rgrNames;
-						deferred.resolve({"status": 200, "doc": doc});
-
-					}).catch(function(err) {
-						console.log("[assessableunit][countrylistIncluded]" + resdata.error);
-					});
-				}
-				/* end: get names of admin section IDs for display */
-
-			}
-
+			
 			/* Field displays */
 			if(doc[0].AuditableFlag == "Yes") {
 				doc[0].AuditableFlagYes = 1;
@@ -238,7 +110,9 @@ var assessableunit = {
 				"col":["4Q2015","Sat","Minerva S Genon",""]
 			};
 			doc[0].AssessmentData.push(toadd);
-
+			
+			
+			
 			/* Get Constituents Data*/
 			switch (doc[0].DocSubType) {
 				case "Business Unit":
@@ -349,7 +223,6 @@ var assessableunit = {
 					doc[0].CPData = [];
 					break;
 			}
-
 			db.find(constiobj).then(function(constidata) {
 				var constidocs = constidata.body.docs;
 
@@ -373,11 +246,128 @@ var assessableunit = {
 					else doc[0].CUData.push(toadd);
 				}
 
-				deferred.resolve({"status": 200, "doc": doc});
+				/* Get Reporting Groups and BU Countries*/
+				if(req.query.edit != undefined) { //Read mode
+					doc[0].editmode = 1;
+					switch (doc[0].DocSubType) {
+						case "Business Unit","BU IMT","BU Country","Controllable Unit","Country Process","Global Process":
+							/* get Reporting Group list */
+							doc[0].ReportingGroupList = [];
+							var searchobj = {
+								selector:{
+									"_id": {"$gt":0},
+									"key": "Assessable Unit",
+									"Status": "Active",
+									"BusinessUnit": doc[0].BusinessUnit,
+									"DocSubType": "BU Reporting Group",
+								}
+							};
+							db.find(searchobj).then(function(resdata) {
+								var resdocs = resdata.body.docs;
+								for (var i = 0; i < resdocs.length; ++i) {
+									doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+									console.log(resdocs[i].Name)
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								console.log("[assessableunit][countrylist]" + resdata.error);
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+						case "BU IOT":
+							/* get BU Countries and Reporting Group list */
+							doc[0].BUCountryList = [];
+							doc[0].ReportingGroupList = [];
+							var searchobj = {
+								selector:{
+									"_id": {"$gt":0},
+									"key": "Assessable Unit",
+									"Status": "Active",
+									"BusinessUnit": doc[0].BusinessUnit,
+									$or: [{"DocSubType": "BU Country"},{"DocSubType": "BU Reporting Group"}]
+								}
+							};
+							db.find(searchobj).then(function(resdata) {
+								var resdocs = resdata.body.docs;
+								for (var i = 0; i < resdocs.length; ++i) {
+									if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								console.log("[assessableunit][countrylist]" + resdata.error);
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+					}
+				}else{ //Edit mode
+					/* start: get names of admin section IDs for display */
+					if(doc[0].DocSubType == "BU IOT" && (doc[0].BUCountryIOT != "" || doc[0].BRGMembership != "" || doc[0].RGRollup != "") ) {
+						var getadminsecID = false;
+						var $or = [];
+						var bucIDs = "", brgmIDs = "", rgrIDs = "";
+
+						if (doc[0].BUCountryIOT != "") {
+							bucIDs = doc[0].BUCountryIOT.split(',');
+							for (var i = 0; i < bucIDs.length; i++) {
+								$or.push({"_id":bucIDs[i]});
+							}
+						}
+						if (doc[0].BRGMembership != "") {
+							brgmIDs = doc[0].BRGMembership.split(',');
+							for (var i = 0; i < brgmIDs.length; i++) {
+								$or.push({"_id":brgmIDs[i]});
+							}
+						}
+						if (doc[0].RGRollup != "") {
+							rgrIDs = doc[0].RGRollup.split(',');
+							for (var i = 0; i < rgrIDs.length; i++) {
+								$or.push({"_id":rgrIDs[i]});
+							}
+						}
+
+						var searchobj = { selector: {"_id": {"$gt":0}, "key": "Assessable Unit", $or } };
+						db.find(searchobj).then(function(resdata) {
+							var resdocs = resdata.body.docs;
+							var bucNames = "", brgmNames = "", rgrNames = "";
+
+							for (var i = 0; i < resdocs.length; ++i) {
+								for (var j = 0; j < bucIDs.length; j++) {
+									if (bucIDs[j] == resdocs[i]._id) {
+										if ( bucNames == "" ) bucNames = resdocs[i].Name;
+										else bucNames = bucNames + ", " + resdocs[i].Name;
+									}
+								}
+								for (var j = 0; j < brgmIDs.length; j++) {
+									if (brgmIDs[j] == resdocs[i]._id) {
+										if ( brgmNames == "" ) brgmNames = resdocs[i].Name;
+										else brgmNames = brgmNames + ", " + resdocs[i].Name;
+									}
+								}
+								for (var j = 0; j < rgrIDs.length; j++) {
+									if (rgrIDs[j] == resdocs[i]._id) {
+										if (rgrNames == "") rgrNames = resdocs[i].Name;
+										else rgrNames = rgrNames + ", " + resdocs[i].Name;
+									}
+								}
+							}
+							doc[0].BUCountryIOTDisp = bucNames;
+							doc[0].BRGMembershipDisp = brgmNames;
+							doc[0].RGRollupDisp = rgrNames;
+							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
+							console.log("[assessableunit][countrylistIncluded]" + err);
+							deferred.reject({"status": 500, "error": err});
+						});
+					}/* end: get names of admin section IDs for display */
+					else{ //Not a BU IOT
+						deferred.resolve({"status": 200, "doc": doc});
+					}
+				}
 			}).catch(function(err) {
 				console.log("[assessableunit][constituents]" + constidata.error);
+				deferred.reject({"status": 500, "error": err});
 			});
-
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
@@ -472,7 +462,6 @@ var assessableunit = {
 
 		return deferred.promise;
 	}
-
 };
 
 module.exports = assessableunit;
