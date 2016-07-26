@@ -1,18 +1,14 @@
 var express = require("express");
-var passport = require('passport');
 var router = express.Router();
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
-var app = express();
 var db = require('./js/class-conn.js');
-var varConf = require('../../configuration');
 
 // Add functionalities from other JS files
 var dialog = require('./js/class-dialog.js');
 var businessunit = require('./js/class-businessunit.js');
 var submenu = require('./js/class-submenu.js');
 var utility = require('./js/class-utility.js');
-var assessableunit = require('./js/class-assessableunit.js');
 var isAuthenticated = require('./router-authentication.js');
 
 router.get('/', isAuthenticated, function(req, res) {
@@ -210,109 +206,6 @@ router.get('/sectionwidget', isAuthenticated, function(req, res) {
 		res.render('sectionwidget', {bg: req.session.BG});
 	else
 		res.render('sectionwidget', {bg: ''});
-});
-/**************************************************************
-ASSESSABLE UNITS - Business Unit type
-***************************************************************/
-
-/* View assessable unit documents */
-router.get('/processdashboard', isAuthenticated, function(req, res) {
-	assessableunit.listAU(req, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			if(data.doc) {
-				res.render('processdashboard', data );
-			} else {
-				res.render('error',{errorDescription: data.error});
-			}
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][processdashboard] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][processdashboard] - " + err.error);
-	})
-});
-
-
-/* Display BU assessable unit document */
-router.get('/assessableunit', isAuthenticated, function(req, res) {
-	assessableunit.getAUbyID(req, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			if(data.doc) {
-				switch (data.doc[0].DocSubType) {
-					case "Business Unit":
-						res.render('aubusinessunit', data.doc[0] );
-						break;
-					case "Global Process":
-						res.render('auglobalprocess', data.doc[0] );
-						break;
-					case "BU IOT":
-						res.render('aubuiot', data.doc[0] );
-						break;
-					case "Country Process":
-						res.render('aucountryprocess', data.doc[0] );
-						break;
-					case "Controllable Unit":
-						res.render('aucontrollableunit', data.doc[0] );
-						break;
-					case "BU Reporting Group":
-						res.render('aureportinggroup', data.doc[0] );
-						break;
-				}
-			} else {
-				res.render('error',{errorDescription: data.error});
-			}
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][assessableunit] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][assessableunit] - " + err.error);
-	})
-});
-
-/* Save BU assessable unit document */
-router.post('/savebuau', isAuthenticated, function(req, res){
-	assessableunit.saveAUBU(req, db).then(function(data) {
-		req.query.id = req.body.docid;
-		var close = req.body.close;
-		if(data.status==200 & !data.error) {
-			if(data.body) {
-				assessableunit.getAUbyID(req, db).then(function(data) {
-					if(data.status==200 & !data.error) {
-						if(data.doc) {
-							if(close=='1') {
-								res.redirect('/processdashboard');
-							} else {
-								res.redirect('/assessableunit?id=' + data.doc[0]._id);
-							}
-						} else {
-							res.render('error',{errorDescription: data.error});
-						}
-					} else {
-						res.render('error',{errorDescription: data.error});
-						console.log("[routes][getassessableunitbyID] - " + data.error);
-					}
-				}).catch(function(err) {
-					res.render('error',{errorDescription: err.error});
-					console.log("[routes][getassessableunitbyID] - " + err.error);
-				});
-				// res.render('aubusinessunit', data.body );
-			} else {
-				res.render('error',{errorDescription: data.error});
-				console.log("[routes][savebuau] - " + data.error);
-			}
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][savebuau] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][savebuau] - " + err.error);
-	})
-
 });
 
 /**************************************************************
