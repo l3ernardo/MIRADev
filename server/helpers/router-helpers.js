@@ -7,18 +7,19 @@ var register = function(Handlebars) {
 		bar: function(){
 			return "BAR";
 		},
-		multiSelect: function(idSpan, list, id, name) {
+		multiSelect: function(idSpan, list, id, name, scope) {
 			//console.log(list);
 			var dataSel = list;
 			//console.log(dataSel.length);
 			var arr='';
-			
+
 			for(i=0;i<dataSel.length;i++){
-				arr = arr+'<li><input type="checkbox" value="'+eval('dataSel[i].'+id)+'" />'+eval('dataSel[i].'+name)+'</li>';
+				arr = arr+'<br /><li><input type="checkbox" id="'+ idSpan + eval('dataSel[i].' + id) +'" name="'+eval('dataSel[i].'+name)+'" value="'+eval('dataSel[i].'+id)+'" />'+eval('dataSel[i].'+name)+'</li>';
 			}
-			var ddEle='<dl class="dropdown"><dt><a href="javascript:void(0)"><span class="hida">Select</span><span id="'+idSpan+
+
+			var ddEle='<dl class="dropdown"><dt><a name="'+scope+'" href="javascript:void(0)"><span id="'+scope+'Sel" class="hida">Select</span><span id="'+idSpan+
 				'" class="multiSel"></span></a></dt><dd>'+
-				'<div class="multiSelect"><ul>'+
+				'<div class="mutliSelect"><ul id="'+scope+'">'+
 				arr+
 				'</ul></div></dd></dl>';
 			return ddEle;

@@ -1,0 +1,94 @@
+
+/*
+.dropdown {
+  position: absolute;
+  top:50%;
+  transform: translateY(-50%);
+}
+*/
+
+a {
+  color: #fff;
+}
+
+.dropdown dd,
+.dropdown dt {
+  margin: 0px;
+  padding: 0px;
+}
+
+.dropdown ul {
+  margin: -1px 0 0 0;
+  padding: 10px 10px 10px 10px;
+}
+
+.dropdown li {
+  padding: 10px 10px 10px 10px;
+  color: #fff;
+}
+
+.dropdown dd {
+  position: relative;
+}
+
+.dropdown a,
+.dropdown a:visited {
+  /*color: #fff;*/
+  color: gray;
+  text-decoration: none;
+  outline: solid;
+  outline-color: #a8a8a8;
+  outline-width: 1px;
+  font-size: 13px;
+}
+
+.dropdown dt a {
+  display: block;
+  padding: 8px 20px 5px 10px;
+  min-height: 25px;
+  line-height: 24px;
+  overflow: hidden;
+  border: 0;
+  width: 508px;
+  white-space: wrap;
+}
+
+.multiSel span {
+  display: inline !important;
+  color: #3f3f3f;
+}
+
+.dropdown dt a span,
+.multiSel span {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 3px 2px 0;
+}
+
+.dropdown dd ul {
+  background-color: gray;
+  border: 0;
+  color: #fff;
+  display: none;
+  left: 0px;
+  padding: 2px 15px 2px 5px;
+  position: absolute;
+  top: 2px;
+  width: 516px;
+  list-style: none;
+  height: 100px;
+  overflow: auto;
+}
+
+.dropdown span.value {
+  display: none;
+}
+
+.dropdown dd ul li a {
+  padding: 5px;
+  display: block;
+}
+
+.dropdown dd ul li a:hover {
+  background-color: #fff;
+}
