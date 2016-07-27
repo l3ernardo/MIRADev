@@ -63,20 +63,6 @@ administration.get('/parameter', isAuthenticated, function(req, res){
 		console.log("[routes][parameter] - " + err.error);
 	})
 });
-/* Load specific parameter data */
-administration.get('/getParam', isAuthenticated, function(req, res) {
-	parameter.getParam(req, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			res.send( data.doc );
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][getParam] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][getParam] - " + err.error);
-	})
-});
 /* Save parameter in cloudant */
 administration.post('/saveParam', isAuthenticated, function(req, res) {
 	parameter.saveParam(req, db).then(function(data) {
@@ -104,6 +90,21 @@ administration.get('/getParameter',isAuthenticated, function(req, res) {
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		//console.log("[routes][getParameter] - " + err.error);
+	})
+});
+/* Load test for list of parameter */
+administration.get('/getListParams', isAuthenticated, function(req, res) {
+	var lParams = ['Metrics', 'UnitSizes'];
+	parameter.getListParams(req, db, lParams).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send( data.parameters );
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][getListParams] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][getListParams] - " + err.error);
 	})
 });
 
