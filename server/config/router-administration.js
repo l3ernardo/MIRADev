@@ -78,6 +78,19 @@ administration.post('/saveParam', isAuthenticated, function(req, res) {
 	})
 
 });
+administration.get('/getParam', isAuthenticated, function(req, res) {
+	parameter.getParam(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.send( data.doc );
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][getParam] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][getParam] - " + err.error);
+	})
+});
 /* Get parameter by keyName */
 administration.get('/getParameter',isAuthenticated, function(req, res) {
 	parameter.getParam(req, db).then(function(data) {
@@ -97,7 +110,7 @@ administration.get('/getListParams', isAuthenticated, function(req, res) {
 	var lParams = ['Metrics', 'UnitSizes'];
 	parameter.getListParams(req, db, lParams).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.send( data.parameters );
+			res.send( data.parameters.Metrics );
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][getListParams] - " + data.error);
