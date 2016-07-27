@@ -26,7 +26,7 @@ var calendar = {
 		return deferred.promise;
 	},
 	/* Get all calendars */
-	getTargetCalendars: function(req, db) {
+	getTargetCalendars: function(req, db, keyIntCal) {
 		var deferred = q.defer();
 		dataTargetCalendars = [];
 		var obj = {
@@ -51,7 +51,7 @@ var calendar = {
 							if (dataMenu.title=="Calendar"){
 								var dataCalendar = dataMenu.entries;
 								for(var k = 0; k < dataCalendar.length; k++){
-									if(dataCalendar[k].id != "calendaridall"){
+									if(dataCalendar[k].id != keyIntCal){
 										dataTargetCalendars.push({
 											id: dataCalendar[k].id,
 											name: dataCalendar[k].name,
@@ -73,11 +73,11 @@ var calendar = {
 		return deferred.promise;
 	},
 	/* Get events */
-	getEvents: function(req, db){
+	getEvents: function(req, db, keyIntCal){
 		var deferred = q.defer();
 		var events = [];
 		var ownerCalendar = req.query.id;
-		if(ownerCalendar == "all"){
+		if(ownerCalendar == keyIntCal){
 			var obj = {
 				selector : {
 					"_id": {"$gt":0},

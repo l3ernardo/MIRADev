@@ -11,6 +11,7 @@ var db = require('./js/class-conn.js');
 var calendar = require('./js/class-calendar.js');
 var utility = require('./js/class-utility.js');
 var isAuthenticated = require('./router-authentication.js');
+var varConf = require('../../configuration');
 
 /**************************************************************
 CALENDARS
@@ -31,7 +32,7 @@ calendars.get('/calendar', isAuthenticated, function(req, res) {
 });
 //load data from db and show in calendar
 calendars.get('/getEvents', isAuthenticated, function(req, res) {
-	calendar.getEvents(req, db).then(function(data) {
+	calendar.getEvents(req, db, varConf.keyIntCal).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.events);
 		} else {
@@ -43,7 +44,7 @@ calendars.get('/getEvents', isAuthenticated, function(req, res) {
 });
 //Get all calendars
 calendars.get('/getTargetCalendars', isAuthenticated, function(req, res){
-	calendar.getTargetCalendars(req, db).then(function(data) {
+	calendar.getTargetCalendars(req, db, varConf.keyIntCal).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.dataTargetCalendars);
 		} else {

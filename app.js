@@ -32,17 +32,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', path.join(__dirname, 'views'));
 
 //handlebars
-app.engine('.hbs', exphbs({defaultLayout: 'main', extname: '.hbs',
-	helpers:
-		{
-			submenu:
-				function () {
-					if(app.locals.submenu) {
-						return app.locals.submenu;
-					}
-				}
-		}
-	}));
+
+var helpers = require("./server/helpers/router-helpers.js").helpers;
+app.engine('.hbs', exphbs({defaultLayout: 'main', extname: '.hbs', helpers: helpers}));
 
 app.set('view engine', '.hbs');
 app.use(function(req,res,next){
@@ -82,6 +74,8 @@ app.use(require('./server/config/router-security.js'));
 app.use(require('./server/config/router-administration.js'));
 app.use(require('./server/config/router-calendars.js'));
 app.use(require('./server/config/router-interface.js'));
+app.use(require('./server/config/router-dashboards.js'));
+
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {

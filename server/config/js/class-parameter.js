@@ -71,6 +71,40 @@ var parameters = {
 		});
 		return deferred.promise;
 	},
+	/* Get all the list of parameter data by keyName list parameter */
+	getListParams: function(req, db, lParams) {
+		var deferred = q.defer();
+		var valParam = [];
+		var obj;
+		var $or = [];
+		
+		try{
+			
+			for(i=0; i<lParams.length; i++){
+				$or.push({"keyName":lParams[i]});
+			}
+			obj = {
+				selector : {
+					"_id": {"$gt":0},
+					$or
+				}
+			};
+			
+			db.find(obj).then(function(data){
+				var parameters = data.body.docs;
+				for (var i = 0; i < parameters.length; ++i) {
+					valParam.push({"keyName" : parameters[i].keyName, "options" : parameters[i].value.options});
+				}
+				deferred.resolve({"status": 200, "parameters": valParam})
+			}).catch(function(err) {
+				
+				deferred.reject({"status": 500, "error": err});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
 	/* Save parameter in cloudant */
 	saveParam: function(req, db) {
 		var deferred = q.defer();		
