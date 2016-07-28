@@ -32,9 +32,9 @@ var register = function(Handlebars) {
 				listvalue = eval('dataSel[i].' + optvalue);
 				listname = eval('dataSel[i].' + optname);
 				if(listvalue==optsel){
-					arr += '<option value="' + eval('dataSel[i].' + optvalue) + '" selected>' + eval('dataSel[i].' + optname) + '</option>';
+					arr += '<option value="' + listvalue + '" selected>' + listname + '</option>';
 				}else{
-					arr += '<option value="' + eval('dataSel[i].' + optvalue) + '">' + eval('dataSel[i].' + optname) + '</option>';
+					arr += '<option value="' + listvalue + '">' + listname + '</option>';
 				}
 			}
 
