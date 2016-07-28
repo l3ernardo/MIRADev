@@ -31,12 +31,16 @@ var register = function(Handlebars) {
 			for(i=0;i<dataSel.length;i++){
 				arr += '<option value="' + eval('dataSel[i].' + value) + '">' + eval('dataSel[i].' + value) + '</option>';
 			}
-			
+
 			var selElem = '<select id="'+idSelect+'">'+
 				arr +
 				'</select>';
-			
+
 			return selElem;
+		},
+		if_equal: function(a, b, opts) {
+			if(a == b) return opts.fn(this);
+     	else return opts.inverse(this);
 		},
 		submenu: function () {
 			if(app.locals.submenu) {
