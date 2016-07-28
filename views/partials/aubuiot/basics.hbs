@@ -8,7 +8,19 @@
 		<tr>
 			<td><label for="IOT">BU IOT:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span><input type="text" name="IOT" value="{{IOT}}" size="100" maxlength="300"></span>
+				<span>
+					<input type="hidden" name="IOTid" id="IOTid" value="{{IOTid}}">
+					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
+					<select id="iotname">
+						{{#each IOTList}}
+							{{#if_equal name ../IOT}}
+								<option value="{{docid}}" selected>{{name}}</option>
+							{{else}}
+								<option value="{{docid}}">{{name}}</option>
+							{{/if_equal}}
+						{{/each}}
+					</select>
+				</span>
 			</td>
 		</tr>
 		<tr>
