@@ -85,6 +85,90 @@
 				<tr>
 				    <td>Additional readers:</td><td>{{AdditionalReaders}}</td>
 			    </tr>
+			{{/if}}	
+         		{{else if BUIMTflag}}
+		   {{#if grantaccess}}
+           <tr>
+				<td width="25%">Owner:</td><td><div id="Owner">{{Owner}}</div>
+				<script>$(document).ready(function() {updateOwner();});</script>
+				</td>
+			</tr>
+			<tr>
+				<td>Focals:</td>
+				<td>
+					<div class="ui-widget">
+					<input id="focalsname" class="ui-autocomplete-input" autocomplete="off" >
+					<a class="ibm-delete-link" href="#" onclick="removeItem($('#focalsname'),$('#focalslist'))">Delete</a>
+					<script>$(document).ready(function() {bpLookup('#focalsname','#focalslist');});</script>
+					</div>
+					<textarea id="focalslist" name="focalslist" rows="4" cols="100" onfocus="this.blur()">{{Focals}}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>Coordinators:</td>
+				<td>
+					<div class="ui-widget">
+					<input id="coordinatorsname" class="ui-autocomplete-input" autocomplete="off" >
+					<a class="ibm-delete-link" href="#" onclick="removeItem($('#coordinatorsname'),$('#coordinatorslist'))">Delete</a>
+					<script>$(document).ready(function() {bpLookup('#coordinatorsname','#coordinatorslist');});</script>
+					</div>
+					<textarea id="coordinatorslist" name="coordinatorslist" rows="4" cols="100" onfocus="this.blur()">{{Coordinators}}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>Readers:</td><
+				<td>
+					<div class="ui-widget">
+					<input id="readersname" class="ui-autocomplete-input" autocomplete="off" >
+					<a class="ibm-delete-link" href="#" onclick="removeItem($('#readersname'),$('#readerslist'))">Delete</a>
+					<script>$(document).ready(function() {bpLookup('#readersname','#readerslist');});</script>
+					</div>
+					<textarea id="readerslist" name="readerslist" rows="4" cols="100" onfocus="this.blur()">{{Readers}}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>Additional editors:</td>
+				<td>
+					<div class="ui-widget">
+					<input id="editorname" class="ui-autocomplete-input" autocomplete="off" >
+					<a class="ibm-delete-link" href="#" onclick="removeItem($('#editorname'),$('#editorlist'))">Delete</a>
+					<script>$(document).ready(function() {bpLookup('#editorname','#editorlist');});</script>
+					</div>
+					<textarea id="editorlist" name="editorlist" rows="4" cols="100" onfocus="this.blur()">{{AdditionalEditors}}</textarea>
+				</td>
+			</tr>
+			<tr>   
+				<td>Additional readers:</td>
+				<td>
+					<div class="ui-widget">
+						<input id="readername" class="ui-autocomplete-input" autocomplete="off" >
+						<a class="ibm-delete-link" href="#" onclick="removeItem($('#readername'),$('#readerlist'))">Delete</a>
+						<script>$(document).ready(function() {bpLookup('#readername','#readerlist');});</script>
+					</div>
+					<textarea id="readerlist" name="readerlist" rows="4" cols="100" onfocus="this.blur()">{{AdditionalReaders}}</textarea>
+				</td>
+			</tr>	
+            {{else}}
+			   	<tr>
+					<td width="25%">Owner:</td><td><div id="Owner">{{Owner}}</div>
+					<script>$(document).ready(function() {updateOwner();});</script>
+					</td>
+				</tr>
+				<tr>
+					<td>Focals:</td><td>{{Focals}}</td>
+				</tr>
+				<tr>
+					<td>Coordinators:</td><td>{{Coordinators}}</td>
+				</tr>
+				<tr>
+					<td>Readers:</td><td>{{Readers}}</td>
+				</tr>
+				<tr>
+					<td>Additional editors:</td><td>{{AdditionalEditors}}</td>
+				</tr>
+				<tr>
+				    <td>Additional readers:</td><td>{{AdditionalReaders}}</td>
+			    </tr>
 			{{/if}}			
         {{else}}	
 		    {{#if grantaccess}}
