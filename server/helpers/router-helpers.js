@@ -38,7 +38,7 @@ var register = function(Handlebars) {
 				}
 			}
 
-			var selElem = '<select id="'+idSelect+'">'+
+			var selElem = '<select id="'+idSelect+'" name="'+idSelect+'">'+
 				arr +
 				'</select>';
 
