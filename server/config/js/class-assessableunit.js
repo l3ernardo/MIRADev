@@ -390,7 +390,6 @@ var assessableunit = {
 							});
 							break;
 					}
-					deferred.resolve({"status": 200, "doc": doc});
 				}else{ //Read mode
 
 					switch (doc[0].DocSubType) { //start of read mode switch
@@ -547,9 +546,10 @@ var assessableunit = {
 							});
 							/* end: get names of admin section IDs for display */
 							break;
-
+						default:
+							deferred.resolve({"status": 200, "doc": doc});
+							break;
 					}//end of read mode switch
-					deferred.resolve({"status": 200, "doc": doc});
 				}
 				
 			}).catch(function(err) {
