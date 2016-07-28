@@ -91,6 +91,9 @@ var assessableunit = {
 			if(doc[0].DocSubType == "BU Reporting Group") {
 				doc[0].RGFlag = 1;
       }
+	        if(doc[0].DocSubType == "BU IMT") {
+				doc[0].BUIMTflag = 1;
+            }
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
 
@@ -387,6 +390,7 @@ var assessableunit = {
 							});
 							break;
 					}
+					deferred.resolve({"status": 200, "doc": doc});
 				}else{ //Read mode
 
 					switch (doc[0].DocSubType) { //start of read mode switch
@@ -545,7 +549,9 @@ var assessableunit = {
 							break;
 
 					}//end of read mode switch
+					deferred.resolve({"status": 200, "doc": doc});
 				}
+				
 			}).catch(function(err) {
 				console.log("[assessableunit][constituents]" + constidata.error);
 				deferred.reject({"status": 500, "error": err});
