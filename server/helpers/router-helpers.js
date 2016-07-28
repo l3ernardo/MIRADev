@@ -25,13 +25,13 @@ var register = function(Handlebars) {
 			return ddEle;
 		},
 		uniqueSelect: function(idSelect, list, optvalue, optname, optsel) {
-			var dataSel = list[0].options;
+			var dataSel = list;
 			var arr='';
 			var listvalue, listname;
 			for(i=0;i<dataSel.length;i++){
 				listvalue = eval('dataSel[i].' + optvalue);
 				listname = eval('dataSel[i].' + optname);
-				if(listvalue==optsel){
+				if(listname==optsel){
 					arr += '<option value="' + listvalue + '" selected>' + listname + '</option>';
 				}else{
 					arr += '<option value="' + listvalue + '">' + listname + '</option>';
