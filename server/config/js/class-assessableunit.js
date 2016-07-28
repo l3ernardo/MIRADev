@@ -54,7 +54,7 @@ var assessableunit = {
 	getAUbyID: function(req, db) {
 		var deferred = q.defer();
 		var docid = req.query.id
-		
+
 		db.get(docid).then(function(data){
 			var doc = [];
 			doc.push(data.body);
@@ -70,7 +70,7 @@ var assessableunit = {
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
 			if (accessrules.rules.editor && accessrules.rules.cuadmin && (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Controllable Unit")) doc[0].admin = 1;
-			
+
 			/* Field displays */
 			if(doc[0].AuditableFlag == "Yes") {
 				doc[0].AuditableFlagYes = 1;
@@ -110,9 +110,9 @@ var assessableunit = {
 				"col":["4Q2015","Sat","Minerva S Genon",""]
 			};
 			doc[0].AssessmentData.push(toadd);
-			
-			
-			
+
+
+
 			/* Get Constituents Data*/
 			switch (doc[0].DocSubType) {
 				case "Business Unit":
@@ -247,9 +247,9 @@ var assessableunit = {
 				}
 
 				/* Get Reporting Groups and BU Countries*/
-				if(req.query.edit != undefined) { //Read mode
+				if(req.query.edit != undefined) { //Edit mode
 					doc[0].editmode = 1;
-					
+
 					switch (doc[0].DocSubType) {
 						case "Business Unit":
 						case "BU IMT":
@@ -268,7 +268,7 @@ var assessableunit = {
 									"DocSubType": "BU Reporting Group",
 								}
 							};
-							
+
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
 								for (var i = 0; i < resdocs.length; ++i) {
@@ -281,16 +281,27 @@ var assessableunit = {
 							});
 							break;
 						case "BU IOT":
-							/* get BU Countries and Reporting Group list */
+							/* get BU Countries List, Reporting Group list and IOT name list */
 							doc[0].BUCountryList = [];
 							doc[0].ReportingGroupList = [];
+							/*
+								IOT Name List:
+								Editing the unit name for BU IOT, BU IMT and BU Country should only be applicable for new units that are not yet saved.
+								Once saved, it should not be editable but the name may change only if it is updated in WWBCIT, MIRA should automatically pick up the name change.
+								***This is enabled for testing purposes only.
+								orig query without iot name list: var searchobj = { selector: {"_id": {"$gt":0}, "key": "Assessable Unit", $or } };
+							*/
+							doc[0].IOTList = [];
+
 							var searchobj = {
 								selector:{
 									"_id": {"$gt":0},
 									"key": "Assessable Unit",
 									"Status": "Active",
-									"BusinessUnit": doc[0].BusinessUnit,
-									$or: [{"DocSubType": "BU Country"},{"DocSubType": "BU Reporting Group"}]
+									$or: [
+										{$and:[{$or:[{"DocSubType": "BU Country"},{"DocSubType": "BU Reporting Group"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
+							      {"DocSubType": "IOT"}
+									]
 								}
 							};
 							db.find(searchobj).then(function(resdata) {
@@ -298,6 +309,7 @@ var assessableunit = {
 								for (var i = 0; i < resdocs.length; ++i) {
 									if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+									if (resdocs[i].DocSubType == "IOT") doc[0].IOTList.push({"docid":resdocs[i]._id,"name":resdocs[i].IOT});
 								}
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
@@ -306,8 +318,8 @@ var assessableunit = {
 							});
 							break;
 					}
-				}else{ //Edit mode
-					/* start: get names of admin section IDs for display */
+				}else{ //Read mode
+					/* start: get names of admin section IDs for display and IOT name */
 					if(doc[0].DocSubType == "BU IOT" && (doc[0].BUCountryIOT != "" || doc[0].BRGMembership != "" || doc[0].RGRollup != "") ) {
 						var getadminsecID = false;
 						var $or = [];
@@ -331,6 +343,8 @@ var assessableunit = {
 								$or.push({"_id":rgrIDs[i]});
 							}
 						}
+						// IOT doc ID
+						$or.push({"_id":doc[0].IOTid});
 
 						var searchobj = { selector: {"_id": {"$gt":0}, "key": "Assessable Unit", $or } };
 						db.find(searchobj).then(function(resdata) {
@@ -399,7 +413,7 @@ var assessableunit = {
 		db.get(docid).then(function(data){
 			var doc = [];
 			doc.push(data.body);
-			// Update Admin Section
+			// Update Admin/Basic Section
 			switch (doc[0].DocSubType) {
 				case "Business Unit":
 					doc[0].RGRollup = req.body.RGRollup;
@@ -412,6 +426,9 @@ var assessableunit = {
 					doc[0].RGRollup = req.body.RGRollup;
 					doc[0].BRGMembership = req.body.BRGMembership;
 					doc[0].BUCountryIOT = req.body.BUCountryIOT;
+					doc[0].IOT = req.body.IOT;
+					doc[0].IOTid = req.body.IOTid;
+					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 					break;
 				case "Country Process":
 					doc[0].BRGMembership = req.body.BRGMembership;
