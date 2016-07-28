@@ -249,8 +249,14 @@ var assessableunit = {
 				/* Get Reporting Groups and BU Countries*/
 				if(req.query.edit != undefined) { //Read mode
 					doc[0].editmode = 1;
+					
 					switch (doc[0].DocSubType) {
-						case "Business Unit","BU IMT","BU Country","Controllable Unit","Country Process","Global Process":
+						case "Business Unit":
+						case "BU IMT":
+						case "BU Country":
+						case "Controllable Unit":
+						case "Country Process":
+						case "Global Process":
 							/* get Reporting Group list */
 							doc[0].ReportingGroupList = [];
 							var searchobj = {
@@ -262,11 +268,11 @@ var assessableunit = {
 									"DocSubType": "BU Reporting Group",
 								}
 							};
+							
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
 								for (var i = 0; i < resdocs.length; ++i) {
 									doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-									console.log(resdocs[i].Name)
 								}
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {

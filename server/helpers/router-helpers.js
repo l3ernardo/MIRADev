@@ -14,7 +14,7 @@ var register = function(Handlebars) {
 			var arr='';
 
 			for(i=0;i<dataSel.length;i++){
-				arr = arr+'<br /><li><input type="checkbox" id="'+ idSpan + eval('dataSel[i].' + id) +'" name="'+eval('dataSel[i].'+name)+'" value="'+eval('dataSel[i].'+id)+'" />'+eval('dataSel[i].'+name)+'</li>';
+				arr += '<br /><li><input type="checkbox" id="'+ idSpan + eval('dataSel[i].' + id) +'" name="'+eval('dataSel[i].'+name)+'" value="'+eval('dataSel[i].'+id)+'" />'+eval('dataSel[i].'+name)+'</li>';
 			}
 
 			var ddEle='<dl class="dropdown"><dt><a name="'+scope+'" href="javascript:void(0)"><span id="'+scope+'Sel" class="hida">Select</span><span id="'+idSpan+
@@ -23,6 +23,20 @@ var register = function(Handlebars) {
 				arr+
 				'</ul></div></dd></dl>';
 			return ddEle;
+		},
+		uniqueSelect: function(idSelect, list, value) {
+			var dataSel = list[0].options;
+			var arr='';
+
+			for(i=0;i<dataSel.length;i++){
+				arr += '<option value="' + eval('dataSel[i].' + value) + '">' + eval('dataSel[i].' + value) + '</option>';
+			}
+			
+			var selElem = '<select id="'+idSelect+'">'+
+				arr +
+				'</select>';
+			
+			return selElem;
 		},
 		submenu: function () {
 			if(app.locals.submenu) {

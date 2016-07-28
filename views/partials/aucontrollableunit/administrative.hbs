@@ -18,7 +18,9 @@
 			<tr>
 				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
 				<td>
-					<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
+					<span><input type="hidden" name="CUSize" value="{{CUSize}}" size="100" maxlength="300" >
+					{{{uniqueSelect "cusize" parameters.UnitSizes "name"}}}
+					</span>
 				</td>
 			</tr>
 			<tr >
