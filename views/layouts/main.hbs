@@ -37,7 +37,7 @@
 	<body id="ibm-com">
 		<div id="ibm-top" class="">
 			<!-- MASTHEAD_BEGIN -->
-			{{>masthead}}
+			{{>masthead user=session.user}}
 			<!-- MASTHEAD_END -->
 			<div id="ibm-pcon" style="width:80%">
 				<!-- CONTENT_BEGIN -->
@@ -45,7 +45,7 @@
 					<div id="ibm-leadspace-head" class="ibm-alternate">
 						<div id="ibm-leadspace-body">
 							<div id="ibm-leadspace-body">
-								<ul id="ibm-navigation-trail" aria-label="Bread Crumbs"><li><a href="/index">MIRA</a></li></ul>
+								<ul id="ibm-navigation-trail" aria-label="Bread Crumbs"><li><a href="/index">MIRA</a></li><li id="breadcrumb"></li></ul>
 								<br/>
 								<h3 class="ibm-confidential">IBM Confidential</h3>
 								<h1 id="pageTitle"></h1>

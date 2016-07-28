@@ -1,85 +1,105 @@
+<link href="../css/jsoneditor.css" rel="stylesheet" type="text/css">
+<script src="./lib/jsoneditor.min.js"></script>
 <script src="./js/setup.js"></script>
 <div class="ibm-container">
 	<div><p/></div>
 	<div class="ibm-columns ibm-graphic-tabs">
-	  <div class="ibm-tab-section">
-	      <h2 class="ibm-access">Tab navigation</h2>
-	      <ul class="ibm-tabs">
-	          <li class="ibm-first-tab ibm-highlight-tab" id="tabBU"><a href="#" onclick="changeTabBU()">Business Unit</a><span class="ibm-access">- selected tab,</span></li>
-	          <li id="tabCM"><a href="#" onclick="changeTabCM()">Categorized Menu</a></li>
-	      </ul>
-	  </div>
-	  <div class="ibm-col-1-1">
-	    <form id="formsetup" class="ibm-column-form ibm-styled-form" name="formsetup" method="POST" action="/saveSetup">
-				<div class="ibm-col-6-2">
-					<div id="divBU">
-	            <input type="hidden" id="idBU" name="idBU">
-	            <input type="hidden" id="revBU" name="revBU">
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label for="title" class="ibm-form-grp-lbl">Name:</label>
-	                <span class="ibm-input-group">
-	                    <input type="text" id="fldname" name="fldname">
-	                </span>
-	            </p>
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label id="lblEnable" class="ibm-form-grp-lbl">Active:</label>
-	                <span class="ibm-input-group">
-	                    <input type="radio" name="fldtrue" value="true" checked ><label for="fldtrue">True</label>
-	                    <input type="radio" name="fldtrue" value="false" ><label for="fldtrue">False</label>
-	                </span>
-	            </p>
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label for="fldvalue" class="ibm-form-grp-lbl">Value:    </label>
-	                <span class="ibm-input-group">
-						<textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea>
-					</span>
-	            </p>
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label for="flddescM" class="ibm-form-grp-lbl">Description:</label>
-	                <span class="ibm-input-group">
-	                  <input type="text" id="flddesc" name="flddesc" size="30" class="text">
-	                </span>
-	            </p>
-	        </div>
-	        <div id="divCM" style="display:none">
-	            <input type="hidden" id="idCM" name="idCM">
-	            <input type="hidden" id="revCM" name="revCM">
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label for="title" class="ibm-form-grp-lbl">Name:</label>
-	                <span class="ibm-input-group">
-	                    <input type="text" id="fldnameM" name="fldnameM">
-	                </span>
-	            </p>
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label id="lblEnable" class="ibm-form-grp-lbl">Active:</label>
-	                <span class="ibm-input-group">
-	                    <input type="radio" name="fldtrueM" value="true" checked ><label for="fldtrue">True</label>
-	                    <input type="radio" name="fldtrueM" value="false" ><label for="fldtrue">False</label>
-	                </span>
-	            </p>
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label for="scheduleTime" class="ibm-form-grp-lbl">Value:    </label>
-	                <span class="ibm-input-group">
-					 
-	                  <textarea id="fldvalueM" name="fldvalueM" rows="5" cols="50"></textarea>
-	                </span>
-	            </p>
-	            <p style="text-align:left" class="ibm-form-elem-grp">
-	                <label for="flddescM" class="ibm-form-grp-lbl">Description:</label>
-	                <span class="ibm-input-group">
-	                  <input type="text" id="flddescM" name="flddescM" size="30" class="text">
-	                </span>
-	            </p>
-	        </div>
-	        <div class="ibm-rule"><hr/></div>
-	        <div class="ibm-buttons-row">
-	            <input class="ibm-btn-pri" type="button" id="btn_submit" value="Submit" />
-	            <span class="ibm-sep"> </span>
-	            <input class="ibm-btn-sec" type="button" id="btn_cancel" value="Cancel" />
-	            <br>
-	        </div>
+		<div class="ibm-tab-section">
+			<h2 class="ibm-access">Tab navigation</h2>
+			<ul class="ibm-tabs">
+				<li class="ibm-first-tab ibm-highlight-tab" id="tabBU"><a href="javascript:void(0)" onclick="changeTabBU()">Business Unit</a><span class="ibm-access">- selected tab,</span></li>
+				<li id="tabCM"><a href="javascript:void(0)" onclick="changeTabCM()">Categorized Menu</a></li>
+			</ul>
+		</div>
+		<div class="ibm-col-1-1">
+			<form id="formsetup" class="ibm-column-form ibm-styled-form" name="formsetup" method="POST" action="/saveSetup">
+				<div id="divBU">
+					<input type="hidden" id="idBU" name="idBU" value="{{BU.0._id}}">
+					<input type="hidden" id="revBU" name="revBU" value="{{BU.0._rev}}">
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<tr>
+						<td width="15%"><label for="title" class="ibm-form-grp-lbl">Name:</label></td>
+						<td><span class="ibm-input-group">
+							<input type="text" id="fldname" name="fldname" value="{{BU.0.keyName}}">
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td><label id="lblEnable" class="ibm-form-grp-lbl">Active:</label></td>
+						<td><span class="ibm-input-group">
+							{{#if BU.0.active}}
+								<input type="radio" name="fldtrue" value="true" checked><label for="fldtrue">True</label>
+								<input type="radio" name="fldtrue" value="false"><label for="fldtrue">False</label>
+							{{else}}
+								<input type="radio" name="fldtrue" value="true"><label for="fldtrue">True</label>
+								<input type="radio" name="fldtrue" value="false" checked><label for="fldtrue">False</label>
+							{{/if}}
+						</span></td>
+					</tr>
+					<tr>
+						<td><label for="fldvalue" class="ibm-form-grp-lbl">Value:</label></td>
+						<td><span style="display:none;">
+							<textarea id="fldvalue" name="fldvalue" rows="5" cols="50">{{BU.0.value}}</textarea>
+							
+						</span>
+						<div id="jsoneditor"></div>
+						<script>$(document).ready(function() {  JSONEdit("fldvalue", "BU", "jsoneditor"); if($('#fldvalue').html() != "")editor.set(JSON.parse($('#fldvalue').html()));});</script></td>
+					</tr>
+					<tr>
+						<td><label for="flddescM" class="ibm-form-grp-lbl">Description:</label></td>
+						<td><span class="ibm-input-group">
+						  <input type="text" id="flddesc" name="flddesc" size="50" class="text" value="{{BU.0.description}}">
+						</span></td>
+					</tr>
+					</table>
 				</div>
-	    </form>
-	  </div>
+				<div id="divCM" style="display:none">
+					<input type="hidden" id="idCM" name="idCM" value="{{Menu.0._id}}">
+					<input type="hidden" id="revCM" name="revCM" value="{{Menu.0._rev}}">
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+					<tr>
+						<td width="15%"><label for="title" class="ibm-form-grp-lbl">Name:</label></td>
+						<td><span class="ibm-input-group">
+							<input type="text" id="fldnameM" name="fldnameM" value="{{Menu.0.keyName}}">
+						</span></td>
+					</tr>
+					<tr>
+						<td><label id="lblEnable" class="ibm-form-grp-lbl">Active:</label></td>
+						<td><span class="ibm-input-group">
+							
+							{{#if Menu.0.active}}
+								<input type="radio" name="fldtrueM" value="true" ><label for="fldtrue">True</label>
+								<input type="radio" name="fldtrueM" value="false" checked><label for="fldtrue">False</label>
+							{{else}}
+								<input type="radio" name="fldtrueM" value="true"><label for="fldtrue">True</label>
+								<input type="radio" name="fldtrueM" value="false" checked><label for="fldtrue">False</label>
+							{{/if}}
+						</span></td>
+					</tr>
+					<tr>
+						<td><label for="scheduleTime" class="ibm-form-grp-lbl">Value:</label></td>
+						<td><span style="display:none;">
+						  <textarea id="fldvalueM" name="fldvalueM" rows="5" cols="50">{{Menu.0.value}}</textarea>
+						</span>
+						<div id="jsoneditorM"></div>
+						<script>$(document).ready(function() {  JSONEdit("fldvalueM", "Menu", "jsoneditorM"); if($('#fldvalueM').html() != "") editorM.set(JSON.parse($('#fldvalueM').html()));});</script></td>
+					</tr>
+					<tr>
+						<td><label for="flddescM" class="ibm-form-grp-lbl">Description:</label></td>
+						<td><span class="ibm-input-group">
+						  <input type="text" id="flddescM" name="flddescM" size="50" class="text" value="{{Menu.0.description}}">
+						</span></td>
+					</tr>
+					</table>
+				</div>
+				<div class="ibm-rule"><hr/></div>
+				<div class="ibm-buttons-row">
+					<input class="ibm-btn-pri" type="button" id="btn_submit" value="Submit" />
+					<span class="ibm-sep"> </span>
+					<input class="ibm-btn-sec" type="button" id="btn_cancel" value="Cancel" />
+					<br>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>

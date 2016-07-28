@@ -2,27 +2,14 @@
 	{{!-- AU BU IOT assesable unit form - Basic section - Edit Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 		<caption class="mira-caption"><em>Basics</em></caption>
+		<tr><td width="25%">Parent BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr>
-			<td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td>
-		</tr>
-		<tr>
-			<td><label for="IOT">BU IOT:<span class="ibm-required">*</span></label></td>
+			<td><label for="IMT">BU IMT:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span>
-					<input type="hidden" name="IOTid" id="IOTid" value="{{IOTid}}">
-					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-					<select id="iotname">
-						{{#each IOTList}}
-							{{#if_equal name ../IOT}}
-								<option value="{{docid}}" selected>{{name}}</option>
-							{{else}}
-								<option value="{{docid}}">{{name}}</option>
-							{{/if_equal}}
-						{{/each}}
-					</select>
-				</span>
+				<span><input type="text" name="IMT" value="{{IMT}}" size="100" maxlength="300"></span>
 			</td>
 		</tr>
+		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr>
 			<td>Current reporting period:</td><td>{{CurrentPeriod}}</td>
 		</tr>
@@ -37,7 +24,8 @@
 	{{!-- AU BU IOT assesable unit form - Basic section - Read Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
-		<tr><td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td></tr>
+		<tr><td width="25%">Parent BU IOT:</td><td>{{IOT}}</td></tr>
+		<tr><td>BU IMT:</td><td>{{IMT}}</td></tr>
 		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr><td>Current reporting period:</td><td>{{CurrentPeriod}}</td></tr>
 		<tr><td>Status:</td><td>{{Status}}</td></tr>
