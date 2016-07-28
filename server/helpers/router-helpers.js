@@ -24,15 +24,21 @@ var register = function(Handlebars) {
 				'</ul></div></dd></dl>';
 			return ddEle;
 		},
-		uniqueSelect: function(idSelect, list, value) {
-			var dataSel = list[0].options;
+		uniqueSelect: function(idSelect, list, optvalue, optname, optsel) {
+			var dataSel = list;
 			var arr='';
-
+			var listvalue, listname;
 			for(i=0;i<dataSel.length;i++){
-				arr += '<option value="' + eval('dataSel[i].' + value) + '">' + eval('dataSel[i].' + value) + '</option>';
+				listvalue = eval('dataSel[i].' + optvalue);
+				listname = eval('dataSel[i].' + optname);
+				if(listname==optsel){
+					arr += '<option value="' + listvalue + '" selected>' + listname + '</option>';
+				}else{
+					arr += '<option value="' + listvalue + '">' + listname + '</option>';
+				}
 			}
 
-			var selElem = '<select id="'+idSelect+'">'+
+			var selElem = '<select id="'+idSelect+'" name="'+idSelect+'">'+
 				arr +
 				'</select>';
 

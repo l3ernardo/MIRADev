@@ -45,6 +45,12 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "BU IOT":
 						res.render('aubuiot', data.doc[0]);
 						break;
+					case "BU IMT":
+						res.render('aubuimt', data.doc[0]);
+						break;
+					case "BU Country":
+						res.render('aubucountry', data.doc[0]);
+						break;
 					case "Country Process":
 						res.render('aucountryprocess', data.doc[0] );
 						break;
@@ -62,7 +68,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 							res.render('error',{errorDescription: err.error});
 							console.log("[routes][assessableunit][getListParams] - " + err.error);
 						})
-						
+
 						break;
 					case "BU Reporting Group":
 						res.render('aureportinggroup', data.doc[0] );
