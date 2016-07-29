@@ -8,7 +8,8 @@
 			<tr>
 				<td width="25%"><label for="BRGMembership">BU reporting groups:</label></td>
 				<td>
-					<span><input type="text" name="BRGMembership" value="{{BRGMembership}}" size="100" maxlength="300"></span>
+					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
+					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
 				</td>
 			</tr>
 			<tr>
@@ -76,7 +77,7 @@
 		{{else}}
 
 			{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with no Admin Access --}}
-			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembership}}</td></tr>
+			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 			<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
 			{{#if SizeFlag}}
@@ -111,7 +112,7 @@
 	{{else}}
 
 		{{!-- AU Country Process form - Administrative Use Only section - Read Mode --}}
-		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembership}}</td></tr>
+		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 		<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
 		{{#if SizeFlag}}

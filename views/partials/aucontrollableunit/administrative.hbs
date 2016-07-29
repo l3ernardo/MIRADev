@@ -4,12 +4,6 @@
 		{{!-- AU ControllableUnit form - Administrative Use Only section - Edit Mode with Admin Access --}}
 		{{#if admin}}
 			<tr>
-				<td width="25%"><label for="BRGMembership">BU reporting groups:</label></td>
-				<td>
-					<span><input type="text" name="BRGMembership" value="{{BRGMembership}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-			<tr>
 				<td width="25%"><label for="PrimaryGlobalProcess">Primary global process:</label></td>
 				<td>
 					<span><input type="text" name="PrimaryGlobalProcess" value="{{PrimaryGlobalProcess}}" size="100" maxlength="300"></span>
@@ -55,26 +49,32 @@
 					<td><!-- Internal Audits embedded view here --></td>
 				</tr>
 			{{/if}}
+			<tr>
+				<td><label for="BRGMembership">BU reporting groups:</label></td>
+				<td>
+					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
+					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
+				</td>
+			</tr>
 
 		{{else}}
 
 			{{!-- AU ControllableUnit form form - Administrative Use Only section - Edit Mode with no Admin Access --}}
-			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembership}}</td></tr>
 			<tr><td width="25%">Primary global process:</td><td>{{PrimaryGlobalProcess}}</td></tr>
 			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 			<tr><td>Lifetime TCV ($M USD):</td><td><font class="td_tcv">{{LifetimeTCV}}</font><b> (planning purposes only)</b></td></tr>
-			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>	
+			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
 			{{#if AuditableFlagYes}}
-			<tr>
-				<td>Internal Audits:</td>
-				<td><!-- Internal Audits embedded view here --></td>
-		</tr>
-		{{/if}}
+				<tr>
+					<td>Internal Audits:</td>
+					<td><!-- Internal Audits embedded view here --></td>
+				</tr>
+			{{/if}}
+			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		{{/if}}
 	{{else}}
 		{{!-- AU ControllableUnit form form - Administrative Use Only section - Read Mode --}}
-		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembership}}</td></tr>
 		<tr><td width="25%">Primary global process:</td><td>{{PrimaryGlobalProcess}}</td></tr>
 		<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 		<tr><td>Lifetime TCV ($M USD):</td><td><font class="td_tcv">{{LifetimeTCV}}</font><b> (planning purposes only)</b></td></tr>
@@ -84,7 +84,8 @@
 			<tr>
 				<td>Internal Audits:</td>
 				<td><!-- Internal Audits embedded view here --></td>
-		</tr>
+			</tr>
 		{{/if}}
+		<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 	{{/if}}
 </table>

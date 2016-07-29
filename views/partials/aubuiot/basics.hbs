@@ -11,14 +11,7 @@
 				<span>
 					<input type="hidden" name="IOTid" id="IOTid" value="{{IOTid}}">
 					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-					<select id="iotname">
-						{{#each IOTList}}
-							{{#if_equal name ../IOT}}
-								<option value="{{docid}}" selected>{{name}}</option>
-							{{else}}
-								<option value="{{docid}}">{{name}}</option>
-							{{/if_equal}}
-						{{/each}}
+					{{{uniqueSelect "iotname" IOTList "docid" "name" IOT}}}
 					</select>
 				</span>
 			</td>

@@ -37,6 +37,13 @@
 					<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
 				</td>
 			</tr>
+			<tr>
+				<td><label for="BRGMembership">BU reporting groups:</label></td>
+				<td>
+					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
+					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
+				</td>
+			</tr>
 			<tr class="internal-audits">
 				<td>Internal Audits:</td>
 				<td>
@@ -58,13 +65,6 @@
 					</div>
 				</td>
 			</tr>
-			<tr>
-				<td><label for="BRGMembership">BU reporting groups:</label></td>
-				<td>
-					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
-					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
-				</td>
-			</tr>
 
 		{{else}}
 
@@ -75,6 +75,7 @@
 				<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 			{{/if}}
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 			{{#if AuditableFlagYes}}
 				<tr>
 					<td>Internal Audits:</td>
@@ -98,7 +99,6 @@
 					</td>
 				</tr>
 			{{/if}}
-			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		{{/if}}
 
 	{{else}}
@@ -110,6 +110,7 @@
 			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 		{{/if}}
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		{{#if AuditableFlagYes}}
 			<tr>
 				<td>Internal Audits:</td>
@@ -133,7 +134,6 @@
 				</td>
 			</tr>
 		{{/if}}
-		<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 	{{/if}}
 
 </table>

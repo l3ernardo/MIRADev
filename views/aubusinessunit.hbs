@@ -1,11 +1,13 @@
 <script src="/js/assessableunit.js" type="text/javascript"></script>
 <script src="/js/constituent_section.js" type="text/javascript"></script>
+<script src="/js/multiselect.js" type="text/javascript"></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <!-- JS for attachments widget -->
 <script src="./js/attachments.js"/></script>
 <!-- JS and CSS for owner, editors and readers / bluepages widget -->
 <script src="./js/owner.js"/></script>
 <script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="./css/multiselect.css" />
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <link rel="stylesheet" href="./css/jquery-ui.min.css">
@@ -35,7 +37,7 @@
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
-	<form id="assessableunit" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebuau">
+	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="docsubtype" value="{{DocSubType}}">
