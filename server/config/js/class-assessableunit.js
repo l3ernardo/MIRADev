@@ -91,6 +91,9 @@ var assessableunit = {
 			if(doc[0].DocSubType == "BU Reporting Group") {
 				doc[0].RGFlag = 1;
       }
+	        if(doc[0].DocSubType == "BU IMT") {
+				doc[0].BUIMTflag = 1;
+            }
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
 
@@ -543,9 +546,12 @@ var assessableunit = {
 							});
 							/* end: get names of admin section IDs for display */
 							break;
-
+						default:
+							deferred.resolve({"status": 200, "doc": doc});
+							break;
 					}//end of read mode switch
 				}
+				
 			}).catch(function(err) {
 				console.log("[assessableunit][constituents]" + constidata.error);
 				deferred.reject({"status": 500, "error": err});

@@ -108,7 +108,7 @@ var parameters = {
 	},
 	/* Save parameter in cloudant */
 	saveParam: function(req, db) {
-		var deferred = q.defer();		z
+		var deferred = q.defer();
 		var value = JSON.parse(req.body.fldvalue);
 		var obj = {
 			"docType": "setup",
