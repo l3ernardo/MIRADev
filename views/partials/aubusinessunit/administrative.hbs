@@ -6,13 +6,14 @@
 			<tr>
 				<td width="25%"><label for="RGRollup">Reporting group rollup included in this assessment:</label></td>
 				<td>
-					<span><input type="text" name="RGRollup" value="{{RGRollup}}" size="100" maxlength="300"></span>
+					<input type="hidden" id="RGRollup" name="RGRollup" value="{{RGRollup}}">
+					{{{multiSelect "rgrlist" ReportingGroupList "docid" "name" "scopeRGR"}}}
 				</td>
 			</tr>
 		{{else}}
 			<tr>
 				<td width="25%">Reporting group rollup included in this assessment:</td>
-				<td>{{RGRollup}}</td>
+				<td>{{RGRollupDisp}}</td>
 			</tr>
 		{{/if}}
 	</table>
@@ -21,7 +22,7 @@
 	<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 		<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
 		<tr>
-			<td width="25%">Reporting group rollup included in this assessment:</td><td>{{RGRollup}}</td>
+			<td width="25%">Reporting group rollup included in this assessment:</td><td>{{RGRollupDisp}}</td>
 		</tr>
 	</table>
 {{/if}}

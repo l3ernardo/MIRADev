@@ -11,15 +11,7 @@
 					<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
 					<input type="hidden" name="Country" id="Country" value="{{Country}}">
 					<input type="hidden" name="Countryid" id="Countryid" value="{{Countryid}}">
-					<select id="countryname">
-						{{#each CountryList}}
-							{{#if_equal name ../Country}}
-								<option value="{{docid}}" selected>{{name}}</option>
-							{{else}}
-								<option value="{{docid}}">{{name}}</option>
-							{{/if_equal}}
-						{{/each}}
-					</select>
+					{{{uniqueSelect "countryname" CountryList "docid" "name" Country}}}
 				</span>
 			</td>
 		</tr>
