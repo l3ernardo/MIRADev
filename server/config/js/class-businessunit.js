@@ -12,18 +12,28 @@ var businessunit = {
 	/* Display Business Units */
 	listBU: function(req, db) {
 		var deferred = q.defer();
+		var bunits = [];
 		var obj = {
 			selector:{
 				"_id": {"$gt":0},
 				"keyName": "BusinessUnit"
 			}
 		};
-		db.find(obj).then(function(data){
-			var doc = data.body.docs;
-			deferred.resolve({"status": 200, "doc": doc});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
-		});
+		try{
+			db.find(obj).then(function(data){
+				var doc = data.body.docs[0].value;
+				for (i=0; i<doc.length; i++){
+					if(doc[i].option == "enable"){
+						bunits.push({name : doc[i].businessUnit});
+					}
+				}
+				deferred.resolve({"status": 200, "bunits": bunits});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
 		return deferred.promise;
 	},
 	/* Save parameter in session */
@@ -42,7 +52,7 @@ var businessunit = {
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});	
-		return deferred.promise;		
+		return deferred.promise;
 	},
 	getMenu: function(req,db) {
 		var deferred = q.defer();
