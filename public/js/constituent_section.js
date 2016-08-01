@@ -1,15 +1,6 @@
-function font_white(searchText){
-  var tags = document.getElementsByTagName("a");
-  for (var i = 0; i < tags.length; i++) {
-    var1=tags[i].textContent;
-    if  (var1.indexOf(searchText)!=-1){
-      tags[i].style.color='#ffffff';
-      break;
-    }
-  }
-}
+/* Start of Business Unit Functions */
 // Add listeners to the constinuents tabs
-function addEventsConstituent(){
+function addEventsConstituentBU(){
 	document.getElementById('GlobalProcess-li').addEventListener('click',function()
 	{
 		document.getElementById('GlobalProcess').style.display="";
@@ -63,7 +54,7 @@ function addEventsConstituent(){
 	},true);
 }
 // Display the selected tab
-function displaySelectedConstituent(){
+function displaySelectedConstituentBU(){
   var url = parent.location.href;
   s=url.indexOf("GlobalProcess");
   if (s!=-1){
@@ -90,10 +81,144 @@ function displaySelectedConstituent(){
       document.getElementById('ControllableUnits').style.display="";
     }
   }
+}
+/* End of Business Unit Functions */
 
+/* Start of BU IOT Functions */
+// Add listeners to the constinuents tabs for BU IOT
+function addEventsConstituentBUIOT(){
+  document.getElementById('BUIMTs-li').addEventListener('click',function()
+	{
+	  document.getElementById('BUIMTs').style.display="";
+	  document.getElementById('IOTCUs').style.display="none";
+
+	  document.getElementById('BUIMTs-li').className="ibm-active";
+	  document.getElementById('IOTCUs-li').className="";
+	},true);
+  document.getElementById('IOTCUs-li').addEventListener('click',function()
+	{
+	  document.getElementById('BUIMTs').style.display="none";
+	  document.getElementById('IOTCUs').style.display="";
+
+	  document.getElementById('BUIMTs-li').className="";
+	  document.getElementById('IOTCUs-li').className="ibm-active";
+	},true);
 }
 
+// Display the selected tab
+function displaySelectedConstituentBUIOT(){
+  var url = parent.location.href;
+  if (url.indexOf("BUIMTs")!=-1){
+    obj= document.getElementById('BUIMTs-li');
+    if(obj){
+      document.getElementById('BUIMTs').style.display="";
+    }
+  }
+  if (url.indexOf("IOTCUs")!=-1){
+    obj= document.getElementById('IOTCUs-li');
+    if(obj){
+      document.getElementById('IOTCUs').style.display="";
+    }
+  }
+}
+/* End of BU IOT Functions */
+
+/* Start of BU IMT Functions */
+// Add listeners to the constinuents tabs for BU IMT
+function addEventsConstituentBUIMT(){
+  document.getElementById('BUCountries-li').addEventListener('click',function()
+	{
+	  document.getElementById('BUCountries').style.display="";
+	  document.getElementById('IMTCUs').style.display="none";
+
+	  document.getElementById('BUCountries-li').className="ibm-active";
+	  document.getElementById('IMTCUs-li').className="";
+	},true);
+  document.getElementById('IMTCUs-li').addEventListener('click',function()
+	{
+	  document.getElementById('BUCountries').style.display="none";
+	  document.getElementById('IMTCUs').style.display="";
+
+	  document.getElementById('BUCountries-li').className="";
+	  document.getElementById('IMTCUs-li').className="ibm-active";
+	},true);
+}
+
+// Display the selected tab
+function displaySelectedConstituentBUIMT(){
+  var url = parent.location.href;
+  if (url.indexOf("BUCountries")!=-1){
+    obj= document.getElementById('BUCountries-li');
+    if(obj){
+      document.getElementById('BUCountries').style.display="";
+    }
+  }
+  if (url.indexOf("IMTCUs")!=-1){
+    obj= document.getElementById('IMTCUs-li');
+    if(obj){
+      document.getElementById('IMTCUs').style.display="";
+    }
+  }
+}
+/* End of BU IMT Functions */
+
+/* Start of Country Functions */
+// Add listeners to the constinuents tabs for Country Process
+function addEventsConstituentCP(){
+  document.getElementById('CPKeyControls-li').addEventListener('click',function()
+	{
+	  document.getElementById('CPKeyControls').style.display="";
+	  document.getElementById('CPCUs').style.display="none";
+
+	  document.getElementById('CPKeyControls-li').className="ibm-active";
+	  document.getElementById('CPCUs-li').className="";
+	},true);
+  document.getElementById('CPCUs-li').addEventListener('click',function()
+	{
+	  document.getElementById('CPKeyControls').style.display="none";
+	  document.getElementById('CPCUs').style.display="";
+
+	  document.getElementById('CPKeyControls-li').className="";
+	  document.getElementById('CPCUs-li').className="ibm-active";
+	},true);
+}
+
+// Display the selected tab
+function displaySelectedConstituentCP(){
+  var url = parent.location.href;
+  if (url.indexOf("CPKeyControls")!=-1){
+    obj= document.getElementById('CPKeyControls-li');
+    if(obj){
+      document.getElementById('CPKeyControls').style.display="";
+    }
+  }
+  if (url.indexOf("CPCUs")!=-1){
+    obj= document.getElementById('CPCUs-li');
+    if(obj){
+      document.getElementById('CPCUs').style.display="";
+    }
+  }
+}
+/* End of Country Functions */
+
+/* main */
 $(document).ready(function() {
-	addEventsConstituent();
-	window.addEventListener("load", displaySelectedConstituent());
+  switch ($("input[name='docsubtype']").val()) {
+    case "Business Unit":
+    	addEventsConstituentBU();
+    	window.addEventListener("load", displaySelectedConstituentBU());
+      break;
+    case "BU IOT":
+      addEventsConstituentBUIOT();
+    	window.addEventListener("load", displaySelectedConstituentBUIOT());
+      break;
+	  case "BU IMT":
+      addEventsConstituentBUIMT();
+    	window.addEventListener("load", displaySelectedConstituentBUIMT());
+      break;
+		case "Country Process":
+      addEventsConstituentCP();
+    	window.addEventListener("load", displaySelectedConstituentCP());
+      break;
+  }
 });

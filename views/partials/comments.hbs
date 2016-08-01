@@ -1,0 +1,40 @@
+{{#if editmode}}
+{{!-- Comments section - Edit Mode --}}
+	<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<tr>
+			<td width="20%"><label for="Notes">Notes:</label></td>
+			<td>
+				<div class='yui-skin-sam'>
+					<span><textarea id="Notes" type="text" name="Notes" cols="125" rows="8">{{Notes}}</textarea></span>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td width="20%">Links:</td><td>
+			<input id='attachIDs' name='attachIDs' value="{{Links}}" type="hidden">
+			<span id="attachments"></span>
+			<script>$(document).ready(function() {linkAttachments('attachments','docid'); loadAttachments('attachIDs');});</script>
+			</td>
+		</tr>
+	</table>
+{{else}}
+{{!-- Comments section - Read Mode --}}
+	<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<tr>
+			<td width="20%"><label for="Notes">Notes:</label></td>
+			<td>
+				<input type="hidden" name="NotesRO" value="{{Notes}}">
+				<div id="NotesReadOnly"></div>
+			</td>
+		</tr>
+		<tr>
+			<td width="20%">Links:</td>
+			<td>
+				<input id='attachIDs' name='attachIDs' value="{{Links}}" type="hidden">
+				<span id="attachments"></span>
+				<script>$(document).ready(function() {linkAttachments('attachments','docid'); loadAttachments('attachIDs');});</script>
+			</td>
+			</td>
+		</tr>
+	</table>
+{{/if}}

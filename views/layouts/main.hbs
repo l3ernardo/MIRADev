@@ -19,6 +19,8 @@
 		<meta name="Robots" content="index,follow" />
 		<meta name="Owner" content="" />
 		<meta name="IBM.Country" content="US" />
+		<meta http-equiv="Cache-Control" content="no-store" />
+		<meta http-equiv="Pragma" content="no-store" />
 		<title>MIRA</title>
 
 		<link href="//1.w3.s81c.com/common/v17/css/w3.css" rel="stylesheet" title="w3" type="text/css" />
@@ -29,13 +31,15 @@
 
 		<script src='./lib/jquery-2.1.1.min.js'></script>
 		<script src="./lib/jquery-ui.min.js"></script>
+		<link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+		<script src="./lib/jquery.treetable.js"></script>
 		<!--<link href='./css/index.css' rel='stylesheet' />-->
 		
 	</head>
 	<body id="ibm-com">
 		<div id="ibm-top" class="">
 			<!-- MASTHEAD_BEGIN -->
-			{{>masthead}}
+			{{>masthead user=session.user}}
 			<!-- MASTHEAD_END -->
 			<div id="ibm-pcon" style="width:80%">
 				<!-- CONTENT_BEGIN -->
@@ -43,7 +47,7 @@
 					<div id="ibm-leadspace-head" class="ibm-alternate">
 						<div id="ibm-leadspace-body">
 							<div id="ibm-leadspace-body">
-								<ul id="ibm-navigation-trail" aria-label="Bread Crumbs"><li><a href="/index">MIRA</a></li></ul>
+								<ul id="ibm-navigation-trail" aria-label="Bread Crumbs"><li><a href="/index">MIRA</a></li><li id="breadcrumb"></li></ul>
 								<br/>
 								<h3 class="ibm-confidential">IBM Confidential</h3>
 								<h1 id="pageTitle"></h1>

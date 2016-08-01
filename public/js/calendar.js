@@ -1,4 +1,14 @@
+var optCal = parent.location.href;
+optCal = optCal.split('/');
+optCal = optCal[optCal.length -1];
+optCal = optCal.replace('?','').replace('=','');
+
+
 $(document).ready(function() {
+	if(optCal == "calendaridall"){
+		$('#eventLinks').html('');
+		$('h1#pageTitle').text("Integrated");
+	}
 	//meeting button event
 	$('#btn_meeting').click(function() {
 		clearFields();
@@ -27,8 +37,8 @@ $(document).ready(function() {
 
 	//button submit
 	$('#btn_submit').click(function() {
-		var opt = parent.location.href;
 		if ($('#title').val() != '' && $('#startDate').val() != '') {
+			ibmweb.overlay.show('divSavingImg');
 			var form = $('#formCalendar');
 			$.ajax({
 				url: "/saveEvent",
@@ -36,11 +46,13 @@ $(document).ready(function() {
 				data: form.serialize(),
 				processData: false,
 				success: function (data) {
+					ibmweb.overlay.hide('divSavingImg');
 					ibmweb.overlay.hide('Overlay_Event');
 					$('#calendar').fullCalendar('refetchEvents');
 					alert("Event saved successfully");
 				},
 				error: function() {
+					ibmweb.overlay.hide('divSavingImg');
 					alert("There was an error when saving the Event");
 					e.preventDefault();
 					e.stopImmediatePropagation();
@@ -53,38 +65,52 @@ $(document).ready(function() {
 	
 	//button cancel
 	$('#btn_cancel').click(function() {
-		ibmweb.overlay.hide('Overlay_Event');
-		$('#btn_submit').prop("disabled", true);
+		if($('#id').val()=="" && $('#attachIDs').val()!="" && $('#attachIDs').val()!="[]"){
+			ibmweb.overlay.show('divDeleteImg');
+			$.ajax({
+				url: "/cancelEvent",
+				type: 'GET',
+				data: { attachIDs: $('#attachIDs').val() },
+				contentType: 'application/json',
+				success: function (data) {
+					ibmweb.overlay.hide('divDeleteImg');
+					ibmweb.overlay.hide('Overlay_Event');
+					$('#calendar').fullCalendar('refetchEvents');
+				},
+				error: function() {
+					ibmweb.overlay.hide('divDeleteImg');
+					alert("There was an error when deleting the Attachment(s)");
+				}
+			});
+		}else{
+			ibmweb.overlay.hide('Overlay_Event');
+			$('#btn_submit').prop("disabled", true);
+		}
 	});
 
 	//button delete
 	$('#btn_delete').click(function() {
 		var r = confirm("Are you sure you want to delete the event?");
-		
 		if (r == true) {
+			ibmweb.overlay.show('divDeleteImg');
 			$.ajax({
 				url: "/deleteEvent",
 				type: 'GET',
 				data: { id: $('#id').val(), rev: $('#rev').val() },
 				contentType: 'application/json',
 				success: function (data) {
+					ibmweb.overlay.hide('divDeleteImg');
 					ibmweb.overlay.hide('Overlay_Event');
 					$('#calendar').fullCalendar('refetchEvents');
 					alert("Event deleted successfully");
 				},
 				error: function() {
+					ibmweb.overlay.hide('divDeleteImg');
 					alert("There was an error when deleting the Event");
 				}
 			});
 		}
 	});
-
-	var opt = parent.location.href;
-	opt = opt.split('?');
-	opt = opt[opt.length -1];
-	if(opt != "id=all"){
-		$('#eventLinks').show();
-	}
 	
 	$('#calendar').fullCalendar({
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -104,30 +130,35 @@ $(document).ready(function() {
 		},
 
 		editable: true,
-		events: ('/getEvents?'+opt),
+		events: {
+			url:'/getEvents?id='+optCal, 
+			success: function(data){
+				for (var i in data) {
+					if(data[i].eventType == "Milestone"){
+						data[i].color = "#17af4b";
+					}
+				}
+			}
+		},
 
 		eventRender: function (event, element) {
 			element.attr('href', 'javascript:void(0);');
 			element.click(function() {
 				clearFields();
 				//enable submit and cancel button if they are disabled
-				$('#btn_submit').prop("disabled", false);
 				$('#btn_cancel').prop("disabled", false);
-				$('#btn_delete').prop("disabled", false);
-				$('#btn_delete').show();
+				
+				$('#eTitle').text(event.eventType);
+				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + event.log[0].name + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
 				$('#id').val(event._id);
 				$('#rev').val(event._rev);
-				$('#title').val(event.title);
-				$('#startDate').val(event.start.format("MM/DD/YYYY"));
-				$('#endDate').val(event.end.format("MM/DD/YYYY"));
 				$('#eventType').val(event.eventType);
-				$('#eventInfo').val(event.eventInfo);
-				$('#owner').val(event.owner);
 				$('#ownerId').val(event.ownerId);
-				// get creationBy and creationDate
+				
+				$('#eventInfo').val(event.eventInfo);
 				$('#attachIDs').val(event.attachIDs);
 				$('input[type=checkbox]').prop('checked', false);
-				$('#eTitle').text(event.eventType);
+				
 				if (event.targetCalendar) {
 					var regions = event.targetCalendar;
 					if (typeof regions === 'string') {
@@ -138,13 +169,56 @@ $(document).ready(function() {
 							if (regions[i] == this.value) {
 								this.checked = true;
 							}
-							
+							//Hide the owner one
+							var lblOwner = eval("$('label[for="+this.value+"')");
+							lblOwner.show();
+							this.style = "";
 						});
 					}
+					var lblOwner = eval("$('label[for="+event.ownerId+"')");
+					lblOwner.hide();
+					var idOwner = eval("$('input[value="+event.ownerId+"')");
+					idOwner.hide();
+				}
+				if($('input[name=editmode]').val()==1){
+					$('#btn_submit').prop("disabled", false);
+					$('#btn_delete').prop("disabled", false);
+					$('#title').val(event.title);
+					$('#owner').val(event.owner);
+					$('#startDate').val(event.start.format("MM/DD/YYYY"));
+					$('#endDate').val(event.end.format("MM/DD/YYYY"));
+					$('input[type=checkbox]').prop('disabled', false);
+				
+				}else{
+					$('#title').html(event.title);
+					$('#owner').html(event.owner);
+					$('#startDate').html(event.start.format("MM/DD/YYYY"));
+					$('input[type=checkbox]').prop('disabled', true);
+				
 				}
 				loadAttachments('attachIDs');
 				ibmweb.overlay.show('Overlay_Event');
 			});
+		},
+		
+		eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
+			var allow = $('input[name=editmode]').val();
+			if(allow == "1"){
+				if (!confirm(event.title + " was moved to: " + event.start.format("MM/DD/YYYY") + ". Are you sure about this change?")) {
+					$('#calendar').fullCalendar('refetchEvents');
+				}else{
+					var aLink = jsEvent.target.parentElement.parentElement;
+					var obj = eval("$('a#" + aLink.id + "')");
+					obj.click();
+					$('#btn_submit').click();
+				}
+			}else{
+				alert("You are not allowed to move a Calendar Event.");
+				$('#calendar').fullCalendar('eventRender');
+			}
+		},
+		loading: function(bool) {
+			$('#loading').toggle(bool);
 		}
 	}); //end var calendar
 
@@ -156,19 +230,12 @@ $(document).ready(function() {
 			var arrTCalenIds = [];
 			for (var i in resp) {
 				var url = parent.location.href;
-				//Load only the other calendars
-				if(url.indexOf(resp[i].link) < 0){
-					arrTCalen.push(resp[i].name);
-					arrTCalenIds.push(resp[i].id);
-				}
-				else{
-					$('#owner').val(resp[i].name);
-					$('#ownerId').val(resp[i].id);
+				//Load other calendars
+				arrTCalen.push(resp[i].name);
+				arrTCalenIds.push(resp[i].id);
+				if(url.indexOf(resp[i].link) >= 0){
 					$('h1#pageTitle').text(resp[i].name);
 				}
-					
-				
-				
 			}
 			loadTargetCalendars(arrTCalen, arrTCalenIds);
 		},
@@ -182,35 +249,44 @@ $(document).ready(function() {
 function clearFields(){
 	$('#btn_submit').prop("disabled", false);
 	$('#btn_cancel').prop("disabled", false);
-	$('#btn_delete').hide();
 	$('#id').val('');
 	$('#rev').val('');
 	$('#title').val('');
-	$('#start').val('');
-	$('#end').val('');
+	$('#startDate').val('');
+	$('#endDate').val('');
 	$('#eventInfo').val('');
 	$('#attachIDs').val('');
 	$('#divDownload').html('');
 	resetAttachments();
 	$('input[type=checkbox]').prop('checked', false);
+	
+	$('input[type=checkbox]').each(function() {
+		var lblOwner = eval("$('label[for="+this.id+"')");
+		if(this.value == optCal){
+			lblOwner.hide();
+			this.style = "display:none";
+		}else{
+			lblOwner.show();
+			this.style = "";
+		}
+	});
+	
+	$('#owner').val($('h1#pageTitle').text());
+	$('#ownerId').val(optCal);
+
 }
 
 function loadTargetCalendars(names, ids) {
-	var opt = parent.location.href;
-	opt = opt.split('id=');
-	opt = opt[opt.length -1];
 	var container = document.getElementById('divTarCal');
 	var count = 1;
 	var tbody = '';
 	for (var i in names) {
-		if(ids[i] != opt){
-			tbody += '<input id="' + ids[i] + '" name="chkTarCal" value="' + ids[i] + '" type="checkbox">';
-			tbody += '<label for="' + ids[i] + '">'  + names[i] + '</label>';
-			if ((count % 5) == 0) {
-				tbody += '<br/>';
-			}
-			count++;
+		tbody += '<input id="' + ids[i] + '" name="chkTarCal" value="' + ids[i] + '" type="checkbox">';
+		tbody += '<label for="' + ids[i] + '">'  + names[i] + '</label>';
+		if ((count % 5) == 0) {
+			tbody += '<br/>';
 		}
+		count++;
 	}
 	container.innerHTML = tbody;
 }

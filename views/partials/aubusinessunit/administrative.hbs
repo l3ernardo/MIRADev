@@ -1,0 +1,28 @@
+{{#if editmode}}
+{{!-- AUBUSINESSUNIT form - Administrative Use Only section - Edit Mode --}}
+	<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+		{{#if admin}}
+			<tr>
+				<td width="25%"><label for="RGRollup">Reporting group rollup included in this assessment:</label></td>
+				<td>
+					<input type="hidden" id="RGRollup" name="RGRollup" value="{{RGRollup}}">
+					{{{multiSelect "rgrlist" ReportingGroupList "docid" "name" "scopeRGR"}}}
+				</td>
+			</tr>
+		{{else}}
+			<tr>
+				<td width="25%">Reporting group rollup included in this assessment:</td>
+				<td>{{RGRollupDisp}}</td>
+			</tr>
+		{{/if}}
+	</table>
+{{else}}
+{{!-- AUBUSINESSUNIT form - Administrative Use Only section - Read Mode --}}
+	<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+		<tr>
+			<td width="25%">Reporting group rollup included in this assessment:</td><td>{{RGRollupDisp}}</td>
+		</tr>
+	</table>
+{{/if}}

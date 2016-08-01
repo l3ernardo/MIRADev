@@ -1,11 +1,13 @@
 <script src="/js/assessableunit.js" type="text/javascript"></script>
 <script src="/js/constituent_section.js" type="text/javascript"></script>
+<script src="/js/multiselect.js" type="text/javascript"></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <!-- JS for attachments widget -->
 <script src="./js/attachments.js"/></script>
 <!-- JS and CSS for owner, editors and readers / bluepages widget -->
 <script src="./js/owner.js"/></script>
 <script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="./css/multiselect.css" />
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <link rel="stylesheet" href="./css/jquery-ui.min.css">
@@ -35,227 +37,24 @@
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
-	<form id="assessableunit" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebuau">
+	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" value="{{_id}}">
+		<input type="hidden" name="editmode" value="{{editmode}}">
+		<input type="hidden" name="docsubtype" value="{{DocSubType}}">
+		<input type="hidden" name="close" id="close" value="0">
 		<!-- BASICS SECTION -->
-		<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-			<caption class="mira-caption"><em>Basics</em></caption>
-			<tr>
-				<td width="25%">Status:</td><td>{{Status}}</td>
-			</tr>
-			<tr>
-				<td>Business Unit:</td><td>{{BusinessUnit}}</td>
-			</tr>
-			<tr>
-				<td>Current reporting period:</td><td>{{CurrentPeriod}}</td>
-			</tr>
-		</table>
+		{{>aubusinessunit/basics}}
 		<!-- ADMIN TABLE -->
-		<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-			<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
-			<tr>
-				<td width="25%"><label for="RGRollup">Reporting group rollup included in this assessment:</label></td>
-				<td>
-					<span><input type="text" name="RGRollup" value="{{RGRollup}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-		</table>
+		{{>aubusinessunit/administrative}}
 		<!-- ACCESS SECTION -->
-		<table id="access_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-			<caption class="mira-caption"><em>Contact/Access</em></caption>
-			<tr>
-				<td width="25%">Owner:</td><td><div id="Owner">{{Owner}}</div>
-				<script>$(document).ready(function() {updateOwner();});</script>
-				</td>
-			</tr>
-			<tr>
-				<td>Focals:</td><td>{{Focals}}</td>
-			</tr>
-			<tr>
-				<td>Coordinators:</td><td>{{Coordinators}}</td>
-			</tr>
-			<tr>
-				<td>Readers:</td><td>{{Readers}}</td>
-			</tr>
-			<tr>
-				<td>Additional editors:</td>
-				<td>
-					<div class="ui-widget">
-					<input id="editorname" class="ui-autocomplete-input" autocomplete="off" >
-					<a class="ibm-delete-link" href="#" onclick="removeItem($('#editorname'),$('#editorlist'))">Delete</a>
-					<script>$(document).ready(function() {bpLookup('#editorname','#editorlist');});</script>
-					</div>
-					<textarea id="editorlist" name="editorlist" rows="4" cols="100" onfocus="this.blur()">{{AdditionalEditors}}</textarea>
-				</td>
-			</tr>
-			<tr>
-				<td>Additional readers:</td>
-				<td>
-					<div class="ui-widget">
-						<input id="readername" class="ui-autocomplete-input" autocomplete="off" >
-						<a class="ibm-delete-link" href="#" onclick="removeItem($('#readername'),$('#readerlist'))">Delete</a>
-						<script>$(document).ready(function() {bpLookup('#readername','#readerlist');});</script>
-					</div>
-					<textarea id="readerlist" name="readerlist" rows="4" cols="100" onfocus="this.blur()">{{AdditionalReaders}}</textarea>
-				</td>
-			</tr>
-		</table>
+		{{>contact}}
 		<!-- ASSESSMENT SECTION -->
-		<table id="assessment_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-			<caption class="mira-caption"><em>Holistic Assessment</em></caption>
-			<tr>
-				<td width="25%"><b class="ibm-important">{{CurrentPeriod}}</b> Rating justification:</td><td>{{Owner}}</td>
-			</tr>
-		</table>
-		<!-- assessment view -->
-		<div class="ibm-columns ibm-graphic-tabs">
-			<table id="assessmentview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="mira-subtable">
-					<th scope="col">Period</th>
-					<th scope="col">Rating</th>
-					<th scope="col">Assessed by</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each AssessmentData}}
-				<tr>
-					{{#each col}}<td>{{this}}</td>{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
+		{{>assessment}}
 		<!-- CONSTITUENT SECTION -->
-		<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-			<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
-		</table>
-		<div class="ibm-columns ibm-graphic-tabs">
-			<div class="ibm-tab-section">
-				<ul class="ibm-tabs">
-					<li id="GlobalProcess-li" class="ibm-active"><a href="#constituents">Global Process</a></li>
-					<li id="BUIOTs-li"><a href="#constituents">BU IOTs</a></li>
-					<li id="BUReportingGroups-li"><a href="#constituents">BU Reporting Groups</a></li>
-					<li id="ControllableUnits-li"><a href="#constituents">Controllable Units</a></li>
-				</ul>
-			</div>			
-			<div id="GlobalProcess" class="ibm-tabs-content">
-				<table id="globalprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-					<thead class="mira-basic">
-						<th scope="col">Name</th>
-						<th scope="col">Status</th>
-						<th scope="col">Prior Qtr</th>
-						<th scope="col">Current Qtr</th>
-						<th scope="col">Outlook</th>
-						<th scope="col">Target to Sat</th>
-					</thead>
-					{{#each GPData}}
-					<tr>
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{this}}</td>
-							{{/if}}
-						{{/each}}
-					</tr>
-					{{/each}}
-				</table>
-			</div>
-			<div id="BUIOTs" class="ibm-tabs-content" style='display : none'>
-				<table id="iots_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-					<thead class="bu-iot">
-						<th scope="col">Name</th>
-						<th scope="col">Status</th>
-						<th scope="col">Prior Qtr</th>
-						<th scope="col">Current Qtr</th>
-						<th scope="col">Outlook</th>
-						<th scope="col">Target to Sat</th>
-					</thead>
-					{{#each BUIOTData}}
-					<tr>
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{this}}</td>
-							{{/if}}
-						{{/each}}
-					</tr>
-					{{/each}}
-				</table>
-			</div>
-			<div id="BUReportingGroups" class="ibm-tabs-content" style='display : none'>
-				<table id="reportinggroups_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-					<thead class="reporting-group">
-						<th scope="col">Type</th>
-						<th scope="col">Name</th>
-						<th scope="col">Status</th>
-						<th scope="col">Prior Qtr</th>
-						<th scope="col">Current Qtr</th>
-						<th scope="col">Outlook</th>
-						<th scope="col">Target to Sat</th>
-					</thead>
-					{{#each RGData}}
-					<tr>
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{this}}</td>
-							{{/if}}
-						{{/each}}
-					</tr>
-					{{/each}}
-				</table>
-			</div>
-			<div id="ControllableUnits" class="ibm-tabs-content" style='display : none'>
-				<table id="controallableunits_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-					<thead class="controllable-unit">
-						<th scope="col">Name</th>
-						<th scope="col">Status</th>
-						<th scope="col">Prior Qtr</th>
-						<th scope="col">Current Qtr</th>
-						<th scope="col">Outlook</th>
-						<th scope="col">Target to Sat</th>
-					</thead>
-					{{#each CUData}}
-					<tr>
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{this}}</td>
-							{{/if}}
-						{{/each}}
-					</tr>
-					{{/each}}
-				</table>
-			</div>
-		
-		</div>
+		{{>aubusinessunit/constituent}}
 		<!-- NOTES & LINKS SECTION -->
-		<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-			<tr>
-				<td width="20%"><label for="Notes">Notes:</label></td>
-				<td>
-					<div class='yui-skin-sam'>
-						<span><textarea id="Notes" type="text" name="Notes" cols="125" rows="8">{{Notes}}</textarea></span>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td width="20%">Links:</td><td>
-				<input id='attachIDs' name='attachIDs' type="hidden">
-				<span id="attachments"></span>
-				<script>$(document).ready(function() {linkAttachments('attachments','docid'); loadAttachments('attachIDs');});</script>
-				</td>
-			</tr>
-		</table>
+		{{>comments}}
 		<!-- BUTTONS AREA -->
-		<div class="ibm-buttons-row">
-			<p>
-				<input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Submit"/>
-				<span class="ibm-sep">&nbsp;</span>
-				<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Cancel" />
-			</p>
-		</div>
+		{{>buttons}}
 	</form>
 </div>
