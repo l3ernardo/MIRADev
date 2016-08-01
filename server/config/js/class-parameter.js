@@ -93,7 +93,8 @@ var parameters = {
 			db.find(obj).then(function(data){
 				var parameters = data.body.docs;
 				for (var i = 0; i < parameters.length; ++i) {
-					valParam.push({"keyName" : parameters[i].keyName, "options" : parameters[i].value.options});
+					eval("valParam."+parameters[i].keyName+" = [];");
+					eval('valParam.'+parameters[i].keyName+'.push({"keyName" : parameters[i].keyName, "options" : parameters[i].value.options});');
 				}
 				deferred.resolve({"status": 200, "parameters": valParam})
 			}).catch(function(err) {
@@ -107,7 +108,7 @@ var parameters = {
 	},
 	/* Save parameter in cloudant */
 	saveParam: function(req, db) {
-		var deferred = q.defer();		
+		var deferred = q.defer();
 		var value = JSON.parse(req.body.fldvalue);
 		var obj = {
 			"docType": "setup",

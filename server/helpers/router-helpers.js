@@ -14,7 +14,7 @@ var register = function(Handlebars) {
 			var arr='';
 
 			for(i=0;i<dataSel.length;i++){
-				arr = arr+'<br /><li><input type="checkbox" id="'+ idSpan + eval('dataSel[i].' + id) +'" name="'+eval('dataSel[i].'+name)+'" value="'+eval('dataSel[i].'+id)+'" />'+eval('dataSel[i].'+name)+'</li>';
+				arr += '<br /><li><input type="checkbox" id="'+ idSpan + eval('dataSel[i].' + id) +'" name="'+eval('dataSel[i].'+name)+'" value="'+eval('dataSel[i].'+id)+'" />'+eval('dataSel[i].'+name)+'</li>';
 			}
 
 			var ddEle='<dl class="dropdown"><dt><a name="'+scope+'" href="javascript:void(0)"><span id="'+scope+'Sel" class="hida">Select</span><span id="'+idSpan+
@@ -23,6 +23,30 @@ var register = function(Handlebars) {
 				arr+
 				'</ul></div></dd></dl>';
 			return ddEle;
+		},
+		uniqueSelect: function(idSelect, list, optvalue, optname, optsel) {
+			var dataSel = list;
+			var arr='';
+			var listvalue, listname;
+			for(i=0;i<dataSel.length;i++){
+				listvalue = eval('dataSel[i].' + optvalue);
+				listname = eval('dataSel[i].' + optname);
+				if(listname==optsel){
+					arr += '<option value="' + listvalue + '" selected>' + listname + '</option>';
+				}else{
+					arr += '<option value="' + listvalue + '">' + listname + '</option>';
+				}
+			}
+
+			var selElem = '<select id="'+idSelect+'" name="'+idSelect+'">'+
+				arr +
+				'</select>';
+
+			return selElem;
+		},
+		if_equal: function(a, b, opts) {
+			if(a == b) return opts.fn(this);
+     	else return opts.inverse(this);
 		},
 		submenu: function () {
 			if(app.locals.submenu) {

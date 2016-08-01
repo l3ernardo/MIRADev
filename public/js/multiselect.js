@@ -7,38 +7,44 @@
 $(document).ready(function() {
 
   if ($("input[name='editmode']").val() == 1) {
-    //list current BU Countries included in this assesment
-    if ( $("input[name='BUCountryIOT']").val() != "") {
-      var units = $("input[name='BUCountryIOT']").val().split(",");
-      for (var i = 0; i < units.length; ++i) {
-        var title = $("#buclist" + units[i]).prop('name') + ",";
-        var html = '<span id="scopeBUC'+units[i]+'" title="' + title + '">' + title + '</span>';
-        $('#buclist').append(html);
-        $("#buclist" + units[i]).prop('checked', true);
+    //list current BU Countries included in this assesment - for BU IOT only
+    if ($("input[name='docsubtype']").val() == "BU IOT") {
+      if ( $("input[name='BUCountryIOT']").val() != "") {
+        var units = $("input[name='BUCountryIOT']").val().split(",");
+        for (var i = 0; i < units.length; ++i) {
+          var title = $("#buclist" + units[i]).prop('name') + ",";
+          var html = '<span id="scopeBUC'+units[i]+'" title="' + title + '">' + title + '</span>';
+          $('#buclist').append(html);
+          $("#buclist" + units[i]).prop('checked', true);
+        }
+        $("#scopeBUCSel").hide();
       }
-      $("#scopeBUCSel").hide();
     }
-    //list current BU Reporting Groups
-    if ( $("input[name='BRGMembership']").val() != "") {
-      var units = $("input[name='BRGMembership']").val().split(",");
-      for (var i = 0; i < units.length; ++i) {
-        var title = $("#brglist" + units[i]).prop('name') + ",";
-        var html = '<span id="scopeBRG'+units[i]+'" title="' + title + '">' + title + '</span>';
-        $('#brglist').append(html);
-        $("#brglist" + units[i]).prop('checked', true);
+    //list current BU Reporting Groups- for BU IOT, BU IMT, BU Country, Global Process, Country Process and Controllable Unit
+    if ($("input[name='docsubtype']").val() == "BU IOT" || $("input[name='docsubtype']").val() == "BU IMT" || $("input[name='docsubtype']").val() == "BU Country" || $("input[name='docsubtype']").val() == "Global Process" || $("input[name='docsubtype']").val() == "Country Process" || $("input[name='docsubtype']").val() == "Controllable Unit") {
+      if ( $("input[name='BRGMembership']").val() != "") {
+        var units = $("input[name='BRGMembership']").val().split(",");
+        for (var i = 0; i < units.length; ++i) {
+          var title = $("#brglist" + units[i]).prop('name') + ",";
+          var html = '<span id="scopeBRG'+units[i]+'" title="' + title + '">' + title + '</span>';
+          $('#brglist').append(html);
+          $("#brglist" + units[i]).prop('checked', true);
+        }
+        $("#scopeBRGSel").hide();
       }
-      $("#scopeBRGSel").hide();
     }
-    //list current BU Reporting Groups included in this assessment
-    if ( $("input[name='RGRollup']").val() != "") {
-      var units = $("input[name='RGRollup']").val().split(",");
-      for (var i = 0; i < units.length; ++i) {
-        var title = $("#rgrlist" + units[i]).prop('name') + ",";
-        var html = '<span id="scopeRGR'+units[i]+'" title="' + title + '">' + title + '</span>';
-        $('#rgrlist').append(html);
-        $("#rgrlist" + units[i]).prop('checked', true);
+    //list current BU Reporting Groups included in this assessment - for BU IOT and Business Unit only
+    if ($("input[name='docsubtype']").val() == "BU IOT" || $("input[name='docsubtype']").val() == "Business Unit" || $("input[name='docsubtype']").val() == "Global Process") {
+      if ( $("input[name='RGRollup']").val() != "") {
+        var units = $("input[name='RGRollup']").val().split(",");
+        for (var i = 0; i < units.length; ++i) {
+          var title = $("#rgrlist" + units[i]).prop('name') + ",";
+          var html = '<span id="scopeRGR'+units[i]+'" title="' + title + '">' + title + '</span>';
+          $('#rgrlist').append(html);
+          $("#rgrlist" + units[i]).prop('checked', true);
+        }
+        $("#scopeRGRSel").hide();
       }
-      $("#scopeRGRSel").hide();
     }
   }
 

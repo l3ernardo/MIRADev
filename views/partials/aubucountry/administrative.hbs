@@ -3,13 +3,12 @@
 
 	{{#if editmode}}
 
-		{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with Admin Access --}}
+		{{!-- AU BU Country form - Administrative Use Only section - Edit Mode with Admin Access --}}
 		{{#if admin}}
 			<tr>
-				<td width="25%"><label for="BRGMembership">BU reporting groups:</label></td>
+				<td width="25%"><label for="ExcludeGeo">Exclude from Geo roll-ups?:</label></td>
 				<td>
-					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
-					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
+					<span><input type="text" name="ExcludeGeo" value="{{ExcludeGeo}}" size="100" maxlength="300"></span>
 				</td>
 			</tr>
 			<tr>
@@ -27,20 +26,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td><label for="CUFlag">Controllable Unit?:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span>
-						{{#if CUFlagYes}}
-							<input type="radio" name="CUFlag" value="Yes" id="CFYes" checked>Yes
-							<input type="radio" name="CUFlag" value="No" id="CFNo">No
-						{{else}}
-							<input type="radio" name="CUFlag" value="Yes" id="CFYes">Yes
-							<input type="radio" name="CUFlag" value="No" id="CFNo" checked>No
-						{{/if}}
-					</span>
-				</td>
-			</tr>
-			<tr>
 				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span><input type="text" name="AuditProgram" value="{{AuditProgram}}" size="100" maxlength="300"></span>
@@ -50,6 +35,13 @@
 				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="BRGMembership">BU reporting groups:</label></td>
+				<td>
+					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
+					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
 				</td>
 			</tr>
 			<tr class="internal-audits">
@@ -76,14 +68,14 @@
 
 		{{else}}
 
-			{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with no Admin Access --}}
-			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
+			{{!-- AU BU Country form - Administrative Use Only section - Edit Mode with no Admin Access --}}
+			<tr><td width="25%">Exclude from Geo roll-ups?:</td><td>{{ExcludeGeo}}</td></tr>
 			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
-			<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
 			{{#if SizeFlag}}
 				<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 			{{/if}}
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 			{{#if AuditableFlagYes}}
 				<tr>
 					<td>Internal Audits:</td>
@@ -111,14 +103,14 @@
 
 	{{else}}
 
-		{{!-- AU Country Process form - Administrative Use Only section - Read Mode --}}
-		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
+		{{!-- AU BU Country form - Administrative Use Only section - Read Mode --}}
+		<tr><td width="25%">Exclude from Geo roll-ups?:</td><td>{{ExcludeGeo}}</td></tr>
 		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
-		<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
 		{{#if SizeFlag}}
 			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 		{{/if}}
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		{{#if AuditableFlagYes}}
 			<tr>
 				<td>Internal Audits:</td>
@@ -126,7 +118,7 @@
 					<div class="ibm-columns ibm-graphic-tabs">
 						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 							<thead class="mira-subtable">
-                <th scope="col"><font color="#FFF">Engagement</font></th>
+								<th scope="col"><font color="#FFF">Engagement</font></th>
 								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
 								<th scope="col"><font color="#FFF">Rating</font></th>
 								<th scope="col"><font color="#FFF">Size</font></th>
