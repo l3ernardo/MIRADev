@@ -12,15 +12,17 @@
 			).
 			</p>
 			<br/><br/>
-			<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/savebunit">
+			<form id="form" class="ibm-column-form" name="form" method="POST" action="/savebunit">
 				<div style="text-align:left" class="ibm-form-elem-grp">
 					<label id="BULabel" style="font-size: 1.3em;" for="username">
 						Business Unit:
 						<span class="ibm-required">*</span>
 					</label>
 					<span>
-						<input type="hidden" id="selectedBU" name="selectedBU">
-						<span id="divBU"></span>
+						<!-- <input type="hidden" id="selectedBU" name="selectedBU"> -->
+						<span>
+						{{{uniqueSelect "selectedBU" bunits "name" "name" ""}}}
+						</span>
 					</span>
 				</div>
 				<br/><br/>
