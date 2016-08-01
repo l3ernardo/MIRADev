@@ -10,15 +10,7 @@
 					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
 					<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
 					<input type="hidden" name="IMTid" id="IMTid" value="{{IMTid}}">
-					<select id="imtname">
-						{{#each IMTList}}
-							{{#if_equal name ../IMT}}
-								<option value="{{docid}}" selected>{{name}}</option>
-							{{else}}
-								<option value="{{docid}}">{{name}}</option>
-							{{/if_equal}}
-						{{/each}}
-					</select>
+					{{{uniqueSelect "imtname" IMTList "docid" "name" IMT}}}
 				</span>
 			</td>
 		</tr>
