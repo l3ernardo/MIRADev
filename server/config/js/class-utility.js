@@ -269,7 +269,7 @@ var util = {
 		} else {
 			url = url+'?'+Math.random().toString()
 		}
-		console.log(url);
+		// console.log(url);
 		var options = {
 			uri: url,
 			headers: {
@@ -291,6 +291,7 @@ var util = {
 			deferred.resolve({"status": 500, "error": e});
 		}
 		return deferred.promise;		
-	}	
+	},
+
 }
 module.exports = util;
