@@ -254,6 +254,43 @@ var util = {
 			});
 		}
 		return deferred.promise;
-	}
+	},
+	/***************************************************/
+	//Generic HTTP request
+	callhttp: function(url) {
+		var deferred = q.defer();		
+		// Get URL credentials
+		var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+		var host = credentials.host;
+		var username = credentials.username;
+		var password = credentials.password;		
+		if((url).indexOf('?')!=-1) {
+			url = url+'&'+Math.random().toString()
+		} else {
+			url = url+'?'+Math.random().toString()
+		}
+		console.log(url);
+		var options = {
+			uri: url,
+			headers: {
+				'User-Agent': 'request',
+			'Authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
+			}
+		};			
+		try {
+			require('request').get(options, process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0", function(error, res, body) {
+				if (error) {
+					console.log('There was an error: '+ error);
+					deferred.reject({"status": 500, "error": error});					
+				} else {
+					console.log('Http request ran');
+					deferred.resolve({"status": 200, "doc": JSON.parse(body)});
+				}
+			});
+		} catch(e) {
+			deferred.resolve({"status": 500, "error": e});
+		}
+		return deferred.promise;		
+	}	
 }
 module.exports = util;
