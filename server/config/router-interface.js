@@ -4,60 +4,66 @@ var interface = express.Router();
 var isAuthenticated = require('./router-authentication.js');
 
 var db = require('./js/class-conn.js');
+var util = require('./js/class-utility.js');
+var varConf = require('../../configuration');
 
 /**************************************************************
 INTERFACES FUNCTIONALITY
 ***************************************************************/
 /* Validate in Login page */
 interface.get('/wwbcitdata', function(req, res) {
-	db.connect("mira-interfaces");
-	var viewname= 'view-'+req.query.id;
-	//var viewname = "view-setup";
-	db.view('wwbcitdocs', viewname, {include_docs: false}).then(function(data){
-		var len = data.body.rows.length;
-		if(len > 0){ 
+	// /showdata?designdoc=wwbcitdocs&viewname=samplesprod
+	var query = varConf.mirainterfaces+"/showdata?designdoc="+req.query.doc+"&viewname="+req.query.id;
+	util.callhttp(query).then(function(data) {
+		if(data.status==200) {
+			//console.log(data);
+			var doc = data;
 			rawDataList=[];
 			//generate list of raw data
-			data.body.rows.forEach(function(doc) {
+			for(var i=0;i<data.doc.length;i++) {
+				var doc=data.doc[i];
+				//console.log(doc);
 				rawDataList.push({
 					// doctype: data.body.rows[i].doc.row.DOCTYPE, 
 					id: doc.id,
 					key: doc.key,
 					value: doc.value
-				});				
-			})
-			
-			if (process.env.VCAP_SERVICES) {
-				db.connect('miradb');
-			} else {
-				db.connect('miradbtest');
-			} 
-			
+				});					
+			}
 			res.render('wwbcitdata', {
 				dataList: rawDataList,
 				viewname: '',
 				quarter: '',
-				alldata: JSON.stringify(data.body.rows, 'utf8'),
+				alldata: JSON.stringify(data, 'utf8'),
 				onedoc: ''
 			})
-		} else{
-			if (process.env.VCAP_SERVICES) {
-				db.connect('miradb');
-			} else {
-				db.connect('miradbtest');
-			} 			
-			//if there is no data in the DB, then redirects to addnew form
-			error = 'There is no data in database.';
 		}
-	}).catch(function(error){ //dbView catch
-		if (process.env.VCAP_SERVICES) {
-			db.connect('miradb');
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err})
+		console.log("[router-interface][wwbcitdata] - " + err);
+	})
+});
+
+/**************************************************************
+RAW DATA ONE DOC DETAIL
+***************************************************************/
+interface.get('/rawDataDetail/:viewname/:id', function(req, res) {
+	var query = varConf.mirainterfaces+"/showDocDetail?id="+req.params.id;
+
+	util.callhttp(query).then(function(data) {
+		// console.log(data.doc)
+		if(data.status==200) {
+			res.render('rawDataDetail', {
+				doc:JSON.stringify(data.doc, 'utf8') 
+			});
 		} else {
-			db.connect('miradbtest');
-		} 	
+			res.render('error',{errorDescription: data.error});
+			console.log("[interface][rawDataDetail] - " + data.error);
+		}
+	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
-		console.log("[router-interface][wwbcitdata] - " + error.error);
-	});
+		console.log("[interface][rawDataDetail] - " + err.error);
+	})
 });
 
 module.exports = interface;

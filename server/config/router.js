@@ -45,7 +45,18 @@ BUSINESS UNIT FUNCTIONALITY
 ***************************************************************/
 /* List Business Unit */
 router.get('/businessunit', isAuthenticated, function(req, res){
-	res.render('businessunit');
+	businessunit.listBU(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.render('businessunit', data);
+		}else{
+			res.render('error', {errorDescription: data.error});
+			console.log("[routes][businessunit] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][businessunit] - " + err.error);
+	})
+	
 });
 /* Save Business Unit */
 router.post('/savebunit', isAuthenticated, function(req, res){
@@ -113,11 +124,11 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 			})
 		} else {
 			res.render('error',{errorDescription: data.error});
-			console.log("[routes][businessunit] - " + data.error);
+			console.log("[routes][savebunit] - " + data.error);
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
-		console.log("[routes][businessunit] - " + err.error);
+		console.log("[routes][savebunit] - " + err.error);
 	})
 });
 /**************************************************************
