@@ -1,0 +1,19 @@
+<link href="/css/jsoneditor.css" rel="stylesheet" type="text/css">
+<script src="/lib/jsoneditor.min.js"></script>
+<script src="/js/rawdata.js"/></script>
+
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+	<br/>
+	<div class="ibm-buttons-row"></div>
+		<div class="ibm-columns">
+				 <span style="display:none;"><textarea id="fldvalue" name="fldvalue" rows="5" cols="50">{{doc}}</textarea></span>
+				<div id="jsoneditor"></div>
+				<script>
+					// $(document).ready(function() {
+						JSONEdit("fldvalue");
+					// });
+				</script>
+		</div> 
+	</div>
+</div>

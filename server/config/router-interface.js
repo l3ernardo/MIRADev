@@ -44,4 +44,26 @@ interface.get('/wwbcitdata', function(req, res) {
 	})
 });
 
+/**************************************************************
+RAW DATA ONE DOC DETAIL
+***************************************************************/
+interface.get('/rawDataDetail/:viewname/:id', function(req, res) {
+	var query = varConf.mirainterfaces+"/showDocDetail?id="+req.params.id;
+
+	util.callhttp(query).then(function(data) {
+		// console.log(data.doc)
+		if(data.status==200) {
+			res.render('rawDataDetail', {
+				doc:JSON.stringify(data.doc, 'utf8') 
+			});
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[interface][rawDataDetail] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[interface][rawDataDetail] - " + err.error);
+	})
+});
+
 module.exports = interface;
