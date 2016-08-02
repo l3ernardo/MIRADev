@@ -9,7 +9,7 @@ function selectedMenuOption(){
 	var url = parent.location.href;
 	url = url.split('/');
 	url = url[url.length -1];
-	url = url.replace('?','').replace('=','');
+	url = url.replace('?','').replace('=','').replace('&','').replace('=','');
 	var selLink = document.getElementById(url);
 	if(selLink != null){
 		selLink = eval("$('a#"+url+"')");
