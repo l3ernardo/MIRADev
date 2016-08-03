@@ -2,12 +2,16 @@
 <table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
 	<tr>
-		<td width="25%">Status:</td><td>{{Status}}</td>
+		<td width="25%">Status:</td>
+		<td>
+			<b class="ibm-important">{{Status}}</b><br />
+			<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
+		</td>
 	</tr>
 	<tr>
 		<td>Business Unit:</td><td>{{BusinessUnit}}</td>
 	</tr>
 	<tr>
-		<td>Current reporting period:</td><td>{{CurrentPeriod}}</td>
+		<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
 	</tr>
 </table>
