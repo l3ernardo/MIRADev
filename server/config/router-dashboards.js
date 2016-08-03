@@ -56,7 +56,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Controllable Unit":
 						var lParams = ['Metrics', 'UnitSizes', 'CUTypes', 'SupportedFrom'];
-						parameter.getListParams(req, db, lParams).then(function(dataParam) {
+						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
 								res.render('aucontrollableunit', data.doc[0] );
