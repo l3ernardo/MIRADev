@@ -1,19 +1,12 @@
 {{#if editmode}}
-	{{!-- AU BU IOT assesable unit form - Basic section - Edit Mode --}}
+	{{!-- AU Account assesable unit form - Basic section - Edit Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 		<caption class="mira-caption"><em>Basics</em></caption>
+		<tr><td width="25%">Parent Controllable Unit:</td><td>{{ParentSubject}}</td></tr>
 		<tr>
-			<td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td>
-		</tr>
-		<tr>
-			<td><label for="IOT">BU IOT:<span class="ibm-required">*</span></label></td>
+			<td><label for="Name">Account name:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span>
-					<input type="hidden" name="IOTid" id="IOTid" value="{{IOTid}}">
-					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-					{{{uniqueSelect "iotname" IOTList "docid" "name" IOT}}}
-					</select>
-				</span>
+				<span><input type="text" name="Name" id="Name" value="{{Name}}" size="100" maxlength="300"></span>
 			</td>
 		</tr>
 		<tr>
@@ -23,16 +16,16 @@
 			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
 			<td>
 				<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span><br />
-				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
+				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>				
 			</td>
 		</tr>
 	</table>
 {{else}}
-	{{!-- AU BU IOT assesable unit form - Basic section - Read Mode --}}
+	{{!-- AU Account assesable unit form - Basic section - Read Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
-		<tr><td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td></tr>
-		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
+		<tr><td width="25%">Parent Controllable Unit:</td><td>{{ParentSubject}}</td></tr>
+		<tr><td>Account name:</td><td>{{Name}}</td></tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>
 		<tr>
 			<td>Status:</td>

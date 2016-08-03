@@ -21,7 +21,7 @@ var assessableunit = {
 			selector:{
 				"_id": {"$gt":0},
 				"key": "Assessable Unit",
-				"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT", "BU IMT", "BU Country"]}
+				"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT", "BU IMT", "BU Country","Account"]}
 			}
 		};
 		db.find(obj).then(function(data){
@@ -88,11 +88,20 @@ var assessableunit = {
 			if(doc[0].DocSubType == "Controllable Unit") {
 				doc[0].CUFlag = 1;
       }
-			if(doc[0].DocSubType == "BU Reporting Group") {
+			if(doc[0].DocSubType == "BU Reporting Group"  || doc[0].DocSubType == "Account") {
 				doc[0].RGFlag = 1;
       }
 	        if(doc[0].DocSubType == "BU IMT") {
 				doc[0].BUIMTflag = 1;
+            }
+			 if(req.session.businessunit == "GBS") {
+				doc[0].GBSflag = 1;
+            } else  if(req.session.businessunit == "GTS") {
+				doc[0].GTSflag = 1;
+            }
+			else
+				{
+				doc[0].GTSTransflag = 1;
             }
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
@@ -117,6 +126,18 @@ var assessableunit = {
 
 			/* Get Constituents Data*/
 			switch (doc[0].DocSubType) {
+				case "Account":
+					constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": "Account",
+							"ParentSubject":doc[0].ParentSubject,
+							"BusinessUnit": doc[0].BusinessUnit
+						}
+					};
+					doc[0].AccountData = [];
+					break;
 				case "Business Unit":
 					constiobj = {
 						selector:{
@@ -245,6 +266,7 @@ var assessableunit = {
 					else if(constidocs[i].DocSubType == "BU IMT") doc[0].BUIMTData.push(toadd);
 					else if(constidocs[i].DocSubType == "BU Country") doc[0].BUCountryData.push(toadd);
 					else if (constidocs[i].DocSubType == "BU Reporting Group") doc[0].RGData.push(toadd);
+					else if (constidocs[i].DocSubType == "Account") doc[0].AccountData.push(toadd);
 					else if (constidocs[i].DocSubType == "Country Process") doc[0].CPData.push(toadd);
 					else if (constidocs[i].DocSubType == "Controllable Unit") doc[0].CUData.push(toadd);
 					else doc[0].CUData.push(toadd);
@@ -259,6 +281,7 @@ var assessableunit = {
 						case "Business Unit":
 						case "Global Process":
 						case "Country Process":
+						case "Account":
 						case "Controllable Unit":
 							/* get Reporting Group list for Controllable Unit, Country Process, Global Process and Business Unit */
 							doc[0].ReportingGroupList = [];
@@ -678,6 +701,15 @@ var assessableunit = {
 					doc[0].AuditProgram = req.body.AuditProgram;
 					doc[0].CUSize = req.body.CUSize;
 					break;
+				case "Account":
+					doc[0].ParentSubject = req.body.ParentSubject;
+					doc[0].MetricsCriteriaLabel= req.body.MetricsCriteriaLabel;
+					doc[0].MetricsCriteria = req.body.MetricsCriteria;
+					doc[0].SpecialContractCategory = req.body.SpecialContractCategory;
+					// Update Focals, Coordinators & Readers
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+                    doc[0].Readers = req.body.readerslist;
         // Update Admin & Basic Sections
 				case "Controllable Unit":
 					doc[0].BRGMembership = req.body.BRGMembership;

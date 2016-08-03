@@ -73,6 +73,10 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "BU Reporting Group":
 						res.render('aureportinggroup', data.doc[0] );
 						break;
+					case "Account":
+						res.render('auaccount', data.doc[0] );
+						break;
+
 				}
 			} else {
 				res.render('error',{errorDescription: data.error});
