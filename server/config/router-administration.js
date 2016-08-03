@@ -9,6 +9,7 @@ var varConf = require('../../configuration');
 var parameter = require('./js/class-parameter.js');
 var setup = require('./js/class-setup.js');
 var isAuthenticated = require('./router-authentication.js');
+var simpleAuthentication = require('./router-simpleAuthentication.js');
 
 /**************************************************************
 SETUP FUNCTIONALITY
@@ -92,7 +93,7 @@ administration.get('/getParam', isAuthenticated, function(req, res) {
 	})
 });
 /* Get parameter by keyName */
-administration.get('/getParameter',isAuthenticated, function(req, res) {
+administration.get('/getParameter', simpleAuthentication, function(req, res) {
 	parameter.getParam(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.doc.value);
