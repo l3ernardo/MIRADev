@@ -55,7 +55,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						res.render('aucountryprocess', data.doc[0] );
 						break;
 					case "Controllable Unit":
-						var lParams = ['Metrics', 'UnitSizes'];
+						var lParams = ['Metrics', 'UnitSizes', 'CUTypes', 'SupportedFrom'];
 						parameter.getListParams(req, db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
@@ -73,6 +73,10 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "BU Reporting Group":
 						res.render('aureportinggroup', data.doc[0] );
 						break;
+					case "Account":
+						res.render('auaccount', data.doc[0] );
+						break;
+
 				}
 			} else {
 				res.render('error',{errorDescription: data.error});

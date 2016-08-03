@@ -84,7 +84,13 @@
   color: white;
   padding-left: 3px;
 }
-
+.ibm-data-table .mira-subdata {
+  font-size:11px
+}
+.ibm-data-table .mira-subdatablue {
+  color: #0060A0;
+  font-size:11px
+}
 
 /*table for dashboard*/
 caption {
