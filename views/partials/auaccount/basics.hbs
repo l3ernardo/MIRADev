@@ -15,7 +15,8 @@
 		<tr>
 			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span>
+				<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span><br />
+				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>				
 			</td>
 		</tr>
 	</table>
@@ -26,6 +27,12 @@
 		<tr><td width="25%">Parent Controllable Unit:</td><td>{{ParentSubject}}</td></tr>
 		<tr><td>Account name:</td><td>{{Name}}</td></tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>
-		<tr><td>Status:</td><td><b class="ibm-important">{{Status}}</b></td></tr>
+		<tr>
+			<td>Status:</td>
+			<td>
+				<b class="ibm-important">{{Status}}</b><br />
+				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
+			</td>
+		</tr>
 	</table>
 {{/if}}
