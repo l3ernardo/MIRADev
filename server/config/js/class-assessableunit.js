@@ -135,7 +135,7 @@ var assessableunit = {
 							"ParentSubject":doc[0].ParentSubject,
 							"BusinessUnit": doc[0].BusinessUnit
 						}
-					};						
+					};
 					doc[0].AccountData = [];
 					break;
 				case "Business Unit":
@@ -265,7 +265,7 @@ var assessableunit = {
 					else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
 					else if(constidocs[i].DocSubType == "BU IMT") doc[0].BUIMTData.push(toadd);
 					else if(constidocs[i].DocSubType == "BU Country") doc[0].BUCountryData.push(toadd);
-					else if (constidocs[i].DocSubType == "BU Reporting Group") doc[0].RGData.push(toadd);					
+					else if (constidocs[i].DocSubType == "BU Reporting Group") doc[0].RGData.push(toadd);
 					else if (constidocs[i].DocSubType == "Account") doc[0].AccountData.push(toadd);
 					else if (constidocs[i].DocSubType == "Country Process") doc[0].CPData.push(toadd);
 					else if (constidocs[i].DocSubType == "Controllable Unit") doc[0].CUData.push(toadd);
