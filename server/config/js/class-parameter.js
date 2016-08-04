@@ -72,7 +72,7 @@ var parameters = {
 		return deferred.promise;
 	},
 	/* Get all the list of parameter data by keyName list parameter */
-	getListParams: function(req, db, lParams) {
+	getListParams: function(db, lParams) {
 		var deferred = q.defer();
 		var valParam = [];
 		var obj;
@@ -93,8 +93,10 @@ var parameters = {
 			db.find(obj).then(function(data){
 				var parameters = data.body.docs;
 				for (var i = 0; i < parameters.length; ++i) {
+					var tmpObj = []; 
+					tmpObj.push({"keyName" : parameters[i].keyName, "options" : parameters[i].value.options});
 					eval("valParam."+parameters[i].keyName+" = [];");
-					eval('valParam.'+parameters[i].keyName+'.push({"keyName" : parameters[i].keyName, "options" : parameters[i].value.options});');
+					eval("valParam."+parameters[i].keyName+" = tmpObj;");
 				}
 				deferred.resolve({"status": 200, "parameters": valParam})
 			}).catch(function(err) {
