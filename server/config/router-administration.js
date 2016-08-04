@@ -93,7 +93,7 @@ administration.get('/getParam', isAuthenticated, function(req, res) {
 	})
 });
 /* Get parameter by keyName */
-administration.get('/getParameter', simpleAuthentication, function(req, res) {
+administration.get('/getParameter', function(req, res) {
 	parameter.getParam(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.doc.value);
