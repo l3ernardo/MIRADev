@@ -4,7 +4,7 @@
 	{{#if editmode}}
 		{{!-- AU ControllableUnit form - Administrative Use Only section - Edit Mode with Admin Access --}}
 		{{#if admin}}
-			<!-- CU Change parent is only available for Admin -->
+			{{!-- CU Change parent is only available for Admin --}}
 			<tr>
 				<td width="25%"><label for="ParentSubject">Parent {{ParentDocSubType}}:</label></td>
 				<td>
@@ -19,6 +19,9 @@
 		<tr><td>Business Unit:</td><td>{{BusinessUnit}}</td></tr>
 		<tr><td>Category:</td><td>{{Category}}</td></tr>
 		<tr><td>Subcategory:</td><td>{{Subcategory}}</td></tr>
+		{{#if (eq ParentDocSubType "BU Country")}}
+			<tr><td>Country:</td><td>{{Country}}</td></tr>
+		{{/if}}
 		<tr><td>Relevant country processes:</td><td>{{RelevantCountryProcesses}}</td></tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>
 		{{#unless BusinessUnitOLD}}
@@ -69,6 +72,9 @@
 		<tr><td>Business Unit:</td><td>{{BusinessUnit}}</td></tr>
 		<tr><td>Category:</td><td>{{Category}}</td></tr>
 		<tr><td>Subcategory:</td><td>{{Subcategory}}</td></tr>
+		{{#if (eq ParentDocSubType "BU Country")}}
+			<tr><td>Country:</td><td>{{Country}}</td></tr>
+		{{/if}}
 		<tr><td>Relevant country processes:</td><td>{{RelevantCountryProcesses}}</td></tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>
 		{{#unless BusinessUnitOLD}}
