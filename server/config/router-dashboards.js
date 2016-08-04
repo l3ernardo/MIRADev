@@ -43,13 +43,61 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						res.render('auglobalprocess', data.doc[0] );
 						break;
 					case "BU IOT":
-						res.render('aubuiot', data.doc[0]);
+						if (data.doc[0].editmode) {
+							var lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aubuiot', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aubuiot', data.doc[0]);
+						}
 						break;
 					case "BU IMT":
-						res.render('aubuimt', data.doc[0]);
+						if (data.doc[0].editmode) {
+							var lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aubuimt', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aubuimt', data.doc[0]);
+						}
 						break;
 					case "BU Country":
-						res.render('aubucountry', data.doc[0]);
+						if (data.doc[0].editmode) {
+							var lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aubucountry', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aubucountry', data.doc[0]);
+						}
 						break;
 					case "Country Process":
 						res.render('aucountryprocess', data.doc[0] );
@@ -76,8 +124,10 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						}
 						break;
 					case "BU Reporting Group":
-						if (data.doc[0].editmode && req.session.businessunit == "GBS") {
-							var lParams = ['GBSAuditPrograms'];
+						if (data.doc[0].editmode) {
+							var lParams;
+							if (req.session.businessunit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
+							else lParams = ['AssessableUnitStatus'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;
@@ -95,7 +145,23 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						}
 						break;
 					case "Account":
-						res.render('auaccount', data.doc[0] );
+						if (data.doc[0].editmode) {
+							var lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('auaccount', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('auaccount', data.doc[0] );
+						}
 						break;
 
 				}
