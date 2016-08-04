@@ -10,6 +10,7 @@ var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
+var param = require('./class-parameter.js');
 
 var assessableunit = {
 
@@ -91,18 +92,17 @@ var assessableunit = {
 			if(doc[0].DocSubType == "BU Reporting Group"  || doc[0].DocSubType == "Account") {
 				doc[0].RGFlag = 1;
       }
-	        if(doc[0].DocSubType == "BU IMT") {
+      if(doc[0].DocSubType == "BU IMT") {
 				doc[0].BUIMTflag = 1;
-            }
-			 if(req.session.businessunit == "GBS") {
+      }
+		 	if(req.session.businessunit == "GBS") {
 				doc[0].GBSflag = 1;
-            } else  if(req.session.businessunit == "GTS") {
+			} else  if(req.session.businessunit == "GTS") {
 				doc[0].GTSflag = 1;
-            }
-			else
-				{
+      } else {
 				doc[0].GTSTransflag = 1;
-            }
+      }
+
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
 
@@ -272,6 +272,72 @@ var assessableunit = {
 					else doc[0].CUData.push(toadd);
 				}
 
+				/* Calculate for Instance Design Specifics and parameters*/
+				if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
+					var lParams;
+					// Get required paramaters
+					if (req.session.businessunit == "GTS") {
+						doc[0].EnteredBU = "GTS";
+						if (doc[0].DocSubType == "Controllable Unit") {
+							doc[0].CatCU = "";
+							lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+						} else if (doc[0].DocSubType == "Country Process") {
+							doc[0].CatP = "";
+							lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign'];
+						} else {
+							lParams = ['GTSInstanceDesign'];
+						}
+					} else {
+						doc[0].EnteredBU = "GBS";
+						lParams = ['GBSInstanceDesign'];
+					}
+					param.getListParams(db, lParams).then(function(dataParam) {
+						if(dataParam.status==200 & !dataParam.error) {
+							// calculate for CatP and CatCU fields
+							if (doc[0].DocSubType == "Country Process") {
+								if (dataParam.parameters.CRMProcess) {
+									for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "CRM";
+									}
+								}
+								if (dataParam.parameters.DeliveryProcess) {
+									for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "Delivery";
+									}
+								}
+							}
+							if (doc[0].DocSubType == "Controllable Unit") {
+								if (dataParam.parameters.CRMCU) {
+									for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "CRM";
+									}
+								}
+								if (dataParam.parameters.DeliveryCU) {
+									for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "Delivery";
+									}
+								}
+							}
+
+							// evaluate BusinessUnitOLD formula
+							if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
+							if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
+
+							// Check if ARC Frequency should be displayed: to check with Linda if there is another field to be used as condition instead of LoB for ARC
+							// Current condition: available only if (Admin or MiniAdmin) and CU and (BusinessUnitOLD = "Global Technology Services") and (LoB = "SO" or LoB = "IS" or LoB = "ITS" or LoB = "TSS" or LoB = "GPS")
+							if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit") {
+								doc[0].showARCFreq = 1;
+							}
+
+						} else {
+							console.log("[routes][class-assessableunit][getListParams] - " + dataParam.error);
+						}
+					}).catch(function(err) {
+						console.log("[routes][class-assessableunit][getListParams] - " + err.error);
+					})
+
+				}
+
 				/* Get Reporting Groups and BU Countries*/
 				if(req.query.edit != undefined) { //Edit mode
 					doc[0].editmode = 1;
@@ -416,7 +482,6 @@ var assessableunit = {
 							break;
 
 						default:
-							console.log("doc[0].ReportingGroupList: " + doc[0].ReportingGroupList.length);
 							deferred.resolve({"status": 200, "doc": doc});
 							break;
 					}
@@ -709,7 +774,7 @@ var assessableunit = {
 					// Update Focals, Coordinators & Readers
 					doc[0].Focals = req.body.focalslist;
 					doc[0].Coordinators = req.body.coordinatorslist;
-                    doc[0].Readers = req.body.readerslist;
+          doc[0].Readers = req.body.readerslist;
         // Update Admin & Basic Sections
 				case "Controllable Unit":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -719,6 +784,7 @@ var assessableunit = {
 					doc[0].AuditableFlag = req.body.AuditableFlag;
 					doc[0].AuditProgram = req.body.AuditProgram;
 					doc[0].Portfolio = req.body.Portfolio;
+					doc[0].ARCFrequency = req.body.ARCFrequency
           // Update Focals, Coordinators & Readers
 					doc[0].PEDPE = req.body.pedpelist;
 					doc[0].IMTVP = req.body.imtvpedpelist;
