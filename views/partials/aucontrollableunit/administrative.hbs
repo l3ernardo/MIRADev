@@ -18,12 +18,33 @@
 					</span>
 				</td>
 			</tr>
-			<tr>
-				<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.Metrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
-				<td>
-					<span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span>
-				</td>
-			</tr>
+			{{#if_equal EnteredBU "GTS"}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GTSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+				<tr>
+					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						</span>
+					</td>
+				</tr>
+			{{else}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GBSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+				<tr>
+					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						</span>
+					</td>
+				</tr>
+			{{/if_equal}}
 			<tr>
 				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
 				<td>
@@ -38,12 +59,16 @@
 					</span>
 				</td>
 			</tr>
-			<tr>
-				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span><input type="text" name="AuditProgram" value="{{AuditProgram}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
+			{{#if_equal showARCFreq 1}}
+				<tr>
+					<td><label for="ARCFrequency">Audit Readiness Checklist (ARC) frequency:</label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "ARCFrequency" parameters.ARCFrequencies.0.options "name" "name" ARCFrequency}}}
+						</span>
+					</td>
+				</tr>
+			{{/if_equal}}
 			{{#if AuditableFlagYes}}
 				<tr>
 					<td>Internal Audits:</td>
@@ -57,6 +82,9 @@
 			<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			{{#if_equal showARCFreq 1}}
+				<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
+			{{/if_equal}}
 			{{#if AuditableFlagYes}}
 				<tr>
 					<td>Internal Audits:</td>
@@ -71,6 +99,9 @@
 		<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		{{#if_equal showARCFreq 1}}
+			<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
+		{{/if_equal}}
 		{{#if AuditableFlagYes}}
 			<tr>
 				<td>Internal Audits:</td>
