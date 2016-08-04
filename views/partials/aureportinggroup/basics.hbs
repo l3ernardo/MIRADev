@@ -15,7 +15,8 @@
 		<tr>
 			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span><br />
+				<span>{{{uniqueSelect "Status" parameters.AssessableUnitStatus.0.options "name" "name" Status}}}</span>
+				<br />
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
 			</td>
 		</tr>
