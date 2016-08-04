@@ -1,9 +1,9 @@
 /**************************************************************************************************
- * 
+ *
  * Parameters code for MIRA Web
  * Developed by :   Gabriela S. Pailiacho G.
  * Date:25 May 2016
- * 
+ *
  */
 
 var q  = require("q");
@@ -12,10 +12,10 @@ var parameters = {
 	/* Load all parameters in view*/
 	listParam: function(req, db) {
 		var deferred = q.defer();
-				
+
 		db.view('setup', 'view-setup', {include_docs: true}).then(function(data) {
 		var len = data.body.rows.length;
-		if(len > 0){ 
+		if(len > 0){
 			totalLog = len;
 			pageSize = 20;
 			pageCount = Math.ceil(totalLog/pageSize);
@@ -27,7 +27,7 @@ var parameters = {
 				log.push({
 					id: data.body.rows[i].doc._id,
 					keyName: data.body.rows[i].doc.keyName,
-					active: data.body.rows[i].doc.active, 
+					active: data.body.rows[i].doc.active,
 					description: data.body.rows[i].doc.description
 				});
 			}
@@ -50,7 +50,7 @@ var parameters = {
 			}
 		}).catch(function(error){
 			deferred.reject({"status": 500, "error": err});
-		});		
+		});
 		return deferred.promise;
 	},
 	/* Get specific parameter data by ID */
@@ -77,9 +77,9 @@ var parameters = {
 		var valParam = [];
 		var obj;
 		var $or = [];
-		
+
 		try{
-			
+
 			for(i=0; i<lParams.length; i++){
 				$or.push({"keyName":lParams[i]});
 			}
@@ -89,18 +89,18 @@ var parameters = {
 					$or
 				}
 			};
-			
+
 			db.find(obj).then(function(data){
 				var parameters = data.body.docs;
 				for (var i = 0; i < parameters.length; ++i) {
-					var tmpObj = []; 
+					var tmpObj = [];
 					tmpObj.push({"keyName" : parameters[i].keyName, "options" : parameters[i].value.options});
 					eval("valParam."+parameters[i].keyName+" = [];");
 					eval("valParam."+parameters[i].keyName+" = tmpObj;");
 				}
 				deferred.resolve({"status": 200, "parameters": valParam})
 			}).catch(function(err) {
-				
+
 				deferred.reject({"status": 500, "error": err});
 			});
 		}catch(e){
