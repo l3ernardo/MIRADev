@@ -743,6 +743,7 @@ var assessableunit = {
 					doc[0].IOT = req.body.IOT;
 					doc[0].IOTid = req.body.IOTid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
+					doc[0].Status = req.body.Status
 					break;
 				case "BU IMT":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -750,6 +751,7 @@ var assessableunit = {
 					doc[0].IMT = req.body.IMT;
 					doc[0].IMTid = req.body.IMTid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
+					doc[0].Status = req.body.Status
 					break;
 				case "BU Country":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -758,6 +760,9 @@ var assessableunit = {
 					doc[0].Country = req.body.Country;
 					doc[0].Countryid = req.body.Countryid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
+					doc[0].AuditProgram = req.body.AuditProgram;
+					doc[0].ExcludeGeo = req.body.ExcludeGeo;
+					doc[0].Status = req.body.Status
 					break;
 				case "Country Process":
 					doc[0].BRGMembership = req.body.BRGMembership;

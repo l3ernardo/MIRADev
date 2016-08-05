@@ -82,7 +82,9 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "BU Country":
 						if (data.doc[0].editmode) {
-							var lParams = ['AssessableUnitStatus'];
+							var lParams;
+							if (req.session.businessunit == "GTS") lParams = ['AssessableUnitStatus','GTSAuditPrograms'];
+							else lParams = ['AssessableUnitStatus','GBSAuditPrograms'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;
@@ -100,7 +102,25 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						}
 						break;
 					case "Country Process":
-						res.render('aucountryprocess', data.doc[0] );
+						if (data.doc[0].editmode) {
+							var lParams;
+							if (req.session.businessunit == "GTS") lParams = ['UnitSizes','GTSAuditPrograms'];
+							else lParams = ['UnitSizes','GBSAuditPrograms'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aucountryprocess', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aucountryprocess', data.doc[0] );
+						}
 						break;
 					case "Controllable Unit":
 						if (data.doc[0].editmode) {
