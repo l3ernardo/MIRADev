@@ -70,7 +70,6 @@ var assessableunit = {
 			doc[0].grantaccess = accessrules.rules.grantaccess;
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
-			// doc[0].admin = 1;
 			if (accessrules.rules.editor && accessrules.rules.cuadmin && (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Controllable Unit")) doc[0].admin = 1;
 			if (doc[0].admin) doc[0].editor = 1;
 
@@ -82,9 +81,6 @@ var assessableunit = {
 			if(doc[0].CUFlag == "Yes") {
 				doc[0].CUFlagYes = 1;
 				doc[0].SizeFlag = 1;
-			}
-			if(doc[0].Portfolio == "Yes") {
-				doc[0].PortfolioYes = 1;
 			}
 
 			if(doc[0].DocSubType == "Controllable Unit") {
@@ -137,7 +133,13 @@ var assessableunit = {
 						selector:{
 							"_id": {"$gt":0},
 							"key": "Assessable Unit",
-							"DocSubType": {"$or":["Global Process","BU Reporting Group","Controllable Unit","BU IOT"]},
+							"$or":
+								[
+									{ "DocSubType":"Global Process" },
+									{ "DocSubType":"BU Reporting Group" },
+									{ "DocSubType":"BU IOT" },
+									{ "$and": [{"DocSubType":"Controllable Unit"},{"ParentDocSubType": "Business Unit"}] }
+								],
 							"BusinessUnit": doc[0].BusinessUnit
 						}
 					};
@@ -153,7 +155,7 @@ var assessableunit = {
 							"key": "Assessable Unit",
 							"DocSubType": "Country Process",
 							"BusinessUnit": doc[0].BusinessUnit,
-							"Global Process": doc[0].GlobalProcess
+							"GlobalProcess": doc[0].GlobalProcess
 						}
 					};
 					doc[0].CPData = [];
@@ -649,10 +651,19 @@ var assessableunit = {
 								}
 							}
 
-							if (doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU Country") {
-								$or.push({"_id":doc[0].IOTid}); // IOT doc ID
-								$or.push({"_id":doc[0].IMTid}); // IMT doc ID
-								if (doc[0].DocSubType == "BU Country") $or.push({"_id":doc[0].Countryid}); // Country doc ID
+							switch (doc[0].DocSubType) {
+								case "BU IMT":
+									$or.push({"_id":doc[0].IOTid});
+									$or.push({"_id":doc[0].IMTid});
+									break;
+								case "BU Country":
+									$or.push({"_id":doc[0].IOTid});
+									$or.push({"_id":doc[0].IMTid});
+									$or.push({"_id":doc[0].Countryid});
+									break;
+								case "Controllable Unit":
+									$or.push({"_id":doc[0].parentid});
+									break;
 							}
 
 							var searchobj = { selector: {"_id": {"$gt":0}, "key": "Assessable Unit", $or } };
@@ -668,14 +679,34 @@ var assessableunit = {
 										}
 									}
 
-									if (doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU Country") {
-										if (resdocs[i]._id == doc[0].IOTid) doc[0].IOT = resdocs[i].IOT; //get latetest IOT name based on ID
-										if (resdocs[i]._id == doc[0].IMTid) doc[0].IMT = resdocs[i].IMT; //get latetest IMT name based on ID
-										if (doc[0].DocSubType == "BU Country")
-											if (resdocs[i]._id == doc[0].Countryid) doc[0].Country = resdocs[i].Country; //get latetest Country name based on ID
+									switch (doc[0].DocSubType) {
+										case "BU IMT":
+											if (resdocs[i]._id == doc[0].IOTid) doc[0].IOT = resdocs[i].IOT;
+											if (resdocs[i]._id == doc[0].IMTid) doc[0].IMT = resdocs[i].IMT;
+											break;
+										case "BU Country":
+											if (resdocs[i]._id == doc[0].IOTid) doc[0].IOT = resdocs[i].IOT;
+											if (resdocs[i]._id == doc[0].IMTid) doc[0].IMT = resdocs[i].IMT;
+											if (resdocs[i]._id == doc[0].Countryid) doc[0].Country = resdocs[i].Country;
+											break;
+										case "Controllable Unit":
+											if (resdocs[i]._id == doc[0].parentid && !doc[0].ParentDocSubType == "Business Unit") {
+												doc[0].ParentSubject = resdocs[i].Name;
+												doc[0].IOT = resdocs[i].IOT;
+												switch (doc[0].ParentDocSubType) {
+													case "BU IMT":
+														doc[0].IMT = resdocs[i].IMT;
+														break;
+													case "Country":
+														doc[0].IMT = resdocs[i].IMT;
+														doc[0].Country = resdocs[i].Country;
+													break;
+												}
+											}
+											break;
 									}
-
 								}
+
 								doc[0].BRGMembershipDisp = brgmNames;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
@@ -784,7 +815,11 @@ var assessableunit = {
 					doc[0].Portfolio = req.body.Portfolio;
 					doc[0].ARCFrequency = req.body.ARCFrequency
 					doc[0].MetricsCriteria = req.body.MetricsCriteria;
-					doc[0].MetricsValue = req.body.MetricsValue
+					doc[0].MetricsValue = req.body.MetricsValue;
+					doc[0].ParentSubject = req.body.ParentSubject;
+					doc[0].IOT = req.body.IOT;
+					doc[0].IMT = req.body.IMT;
+					doc[0].Country = req.body.Country;
 					break;
 				case "BU Reporting Group":
 					doc[0].GroupLOB = req.body.GroupLOB;
