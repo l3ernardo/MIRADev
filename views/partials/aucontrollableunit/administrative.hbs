@@ -69,12 +69,27 @@
 					</td>
 				</tr>
 			{{/if_equal}}
-			{{#if AuditableFlagYes}}
-				<tr>
-					<td>Internal Audits:</td>
-					<td><!-- Internal Audits embedded view here --></td>
-				</tr>
-			{{/if}}
+			<tr class="internal-audits">
+				<td>Internal Audits:</td>
+				<td>
+					<div class="ibm-columns ibm-graphic-tabs">
+						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="mira-subtable">
+                <th scope="col"><font color="#FFF">Engagement</font></th>
+								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
+								<th scope="col"><font color="#FFF">Rating</font></th>
+								<th scope="col"><font color="#FFF">Size</font></th>
+								<th scope="col"><font color="#FFF">Score</font></th>
+							</thead>
+							{{#each IAData}}
+							<tr>
+								{{#each col}}<td>{{this}}</td>{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+				</td>
+			</tr>
 		{{else}}
 			{{!-- AU ControllableUnit form form - Administrative Use Only section - Edit Mode with no Admin Access --}}
 			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
@@ -88,7 +103,24 @@
 			{{#if AuditableFlagYes}}
 				<tr>
 					<td>Internal Audits:</td>
-					<td><!-- Internal Audits embedded view here --></td>
+					<td>
+						<div class="ibm-columns ibm-graphic-tabs">
+							<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+								<thead class="mira-subtable">
+                  <th scope="col"><font color="#FFF">Engagement</font></th>
+  								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
+  								<th scope="col"><font color="#FFF">Rating</font></th>
+  								<th scope="col"><font color="#FFF">Size</font></th>
+  								<th scope="col"><font color="#FFF">Score</font></th>
+								</thead>
+								{{#each IAData}}
+								<tr>
+									{{#each col}}<td>{{this}}</td>{{/each}}
+								</tr>
+								{{/each}}
+							</table>
+						</div>
+					</td>
 				</tr>
 			{{/if}}
 		{{/if}}
@@ -105,7 +137,24 @@
 		{{#if AuditableFlagYes}}
 			<tr>
 				<td>Internal Audits:</td>
-				<td><!-- Internal Audits embedded view here --></td>
+				<td>
+					<div class="ibm-columns ibm-graphic-tabs">
+						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="mira-subtable">
+								<th scope="col"><font color="#FFF">Engagement</font></th>
+								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
+								<th scope="col"><font color="#FFF">Rating</font></th>
+								<th scope="col"><font color="#FFF">Size</font></th>
+								<th scope="col"><font color="#FFF">Score</font></th>
+							</thead>
+							{{#each IAData}}
+							<tr>
+								{{#each col}}<td>{{this}}</td>{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+				</td>
 			</tr>
 		{{/if}}
 	{{/if}}

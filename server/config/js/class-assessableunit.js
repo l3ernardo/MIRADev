@@ -70,6 +70,7 @@ var assessableunit = {
 			doc[0].grantaccess = accessrules.rules.grantaccess;
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
+			// doc[0].admin = 1;
 			if (accessrules.rules.editor && accessrules.rules.cuadmin && (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Controllable Unit")) doc[0].admin = 1;
 			if (doc[0].admin) doc[0].editor = 1;
 
@@ -94,13 +95,6 @@ var assessableunit = {
       }
       if(doc[0].DocSubType == "BU IMT") {
 				doc[0].BUIMTflag = 1;
-      }
-		 	if(req.session.businessunit == "GBS") {
-				doc[0].GBSflag = 1;
-			} else  if(req.session.businessunit == "GTS") {
-				doc[0].GTSflag = 1;
-      } else {
-				doc[0].GTSTransflag = 1;
       }
 
 			/* Format Links */
@@ -772,10 +766,10 @@ var assessableunit = {
 					doc[0].CUSize = req.body.CUSize;
 					break;
 				case "Account":
-					doc[0].ParentSubject = req.body.ParentSubject;
-					doc[0].MetricsCriteriaLabel= req.body.MetricsCriteriaLabel;
+					doc[0].Name = req.body.Name;
 					doc[0].MetricsCriteria = req.body.MetricsCriteria;
-					doc[0].SpecialContractCategory = req.body.SpecialContractCategory;
+					doc[0].MetricsValue = req.body.MetricsValue
+					doc[0].Status = req.body.Status;
 					// Update Focals, Coordinators & Readers
 					doc[0].Focals = req.body.focalslist;
 					doc[0].Coordinators = req.body.coordinatorslist;
@@ -783,17 +777,14 @@ var assessableunit = {
         // Update Admin & Basic Sections
 				case "Controllable Unit":
 					doc[0].BRGMembership = req.body.BRGMembership;
-					doc[0].PrimaryGlobalProcess = req.body.PrimaryGlobalProcess;
 					doc[0].CUSize = req.body.CUSize;
 					doc[0].LifetimeTCV= req.body.LifetimeTCV;
 					doc[0].AuditableFlag = req.body.AuditableFlag;
 					doc[0].AuditProgram = req.body.AuditProgram;
 					doc[0].Portfolio = req.body.Portfolio;
 					doc[0].ARCFrequency = req.body.ARCFrequency
-          // Update Focals, Coordinators & Readers
-					doc[0].PEDPE = req.body.pedpelist;
-					doc[0].IMTVP = req.body.imtvpedpelist;
-          doc[0].SCAGEOLead = req.body.scageoleadlist;
+					doc[0].MetricsCriteria = req.body.MetricsCriteria;
+					doc[0].MetricsValue = req.body.MetricsValue
 					break;
 				case "BU Reporting Group":
 					doc[0].GroupLOB = req.body.GroupLOB;
