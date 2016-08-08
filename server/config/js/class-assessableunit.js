@@ -10,6 +10,7 @@ var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
+var param = require('./class-parameter.js');
 
 var assessableunit = {
 
@@ -81,28 +82,14 @@ var assessableunit = {
 				doc[0].CUFlagYes = 1;
 				doc[0].SizeFlag = 1;
 			}
-			if(doc[0].Portfolio == "Yes") {
-				doc[0].PortfolioYes = 1;
-			}
 
 			if(doc[0].DocSubType == "Controllable Unit") {
 				doc[0].CUFlag = 1;
       }
-			if(doc[0].DocSubType == "BU Reporting Group"  || doc[0].DocSubType == "Account") {
-				doc[0].RGFlag = 1;
+			if(doc[0].DocSubType == "BU Reporting Group" || doc[0].DocSubType == "Account" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU Country") {
+				doc[0].MIRAunit = 1;
       }
-	        if(doc[0].DocSubType == "BU IMT") {
-				doc[0].BUIMTflag = 1;
-            }
-			 if(req.session.businessunit == "GBS") {
-				doc[0].GBSflag = 1;
-            } else  if(req.session.businessunit == "GTS") {
-				doc[0].GTSflag = 1;
-            }
-			else
-				{
-				doc[0].GTSTransflag = 1;
-            }
+
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
 
@@ -143,7 +130,13 @@ var assessableunit = {
 						selector:{
 							"_id": {"$gt":0},
 							"key": "Assessable Unit",
-							"DocSubType": {"$or":["Global Process","BU Reporting Group","Controllable Unit","BU IOT"]},
+							"$or":
+								[
+									{ "DocSubType":"Global Process" },
+									{ "DocSubType":"BU Reporting Group" },
+									{ "DocSubType":"BU IOT" },
+									{ "$and": [{"DocSubType":"Controllable Unit"},{"ParentDocSubType": "Business Unit"}] }
+								],
 							"BusinessUnit": doc[0].BusinessUnit
 						}
 					};
@@ -159,7 +152,7 @@ var assessableunit = {
 							"key": "Assessable Unit",
 							"DocSubType": "Country Process",
 							"BusinessUnit": doc[0].BusinessUnit,
-							"Global Process": doc[0].GlobalProcess
+							"GlobalProcess": doc[0].GlobalProcess
 						}
 					};
 					doc[0].CPData = [];
@@ -270,6 +263,72 @@ var assessableunit = {
 					else if (constidocs[i].DocSubType == "Country Process") doc[0].CPData.push(toadd);
 					else if (constidocs[i].DocSubType == "Controllable Unit") doc[0].CUData.push(toadd);
 					else doc[0].CUData.push(toadd);
+				}
+
+				/* Calculate for Instance Design Specifics and parameters*/
+				if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
+					var lParams;
+					// Get required paramaters
+					if (req.session.businessunit == "GTS") {
+						doc[0].EnteredBU = "GTS";
+						if (doc[0].DocSubType == "Controllable Unit") {
+							doc[0].CatCU = "";
+							lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+						} else if (doc[0].DocSubType == "Country Process") {
+							doc[0].CatP = "";
+							lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign'];
+						} else {
+							lParams = ['GTSInstanceDesign'];
+						}
+					} else {
+						doc[0].EnteredBU = "GBS";
+						lParams = ['GBSInstanceDesign'];
+					}
+					param.getListParams(db, lParams).then(function(dataParam) {
+						if(dataParam.status==200 & !dataParam.error) {
+							// calculate for CatP and CatCU fields
+							if (doc[0].DocSubType == "Country Process") {
+								if (dataParam.parameters.CRMProcess) {
+									for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "CRM";
+									}
+								}
+								if (dataParam.parameters.DeliveryProcess) {
+									for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "Delivery";
+									}
+								}
+							}
+							if (doc[0].DocSubType == "Controllable Unit") {
+								if (dataParam.parameters.CRMCU) {
+									for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "CRM";
+									}
+								}
+								if (dataParam.parameters.DeliveryCU) {
+									for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
+										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "Delivery";
+									}
+								}
+							}
+
+							// evaluate BusinessUnitOLD formula
+							if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
+							if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
+
+							// Check if ARC Frequency should be displayed: to check with Linda if there is another field to be used as condition instead of LoB for ARC
+							// Current condition: available only if (Admin or MiniAdmin) and CU and (BusinessUnitOLD = "Global Technology Services") and (LoB = "SO" or LoB = "IS" or LoB = "ITS" or LoB = "TSS" or LoB = "GPS")
+							if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit") {
+								doc[0].showARCFreq = 1;
+							}
+
+						} else {
+							console.log("[routes][class-assessableunit][getListParams] - " + dataParam.error);
+						}
+					}).catch(function(err) {
+						console.log("[routes][class-assessableunit][getListParams] - " + err.error);
+					})
+
 				}
 
 				/* Get Reporting Groups and BU Countries*/
@@ -416,7 +475,6 @@ var assessableunit = {
 							break;
 
 						default:
-							console.log("doc[0].ReportingGroupList: " + doc[0].ReportingGroupList.length);
 							deferred.resolve({"status": 200, "doc": doc});
 							break;
 					}
@@ -590,10 +648,19 @@ var assessableunit = {
 								}
 							}
 
-							if (doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU Country") {
-								$or.push({"_id":doc[0].IOTid}); // IOT doc ID
-								$or.push({"_id":doc[0].IMTid}); // IMT doc ID
-								if (doc[0].DocSubType == "BU Country") $or.push({"_id":doc[0].Countryid}); // Country doc ID
+							switch (doc[0].DocSubType) {
+								case "BU IMT":
+									$or.push({"_id":doc[0].IOTid});
+									$or.push({"_id":doc[0].IMTid});
+									break;
+								case "BU Country":
+									$or.push({"_id":doc[0].IOTid});
+									$or.push({"_id":doc[0].IMTid});
+									$or.push({"_id":doc[0].Countryid});
+									break;
+								case "Controllable Unit":
+									$or.push({"_id":doc[0].parentid});
+									break;
 							}
 
 							var searchobj = { selector: {"_id": {"$gt":0}, "key": "Assessable Unit", $or } };
@@ -609,14 +676,34 @@ var assessableunit = {
 										}
 									}
 
-									if (doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU Country") {
-										if (resdocs[i]._id == doc[0].IOTid) doc[0].IOT = resdocs[i].IOT; //get latetest IOT name based on ID
-										if (resdocs[i]._id == doc[0].IMTid) doc[0].IMT = resdocs[i].IMT; //get latetest IMT name based on ID
-										if (doc[0].DocSubType == "BU Country")
-											if (resdocs[i]._id == doc[0].Countryid) doc[0].Country = resdocs[i].Country; //get latetest Country name based on ID
+									switch (doc[0].DocSubType) {
+										case "BU IMT":
+											if (resdocs[i]._id == doc[0].IOTid) doc[0].IOT = resdocs[i].IOT;
+											if (resdocs[i]._id == doc[0].IMTid) doc[0].IMT = resdocs[i].IMT;
+											break;
+										case "BU Country":
+											if (resdocs[i]._id == doc[0].IOTid) doc[0].IOT = resdocs[i].IOT;
+											if (resdocs[i]._id == doc[0].IMTid) doc[0].IMT = resdocs[i].IMT;
+											if (resdocs[i]._id == doc[0].Countryid) doc[0].Country = resdocs[i].Country;
+											break;
+										case "Controllable Unit":
+											if (resdocs[i]._id == doc[0].parentid && !doc[0].ParentDocSubType == "Business Unit") {
+												doc[0].ParentSubject = resdocs[i].Name;
+												doc[0].IOT = resdocs[i].IOT;
+												switch (doc[0].ParentDocSubType) {
+													case "BU IMT":
+														doc[0].IMT = resdocs[i].IMT;
+														break;
+													case "Country":
+														doc[0].IMT = resdocs[i].IMT;
+														doc[0].Country = resdocs[i].Country;
+													break;
+												}
+											}
+											break;
 									}
-
 								}
+
 								doc[0].BRGMembershipDisp = brgmNames;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
@@ -678,6 +765,12 @@ var assessableunit = {
 					doc[0].IOT = req.body.IOT;
 					doc[0].IOTid = req.body.IOTid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
+					doc[0].Status = req.body.Status
+					// Update Access
+					doc[0].Owner = req.body.Owner;
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+          doc[0].Readers = req.body.readerslist;
 					break;
 				case "BU IMT":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -685,6 +778,12 @@ var assessableunit = {
 					doc[0].IMT = req.body.IMT;
 					doc[0].IMTid = req.body.IMTid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
+					doc[0].Status = req.body.Status
+					// Update Access
+					doc[0].Owner = req.body.Owner;
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+          doc[0].Readers = req.body.readerslist;
 					break;
 				case "BU Country":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -693,6 +792,14 @@ var assessableunit = {
 					doc[0].Country = req.body.Country;
 					doc[0].Countryid = req.body.Countryid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
+					doc[0].AuditProgram = req.body.AuditProgram;
+					doc[0].ExcludeGeo = req.body.ExcludeGeo;
+					doc[0].Status = req.body.Status
+					// Update Access
+					doc[0].Owner = req.body.Owner;
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+          doc[0].Readers = req.body.readerslist;
 					break;
 				case "Country Process":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -702,27 +809,30 @@ var assessableunit = {
 					doc[0].CUSize = req.body.CUSize;
 					break;
 				case "Account":
-					doc[0].ParentSubject = req.body.ParentSubject;
-					doc[0].MetricsCriteriaLabel= req.body.MetricsCriteriaLabel;
+					// Update Admin & Basic Sections
+					doc[0].Name = req.body.Name;
 					doc[0].MetricsCriteria = req.body.MetricsCriteria;
-					doc[0].SpecialContractCategory = req.body.SpecialContractCategory;
-					// Update Focals, Coordinators & Readers
+					doc[0].MetricsValue = req.body.MetricsValue
+					doc[0].Status = req.body.Status;
+					// Update Access
+					doc[0].Owner = req.body.Owner;
 					doc[0].Focals = req.body.focalslist;
 					doc[0].Coordinators = req.body.coordinatorslist;
-                    doc[0].Readers = req.body.readerslist;
-        // Update Admin & Basic Sections
+          doc[0].Readers = req.body.readerslist;
 				case "Controllable Unit":
 					doc[0].BRGMembership = req.body.BRGMembership;
-					doc[0].PrimaryGlobalProcess = req.body.PrimaryGlobalProcess;
 					doc[0].CUSize = req.body.CUSize;
 					doc[0].LifetimeTCV= req.body.LifetimeTCV;
 					doc[0].AuditableFlag = req.body.AuditableFlag;
 					doc[0].AuditProgram = req.body.AuditProgram;
 					doc[0].Portfolio = req.body.Portfolio;
-          // Update Focals, Coordinators & Readers
-					doc[0].PEDPE = req.body.pedpelist;
-					doc[0].IMTVP = req.body.imtvpedpelist;
-          doc[0].SCAGEOLead = req.body.scageoleadlist;
+					doc[0].ARCFrequency = req.body.ARCFrequency
+					doc[0].MetricsCriteria = req.body.MetricsCriteria;
+					doc[0].MetricsValue = req.body.MetricsValue;
+					doc[0].ParentSubject = req.body.ParentSubject;
+					doc[0].IOT = req.body.IOT;
+					doc[0].IMT = req.body.IMT;
+					doc[0].Country = req.body.Country;
 					break;
 				case "BU Reporting Group":
 					doc[0].GroupLOB = req.body.GroupLOB;
@@ -730,7 +840,8 @@ var assessableunit = {
           doc[0].GroupLOB = req.body.GroupLOB;
 					doc[0].Name = req.body.Name;
 					doc[0].Status = req.body.Status;
-          // Update Focals, Coordinators & Readers
+					// Update Access
+					doc[0].Owner = req.body.Owner;
 					doc[0].Focals = req.body.focalslist;
 					doc[0].Coordinators = req.body.coordinatorslist;
           doc[0].Readers = req.body.readerslist;

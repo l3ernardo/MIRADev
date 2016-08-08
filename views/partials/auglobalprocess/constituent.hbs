@@ -14,7 +14,13 @@
 		</thead>
 		{{#each CPData}}
 			<tr>
-				{{#each col}}<td>{{this}}</td>{{/each}}
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
+				{{/each}}
 			</tr>
 		{{/each}}
 	</table>

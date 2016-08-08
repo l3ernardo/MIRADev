@@ -1,10 +1,10 @@
 /**************************************************************************************************
- * 
+ *
  * MIRA Web identify all user access
  * Date: 06 July 2016
- * 
+ *
  */
- 
+
 var accessrules = {
 	rules: {},
 	getRules: function(req, fldlist) {
@@ -28,6 +28,7 @@ var accessrules = {
 				switch (roles[i]) {
 					case 'MIRA-ADMIN':
 					admin = true;
+          grantaccess = true;
 					break;
 					case 'MIRA-GRANT-ACCESS':
 					grantaccess = true;
@@ -37,7 +38,7 @@ var accessrules = {
 					break;
 					case 'MIRA-CU-ADMIN-DATA':
 					cuadmin = true;
-					break;					
+					break;
 				}
 			}
 		}
@@ -47,9 +48,9 @@ var accessrules = {
 			"grantaccess":grantaccess,
 			"resetstatus":resetstatus,
 			"cuadmin":cuadmin
-		}		
+		}
 		this.rules = rules;
-	}			
+	}
 };
 
 module.exports = accessrules;

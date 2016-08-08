@@ -93,7 +93,7 @@ administration.get('/getParam', isAuthenticated, function(req, res) {
 	})
 });
 /* Get parameter by keyName */
-administration.get('/getParameter', simpleAuthentication, function(req, res) {
+administration.get('/getParameter', function(req, res) {
 	parameter.getParam(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.doc.value);
@@ -108,8 +108,8 @@ administration.get('/getParameter', simpleAuthentication, function(req, res) {
 });
 /* Load test for list of parameter */
 administration.get('/getListParams', isAuthenticated, function(req, res) {
-	var lParams = ['GBSInstanceDesign', 'UnitSizes'];
-	parameter.getListParams(req, db, lParams).then(function(data) {
+	var lParams = ['GBSInstanceDesign', 'UnitSizes','ARCFrequencies'];
+	parameter.getListParams(db, lParams).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send( data.parameters.GBSInstanceDesign );
 		} else {
