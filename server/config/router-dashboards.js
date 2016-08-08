@@ -166,7 +166,9 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Account":
 						if (data.doc[0].editmode) {
-							var lParams = ['AssessableUnitStatus'];
+							var lParams;
+							if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'AssessableUnitStatus'];
+							else lParams = ['GBSMetrics', 'AssessableUnitStatus'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;
