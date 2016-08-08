@@ -86,11 +86,8 @@ var assessableunit = {
 			if(doc[0].DocSubType == "Controllable Unit") {
 				doc[0].CUFlag = 1;
       }
-			if(doc[0].DocSubType == "BU Reporting Group"  || doc[0].DocSubType == "Account") {
-				doc[0].RGFlag = 1;
-      }
-      if(doc[0].DocSubType == "BU IMT") {
-				doc[0].BUIMTflag = 1;
+			if(doc[0].DocSubType == "BU Reporting Group" || doc[0].DocSubType == "Account" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU Country") {
+				doc[0].MIRAunit = 1;
       }
 
 			/* Format Links */
@@ -769,6 +766,11 @@ var assessableunit = {
 					doc[0].IOTid = req.body.IOTid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 					doc[0].Status = req.body.Status
+					// Update Access
+					doc[0].Owner = req.body.Owner;
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+          doc[0].Readers = req.body.readerslist;
 					break;
 				case "BU IMT":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -777,6 +779,11 @@ var assessableunit = {
 					doc[0].IMTid = req.body.IMTid;
 					doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 					doc[0].Status = req.body.Status
+					// Update Access
+					doc[0].Owner = req.body.Owner;
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+          doc[0].Readers = req.body.readerslist;
 					break;
 				case "BU Country":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -788,6 +795,11 @@ var assessableunit = {
 					doc[0].AuditProgram = req.body.AuditProgram;
 					doc[0].ExcludeGeo = req.body.ExcludeGeo;
 					doc[0].Status = req.body.Status
+					// Update Access
+					doc[0].Owner = req.body.Owner;
+					doc[0].Focals = req.body.focalslist;
+					doc[0].Coordinators = req.body.coordinatorslist;
+          doc[0].Readers = req.body.readerslist;
 					break;
 				case "Country Process":
 					doc[0].BRGMembership = req.body.BRGMembership;
@@ -797,15 +809,16 @@ var assessableunit = {
 					doc[0].CUSize = req.body.CUSize;
 					break;
 				case "Account":
+					// Update Admin & Basic Sections
 					doc[0].Name = req.body.Name;
 					doc[0].MetricsCriteria = req.body.MetricsCriteria;
 					doc[0].MetricsValue = req.body.MetricsValue
 					doc[0].Status = req.body.Status;
-					// Update Focals, Coordinators & Readers
+					// Update Access
+					doc[0].Owner = req.body.Owner;
 					doc[0].Focals = req.body.focalslist;
 					doc[0].Coordinators = req.body.coordinatorslist;
           doc[0].Readers = req.body.readerslist;
-        // Update Admin & Basic Sections
 				case "Controllable Unit":
 					doc[0].BRGMembership = req.body.BRGMembership;
 					doc[0].CUSize = req.body.CUSize;
@@ -827,7 +840,8 @@ var assessableunit = {
           doc[0].GroupLOB = req.body.GroupLOB;
 					doc[0].Name = req.body.Name;
 					doc[0].Status = req.body.Status;
-          // Update Focals, Coordinators & Readers
+					// Update Access
+					doc[0].Owner = req.body.Owner;
 					doc[0].Focals = req.body.focalslist;
 					doc[0].Coordinators = req.body.coordinatorslist;
           doc[0].Readers = req.body.readerslist;
