@@ -6,15 +6,19 @@
 			<td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td>
 		</tr>
 		<tr>
-			<td><label for="IOT">BU IOT:<span class="ibm-required">*</span></label></td>
-			<td>
-				<span>
-					<input type="hidden" name="IOTid" id="IOTid" value="{{IOTid}}">
-					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-					{{{uniqueSelect "iotname" IOTList "docid" "name" IOT}}}
-					</select>
-				</span>
-			</td>
+			{{#if newunit}}
+				<td><label for="IOT">BU IOT:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						<input type="hidden" name="IOTid" id="IOTid" value="{{IOTid}}">
+						<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
+						{{{uniqueSelect "iotname" IOTList "docid" "name" IOT}}}
+						</select>
+					</span>
+				</td>
+			{{else}}
+				<td>BU IOT:</td><td>{{IOT}}</td>
+			{{/if}}
 		</tr>
 		<tr>
 			<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
