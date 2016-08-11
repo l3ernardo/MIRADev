@@ -4,15 +4,19 @@
 		<caption class="mira-caption"><em>Basics</em></caption>
 		<tr><td width="25%">Parent BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr>
-			<td><label for="IMT">BU IMT:<span class="ibm-required">*</span></label></td>
-			<td>
-				<span>
-					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-					<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
-					<input type="hidden" name="IMTid" id="IMTid" value="{{IMTid}}">
-					{{{uniqueSelect "imtname" IMTList "docid" "name" IMT}}}
-				</span>
-			</td>
+			{{#if newunit}}
+				<td><label for="IMT">BU IMT:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
+						<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
+						<input type="hidden" name="IMTid" id="IMTid" value="{{IMTid}}">
+						{{{uniqueSelect "imtname" IMTList "docid" "name" IMT}}}
+					</span>
+				</td>
+			{{else}}
+				<td>BU IMT:</td><td>{{IMT}}</td>
+			{{/if}}
 		</tr>
 		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr>
