@@ -1,217 +1,118 @@
-{{#if editmode}}
-{{!-- AUBUSINESSUNIT form - Constituent Assessable Units section - Edit Mode --}}
-	<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-		<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
-	</table>
-	<div class="ibm-columns ibm-graphic-tabs">
-		<div class="ibm-tab-section">
-			<ul class="ibm-tabs">
-				<li id="GlobalProcess-li" class="ibm-active"><a href="#constituents">Global Process</a></li>
-				<li id="BUIOTs-li"><a href="#constituents">BU IOTs</a></li>
-				<li id="BUReportingGroups-li"><a href="#constituents">BU Reporting Groups</a></li>
-				<li id="ControllableUnits-li"><a href="#constituents">Controllable Units</a></li>
-			</ul>
-		</div>
-		<div id="GlobalProcess" class="ibm-tabs-content">
-			<table id="globalprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="mira-basic">
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each GPData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
-		<div id="BUIOTs" class="ibm-tabs-content" style='display : none'>
-			<table id="iots_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="bu-iot">
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each BUIOTData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
-		<div id="BUReportingGroups" class="ibm-tabs-content" style='display : none'>
-			<table id="reportinggroups_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="reporting-group">
-					<th scope="col">Type</th>
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each RGData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
-		<div id="ControllableUnits" class="ibm-tabs-content" style='display : none'>
-			<table id="controallableunits_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="controllable-unit">
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each CUData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
+<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
+</table>
+<div class="ibm-columns ibm-graphic-tabs">
+	<div class="ibm-tab-section">
+		<ul class="ibm-tabs">
+			<li id="GlobalProcess-li" class="ibm-active"><a href="#constituents">Global Process</a></li>
+			<li id="BUIOTs-li"><a href="#constituents">BU IOTs</a></li>
+			<li id="BUReportingGroups-li"><a href="#constituents">BU Reporting Groups</a></li>
+			<li id="ControllableUnits-li"><a href="#constituents">Controllable Units</a></li>
+		</ul>
 	</div>
-{{else}}
-{{!-- AUBUSINESSUNIT form - Constituent Assessable Units section - Read Mode --}}
-	<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-		<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
-	</table>
-	<div class="ibm-columns ibm-graphic-tabs">
-		<div class="ibm-tab-section">
-			<ul class="ibm-tabs">
-				<li id="GlobalProcess-li" class="ibm-active"><a href="#constituents">Global Process</a></li>
-				<li id="BUIOTs-li"><a href="#constituents">BU IOTs</a></li>
-				<li id="BUReportingGroups-li"><a href="#constituents">BU Reporting Groups</a></li>
-				<li id="ControllableUnits-li"><a href="#constituents">Controllable Units</a></li>
-			</ul>
-		</div>
-		<div id="GlobalProcess" class="ibm-tabs-content">
-			<table id="globalprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="mira-basic">
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each GPData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
+	<div id="GlobalProcess" class="ibm-tabs-content">
+		<table id="globalprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="mira-basic">
+				<th scope="col">Name</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each GPData}}
+			<tr>
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
 				{{/each}}
-			</table>
-		</div>
-		<div id="BUIOTs" class="ibm-tabs-content" style='display : none'>
-			<table id="iots_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="bu-iot">
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each BUIOTData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
-		<div id="BUReportingGroups" class="ibm-tabs-content" style='display : none'>
-			<table id="reportinggroups_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="reporting-group">
-					<th scope="col">Type</th>
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each RGData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
-		<div id="ControllableUnits" class="ibm-tabs-content" style='display : none'>
-			<table id="controallableunits_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="controllable-unit">
-					<th scope="col">Name</th>
-					<th scope="col">Status</th>
-					<th scope="col">Prior Qtr</th>
-					<th scope="col">Current Qtr</th>
-					<th scope="col">Outlook</th>
-					<th scope="col">Target to Sat</th>
-				</thead>
-				{{#each CUData}}
-				<tr>
-					{{#each col}}
-						{{#if @first}}
-							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-						{{else}}
-							<td>{{this}}</td>
-						{{/if}}
-					{{/each}}
-				</tr>
-				{{/each}}
-			</table>
-		</div>
+			</tr>
+			{{/each}}
+		</table>
 	</div>
-{{/if}}
+	<div id="BUIOTs" class="ibm-tabs-content" style='display : none'>
+		{{#if admin}}
+			{{#if _id}}
+				<a href="/newassessableunit?pid={{_id}}&docsubtype=BU IOT">Create new BU IOT</a>
+				<br /><br />
+			{{/if}}
+		{{/if}}
+		<table id="iots_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="bu-iot">
+				<th scope="col">Name IOT</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each BUIOTData}}
+			<tr>
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
+				{{/each}}
+			</tr>
+			{{/each}}
+		</table>
+	</div>
+	<div id="BUReportingGroups" class="ibm-tabs-content" style='display : none'>
+		{{#if admin}}
+			{{#if _id}}
+				<a href="/newassessableunit?pid={{_id}}&docsubtype=BU Reporting Group">Create new BU Reporting Group</a>
+				<br /><br />
+			{{/if}}
+		{{/if}}
+		<table id="reportinggroups_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="reporting-group">
+				<th scope="col">Type</th>
+				<th scope="col">Name</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each RGData}}
+			<tr>
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
+				{{/each}}
+			</tr>
+			{{/each}}
+		</table>
+	</div>
+	<div id="ControllableUnits" class="ibm-tabs-content" style='display : none'>
+		<table id="controallableunits_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="controllable-unit">
+				<th scope="col">Name</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each CUData}}
+			<tr>
+				{{#each col}}
+					{{#if @first}}
+						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+					{{else}}
+						<td>{{this}}</td>
+					{{/if}}
+				{{/each}}
+			</tr>
+			{{/each}}
+		</table>
+	</div>
+</div>
