@@ -23,8 +23,9 @@ bpDivURL: 'http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmdivdept/dept=%t.sea
 */
 function updateOwner() {
 	var member = [];
-	var email = $("#Owner").html().split("(")[1].split(")")[0];
-	//email = "rodrigok@br.ibm.com" // for test purposes
+  var email = "";
+	if (!$("#Owner").html() == "") email = $("#Owner").html().split("(")[1].split(")")[0];
+
 	if(email!="") {
 		// Owner info
 		var div = '';
@@ -41,14 +42,14 @@ function updateOwner() {
 		var cn='';
 		var notesemail = '';
 		var stelephonenumber = '';
-		var smail = '';  
+		var smail = '';
 		$.ajax({
 			url: '/bpdata?field=mail&search=' + email,
 			type: 'GET',
 			success: function(resp) {
 				if (resp) {
 					//alert(JSON.stringify(resp));
-					var doc = JSON.parse(resp);	
+					var doc = JSON.parse(resp);
 					for (var i = 0; i < doc.search.return.count; i++) {
 						for(var j=0;j<doc.search.entry[i].attribute.length;j++) {
 							//console.log(doc.search.entry[i].attribute.length);
@@ -82,7 +83,7 @@ function updateOwner() {
 									break;
 								case 'secretaryserialnumber':
 									secretaryserialnumber = doc.search.entry[i].attribute[j].value[0];
-									break;                
+									break;
 							}
 						}
 						if(secretaryserialnumber!="") {
@@ -91,7 +92,7 @@ function updateOwner() {
 								type: 'GET',
 								success: function(resp) {
 									if (resp) {
-										var doc = JSON.parse(resp);	
+										var doc = JSON.parse(resp);
 										for (var i = 0; i < doc.search.return.count; i++) {
 											for(var j=0;j<doc.search.entry[i].attribute.length;j++) {
 												switch(doc.search.entry[i].attribute[j].name) {
@@ -100,13 +101,13 @@ function updateOwner() {
 														break;
 													case 'notesemail':
 														notesemail = doc.search.entry[i].attribute[j].value[0];
-														break; 
+														break;
 													case 'telephonenumber':
 														stelephonenumber = doc.search.entry[i].attribute[j].value[0];
-														break; 
+														break;
 													case 'mail':
 														smail = doc.search.entry[i].attribute[j].value[0];
-														break;                   
+														break;
 												}
 											}
 										}
@@ -123,12 +124,12 @@ function updateOwner() {
 										member.push({"fld":"Assistant Notes ID","value":notesemail})
 										member.push({"fld":"Assistant Phone","value":stelephonenumber})
 										member.push({"fld":"Assistant email","value":smail})
-										loadCodes(member);									
+										loadCodes(member);
 									}
 								},
 								error: function(e) {
 									return false;
-								}  
+								}
 							})
 						} else {
 							member.push({"fld":"Division","value":div})
@@ -145,12 +146,12 @@ function updateOwner() {
 							member.push({"fld":"Assistant Phone","value":stelephonenumber})
 							member.push({"fld":"Assistant email","value":smail})
 							loadCodes(member);
-						}     
+						}
 				}
 			}},
 			error: function(e) {
 				return false;
-			}  
+			}
 		})
 	}
 }
@@ -165,7 +166,7 @@ function loadCodes(member) {
 			}
 			if(member[i].fld=='Department') {
 				dept = member[i].value
-			}			
+			}
 		}
 		$.ajax({
 			url: '/bporg?search=' + org,
@@ -183,7 +184,7 @@ function loadCodes(member) {
 											member[k].value = org
 										}
 									}
-									break;                
+									break;
 							}
 						}
 					}
@@ -203,7 +204,7 @@ function loadCodes(member) {
 														member[k].value = dept
 													}
 												}
-												break;                
+												break;
 										}
 									}
 								}
@@ -221,7 +222,7 @@ function loadCodes(member) {
 
 function displayOwnerInfo(member) {
 	var dummy = document.getElementById('Owner');
-	$(dummy).after( "<br/><div class='ibm-ind-link'><a class='ibm-forward-em-link' onclick='showHide(document.getElementById(\"OwnerDetails\"))'>Details</a><div id='OwnerInfo'><br/></div>" );	
+	$(dummy).after( "<br/><div class='ibm-ind-link'><a class='ibm-forward-em-link' onclick='showHide(document.getElementById(\"OwnerDetails\"))'>Details</a><div id='OwnerInfo'><br/></div>" );
 	var OwnerInfo = document.getElementById('OwnerInfo');
 	var x = document.createElement("TABLE");
 	x.setAttribute("cellspacing","0")
@@ -235,14 +236,14 @@ function displayOwnerInfo(member) {
 	var y = document.createElement("THEAD");
 	x.appendChild(y);
 	var t = document.createElement("TR");
-	y.appendChild(t);	
+	y.appendChild(t);
 	var w = document.createElement("TH");
 	t.appendChild(w);
 	var w = document.createElement("TH");
 	t.appendChild(w);
 	*/
 	var y = document.createElement("TBODY");
-	x.appendChild(y);	
+	x.appendChild(y);
 	for(var i=0;i<member.length;i++) {
 		var t = document.createElement("TR");
 		y.appendChild(t);
