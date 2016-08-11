@@ -37,7 +37,7 @@
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
 	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/savebuau">
-		<input type="hidden" name="docid" value="{{_id}}">
+		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="docsubtype" value="{{DocSubType}}">
 		<input type="hidden" name="parentid" value="{{parentid}}">
