@@ -4,7 +4,7 @@
 	{{#if editmode}}
 		{{!-- AU ControllableUnit form - Administrative Use Only section - Edit Mode with Admin Access --}}
 		{{#if admin}}
-			<!-- CU Change parent is only available for Admin -->
+			{{!-- CU Change parent is only available for Admin --}}
 			<tr>
 				<td width="25%"><label for="ParentSubject">Parent {{ParentDocSubType}}:</label></td>
 				<td>
@@ -19,30 +19,29 @@
 		<tr><td>Business Unit:</td><td>{{BusinessUnit}}</td></tr>
 		<tr><td>Category:</td><td>{{Category}}</td></tr>
 		<tr><td>Subcategory:</td><td>{{Subcategory}}</td></tr>
-		<tr><td>Relevant country processes:</td><td>{{RelevantCountryProcesses}}</td></tr>
+		{{#if (eq ParentDocSubType "BU Country")}}
+			<tr><td>Country:</td><td>{{Country}}</td></tr>
+		{{/if}}
+		<tr>
+			<td>Relevant country processes:</td>
+			<td>
+				{{#each RelevantCountryProcesses}}
+					{{#if @last}} {{this}} {{else}} {{this}}<br /> {{/if}}
+				{{/each}}
+			</td>
+		</tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>
-		{{#unless BusinessUnitOLD}}
-			{{!-- CU Type based on BU validation --}}
-			<tr>
-				<td><label for="CUType">CU type:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span>
-					{{{uniqueSelect "CUType" parameters.CUTypes.0.options "name" "name" CUType}}}
-					</span>
-				</td>
-			</tr>
-		{{/unless}}
 		<tr>
 			<td><label for="Portfolio">Portfolio:<span class="ibm-required">*</span></label></td>
 			<td>
 				<span>
-				{{#if PortfolioYes}}
+				{{#if_equal Portfolio "Yes"}}
 						<input class="showsize" type="radio" id="PortfolioYes" name="Portfolio" value="Yes" checked>Yes
 						<input type="radio" name="Portfolio" id="PortfolioNo" value="No">No
 					{{else}}
 						<input class="showsize" type="radio" id="PortfolioYes" name="Portfolio" value="Yes">Yes
 						<input type="radio" name="Portfolio" id="PortfolioNo" value="No" checked>No
-					{{/if}}
+					{{/if_equal}}
 				</span>
 			</td>
 		</tr>
@@ -53,28 +52,23 @@
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
 			</td>
 		</tr>
-		{{#unless BusinessUnitOLD}}
-			{{!-- SupportedFrom based on BU validation --}}
-			<tr>
-				<td><label for="SupportedFrom">Supported From:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span>
-					{{{uniqueSelect "SupportedFrom" parameters.SupportedFrom.0.options "name" "name" SupportedFrom}}}
-					</span>
-				</td>
-			</tr>
-		{{/unless}}
 	{{else}}
 		<tr><td width="25%">Parent {{ParentDocSubType}}:</td><td>{{ParentSubject}}</td></tr>
 		<tr><td>Business Unit:</td><td>{{BusinessUnit}}</td></tr>
 		<tr><td>Category:</td><td>{{Category}}</td></tr>
 		<tr><td>Subcategory:</td><td>{{Subcategory}}</td></tr>
-		<tr><td>Relevant country processes:</td><td>{{RelevantCountryProcesses}}</td></tr>
+		{{#if (eq ParentDocSubType "BU Country")}}
+			<tr><td>Country:</td><td>{{Country}}</td></tr>
+		{{/if}}
+		<tr>
+			<td>Relevant country processes:</td>
+			<td>
+				{{#each RelevantCountryProcesses}}
+					{{#if @last}} {{this}} {{else}} {{this}}<br /> {{/if}}
+				{{/each}}
+			</td>
+		</tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>
-		{{#unless BusinessUnitOLD}}
-			{{!-- CUType based on BU validation --}}
-			<tr><td>CU type:</td><td>{{CUType}}</td></tr>
-		{{/unless}}
 		<tr><td>Portfolio:</td><td>{{Portfolio}}</td></tr>
 		<tr>
 			<td>Status:</td>
@@ -83,10 +77,6 @@
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
 			</td>
 		</tr>
-		{{#unless BusinessUnitOLD}}
-			{{!-- SupportedFrom based on BU validation --}}
-			<tr><td>Supported From:</td><td>{{SupportedFrom}}</td></tr>
-		{{/unless}}
 	{{/if}}
 
 </table>

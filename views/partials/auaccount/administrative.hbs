@@ -1,47 +1,23 @@
-{{#if editmode}}
-{{!-- AUACCOUNT form - Administrative Use Only section - Edit Mode --}}
-	<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-		<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
-		{{#if GTSflag}}
+<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+	{{!-- AUACCOUNT form - Administrative Use Only section - Edit Mode --}}
+	{{#if editmode}}
 		{{#if admin}}
-			<tr>
-				<td width="25%">
-				    <input type="text" id="MetricsCriteriaLabel" name="MetricsCriteriaLabel" value="{{MetricsCriteriaLabel}}" size="40"><label> ($M USD)</label>
-                </td>
-				<td>
-					<input type="text" id="MetricsCriteria" name="MetricsCriteria" value="{{MetricsCriteria}}" size="100" maxlength="300">
-				</td>
-			</tr>
-			<tr>
-			    <td width="25%"><label for="SpecialContractCategory">Special Contract Category:</label></td>
-			    <td><input type="text" id="SpecialContractCategory" name="SpecialContractCategory" value="{{SpecialContractCategory}}" size="100" maxlength="300"></td>
-			</tr>
+			{{#if_equal EnteredBU "GTS"}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GTSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+			{{else}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GBSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+			{{/if_equal}}
 		{{else}}
-			<tr><td width="25%">{{MetricsCriteriaLabel}} ($M USD)</td><td>{{MetricsCriteria}} (planning purposes only)</td></tr>
-		    <tr><td width="25%">Special Contract Category:</td><td>{{SpecialContractCategory}}</td></tr>
+			<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 		{{/if}}
-		{{else}}
-				{{#if admin}}
-			<tr>
-				<td width="25%"><input type="text" id="MetricsCriteriaLabel" name="MetricsCriteriaLabel" value="{{MetricsCriteriaLabel}}" size="40"><label> ($M USD)</label></td>
-				<td>
-					<input type="text" id="MetricsCriteria" name="MetricsCriteria" value="{{MetricsCriteria}}" size="100" maxlength="300">
-				</td>
-			</tr>
-		{{else}}
-			<tr><td width="25%">{{MetricsCriteriaLabel}} ($M USD)</td><td>{{MetricsCriteria}} (planning purposes only)</td></tr>
-		{{/if}}
-		{{/if}}
-	</table>
-{{else}}
-{{!-- AUACCOUNT form - Administrative Use Only section - Read Mode --}}
-	<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-		<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
-		{{#if GTSflag}}
-		<tr><td width="25%">{{MetricsCriteriaLabel}} ($M USD)</td><td>{{MetricsCriteria}} (planning purposes only)</td></tr>
-		<tr><td width="25%">Special Contract Category:</td><td>{{SpecialContractCategory}}</td></tr>
-		{{else }}
-		<tr><td width="25%">{{MetricsCriteriaLabel}} ($M USD)</td><td>{{MetricsCriteria}} (planning purposes only)</td></tr>
-		{{/if}}
-	</table>
-{{/if}}
+	{{else}}
+		<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+	{{/if}}
+</table>

@@ -4,16 +4,20 @@
 		<caption class="mira-caption"><em>Basics</em></caption>
 		<tr><td width="25%">Parent BU IMT:</td><td>{{IMT}}</td></tr>
 		<tr>
-			<td><label for="Country">Country:<span class="ibm-required">*</span></label></td>
-			<td>
-				<span>
-					<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-					<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
-					<input type="hidden" name="Country" id="Country" value="{{Country}}">
-					<input type="hidden" name="Countryid" id="Countryid" value="{{Countryid}}">
-					{{{uniqueSelect "countryname" CountryList "docid" "name" Country}}}
-				</span>
-			</td>
+			{{#if newunit}}
+				<td><label for="Country">Country:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
+						<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
+						<input type="hidden" name="Country" id="Country" value="{{Country}}">
+						<input type="hidden" name="Countryid" id="Countryid" value="{{Countryid}}">
+						{{{uniqueSelect "countryname" CountryList "docid" "name" Country}}}
+					</span>
+				</td>
+			{{else}}
+				<td>Country:</td><td>{{Country}}</td>
+			{{/if}}
 		</tr>
 		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr>
@@ -22,7 +26,8 @@
 		<tr>
 			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span><br />
+				<span>{{{uniqueSelect "Status" parameters.AssessableUnitStatus.0.options "name" "name" Status}}}</span>
+				<br />
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
 			</td>
 		</tr>

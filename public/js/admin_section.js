@@ -3,15 +3,19 @@ $(document).ready(function() {
 	if( $('#CFYes').is(':checked') ) {
 		$(".size").show();
 	} else {
-		$(".size").hide();
+		if( !$('#AFYes').is(':checked')) {
+			$(".size").hide();
+		}
 	}
 
 	if( $('#AFYes').is(':checked')) {
 		$(".size").show();
 		$(".internal-audits").show();
 	} else {
-		$(".size").hide();
 		$(".internal-audits").hide();
+		if( !$('#CFYes').is(':checked')) {
+			$(".size").hide();
+		}
 	}
 
 	$("input[name='AuditableFlag']").click(function(){
@@ -19,8 +23,10 @@ $(document).ready(function() {
 			$(".size").show();
 			$(".internal-audits").show();
 		} else {
-			$(".size").hide();
 			$(".internal-audits").hide();
+			if( !$('#CFYes').is(':checked')) {
+				$(".size").hide();
+			}
 		}
 	});
 
@@ -28,7 +34,9 @@ $(document).ready(function() {
 		if($('#CFYes').is(':checked')) {
 			$(".size").show();
 		} else {
-			$(".size").hide();
+			if( !$('#AFYes').is(':checked')) {
+				$(".size").hide();
+			}
 		}
 	});
 

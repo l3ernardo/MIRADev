@@ -41,7 +41,10 @@
 	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
-		<input type="hidden" name="docsubtype" value="{{DocSubType}}">
+		<input type="hidden" name="DocSubType" value="{{DocSubType}}">
+		<input type="hidden" name="IOT" value="{{IOT}}">
+		<input type="hidden" name="IMT" value="{{IMT}}">
+		<input type="hidden" name="Country" value="{{Country}}">
 		<input type="hidden" name="close" id="close" value="0">
 		<!-- BASICS SECTION -->
 		{{>aucontrollableunit/basics}}
@@ -49,8 +52,10 @@
 		{{>aucontrollableunit/administrative}}
 		<!-- ASSESSMENT SECTION -->
 		{{>assessment}}
-		<!-- CONSTITUENT SECTION -->
-		{{>aucontrollableunit/constituent}}
+		<!-- CONSTITUENT SECTION is only available if a CU is a Portfolio-->
+		{{#if_equal Portfolio "Yes"}}
+			{{>aucontrollableunit/constituent}}
+		{{/if_equal}}
 		<!-- ACCESS SECTION -->
 		{{>contact}}
 		<!-- NOTES & LINKS SECTION -->
