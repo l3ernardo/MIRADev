@@ -860,7 +860,7 @@ var assessableunit = {
 								if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"countryid":resdocs[i].Countryid});
 							}
 							for (var i = 0; i < doc[0].CountryAUList.length; ++i) {
-								findAndRemove(doc[0].CountryList,'docid',doc[0].CountryAUList[i].Countryid)
+								findAndRemove(doc[0].CountryList,'docid',doc[0].CountryAUList[i].countryid)
 							}
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
@@ -932,11 +932,6 @@ var assessableunit = {
 						doc[0].IOT = req.body.IOT;
 						doc[0].IOTid = req.body.IOTid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU IMT":
 						doc[0].BRGMembership = req.body.BRGMembership;
@@ -944,11 +939,6 @@ var assessableunit = {
 						doc[0].IMT = req.body.IMT;
 						doc[0].IMTid = req.body.IMTid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU Country":
 						doc[0].BRGMembership = req.body.BRGMembership;
@@ -959,11 +949,6 @@ var assessableunit = {
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 					case "Account":
             doc[0].ControllableUnit = pdoc[0].ControllableUnit;
@@ -972,28 +957,23 @@ var assessableunit = {
 						doc[0].Name = req.body.Name;
 						doc[0].MetricsCriteria = req.body.MetricsCriteria;
 						doc[0].MetricsValue = req.body.MetricsValue
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 					case "BU Reporting Group":
 						doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].Name = req.body.Name;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 				}
 				doc[0].Notes = req.body.Notes;
 				doc[0].Links = eval(req.body.attachIDs);
 				doc[0].Log = [];
 				doc[0].Log.push(addlog);
+        doc[0].Status = req.body.Status;
 
+        doc[0].Owner = req.body.ownername;
+        doc[0].Focals = req.body.focalslist;
+        doc[0].Coordinators = req.body.coordinatorslist;
+        doc[0].Readers = req.body.readerslist;
 				doc[0].AdditionalReaders = req.body.readerlist;
         if (pdoc[0].AllReaders == undefined) pdoc[0].AllReaders = "";
 				doc[0].AllReaders = pdoc[0].AllReaders; //inherited reader access
@@ -1072,7 +1052,7 @@ var assessableunit = {
 						doc[0].BUCountryIOT = req.body.BUCountryIOT;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1082,7 +1062,7 @@ var assessableunit = {
 						doc[0].IMTid = req.body.IMTid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1094,7 +1074,7 @@ var assessableunit = {
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1111,7 +1091,7 @@ var assessableunit = {
 						doc[0].MetricsCriteria = req.body.MetricsCriteria;
 						doc[0].MetricsValue = req.body.MetricsValue
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1136,7 +1116,7 @@ var assessableunit = {
 	          doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].Name = req.body.Name;
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
