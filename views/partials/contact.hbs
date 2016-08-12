@@ -9,8 +9,12 @@
   			{{#if MIRAunit}}
 
   				<tr>
-  					<td width="25%">MIRA Owner:</td><td><div id="Owner">{{Owner}}</div>
-  					<script>$(document).ready(function() {updateOwner();});</script>
+  					<td width="25%">MIRA Owner:</td>
+            <td>
+              <div class="Owner">
+    						<input id="ownername" name="ownername" size="99" class="ui-autocomplete-input" autocomplete="off" value="{{Owner}}">
+                <script>$(document).ready(function() {bpLookup('#ownername','#ownername');});</script>
+  						</div>
   					</td>
   				</tr>
   				<tr>
