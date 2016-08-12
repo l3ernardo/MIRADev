@@ -28,7 +28,7 @@ security.post('/login',middleware.urlEncodedParser,middleware.passport.authentic
 		// Store the initial url
 		if(req.session.returnTo=='')	req.session.returnTo = req.flash('url');
 		// Store only required user parameters
-		req.session.user = { uid : req.user.uid, cn:req.user.cn, groupName: req.user.groupName};
+		req.session.user = { uid : req.user.uid, cn:req.user.cn, groupName: req.user.groupName, mail:req.user.mail};
 		
 		var userID = req.session.user.cn;
 		if(userID[0].length > 1)	userID = userID[0];
