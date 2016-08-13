@@ -27,21 +27,26 @@ var accessrules = {
 			if(req.session.user.groupName.indexOf(roles[i])!=-1) {
 				switch (roles[i]) {
 					case 'MIRA-ADMIN':
-					admin = true;
-          grantaccess = true;
-					break;
+						admin = true;
+						grantaccess = true;
+						editor = true;
+						break;
 					case 'MIRA-GRANT-ACCESS':
-					grantaccess = true;
-					break;
+						grantaccess = true;
+						editor = true;
+						break;
 					case 'MIRA-RESET-STATUS':
-					resetstatus = true;
-					break;
+						resetstatus = true;
+						break;
 					case 'MIRA-CU-ADMIN-DATA':
-					cuadmin = true;
-					break;
+						cuadmin = true;
+						break;
 				}
 			}
 		}
+		admin = true;
+		grantaccess = true;
+		editor = true;
 		var rules = {
 			"editor":editor,
 			"admin":admin,
