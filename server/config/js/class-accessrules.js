@@ -44,9 +44,6 @@ var accessrules = {
 				}
 			}
 		}
-		admin = true;
-		grantaccess = true;
-		editor = true;
 		var rules = {
 			"editor":editor,
 			"admin":admin,
