@@ -5,6 +5,8 @@ var db = require('./js/class-conn.js');
 var assessableunit = require('./js/class-assessableunit.js');
 var parameter = require('./js/class-parameter.js');
 var isAuthenticated = require('./router-authentication.js');
+var utility = require('./js/class-utility.js');
+var aureq = require('./js/class-auvalidation.js');
 
 /**************************************************************
 ASSESSABLE UNITS - Business Unit type
@@ -304,43 +306,82 @@ dashboards.get('/newassessableunit', isAuthenticated, function(req, res) {
 
 /* Save BU assessable unit document */
 dashboards.post('/savebuau', isAuthenticated, function(req, res){
-	assessableunit.saveAUBU(req, db).then(function(data) {
-		req.query.id = data.body.id;
-		var close = req.body.close;
-		if(data.status==200 & !data.error) {
-			if(data.body) {
-				assessableunit.getAUbyID(req, db).then(function(data) {
-					if(data.status==200 & !data.error) {
-						if(data.doc) {
-							if(close=='1') {
-								res.redirect('/processdashboard');
-							} else {
-								res.redirect('/assessableunit?id=' + data.doc[0]._id);
-							}
+	aureq.validate(req);
+	if (!aureq.validation.status) {
+		res.render('error',{errorDescription: aureq.validation.message.join()});
+		console.log("[routes][savebuau] - " + aureq.validation.message.join());
+	} else {
+		assessableunit.saveAUBU(req, db).then(function(data) {
+			req.query.id = data.body.id;
+			var close = req.body.close;
+			if(data.status==200 & !data.error) {
+				//New document need to update attachments
+				if(req.body.attachIDs != '' && req.body.docid == ""){
+					utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(dataF) {
+						if(dataF.status==200 & !dataF.error && data.body) {
+							assessableunit.getAUbyID(req, db).then(function(data) {
+								if(data.status==200 & !data.error) {
+									if(data.doc) {
+										if(close=='1') {
+											res.redirect('/processdashboard');
+										} else {
+											res.redirect('/assessableunit?id=' + data.doc[0]._id);
+										}
+									} else {
+										res.render('error',{errorDescription: data.error});
+									}
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][getassessableunitbyID] - " + data.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][getassessableunitbyID] - " + err.error);
+							});
+							// res.render('aubusinessunit', data.body );
 						} else {
-							res.render('error',{errorDescription: data.error});
+							res.render('error',{errorDescription: dataF.error});
+							console.log("[routes][savebuau] - " + dataF.error);
 						}
+					}).catch(function(err) {
+						console.log("[dashboards][savebuau] - " + err.error);
+					});
+				} else { //Old document doesn't need to update attachments
+					if(data.body) {
+						assessableunit.getAUbyID(req, db).then(function(data) {
+							if(data.status==200 & !data.error) {
+								if(data.doc) {
+									if(close=='1') {
+										res.redirect('/processdashboard');
+									} else {
+										res.redirect('/assessableunit?id=' + data.doc[0]._id);
+									}
+								} else {
+									res.render('error',{errorDescription: data.error});
+								}
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][getassessableunitbyID] - " + data.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][getassessableunitbyID] - " + err.error);
+						});
+						// res.render('aubusinessunit', data.body );
 					} else {
-						res.render('error',{errorDescription: data.error});
-						console.log("[routes][getassessableunitbyID] - " + data.error);
+						res.render('error',{errorDescription: dataF.error});
+						console.log("[routes][savebuau] - " + dataF.error);
 					}
-				}).catch(function(err) {
-					res.render('error',{errorDescription: err.error});
-					console.log("[routes][getassessableunitbyID] - " + err.error);
-				});
-				// res.render('aubusinessunit', data.body );
+				}
 			} else {
 				res.render('error',{errorDescription: data.error});
-				console.log("[routes][savebuau] - " + data.error);
+				console.log("[dashboards][savebuau] - " + data.error);
 			}
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][savebuau] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][savebuau] - " + err.error);
-	})
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[dashboards][savebuau] - " + err.error);
+		})
+	}
 
 });
 

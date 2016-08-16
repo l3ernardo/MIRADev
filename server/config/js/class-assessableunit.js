@@ -11,14 +11,7 @@ var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var param = require('./class-parameter.js');
-
-function findAndRemove(array, property, value) {
-  array.forEach(function(result, index) {
-    if(result[property] === value) {
-      array.splice(index, 1);
-    }
-  });
-}
+var util = require('./class-utility.js');
 
 var assessableunit = {
 
@@ -79,10 +72,6 @@ var assessableunit = {
 			doc[0].resetstatus = accessrules.rules.resetstatus;
 			doc[0].cuadmin = accessrules.rules.cuadmin;
 			if (accessrules.rules.editor && accessrules.rules.cuadmin && (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Controllable Unit")) doc[0].admin = 1;
-			if (doc[0].admin) {
-				doc[0].editor = 1;
-				doc[0].grantaccess = 1;
-			}
 
 			/* Field displays */
 			if(doc[0].AuditableFlag == "Yes") {
@@ -343,7 +332,7 @@ var assessableunit = {
 				}
 
 				/* Get Reporting Groups and BU Countries*/
-				if(req.query.edit != undefined) { //Edit mode
+				if(req.query.edit != undefined && doc[0].editor) { //Edit mode
 					doc[0].editmode = 1;
 
 					switch (doc[0].DocSubType) {
@@ -786,7 +775,7 @@ var assessableunit = {
 								if (resdocs[i].DocSubType == "BU IOT") doc[0].IOTAUList.push({"iotid":resdocs[i].IOTid});
 							}
 							for (var i = 0; i < doc[0].IOTAUList.length; ++i) {
-								findAndRemove(doc[0].IOTList,'docid',doc[0].IOTAUList[i].iotid)
+                util.findAndRemove(doc[0].IOTList,'docid',doc[0].IOTAUList[i].iotid)
 							}
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
@@ -822,7 +811,7 @@ var assessableunit = {
 								if (resdocs[i].DocSubType == "BU IMT") doc[0].IMTAUList.push({"imtid":resdocs[i].IMTid});
 							}
 							for (var i = 0; i < doc[0].IMTAUList.length; ++i) {
-								findAndRemove(doc[0].IMTList,'docid',doc[0].IMTAUList[i].imtid)
+								util.findAndRemove(doc[0].IMTList,'docid',doc[0].IMTAUList[i].imtid)
 							}
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
@@ -860,7 +849,7 @@ var assessableunit = {
 								if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"countryid":resdocs[i].Countryid});
 							}
 							for (var i = 0; i < doc[0].CountryAUList.length; ++i) {
-								findAndRemove(doc[0].CountryList,'docid',doc[0].CountryAUList[i].Countryid)
+								util.findAndRemove(doc[0].CountryList,'docid',doc[0].CountryAUList[i].countryid)
 							}
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
@@ -932,11 +921,6 @@ var assessableunit = {
 						doc[0].IOT = req.body.IOT;
 						doc[0].IOTid = req.body.IOTid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU IMT":
 						doc[0].BRGMembership = req.body.BRGMembership;
@@ -944,11 +928,6 @@ var assessableunit = {
 						doc[0].IMT = req.body.IMT;
 						doc[0].IMTid = req.body.IMTid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU Country":
 						doc[0].BRGMembership = req.body.BRGMembership;
@@ -959,11 +938,6 @@ var assessableunit = {
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 					case "Account":
             doc[0].ControllableUnit = pdoc[0].ControllableUnit;
@@ -972,69 +946,55 @@ var assessableunit = {
 						doc[0].Name = req.body.Name;
 						doc[0].MetricsCriteria = req.body.MetricsCriteria;
 						doc[0].MetricsValue = req.body.MetricsValue
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 					case "BU Reporting Group":
 						doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].Name = req.body.Name;
-						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-						doc[0].Readers = req.body.readerslist;
 						break;
 				}
 				doc[0].Notes = req.body.Notes;
 				doc[0].Links = eval(req.body.attachIDs);
 				doc[0].Log = [];
 				doc[0].Log.push(addlog);
+        doc[0].Status = req.body.Status;
 
-				doc[0].AdditionalReaders = req.body.readerlist;
-        if (pdoc[0].AllReaders == undefined) pdoc[0].AllReaders = "";
-				doc[0].AllReaders = pdoc[0].AllReaders; //inherited reader access
-        if (doc[0].AllReaders != "") {
-					if (doc[0].AdditionalReaders != "" && doc[0].AdditionalReaders != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].AdditionalReaders;
-					if (doc[0].Coordinators != "" && doc[0].Coordinators != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Coordinators;
-					if (doc[0].Readers != "" && doc[0].Readers != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Readers;
-				} else {
-					if (doc[0].AdditionalReaders != "" && doc[0].AdditionalReaders != undefined) doc[0].AllReaders = doc[0].AdditionalReaders;
-					if (doc[0].AllReaders) {
-						if (doc[0].Coordinators != "" && doc[0].Coordinators != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Coordinators;
-					} else {
-						if (doc[0].Coordinators != "" && doc[0].Coordinators != undefined) doc[0].AllReaders = doc[0].Coordinators;
-					}
-					if (doc[0].AllReaders) {
-						if (doc[0].Readers != "" && doc[0].Readers != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Readers;
-					} else {
-						if (doc[0].Readers != "" && doc[0].Readers != undefined) doc[0].AllReaders =  doc[0].Readers;
-					}
-				}
+        doc[0].Owner = req.body.ownername;
+        doc[0].Focals = req.body.focalslist;
+        doc[0].Coordinators = req.body.coordinatorslist;
+        doc[0].Readers = req.body.readerslist;
 
+        doc[0].AdditionalReaders = req.body.readerlist;
 				doc[0].AdditionalEditors = req.body.editorlist;
-        if (pdoc[0].AllEditors == undefined) pdoc[0].AllEditors = "";
-				doc[0].AllEditors = pdoc[0].AllEditors; //inherited editor access
-				if (doc[0].AllEditors != "") {
-					if (doc[0].AdditionalEditors != "" && doc[0].AdditionalEditors != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].AdditionalEditors;
-					if (doc[0].Owner != "" && doc[0].Owner != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Owner;
-					if (doc[0].Focals != "" && doc[0].Focals != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Focals;
-				} else {
-					if (doc[0].AdditionalEditors != "" && doc[0].AdditionalEditors != undefined) doc[0].AllEditors = doc[0].AdditionalEditors;
-					if (doc[0].AllEditors) {
-						if (doc[0].Owner != "" && doc[0].Owner != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Owner;
-					} else {
-						if (doc[0].Owner != "" && doc[0].Owner != undefined) doc[0].AllEditors = doc[0].Owner;
-					}
-					if (doc[0].AllEditors) {
-						if (doc[0].Focals != "" && doc[0].Focals != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Focals;
-					} else {
-						if (doc[0].Focals != "" && doc[0].Focals != undefined) doc[0].AllEditors = doc[0].Focals;
-					}
-				}
+
+        if (pdoc[0].AllReaders == undefined) pdoc[0].AllReaders = [];
+				doc[0].AllReaders = pdoc[0].AllReaders; //inherited reader access
+        if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
+          doc[0].AdditionalReaders.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
+        }
+        if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
+          doc[0].Coordinators.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
+        }
+        if (doc[0].Readers != undefined && doc[0].Readers != "") {
+          doc[0].Readers.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
+        }
+        doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
+
+        if (pdoc[0].AllEditors == undefined) pdoc[0].AllEditors = [];
+				doc[0].AllEditors = pdoc[0].AllEditors; //inherited reader access
+        if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner);
+        if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
+          doc[0].AdditionalEditors.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
+        }
+        if (doc[0].Focals != undefined && doc[0].Focals != "") {
+          doc[0].Focals.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
+        }
+        doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);
 
 				db.save(doc[0]).then(function(data){
 					deferred.resolve(data);
@@ -1072,7 +1032,7 @@ var assessableunit = {
 						doc[0].BUCountryIOT = req.body.BUCountryIOT;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1082,7 +1042,7 @@ var assessableunit = {
 						doc[0].IMTid = req.body.IMTid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1094,7 +1054,7 @@ var assessableunit = {
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1111,7 +1071,7 @@ var assessableunit = {
 						doc[0].MetricsCriteria = req.body.MetricsCriteria;
 						doc[0].MetricsValue = req.body.MetricsValue
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1136,7 +1096,7 @@ var assessableunit = {
 	          doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].Name = req.body.Name;
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.Owner;
+						doc[0].Owner = req.body.ownername;
 						doc[0].Focals = req.body.focalslist;
 						doc[0].Coordinators = req.body.coordinatorslist;
 	          doc[0].Readers = req.body.readerslist;
@@ -1146,47 +1106,35 @@ var assessableunit = {
 				doc[0].Links = eval(req.body.attachIDs);
 				doc[0].Log.push(addlog);
 
-				doc[0].AdditionalReaders = req.body.readerlist;
+        doc[0].AdditionalReaders = req.body.readerlist;
 				doc[0].AdditionalEditors = req.body.editorlist;
 
-        if (doc[0].AllReaders == undefined) doc[0].AllReaders = "";
-				if (doc[0].AllReaders != "") {
-					if (doc[0].AdditionalReaders != "" && doc[0].AdditionalReaders != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].AdditionalReaders;
-					if (doc[0].Coordinators != "" && doc[0].Coordinators != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Coordinators;
-					if (doc[0].Readers != "" && doc[0].Readers != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Readers;
-				} else {
-					if (doc[0].AdditionalReaders != "") doc[0].AllReaders = doc[0].AdditionalReaders;
-					if (doc[0].AllReaders) {
-						if (doc[0].Coordinators != "" && doc[0].Coordinators != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Coordinators;
-					} else {
-						if (doc[0].Coordinators != "" && doc[0].Coordinators != undefined) doc[0].AllReaders = doc[0].Coordinators;
-					}
-					if (doc[0].AllReaders) {
-						if (doc[0].Readers != "" && doc[0].Readers != undefined) doc[0].AllReaders = doc[0].AllReaders + "," + doc[0].Readers;
-					} else {
-						if (doc[0].Readers != "" && doc[0].Readers != undefined) doc[0].AllReaders =  doc[0].Readers;
-					}
-				}
+        if (doc[0].AllReaders == undefined) doc[0].AllReaders = [];
+        if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
+          doc[0].AdditionalReaders.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
+        }
+        if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
+          doc[0].Coordinators.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
+        }
+        if (doc[0].Readers != undefined && doc[0].Readers != "") {
+          doc[0].Readers.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
+        }
+        doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
 
-        if (doc[0].AllEditors == undefined) doc[0].AllEditors = "";
-				if (doc[0].AllEditors != "") {
-					if (doc[0].AdditionalEditors != "" && doc[0].AdditionalEditors != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].AdditionalEditors;
-					if (doc[0].Owner != "" && doc[0].Owner != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Owner;
-					if (doc[0].Focals != "" && doc[0].Focals != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Focals;
-				} else {
-					if (doc[0].AdditionalEditors != "" && doc[0].AdditionalEditors != undefined) doc[0].AllEditors = doc[0].AdditionalEditors;
-					if (doc[0].AllEditors) {
-						if (doc[0].Owner != "" && doc[0].Owner != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Owner;
-					} else {
-						if (doc[0].Owner != "" && doc[0].Owner != undefined) doc[0].AllEditors = doc[0].Owner;
-					}
-					if (doc[0].AllEditors) {
-						if (doc[0].Focals != "" && doc[0].Focals != undefined) doc[0].AllEditors = doc[0].AllEditors + "," + doc[0].Focals;
-					} else {
-						if (doc[0].Focals != "" && doc[0].Focals != undefined) doc[0].AllEditors = doc[0].Focals;
-					}
-				}
-
+        if (doc[0].AllEditors == undefined) doc[0].AllEditors = [];
+        if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner);
+        if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
+          doc[0].AdditionalEditors.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
+        }
+        if (doc[0].Focals != undefined && doc[0].Focals != "") {
+          doc[0].Focals.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
+        }
+        doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);
 
 				db.save(doc[0]).then(function(data){
 					deferred.resolve(data);
