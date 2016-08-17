@@ -23,7 +23,7 @@ var assessableunit = {
 			selector:{
 				"_id": {"$gt":0},
 				"key": "Assessable Unit",
-				"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT", "BU IMT", "BU Country","Account"]}
+				"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT", "BU IMT", "BU Country","Account","Sub-process"]}
 			}
 		};
 		db.find(obj).then(function(data){
@@ -152,6 +152,18 @@ var assessableunit = {
 							"key": "Assessable Unit",
 							"DocSubType": "Country Process",
 							"BusinessUnit": doc[0].BusinessUnit,
+							"GlobalProcess": doc[0].GlobalProcess
+						}
+					};
+					doc[0].CPData = [];
+					break;
+				case "Sub-process":
+					var constiobj = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"DocSubType": "Country Process",
+							"Subprocess": doc[0].Name,
 							"GlobalProcess": doc[0].GlobalProcess
 						}
 					};
@@ -316,9 +328,7 @@ var assessableunit = {
 							if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
 							if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
 
-							// Check if ARC Frequency should be displayed: to check with Linda if there is another field to be used as condition instead of LoB for ARC
-							// Current condition: available only if (Admin or MiniAdmin) and CU and (BusinessUnitOLD = "Global Technology Services") and (LoB = "SO" or LoB = "IS" or LoB = "ITS" or LoB = "TSS" or LoB = "GPS")
-							if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit") {
+							if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
 								doc[0].showARCFreq = 1;
 							}
 
@@ -339,6 +349,7 @@ var assessableunit = {
 
 						case "Business Unit":
 						case "Global Process":
+						case "Sub-process":
 						case "Country Process":
 						case "Account":
 						case "Controllable Unit":
@@ -461,6 +472,7 @@ var assessableunit = {
 							/* end: get names of admin section IDs for display */
 							break;
 
+						case "Sub-process":
 						case "Global Process":
 							/* start: get names of admin section IDs for display */
 							var $or = [];
@@ -947,9 +959,7 @@ var assessableunit = {
 						doc[0].MetricsCriteria = req.body.MetricsCriteria;
 						doc[0].MetricsValue = req.body.MetricsValue
 					case "BU Reporting Group":
-						doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].AuditProgram = req.body.AuditProgram;
-						doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].Name = req.body.Name;
 						break;
 				}
@@ -1022,6 +1032,7 @@ var assessableunit = {
 					case "Business Unit":
 						doc[0].RGRollup = req.body.RGRollup;
 						break;
+					case "Sub-process":
 					case "Global Process":
 						doc[0].RGRollup = req.body.RGRollup;
 						doc[0].BRGMembership = req.body.BRGMembership;
@@ -1091,9 +1102,7 @@ var assessableunit = {
 						doc[0].Country = req.body.Country;
 						break;
 					case "BU Reporting Group":
-						doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].AuditProgram = req.body.AuditProgram;
-	          doc[0].GroupLOB = req.body.GroupLOB;
 						doc[0].Name = req.body.Name;
 						doc[0].Status = req.body.Status;
 						doc[0].Owner = req.body.ownername;
