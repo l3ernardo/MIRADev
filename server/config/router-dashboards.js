@@ -44,6 +44,9 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "Global Process":
 						res.render('auglobalprocess', data.doc[0] );
 						break;
+					case "Sub-process":
+						res.render('ausubprocess', data.doc[0] );
+						break;
 					case "BU IOT":
 						if (data.doc[0].editmode) {
 							var lParams = ['AssessableUnitStatus'];
