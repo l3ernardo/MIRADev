@@ -4,31 +4,19 @@
 		{{!-- AU Reporting Group form - Administrative Use Only section - Edit Mode with Admin Access --}}
 		{{#if admin}}
 			<tr>
-				<td width="25%"><label for="GroupLOB">Group LOB:</label></td>
+				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
-					<span><input type="text" name="GroupLOB" value="{{GroupLOB}}" size="100" maxlength="300"></span>
+					<span>
+						{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+					</span>
 				</td>
 			</tr>
-			{{#if_equal EnteredBU "GBS"}}
-				<tr>
-					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-					<td>
-						<span>
-							{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
-						</span>
-					</td>
-				</tr>
-			{{/if_equal}}
 		{{else}}
 			{{!-- AU Reporting Group form - Administrative Use Only section - Edit Mode with no Admin Access --}}
-			<tr><td width="25%">Group LOB:</td><td>{{GroupLOB}}</td></tr>
-			{{#if_equal BusinessUnitOLD "GBS"}}
-				<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
-			{{/if_equal}}
+			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
 		{{/if}}
 	{{else}}
 		{{!-- AU Reporting Group form - Administrative Use Only section - Read Mode --}}
-		<tr><td width="25%">Group LOB:</td><td>{{GroupLOB}}</td></tr>
 		{{#if_equal EnteredBU "GBS"}}
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
 		{{/if_equal}}

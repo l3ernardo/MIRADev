@@ -284,7 +284,11 @@ var util = {
 					deferred.reject({"status": 500, "error": error});
 				} else {
 					console.log('Http request ran');
-					deferred.resolve({"status": 200, "doc": JSON.parse(body)});
+					try {
+						deferred.resolve({"status": 200, "doc": JSON.parse(body)});	
+					} catch(e) {
+						deferred.resolve({"status": 200, "doc": body});
+					}
 				}
 			});
 		} catch(e) {

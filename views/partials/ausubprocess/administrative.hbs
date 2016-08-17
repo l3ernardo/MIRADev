@@ -1,0 +1,30 @@
+<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+	{{#if editmode}}
+		{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with Admin Access --}}
+		{{#if admin}}
+			<tr>
+				<td width="25%"><label for="RGRollup">Reporting group rollup included in this assessment:</label></td>
+				<td>
+					<input type="hidden" id="RGRollup" name="RGRollup" value="{{RGRollup}}">
+					{{{multiSelect "rgrlist" ReportingGroupList "docid" "name" "scopeRGR"}}}
+				</td>
+			</tr>
+			<tr>
+				<td><label for="BRGMembership">BU reporting groups:</label></td>
+				<td>
+					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
+					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
+				</td>
+			</tr>
+		{{else}}
+			{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with no Admin Access --}}
+			<tr><td width="25%">Reporting group rollup included in this assessment:</td><td>{{RGRollupDisp}}</td></tr>
+			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
+		{{/if}}
+	{{else}}
+		{{!-- AU Country Process form - Administrative Use Only section - Read Mode --}}
+		<tr><td width="25%">Reporting group rollup included in this assessment:</td><td>{{RGRollupDisp}}</td></tr>
+		<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
+	{{/if}}
+</table>

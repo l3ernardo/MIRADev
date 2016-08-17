@@ -66,4 +66,48 @@ interface.get('/rawDataDetail/:viewname/:id', function(req, res) {
 	})
 });
 
+/* Load log page */
+interface.get('/listlog', function(req, res) {
+	// /listlog
+	var query = varConf.mirainterfaces+"/listlog";
+	util.callhttp(query).then(function(data) {
+		if(data.status==200) {
+			//console.log(data);
+			var doc = data;
+			rawDataList=[];
+			//generate list of raw data
+			for(var i=0;i<data;i++) {
+				var doc=data.doc[i];
+				//console.log(doc);
+				rawDataList.push({
+					// doctype: data.body.rows[i].doc.row.DOCTYPE, 
+					filename: doc.filename
+				});					
+			}
+			res.render('loglist', {
+				dataList: rawDataList,
+				server: varConf.mirainterfaces,
+				viewname: '',
+				quarter: '',
+				alldata: JSON.stringify(data, 'utf8'),
+				onedoc: ''
+			})
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err})
+		console.log("[router-interface][listlog] - " + err);
+	})
+});
+
+/* Load log file */
+interface.get('/logDetail', function(req, res) {
+	// /listlog
+	util.callhttp(req.query.filepath).then(function(data) {
+		res.render('logDetail', { doc: data.doc });
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err})
+		console.log("[router-interface][logDetail] - " + err);
+	})
+});
+
 module.exports = interface;
