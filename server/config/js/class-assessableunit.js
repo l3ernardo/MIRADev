@@ -948,7 +948,6 @@ var assessableunit = {
 						doc[0].Country = req.body.Country;
 						doc[0].Countryid = req.body.Countryid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
-						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
 						break;
 					case "Account":
@@ -1062,7 +1061,6 @@ var assessableunit = {
 						doc[0].BRGMembership = req.body.BRGMembership;
 						doc[0].Countryid = req.body.Countryid;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
-						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
 						doc[0].Status = req.body.Status
 						doc[0].Owner = req.body.ownername;
