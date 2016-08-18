@@ -112,6 +112,38 @@ $(document).ready(function() {
 		}
 	});
 	
+	//button copy
+	$('#btn_copy').click(function() {
+		if ($('#title').val() != '' && $('#startDate').val() != '') {
+			//copy to a new event
+			$('#id').val('');
+			//copy without attachments
+			$('#attachIDs').val('');
+			ibmweb.overlay.show('divSavingImg');
+			var form = $('#formCalendar');
+			$.ajax({
+				url: "/saveEvent",
+				type: 'POST',
+				data: form.serialize(),
+				processData: false,
+				success: function (data) {
+					ibmweb.overlay.hide('divSavingImg');
+					ibmweb.overlay.hide('Overlay_Event');
+					$('#calendar').fullCalendar('refetchEvents');
+					alert("Event copied successfully");
+				},
+				error: function() {
+					ibmweb.overlay.hide('divSavingImg');
+					alert("There was an error when saving the Event");
+					e.preventDefault();
+					e.stopImmediatePropagation();
+				}
+			});
+		}else {
+			alert('Please fill out all of the required fields.');
+		}
+	});
+	
 	$('#calendar').fullCalendar({
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
 		header:	{
