@@ -87,9 +87,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "BU Country":
 						if (data.doc[0].editmode) {
-							var lParams;
-							if (req.session.businessunit == "GTS") lParams = ['AssessableUnitStatus','GTSAuditPrograms'];
-							else lParams = ['AssessableUnitStatus','GBSAuditPrograms'];
+							var lParams = ['AssessableUnitStatus'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;
@@ -242,9 +240,7 @@ dashboards.get('/newassessableunit', isAuthenticated, function(req, res) {
 						})
 						break;
 					case "BU Country":
-						var lParams;
-						if (req.session.businessunit == "GTS") lParams = ['AssessableUnitStatus','GTSAuditPrograms'];
-						else lParams = ['AssessableUnitStatus','GBSAuditPrograms'];
+						var lParams = ['AssessableUnitStatus'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
