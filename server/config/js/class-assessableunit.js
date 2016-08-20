@@ -979,15 +979,24 @@ var assessableunit = {
         if (pdoc[0].AllReaders == undefined) pdoc[0].AllReaders = [];
 				doc[0].AllReaders = pdoc[0].AllReaders; //inherited reader access
         if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
-          doc[0].AdditionalReaders.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].AdditionalReaders.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllReaders.push(entry);
+					});
           doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
         }
         if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
-          doc[0].Coordinators.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Coordinators.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllReaders.push(entry);
+					});
           doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
         }
         if (doc[0].Readers != undefined && doc[0].Readers != "") {
-          doc[0].Readers.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Readers.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllReaders.push(entry);
+					});
           doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
         }
         doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
@@ -996,11 +1005,17 @@ var assessableunit = {
 				doc[0].AllEditors = pdoc[0].AllEditors; //inherited reader access
         if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner);
         if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
-          doc[0].AdditionalEditors.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].AdditionalEditors.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllEditors.push(entry);
+					});
           doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
         }
         if (doc[0].Focals != undefined && doc[0].Focals != "") {
-          doc[0].Focals.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].Focals.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllEditors.push(entry);
+					});
           doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
         }
         doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);
@@ -1118,27 +1133,42 @@ var assessableunit = {
 
         if (doc[0].AllReaders == undefined) doc[0].AllReaders = [];
         if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
-          doc[0].AdditionalReaders.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].AdditionalReaders.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllReaders.push(entry);
+					});
           doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
         }
         if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
-          doc[0].Coordinators.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Coordinators.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllReaders.push(entry);
+					});
           doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
         }
         if (doc[0].Readers != undefined && doc[0].Readers != "") {
-          doc[0].Readers.split(',').forEach(function(entry) { doc[0].AllReaders.push(entry); });
+          doc[0].Readers.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllReaders.push(entry);
+					});
           doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
         }
         doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
 
         if (doc[0].AllEditors == undefined) doc[0].AllEditors = [];
-        if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner);
+        if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner.split("(")[1].split(")")[0]);
         if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
-          doc[0].AdditionalEditors.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].AdditionalEditors.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllEditors.push(entry);
+					});
           doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
         }
         if (doc[0].Focals != undefined && doc[0].Focals != "") {
-          doc[0].Focals.split(',').forEach(function(entry) { doc[0].AllEditors.push(entry); });
+          doc[0].Focals.split(',').forEach(function(entry) {
+						entry = entry.split("(")[1].split(")")[0];
+						doc[0].AllEditors.push(entry);
+					});
           doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
         }
         doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);

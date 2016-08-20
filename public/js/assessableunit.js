@@ -56,7 +56,7 @@ function hide_divs(){
 };
 
 function valid_au() {
-	var valid;
+	var valid = true;
 	var req_flds = "";
 	switch ($("input[name='docsubtype']").val()) {
 		case "Country Process":
@@ -106,6 +106,7 @@ function valid_au() {
 				}
 			}
 			break;
+		case "BU Reporting Group":
 		case "Account":
 			if ($("input[name='Name']").val() == "") {
 				req_flds = req_flds + "  - Name\n";
