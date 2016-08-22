@@ -5,12 +5,12 @@
 <div class="ibm-columns ibm-graphic-tabs">
 	<div class="ibm-tab-section">
 		<ul class="ibm-tabs">
-			<li id="BUIMTs-li" class="ibm-active"><a href="#constituents">BU IMTs</a></li>
-			<li id="IOTCUs-li"><a href="#constituents">IOT Level CUs</a></li>
+			<li id="CPs-li" class="ibm-active"><a href="#constituents">Country Processes</a></li>
+			<li id="CountryCUs-li"><a href="#constituents">Controllable Units</a></li>
 		</ul>
 	</div>
-	<div id="BUIMTs" class="ibm-tabs-content">
-		<table id="imts_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+	<div id="CPs" class="ibm-tabs-content">
+		<table id="cps_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 			<thead class="bu-iot">
 				<th scope="col">Name</th>
 				<th scope="col">Status</th>
@@ -19,7 +19,7 @@
 				<th scope="col">Outlook</th>
 				<th scope="col">Target to Sat</th>
 			</thead>
-			{{#each BUIMTData}}
+			{{#each CPData}}
 			<tr>
 				{{#each col}}
 					{{#if @first}}
@@ -32,8 +32,8 @@
 			{{/each}}
 		</table>
 	</div>
-	<div id="IOTCUs" class="ibm-tabs-content" style='display : none'>
-		<table id="IOTCUs_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+	<div id="CountryCUs" class="ibm-tabs-content" style='display : none'>
+		<table id="CountryCUs_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 			<thead class="controllable-unit">
 				<th scope="col">Name</th>
 				<th scope="col">Status</th>

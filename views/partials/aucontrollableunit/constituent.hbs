@@ -5,6 +5,12 @@
 <div class="ibm-columns ibm-graphic-tabs">
 
 	<div id="ControllableUnits" class="ibm-tabs-content">
+		{{#if admin}}
+			{{#if _id}}
+				<a href="/newassessableunit?pid={{_id}}&docsubtype=Account" class="ibm-add1-link">Create new Account</a>
+				<br /><br />
+			{{/if}}
+		{{/if}}
 		<table id="controallableunits_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 			<thead class="controllable-unit">
 				<th scope="col">Name</th>
@@ -14,7 +20,7 @@
 				<th scope="col">Outlook</th>
 				<th scope="col">Target to Sat</th>
 			</thead>
-			{{#each CUData}}
+			{{#each AccountData}}
 			<tr>
 				{{#each col}}
 					{{#if @first}}

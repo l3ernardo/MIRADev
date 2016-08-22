@@ -162,6 +162,45 @@ function displaySelectedConstituentBUIMT(){
 }
 /* End of BU IMT Functions */
 
+/* Start of BU Country Functions */
+// Add listeners to the constinuents tabs for BU Country
+function addEventsConstituentBUCountry(){
+  document.getElementById('CPs-li').addEventListener('click',function()
+	{
+	  document.getElementById('CPs').style.display="";
+	  document.getElementById('CountryCUs').style.display="none";
+
+	  document.getElementById('CPs-li').className="ibm-active";
+	  document.getElementById('CountryCUs-li').className="";
+	},true);
+  document.getElementById('CountryCUs-li').addEventListener('click',function()
+	{
+	  document.getElementById('CPs').style.display="none";
+	  document.getElementById('CountryCUs').style.display="";
+
+	  document.getElementById('CPs-li').className="";
+	  document.getElementById('CountryCUs-li').className="ibm-active";
+	},true);
+}
+
+// Display the selected tab
+function displaySelectedConstituentBUCountry(){
+  var url = parent.location.href;
+  if (url.indexOf("CPs")!=-1){
+    obj= document.getElementById('CPs-li');
+    if(obj){
+      document.getElementById('CPs').style.display="";
+    }
+  }
+  if (url.indexOf("CountryCUs")!=-1){
+    obj= document.getElementById('CountryCUs-li');
+    if(obj){
+      document.getElementById('CountryCUs').style.display="";
+    }
+  }
+}
+/* End of BU Country Functions */
+
 /* Start of Country Functions */
 // Add listeners to the constinuents tabs for Country Process
 function addEventsConstituentCP(){
@@ -215,6 +254,10 @@ $(document).ready(function() {
 	  case "BU IMT":
       addEventsConstituentBUIMT();
     	window.addEventListener("load", displaySelectedConstituentBUIMT());
+      break;
+		case "BU Country":
+      addEventsConstituentBUCountry();
+    	window.addEventListener("load", displaySelectedConstituentBUCountry());
       break;
 		case "Country Process":
       addEventsConstituentCP();

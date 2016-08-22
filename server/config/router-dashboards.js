@@ -5,6 +5,8 @@ var db = require('./js/class-conn.js');
 var assessableunit = require('./js/class-assessableunit.js');
 var parameter = require('./js/class-parameter.js');
 var isAuthenticated = require('./router-authentication.js');
+var utility = require('./js/class-utility.js');
+var aureq = require('./js/class-auvalidation.js');
 
 /**************************************************************
 ASSESSABLE UNITS - Business Unit type
@@ -42,39 +44,149 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "Global Process":
 						res.render('auglobalprocess', data.doc[0] );
 						break;
+					case "Sub-process":
+						res.render('ausubprocess', data.doc[0] );
+						break;
 					case "BU IOT":
-						res.render('aubuiot', data.doc[0]);
+						if (data.doc[0].editmode) {
+							var lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aubuiot', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aubuiot', data.doc[0]);
+						}
 						break;
 					case "BU IMT":
-						res.render('aubuimt', data.doc[0]);
+						if (data.doc[0].editmode) {
+							var lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aubuimt', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aubuimt', data.doc[0]);
+						}
 						break;
 					case "BU Country":
-						res.render('aubucountry', data.doc[0]);
+						if (data.doc[0].editmode) {
+							var lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aubucountry', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aubucountry', data.doc[0]);
+						}
 						break;
 					case "Country Process":
-						res.render('aucountryprocess', data.doc[0] );
+						if (data.doc[0].editmode) {
+							var lParams;
+							if (req.session.businessunit == "GTS") lParams = ['UnitSizes','GTSAuditPrograms'];
+							else lParams = ['UnitSizes','GBSAuditPrograms'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aucountryprocess', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aucountryprocess', data.doc[0] );
+						}
 						break;
 					case "Controllable Unit":
-						var lParams = ['Metrics', 'UnitSizes', 'CUTypes', 'SupportedFrom'];
-						parameter.getListParams(req, db, lParams).then(function(dataParam) {
-							if(dataParam.status==200 & !dataParam.error) {
-								data.doc[0].parameters = dataParam.parameters;
-								res.render('aucontrollableunit', data.doc[0] );
-							} else {
-								res.render('error',{errorDescription: data.error});
-								console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
-							}
-						}).catch(function(err) {
-							res.render('error',{errorDescription: err.error});
-							console.log("[routes][assessableunit][getListParams] - " + err.error);
-						})
-
+						if (data.doc[0].editmode) {
+							var lParams;
+							if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'UnitSizes','ARCFrequencies','GTSAuditPrograms'];
+							else lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aucontrollableunit', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aucontrollableunit', data.doc[0] );
+						}
 						break;
 					case "BU Reporting Group":
-						res.render('aureportinggroup', data.doc[0] );
+						if (data.doc[0].editmode) {
+							var lParams;
+							if (req.session.businessunit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
+							else lParams = ['AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('aureportinggroup', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('aureportinggroup', data.doc[0] );
+						}
 						break;
 					case "Account":
-						res.render('auaccount', data.doc[0] );
+						if (data.doc[0].editmode) {
+							var lParams;
+							if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'AssessableUnitStatus'];
+							else lParams = ['GBSMetrics', 'AssessableUnitStatus'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('auaccount', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessableunit][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessableunit][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('auaccount', data.doc[0] );
+						}
 						break;
 
 				}
@@ -91,45 +203,184 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 	})
 });
 
-/* Save BU assessable unit document */
-dashboards.post('/savebuau', isAuthenticated, function(req, res){
-	assessableunit.saveAUBU(req, db).then(function(data) {
-		req.query.id = req.body.docid;
-		var close = req.body.close;
+/* Display BU assessable unit document */
+dashboards.get('/newassessableunit', isAuthenticated, function(req, res) {
+	assessableunit.newAUbyPID(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			if(data.body) {
-				assessableunit.getAUbyID(req, db).then(function(data) {
-					if(data.status==200 & !data.error) {
-						if(data.doc) {
-							if(close=='1') {
-								res.redirect('/processdashboard');
+			if(data.doc) {
+				switch (data.doc[0].DocSubType) {
+					case "BU IOT":
+						var lParams = ['AssessableUnitStatus'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('aubuiot', data.doc[0] );
 							} else {
-								res.redirect('/assessableunit?id=' + data.doc[0]._id);
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][newassessableunit][getListParams] - " + dataParam.error);
 							}
-						} else {
-							res.render('error',{errorDescription: data.error});
-						}
-					} else {
-						res.render('error',{errorDescription: data.error});
-						console.log("[routes][getassessableunitbyID] - " + data.error);
-					}
-				}).catch(function(err) {
-					res.render('error',{errorDescription: err.error});
-					console.log("[routes][getassessableunitbyID] - " + err.error);
-				});
-				// res.render('aubusinessunit', data.body );
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][newassessableunit][getListParams] - " + err.error);
+						})
+						break;
+					case "BU IMT":
+						var lParams = ['AssessableUnitStatus'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('aubuimt', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][newassessableunit][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][newassessableunit][getListParams] - " + err.error);
+						})
+						break;
+					case "BU Country":
+						var lParams = ['AssessableUnitStatus'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('aubucountry', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][newassessableunit][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][newassessableunit][getListParams] - " + err.error);
+						})
+						break;
+					case "BU Reporting Group":
+						var lParams;
+						if (req.session.businessunit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
+						else lParams = ['AssessableUnitStatus'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('aureportinggroup', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][newassessableunit][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][newassessableunit][getListParams] - " + err.error);
+						})
+						break;
+					case "Account":
+						var lParams;
+						if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'AssessableUnitStatus'];
+						else lParams = ['GBSMetrics', 'AssessableUnitStatus'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('auaccount', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][newassessableunit][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][newassessableunit][getListParams] - " + err.error);
+						})
+						break;
+				}
+
 			} else {
 				res.render('error',{errorDescription: data.error});
-				console.log("[routes][savebuau] - " + data.error);
 			}
 		} else {
 			res.render('error',{errorDescription: data.error});
-			console.log("[routes][savebuau] - " + data.error);
+			console.log("[routes][assessableunit] - " + data.error);
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
-		console.log("[routes][savebuau] - " + err.error);
+		console.log("[routes][assessableunit] - " + err.error);
 	})
+});
+
+/* Save BU assessable unit document */
+dashboards.post('/savebuau', isAuthenticated, function(req, res){
+	aureq.validate(req);
+	if (!aureq.validation.status) {
+		res.render('error',{errorDescription: aureq.validation.message.join()});
+		console.log("[routes][savebuau] - " + aureq.validation.message.join());
+	} else {
+		assessableunit.saveAUBU(req, db).then(function(data) {
+			req.query.id = data.body.id;
+			var close = req.body.close;
+			if(data.status==200 & !data.error) {
+				//New document need to update attachments
+				if(req.body.attachIDs != '' && req.body.docid == ""){
+					utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(dataF) {
+						if(dataF.status==200 & !dataF.error && data.body) {
+							assessableunit.getAUbyID(req, db).then(function(data) {
+								if(data.status==200 & !data.error) {
+									if(data.doc) {
+										if(close=='1') {
+											res.redirect('/processdashboard');
+										} else {
+											res.redirect('/assessableunit?id=' + data.doc[0]._id);
+										}
+									} else {
+										res.render('error',{errorDescription: data.error});
+									}
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][getassessableunitbyID] - " + data.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][getassessableunitbyID] - " + err.error);
+							});
+							// res.render('aubusinessunit', data.body );
+						} else {
+							res.render('error',{errorDescription: dataF.error});
+							console.log("[routes][savebuau] - " + dataF.error);
+						}
+					}).catch(function(err) {
+						console.log("[dashboards][savebuau] - " + err.error);
+					});
+				} else { //Old document doesn't need to update attachments
+					if(data.body) {
+						assessableunit.getAUbyID(req, db).then(function(data) {
+							if(data.status==200 & !data.error) {
+								if(data.doc) {
+									if(close=='1') {
+										res.redirect('/processdashboard');
+									} else {
+										res.redirect('/assessableunit?id=' + data.doc[0]._id);
+									}
+								} else {
+									res.render('error',{errorDescription: data.error});
+								}
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][getassessableunitbyID] - " + data.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][getassessableunitbyID] - " + err.error);
+						});
+						// res.render('aubusinessunit', data.body );
+					} else {
+						res.render('error',{errorDescription: dataF.error});
+						console.log("[routes][savebuau] - " + dataF.error);
+					}
+				}
+			} else {
+				res.render('error',{errorDescription: data.error});
+				console.log("[dashboards][savebuau] - " + data.error);
+			}
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[dashboards][savebuau] - " + err.error);
+		})
+	}
 
 });
 

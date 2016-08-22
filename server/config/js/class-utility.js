@@ -1,9 +1,9 @@
 /**************************************************************************************************
- * 
+ *
  * Utility code for MIRA Web
  * Developed by : Carlos Kenji Takata
  * Date:01 June 2016
- * 
+ *
  */
 var varConf = require('../../../configuration');
 var q  = require("q");
@@ -28,7 +28,7 @@ var util = {
 	},
 	getPersonDiv: function(req) {
 		var deferred = q.defer();
-		try {		
+		try {
 			url = varConf.bpDivURL.replace('%t',req.query.search);
 			require('request').get(url, function(err, response, body) {
 				if(err) {
@@ -39,11 +39,11 @@ var util = {
 			return deferred.promise;
 		} catch(e) {
 			deferred.resolve({"status": 500, "error": e});
-		}		
-	},	
+		}
+	},
 	getPersonData: function(req) {
 		var deferred = q.defer();
-		try {		
+		try {
 			url = varConf.bpURL.replace('%t',req.query.search).replace('%f',req.query.field);
 			require('request').get(url, function(err, response, body) {
 				if(err) {
@@ -54,7 +54,7 @@ var util = {
 			return deferred.promise;
 		} catch(e) {
 			deferred.resolve({"status": 500, "error": e});
-		}		
+		}
 	},
 	getPeopleData: function(req) {
 		var deferred = q.defer();
@@ -93,14 +93,14 @@ var util = {
 				return deferred.promise;
 			}
 			try {
-				var doc = JSON.parse(body);	
+				var doc = JSON.parse(body);
 				for (var i = 0; i < doc.length; i++) {
 					member.push({"name": doc[i].name, "email":doc[i].email});
 				}
 				deferred.resolve({"status": 200, "doc": member});
 			} catch(e) {
 				deferred.resolve({"status": 500, "error": e});
-			}			
+			}
 		});
 		return deferred.promise;
 	},
@@ -109,7 +109,7 @@ var util = {
 		var deferred = q.defer();
 		var object;
 		var date = new Date();
-		var filenames = req.files.upload;	
+		var filenames = req.files.upload;
 
 		object = {
 			"parentid": parentid,
@@ -121,7 +121,7 @@ var util = {
 			if (filenames) {
 				var file = filenames;
 				fs.readFile(file.path, function(err, data) {
-					if (!err) { 
+					if (!err) {
 						if (file) {
 							db.attach(doc.body.id, file.name, data, file.type, {rev: doc.body.rev}).then(function(obj) {
 								doc.body.name= file.name;
@@ -131,13 +131,13 @@ var util = {
 							});
 						}
 					}
-					else { 
+					else {
 						deferred.reject({"status": 500, "error": err});
 					}
 				});
 			}else {
 				deferred.resolve({"status": 200, "doc":doc.body});
-			}				
+			}
 		}).catch(function(error) {
 			deferred.reject({"status": 500, "error": error});
 		})
@@ -153,8 +153,8 @@ var util = {
 			deferred.resolve({"status": 200});
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error - download file": err});
-		});		
-		return deferred.promise;	
+		});
+		return deferred.promise;
 	},
 	//Delete the selected file
 	deleteFile: function (req, db){
@@ -170,8 +170,8 @@ var util = {
 			});
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
-		});		
-		return deferred.promise;	
+		});
+		return deferred.promise;
 	},
 	//Delete files by parentid
 	deleteFilesParentID: function (parentid, db){
@@ -197,7 +197,7 @@ var util = {
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
-		
+
 		return deferred.promise;
 	},
 	//Delete files by ids
@@ -258,12 +258,12 @@ var util = {
 	/***************************************************/
 	//Generic HTTP request
 	callhttp: function(url) {
-		var deferred = q.defer();		
+		var deferred = q.defer();
 		// Get URL credentials
 		var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
 		var host = credentials.host;
 		var username = credentials.username;
-		var password = credentials.password;		
+		var password = credentials.password;
 		if((url).indexOf('?')!=-1) {
 			url = url+'&'+Math.random().toString()
 		} else {
@@ -276,21 +276,39 @@ var util = {
 				'User-Agent': 'request',
 			'Authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
 			}
-		};			
+		};
 		try {
 			require('request').get(options, process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0", function(error, res, body) {
 				if (error) {
 					console.log('There was an error: '+ error);
-					deferred.reject({"status": 500, "error": error});					
+					deferred.reject({"status": 500, "error": error});
 				} else {
 					console.log('Http request ran');
-					deferred.resolve({"status": 200, "doc": JSON.parse(body)});
+					try {
+						deferred.resolve({"status": 200, "doc": JSON.parse(body)});	
+					} catch(e) {
+						deferred.resolve({"status": 200, "doc": body});
+					}
 				}
 			});
 		} catch(e) {
 			deferred.resolve({"status": 500, "error": e});
 		}
-		return deferred.promise;		
+		return deferred.promise;
+	},
+
+	findAndRemove: function(array, property, value) {
+	  array.forEach(function(result, index) {
+	    if(result[property] === value) {
+	      array.splice(index, 1);
+	    }
+	  });
+	},
+
+	sort_unique: function(arr) {
+	    return arr.sort().filter(function(el,i,a) {
+	        return (i==a.indexOf(el));
+	    });
 	},
 
 }
