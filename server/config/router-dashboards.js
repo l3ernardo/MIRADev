@@ -3,6 +3,7 @@ var dashboards = express.Router();
 var db = require('./js/class-conn.js');
 // Add functionalities from other JS files
 var assessableunit = require('./js/class-assessableunit.js');
+var assessment = require('./js/class-assessment.js');
 var parameter = require('./js/class-parameter.js');
 var isAuthenticated = require('./router-authentication.js');
 var utility = require('./js/class-utility.js');
@@ -87,9 +88,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "BU Country":
 						if (data.doc[0].editmode) {
-							var lParams;
-							if (req.session.businessunit == "GTS") lParams = ['AssessableUnitStatus','GTSAuditPrograms'];
-							else lParams = ['AssessableUnitStatus','GBSAuditPrograms'];
+							var lParams = ['AssessableUnitStatus'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;
@@ -242,9 +241,7 @@ dashboards.get('/newassessableunit', isAuthenticated, function(req, res) {
 						})
 						break;
 					case "BU Country":
-						var lParams;
-						if (req.session.businessunit == "GTS") lParams = ['AssessableUnitStatus','GTSAuditPrograms'];
-						else lParams = ['AssessableUnitStatus','GBSAuditPrograms'];
+						var lParams = ['AssessableUnitStatus'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
@@ -304,6 +301,47 @@ dashboards.get('/newassessableunit', isAuthenticated, function(req, res) {
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][assessableunit] - " + err.error);
+	})
+});
+
+/* Display assesment document */
+dashboards.get('/assessment', isAuthenticated, function(req, res) {
+	assessment.getAsmtbyID(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				switch (data.doc[0].ParentDocSubType) {
+					case "Business Unit":
+						break;
+					case "Global Process":
+						break;
+					case "Sub-process":
+						break;
+					case "BU IOT":
+						break;
+					case "BU IMT":
+						break;
+					case "BU Country":
+						break;
+					case "Country Process":
+						res.render('asmtcountryprocess', data.doc[0] );
+						break;
+					case "Controllable Unit":
+						break;
+					case "BU Reporting Group":
+						break;
+					case "Account":
+						break;
+				}
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][assessment] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][assessment] - " + err.error);
 	})
 });
 

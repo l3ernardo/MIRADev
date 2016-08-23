@@ -1,23 +1,24 @@
-<script src="/js/assessableunit.js" type="text/javascript"></script>
-<script src="/js/constituent_section.js" type="text/javascript"></script>
-<script src="/js/admin_section.js" type="text/javascript"></script>
+<script src="/js/asmtbasic_section.js" type="text/javascript"></script>
+<script src="/js/asmt_components.js" type="text/javascript"></script>
+<script src="/js/assessment.js" type="text/javascript"></script>
+<!-- <script src="/js/constituent_section.js" type="text/javascript"></script>
+<script src="/js/admin_section.js" type="text/javascript"></script>  -->
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
-<!-- JS for attachments widget -->
 <script src="./js/attachments.js"/></script>
-<!-- JS and CSS for owner, editors and readers / bluepages widget -->
-<script src="./js/owner.js"/></script>
+<!-- <script src="./js/owner.js"/></script>
 <script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
-<link rel="stylesheet" href="./css/style.css">
+<script src="/js/multiselect.js" type="text/javascript"></script> -->
+<!-- <link rel="stylesheet" href="./css/multiselect.css" />
+<link rel="stylesheet" href="./css/style.css"> -->
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <link rel="stylesheet" href="./css/jquery-ui.min.css">
 
-<input type="hidden" id="docTitle" value="{{DocType}} ({{DocSubType}})">
-<input type="hidden" id="docSubTitle" value="{{Name}}">
+<input type="hidden" id="docTitle" value="{{CurrentPeriod}} Holistic Base Level Assessment">
 <script>
 	//Load document's name
 	$('h1#pageTitle').text($('input#docTitle').val());
 	//Load document's business unit
-	$('h3#pageSubTitle').text($('input#docSubTitle').val());
+	$('h3#pageSubTitle').hide();
 </script>
 
 <!-- JS and CSS for rich text edit -->
@@ -32,31 +33,26 @@
 <script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
 
-<div class="ibm-container" style="width:80%">
+<div class="ibm-container" style="width:90%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
 	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
-		<input type="hidden" name="docsubtype" value="{{DocSubType}}">
-		<input type="hidden" name="parentid" value="{{parentid}}">
+		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="close" id="close" value="0">
-		<!-- BASICS SECTION -->
-		{{>aureportinggroup/basics}}
-		<!-- ADMIN TABLE -->
-		{{#if_equal EnteredBU "GBS"}}
-			{{>aureportinggroup/administrative}}
-		{{/if_equal}}
-		<!-- ASSESSMENT SECTION -->
-		{{>assessment}}
-		<!-- CONSTITUENT SECTION -->
-		{{>aureportinggroup/constituent}}
-		<!-- ACCESS SECTION -->
-		{{>contact}}
+		<!-- Basic Details -->
+		{{>asmtcountryprocess/basics}}
+		<!-- Exception Details -->
+		{{>asmtexception}}
+		<!-- Contact -->
+		{{>asmtexception}}<br /><br />
+		<!-- Assessment components guide -->
+		{{>asmtcountryprocess/compguide}}<br /><br />
+		<!-- Assessment components tabs -->
+		{{>asmtcountryprocess/blacomponent}}<br /><br />
 		<!-- NOTES & LINKS SECTION -->
-		<br />
-		<br />
 		{{>comments}}
 		<!-- BUTTONS AREA -->
 		{{>buttons}}

@@ -19,25 +19,6 @@
 					</span>
 				</td>
 			</tr>
-      {{#if_equal EnteredBU "GTS"}}
-				<tr>
-					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-					<td>
-						<span>
-							{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
-						</span>
-					</td>
-				</tr>
-			{{else}}
-				<tr>
-					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-					<td>
-						<span>
-							{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
-						</span>
-					</td>
-				</tr>
-			{{/if_equal}}
 			<tr>
 				<td><label for="BRGMembership">BU reporting groups:</label></td>
 				<td>
@@ -50,7 +31,6 @@
 
 			{{!-- AU BU Country form - Administrative Use Only section - Edit Mode with no Admin Access --}}
 			<tr><td width="25%">Exclude from Geo roll-ups?:</td><td>{{ExcludeGeo}}</td></tr>
-			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
 			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 
 		{{/if}}
@@ -59,7 +39,6 @@
 
 		{{!-- AU BU Country form - Administrative Use Only section - Read Mode --}}
     <tr><td width="25%">Exclude from Geo roll-ups?:</td><td>{{ExcludeGeo}}</td></tr>
-    <tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
     <tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 
 	{{/if}}
