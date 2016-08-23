@@ -12,6 +12,7 @@ var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var param = require('./class-parameter.js');
 var util = require('./class-utility.js');
+var accessupdates = require('./class-accessupdates.js');
 
 var assessableunit = {
 
@@ -872,6 +873,7 @@ var assessableunit = {
 					"parentid": pdoc[0]._id,
 					"DocSubType": req.body.docsubtype,
 					"BusinessUnit": pdoc[0].BusinessUnit,
+					"MIRABusinessUnit": pdoc[0].MIRABusinessUnit,
 					"CurrentPeriod": pdoc[0].CurrentPeriod,
 					"StatusChangeWho": curruser,
 					"StatusChangeWhen": currdate,
@@ -926,57 +928,7 @@ var assessableunit = {
 				doc[0].Log.push(addlog);
         doc[0].Status = req.body.Status;
 
-        doc[0].Owner = req.body.ownername;
-        doc[0].Focals = req.body.focalslist;
-        doc[0].Coordinators = req.body.coordinatorslist;
-        doc[0].Readers = req.body.readerslist;
-
-        doc[0].AdditionalReaders = req.body.readerlist;
-				doc[0].AdditionalEditors = req.body.editorlist;
-
-        if (pdoc[0].AllReaders == undefined) pdoc[0].AllReaders = [];
-				doc[0].AllReaders = pdoc[0].AllReaders; //inherited reader access
-        if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
-          doc[0].AdditionalReaders.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
-        }
-        if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
-          doc[0].Coordinators.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
-        }
-        if (doc[0].Readers != undefined && doc[0].Readers != "") {
-          doc[0].Readers.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
-        }
-        doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
-
-        if (pdoc[0].AllEditors == undefined) pdoc[0].AllEditors = [];
-				doc[0].AllEditors = pdoc[0].AllEditors; //inherited reader access
-				if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner.split("(")[1].split(")")[0]);
-        if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
-          doc[0].AdditionalEditors.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
-        }
-        if (doc[0].Focals != undefined && doc[0].Focals != "") {
-          doc[0].Focals.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
-        }
-        doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);
+				doc = accessupdates.updateAccessNewDoc(req,pdoc,doc);
 
 				db.save(doc[0]).then(function(data){
 					deferred.resolve(data);
@@ -1015,29 +967,17 @@ var assessableunit = {
 						doc[0].BUCountryIOT = req.body.BUCountryIOT;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU IMT":
 						doc[0].BRGMembership = req.body.BRGMembership;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU Country":
 						doc[0].BRGMembership = req.body.BRGMembership;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 					case "Country Process":
 						doc[0].BRGMembership = req.body.BRGMembership;
@@ -1051,10 +991,7 @@ var assessableunit = {
 						doc[0].MetricsCriteria = req.body.MetricsCriteria;
 						doc[0].MetricsValue = req.body.MetricsValue
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
+						break;
 					case "Controllable Unit":
 						doc[0].BRGMembership = req.body.BRGMembership;
 						doc[0].CUSize = req.body.CUSize;
@@ -1074,60 +1011,13 @@ var assessableunit = {
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].Name = req.body.Name;
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 				}
 				doc[0].Notes = req.body.Notes;
 				doc[0].Links = eval(req.body.attachIDs);
 				doc[0].Log.push(addlog);
 
-        doc[0].AdditionalReaders = req.body.readerlist;
-				doc[0].AdditionalEditors = req.body.editorlist;
-
-        if (doc[0].AllReaders == undefined) doc[0].AllReaders = [];
-        if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
-          doc[0].AdditionalReaders.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
-        }
-        if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
-          doc[0].Coordinators.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
-        }
-        if (doc[0].Readers != undefined && doc[0].Readers != "") {
-          doc[0].Readers.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
-        }
-        doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
-
-        if (doc[0].AllEditors == undefined) doc[0].AllEditors = [];
-        if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner.split("(")[1].split(")")[0]);
-        if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
-          doc[0].AdditionalEditors.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
-        }
-        if (doc[0].Focals != undefined && doc[0].Focals != "") {
-          doc[0].Focals.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
-        }
-        doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);
+				doc = accessupdates.updateAccessExistDoc(req,doc);
 
 				db.save(doc[0]).then(function(data){
 					deferred.resolve(data);

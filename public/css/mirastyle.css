@@ -101,6 +101,30 @@
   color: #0060A0;
   font-size:11px
 }
+.ibm-data-table .basic-ctrl {
+  color: #ffffff;
+  background-color: #71B2CF;
+}
+.ibm-data-table .ar-asmt {
+  color: #ffffff;
+  background-color: #7f604f;
+}
+.ibm-data-table .risk-msdcommit {
+  color: #ffffff;
+  background-color: #00c150;
+}
+.ibm-data-table .audit-review {
+  color: #ffffff;
+  background-color: #4181c0;
+}
+.ibm-data-table .kc-test {
+  color: #ffffff;
+  background-color: #ff8141;
+}
+.ibm-data-table .op-metric {
+  color: #ffffff;
+  background-color: #c0a1e0;
+}
 
 /*table for dashboard*/
 caption {
