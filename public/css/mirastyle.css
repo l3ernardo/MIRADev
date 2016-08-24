@@ -1,12 +1,15 @@
+.ibm-data-table  .mira-td-exceptions {
+	font-size:11px
+}
 .ibm-data-table  .mira-td-exceptions td:first-child, .ibm-data-table  .mira-td-exceptions td{
 	padding: 0px;
 }
 .ibm-data-table  .mira-td-exceptions td:first-child table, .ibm-data-table  .mira-td-exceptions td table{
 	border: 1px solid;
-	height: 229px;
+	height: 199px;
 }
 .ibm-data-table  .mira-td-exceptions td:first-child table tbody tr:first-child, .ibm-data-table  .mira-td-exceptions td table tbody tr:first-child{
-	height: 60px;
+	height: 50px;
 }
 .ibm-data-table  .mira-td-exceptions td:first-child table tbody tr:first-child th, .ibm-data-table  .mira-td-exceptions td table tbody tr:first-child th{
 	text-align: center;
@@ -132,15 +135,46 @@
 .ibm-data-table .summary {
   color: #ffffff;
   background-color: #c0c27c;
+	border: 20px solid #c0c27c;
+}
+.ibm-data-table .summary-label {
+  background-color: #f1f1b4;
+}
+.ibm-data-table .content-data {
+  background-color: #ffffff;
 }
 .ibm-data-table .basic-ctrl {
   color: #ffffff;
   background-color: #71B2CF;
 }
+.ibm-data-table .basic-ctrl-content {
+	background-color: #71B2CF;
+	border: 20px solid #71B2CF;
+}
+.ibm-data-table .basic-ctrl-label {
+  background-color: #E0F1FF;
+}
 .ibm-data-table .ar-asmt {
   color: #ffffff;
   background-color: #7f604f;
 }
+.ibm-data-table .ar-asmt-content {
+	background-color: #7f604f;
+	border: 20px solid #7f604f;
+}
+.ibm-data-table .ar-asmt-label {
+  background-color: #e7d8cf;
+}
+/*.ibm-data-table .ar-asmtdata1 {
+  background-color: #7f604f;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+}
+.ibm-data-table .ar-asmtdata2 {
+  background-color: #e7d8cf;
+}*/
 .ibm-data-table .risk-msdcommit {
   color: #ffffff;
   background-color: #00c150;

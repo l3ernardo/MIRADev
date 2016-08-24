@@ -23,6 +23,7 @@ var assessment = {
 		db.get(docid).then(function(data){
 			var doc = [];
 			doc.push(data.body);
+			doc[0].EnteredBU = req.session.businessunit;
 			deferred.resolve({"status": 200, "doc": doc});
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
