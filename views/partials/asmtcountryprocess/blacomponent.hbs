@@ -4,23 +4,33 @@
 
 	<div class="ibm-tab-section">
 		<ul class="ibm-tabs">
-			<li id="summary-li" class="ibm-active"><a href="#asmttab">Summary</a></li>
-			<li id="basiccontrol-li"><a href="##asmttab">Basics of Control</a></li>
-			<li id="auditreadyasmt-li"><a href="##asmttab">Audit Readiness Asmt</a></li>
-			<li id="riskmsdcommit-li"><a href="##asmttab">Open Risks &amp; Missed Commits</a></li>
-			<li id="auditreview-li"><a href="##asmttab">Audits &amp; Reviews</a></li>
-			<li id="kctest-li"><a href="##asmttab">Key Controls Testing</a></li>
-			<li id="opmetric-li"><a href="##asmttab">Operational Metrics</a></li>
-			<li id="other-li"><a href="##asmttab">Others</a></li>
+			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
+			<li id="basiccontrol-li"><a href="javascript:void(0)" class="mira-subdata">Basics of Control</a></li>
+			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Assessment</a></li>
+			<li id="riskmsdcommit-li"><a href="javascript:void(0)" class="mira-subdata">Open Risks &amp; Missed Commits</a></li>
+			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
+			<li id="kctest-li"><a href="javascript:void(0)" class="mira-subdata">Key Controls Testing</a></li>
+			<li id="opmetric-li"><a href="javascript:void(0)" class="mira-subdata">Operational Metrics</a></li>
+			<li id="other-li"><a href="javascript:void(0)" class="mira-subdata">Others</a></li>
 		</ul>
 	</div>
 	<div id="summary" class="ibm-tabs-content">
 		<table id="summary_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-summary">
-				<th scope="col">Rating Summary</th>
-			</thead>
 			<tr>
-				<td width="80%">{{RatingSummary}}</td>
+				<td width="80%" colspan="2">
+					<strong>Rating Summary</strong><br /><br />
+					{{RatingSummary}}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Highlights</strong><br /><br />
+					{{Highlight}}
+				</td>
+				<td>
+					<strong>Focus Areas</strong><br /><br />
+					{{FocusArea}}
+				</td>
 			</tr>
 		</table>
 	</div>

@@ -129,6 +129,10 @@
   color: #0060A0;
   font-size:11px
 }
+.ibm-data-table .summary {
+  color: #ffffff;
+  background-color: #c0c27c;
+}
 .ibm-data-table .basic-ctrl {
   color: #ffffff;
   background-color: #71B2CF;
@@ -152,6 +156,9 @@
 .ibm-data-table .op-metric {
   color: #ffffff;
   background-color: #c0a1e0;
+}
+.ibm-tabs .mira-subdata {
+  font-size:12px
 }
 
 /*table for dashboard*/
