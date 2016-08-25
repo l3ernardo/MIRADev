@@ -12,6 +12,8 @@ var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var param = require('./class-parameter.js');
 var util = require('./class-utility.js');
+var accessupdates = require('./class-accessupdates.js');
+var fieldCalc = require('./class-fieldcalc.js');
 
 var assessableunit = {
 
@@ -275,67 +277,13 @@ var assessableunit = {
 				}
 
 				/* Calculate for Instance Design Specifics and parameters*/
-				if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
-					var lParams;
-					// Get required paramaters
-					if (req.session.businessunit == "GTS") {
-						doc[0].EnteredBU = "GTS";
-						if (doc[0].DocSubType == "Controllable Unit") {
-							doc[0].CatCU = "";
-							lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-						} else if (doc[0].DocSubType == "Country Process") {
-							doc[0].CatP = "";
-							lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign'];
-						} else {
-							lParams = ['GTSInstanceDesign'];
-						}
-					} else {
-						doc[0].EnteredBU = "GBS";
-						lParams = ['GBSInstanceDesign'];
-					}
-					param.getListParams(db, lParams).then(function(dataParam) {
-						if(dataParam.status==200 & !dataParam.error) {
-							// calculate for CatP and CatCU fields
-							if (doc[0].DocSubType == "Country Process") {
-								if (dataParam.parameters.CRMProcess) {
-									for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "CRM";
-									}
-								}
-								if (dataParam.parameters.DeliveryProcess) {
-									for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "Delivery";
-									}
-								}
-							}
-							if (doc[0].DocSubType == "Controllable Unit") {
-								if (dataParam.parameters.CRMCU) {
-									for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "CRM";
-									}
-								}
-								if (dataParam.parameters.DeliveryCU) {
-									for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "Delivery";
-									}
-								}
-							}
+				doc[0].EnteredBU = req.session.businessunit;
+				if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
+					doc = fieldCalc.getCategoryAndBUOld(db, doc);
+				}
 
-							// evaluate BusinessUnitOLD formula
-							if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
-							if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
-
-							if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
-								doc[0].showARCFreq = 1;
-							}
-
-						} else {
-							console.log("[routes][class-assessableunit][getListParams] - " + dataParam.error);
-						}
-					}).catch(function(err) {
-						console.log("[routes][class-assessableunit][getListParams] - " + err.error);
-					})
-
+				if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
+					doc[0].showARCFreq = 1;
 				}
 
 				/* Get Reporting Groups and BU Countries*/
@@ -872,6 +820,7 @@ var assessableunit = {
 					"parentid": pdoc[0]._id,
 					"DocSubType": req.body.docsubtype,
 					"BusinessUnit": pdoc[0].BusinessUnit,
+					"MIRABusinessUnit": pdoc[0].MIRABusinessUnit,
 					"CurrentPeriod": pdoc[0].CurrentPeriod,
 					"StatusChangeWho": curruser,
 					"StatusChangeWhen": currdate,
@@ -926,57 +875,7 @@ var assessableunit = {
 				doc[0].Log.push(addlog);
         doc[0].Status = req.body.Status;
 
-        doc[0].Owner = req.body.ownername;
-        doc[0].Focals = req.body.focalslist;
-        doc[0].Coordinators = req.body.coordinatorslist;
-        doc[0].Readers = req.body.readerslist;
-
-        doc[0].AdditionalReaders = req.body.readerlist;
-				doc[0].AdditionalEditors = req.body.editorlist;
-
-        if (pdoc[0].AllReaders == undefined) pdoc[0].AllReaders = [];
-				doc[0].AllReaders = pdoc[0].AllReaders; //inherited reader access
-        if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
-          doc[0].AdditionalReaders.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
-        }
-        if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
-          doc[0].Coordinators.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
-        }
-        if (doc[0].Readers != undefined && doc[0].Readers != "") {
-          doc[0].Readers.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
-        }
-        doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
-
-        if (pdoc[0].AllEditors == undefined) pdoc[0].AllEditors = [];
-				doc[0].AllEditors = pdoc[0].AllEditors; //inherited reader access
-				if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner.split("(")[1].split(")")[0]);
-        if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
-          doc[0].AdditionalEditors.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
-        }
-        if (doc[0].Focals != undefined && doc[0].Focals != "") {
-          doc[0].Focals.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
-        }
-        doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);
+				doc = accessupdates.updateAccessNewDoc(req,pdoc,doc);
 
 				db.save(doc[0]).then(function(data){
 					deferred.resolve(data);
@@ -1015,29 +914,17 @@ var assessableunit = {
 						doc[0].BUCountryIOT = req.body.BUCountryIOT;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU IMT":
 						doc[0].BRGMembership = req.body.BRGMembership;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 					case "BU Country":
 						doc[0].BRGMembership = req.body.BRGMembership;
 						doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 						doc[0].ExcludeGeo = req.body.ExcludeGeo;
 						doc[0].Status = req.body.Status
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 					case "Country Process":
 						doc[0].BRGMembership = req.body.BRGMembership;
@@ -1051,10 +938,7 @@ var assessableunit = {
 						doc[0].MetricsCriteria = req.body.MetricsCriteria;
 						doc[0].MetricsValue = req.body.MetricsValue
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
+						break;
 					case "Controllable Unit":
 						doc[0].BRGMembership = req.body.BRGMembership;
 						doc[0].CUSize = req.body.CUSize;
@@ -1074,60 +958,13 @@ var assessableunit = {
 						doc[0].AuditProgram = req.body.AuditProgram;
 						doc[0].Name = req.body.Name;
 						doc[0].Status = req.body.Status;
-						doc[0].Owner = req.body.ownername;
-						doc[0].Focals = req.body.focalslist;
-						doc[0].Coordinators = req.body.coordinatorslist;
-	          doc[0].Readers = req.body.readerslist;
 						break;
 				}
 				doc[0].Notes = req.body.Notes;
 				doc[0].Links = eval(req.body.attachIDs);
 				doc[0].Log.push(addlog);
 
-        doc[0].AdditionalReaders = req.body.readerlist;
-				doc[0].AdditionalEditors = req.body.editorlist;
-
-        if (doc[0].AllReaders == undefined) doc[0].AllReaders = [];
-        if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
-          doc[0].AdditionalReaders.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].AdditionalReaders = util.sort_unique(doc[0].AdditionalReaders.split(',')).join();
-        }
-        if (doc[0].Coordinators != undefined && doc[0].Coordinators != "")  {
-          doc[0].Coordinators.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Coordinators = util.sort_unique(doc[0].Coordinators.split(',')).join();
-        }
-        if (doc[0].Readers != undefined && doc[0].Readers != "") {
-          doc[0].Readers.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllReaders.push(entry);
-					});
-          doc[0].Readers = util.sort_unique(doc[0].Readers.split(',')).join();
-        }
-        doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
-
-        if (doc[0].AllEditors == undefined) doc[0].AllEditors = [];
-        if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner.split("(")[1].split(")")[0]);
-        if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
-          doc[0].AdditionalEditors.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].AdditionalEditors = util.sort_unique(doc[0].AdditionalEditors.split(',')).join();
-        }
-        if (doc[0].Focals != undefined && doc[0].Focals != "") {
-          doc[0].Focals.split(',').forEach(function(entry) {
-						entry = entry.split("(")[1].split(")")[0];
-						doc[0].AllEditors.push(entry);
-					});
-          doc[0].Focals = util.sort_unique(doc[0].Focals.split(',')).join();
-        }
-        doc[0].AllEditors = util.sort_unique(doc[0].AllEditors);
+				doc = accessupdates.updateAccessExistDoc(req,doc);
 
 				db.save(doc[0]).then(function(data){
 					deferred.resolve(data);

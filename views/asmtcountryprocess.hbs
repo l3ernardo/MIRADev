@@ -1,4 +1,5 @@
 <script src="/js/asmtbasic_section.js" type="text/javascript"></script>
+<script src="/js/asmt_components.js" type="text/javascript"></script>
 <script src="/js/assessment.js" type="text/javascript"></script>
 <!-- <script src="/js/constituent_section.js" type="text/javascript"></script>
 <script src="/js/admin_section.js" type="text/javascript"></script>  -->
@@ -32,7 +33,7 @@
 <script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
 
-<div class="ibm-container" style="width:80%">
+<div class="ibm-container" style="width:85%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
@@ -46,10 +47,12 @@
 		<!-- Exception Details -->
 		{{>asmtexception}}
 		<!-- Contact -->
-		{{>asmtexception}}
+		{{>asmtexception}}<br /><br />
+		<!-- Assessment components guide -->
+		{{>asmtcountryprocess/compguide}}<br /><br />
+		<!-- Assessment components tabs -->
+		{{>asmtcountryprocess/blacomponent}}<br /><br />
 		<!-- NOTES & LINKS SECTION -->
-		<br />
-		<br />
 		{{>comments}}
 		<!-- BUTTONS AREA -->
 		{{>buttons}}

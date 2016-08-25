@@ -12,5 +12,6 @@ module.exports = {
 	bpURL: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(%f=%t).search/byjson',
 	bpOrgURL: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmorganization/hrOrganizationCode=%t.search/byjson',
 	bpDivURL: 'https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmdivdept/dept=%t.search/byjson',
+	bgURL: 'https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=listMembers&attrib=%f&group=%t',
 	mirainterfaces: 'https://mira-connector-dev.w3ibm.mybluemix.net'
 }
