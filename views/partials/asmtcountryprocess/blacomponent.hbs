@@ -4,96 +4,34 @@
 
 	<div class="ibm-tab-section">
 		<ul class="ibm-tabs">
-			<li id="summary-li" class="ibm-active"><a href="#asmttab">Summary</a></li>
-			<li id="basiccontrol-li"><a href="##asmttab">Basics of Control</a></li>
-			<li id="auditreadyasmt-li"><a href="##asmttab">Audit Readiness Asmt</a></li>
-			<li id="riskmsdcommit-li"><a href="##asmttab">Open Risks &amp; Missed Commits</a></li>
-			<li id="auditreview-li"><a href="##asmttab">Audits &amp; Reviews</a></li>
-			<li id="kctest-li"><a href="##asmttab">Key Controls Testing</a></li>
-			<li id="opmetric-li"><a href="##asmttab">Operational Metrics</a></li>
-			<li id="other-li"><a href="##asmttab">Others</a></li>
+			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
+			<li id="basiccontrol-li"><a href="javascript:void(0)" class="mira-subdata">Basics of Control</a></li>
+			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Assessment</a></li>
+			<li id="riskmsdcommit-li"><a href="javascript:void(0)" class="mira-subdata">Open Risks &amp; Missed Commits</a></li>
+			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
+			<li id="kctest-li"><a href="javascript:void(0)" class="mira-subdata">Key Controls Testing</a></li>
+			<li id="opmetric-li"><a href="javascript:void(0)" class="mira-subdata">Operational Metrics</a></li>
+			<li id="other-li"><a href="javascript:void(0)" class="mira-subdata">Others</a></li>
 		</ul>
 	</div>
 	<div id="summary" class="ibm-tabs-content">
-		<table id="summary_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-summary">
-				<th scope="col">Rating Summary</th>
-			</thead>
-			<tr>
-				<td width="80%">{{RatingSummary}}</td>
-			</tr>
-		</table>
+		{{>asmtbaselevel/ratingsummary}}
 	</div>
 	<div id="basiccontrol" class="ibm-tabs-content" style='display : none'>
-		<a href="#">Corporate Instruction FIN 182</a> <br /> <br />
-		<table id="basiccontrol_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-basiccontrol">
-				<th scope="col" width="5%">#</th>
-				<th scope="col" width="40%">Question</th>
-				<th scope="col" width="15%">Response</th>
-				<th scope="col" width="15%">Target Date</th>
-				<th scope="col" width="25%">Comments</th>
-			</thead>
-			<tr>
-				<td>1.</td>
-				<td>
-					Can you demonstrate organizational or process ownership?<br />Includes:
-					<ul>
-						<li>having a documented and effective process</li>
-						<li>identification/monitoring of metrics</li>
-						<li>assignment of responsibility with appropriate separation of duties</li>
-						<li>periodic process inspection and validation</li>
-						<li>periodic re-evaluation of changes in the business environment or business model</li>
-					</ul>
-					<strong>Note:</strong>  Please answer "No" if one or more bullets are "No".
-				</td>
-				<td>{{BoCResponse1}}</td>
-				<td>{{BoCTargetCloseDate1}}</td>
-				<td>{{BoCComments1}}</td>
-			</tr>
-		</table>
+		{{>asmtbaselevel/basicsofcontrol}}
 	</div>
 	<div id="auditreadyasmt" class="ibm-tabs-content" style='display : none'>
-		<table id="auditreadyasmt_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-auditreadyasmt">
-				<th scope="col">Audit Readiness Assessment Content</th>
-			</thead>
-		</table>
+		{{>asmtbaselevel/auditreadinessasmt}}
 	</div>
 	<div id="riskmsdcommit" class="ibm-tabs-content" style='display : none'>
-		<table id="riskmsdcommit_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-riskmsdcommit">
-				<th scope="col">Open Risk and Missed Commits Content</th>
-			</thead>
-		</table>
 	</div>
 	<div id="auditreview" class="ibm-tabs-content" style='display : none'>
-		<table id="auditreview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-auditreview">
-				<th scope="col">Audits and Reviews Content</th>
-			</thead>
-		</table>
 	</div>
 	<div id="kctest" class="ibm-tabs-content" style='display : none'>
-		<table id="kctest_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-kctest">
-				<th scope="col">Key Controls Testing Content</th>
-			</thead>
-		</table>
 	</div>
 	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-		<table id="opmetric_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-opmetric">
-				<th scope="col">Operational Metric Content</th>
-			</thead>
-		</table>
 	</div>
 	<div id="other" class="ibm-tabs-content" style='display : none'>
-		<table id="other_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-			<thead class="bla-other">
-				<th scope="col">Other Considerations Content</th>
-			</thead>
-		</table>
 	</div>
 
 </div>
