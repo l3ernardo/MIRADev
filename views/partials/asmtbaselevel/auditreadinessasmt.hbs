@@ -1,5 +1,105 @@
 <table id="auditreadyasmt_table" class="ibm-data-table">
 	{{#if_equal EnteredBU "GTS"}}
+		<tr class="ar-asmt-content">
+			<th class="ar-asmt-content">Analysis to Audit Lessons Learned</th>
+		</tr>
+		<tr class="ar-asmt-content">
+			<td>
+				<table width="100%" class="ar-asmt-label">
+					<thead>
+						<th scope="col" width="35%">Question</th>
+						<th scope="col" width="10%">Response</th>
+						<th scope="col" width="10%">Finding</th>
+						<th scope="col" width="10%">Explanation</th>
+						<th scope="col" width="35%">Target to Sat</th>
+					</thead>
+					<tr>
+						<td>Have you analyzed the list of lessons learned to determine if there are similar exposures in the assessed unit?</td>
+						<td class="content-data"></td>
+						<td class="content-data"></td>
+						<td class="content-data"></td>
+						<td class="content-data"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="ar-asmt-content">
+			<td>
+				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+					<thead class="ar-asmt-viewheader">
+						<th scope="col" width="10%">Qtr</th>
+						<th scope="col" width="10%">ID</th>
+						<th scope="col" width="35%">Summary of Issue/Recommendation</th>
+						<th scope="col" width="15%">Observation Category</th>
+						<th scope="col" width="15%">Audit/CAR</th>
+						<th scope="col" width="15%">Subprocess</th>
+					</thead>
+					{{#each ALLData}}
+						<tr>
+							{{#each col}}
+								{{#if @first}}
+									<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+								{{else}}
+									<td>{{this}}</td>
+								{{/if}}
+							{{/each}}
+						</tr>
+					{{/each}}
+					<tr class="ar-asmt-viewheader">
+						<td colspan="6"><a href="javascript:void(0)">Click here</a> to view all audit lessons learned.</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<!-- Audit Readiness Checklist is for GTS CRM/Other type of docs only -->
+		{{#if_equal CatP "CRM"}}
+			<tr class="ar-asmt-content">
+				<th class="ar-asmt-content">Audit Readiness Checklist</th>
+			</tr>
+			<tr class="ar-asmt-content">
+				<td>
+					<table width="100%" class="ar-asmt-label">
+						<thead>
+							<th scope="col" width="35%">Question</th>
+							<th scope="col" width="10%">Rating</th>
+							<th scope="col" width="10%">Finding</th>
+							<th scope="col" width="10%">Explanation</th>
+							<th scope="col" width="35%">Target to Sat</th>
+						</thead>
+						<tr>
+							<td>Did you perform/complete an Audit Readiness Self Assessment checklist (checklist is performed to a defined schedule, not necessarily quarterly)?</td>
+							<td class="content-data"></td>
+							<td class="content-data"></td>
+							<td class="content-data"></td>
+							<td class="content-data"></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr class="ar-asmt-content">
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+						<thead class="ar-asmt-viewheader">
+							<th scope="col" width="20%">Period</th>
+							<th scope="col" width="20%">Rating</th>
+							<th scope="col" width="35%">Assessed by</th>
+							<th scope="col" width="25%">Target to Sat</th>
+						</thead>
+						{{#each ARCData}}
+							<tr>
+								{{#each col}}
+									{{#if @first}}
+										<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+									{{else}}
+										<td>{{this}}</td>
+									{{/if}}
+								{{/each}}
+							</tr>
+						{{/each}}
+					</table>
+				</td>
+			</tr>
+		{{/if_equal}}
 	{{else}}
 		<tr class="ar-asmt-content">
 			<td>

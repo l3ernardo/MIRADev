@@ -159,22 +159,17 @@
   background-color: #7f604f;
 }
 .ibm-data-table .ar-asmt-content {
+	color: #ffffff;
 	background-color: #7f604f;
 	border: 20px solid #7f604f;
+}
+.ibm-data-table .ar-asmt-viewheader {
+	font-size: 11px;
+	background-color: #e7d8cf;
 }
 .ibm-data-table .ar-asmt-label {
   background-color: #e7d8cf;
 }
-/*.ibm-data-table .ar-asmtdata1 {
-  background-color: #7f604f;
-	padding-bottom: 5px;
-	padding-left: 5px;
-	padding-right: 5px;
-	padding-top: 5px;
-}
-.ibm-data-table .ar-asmtdata2 {
-  background-color: #e7d8cf;
-}*/
 .ibm-data-table .risk-msdcommit {
   color: #ffffff;
   background-color: #00c150;
