@@ -16,14 +16,14 @@
 		<div id="loglist">
 			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="display nowrap">
 				<thead>
-					<th scope="col">Bluegroup</th>
+					<th scope="col">Name</th>
 				</thead>
 			</table>
 		</div> 
 	</div>
 </div>
 
-<div class="ibm-common-overlay ibm-overlay-alt-two" id="Overlay_Bluegroups">
+<div class="ibm-common-overlay ibm-overlay-alt-two" id="Overlay_Bluegroups" style="box-sizing: border-box;" >
 	<div class="ibm-body">
 		<div class="ibm-main">
 			<div class="ibm-title ibm-subtitle">
@@ -37,13 +37,12 @@
 							<input type="hidden" id="id" name="id">
 							<input type="hidden" id="rev" name="rev">
 							<p style="text-align:left" class="ui-widget">
-								<label for="bpname">Type the name:<span class="ibm-required">&nbsp;</span></label>
-								<span><input id="bpname" class="ui-autocomplete-input" autocomplete="off" ></span>
-								<a class="ibm-add-link" href="#" onclick="add($('#bpname'),$('#bplist'))">Add</a>
+								<label for="bpname">Name:<span class="ibm-required">&nbsp;</span><a class="ibm-add1-link" href="#" onclick="add($('#bpname'),$('#bplist'))">Add</a></label>
+								<span><input id="bpname" class="ui-autocomplete-input" autocomplete="off" ></span>								
 								<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>		
 							</p>
 							<p style="text-align:left">
-								<label for="title">Members:<span class="ibm-required">*</span></label>
+								<label for="title">Members:<span class="ibm-required">&nbsp;</span><a class="ibm-delete-link" href="#" onclick="remove($('#bpname'),$('#bplist'))">Remove</a></label>
 								<span><div id="fldmembers"></div></span>
 							</p>
 							<div class="ibm-buttons-row">
@@ -62,6 +61,8 @@
 </div>
 
 <script>
+$('h1#pageTitle').text("Bluegroups");
+
 function loadData(bgname) {
 	// http://127.0.0.1:6007/bgdetail?group=MIRA-ADMIN
 	$.ajax({
@@ -71,13 +72,15 @@ function loadData(bgname) {
 		contentType: "application/json; charset=utf-8",
 		success: function (response) {
 			if(response.doc != ''){
-				document.getElementById("titlehead").innerHTML="Bluegroup: " + bgname;
+				document.getElementById("titlehead").innerHTML=bgname;
 				//$('#titlehead').val("Bluegroup: " + bgname);				
 				var myDiv = document.getElementById("fldmembers");	
 				myDiv.innerHTML = "";
 				//Create and append select list
 				var selectList = document.createElement("select");
 				selectList.id = "mySelect";
+				selectList.multiple = "";
+				selectList.size = "10";
 				myDiv.appendChild(selectList);
 				//Create and append the options
 				for(var i=0;i<response.doc.length;i++) {
