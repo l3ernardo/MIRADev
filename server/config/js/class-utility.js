@@ -8,6 +8,7 @@
 var varConf = require('../../../configuration');
 var q  = require("q");
 var moment = require('moment');
+var xml2js = require('xml2js');
 
 var util = {
 	/* Get data from faces & bluepages */
@@ -104,6 +105,78 @@ var util = {
 		});
 		return deferred.promise;
 	},
+	getBluegroup: function(req) {
+		var deferred = q.defer();
+		var parser = new xml2js.Parser();
+		var bg = [];
+		var bgemail = [];
+		var bgcn = [];
+		var bguid = [];
+		var urlemail = varConf.bgURL.replace('%t',req.query.group).replace('%f','email');
+		var urlcn = varConf.bgURL.replace('%t',req.query.group).replace('%f','cn');			
+		var urluid = varConf.bgURL.replace('%t',req.query.group).replace('%f','uid');			
+		try {
+			require('request').get(urlemail, function(err, response, body) {
+				if(err) {
+					deferred.reject({"status": 500, "error": err});
+				} else {
+					parser.parseString(body, function (err, result) {
+							result.group.member.forEach(function(member) {
+								bgemail.push({"email":member})
+							})
+						});					
+					try {
+						require('request').get(urlcn, function(err, response, body2) {
+							if(err) {
+								deferred.reject({"status": 500, "error": err});
+							} else {
+								parser.parseString(body2, function (err, result) {
+									result.group.member.forEach(function(member) {
+										bgcn.push({"cn":member})
+									})
+								});
+								try {
+									require('request').get(urluid, function(err, response, body3) {
+										if(err) {
+											deferred.reject({"status": 500, "error": err});
+										} else {
+											parser.parseString(body3, function (err, result) {
+												result.group.member.forEach(function(member) {
+													bguid.push({"uid":member})
+												})
+											})												
+											// We got all values, now return in a single JSON
+											for(var i=0;i<bgemail.length;i++) {
+												bg.push({"member": bgcn[i].cn + " (" + bgemail[i].email+ ")","uid":bguid[i].uid})
+											}
+											bg.sort(function(a, b){
+												var nameA=a.member.toLowerCase(), nameB=b.member.toLowerCase()
+												if (nameA < nameB) //sort string ascending
+													return -1 
+												if (nameA > nameB)
+													return 1
+												return 0 //default return value (no sorting)
+											})
+											deferred.resolve({"status": 200, "doc": bg})
+										}
+									})
+									return deferred.promise;
+								} catch(e) {
+									deferred.reject({"status": 500, "error": e});
+								}
+							}								
+						});
+						return deferred.promise;
+					} catch(e) {
+						deferred.reject({"status": 500, "error": e});
+					}							
+				}				
+			});
+			return deferred.promise;
+		} catch(e) {
+			deferred.reject({"status": 500, "error": e});
+		}
+	},	
 	/* Upload a file*/
 	uploadFile: function (parentid, req, db){
 		var deferred = q.defer();
