@@ -13,6 +13,7 @@ var accessrules = require('./class-accessrules.js');
 var param = require('./class-parameter.js');
 var util = require('./class-utility.js');
 var accessupdates = require('./class-accessupdates.js');
+var fieldCalc = require('./class-fieldcalc.js');
 
 var assessableunit = {
 
@@ -276,67 +277,13 @@ var assessableunit = {
 				}
 
 				/* Calculate for Instance Design Specifics and parameters*/
-				if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
-					var lParams;
-					// Get required paramaters
-					if (req.session.businessunit == "GTS") {
-						doc[0].EnteredBU = "GTS";
-						if (doc[0].DocSubType == "Controllable Unit") {
-							doc[0].CatCU = "";
-							lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-						} else if (doc[0].DocSubType == "Country Process") {
-							doc[0].CatP = "";
-							lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign'];
-						} else {
-							lParams = ['GTSInstanceDesign'];
-						}
-					} else {
-						doc[0].EnteredBU = "GBS";
-						lParams = ['GBSInstanceDesign'];
-					}
-					param.getListParams(db, lParams).then(function(dataParam) {
-						if(dataParam.status==200 & !dataParam.error) {
-							// calculate for CatP and CatCU fields
-							if (doc[0].DocSubType == "Country Process") {
-								if (dataParam.parameters.CRMProcess) {
-									for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "CRM";
-									}
-								}
-								if (dataParam.parameters.DeliveryProcess) {
-									for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "Delivery";
-									}
-								}
-							}
-							if (doc[0].DocSubType == "Controllable Unit") {
-								if (dataParam.parameters.CRMCU) {
-									for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "CRM";
-									}
-								}
-								if (dataParam.parameters.DeliveryCU) {
-									for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
-										if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "Delivery";
-									}
-								}
-							}
+				doc[0].EnteredBU = req.session.businessunit;
+				if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
+					doc = fieldCalc.getCategoryAndBUOld(db, doc);
+				}
 
-							// evaluate BusinessUnitOLD formula
-							if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
-							if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
-
-							if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
-								doc[0].showARCFreq = 1;
-							}
-
-						} else {
-							console.log("[routes][class-assessableunit][getListParams] - " + dataParam.error);
-						}
-					}).catch(function(err) {
-						console.log("[routes][class-assessableunit][getListParams] - " + err.error);
-					})
-
+				if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
+					doc[0].showARCFreq = 1;
 				}
 
 				/* Get Reporting Groups and BU Countries*/
