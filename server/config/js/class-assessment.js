@@ -10,8 +10,7 @@ var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
-// var param = require('./class-parameter.js');
-// var util = require('./class-utility.js');
+var fieldCalc = require('./class-fieldcalc.js');
 
 var assessment = {
 
@@ -24,6 +23,7 @@ var assessment = {
 			var doc = [];
 			doc.push(data.body);
 			doc[0].EnteredBU = req.session.businessunit;
+			doc = fieldCalc.getCategoryAndBUOld(db, doc);
 			deferred.resolve({"status": 200, "doc": doc});
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
