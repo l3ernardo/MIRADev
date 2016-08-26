@@ -283,7 +283,7 @@ var assessableunit = {
 					/* Calculate for Instance Design Specifics and parameters*/
 					doc[0].EnteredBU = req.session.businessunit;
 					if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
-						doc = fieldCalc.getCategoryAndBUOld(db, doc);
+						doc = fieldCalc.getCategoryAndBUOld(req, db, doc);
 					}
 
 					if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
