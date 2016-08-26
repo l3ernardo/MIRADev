@@ -14,6 +14,61 @@ var param = require('./class-parameter.js');
 var util = require('./class-utility.js');
 var accessupdates = require('./class-accessupdates.js');
 var fieldCalc = require('./class-fieldcalc.js');
+var recordindex;
+var parentindex;
+var indexp;
+
+function existparentid (parentkey,F){
+      for (j=0;j<F.length;j++)
+   {  
+      if(F[j]!= undefined){       
+
+      if(F[j]._id==parentkey)
+	  {
+	       result=1;
+		   parentindex=j;
+   }}
+   }
+  /* return 1;*/
+   return result
+}
+function parentidf (parentkey,G){
+  for (m=0;m<G.length;m++)
+   {  
+      if(G[m]!= undefined){     
+      if(G[m]._id==parentkey)
+	  {   
+		   indexp=m;
+     }
+	 else
+	 {
+		  indexp=G.length;
+	 }
+   }
+   }
+   return indexp
+}
+
+function findtl(level,parentkey,F){
+    for(k=F.length-1;k>=parentindex;k--)
+	{
+	   if(F[k]!= undefined)
+	   {  
+	       if(F[k].LevelType==level && F[k].parentid==parentkey)
+		       {    
+					result2=1;
+				    recordindex=k;
+					k=parentindex-1;
+				} 
+				else{ 
+					 recordindex=parentidf(parentkey,F);
+					 result2=0;					 
+				}
+	   }
+	}
+	return result2
+}
+
 
 var assessableunit = {
 
@@ -22,17 +77,147 @@ var assessableunit = {
 		var deferred = q.defer();
 		try{
 			var view_dashboard=[];
-			var obj = {
+			var temporal=[];
+		var A=[];
+		var F=[];
+		var index;
+			var process =	
+				{"selector":{
+	  				"$and": [
+			             { "LevelType": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+						 {"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
+						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+						 {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}  
+				]
+	}	,	
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
+	};
+
+		var geo = {
+			"selector":{
+			"$and": [
+			             { "LevelType": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit"]}},
+				         {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+				]	
+			},	
+			"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]	
+};
+		var rg = {
+			"selector":{
+			"$and": [
+			             { "LevelTypeG": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+						 //{"DocSubType":{"$in":["BU Reporting Group"]}},
+					     {"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
+				         {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+				]	
+			},	
+			"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]	
+};
+        if(req.url=='/processdashboard'){
+			obj=process;
+		}
+		else if(req.url=='/geodashboard')
+		{
+			obj=geo;
+		}
+		else if(req.url=='/reportingdashboard')
+		{
+			obj=rg;			
+		}
+		
+			
+			
+			
+		/*	var obj = {
 				selector:{
 					"_id": {"$gt":0},
 					"key": "Assessable Unit",
 					"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT", "BU IMT", "BU Country","Account","Sub-process"]}
 				}
-			};
+			};*/
 			db.find(obj).then(function(data){
 				var doc = data.body.docs;
 				var len= doc.length;
-				if(len > 0){
+				if(len > 0){							
+    //sorting
+            var n ;
+            var result;
+			var result2;
+			var lenF=0;
+
+	
+if(F!= undefined)
+	{ 		 
+if(req.url!='/reportingdashboard')
+{
+for (i=0;i<len;i++)
+{       lenF=F.length; 
+         if(i==0)
+			{  
+			   F[0]=doc[0]; 
+			}
+	     else if (i!=0 && doc[i].LevelType=='1')
+	          {   
+	             F[n]=doc[i];
+	          }
+              else
+	     {   //
+	             if(existparentid(doc[i].parentid,F)=='1' && findtl(doc[i].LevelType,doc[i].parentid,F)=='1')
+	                { 
+						for(l=lenF;l>recordindex;l--)
+								{   
+									 F[l]=F[l-1];
+								}
+								F[recordindex+1]=doc[i];		 
+					}
+	                 
+	                else if(existparentid(doc[i].parentid,F)=='1' && findtl(doc[i].LevelType,doc[i].parentid,F)=='0')
+	                {      
+						for(l=lenF;l>parentindex;l--)
+						{
+							F[l]=F[l-1]; 
+						}
+							F[parentindex+1]=doc[i];	  
+					}
+	         }    
+         n=lenF+1;
+		 
+	}
+}
+else
+{
+	for (i=0;i<len;i++)
+{
+	 F[i]=doc[i]; 
+}
+}
+}
+				 for (var i = 0; i < F.length; i++){
+					 view_dashboard.push({
+										assessableUnit: F[i].Name,
+										priorQ: F[i].PeriodRatingPrev,
+										currentQ: F[i].PeriodRating,
+										nextQtr: F[i].AUNextQtrRating,
+										targetToSat:F[i].Target2Sat,
+										mira:F[i].MIRAAssessmentStatus,
+										wwBcit:F[i].WWBCITAssessmentStatus,
+										owner:F[i].Owner,
+										type:F[i].DocSubType,
+									})
+				}
+			}
+				
+				
+			/*	if(len > 0){
 					for (var i = 0; i < len; i++){
 						view_dashboard.push({
 							assessableUnit: doc[i].Name,
@@ -46,9 +231,9 @@ var assessableunit = {
 							type:doc[i].DocSubType,
 						})
 					}
-				}
+				}*/
 				view=JSON.stringify(view_dashboard, 'utf8');
-				deferred.resolve({"status": 200, "doc": doc,"view":view});
+				deferred.resolve({"status": 200, "doc": F,"view":view});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -283,7 +468,7 @@ var assessableunit = {
 					/* Calculate for Instance Design Specifics and parameters*/
 					doc[0].EnteredBU = req.session.businessunit;
 					if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
-						doc = fieldCalc.getCategoryAndBUOld(db, doc);
+						doc = fieldCalc.getCategoryAndBUOld(req, db, doc);
 					}
 
 					if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
