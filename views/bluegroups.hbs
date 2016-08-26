@@ -1,0 +1,114 @@
+<link  href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
+<script src="/lib/jquery.dataTables.js"></script>
+	<style>
+		.ui-autocomplete-loading {
+			background: white url("./images/animated-progress-20x20b.gif") right center no-repeat;
+		}
+	</style>
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<br/>
+		<br/>
+		<div class="ibm-buttons-row">
+		</div>
+
+		<div id="loglist">
+			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="display nowrap">
+				<thead>
+					<th scope="col">Name</th>
+				</thead>
+			</table>
+		</div> 
+	</div>
+</div>
+
+<div class="ibm-common-overlay ibm-overlay-alt-two" id="Overlay_Bluegroups" style="box-sizing: border-box;" >
+	<div class="ibm-body">
+		<div class="ibm-main">
+			<div class="ibm-title ibm-subtitle">
+				<h2 id="titlehead">BlueGroup</h2>
+			</div>
+			<div class="ibm-rule"><hr/></div>
+			<div class="ibm-container ibm-alternate ibm-buttons-last">
+				<div class="ibm-container-body">
+					<div id="bodyContent" title="Bluegroup Details" style="display:;">
+						<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/updateBG">
+							<input type="hidden" id="id" name="id">
+							<input type="hidden" id="rev" name="rev">
+							<p style="text-align:left" class="ui-widget">
+								<label for="bpname">Name:<span class="ibm-required">&nbsp;</span><a class="ibm-add1-link" href="#" onclick="add($('#bpname'),$('#bplist'))">Add</a></label>
+								<span><input id="bpname" class="ui-autocomplete-input" autocomplete="off" ></span>								
+								<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>		
+							</p>
+							<p style="text-align:left">
+								<label for="title">Members:<span class="ibm-required">&nbsp;</span><a class="ibm-delete-link" href="#" onclick="remove($('#bpname'),$('#bplist'))">Remove</a></label>
+								<span><div id="fldmembers"></div></span>
+							</p>
+							<div class="ibm-buttons-row">
+								<p>
+									<input class="ibm-btn-arrow-pri" type="submit" id="btn_submit" value="Submit" />
+									<span class="ibm-sep">&nbsp;</span>
+									<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Cancel" />
+								</p>
+							</div>							
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$('h1#pageTitle').text("Bluegroups");
+
+function loadData(bgname) {
+	// http://127.0.0.1:6007/bgdetail?group=MIRA-ADMIN
+	$.ajax({
+		url: "/bgdetail?group="+bgname,
+		type: "GET",
+		dataType: "json",
+		contentType: "application/json; charset=utf-8",
+		success: function (response) {
+			if(response.doc != ''){
+				document.getElementById("titlehead").innerHTML=bgname;
+				//$('#titlehead').val("Bluegroup: " + bgname);				
+				var myDiv = document.getElementById("fldmembers");	
+				myDiv.innerHTML = "";
+				//Create and append select list
+				var selectList = document.createElement("select");
+				selectList.id = "mySelect";
+				selectList.multiple = "";
+				selectList.size = "10";
+				myDiv.appendChild(selectList);
+				//Create and append the options
+				for(var i=0;i<response.doc.length;i++) {
+					var option = document.createElement("option");
+					option.value = response.doc[i].uid;
+					option.text = response.doc[i].member;
+					selectList.appendChild(option);
+				}				
+			}
+			ibmweb.overlay.show("Overlay_Bluegroups",this);			
+		},
+		error: function(e) {
+			//updateUserName('');
+		}
+	});	
+}
+
+var alldata = JSON.parse('{{{alldata}}}');
+var data = [];
+for ( var i=0 ; i<alldata.bg.length ; i++ ) {
+	if(alldata.bg[i].bgname!="MIRA-ACCESS") {
+		data.push(["<a href='#' onclick='loadData(\""+alldata.bg[i].bgname+"\");return false;'>"+alldata.bg[i].bgname+"</a>"]);
+	}
+}
+$('#reports_table').DataTable( {
+            data:  data,
+			select: true,
+			"scrollY": 250,
+			"scrollX": true
+        } )
+</script>

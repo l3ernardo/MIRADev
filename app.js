@@ -69,6 +69,7 @@ app.use(require('./server/config/router-security.js'));
 app.use(require('./server/config/router-administration.js'));
 app.use(require('./server/config/router-calendars.js'));
 app.use(require('./server/config/router-interface.js'));
+app.use(require('./server/config/router-bluegroups.js'));
 app.use(require('./server/config/router-dashboards.js'));
 
 
