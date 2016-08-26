@@ -1,0 +1,32 @@
+<link  href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<script src="/lib/jquery.dataTables.js"></script>
+
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<br/>
+		<br/>
+		<div class="ibm-buttons-row">
+		</div>
+
+		<div id="loglist">
+			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="display nowrap">
+				<thead>
+					<th scope="col">Filename</th>
+				</thead>
+			</table>
+		</div> 
+	</div>
+</div>
+<script>
+var alldata = JSON.parse('{{{alldata}}}');
+var data = [];
+for ( var i=0 ; i<alldata.doc.length ; i++ ) {
+	data.push(["<a href='/logDetail?filepath={{server}}/getlog?file="+alldata.doc[i].file+"'>"+alldata.doc[i].file+"</a>"]);
+}
+$('#reports_table').DataTable( {
+            data:  data,
+			select: true,
+			"scrollY": 250,
+			"scrollX": true
+        } )
+</script>

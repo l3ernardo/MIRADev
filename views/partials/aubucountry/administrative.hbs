@@ -8,33 +8,15 @@
 			<tr>
 				<td width="25%"><label for="ExcludeGeo">Exclude from Geo roll-ups?:</label></td>
 				<td>
-					<span><input type="text" name="ExcludeGeo" value="{{ExcludeGeo}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-			<tr>
-				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span>
-						{{#if AuditableFlagYes}}
-							<input type="radio" name="AuditableFlag" id="AFYes" value="Yes" checked>Yes
-							<input type="radio" name="AuditableFlag" id="AFNo" value="No">No
+          <span>
+						{{#if_equal ExcludeGeo "Yes"}}
+							<input type="radio" name="ExcludeGeo" id="AFYes" value="Yes" checked>Yes
+							<input type="radio" name="ExcludeGeo" id="AFNo" value="No">No
 						{{else}}
-							<input type="radio" name="AuditableFlag" id="AFYes" value="Yes">Yes
-							<input type="radio" name="AuditableFlag" id="AFNo" value="No" checked>No
-						{{/if}}
+							<input type="radio" name="ExcludeGeo" id="AFYes" value="Yes">Yes
+							<input type="radio" name="ExcludeGeo" id="AFNo" value="No" checked>No
+						{{/if_equal}}
 					</span>
-				</td>
-			</tr>
-			<tr>
-				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span><input type="text" name="AuditProgram" value="{{AuditProgram}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-			<tr class="size">
-				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
 				</td>
 			</tr>
 			<tr>
@@ -44,96 +26,21 @@
 					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
 				</td>
 			</tr>
-			<tr class="internal-audits">
-				<td>Internal Audits:</td>
-				<td>
-					<div class="ibm-columns ibm-graphic-tabs">
-						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-							<thead class="mira-subtable">
-                <th scope="col"><font color="#FFF">Engagement</font></th>
-								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
-								<th scope="col"><font color="#FFF">Rating</font></th>
-								<th scope="col"><font color="#FFF">Size</font></th>
-								<th scope="col"><font color="#FFF">Score</font></th>
-							</thead>
-							{{#each IAData}}
-							<tr>
-								{{#each col}}<td>{{this}}</td>{{/each}}
-							</tr>
-							{{/each}}
-						</table>
-					</div>
-				</td>
-			</tr>
 
 		{{else}}
 
 			{{!-- AU BU Country form - Administrative Use Only section - Edit Mode with no Admin Access --}}
 			<tr><td width="25%">Exclude from Geo roll-ups?:</td><td>{{ExcludeGeo}}</td></tr>
-			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
-			{{#if SizeFlag}}
-				<tr><td>Size:</td><td>{{CUSize}}</td></tr>
-			{{/if}}
-			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
 			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
-			{{#if AuditableFlagYes}}
-				<tr>
-					<td>Internal Audits:</td>
-					<td>
-						<div class="ibm-columns ibm-graphic-tabs">
-							<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-								<thead class="mira-subtable">
-                  <th scope="col"><font color="#FFF">Engagement</font></th>
-  								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
-  								<th scope="col"><font color="#FFF">Rating</font></th>
-  								<th scope="col"><font color="#FFF">Size</font></th>
-  								<th scope="col"><font color="#FFF">Score</font></th>
-								</thead>
-								{{#each IAData}}
-								<tr>
-									{{#each col}}<td>{{this}}</td>{{/each}}
-								</tr>
-								{{/each}}
-							</table>
-						</div>
-					</td>
-				</tr>
-			{{/if}}
+
 		{{/if}}
 
 	{{else}}
 
 		{{!-- AU BU Country form - Administrative Use Only section - Read Mode --}}
-		<tr><td width="25%">Exclude from Geo roll-ups?:</td><td>{{ExcludeGeo}}</td></tr>
-		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
-		{{#if SizeFlag}}
-			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
-		{{/if}}
-		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
-		<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
-		{{#if AuditableFlagYes}}
-			<tr>
-				<td>Internal Audits:</td>
-				<td>
-					<div class="ibm-columns ibm-graphic-tabs">
-						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-							<thead class="mira-subtable">
-								<th scope="col"><font color="#FFF">Engagement</font></th>
-								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
-								<th scope="col"><font color="#FFF">Rating</font></th>
-								<th scope="col"><font color="#FFF">Size</font></th>
-								<th scope="col"><font color="#FFF">Score</font></th>
-							</thead>
-							{{#each IAData}}
-							<tr>
-								{{#each col}}<td>{{this}}</td>{{/each}}
-							</tr>
-							{{/each}}
-						</table>
-					</div>
-				</td>
-			</tr>
-		{{/if}}
+    <tr><td width="25%">Exclude from Geo roll-ups?:</td><td>{{ExcludeGeo}}</td></tr>
+    <tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
+
 	{{/if}}
 
 </table>

@@ -7,7 +7,7 @@ var app = express(),
 sessions = require('client-sessions'),
 passport = require('passport'),
 bodyParser = require('body-parser');
-var flash = require('connect-flash'); 
+var flash = require('connect-flash');
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -58,12 +58,7 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 	//init database
 	console.log("[app] init database");
 	var cloudant = require('./server/config/js/class-conn');
-	// Connect to db in Bluemix if it's running over there; otherwise
-	if (process.env.VCAP_SERVICES) {
-		cloudant.connect('miradb');
-	} else {
-		cloudant.connect('miradbtest');
-	} 
+	cloudant.connect('miradb');
 });
 
 //Site variables
@@ -74,10 +69,11 @@ app.use(require('./server/config/router-security.js'));
 app.use(require('./server/config/router-administration.js'));
 app.use(require('./server/config/router-calendars.js'));
 app.use(require('./server/config/router-interface.js'));
+app.use(require('./server/config/router-bluegroups.js'));
 app.use(require('./server/config/router-dashboards.js'));
 
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {
     res.render('error',{errorDescription: req.url + ' does not exist.'});
-}); 
+});

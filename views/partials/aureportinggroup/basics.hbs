@@ -2,57 +2,36 @@
 <table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
 	{{#if editmode}}
-		{{#if admin}}
+		<tr><td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td></tr>
 		<tr>
-			<td>Parent Business Unit:</td><td>{{BusinessUnit}}</td>
-		</tr>
-		<tr>
-			<td width="25%"><label for="Name">Name:<span class="ibm-required">*</span></label></td>
+			<td><label for="Name">Name:<span class="ibm-required">*</span></label></td>
 			<td>
-			<span><input type="text" name="Name" value="{{Name}}" size="100" maxlength="300"></span>
+				<span><input type="text" name="Name" value="{{Name}}" size="100" maxlength="300"></span>
 			</td>
 		</tr>
 		<tr>
 			<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
 		</tr>
 		<tr>
-			<td width="25%"><label for="Status">Status:<span class="ibm-required">*</span></label></td>
+			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
 			<td>
-			<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span>
+				<span>{{{uniqueSelect "Status" parameters.AssessableUnitStatus.0.options "name" "name" Status}}}</span>
+				<br />
+				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
 			</td>
 		</tr>
-		{{else}}
-	     	<tr>
-				<td>Parent Business Unit:</td><td>{{BusinessUnit}}</td>
-			</tr>
-			<tr>
-				<td width="25%"><label for="Name">Name:<span class="ibm-required">*</span></label></td>
-				<td>
-				<span><input type="text" name="Name" value="{{Name}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
-			</tr>
-			<tr>
-				<td width="25%"><label for="Status">Status:<span class="ibm-required">*</span></label></td>
-				<td>
-				<span><input type="text" name="Status" value="{{Status}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-		{{/if}}
 	{{else}}
-	<tr>
-		<td>Parent Business Unit:</td><td>{{BusinessUnit}}</td>
-	</tr>
-	<tr>
-		<td>Name:<span class="ibm-required">*</span></td><td>{{Name}}</td>
-	</tr>
-	<tr>
-		<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
-	</tr>
-	<tr>
-		<td>Status:<span class="ibm-required">*</span></td><td><b class="ibm-important">{{Status}}</b></td>
-	</tr>
+		<tr><td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td></tr>
+		<tr><td>Name:</td><td>{{Name}}</td></tr>
+		<tr>
+			<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
+		</tr>
+		<tr>
+			<td>Status:</td>
+			<td>
+				<b class="ibm-important">{{Status}}</b><br />
+				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
+			</td>
+		</tr>
 	{{/if}}
 </table>

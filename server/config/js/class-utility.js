@@ -1,13 +1,14 @@
 /**************************************************************************************************
- * 
+ *
  * Utility code for MIRA Web
  * Developed by : Carlos Kenji Takata
  * Date:01 June 2016
- * 
+ *
  */
 var varConf = require('../../../configuration');
 var q  = require("q");
 var moment = require('moment');
+var xml2js = require('xml2js');
 
 var util = {
 	/* Get data from faces & bluepages */
@@ -28,7 +29,7 @@ var util = {
 	},
 	getPersonDiv: function(req) {
 		var deferred = q.defer();
-		try {		
+		try {
 			url = varConf.bpDivURL.replace('%t',req.query.search);
 			require('request').get(url, function(err, response, body) {
 				if(err) {
@@ -39,11 +40,11 @@ var util = {
 			return deferred.promise;
 		} catch(e) {
 			deferred.resolve({"status": 500, "error": e});
-		}		
-	},	
+		}
+	},
 	getPersonData: function(req) {
 		var deferred = q.defer();
-		try {		
+		try {
 			url = varConf.bpURL.replace('%t',req.query.search).replace('%f',req.query.field);
 			require('request').get(url, function(err, response, body) {
 				if(err) {
@@ -54,7 +55,7 @@ var util = {
 			return deferred.promise;
 		} catch(e) {
 			deferred.resolve({"status": 500, "error": e});
-		}		
+		}
 	},
 	getPeopleData: function(req) {
 		var deferred = q.defer();
@@ -93,167 +94,316 @@ var util = {
 				return deferred.promise;
 			}
 			try {
-				var doc = JSON.parse(body);	
+				var doc = JSON.parse(body);
 				for (var i = 0; i < doc.length; i++) {
 					member.push({"name": doc[i].name, "email":doc[i].email});
 				}
 				deferred.resolve({"status": 200, "doc": member});
 			} catch(e) {
 				deferred.resolve({"status": 500, "error": e});
-			}			
+			}
 		});
 		return deferred.promise;
 	},
+	getBluegroup: function(req) {
+		var deferred = q.defer();
+		var parser = new xml2js.Parser();
+		var bg = [];
+		var bgemail = [];
+		var bgcn = [];
+		var bguid = [];
+		var urlemail = varConf.bgURL.replace('%t',req.query.group).replace('%f','email');
+		var urlcn = varConf.bgURL.replace('%t',req.query.group).replace('%f','cn');			
+		var urluid = varConf.bgURL.replace('%t',req.query.group).replace('%f','uid');			
+		try {
+			require('request').get(urlemail, function(err, response, body) {
+				if(err) {
+					deferred.reject({"status": 500, "error": err});
+				} else {
+					parser.parseString(body, function (err, result) {
+							result.group.member.forEach(function(member) {
+								bgemail.push({"email":member})
+							})
+						});					
+					try {
+						require('request').get(urlcn, function(err, response, body2) {
+							if(err) {
+								deferred.reject({"status": 500, "error": err});
+							} else {
+								parser.parseString(body2, function (err, result) {
+									result.group.member.forEach(function(member) {
+										bgcn.push({"cn":member})
+									})
+								});
+								try {
+									require('request').get(urluid, function(err, response, body3) {
+										if(err) {
+											deferred.reject({"status": 500, "error": err});
+										} else {
+											parser.parseString(body3, function (err, result) {
+												result.group.member.forEach(function(member) {
+													bguid.push({"uid":member})
+												})
+											})												
+											// We got all values, now return in a single JSON
+											for(var i=0;i<bgemail.length;i++) {
+												bg.push({"member": bgcn[i].cn + " (" + bgemail[i].email+ ")","uid":bguid[i].uid})
+											}
+											bg.sort(function(a, b){
+												var nameA=a.member.toLowerCase(), nameB=b.member.toLowerCase()
+												if (nameA < nameB) //sort string ascending
+													return -1 
+												if (nameA > nameB)
+													return 1
+												return 0 //default return value (no sorting)
+											})
+											deferred.resolve({"status": 200, "doc": bg})
+										}
+									})
+									return deferred.promise;
+								} catch(e) {
+									deferred.reject({"status": 500, "error": e});
+								}
+							}								
+						});
+						return deferred.promise;
+					} catch(e) {
+						deferred.reject({"status": 500, "error": e});
+					}							
+				}				
+			});
+			return deferred.promise;
+		} catch(e) {
+			deferred.reject({"status": 500, "error": e});
+		}
+	},	
 	/* Upload a file*/
 	uploadFile: function (parentid, req, db){
 		var deferred = q.defer();
-		var object;
-		var date = new Date();
-		var filenames = req.files.upload;	
+		try{
+			var object;
+			var date = new Date();
+			var filenames = req.files.upload;
 
-		object = {
-			"parentid": parentid,
-			"type": "Attachments",
-			"creation_date": moment(date).format("DD-MM-YYYY HH:mm")
-		};
+			object = {
+				"parentid": parentid,
+				"type": "Attachments",
+				"creation_date": moment(date).format("DD-MM-YYYY HH:mm")
+			};
 
-		db.save(object).then(function(doc) {
-			if (filenames) {
-				var file = filenames;
-				fs.readFile(file.path, function(err, data) {
-					if (!err) { 
-						if (file) {
-							db.attach(doc.body.id, file.name, data, file.type, {rev: doc.body.rev}).then(function(obj) {
-								doc.body.name= file.name;
-								deferred.resolve({"status": 200, "doc": doc.body})
-							}).catch(function(error){
-								deferred.reject({"status": 500, "error": error});
-							});
+			db.save(object).then(function(doc) {
+				if (filenames) {
+					var file = filenames;
+					fs.readFile(file.path, function(err, data) {
+						if (!err) {
+							if (file) {
+								db.attach(doc.body.id, file.name, data, file.type, {rev: doc.body.rev}).then(function(obj) {
+									doc.body.name= file.name;
+									deferred.resolve({"status": 200, "doc": doc.body})
+								}).catch(function(error){
+									deferred.reject({"status": 500, "error": error});
+								});
+							}
 						}
-					}
-					else { 
-						deferred.reject({"status": 500, "error": err});
-					}
-				});
-			}else {
-				deferred.resolve({"status": 200, "doc":doc.body});
-			}				
-		}).catch(function(error) {
-			deferred.reject({"status": 500, "error": error});
-		})
+						else {
+							deferred.reject({"status": 500, "error": err});
+						}
+					});
+				}else {
+					deferred.resolve({"status": 200, "doc":doc.body});
+				}
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
 		return deferred.promise;
 	},
 	//Download the selected file
 	downloadFile: function (req, res, db){
 		var deferred = q.defer();
-		var id = req.query.id;
-		var filename = req.query.filename;
-		db.getattachment(id, filename, {}).then(function(resp){
-			res.body = resp.body;
-			deferred.resolve({"status": 200});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error - download file": err});
-		});		
-		return deferred.promise;	
+		try{
+			var id = req.query.id;
+			var filename = req.query.filename;
+			db.getattachment(id, filename, {}).then(function(resp){
+				res.body = resp.body;
+				deferred.resolve({"status": 200});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error - download file": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
 	},
 	//Delete the selected file
 	deleteFile: function (req, db){
 		var deferred = q.defer();
-		var names=req.query.filename
-		var id = req.query.id;
-		db.get(id, {attachments: true}).then(function(existingdoc) {
-			var rev = existingdoc.body._rev;
-			db.del(id, rev).then(function(resp) {
-				deferred.resolve({"status": 200});
+		try{
+			var names=req.query.filename
+			var id = req.query.id;
+			db.get(id, {attachments: true}).then(function(existingdoc) {
+				var rev = existingdoc.body._rev;
+				db.del(id, rev).then(function(resp) {
+					deferred.resolve({"status": 200});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
 			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": err});
+				deferred.reject({"status": 500, "error": err.error.reason});
 			});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
-		});		
-		return deferred.promise;	
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
 	},
 	//Delete files by parentid
 	deleteFilesParentID: function (parentid, db){
 		var deferred = q.defer();
-		var doc;
-		var object = {
-			selector:{
-				"_id": {"$gt":0},
-				"parentid": parentid,
-				"type": "Attachments"
-			}
-		};
-		db.find(object).then(function(data){
-			doc = data.body.docs;
-			for (var i = 0; i < doc.length; ++i) {
-				db.del(doc[i]._id, doc[i]._rev).then(function(resp) {
-					deferred.resolve({"status": 200});
-				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err});
-				});
-			}
-			deferred.resolve({"status": 200});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
-		});
-		
-		return deferred.promise;
-	},
-	//Delete files by ids
-	deleteFilesByIDs: function (filesIds, db){
-		var deferred = q.defer();
-		var object;
-		var doc;
-		var arrLinks = JSON.parse(filesIds);
-		for(i=0; i<arrLinks.length; i++){
-			object = {
+		try{
+			var doc;
+			var object = {
 				selector:{
-					"_id": arrLinks[i].attachId,
+					"_id": {"$gt":0},
+					"parentid": parentid,
 					"type": "Attachments"
 				}
 			};
 			db.find(object).then(function(data){
 				doc = data.body.docs;
-				db.del(doc[0]._id, doc[0]._rev).then(function(resp) {
-					deferred.resolve({"status": 200});
-				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err});
-				});
+				for (var i = 0; i < doc.length; ++i) {
+					db.del(doc[i]._id, doc[i]._rev).then(function(resp) {
+						deferred.resolve({"status": 200});
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+				}
+				deferred.resolve({"status": 200});
 			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": err});
+				deferred.reject({"status": 500, "error": err.error.reason});
 			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+	//Delete files by ids
+	deleteFilesByIDs: function (filesIds, db){
+		var deferred = q.defer();
+		try{
+			var object;
+			var doc;
+			var arrLinks = JSON.parse(filesIds);
+			for(i=0; i<arrLinks.length; i++){
+				object = {
+					selector:{
+						"_id": arrLinks[i].attachId,
+						"type": "Attachments"
+					}
+				};
+				db.find(object).then(function(data){
+					doc = data.body.docs;
+					db.del(doc[0]._id, doc[0]._rev).then(function(resp) {
+						deferred.resolve({"status": 200});
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
+			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
 	},
 	//Update Files with the parentid
 	updateFilesParentID: function (parentid, filesIds, db){
 		var deferred = q.defer();
-		var object;
-		var doc;
-		var arrLinks = JSON.parse(filesIds);
-		for(i=0; i<arrLinks.length; i++){
-			object = {
-				selector:{
-					"_id": arrLinks[i].attachId,
-					"type": "Attachments"
-				}
-			};
-			db.find(object).then(function(data){
-				doc = data.body.docs;
-				// Update Parent ID
-				doc[0].parentid = parentid;
-
-				db.save(doc[0]).then(function(data){
-					deferred.resolve(data);
+		try{
+			var object;
+			var doc;
+			var arrLinks = JSON.parse(filesIds);
+			for(i=0; i<arrLinks.length; i++){
+				object = {
+					selector:{
+						"_id": arrLinks[i].attachId,
+						"type": "Attachments"
+					}
+				};
+				db.find(object).then(function(data){
+					doc = data.body.docs;
+					// Update Parent ID
+					doc[0].parentid = parentid;
+					db.save(doc[0]).then(function(data){
+						deferred.resolve(data);
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
 				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err});
+					deferred.reject({"status": 500, "error": err.error.reason});
 				});
-			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": err});
-			});
+			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
+	},
+	/***************************************************/
+	//Generic HTTP request
+	callhttp: function(url) {
+		var deferred = q.defer();
+		// Get URL credentials
+		var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+		var host = credentials.host;
+		var username = credentials.username;
+		var password = credentials.password;
+		if((url).indexOf('?')!=-1) {
+			url = url+'&'+Math.random().toString()
+		} else {
+			url = url+'?'+Math.random().toString()
+		}
+		// console.log(url);
+		var options = {
+			uri: url,
+			headers: {
+				'User-Agent': 'request',
+			'Authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
+			}
+		};
+		try {
+			require('request').get(options, process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0", function(error, res, body) {
+				if (error) {
+					console.log('There was an error: '+ error);
+					deferred.reject({"status": 500, "error": error});
+				} else {
+					console.log('Http request ran');
+					try {
+						deferred.resolve({"status": 200, "doc": JSON.parse(body)});	
+					} catch(e) {
+						deferred.resolve({"status": 200, "doc": body});
+					}
+				}
+			});
+		} catch(e) {
+			deferred.resolve({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+
+	findAndRemove: function(array, property, value) {
+		 array.forEach(function(result, index) {
+			if(result[property] === value) {
+				array.splice(index, 1);
+			}
+		});
+	},
+	//Get unique values and sort an array
+	sort_unique: function(arr) {
+		return arr.sort().filter(function(el,i,a) {
+			return (i==a.indexOf(el));
+		});
 	}
 }
 module.exports = util;

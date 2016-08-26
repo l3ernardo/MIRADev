@@ -25,17 +25,19 @@ security.get('/login', function(req, res) {
 /* Post Login function to validate user access and store in a session */
 security.post('/login',middleware.urlEncodedParser,middleware.passport.authenticate('ldapauth' , { failureRedirect: '/login',failureFlash: true}),function (req,res){
 	if(req.user.hasAccess) {
-		console.log("[BG NAME]: " + req.user.groupName);
 		// Store the initial url
-		if(req.session.returnTo=='') req.session.returnTo = req.flash('url');
-		req.session.user = req.user;
-		var userID = req.session.user.notesId.split('/');
-		userID = userID[0].replace('CN=','');
+		if(req.session.returnTo=='')	req.session.returnTo = req.flash('url');
+		// Store only required user parameters
+		req.session.user = { uid : req.user.uid, cn:req.user.cn, groupName: req.user.groupName, mail:req.user.mail};
+		
+		var userID = req.session.user.cn;
+		if(userID[0].length > 1)	userID = userID[0];
 		req.session.user.notesId = userID;
 		req.session.isAuthenticated = true;
 		req.session.BG = req.user.groupName;
-		console.info("[routes][login] - roles: " + req.user.groupName);
 		req.session.businessunit = "";
+		console.log("[USER] - " + req.session.user.notesId);
+		console.log("[BG NAME]: " + req.user.groupName);
 		res.redirect('setup');
 	}else{
 		//console.log("[routes][login] - Access Denied");

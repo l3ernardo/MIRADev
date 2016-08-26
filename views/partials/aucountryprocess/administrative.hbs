@@ -40,18 +40,33 @@
 					</span>
 				</td>
 			</tr>
-			<tr>
-				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span><input type="text" name="AuditProgram" value="{{AuditProgram}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
 			<tr class="size">
 				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
 				<td>
-					<span><input type="text" name="CUSize" value="{{CUSize}}" size="100" maxlength="300"></span>
+					<span>
+					{{{uniqueSelect "CUSize" parameters.UnitSizes.0.options "name" "name" CUSize}}}
+					</span>
 				</td>
 			</tr>
+			{{#if_equal EnteredBU "GTS"}}
+				<tr>
+					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						</span>
+					</td>
+				</tr>
+			{{else}}
+				<tr>
+					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						</span>
+					</td>
+				</tr>
+			{{/if_equal}}
 			<tr class="internal-audits">
 				<td>Internal Audits:</td>
 				<td>

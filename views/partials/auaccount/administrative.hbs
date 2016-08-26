@@ -1,0 +1,23 @@
+<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+	{{!-- AUACCOUNT form - Administrative Use Only section - Edit Mode --}}
+	{{#if editmode}}
+		{{#if admin}}
+			{{#if_equal EnteredBU "GTS"}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GTSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+			{{else}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GBSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+			{{/if_equal}}
+		{{else}}
+			<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+		{{/if}}
+	{{else}}
+		<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+	{{/if}}
+</table>

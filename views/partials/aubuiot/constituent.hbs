@@ -10,6 +10,12 @@
 		</ul>
 	</div>
 	<div id="BUIMTs" class="ibm-tabs-content">
+		{{#if admin}}
+			{{#if _id}}
+				<a href="/newassessableunit?pid={{_id}}&docsubtype=BU IMT" class="ibm-add1-link">Create new BU IMT</a>
+				<br /><br />
+			{{/if}}
+		{{/if}}
 		<table id="imts_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 			<thead class="bu-iot">
 				<th scope="col">Name</th>

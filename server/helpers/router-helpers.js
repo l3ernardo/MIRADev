@@ -48,6 +48,9 @@ var register = function(Handlebars) {
 			if(a == b) return opts.fn(this);
      	else return opts.inverse(this);
 		},
+		eq: function(a, b) {
+			return a===b;
+		},
 		submenu: function () {
 			if(app.locals.submenu) {
 				return app.locals.submenu;

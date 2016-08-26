@@ -1,6 +1,5 @@
 <link  href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 <script src="/lib/jquery.dataTables.js"></script>
-<script src="/js/process.js"/></script>
 
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
@@ -9,11 +8,8 @@
 			<input class="ibm-btn-cancel-sec ibm-btn-small" type="button" id="button_export" name="export_table" value="Export to Excel">
 			<input type="hidden" id="viewTitle" value="{{viewname}} {{quarter}}">
 			<input type='hidden' id='dataForTableHeader' value='{{onedoc}}');>
-			<textarea name="textarea" id="dataForTableRows" cols="100" style="display:none">{{alldata}}</textarea>
 		</p>
 		<br/>
-		
-
 		<div class="ibm-buttons-row">
 		</div>
 
@@ -24,26 +20,21 @@
 					<th scope="col">KEY</th>
 					<th scope="col">VALUE</th>
 				</thead>
-				<tbody>
-					{{#each dataList}}
-					<tr>
-						<td>{{ id }}</a></td>
-						<td>{{ key }}</td>
-						<td>{{ value }}</td>
-					</tr>
-					{{/each }}
-				</tbody>
 			</table>
 		</div>
  
 	</div>
 </div>
-<!--
 <script>
-$(document).ready(function() {
-	$('#rawdata-options').show();
-	$('#rawdata-main').addClass('ibm-active');
-	$('h1#pageTitle').text($('input#viewTitle').val());
-});
+var alldata = JSON.parse('{{{alldata}}}');
+var data = [];
+for ( var i=0 ; i<alldata.doc.length ; i++ ) {
+	data.push(["<a href='/rawDataDetail/"+alldata.doc[i].key+"/"+alldata.doc[i].id+"'>"+alldata.doc[i].id+"</a>",alldata.doc[i].key,alldata.doc[i].value]);
+}
+$('#reports_table').DataTable( {
+            data:  data,
+			select: true,
+			"scrollY": 250,
+			"scrollX": true
+        } )
 </script>
--->

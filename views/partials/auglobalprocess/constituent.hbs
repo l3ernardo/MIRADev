@@ -3,19 +3,80 @@
 	<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
 </table>
 <div class="ibm-columns ibm-graphic-tabs">
-	<table id="countryprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-		<thead class="mira-subtable">
-			<th scope="col">Name</th>
-			<th scope="col">Status</th>
-			<th scope="col">Prior Qtr</th>
-			<th scope="col">Current Qtr</th>
-			<th scope="col">Outlook</th>
-			<th scope="col">Target to Sat</th>
-		</thead>
-		{{#each CPData}}
-			<tr>
-				{{#each col}}<td>{{this}}</td>{{/each}}
-			</tr>
-		{{/each}}
-	</table>
+	{{#if_equal EnteredBU "GBS"}}
+		<div class="ibm-tab-section">
+			<ul class="ibm-tabs">
+				<li id="CPs-li" class="ibm-active"><a href="#constituents">Country Processes</a></li>
+				<li id="SPs-li"><a href="#constituents">Sub-processes</a></li>
+			</ul>
+		</div>
+		<div id="CPs" class="ibm-tabs-content">
+			<table id="cps_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead class="country-process">
+					<th scope="col">Name</th>
+					<th scope="col">Status</th>
+					<th scope="col">Prior Qtr</th>
+					<th scope="col">Current Qtr</th>
+					<th scope="col">Outlook</th>
+					<th scope="col">Target to Sat</th>
+				</thead>
+				{{#each CPData}}
+				<tr>
+					{{#each col}}
+						{{#if @first}}
+							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+						{{else}}
+							<td>{{this}}</td>
+						{{/if}}
+					{{/each}}
+				</tr>
+				{{/each}}
+			</table>
+		</div>
+		<div id="SPs" class="ibm-tabs-content" style='display : none'>
+			<table id="sps_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead class="sub-process">
+					<th scope="col">Name</th>
+					<th scope="col">Status</th>
+					<th scope="col">Prior Qtr</th>
+					<th scope="col">Current Qtr</th>
+					<th scope="col">Outlook</th>
+					<th scope="col">Target to Sat</th>
+				</thead>
+				{{#each SPData}}
+				<tr>
+					{{#each col}}
+						{{#if @first}}
+							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+						{{else}}
+							<td>{{this}}</td>
+						{{/if}}
+					{{/each}}
+				</tr>
+				{{/each}}
+			</table>
+		</div>
+	{{else}}
+		<table id="countryprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<thead class="mira-subtable">
+				<th scope="col">Name</th>
+				<th scope="col">Status</th>
+				<th scope="col">Prior Qtr</th>
+				<th scope="col">Current Qtr</th>
+				<th scope="col">Outlook</th>
+				<th scope="col">Target to Sat</th>
+			</thead>
+			{{#each CPData}}
+				<tr>
+					{{#each col}}
+						{{#if @first}}
+							<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
+						{{else}}
+							<td>{{this}}</td>
+						{{/if}}
+					{{/each}}
+				</tr>
+			{{/each}}
+		</table>
+	{{/if_equal}}
 </div>

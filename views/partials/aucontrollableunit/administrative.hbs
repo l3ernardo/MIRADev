@@ -4,9 +4,10 @@
 		{{!-- AU ControllableUnit form - Administrative Use Only section - Edit Mode with Admin Access --}}
 		{{#if admin}}
 			<tr>
-				<td width="25%"><label for="PrimaryGlobalProcess">Primary global process:</label></td>
+				<td><label for="BRGMembership">BU reporting groups:</label></td>
 				<td>
-					<span><input type="text" name="PrimaryGlobalProcess" value="{{PrimaryGlobalProcess}}" size="100" maxlength="300"></span>
+					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
+					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
 				</td>
 			</tr>
 			<tr>
@@ -17,12 +18,33 @@
 					</span>
 				</td>
 			</tr>
-			<tr >
-				<td><label for="LifetimeTCV">Lifetime TCV ($M USD):</label></td>
-				<td>
-					<span><input type="text" name="LifetimeTCV" value="{{LifetimeTCV}}" class="td_tcv" size="100" maxlength="300"></span>
-				</td>
-			</tr>
+			{{#if_equal EnteredBU "GTS"}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GTSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+				<tr>
+					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						</span>
+					</td>
+				</tr>
+			{{else}}
+				<tr>
+					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GBSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+				</tr>
+				<tr>
+					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						</span>
+					</td>
+				</tr>
+			{{/if_equal}}
 			<tr>
 				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
 				<td>
@@ -37,55 +59,103 @@
 					</span>
 				</td>
 			</tr>
-			<tr>
-				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span><input type="text" name="AuditProgram" value="{{AuditProgram}}" size="100" maxlength="300"></span>
-				</td>
-			</tr>
-			{{#if AuditableFlagYes}}
+			{{#if_equal showARCFreq 1}}
 				<tr>
-					<td>Internal Audits:</td>
-					<td><!-- Internal Audits embedded view here --></td>
+					<td><label for="ARCFrequency">Audit Readiness Checklist (ARC) frequency:</label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "ARCFrequency" parameters.ARCFrequencies.0.options "name" "name" ARCFrequency}}}
+						</span>
+					</td>
 				</tr>
-			{{/if}}
-			<tr>
-				<td><label for="BRGMembership">BU reporting groups:</label></td>
+			{{/if_equal}}
+			<tr class="internal-audits">
+				<td>Internal Audits:</td>
 				<td>
-					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
-					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
+					<div class="ibm-columns ibm-graphic-tabs">
+						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="mira-subtable">
+                <th scope="col"><font color="#FFF">Engagement</font></th>
+								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
+								<th scope="col"><font color="#FFF">Rating</font></th>
+								<th scope="col"><font color="#FFF">Size</font></th>
+								<th scope="col"><font color="#FFF">Score</font></th>
+							</thead>
+							{{#each IAData}}
+							<tr>
+								{{#each col}}<td>{{this}}</td>{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
 				</td>
 			</tr>
-
 		{{else}}
-
 			{{!-- AU ControllableUnit form form - Administrative Use Only section - Edit Mode with no Admin Access --}}
-			<tr><td width="25%">Primary global process:</td><td>{{PrimaryGlobalProcess}}</td></tr>
+			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
-			<tr><td>Lifetime TCV ($M USD):</td><td><font class="td_tcv">{{LifetimeTCV}}</font><b> (planning purposes only)</b></td></tr>
+			<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			{{#if_equal showARCFreq 1}}
+				<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
+			{{/if_equal}}
 			{{#if AuditableFlagYes}}
 				<tr>
 					<td>Internal Audits:</td>
-					<td><!-- Internal Audits embedded view here --></td>
+					<td>
+						<div class="ibm-columns ibm-graphic-tabs">
+							<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+								<thead class="mira-subtable">
+                  <th scope="col"><font color="#FFF">Engagement</font></th>
+  								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
+  								<th scope="col"><font color="#FFF">Rating</font></th>
+  								<th scope="col"><font color="#FFF">Size</font></th>
+  								<th scope="col"><font color="#FFF">Score</font></th>
+								</thead>
+								{{#each IAData}}
+								<tr>
+									{{#each col}}<td>{{this}}</td>{{/each}}
+								</tr>
+								{{/each}}
+							</table>
+						</div>
+					</td>
 				</tr>
 			{{/if}}
-			<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		{{/if}}
 	{{else}}
 		{{!-- AU ControllableUnit form form - Administrative Use Only section - Read Mode --}}
-		<tr><td width="25%">Primary global process:</td><td>{{PrimaryGlobalProcess}}</td></tr>
+		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		<tr><td>Size:</td><td>{{CUSize}}</td></tr>
-		<tr><td>Lifetime TCV ($M USD):</td><td><font class="td_tcv">{{LifetimeTCV}}</font><b> (planning purposes only)</b></td></tr>
+		<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		{{#if_equal showARCFreq 1}}
+			<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
+		{{/if_equal}}
 		{{#if AuditableFlagYes}}
 			<tr>
 				<td>Internal Audits:</td>
-				<td><!-- Internal Audits embedded view here --></td>
+				<td>
+					<div class="ibm-columns ibm-graphic-tabs">
+						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+							<thead class="mira-subtable">
+								<th scope="col"><font color="#FFF">Engagement</font></th>
+								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
+								<th scope="col"><font color="#FFF">Rating</font></th>
+								<th scope="col"><font color="#FFF">Size</font></th>
+								<th scope="col"><font color="#FFF">Score</font></th>
+							</thead>
+							{{#each IAData}}
+							<tr>
+								{{#each col}}<td>{{this}}</td>{{/each}}
+							</tr>
+							{{/each}}
+						</table>
+					</div>
+				</td>
 			</tr>
 		{{/if}}
-		<tr><td>BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 	{{/if}}
 </table>

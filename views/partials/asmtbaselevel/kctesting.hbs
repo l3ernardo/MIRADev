@@ -1,0 +1,107 @@
+<table id="kctest_table" width="100%" class="ibm-data-table">
+	<tr class="kc-test-content">
+		<th class="kc-test-content" colspan="2">Process Testing Summary</th>
+	</tr>
+	<tr class="kc-test-content">
+		<td width="35%" class="kc-test-content">
+			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead class="kc-test-viewheader">
+					<th colspan="5" class="kc-test-viewheader">Defect Rates (%) for Prior and Current Quarters</th>
+				</thead>
+				<tr class="kc-test-viewheader">
+					{{#each PrevQtrs}}
+						<td width="20%" class="kc-test-viewsubheader">{{this}}</td>
+					{{/each}}
+					<td class="asmt-viewdata" width="20%">{{CurrentPeriod}}</td>
+				</tr>
+				{{#each DRData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+		<td width="65%" class="kc-test-content"></td>
+	</tr>
+	<tr class="kc-test-content">
+		<th class="kc-test-content" colspan="2">Reporting Country Testing</th>
+	</tr>
+	<tr class="kc-test-content">
+		<td class="kc-test-content" colspan="2">
+			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead class="kc-test-viewheader">
+					<th class="kc-test-viewheader" width="10">Period</th>
+					<th class="kc-test-viewheader" width="15">Type</th>
+					<th class="kc-test-viewheader" width="30">Control</th>
+					<th class="kc-test-viewheader" width="10">Tests</th>
+					<th class="kc-test-viewheader" width="10">Defects</th>
+					<th class="kc-test-viewheader" width="10">Defect Rate %</th>
+					<th class="kc-test-viewheader" width="15">Remaining Fin. Impact</th>
+				</thead>
+				{{#each RCTestData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+	<tr class="kc-test-content">
+		<th class="kc-test-content" colspan="2">Sampled Country Testing</th>
+	</tr>
+	<tr class="kc-test-content">
+		<td class="kc-test-content" colspan="2">
+			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead class="kc-test-viewheader">
+					<th class="kc-test-viewheader" width="10">Period</th>
+					<th class="kc-test-viewheader" width="15">Type</th>
+					<th class="kc-test-viewheader" width="15">Control</th>
+					<th class="kc-test-viewheader" width="30">Reporting Country</th>
+					<th class="kc-test-viewheader" width="10">Tests</th>
+					<th class="kc-test-viewheader" width="10">Defects</th>
+					<th class="kc-test-viewheader" width="10">Defect Rate %</th>
+				</thead>
+				{{#each SCTestData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+	<tr class="kc-test-content">
+		<th class="kc-test-content" colspan="2">Current Period Samples with Defects (includes all test types)</th>
+	</tr>
+	<tr class="kc-test-content">
+		<td class="kc-test-content" colspan="2">
+			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="kc-test-viewheader" width="5">Cat</th>
+					<th class="kc-test-viewheader" width="5">Process</th>
+					<th class="kc-test-viewheader" width="5">Control</th>
+					<th class="kc-test-viewheader" width="10">Sample ID</th>
+					<th class="kc-test-viewheader" width="5">Defects</th>
+					<th class="kc-test-viewheader" width="10">Defect Type</th>
+					<th class="kc-test-viewheader" width="10">Remed. Status</th>
+					<th class="kc-test-viewheader" width="5">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="13">Original Target to Close</th>
+					<th class="kc-test-viewheader" width="12">Current Target to Close</th>
+					<th class="kc-test-viewheader" width="20">Defect Abstract</th>
+				</thead>
+				{{#each SampleData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+</table>
