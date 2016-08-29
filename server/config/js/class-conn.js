@@ -5,23 +5,6 @@
  * 
  */
 
-// Obtain the cloudant interface from VCAP_SERVICES
-// var cloudant = require('cloudant');
-// var http = require('http');
-// if (process.env.VCAP_SERVICES) {
-// 	  // Running on Bluemix. Parse the process.env for the port and host that we've been assigned.
-// 	  var env = JSON.parse(process.env.VCAP_SERVICES);
-// 	  var host = process.env.VCAP_APP_HOST; 
-// 	  var port = process.env.VCAP_APP_PORT;
-// 	  console.log('VCAP_SERVICES: %s', process.env.VCAP_SERVICES);    
-// 	  // Also parse out Cloudant settings.
-// 	  var cloudant = env['cloudantNoSQLDB'][0]['credentials'];
-// }
-
-// cloudant.db.list(function(err, allDbs) {
-//   console.log('All my databases: %s', allDbs.join(', '))
-// });
-
 var Cloudant = require('cloudant');
 var q  = require("q");
 var cloudant, dbCredentials = {};

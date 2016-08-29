@@ -180,151 +180,173 @@ var util = {
 	/* Upload a file*/
 	uploadFile: function (parentid, req, db){
 		var deferred = q.defer();
-		var object;
-		var date = new Date();
-		var filenames = req.files.upload;
+		try{
+			var object;
+			var date = new Date();
+			var filenames = req.files.upload;
 
-		object = {
-			"parentid": parentid,
-			"type": "Attachments",
-			"creation_date": moment(date).format("DD-MM-YYYY HH:mm")
-		};
+			object = {
+				"parentid": parentid,
+				"type": "Attachments",
+				"creation_date": moment(date).format("DD-MM-YYYY HH:mm")
+			};
 
-		db.save(object).then(function(doc) {
-			if (filenames) {
-				var file = filenames;
-				fs.readFile(file.path, function(err, data) {
-					if (!err) {
-						if (file) {
-							db.attach(doc.body.id, file.name, data, file.type, {rev: doc.body.rev}).then(function(obj) {
-								doc.body.name= file.name;
-								deferred.resolve({"status": 200, "doc": doc.body})
-							}).catch(function(error){
-								deferred.reject({"status": 500, "error": error});
-							});
+			db.save(object).then(function(doc) {
+				if (filenames) {
+					var file = filenames;
+					fs.readFile(file.path, function(err, data) {
+						if (!err) {
+							if (file) {
+								db.attach(doc.body.id, file.name, data, file.type, {rev: doc.body.rev}).then(function(obj) {
+									doc.body.name= file.name;
+									deferred.resolve({"status": 200, "doc": doc.body})
+								}).catch(function(error){
+									deferred.reject({"status": 500, "error": error});
+								});
+							}
 						}
-					}
-					else {
-						deferred.reject({"status": 500, "error": err});
-					}
-				});
-			}else {
-				deferred.resolve({"status": 200, "doc":doc.body});
-			}
-		}).catch(function(error) {
-			deferred.reject({"status": 500, "error": error});
-		})
+						else {
+							deferred.reject({"status": 500, "error": err});
+						}
+					});
+				}else {
+					deferred.resolve({"status": 200, "doc":doc.body});
+				}
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
 		return deferred.promise;
 	},
 	//Download the selected file
 	downloadFile: function (req, res, db){
 		var deferred = q.defer();
-		var id = req.query.id;
-		var filename = req.query.filename;
-		db.getattachment(id, filename, {}).then(function(resp){
-			res.body = resp.body;
-			deferred.resolve({"status": 200});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error - download file": err});
-		});
+		try{
+			var id = req.query.id;
+			var filename = req.query.filename;
+			db.getattachment(id, filename, {}).then(function(resp){
+				res.body = resp.body;
+				deferred.resolve({"status": 200});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error - download file": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
 		return deferred.promise;
 	},
 	//Delete the selected file
 	deleteFile: function (req, db){
 		var deferred = q.defer();
-		var names=req.query.filename
-		var id = req.query.id;
-		db.get(id, {attachments: true}).then(function(existingdoc) {
-			var rev = existingdoc.body._rev;
-			db.del(id, rev).then(function(resp) {
-				deferred.resolve({"status": 200});
+		try{
+			var names=req.query.filename
+			var id = req.query.id;
+			db.get(id, {attachments: true}).then(function(existingdoc) {
+				var rev = existingdoc.body._rev;
+				db.del(id, rev).then(function(resp) {
+					deferred.resolve({"status": 200});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
 			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": err});
+				deferred.reject({"status": 500, "error": err.error.reason});
 			});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
-		});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
 		return deferred.promise;
 	},
 	//Delete files by parentid
 	deleteFilesParentID: function (parentid, db){
 		var deferred = q.defer();
-		var doc;
-		var object = {
-			selector:{
-				"_id": {"$gt":0},
-				"parentid": parentid,
-				"type": "Attachments"
-			}
-		};
-		db.find(object).then(function(data){
-			doc = data.body.docs;
-			for (var i = 0; i < doc.length; ++i) {
-				db.del(doc[i]._id, doc[i]._rev).then(function(resp) {
-					deferred.resolve({"status": 200});
-				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err});
-				});
-			}
-			deferred.resolve({"status": 200});
-		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
-		});
-
-		return deferred.promise;
-	},
-	//Delete files by ids
-	deleteFilesByIDs: function (filesIds, db){
-		var deferred = q.defer();
-		var object;
-		var doc;
-		var arrLinks = JSON.parse(filesIds);
-		for(i=0; i<arrLinks.length; i++){
-			object = {
+		try{
+			var doc;
+			var object = {
 				selector:{
-					"_id": arrLinks[i].attachId,
+					"_id": {"$gt":0},
+					"parentid": parentid,
 					"type": "Attachments"
 				}
 			};
 			db.find(object).then(function(data){
 				doc = data.body.docs;
-				db.del(doc[0]._id, doc[0]._rev).then(function(resp) {
-					deferred.resolve({"status": 200});
-				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err});
-				});
+				for (var i = 0; i < doc.length; ++i) {
+					db.del(doc[i]._id, doc[i]._rev).then(function(resp) {
+						deferred.resolve({"status": 200});
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+				}
+				deferred.resolve({"status": 200});
 			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": err});
+				deferred.reject({"status": 500, "error": err.error.reason});
 			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+	//Delete files by ids
+	deleteFilesByIDs: function (filesIds, db){
+		var deferred = q.defer();
+		try{
+			var object;
+			var doc;
+			var arrLinks = JSON.parse(filesIds);
+			for(i=0; i<arrLinks.length; i++){
+				object = {
+					selector:{
+						"_id": arrLinks[i].attachId,
+						"type": "Attachments"
+					}
+				};
+				db.find(object).then(function(data){
+					doc = data.body.docs;
+					db.del(doc[0]._id, doc[0]._rev).then(function(resp) {
+						deferred.resolve({"status": 200});
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
+			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
 	},
 	//Update Files with the parentid
 	updateFilesParentID: function (parentid, filesIds, db){
 		var deferred = q.defer();
-		var object;
-		var doc;
-		var arrLinks = JSON.parse(filesIds);
-		for(i=0; i<arrLinks.length; i++){
-			object = {
-				selector:{
-					"_id": arrLinks[i].attachId,
-					"type": "Attachments"
-				}
-			};
-			db.find(object).then(function(data){
-				doc = data.body.docs;
-				// Update Parent ID
-				doc[0].parentid = parentid;
-
-				db.save(doc[0]).then(function(data){
-					deferred.resolve(data);
+		try{
+			var object;
+			var doc;
+			var arrLinks = JSON.parse(filesIds);
+			for(i=0; i<arrLinks.length; i++){
+				object = {
+					selector:{
+						"_id": arrLinks[i].attachId,
+						"type": "Attachments"
+					}
+				};
+				db.find(object).then(function(data){
+					doc = data.body.docs;
+					// Update Parent ID
+					doc[0].parentid = parentid;
+					db.save(doc[0]).then(function(data){
+						deferred.resolve(data);
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
 				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err});
+					deferred.reject({"status": 500, "error": err.error.reason});
 				});
-			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": err});
-			});
+			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
 	},
@@ -371,18 +393,17 @@ var util = {
 	},
 
 	findAndRemove: function(array, property, value) {
-	  array.forEach(function(result, index) {
-	    if(result[property] === value) {
-	      array.splice(index, 1);
-	    }
-	  });
+		 array.forEach(function(result, index) {
+			if(result[property] === value) {
+				array.splice(index, 1);
+			}
+		});
 	},
-
+	//Get unique values and sort an array
 	sort_unique: function(arr) {
-	    return arr.sort().filter(function(el,i,a) {
-	        return (i==a.indexOf(el));
-	    });
-	},
-
+		return arr.sort().filter(function(el,i,a) {
+			return (i==a.indexOf(el));
+		});
+	}
 }
 module.exports = util;

@@ -1,0 +1,97 @@
+<table id="auditreview_table" class="ibm-data-table">
+	<tr class="audit-review-content">
+		<th class="audit-review-label">Internal Audits and Proactive Reviews (Process Reviews, PwC Required Walkthroughs, IBM Voluntary Walkthroughs, and Application Reviews)</th>
+	</tr>
+	<tr class="audit-review-content">
+		<td>
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="audit-review-viewheader" scope="col" width="4%">Period</th>
+					<th class="audit-review-viewheader" scope="col" width="4%">CO</th>
+					<th class="audit-review-viewheader" scope="col" width="15%">Audit or Review</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">ID</th>
+					<th class="audit-review-viewheader" scope="col" width="20%">Assessable Unit</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Date</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Total Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Open Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Target to Close</th>
+					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
+				</thead>
+				{{#each AuditTrustedData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+	<tr class="audit-review-content">
+		<th class="audit-review-label">Relevant CU Internal Audits</th>
+	</tr>
+	<tr class="audit-review-content">
+		<td>
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="audit-review-viewheader" scope="col" width="4%">Period</th>
+					<th class="audit-review-viewheader" scope="col" width="15%">Audit or Review</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">ID</th>
+					<th class="audit-review-viewheader" scope="col" width="24%">Assessable Unit</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Report Date</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Total Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Open Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Target to Close</th>
+					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
+				</thead>
+				{{#each AuditTrustedRCUData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+	<tr class="audit-review-content">
+		<th class="audit-review-label">Audits &amp; Reviews (data managed locally)</th>
+	</tr>
+	<tr class="audit-review-content">
+		<td>
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="audit-review-viewheader" scope="col" width="7%">Period</th>
+					<th class="audit-review-viewheader" scope="col" width="20%">Audit or Review</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Date</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Rating</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">Total Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="9%">Open Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">Target to Close</th>
+					<th class="audit-review-viewheader" scope="col" width="30%">Comments</th>
+				</thead>
+				{{#each AuditLocalData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+</table>

@@ -137,10 +137,23 @@ function add_icons(table_name){
 } 
 
 $(document).ready(function(){ 
+    r=url.indexOf("processdashboard");
+    s=url.indexOf("geodashboard");
+	t=url.indexOf("reportingdashboard");
     paint_td('process_dashboard_treeview');
 	add_icons('process_dashboard_treeview');
 	paint_td('process_dashboard_flatview');
 	add_icons('process_dashboard_flatview');
+	
+	paint_td('geo_dashboard_treeview');
+	add_icons('geo_dashboard_treeview');
+	paint_td('geo_dashboard_flatview');
+	add_icons('geo_dashboard_flatview');
+	
+	paint_td('rg_dashboard_treeview');
+	add_icons('rg_dashboard_treeview');
+	paint_td('rg_dashboard_flatview');
+	add_icons('rg_dashboard_flatview');
 	
     $("#mira_checkbox_tree").click(function(){
       $(".mira_checkbox_tree").prop('checked', $(this).prop('checked'));
@@ -150,14 +163,17 @@ $(document).ready(function(){
       });  
 	$(".mira_checkbox_tree").prop('checked', false);
 	$(".mira_checkbox_flat").prop('checked', false);
-	$('#button_view').click(function(){
-	 if($('#button_view').val()=='Flat View')
+$('#button_view').click(function(){
+		
+	
+		
+	 if($('#button_view').val()=='Flat View' &&  r!=-1)
 	 {   
 		$('#process_dashboard_flatview').show();
 		$('#process_dashboard_treeview').hide();
 		$('#button_view').val('Tree View');
 	 }
-	 else if($('#button_view').val()=='Tree View')
+	 else if($('#button_view').val()=='Tree View' &&  r!=-1)
 	 {  
 		$('#process_dashboard_treeview').show();
 		$('#process_dashboard_flatview').hide();
@@ -166,16 +182,62 @@ $(document).ready(function(){
 		$('#button_view').val('Flat View');
 		
 	 }
-});
-    $('#button_export').click(function(){
-	 if($('#button_view').val()=='Flat View')
-	 {   
-		fnExcelReport('process_dashboard_treeview');
+	 else if($('#button_view').val()=='Flat View' &&  s!=-1)
+	 {  
+		$('#geo_dashboard_flatview').show();
+		$('#geo_dashboard_treeview').hide();
+		$('#button_view').val('Tree View');
+		
 	 }
-	 else if($('#button_view').val()=='Tree View')
+	 else if($('#button_view').val()=='Tree View' &&  s!=-1)
+	 {  
+		$('#geo_dashboard_treeview').show();
+		$('#geo_dashboard_flatview').hide();
+		$(".mira_checkbox_tree").prop('checked', false);
+	    $(".mira_checkbox_flat").prop('checked', false);
+		$('#button_view').val('Flat View');		
+	 }
+	 else if($('#button_view').val()=='Flat View' &&  t!=-1)
+	 {  
+		$('#rg_dashboard_flatview').show();
+		$('#rg_dashboard_treeview').hide();
+		$('#button_view').val('Tree View');
+		
+	 }
+	 else if($('#button_view').val()=='Tree View' &&  t!=-1)
+	 {  
+		$('#rg_dashboard_treeview').show();
+		$('#rg_dashboard_flatview').hide();
+		$(".mira_checkbox_tree").prop('checked', false);
+	    $(".mira_checkbox_flat").prop('checked', false);
+		$('#button_view').val('Flat View');		
+	 }
+});
+   $('#button_export').click(function(){
+	 if($('#button_view').val()=='Flat View' &&  r!=-1)
+	 {   
+		fnExcelReport('process_dashboard_treeview' );
+	 }
+	 else if($('#button_view').val()=='Tree View' &&  r!=-1)
 	 {  
 		 fnExcelReport('process_dashboard_flatview');
 		
+	 }
+	 else if($('#button_view').val()=='Flat View' &&  s!=-1)
+	 {   
+		fnExcelReport('geo_dashboard_treeview' );
+	 }
+	 else if($('#button_view').val()=='Tree View' &&  s!=-1)
+	 {  
+		 fnExcelReport('geo_dashboard_flatview');		
+	 }
+	  else if($('#button_view').val()=='Flat View' &&  t!=-1)
+	 {   
+		fnExcelReport('rg_dashboard_treeview' );
+	 }
+	 else if($('#button_view').val()=='Tree View' &&  t!=-1)
+	 {  
+		 fnExcelReport('rg_dashboard_flatview');		
 	 }
 });
 });
