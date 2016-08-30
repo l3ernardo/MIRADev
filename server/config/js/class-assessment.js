@@ -36,9 +36,10 @@ var assessment = {
 			doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
 			doc[0].SCTestData = doc[0].RCTestData;
 			doc[0].SampleData = doc[0].RiskData;
-
+			doc[0].EAData = doc[0].ARCData;
 
 			doc[0].CatP = "CRM";
+			doc[0].ShowEA = 1;
 			doc[0].PrevQtrs = [];
 			doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
