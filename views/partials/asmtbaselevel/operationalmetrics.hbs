@@ -1,0 +1,30 @@
+<table id="opmetric_table" class="ibm-data-table">
+	<tr class="op-metric-content">
+		<td>
+			<table width="100%">
+				<thead class="op-metric-label">
+					<th scope="col">Metric</th>
+					{{#if OpMetric.desc}}
+						<th scope="col">Defined Target</th>
+					{{/if}}
+					<th scope="col">Rating</th>
+					<th scope="col">Target to Sat</th>
+					<th scope="col">Findings</th>
+					<th scope="col">Actions</th>
+				</thead>
+				{{#each OpMetric}}
+					<tr>
+						<td class="op-metric-label">{{name}}</td>
+						{{#if desc}}
+							<td class="op-metric-label">{{desc}}</td>
+						{{/if}}
+						<td class="content-data">{{rating}}</td>
+						<td class="content-data">{{targetsatdate}}</td>
+						<td class="content-data">{{finding}}</td>
+						<td class="content-data">{{action}}</td>
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+</table>
