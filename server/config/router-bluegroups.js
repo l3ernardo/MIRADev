@@ -34,4 +34,51 @@ interface.get('/bgdetail', function(req, res) {
 	})
 });
 
+/* Load Bluegroups members */
+interface.get('/frmbg', function(req, res) {
+	util.getBluegroup(req).then(function(data) {
+		res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
+	})
+});
+
+/* Process Bluegroups members */
+interface.post('/processbg', function(req,res) {
+	//console.log(req.body.finalmembers.split(";"));	
+	req.query.group = req.body.group;
+	var addmembers = [];
+	var delmembers = [];
+	util.getBluegroup(req).then(function(data) {
+		//console.log("Current # of members: " + data.doc.length + "\nNew # of members: " + req.body.finalmembers.split(";").length);
+		data.doc.forEach(function(member) {
+			if(req.body.finalmembers.split(";").indexOf(member.uid)==-1) {
+				delmembers.push(member.uid);
+				util.delMember(req.body.group,member.uid).then(function(result) {
+					if(result) {
+						//console.log("Deleted: " + member.uid);
+					}
+				})
+			}
+		});
+		req.body.finalmembers.split(";").forEach(function(member) {
+			if(member.indexOf("@")!=-1) {
+				//console.log(member);
+				req.query.search = member;
+				req.query.field = "mail";
+				util.getPersonData(req).then(function(data) {
+					var person = data.doc.replace("search","doc"); // search is a reserved word for node.js, replacing with "doc"
+					var pdata = JSON.parse(person);
+					var uid = (pdata.doc.entry[0].dn.split(',')[0]).split("=")[1];
+					addmembers.push(uid);
+					util.addMember(req.body.group,uid).then(function(result) {
+						if(result) {
+							//console.log("Added: " + uid);
+						}
+					})					
+				});
+			}
+		});
+		res.redirect('/bluegroups');
+	})
+});
+
 module.exports = interface;
