@@ -176,7 +176,65 @@ var util = {
 		} catch(e) {
 			deferred.reject({"status": 500, "error": e});
 		}
-	},	
+	},
+	addMember: function(group,uid) {
+		var deferred = q.defer();
+		try {
+			// Get URL credentials
+			var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+			var host = credentials.host;
+			var username = credentials.username;
+			var password = credentials.password;
+			url = varConf.addMembersURL.replace('%g',group).replace('%u',uid);
+			console.log(url);
+			var options = {
+				uri: url,
+				headers: {
+					'User-Agent': 'request',
+				'Authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
+				}
+			};					
+			//console.log(url);
+			require('request').get(options, function(err, response, body) {
+				if(err) {
+					deferred.resolve({"status": 500, "error": err});
+				}
+				deferred.resolve({"status": 200, "doc": body});
+			});
+			return deferred.promise;
+		} catch(e) {
+			deferred.resolve({"status": 500, "error": e});
+		}
+	},
+	delMember: function(group,uid) {
+		var deferred = q.defer();
+		try {
+			// Get URL credentials
+			var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+			var host = credentials.host;
+			var username = credentials.username;
+			var password = credentials.password;
+			url = varConf.delMembersURL.replace('%g',group).replace('%u',uid);
+			//console.log(url);
+			var options = {
+				uri: url,
+				headers: {
+					'User-Agent': 'request',
+				'Authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
+				}
+			};					
+			console.log(url);
+			require('request').get(options, function(err, response, body) {
+				if(err) {
+					deferred.resolve({"status": 500, "error": err});
+				}
+				deferred.resolve({"status": 200, "doc": body});
+			});
+			return deferred.promise;
+		} catch(e) {
+			deferred.resolve({"status": 500, "error": e});
+		}
+	},
 	/* Upload a file*/
 	uploadFile: function (parentid, req, db){
 		var deferred = q.defer();
