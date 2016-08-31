@@ -233,6 +233,15 @@
   color: #ffffff;
   background-color: #c0a1e0;
 }
+.ibm-data-table .op-metric-content {
+  color: #ffffff;
+  background-color: #c0a1e0;
+	border: 20px solid #c0a1e0;
+}
+.ibm-data-table .op-metric-label {
+	font-size: 11px;
+  background-color: #e0e0ff;
+}
 .ibm-data-table .other {
 	color: #ffffff;
   background-color: #808080;
