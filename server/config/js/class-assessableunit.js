@@ -81,22 +81,59 @@ var assessableunit = {
 		var A=[];
 		var F=[];
 		var index;
+		if(req.session.BG.indexOf("MIRA-ADMIN")> '-1')
+		{
 			var process =
-				{"selector":{
+				{
+					"selector":{
 	  				"$and": [
 			             { "LevelType": { "$gt": null }},
 			             {"Name": { "$ne": null }},
 				         {"key": "Assessable Unit"},
 						 {"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
-						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
-						 {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
-	}	,
-			"sort": [{"LevelType":"asc"},{"Name":"asc"}]
-	};
-
-		var geo = {
-			"selector":{
+	}	,	
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
+		}				
+	}
+	else 
+	{
+		var process =
+				{
+					"selector":{
+	  				"$and": [
+			             { "LevelType": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+						 {"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
+						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]}, 
+						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+				]
+	}	,	
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
+		}
+		
+	}
+	if(req.session.BG.indexOf("MIRA-ADMIN")> '-1')
+    {
+			var geo =  
+		{	"selector":{
+			"$and": [
+			             { "LevelType": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit"]}},
+				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+				]	
+			},	
+			"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
+        }		
+	}
+	else
+	    {
+			var geo =  
+		{	"selector":{
 			"$and": [
 			             { "LevelType": { "$gt": null }},
 			             {"Name": { "$ne": null }},
@@ -104,11 +141,30 @@ var assessableunit = {
 					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit"]}},
 				         {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+				]	
+			},	
+			"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
+        }		
+	}
+    if(req.session.BG.indexOf("MIRA-ADMIN")> '-1')
+    {
+			var rg = {
+			"selector":{
+			"$and": [
+			             { "LevelTypeG": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+						 //{"DocSubType":{"$in":["BU Reporting Group"]}},
+					     {"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
+				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
 			},
-			"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
-};
-		var rg = {
+			"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]
+        }
+	}
+	else
+	    {
+			var rg = {
 			"selector":{
 			"$and": [
 			             { "LevelTypeG": { "$gt": null }},
@@ -121,7 +177,9 @@ var assessableunit = {
 				]
 			},
 			"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]
-};
+        }
+	}
+
         if(req.url=='/processdashboard'){
 			obj=process;
 		}
@@ -133,9 +191,6 @@ var assessableunit = {
 		{
 			obj=rg;
 		}
-
-
-
 
 		/*	var obj = {
 				selector:{
