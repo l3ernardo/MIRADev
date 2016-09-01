@@ -23,27 +23,32 @@ var assessment = {
 			var doc = [];
 			doc.push(data.body);
 			doc[0].EnteredBU = req.session.businessunit;
-			doc = fieldCalc.getCategoryAndBUOld(req, db, doc);
+			// doc = fieldCalc.getDocParams(req, db, doc);
+			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
-			// test view data
-			doc[0].ALLData = fieldCalc.addTestViewData(6,3);
-			doc[0].ARCData = fieldCalc.addTestViewData(4,3);
-			doc[0].RiskData = fieldCalc.addTestViewData(11,3);
-			doc[0].AuditTrustedData = doc[0].RiskData;
-			doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
-			doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
-			doc[0].DRData = fieldCalc.addTestViewData(5,1);
-			doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
-			doc[0].SCTestData = doc[0].RCTestData;
-			doc[0].SampleData = doc[0].RiskData;
+				// test view data
+				doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+				doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+				doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+				doc[0].AuditTrustedData = doc[0].RiskData;
+				doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
+				doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+				doc[0].DRData = fieldCalc.addTestViewData(5,1);
+				doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+				doc[0].SCTestData = doc[0].RCTestData;
+				doc[0].SampleData = doc[0].RiskData;
+				doc[0].EAData = doc[0].ARCData;
 
+				doc[0].CatP = "CRM";
+				doc[0].ShowEA = 1;
+				doc[0].PrevQtrs = [];
+				doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
-			doc[0].CatP = "CRM";
-			doc[0].PrevQtrs = [];
-			doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
+				deferred.resolve({"status": 200, "doc": doc});
 
-			deferred.resolve({"status": 200, "doc": doc});
-
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
