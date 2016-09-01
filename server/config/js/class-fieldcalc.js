@@ -7,6 +7,7 @@
  */
 
  var param = require('./class-parameter.js');
+ var q  = require("q");
 
 var calculatefield = {
 
@@ -58,58 +59,88 @@ var calculatefield = {
   },
 
 	/* Calculates CatP, CatCU, BusinessUnitOLD, ShowEA */
-	getCategoryAndBUOld: function(req, db, doc) {
+	getDocParams: function(req, db, doc) {
+    var deferred = q.defer();
+		try{
 
-		/* Calculate for Instance Design Specifics and parameters*/
-		var lParams;
-		// Get required paramaters
-		if (req.session.businessunit == "GTS") {
-			if (doc[0].DocSubType == "Controllable Unit") {
-				doc[0].CatCU = "";
-				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
-				doc[0].CatP = "";
-				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-			} else {
-				lParams = ['GTSInstanceDesign'];
-			}
-		} else {
-			lParams = ['GBSInstanceDesign'];
+      // if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
+
+      /* Calculate for Instance Design Specifics and parameters*/
+  		var lParams = [];
+  		// Get required paramaters
+  		if (req.session.businessunit == "GTS") {
+  			if (doc[0].DocSubType == "Controllable Unit") {
+  				doc[0].CatCU = "";
+  				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+  			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
+  				doc[0].CatP = "";
+  				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess',gpkey];
+  			} else {
+  				lParams = ['GTSInstanceDesign'];
+  			}
+  		} else {
+  			lParams = ['GBSInstanceDesign'];
+  		}
+      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
+        var opMetricKey;
+        if (doc[0].ParentDocSubType == "Country Process") opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+        else opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+        lParams.push(opMetricKey);
+      }
+  		param.getListParams(db, lParams).then(function(dataParam) {
+  			if(dataParam.status==200 & !dataParam.error) {
+  				if (dataParam.parameters.CRMProcess) {
+  					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
+  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "CRM";
+  					}
+  				}
+  				if (dataParam.parameters.DeliveryProcess) {
+  					for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
+  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "Delivery";
+  					}
+  				}
+  				if (dataParam.parameters.CRMCU) {
+  					for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
+  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "CRM";
+  					}
+  				}
+  				if (dataParam.parameters.DeliveryCU) {
+  					for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
+  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "Delivery";
+  					}
+  				}
+          if (dataParam.parameters[opMetricKey]) {
+            doc[0].OpMetric = [];
+            for (var j = 0; j < dataParam.parameters[opMetricKey][0].options.length; ++j) {
+                doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                doc[0].OpMetric[j].rating = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "Rating"];
+                doc[0].OpMetric[j].targetsatdate = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "TargetSatDate"];
+                doc[0].OpMetric[j].finding = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "Finding"];
+                doc[0].OpMetric[j].action = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "Action"];
+            }
+          }
+          if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
+            doc[0].ShowEA = 1;
+  				// evaluate BusinessUnitOLD formula
+  				if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
+  				if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
+
+          deferred.resolve(doc);
+
+  			} else {
+          deferred.reject({"status": 500, "error": err.error.reason});
+				  // console.log("[routes][class-assessableunit][getListParams] - " + dataParam.error);
+  			}
+  		}).catch(function(err) {
+        deferred.reject({"status": 500, "error": err.error.reason});
+  			// console.log("[routes][class-assessableunit][getListParams] - " + err.error);
+  		});
+
+    }catch(e){
+			deferred.reject({"status": 500, "error": e});
 		}
-		param.getListParams(db, lParams).then(function(dataParam) {
-			if(dataParam.status==200 & !dataParam.error) {
-				if (dataParam.parameters.CRMProcess) {
-					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
-						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "CRM";
-					}
-				}
-				if (dataParam.parameters.DeliveryProcess) {
-					for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
-						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "Delivery";
-					}
-				}
-				if (dataParam.parameters.CRMCU) {
-					for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
-						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "CRM";
-					}
-				}
-				if (dataParam.parameters.DeliveryCU) {
-					for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
-						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "Delivery";
-					}
-				}
-        if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
-          doc[0].ShowEA = 1;
-				// evaluate BusinessUnitOLD formula
-				if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
-				if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
-			} else {
-				console.log("[routes][class-assessableunit][getListParams] - " + dataParam.error);
-			}
-		}).catch(function(err) {
-			console.log("[routes][class-assessableunit][getListParams] - " + err.error);
-		});
-		return doc;
+		return deferred.promise;
 	}
+
 }
 module.exports = calculatefield;
