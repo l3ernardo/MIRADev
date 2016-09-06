@@ -98,7 +98,7 @@ function add_icons(table_name){
 	 else
 		 {              
 			  var checkboxes=[];var array2=[]; var aux=0;
-			  if (table=='process_dashboard_treeview')
+			  if ((table=='process_dashboard_treeview') || (table=='geo_dashboard_treeview') || (table=='rg_dashboard_treeview'))
 				{
 					class_name='mira_checkbox_tree';
 				}
@@ -132,6 +132,7 @@ function add_icons(table_name){
         }
     tab_text=tab_text+"</tbody></table>";	
     name=encodeURIComponent(tab_text);
+	//sa=window.location.assign('data:application/vnd.oasis.opendocument.spreadsheet,'+ name);
 	sa=window.location.assign('data:application/vnd.ms-excel,'+ name);
 	return (sa);	
 } 
