@@ -98,7 +98,7 @@ function add_icons(table_name){
 	 else
 		 {              
 			  var checkboxes=[];var array2=[]; var aux=0;
-			  if ((table=='process_dashboard_treeview') || (table=='geo_dashboard_treeview') || (table=='rg_dashboard_treeview'))
+			  if ((table=='process_dashboard_treeview') || (table=='geo_dashboard_treeview') || (table=='rg_dashboard_treeview') || (table=='subprocess_dashboard_treeview'))
 				{
 					class_name='mira_checkbox_tree';
 				}
@@ -140,7 +140,8 @@ function add_icons(table_name){
 $(document).ready(function(){ 
     r=url.indexOf("processdashboard");
     s=url.indexOf("geodashboard");
-	t=url.indexOf("reportingdashboard");
+	t=url.indexOf("reportingdashboard");	
+	u=url.indexOf("subprocessdashboard");
     paint_td('process_dashboard_treeview');
 	add_icons('process_dashboard_treeview');
 	paint_td('process_dashboard_flatview');
@@ -156,6 +157,11 @@ $(document).ready(function(){
 	paint_td('rg_dashboard_flatview');
 	add_icons('rg_dashboard_flatview');
 	
+	paint_td('subprocess_dashboard_treeview');
+	add_icons('subprocess_dashboard_treeview');
+	paint_td('subprocess_dashboard_flatview');
+	add_icons('subprocess_dashboard_flatview');
+	
     $("#mira_checkbox_tree").click(function(){
       $(".mira_checkbox_tree").prop('checked', $(this).prop('checked'));
       });
@@ -168,13 +174,13 @@ $('#button_view').click(function(){
 		
 	
 		
-	 if($('#button_view').val()=='Flat View' &&  r!=-1)
+	 if($('#button_view').val()=='Flat View' &&  r!=-1 && u==-1)
 	 {   
 		$('#process_dashboard_flatview').show();
 		$('#process_dashboard_treeview').hide();
 		$('#button_view').val('Tree View');
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  r!=-1)
+	 else if($('#button_view').val()=='Tree View' &&  r!=-1 && u==-1)
 	 {  
 		$('#process_dashboard_treeview').show();
 		$('#process_dashboard_flatview').hide();
@@ -213,6 +219,21 @@ $('#button_view').click(function(){
 	    $(".mira_checkbox_flat").prop('checked', false);
 		$('#button_view').val('Flat View');		
 	 }
+	  else if($('#button_view').val()=='Flat View' &&  u!=-1)
+	 { 
+		$('#subprocess_dashboard_flatview').show();
+		$('#subprocess_dashboard_treeview').hide();
+		$('#button_view').val('Tree View');
+	 }
+	 else if($('#button_view').val()=='Tree View' &&  u!=-1)
+	 {  
+		$('#subprocess_dashboard_treeview').show();
+		$('#subprocess_dashboard_flatview').hide();
+		$(".mira_checkbox_tree").prop('checked', false);
+	    $(".mira_checkbox_flat").prop('checked', false);
+		$('#button_view').val('Flat View');
+		
+	 }
 });
    $('#button_export').click(function(){
 	 if($('#button_view').val()=='Flat View' &&  r!=-1)
@@ -239,6 +260,15 @@ $('#button_view').click(function(){
 	 else if($('#button_view').val()=='Tree View' &&  t!=-1)
 	 {  
 		 fnExcelReport('rg_dashboard_flatview');		
+	 }
+	  else if($('#button_view').val()=='Flat View' &&  u!=-1)
+	 {   
+		fnExcelReport('subprocess_dashboard_treeview');
+	 }
+	 else if($('#button_view').val()=='Tree View' &&  u!=-1)
+	 {  
+		 fnExcelReport('subprocess_dashboard_flatview');
+		
 	 }
 });
 });
