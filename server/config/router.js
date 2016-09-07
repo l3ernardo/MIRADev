@@ -249,7 +249,7 @@ router.get('/download', isAuthenticated, function(req, res){
 			console.log("[routes][downloadFile] - " + data.error);
 		}
 	}).catch(function(err) {
-		console.log("[routes][downloadFile] - " + err.error);
+		console.log("[routes][download] - " + err.error);
 	})
 });
 /* Delete attachment */
