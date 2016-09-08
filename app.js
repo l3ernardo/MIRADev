@@ -71,7 +71,7 @@ app.use(require('./server/config/router-calendars.js'));
 app.use(require('./server/config/router-interface.js'));
 app.use(require('./server/config/router-bluegroups.js'));
 app.use(require('./server/config/router-dashboards.js'));
-
+app.use(require('./server/config/router-reports.js'));
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {
