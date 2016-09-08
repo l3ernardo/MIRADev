@@ -179,6 +179,40 @@ var assessableunit = {
 			"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]
         }
 	}
+		if(req.session.BG.indexOf("MIRA-ADMIN")> '-1')
+		{
+			var subprocess =
+				{
+					"selector":{
+	  				"$and": [
+			             { "LevelType": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+						 {"DocSubType":{"$in":["Business Unit","Global Process","Subprocess"]}},
+						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+				]
+	}	,	
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
+		}				
+	}
+	else 
+	{
+		var subprocess =
+				{
+					"selector":{
+	  				"$and": [
+			             { "LevelType": { "$gt": null }},
+			             {"Name": { "$ne": null }},
+				         {"key": "Assessable Unit"},
+						 {"DocSubType":{"$in":["Business Unit","Global Process","Subprocess"]}},
+						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]}, 
+						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+				]
+	}	,	
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
+		}
+		
+	}
 
         if(req.url=='/processdashboard'){
 			obj=process;
@@ -191,12 +225,16 @@ var assessableunit = {
 		{
 			obj=rg;
 		}
+		else if(req.url=='/subprocessdashboard')
+		{
+			obj=subprocess;
+		}
 
 		/*	var obj = {
 				selector:{
 					"_id": {"$gt":0},
 					"key": "Assessable Unit",
-					"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT", "BU IMT", "BU Country","Account","Sub-process"]}
+					"DocSubType": {$or: ["Business Unit", "Global Process", "Country Process", "Controllable Unit", "BU Reporting Group", "BU IOT", "BU IMT", "BU Country","Account","Subprocess"]}
 				}
 			};*/
 			db.find(obj).then(function(data){
@@ -265,28 +303,11 @@ else
 										targetToSat:F[i].Target2Sat,
 										mira:F[i].MIRAAssessmentStatus,
 										wwBcit:F[i].WWBCITAssessmentStatus,
-										owner:F[i].Owner,
 										type:F[i].DocSubType,
 									})
 				}
 			}
 
-
-			/*	if(len > 0){
-					for (var i = 0; i < len; i++){
-						view_dashboard.push({
-							assessableUnit: doc[i].Name,
-							priorQ: doc[i].PeriodRatingPrev,
-							currentQ: doc[i].PeriodRating,
-							nextQtr: doc[i].AUNextQtrRating,
-							targetToSat:doc[i].Target2Sat,
-							mira:doc[i].MIRAAssessmentStatus,
-							wwBcit:doc[i].WWBCITAssessmentStatus,
-							owner:doc[i].Owner,
-							type:doc[i].DocSubType,
-						})
-					}
-				}*/
 				view=JSON.stringify(view_dashboard, 'utf8');
 				deferred.resolve({"status": 200, "doc": F,"view":view});
 			}).catch(function(err) {
@@ -378,7 +399,7 @@ else
 							selector:{
 								"_id": {"$gt":0},
 								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Country Process","Sub-process"]},
+								"DocSubType": {"$or":["Country Process","Subprocess"]},
 								"BusinessUnit": doc[0].BusinessUnit,
 								"GlobalProcess": doc[0].GlobalProcess
 							}
@@ -386,13 +407,14 @@ else
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
-					case "Sub-process":
+					case "Subprocess":
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
 								"key": "Assessable Unit",
 								"DocSubType": "Country Process",
 								"Subprocess": doc[0].Name,
+								"BusinessUnit": doc[0].BusinessUnit,
 								"GlobalProcess": doc[0].GlobalProcess
 							}
 						};
@@ -537,7 +559,7 @@ else
 
   							case "Business Unit":
   							case "Global Process":
-  							case "Sub-process":
+  							case "Subprocess":
   							case "Country Process":
   							case "Account":
   							case "Controllable Unit":
@@ -660,7 +682,7 @@ else
   								/* end: get names of admin section IDs for display */
   								break;
 
-  							case "Sub-process":
+  							case "Subprocess":
   							case "Global Process":
   								/* start: get names of admin section IDs for display */
   								var $or = [];
@@ -1155,7 +1177,11 @@ else
 						case "Business Unit":
 							doc[0].RGRollup = req.body.RGRollup;
 							break;
-						case "Sub-process":
+						case "Subprocess":
+							doc[0].BRGMembership = req.body.BRGMembership;
+							doc[0].BRGMembershipDisp=req.body.BRGMembershipDisp;
+							doc[0].ReportingGroupList=req.body.ReportingGroupList;
+							break;
 						case "Global Process":
 							doc[0].RGRollup = req.body.RGRollup;
 							doc[0].BRGMembership = req.body.BRGMembership;
