@@ -284,11 +284,12 @@ var util = {
 		try{
 			var id = req.query.id;
 			var filename = req.query.filename;
-			db.getattachment(id, filename, {}).then(function(resp){
-				res.body = resp.body;
-				deferred.resolve({"status": 200});
+			db.getattachment(id, filename, {}, res).then(function(resp){
+				if(resp.error){
+					deferred.reject({"status": 500, "error": resp.error});
+				}
 			}).catch(function(err) {
-				deferred.reject({"status": 500, "error - download file": err.error.reason});
+				deferred.reject({"status": 500, "error": err.error});
 			});
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
