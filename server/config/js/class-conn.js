@@ -159,25 +159,19 @@ var DB = {
 		return deferred.promise;
 	},
 	//GET ATTACHMENT
-	getattachment: function(id, filename, params) {
-		var newPath = "/" + filename.toString();
-		//	var newPath = __dirname + "/public/public/uploads/" + filename.toString();
+	getattachment: function(id, filename, params, res) {
 		var deferred = q.defer();
-		this.db.attachment.get(id, filename, params, function(err, file) { 
-			if(err) { 
-				deferred.reject({"status": 500, "body": {}, "error": err});
-			} else { 
-				fs.writeFile(newPath, file, function(error) {
-					//console.log("[db] fs.write..."+newPath);
-					if (error) {
-						deferred.reject({"status": 500, "body": {}, "error": err});
-					}
-					else {
-						deferred.resolve({"status": 200, "body": newPath});
-					}
-				});
-			}
-		});
+		
+		try{
+			res.setHeader('Content-disposition', 'attachment; filename='+filename);
+			this.db.attachment.get(id, filename).pipe(res, function(error){
+				if(error) { 
+					 deferred.reject({"status": 500, "body": {}, "error": error});
+				}
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "body": {}, "error": e.toString()});
+		}
 		return deferred.promise;
 	},
 	//DELETE ATTACHMENT
