@@ -1,4 +1,47 @@
-<script>
-	//Load document's name
-	$('h1#pageTitle').text("Assessable Units File");
-</script>
+<script src='./js/report.js'></script>
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<span><br/></span>
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
+			{{#if admin}}
+			<p>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="New Meeting/Event" name="btn_meeting" id="btn_meeting" class="ibm-add1-link">Export to Excel</a>
+			</p>
+			<br/>
+			{{/if}}
+		</div>
+		
+		<div id='reportaufile'>
+			<table id="reportaufile_flatview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table">
+				<thead>
+				<tr> 
+					<th scope="col"><input type="checkbox" class="mira_checkbox_flat" id="mira_checkbox_flat" name="mira_checkbox "/></th>
+					<th>Assessable Unit</th>
+					<th>Type</th>
+					<th>Status</th>
+					<th>Portafolio</th>
+					<th>Auditable</th>
+					<th>Auditable Process</th>
+					<th>Owner</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{#each doc}}
+				<tr>
+					<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>
+					<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
+					<td>{{DocSubType}}</td>
+					<td>{{Status}}</td>
+					<td>{{Portafolio}}</td>
+					<td>{{AuditableFlag}}</td>
+					<td>{{AuditProgram}}</td>
+					<td>{{Owner}}</td>
+					
+				</tr>
+				{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
