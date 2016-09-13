@@ -10,76 +10,63 @@
 <div class="ibm-container-body" style="width: 100%;">
 	<div class="ibm-columns">
 		<div class="ibm-col-6-4">
-			<table id="rg_dashboard_treeview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" >
+			<table id="subprocess_dashboard_treeview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" >
 			   <thead>
 				<tr> 
 				    <th scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
-					<th>Assessable Unit</th>	
-					<th>Type</th>					
+				    <th>Assessable Unit</th>					
 					<th>Prior Q</th>
 					<th>Curr Q</th>
 					<th>Next Qtr</th>
 					<th>Target to Sat</th>
 					<th>MIRA</th>
 					<th>WWBCIT</th>
-				    <th>Group</th>
+                    <th>Type</th>					
 				</tr>
 				</thead>
 				<tbody>
 				{{#each doc}}
-				<tr data-tt-id={{_id}} data-tt-parent-id={{parentidg}}>
-					<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_tree"/></th>	
-					{{#if_equal  DocSubType "GroupName"}}
-					<td>{{Name}}</td>	
-                    <td></td>	
-					{{else}}
-					<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>	
-                    <td>{{DocSubType}}</td>											
-					{{/if_equal}}
+				<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
+					<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_tree"/></th>			
+				    <td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>					
 					<td>{{PeriodRatingPrev}}</td>
 					<td>{{PeriodRating}}</td>
 					<td>{{AUNextQtrRating}}</td>
 					<td>{{Target2Sat}}</td>
 					<td>{{MIRAAssessmentStatus}}</td>
-					<td>{{WWBCITAssessmentStatus}}</td>				        
-					<td>{{GroupName}}</td>
+					<td>{{WWBCITAssessmentStatus}}</td>		
+                    <td>{{DocSubType}}</td>					
 				</tr>
 				{{/each}}
 				</tbody>
 			</table>
 		</div>
-			<table id="rg_dashboard_flatview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" style='display : none'>
+			<table id="subprocess_dashboard_flatview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" style='display :none'>
 		        <thead>
 				<tr> 
 				    <th scope="col"><input type="checkbox" class="mira_checkbox_flat" id="mira_checkbox_flat" name="mira_checkbox "/></th>					
-				   <th>Assessable Unit</th>	
-					<th>Type</th>					
+				    <th>Assessable Unit</th>					
 					<th>Prior Q</th>
 					<th>Curr Q</th>
 					<th>Next Qtr</th>
 					<th>Target to Sat</th>
 					<th>MIRA</th>
 					<th>WWBCIT</th>
-				    <th>Group</th>		
+                    <th>Type</th>					
 				</tr>
 				</thead>
 				<tbody>
 				{{#each doc}}
 				<tr>
-				    <th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>	                   
-				    <td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>	
-                    {{#if_equal  DocSubType "GroupName"}}
-					<td></td>	
-                    {{else}}
-					<td>{{DocSubType}}</td>	
-                    {{/if_equal}}									
+				    <th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>
+				    <td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>					
 					<td>{{PeriodRatingPrev}}</td>
 					<td>{{PeriodRating}}</td>
 					<td>{{AUNextQtrRating}}</td>
 					<td>{{Target2Sat}}</td>
 					<td>{{MIRAAssessmentStatus}}</td>
-					<td>{{WWBCITAssessmentStatus}}</td>                  				        
-					<td>{{GroupName}}</td>					
+					<td>{{WWBCITAssessmentStatus}}</td>	
+                    <td>{{DocSubType}}</td>					
 				</tr>
 				{{/each}}
 				</tbody>
@@ -90,8 +77,9 @@
     <script src="./js/dashboards.js"/></script>
 <script>
 	//Load document's name
-	$('h1#pageTitle').text("Reporting Group Dashboard");
-	$("#rg_dashboard_treeview").treetable({expandable: true });
-    $("#rg_dashboard_flatview");
+	$('h1#pageTitle').text("Subprocess Dashboard");
+	$("#subprocess_dashboard_treeview").treetable({expandable: true });
+    $("#subprocess_dashboard_flatview");
 </script>
 </div>
+

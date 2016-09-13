@@ -67,7 +67,23 @@ dashboards.get('/reportingdashboard', isAuthenticated, function(req, res) {
 	})
 });
 
-
+dashboards.get('/subprocessdashboard', isAuthenticated, function(req, res) {
+	assessableunit.listAU(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('subprocessdashboard', data );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][subprocessdashboard] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][subprocessdashboard] - " + err.error);
+	})
+});
 
 /* Display BU assessable unit document */
 dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
@@ -81,7 +97,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "Global Process":
 						res.render('auglobalprocess', data.doc[0] );
 						break;
-					case "Sub-process":
+					case "Subprocess":
 						res.render('ausubprocess', data.doc[0] );
 						break;
 					case "BU IOT":
