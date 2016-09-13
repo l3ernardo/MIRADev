@@ -11,7 +11,7 @@ var varConf = require('../../configuration');
 BLUEGROUPS FUNCTIONALITY
 ***************************************************************/
 /* Load Bluegroup page */
-interface.get('/bluegroups', function(req, res) {
+interface.get('/bluegroups', isAuthenticated, function(req, res) {
 	var obj = {
 		selector : {
 			//"_id": req.query.id
@@ -27,7 +27,7 @@ interface.get('/bluegroups', function(req, res) {
 });
 
 /* Load Bluegroups members */
-interface.get('/bgdetail', function(req, res) {
+interface.get('/bgdetail', isAuthenticated, function(req, res) {
 	util.getBluegroup(req).then(function(data) {
 		res.send(data);
 		res.end();
@@ -35,14 +35,14 @@ interface.get('/bgdetail', function(req, res) {
 });
 
 /* Load Bluegroups members */
-interface.get('/frmbg', function(req, res) {
+interface.get('/frmbg', isAuthenticated, function(req, res) {
 	util.getBluegroup(req).then(function(data) {
 		res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
 	})
 });
 
 /* Process Bluegroups members */
-interface.post('/processbg', function(req,res) {
+interface.post('/processbg', isAuthenticated, function(req,res) {
 	//console.log(req.body.finalmembers.split(";"));	
 	req.query.group = req.body.group;
 	var addmembers = [];
