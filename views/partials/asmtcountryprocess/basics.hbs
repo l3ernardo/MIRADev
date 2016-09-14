@@ -2,20 +2,26 @@
 <table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
 	<tr>
-		<td width="25%">Country Process:</td><td>{{AssessableUnitName}}</td>
+		<td width="25%">Country Process:</td><td><b>{{AssessableUnitName}}</b></td>
 	</tr>
 	{{#if editmode}}
 		<tr>
-			<td><label for="PeriodRating">Holistic Rating:<span class="ibm-required">*</span></label></td>
-			<td>
-				<span>
-				{{{uniqueSelect "PeriodRating" parameters.PeriodRating.0.options "name" "name" PeriodRating}}}
-				</span>
-				<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
-			</td>
+			{{#if RatingEditable}}
+				<td><label for="PeriodRating">Holistic Rating:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>{{{uniqueSelect "PeriodRating" parameters.PeriodRating.0.options "name" "name" PeriodRating}}}</span><br />
+					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
+				</td>
+			{{else}}
+				<td>Holistic Rating:</td>
+				<td>
+					{{PeriodRating}}<br />
+					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
+				</td>
+			{{/if}}
 		</tr>
 		<tr>
-			{{#if_equal WWBCITStatus "Draft"}}
+			{{#if RJandT2SEditable}}
 				<td><label for="MIRARatingJustification">Rating Justification:</label></td>
 				<td>
 					<span><input type="text" name="MIRARatingJustification" id="MIRARatingJustification" value="{{MIRARatingJustification}}" size="100"></span>
@@ -23,21 +29,34 @@
 			{{else}}
 				<td>Rating Justification:</td>
 				<td>{{WWBCITRatingJustification}}</td>
-			{{/if_equal}}
+			{{/if}}
 		</tr>
+		{{#if_not_equal PeriodRating "Sat"}}
+			<tr>
+				<td><label for="ReviewComments">Review Explanation/Comment:</label></td>
+				<td>
+					<span><input type="text" name="ReviewComments" id="ReviewComments" value="{{ReviewComments}}" size="100"></span>
+				</td>
+			</tr>
+			{{#if RJandT2SEditable}}
+				<!-- replace this with editable calendar, check with Gaby if there is already a calendar field used -->
+				<tr><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+			{{/if}}
+		{{/if_not_equal}}
 		<tr>
-			<td><label for="MIRARatingJustification">Review Explanation/Comment:</label></td>
-			<td>
-				<span><input type="text" name="ReviewComments" id="ReviewComments" value="{{ReviewComments}}" size="100"></span>
-			</td>
-		</tr>
-		<tr><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
-		<tr>
-			<td>MIRA Status:</td>
-			<td>
-				<b class="ibm-important">{{MIRAStatus}}</b><br />
-				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{MIRAStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{MIRAStatusChangeWhen}}</span>
-			</td>
+			{{#if_not_equal MIRAStatus "Final"}}
+				<td><label for="MIRAStatus">MIRA Status:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>{{{uniqueSelect "MIRAStatus" parameters.AssessmentStatus.0.options "name" "name" MIRAStatus}}}</span><br />
+					<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{MIRAStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{MIRAStatusChangeWhen}}</span>
+				</td>
+			{{else}}
+				<td>MIRA Status:</td>
+				<td>
+					<b class="ibm-important">{{MIRAStatus}}</b><br />
+					<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{MIRAStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{MIRAStatusChangeWhen}}</span>
+				</td>
+			{{/if_not_equal}}
 		</tr>
 		<tr>
 			<td>WWBCIT Status:</td>
@@ -46,8 +65,13 @@
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{WWBCITStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{WWBCITStatusChangeWhen}}</span>
 			</td>
 		</tr>
-		<tr class="outlook"><td>Next Qtr Outlook:</td><td>{{NextQtrRating}}</td></tr>
-	{{else}}
+		<tr class="outlook">
+			<td><label for="NextQtrRating">Next Qtr Outlook:</label></td>
+			<td>
+				<span>{{{uniqueSelect "NextQtrRating" parameters.NextQtrRating.0.options "name" "name" NextQtrRating}}}</span>
+			</td>
+		</tr>
+	{{else}} <!-- read mode -->
 		<tr>
 			<td>Holistic Rating:</td>
 			<td>
@@ -57,10 +81,18 @@
 		</tr>
 		<tr>
 			<td>Rating Justification:</td>
-			<td>{{#if_equal WWBCITStatus "Draft"}}{{MIRARatingJustification}}{{else}}{{WWBCITRatingJustification}}{{/if_equal}}</td>
+			<td>
+				{{#if RJandT2SEditable}}
+					{{MIRARatingJustification}}
+				{{else}}
+					{{WWBCITRatingJustification}}
+				{{/if}}
+			</td>
 		</tr>
-		<tr><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
-		<tr><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+		{{#if_not_equal PeriodRating "Sat"}}
+			<tr><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
+			<tr><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+		{{/if_not_equal}}
 		<tr>
 			<td>MIRA Status:</td>
 			<td>

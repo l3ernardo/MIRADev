@@ -243,9 +243,7 @@ router.get('/attachment', isAuthenticated, function(req, res) {
 /* Download attachment */
 router.get('/download', isAuthenticated, function(req, res){
 	utility.downloadFile(req, res, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			res.download(res.body);
-		} else {
+		if(data.error) {
 			console.log("[routes][downloadFile] - " + data.error);
 		}
 	}).catch(function(err) {
@@ -264,13 +262,6 @@ router.get('/deleteAttachment', isAuthenticated, function(req, res){
 		console.log("[routes][deleteAttachment] - " + err.error);
 	})
 
-});
-/**************************************************************
-REPORTS
-***************************************************************/
-/* Load report assessable unit file page*/
-router.get('/reportaufile', isAuthenticated, function(req, res) {
-	res.render('reportaufile');
 });
 /**************************************************************
 REFERENCES
