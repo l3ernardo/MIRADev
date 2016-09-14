@@ -59,6 +59,25 @@ var assessment = {
 					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
 						doc[0].editmode = 1;
 
+						// --- Start of Basic Section --- //
+
+						// check if Rating is editable
+						var ratingEditors = parentdoc[0].Owner + parentdoc[0].Focals;
+						if(ratingEditors.indexOf("(" + req.session.user.mail + ")") !== -1) {
+							if (doc[0].ParentDocSubType == "Country Process" && doc[0].WWBCITStatus != "Reviewed" && doc[0].MIRAStatus != "Final") {
+								doc[0].RatingEditable = 1;
+							} else {
+								if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) )
+									doc[0].RatingEditable = 1;
+							}
+						}
+
+						//check if Rating Justification and Target to Sat is editable
+						if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) )
+							doc[0].RJandT2SEditable = 1;
+
+						// --- End of Basic Section --- //
+
 					} else { // Read mode
 
 					}
