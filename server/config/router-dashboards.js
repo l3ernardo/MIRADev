@@ -375,8 +375,25 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 					case "BU Country":
 						break;
 					case "Country Process":
-						res.render('asmtcountryprocess', data.doc[0] );
+						if (data.doc[0].editmode) {
+							var lParams = ['PeriodRating','AssessmentStatus','NextQtrRating'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('asmtcountryprocess', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessment][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessment][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('asmtcountryprocess', data.doc[0] );
+						}
 						break;
+
 					case "Controllable Unit":
 						break;
 					case "BU Reporting Group":

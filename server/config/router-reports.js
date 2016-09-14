@@ -20,9 +20,23 @@ reports.get('/reportaufile', isAuthenticated, function(req, res) {
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
-		console.log("[routes][disclosure] - " + err.error);
+		console.log("[routes][reportaufile] - " + err.error);
 	})
 	
 });
-
+/* Load report controllable unit file page*/
+reports.get('/reportcufile', isAuthenticated, function(req, res) {
+	report.controllableunitfile(req, db).then(function(data){
+		if(data.status=="200" & !data.error){
+			res.render('reportcufile', data);
+		}
+		else{
+			res.render('error',{errorDescription: data.error});
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][reportcufile] - " + err.error);
+	})
+	
+});
 module.exports = reports;
