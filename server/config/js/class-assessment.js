@@ -44,11 +44,35 @@ var assessment = {
 				doc[0].PrevQtrs = [];
 				doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
-				deferred.resolve({"status": 200, "doc": doc});
+				// get parent assessable unit document
+				db.get(doc[0].parentid).then(function(pdata){
+					var parentdoc = [];
+					parentdoc.push(pdata.body);
+
+					/* Get access and roles */
+					var editors = parentdoc[0].AdditionalEditors + parentdoc[0].Owner + parentdoc[0].Focals;
+					accessrules.getRules(req,editors);
+					doc[0].editor = accessrules.rules.editor;
+					doc[0].admin = accessrules.rules.admin;
+					doc[0].resetstatus = accessrules.rules.resetstatus;
+
+					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
+						doc[0].editmode = 1;
+
+					} else { // Read mode
+
+					}
+
+					deferred.resolve({"status": 200, "doc": doc});
+
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err});
+				});
 
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err});
 			});
+
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
