@@ -68,12 +68,12 @@ function add_icons(table_name){
     }
 }
 /*Funciton to export dashboard views*/
- function fnExcelReport(table) {	
+ function fnExcelReport(table,typefile) {	
 	var field4rows = $.parseJSON($('textarea#dataForExport').val());
 	var table=table;
 	var tab_text="<table border='2px'><thead><tr bgcolor='#87AFC6'>";
-	var line = ""
-	var tab = $(table); 
+	var line = "";
+	var tab = $(table);
 	var theader=$('#'+table+' tr:eq(0) th'); 
 	for (c=1;c<theader.length;c++)
 	{
@@ -83,7 +83,7 @@ function add_icons(table_name){
 	tab_text=tab_text+line+"</tr>"+"</thead><tbody>";
 	if(($("#mira_checkbox").is(':checked')) || ($("#mira_checkbox_flat").is(':checked'))) 
 		{  
-			for(j = 1; j<=field4rows.length; j++)
+			for(j = 0; j<=field4rows.length; j++)
 				{
 					var r1 = field4rows[j];
 					line="<tr>";
@@ -93,7 +93,7 @@ function add_icons(table_name){
 						} //end for obj1
 						tab_text=tab_text+line+"</tr>";
 				}
-				tab_text=tab_text+"</tbody></table>";
+			//	tab_text=tab_text+"</tbody></table>";
 		}
 	 else
 		 {              
@@ -132,8 +132,14 @@ function add_icons(table_name){
         }
     tab_text=tab_text+"</tbody></table>";	
     name=encodeURIComponent(tab_text);
-	//sa=window.location.assign('data:application/vnd.oasis.opendocument.spreadsheet,'+ name);
-	sa=window.location.assign('data:application/vnd.ms-excel,'+ name);
+	 if(typefile==1)
+	 { 
+		 sa=window.location.assign('data:application/vnd.ms-excel,'+ name);
+	 }
+	 else
+	 {
+		 sa=window.location.assign('data:application/vnd.oasis.opendocument.spreadsheet,'+ name);		 
+	 }
 	return (sa);	
 } 
 
@@ -170,104 +176,138 @@ $(document).ready(function(){
       });  
 	$(".mira_checkbox_tree").prop('checked', false);
 	$(".mira_checkbox_flat").prop('checked', false);
-$('#button_view').click(function(){
-		
 	
-		
-	 if($('#button_view').val()=='Flat View' &&  r!=-1 && u==-1)
+    $('#link-view').click(function(){
+	 if($(this).text()=='Flat View' &&  r!=-1 && u==-1)
 	 {   
 		$('#process_dashboard_flatview').show();
 		$('#process_dashboard_treeview').hide();
-		$('#button_view').val('Tree View');
+		$(this).text('Tree View');
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  r!=-1 && u==-1)
+	 else if($(this).text()=='Tree View' &&  r!=-1 && u==-1)
 	 {  
 		$('#process_dashboard_treeview').show();
 		$('#process_dashboard_flatview').hide();
 		$(".mira_checkbox_tree").prop('checked', false);
 	    $(".mira_checkbox_flat").prop('checked', false);
-		$('#button_view').val('Flat View');
+		$(this).text('Flat View');
 		
 	 }
-	 else if($('#button_view').val()=='Flat View' &&  s!=-1)
+	 else if($(this).text()=='Flat View' &&  s!=-1)
 	 {  
 		$('#geo_dashboard_flatview').show();
 		$('#geo_dashboard_treeview').hide();
-		$('#button_view').val('Tree View');
+		$(this).text('Tree View');
 		
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  s!=-1)
+	 else if($(this).text()=='Tree View' &&  s!=-1)
 	 {  
 		$('#geo_dashboard_treeview').show();
 		$('#geo_dashboard_flatview').hide();
 		$(".mira_checkbox_tree").prop('checked', false);
 	    $(".mira_checkbox_flat").prop('checked', false);
-		$('#button_view').val('Flat View');		
+		$(this).text('Flat View');
 	 }
-	 else if($('#button_view').val()=='Flat View' &&  t!=-1)
+	 else if($(this).text()=='Flat View' &&  t!=-1)
 	 {  
 		$('#rg_dashboard_flatview').show();
 		$('#rg_dashboard_treeview').hide();
-		$('#button_view').val('Tree View');
+		$(this).text('Tree View');
 		
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  t!=-1)
+	 else if($(this).text()=='Tree View' &&  t!=-1)
 	 {  
 		$('#rg_dashboard_treeview').show();
 		$('#rg_dashboard_flatview').hide();
 		$(".mira_checkbox_tree").prop('checked', false);
 	    $(".mira_checkbox_flat").prop('checked', false);
-		$('#button_view').val('Flat View');		
+		$(this).text('Flat View');
 	 }
-	  else if($('#button_view').val()=='Flat View' &&  u!=-1)
+	  else if($(this).text()=='Flat View' &&  u!=-1 && r==-1)
 	 { 
 		$('#subprocess_dashboard_flatview').show();
 		$('#subprocess_dashboard_treeview').hide();
-		$('#button_view').val('Tree View');
+		$(this).text('Tree View');
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  u!=-1)
+	 else if($(this).text()=='Tree View' &&  u!=-1 && r==-1)
 	 {  
 		$('#subprocess_dashboard_treeview').show();
 		$('#subprocess_dashboard_flatview').hide();
 		$(".mira_checkbox_tree").prop('checked', false);
 	    $(".mira_checkbox_flat").prop('checked', false);
-		$('#button_view').val('Flat View');
+		$(this).text('Flat View');		
+	 }
+});
+
+$('#link-export').click(function(){
+	 if($('#link-view').text()=='Flat View' &&  r!=-1 &&  u==-1)
+	 {   
+		fnExcelReport('process_dashboard_treeview',1);
+	 }
+	 else if($('#link-view').text()=='Tree View' &&  r!=-1 &&  u==-1)
+	 {  
+		 fnExcelReport('process_dashboard_flatview',1);
+		
+	 }
+	 else if($('#link-view').text()=='Flat View' &&  s!=-1)
+	 {   
+		fnExcelReport('geo_dashboard_treeview',1);
+	 }
+	 else if($('#link-view').text()=='Tree View' &&  s!=-1)
+	 {  
+		 fnExcelReport('geo_dashboard_flatview',1);		
+	 }
+	  else if($('#link-view').text()=='Flat View' &&  t!=-1)
+	 {   
+		fnExcelReport('rg_dashboard_treeview',1);
+	 }
+	 else if($('#link-view').text()=='Tree View' &&  t!=-1)
+	 {  
+		 fnExcelReport('rg_dashboard_flatview',1);		
+	 }
+	  else if($('#link-view').text()=='Flat View' &&  u!=-1 )
+	 {   
+		fnExcelReport('subprocess_dashboard_treeview',1);
+	 }
+	 else if($('#link-view').text()=='Tree View' &&  u!=-1)
+	 {  
+		 fnExcelReport('subprocess_dashboard_flatview',1);
 		
 	 }
 });
-   $('#button_export').click(function(){
-	 if($('#button_view').val()=='Flat View' &&  r!=-1)
+$('#link-export2').click(function(){
+	 if($('#link-view').text()=='Flat View' &&  r!=-1 &&  u==-1)
 	 {   
-		fnExcelReport('process_dashboard_treeview' );
+		fnExcelReport('process_dashboard_treeview',2);
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  r!=-1)
+	 else if($('#link-view').text()=='Tree View' &&  r!=-1 &&  u==-1)
 	 {  
-		 fnExcelReport('process_dashboard_flatview');
+		 fnExcelReport('process_dashboard_flatview',2);
 		
 	 }
-	 else if($('#button_view').val()=='Flat View' &&  s!=-1)
+	 else if($('#link-view').text()=='Flat View' &&  s!=-1)
 	 {   
-		fnExcelReport('geo_dashboard_treeview' );
+		fnExcelReport('geo_dashboard_treeview',2);
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  s!=-1)
+	 else if($('#link-view').text()=='Tree View' &&  s!=-1)
 	 {  
-		 fnExcelReport('geo_dashboard_flatview');		
+		 fnExcelReport('geo_dashboard_flatview',2);		
 	 }
-	  else if($('#button_view').val()=='Flat View' &&  t!=-1)
+	  else if($('#link-view').text()=='Flat View' &&  t!=-1)
 	 {   
-		fnExcelReport('rg_dashboard_treeview' );
+		fnExcelReport('rg_dashboard_treeview',2);
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  t!=-1)
+	 else if($('#link-view').text()=='Tree View' &&  t!=-1)
 	 {  
-		 fnExcelReport('rg_dashboard_flatview');		
+		 fnExcelReport('rg_dashboard_flatview',2);		
 	 }
-	  else if($('#button_view').val()=='Flat View' &&  u!=-1)
+	  else if($('#link-view').text()=='Flat View' &&  u!=-1)
 	 {   
-		fnExcelReport('subprocess_dashboard_treeview');
+		fnExcelReport('subprocess_dashboard_treeview',2);
 	 }
-	 else if($('#button_view').val()=='Tree View' &&  u!=-1)
+	 else if($('#link-view').text()=='Tree View' &&  u!=-1)
 	 {  
-		 fnExcelReport('subprocess_dashboard_flatview');
+		 fnExcelReport('subprocess_dashboard_flatview',2);
 		
 	 }
 });

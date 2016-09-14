@@ -188,7 +188,7 @@ var assessableunit = {
 			             { "LevelType": { "$gt": null }},
 			             {"Name": { "$ne": null }},
 				         {"key": "Assessable Unit"},
-						 {"DocSubType":{"$in":["Business Unit","Global Process","Subprocess"]}},
+						 {"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
 						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
 	}	,	
@@ -204,7 +204,7 @@ var assessableunit = {
 			             { "LevelType": { "$gt": null }},
 			             {"Name": { "$ne": null }},
 				         {"key": "Assessable Unit"},
-						 {"DocSubType":{"$in":["Business Unit","Global Process","Subprocess"]}},
+						 {"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
 						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]}, 
 						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
@@ -399,7 +399,7 @@ else
 							selector:{
 								"_id": {"$gt":0},
 								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Country Process","Subprocess"]},
+								"DocSubType": {"$or":["Country Process","Sub-process"]},
 								"BusinessUnit": doc[0].BusinessUnit,
 								"GlobalProcess": doc[0].GlobalProcess
 							}
@@ -407,13 +407,13 @@ else
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
-					case "Subprocess":
+					case "Sub-process":
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
 								"key": "Assessable Unit",
 								"DocSubType": "Country Process",
-								"Subprocess": doc[0].Name,
+								"Sub-process": doc[0].Name,
 								"BusinessUnit": doc[0].BusinessUnit,
 								"GlobalProcess": doc[0].GlobalProcess
 							}
@@ -559,7 +559,7 @@ else
 
   							case "Business Unit":
   							case "Global Process":
-  							case "Subprocess":
+  							case "Sub-process":
   							case "Country Process":
   							case "Account":
   							case "Controllable Unit":
@@ -682,7 +682,7 @@ else
   								/* end: get names of admin section IDs for display */
   								break;
 
-  							case "Subprocess":
+  							case "Sub-process":
   							case "Global Process":
   								/* start: get names of admin section IDs for display */
   								var $or = [];
@@ -1177,7 +1177,7 @@ else
 						case "Business Unit":
 							doc[0].RGRollup = req.body.RGRollup;
 							break;
-						case "Subprocess":
+						case "Sub-process":
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].BRGMembershipDisp=req.body.BRGMembershipDisp;
 							doc[0].ReportingGroupList=req.body.ReportingGroupList;

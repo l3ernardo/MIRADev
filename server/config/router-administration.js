@@ -9,6 +9,7 @@ var varConf = require('../../configuration');
 var parameter = require('./js/class-parameter.js');
 var setup = require('./js/class-setup.js');
 var isAuthenticated = require('./router-authentication.js');
+var isAuthorized = require('./router-authorization.js');
 var simpleAuthentication = require('./router-simpleAuthentication.js');
 
 /**************************************************************
@@ -92,8 +93,8 @@ administration.get('/getParam', isAuthenticated, function(req, res) {
 		console.log("[routes][getParam] - " + err.error);
 	})
 });
-/* Get parameter by keyName */
-administration.get('/getParameter', function(req, res) {
+/* Get parameter by keyName */ // -> This is the only restful
+administration.get('/getParameter', isAuthorized, function(req, res) {
 	parameter.getParam(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			res.send(data.doc.value);

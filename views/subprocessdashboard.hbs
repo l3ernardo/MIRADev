@@ -2,8 +2,9 @@
   <p>
   <iframe id="txtArea1" style="display:none"></iframe>
   <span class="ibm-sep"> </span>
-  <input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="button_view" name="flat_view" value="Flat View">
-  <input class="ibm-btn-cancel-sec ibm-btn-small ibm-btn-small" type="submit" id="button_export" name="export_table" value="Export to Excel">
+  <a id="link-view" class="ibm-forward-link">Flat View</a>
+  <a id="link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+  <a id="link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
   <textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{view}}</textarea>
   </p>
 </div>
@@ -77,7 +78,7 @@
     <script src="./js/dashboards.js"/></script>
 <script>
 	//Load document's name
-	$('h1#pageTitle').text("Subprocess Dashboard");
+	$('h1#pageTitle').text("Sub-process Dashboard");
 	$("#subprocess_dashboard_treeview").treetable({expandable: true });
     $("#subprocess_dashboard_flatview");
 </script>
