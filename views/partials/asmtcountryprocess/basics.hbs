@@ -31,18 +31,18 @@
 				<td>{{WWBCITRatingJustification}}</td>
 			{{/if}}
 		</tr>
-		{{#if_not_equal PeriodRating "Sat"}}
-			<tr>
-				<td><label for="ReviewComments">Review Explanation/Comment:</label></td>
-				<td>
-					<span><input type="text" name="ReviewComments" id="ReviewComments" value="{{ReviewComments}}" size="100"></span>
-				</td>
-			</tr>
+		<tr class="reviewComments">
+			<td><label for="ReviewComments">Review Explanation/Comment:</label></td>
+			<td>
+				<span><input type="text" name="ReviewComments" id="ReviewComments" value="{{ReviewComments}}" size="100"></span>
+			</td>
+		</tr>
+		<tr class="target2Sat">
 			{{#if RJandT2SEditable}}
 				<!-- replace this with editable calendar, check with Gaby if there is already a calendar field used -->
-				<tr><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+				<td>Target to Sat</td><td>{{Target2Sat}}</td>
 			{{/if}}
-		{{/if_not_equal}}
+		</tr>
 		<tr>
 			{{#if_not_equal MIRAStatus "Final"}}
 				<td><label for="MIRAStatus">MIRA Status:<span class="ibm-required">*</span></label></td>
@@ -65,7 +65,7 @@
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{WWBCITStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{WWBCITStatusChangeWhen}}</span>
 			</td>
 		</tr>
-		<tr class="outlook">
+		<tr>
 			<td><label for="NextQtrRating">Next Qtr Outlook:</label></td>
 			<td>
 				<span>{{{uniqueSelect "NextQtrRating" parameters.NextQtrRating.0.options "name" "name" NextQtrRating}}}</span>
@@ -75,7 +75,7 @@
 		<tr>
 			<td>Holistic Rating:</td>
 			<td>
-				{{PeriodRating}}<br />
+				{{{ratingDisplay PeriodRating "PeriodRating"}}}<br />
 				<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 			</td>
 		</tr>
@@ -89,10 +89,8 @@
 				{{/if}}
 			</td>
 		</tr>
-		{{#if_not_equal PeriodRating "Sat"}}
-			<tr><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
-			<tr><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
-		{{/if_not_equal}}
+		<tr class="reviewComments"><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
+		<tr class="target2Sat"><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
 		<tr>
 			<td>MIRA Status:</td>
 			<td>
@@ -107,6 +105,9 @@
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{WWBCITStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{WWBCITStatusChangeWhen}}</span>
 			</td>
 		</tr>
-		<tr class="outlook"><td>Next Qtr Outlook:</td><td>{{NextQtrRating}}</td></tr>
+		<tr class="outlook">
+			<td>Next Qtr Outlook:</td>
+			<td>{{{ratingDisplay NextQtrRating "NextQtrRating"}}}</td>
+		</tr>
 	{{/if}}
 </table>

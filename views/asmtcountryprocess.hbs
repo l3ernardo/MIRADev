@@ -1,15 +1,9 @@
 <script src="/js/asmtbasic_section.js" type="text/javascript"></script>
 <script src="/js/asmt_components.js" type="text/javascript"></script>
 <script src="/js/assessment.js" type="text/javascript"></script>
-<!-- <script src="/js/constituent_section.js" type="text/javascript"></script>
-<script src="/js/admin_section.js" type="text/javascript"></script>  -->
+<script src="/js/asmtbasic_section.js" type="text/javascript"></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <script src="./js/attachments.js"/></script>
-<!-- <script src="./js/owner.js"/></script>
-<script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
-<script src="/js/multiselect.js" type="text/javascript"></script> -->
-<!-- <link rel="stylesheet" href="./css/multiselect.css" />
-<link rel="stylesheet" href="./css/style.css"> -->
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <link rel="stylesheet" href="./css/jquery-ui.min.css">
 
@@ -37,7 +31,7 @@
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
-	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/savebuau">
+	<form id="assessment" class="ibm-column-form" name="form" method="POST" action="/saveasmt">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
