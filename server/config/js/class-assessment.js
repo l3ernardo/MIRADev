@@ -23,7 +23,6 @@ var assessment = {
 			var doc = [];
 			doc.push(data.body);
 			doc[0].EnteredBU = req.session.businessunit;
-			// doc = fieldCalc.getDocParams(req, db, doc);
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
 				// test view data
@@ -56,6 +55,10 @@ var assessment = {
 					doc[0].admin = accessrules.rules.admin;
 					doc[0].resetstatus = accessrules.rules.resetstatus;
 
+					// Check if Rating Justification and Target to Sat is editable. This is part of the basic section but conditions apply in both read and edit mode
+					if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) )
+						doc[0].RJandT2SEditable = 1;
+
 					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
 						doc[0].editmode = 1;
 
@@ -71,10 +74,6 @@ var assessment = {
 									doc[0].RatingEditable = 1;
 							}
 						}
-
-						//check if Rating Justification and Target to Sat is editable
-						if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) )
-							doc[0].RJandT2SEditable = 1;
 
 						// --- End of Basic Section --- //
 
@@ -95,6 +94,123 @@ var assessment = {
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
+		return deferred.promise;
+	},
+
+	/* Save Assessment document */
+	saveAsmt: function(req, db) {
+		var deferred = q.defer();
+		try{
+			var now = moment(new Date());
+			var docid = req.body.docid;
+			var curruser = req.session.user.notesId;
+			var currdate = now.format("MM/DD/YYYY");
+			var addlog = {
+				"name": curruser,
+				"date": currdate,
+				"time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
+			};
+
+			if (docid == "") { // new assessment document
+				var pid = req.body.parentid;
+				db.get(pid).then(function(pdata){
+					var pdoc = [];
+					var doc = [];
+					pdoc.push(pdata.body);
+					var tmpdoc = {
+						"key": "Assessment",
+						"DocType": "Assessment",
+						"parentid": pdoc[0]._id,
+						"ParentDocSubType": req.body.parentdocsubtype,
+						"AssessableUnitName": pdoc[0].Name,
+						"BusinessUnit": pdoc[0].BusinessUnit,
+						"CurrentPeriod": pdoc[0].CurrentPeriod,
+						"PeriodKey": pdoc[0].CurrentPeriod
+					};
+					doc.push(tmpdoc);
+					switch (doc[0].DocSubType) {
+						case "BU IOT":
+							break;
+						case "BU IMT":
+							break;
+						case "BU Country":
+							break;
+						case "Account":
+						case "BU Reporting Group":
+							break;
+					}
+					doc[0].Notes = req.body.Notes;
+					doc[0].Links = eval(req.body.attachIDs);
+					doc[0].Log = [];
+					doc[0].Log.push(addlog);
+					doc[0].Status = req.body.Status;
+
+					db.save(doc[0]).then(function(data){
+						deferred.resolve(data);
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
+
+			} else { // existing assessment document
+
+				var obj = {
+					selector:{
+						"_id": docid,
+					}
+				};
+
+				db.get(docid).then(function(data){
+					var doc = [];
+					doc.push(data.body);
+					switch (doc[0].ParentDocSubType) {
+						case "Business Unit":
+							break;
+						case "Subprocess":
+							break;
+						case "Global Process":
+							break;
+						case "BU IOT":
+							break;
+						case "BU IMT":
+							break;
+						case "BU Country":
+							break;
+						case "Country Process":
+							doc[0].PeriodRating = req.body.PeriodRating;
+							doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
+							doc[0].ReviewComments = req.body.ReviewComments;
+							// doc[0].Target2Sat = "";
+							doc[0].MIRAStatus = req.body.MIRAStatus;
+							doc[0].NextQtrRating = req.body.NextQtrRating;
+							break;
+						case "Account":
+							break;
+						case "Controllable Unit":
+							break;
+						case "BU Reporting Group":
+							break;
+					}
+
+					// doc[0].Notes = req.body.Notes;
+					// doc[0].Links = eval(req.body.attachIDs);
+					doc[0].Log.push(addlog);
+
+					db.save(doc[0]).then(function(data){
+						deferred.resolve(data);
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
+			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
 		return deferred.promise;
 	}
 
