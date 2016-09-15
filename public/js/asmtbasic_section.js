@@ -14,6 +14,9 @@ $(document).ready(function() {
 			$(".reviewComments").hide();
 			$(".target2Sat").hide();
 		} else {
+			if ( $("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") {
+				alert("All mandatory assessments with less than Satisfactory ratings must be supported by the appropriate issue documentation in WWBCIT. All other assessments can be documented in WWBCIT or retained locally. WWBCIT issue documentation includes sample documents, risk evaluations, internal and external audit findings/recommendations.")
+			}
 			$(".reviewComments").show();
 			$(".target2Sat").show();
 		}

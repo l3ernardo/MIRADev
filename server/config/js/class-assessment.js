@@ -180,10 +180,19 @@ var assessment = {
 						case "BU Country":
 							break;
 						case "Country Process":
+							doc[0].PrevRatingUpdate = doc[0].PeriodRating;
 							doc[0].PeriodRating = req.body.PeriodRating;
+							if (doc[0].PrevRatingUpdate != doc[0].PeriodRating) {
+								doc[0].RatingChangeWho = curruser;
+								doc[0].RatingChangeWhen = currdate;
+							}
 							doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
 							doc[0].ReviewComments = req.body.ReviewComments;
 							// doc[0].Target2Sat = "";
+							if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
+								doc[0].MIRAStatusChangeWho = curruser;
+								doc[0].MIRAStatusChangeWhen = currdate;
+							}
 							doc[0].MIRAStatus = req.body.MIRAStatus;
 							doc[0].NextQtrRating = req.body.NextQtrRating;
 							break;
@@ -195,8 +204,8 @@ var assessment = {
 							break;
 					}
 
-					// doc[0].Notes = req.body.Notes;
-					// doc[0].Links = eval(req.body.attachIDs);
+					doc[0].Notes = req.body.Notes;
+					doc[0].Links = eval(req.body.attachIDs);
 					doc[0].Log.push(addlog);
 
 					db.save(doc[0]).then(function(data){
