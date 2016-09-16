@@ -1,4 +1,5 @@
 <script src='./js/report.js'></script>
+<script src='./js/utility.js'></script>
 <link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 <script src="./lib/jquery.dataTables.js"></script>
 <script>
@@ -11,34 +12,75 @@
 		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
 			<p>
 				<span class="ibm-sep"> </span>
-				<a href="javascript:void(0);" value="Export to Excel" name="btn_exportxls" id="btn_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
+				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
 			</p>
 			<br/>
 		</div>
 		<div id='reportcufile'>
-			<table id="reports_table" cellspacing="0" cellpadding="0" border="0">
+			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" class="display nowrap">
 				<thead>
-					<tr> 
-						<th>Assessable Unit</th>
-						<th>Type</th>
-						<th>Status</th>
-						<th>Portafolio</th>
-						<th>Auditable</th>
-						<th>Auditable Process</th>
-						<th>Owner</th>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">BU IOT</th>
+						<th scope="col">BU IMT</th>
+						<th scope="col">Country</th>
+						<th scope="col">Status</th>
+						<th scope="col">Portafolio</th>
+						<th scope="col">Type</th>
+						<th scope="col">Special Contract Category</th>
+						<th scope="col">Auditable</th>
+						<th scope="col">Category</th>
+						<th scope="col">Sub-Category</th>
+						<th scope="col">Auditable Process</th>
+						<th scope="col">Size</th>
+						<th scope="col">Audit Universe Metric</th>
+						<th scope="col">Value ($M USD)</th>
+						<th scope="col">Arc Frequency</th>
+						<th scope="col">Prior Qtr</th>
+						<th scope="col">Current Qtr</th>
+						<th scope="col">Outlook</th>
+						<th scope="col">Prior Target to Sat</th>
+						<th scope="col">Target to Sat</th>
+						<th scope="col">Owners</th>
+						<th scope="col">Focals</th>
+						<th scope="col">Coordinators</th>
+						<th scope="col">Readers</th>
+						<th scope="col">Additional Editors</th>
+						<th scope="col">Additional Readers</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{#each doc}}
 					<tr>
 						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-						<td>{{DocSubType}}</td>
+						<td>{{IOT}}</td>
+						<td>{{IMT}}</td>
+						<td>{{Country}}</td>
 						<td>{{Status}}</td>
 						<td>{{Portafolio}}</td>
+						<td>{{DocSubType}}</td>
+						<td></td>
 						<td>{{AuditableFlag}}</td>
+						<td>{{Category}}</td>
+						<td>{{Subcategory}}</td>
 						<td>{{AuditProgram}}</td>
+						<td>{{CUSize}}</td>
+						<td>{{MetricsCriteria}}</td>
+						<td>{{MetricsValue}}</td>
+						<td>{{ARCFrequency}}</td>
+						<td>{{PeriodRatingPrev}}</td>
+						<td>{{PeriodRating}}</td>
+						<td>{{AUNextQtrRating}}</td>
+						<td>{{Target2SatPrev}}</td>
+						<td>{{Target2Sat}}</td>
 						<td>{{Owner}}</td>
-						
+						<td>{{Focals}}</td>
+						<td>{{Coordinators}}</td>
+						<td>{{Readers}}</td>
+						<td>{{AdditionalEditors}}</td>
+						<td>{{AdditionalReaders}}</td>
 					</tr>
 				{{/each}}
 				</tbody>
