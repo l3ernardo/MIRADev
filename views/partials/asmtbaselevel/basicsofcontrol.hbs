@@ -14,63 +14,147 @@
 				<thead class="basic-ctrl-label">
 					<th scope="col" width="5%">#</th>
 					<th scope="col" width="40%">Question</th>
-					<th scope="col" width="15%">Response</th>
+					<th scope="col" width="10%">Response</th>
 					<th scope="col" width="15%">Target Date</th>
-					<th scope="col" width="25%">Comments</th>
+					<th scope="col" width="30%">Comments</th>
 				</thead>
-				<tr>
-					<td class="basic-ctrl-label">1.</td>
-					<td class="basic-ctrl-label">
-						Can you demonstrate organizational or process ownership?<br />Includes:
-						<ul>
-							<li>having a documented and effective process</li>
-							<li>identification/monitoring of metrics</li>
-							<li>assignment of responsibility with appropriate separation of duties</li>
-							<li>periodic process inspection and validation</li>
-							<li>periodic re-evaluation of changes in the business environment or business model</li>
-						</ul>
-						<br /><strong>Note:</strong>  Please answer "No" if one or more bullets are "No".
-					</td>
-					<td class="content-data">{{BoCResponse1}}</td>
-					<td class="content-data">{{BoCTargetCloseDate1}}</td>
-					<td class="content-data">{{BoCComments1}}</td>
-				</tr>
-				<tr>
-					<td class="basic-ctrl-label">2.</td>
-					<td class="basic-ctrl-label">
-						Are your procedures well documented and is there ongoing education?
-					</td>
-					<td class="content-data">{{BoCResponse2}}</td>
-					<td class="content-data">{{BoCTargetCloseDate2}}</td>
-					<td class="content-data">{{BoCComments2}}</td>
-				</tr>
-				<tr>
-					<td class="basic-ctrl-label">3.</td>
-					<td class="basic-ctrl-label">
-						Can you demonstrate compliance with relevant <a href="http://w3-03.ibm.com/ibm/documents/corpdocweb.nsf/ContentDocsByTitle/Corporate+Instructions">Corporate Instructions</a>, Guidelines, Policies, and Procedures?
-					</td>
-					<td class="content-data">{{BoCResponse3}}</td>
-					<td class="content-data">{{BoCTargetCloseDate3}}</td>
-					<td class="content-data">{{BoCComments3}}</td>
-				</tr>
-				<tr>
-					<td class="basic-ctrl-label">4.</td>
-					<td class="basic-ctrl-label">
-						Can you demonstrate appropriate management of applications and information technology infrastructure, for both IBM internal use and external client service delivery?
-					</td>
-					<td class="content-data">{{BoCResponse4}}</td>
-					<td class="content-data">{{BoCTargetCloseDate4}}</td>
-					<td class="content-data">{{BoCComments4}}</td>
-				</tr>
-				<tr>
-					<td class="basic-ctrl-label">5.</td>
-					<td class="basic-ctrl-label">
-						Can you demonstrate effective identification, assessment and management of risk including fraud prevention/detection, and regulatory compliance?
-					</td>
-					<td class="content-data">{{BoCResponse5}}</td>
-					<td class="content-data">{{BoCTargetCloseDate5}}</td>
-					<td class="content-data">{{BoCComments5}}</td>
-				</tr>
+
+				{{#if editmode}}
+					<tr>
+						<td class="basic-ctrl-label">1.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate organizational or process ownership?<br />Includes:
+							<ul>
+								<li>having a documented and effective process</li>
+								<li>identification/monitoring of metrics</li>
+								<li>assignment of responsibility with appropriate separation of duties</li>
+								<li>periodic process inspection and validation</li>
+								<li>periodic re-evaluation of changes in the business environment or business model</li>
+							</ul>
+							<br /><strong>Note:</strong>  Please answer "No" if one or more bullets are "No".
+						</td>
+						<td class="content-data">{{{radioBtnVal "BoCResponse1" BoCResponse1}}}</td>
+						<td class="content-data">
+							<input type="date" name="BoCTargetCloseDate1" id="BoCTargetCloseDate1" value="{{BoCTargetCloseDate1}}" size="15">&nbsp;
+							<span for="BoCTargetCloseDate1" class="ibm-calendar-link"></span>
+						</td>
+						<td class="content-data">
+							<span class="content-data"><input type="text" name="BoCComments1" id="BoCComments1" value="{{BoCComments1}}" size="45"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">2.</td>
+						<td class="basic-ctrl-label">
+							Are your procedures well documented and is there ongoing education?
+						</td>
+						<td class="content-data">{{{radioBtnVal "BoCResponse2" BoCResponse2}}}</td>
+						<td class="content-data">
+							<input type="date" name="BoCTargetCloseDate2" id="BoCTargetCloseDate2" value="{{BoCTargetCloseDate2}}" size="15">&nbsp;
+							<span for="BoCTargetCloseDate2" class="ibm-calendar-link"></span>
+						</td>
+						<td class="content-data">
+							<span class="content-data"><input type="text" name="BoCComments2" id="BoCComments2" value="{{BoCComments2}}" size="45"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">3.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate compliance with relevant <a href="http://w3-03.ibm.com/ibm/documents/corpdocweb.nsf/ContentDocsByTitle/Corporate+Instructions">Corporate Instructions</a>, Guidelines, Policies, and Procedures?
+						</td>
+						<td class="content-data">{{{radioBtnVal "BoCResponse3" BoCResponse3}}}</td>
+						<td class="content-data">
+							<input type="date" name="BoCTargetCloseDate3" id="BoCTargetCloseDate3" value="{{BoCTargetCloseDate3}}" size="15">&nbsp;
+							<span for="BoCTargetCloseDate3" class="ibm-calendar-link"></span>
+						</td>
+						<td class="content-data">
+							<span class="content-data"><input type="text" name="BoCComments3" id="BoCComments3" value="{{BoCComments3}}" size="45"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">4.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate appropriate management of applications and information technology infrastructure, for both IBM internal use and external client service delivery?
+						</td>
+						<td class="content-data">{{{radioBtnVal "BoCResponse4" BoCResponse4}}}</td>
+						<td class="content-data">
+							<input type="date" name="BoCTargetCloseDate4" id="BoCTargetCloseDate4" value="{{BoCTargetCloseDate4}}" size="15">&nbsp;
+							<span for="BoCTargetCloseDate4" class="ibm-calendar-link"></span>
+						</td>
+						<td class="content-data">
+							<span class="content-data"><input type="text" name="BoCComments4" id="BoCComments4" value="{{BoCComments4}}" size="45"></span>
+						</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">5.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate effective identification, assessment and management of risk including fraud prevention/detection, and regulatory compliance?
+						</td>
+						<td class="content-data">{{{radioBtnVal "BoCResponse5" BoCResponse5}}}</td>
+						<td class="content-data">
+							<input type="date" name="BoCTargetCloseDate5" id="BoCTargetCloseDate5" value="{{BoCTargetCloseDate5}}" size="15">&nbsp;
+							<span for="BoCTargetCloseDate5" class="ibm-calendar-link"></span>
+						</td>
+						<td class="content-data">
+							<span class="content-data"><input type="text" name="BoCComments5" id="BoCComments5" value="{{BoCComments5}}" size="45"></span>
+						</td>
+					</tr>
+				{{else}} <!-- Read Mode -->
+					<tr>
+						<td class="basic-ctrl-label">1.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate organizational or process ownership?<br />Includes:
+							<ul>
+								<li>having a documented and effective process</li>
+								<li>identification/monitoring of metrics</li>
+								<li>assignment of responsibility with appropriate separation of duties</li>
+								<li>periodic process inspection and validation</li>
+								<li>periodic re-evaluation of changes in the business environment or business model</li>
+							</ul>
+							<br /><strong>Note:</strong>  Please answer "No" if one or more bullets are "No".
+						</td>
+						<td class="content-data">{{BoCResponse1}}</td>
+						<td class="content-data">{{BoCTargetCloseDate1}}
+						</td>
+						<td class="content-data">{{BoCComments1}}</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">2.</td>
+						<td class="basic-ctrl-label">
+							Are your procedures well documented and is there ongoing education?
+						</td>
+						<td class="content-data">{{BoCResponse2}}</td>
+						<td class="content-data">{{BoCTargetCloseDate2}}</td>
+						<td class="content-data">{{BoCComments2}}</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">3.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate compliance with relevant <a href="http://w3-03.ibm.com/ibm/documents/corpdocweb.nsf/ContentDocsByTitle/Corporate+Instructions">Corporate Instructions</a>, Guidelines, Policies, and Procedures?
+						</td>
+						<td class="content-data">{{BoCResponse3}}</td>
+						<td class="content-data">{{BoCTargetCloseDate3}}</td>
+						<td class="content-data">{{BoCComments3}}</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">4.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate appropriate management of applications and information technology infrastructure, for both IBM internal use and external client service delivery?
+						</td>
+						<td class="content-data">{{BoCResponse4}}</td>
+						<td class="content-data">{{BoCTargetCloseDate4}}</td>
+						<td class="content-data">{{BoCComments4}}</td>
+					</tr>
+					<tr>
+						<td class="basic-ctrl-label">5.</td>
+						<td class="basic-ctrl-label">
+							Can you demonstrate effective identification, assessment and management of risk including fraud prevention/detection, and regulatory compliance?
+						</td>
+						<td class="content-data">{{BoCResponse5}}</td>
+						<td class="content-data">{{BoCTargetCloseDate5}}</td>
+						<td class="content-data">{{BoCComments5}}</td>
+					</tr>
+				{{/if}}
+
 			</table>
 		</td>
 	</tr>

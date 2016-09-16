@@ -22,5 +22,10 @@ $(document).ready(function() {
 		}
 	});
 
+	$('#Target2Sat').datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1
+	});
 
 });

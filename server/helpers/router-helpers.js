@@ -46,20 +46,35 @@ var register = function(Handlebars) {
 		},
 		ratingDisplay: function(rating, field) {
 			var ratinghtml;
-			if (rating == "Sat")
+			if (rating == "Sat") {
 				ratinghtml = '<span style="background-color:#00ff00; padding-left:3em; padding-right:3em">'+rating+'</span>';
-			else
-				if (rating == "Marg")
+			} else {
+				if (rating == "Marg") {
 					ratinghtml = '<span style="background-color: #ffff00; padding-left:3em; padding-right:3em">'+rating+'</span>';
-				else
-					if (rating == "Unsat")
+				} else {
+					if (rating == "Unsat") {
 						ratinghtml = '<span style="background-color: #ff0000; padding-left:3em; padding-right:3em">'+rating+'</span>';
-					else
+					} else {
 						if (field = "NextQtrRating")
 							ratinghtml = "NA";
 						else
 							ratinghtml = rating;
+					}
+				}
+			}
 			return ratinghtml;
+		},
+		radioBtnVal: function(fieldName, fieldVal) {
+			var radioBtnHtml;
+			if (fieldVal == "Yes") {
+				radioBtnHtml = '<input type="radio" name="'+fieldName+'" id="'+fieldName+'Yes'+'" value="Yes" checked>Yes<input type="radio" name="'+fieldName+'" id="'+fieldName+'No'+'" value="No">No';
+			} else {
+				if (fieldVal == "No")
+					radioBtnHtml = '<input type="radio" name="'+fieldName+'" id="'+fieldName+'Yes'+'" value="Yes">Yes<input type="radio" name="'+fieldName+'" id="'+fieldName+'No'+'" value="No" checked>No';
+				else
+					radioBtnHtml = '<input type="radio" name="'+fieldName+'" id="'+fieldName+'Yes'+'" value="Yes">Yes<input type="radio" name="'+fieldName+'" id="'+fieldName+'No'+'" value="No">No'
+			}
+			return radioBtnHtml;
 		},
 		if_equal: function(a, b, opts) {
 			if(a == b) return opts.fn(this);
