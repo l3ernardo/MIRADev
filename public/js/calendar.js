@@ -16,7 +16,7 @@ $(document).ready(function() {
 		$('#eventType').attr('value', 'Meeting/Event');
 		ibmweb.overlay.show('Overlay_Event');
 	});
-					
+
 	//milestone button event
 	$('#btn_milestone').click(function() {
 		clearFields();
@@ -62,7 +62,7 @@ $(document).ready(function() {
 			alert('Please fill out all of the required fields.');
 		}
 	});
-	
+
 	//button cancel
 	$('#btn_cancel').click(function() {
 		if($('#id').val()=="" && $('#attachIDs').val()!="" && $('#attachIDs').val()!="[]"){
@@ -111,7 +111,7 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
+
 	//button copy
 	$('#btn_copy').click(function() {
 		if ($('#title').val() != '' && $('#startDate').val() != '') {
@@ -143,7 +143,7 @@ $(document).ready(function() {
 			alert('Please fill out all of the required fields.');
 		}
 	});
-	
+
 	$('#calendar').fullCalendar({
 		schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
 		header:	{
@@ -163,7 +163,7 @@ $(document).ready(function() {
 
 		editable: true,
 		events: {
-			url:'/getEvents?id='+optCal, 
+			url:'/getEvents?id='+optCal,
 			success: function(data){
 				for (var i in data) {
 					if(data[i].eventType == "Milestone"){
@@ -179,18 +179,18 @@ $(document).ready(function() {
 				clearFields();
 				//enable submit and cancel button if they are disabled
 				$('#btn_cancel').prop("disabled", false);
-				
+
 				$('#eTitle').text(event.eventType);
 				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + event.log[0].name + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
 				$('#id').val(event._id);
 				$('#rev').val(event._rev);
 				$('#eventType').val(event.eventType);
 				$('#ownerId').val(event.ownerId);
-				
+
 				$('#eventInfo').val(event.eventInfo);
 				$('#attachIDs').val(event.attachIDs);
 				$('input[type=checkbox]').prop('checked', false);
-				
+
 				if (event.targetCalendar) {
 					var regions = event.targetCalendar;
 					if (typeof regions === 'string') {
@@ -220,19 +220,19 @@ $(document).ready(function() {
 					$('#startDate').val(event.start.format("MM/DD/YYYY"));
 					$('#endDate').val(event.end.format("MM/DD/YYYY"));
 					$('input[type=checkbox]').prop('disabled', false);
-				
+
 				}else{
 					$('#title').html(event.title);
 					$('#owner').html(event.owner);
 					$('#startDate').html(event.start.format("MM/DD/YYYY"));
 					$('input[type=checkbox]').prop('disabled', true);
-				
+
 				}
 				loadAttachments('attachIDs');
 				ibmweb.overlay.show('Overlay_Event');
 			});
 		},
-		
+
 		eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
 			var allow = $('input[name=editmode]').val();
 			if(allow == "1"){
@@ -273,7 +273,7 @@ $(document).ready(function() {
 		},
 		error: function(e) {
 			alert('error: ' + e);
-		}  
+		}
 	});
 
 }); //document ready
@@ -291,7 +291,7 @@ function clearFields(){
 	$('#divDownload').html('');
 	resetAttachments();
 	$('input[type=checkbox]').prop('checked', false);
-	
+
 	$('input[type=checkbox]').each(function() {
 		var lblOwner = eval("$('label[for="+this.id+"')");
 		if(this.value == optCal){
@@ -302,7 +302,7 @@ function clearFields(){
 			this.style = "";
 		}
 	});
-	
+
 	$('#owner').val($('h1#pageTitle').text());
 	$('#ownerId').val(optCal);
 

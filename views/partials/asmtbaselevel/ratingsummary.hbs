@@ -1,24 +1,74 @@
 <table id="summary_table" class="ibm-data-table">
-	<tr class="summary">
-		<td>
-			<table width="100%">
-				<thead class="summary-label"><th scope="col">Rating Summary</th></thead>
-				<tr class="content-data"><td>&nbsp;{{RatingSummary}}</td></tr>
-			</table>
-		</td>
-	</tr>
-	<tr class="summary">
-		<td>
-			<table width="100%">
-				<thead class="summary-label">
-					<th scope="col">Highlights</th>
-					<th scope="col">Focus Areas</th>
-				</thead>
-				<tr class="content-data">
-					<td>&nbsp;{{Highlight}}</td>
-					<td>&nbsp;{{FocusArea}}</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
+	{{#if editmode}}
+		<tr class="summary">
+			<td>
+				<table width="100%">
+					<thead class="summary-label"><th scope="col"><label for="RatingSummary">Rating Summary</label></th></thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="RatingSummary" type="text" name="RatingSummary" cols="168" rows="3">{{RatingSummary}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summary">
+			<td>
+				<table width="100%">
+					<thead class="summary-label">
+						<th scope="col"><label for="Highlight">Highlights</label></th>
+						<th scope="col"><label for="FocusArea">Focus Areas</label></th>
+					</thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="Highlight" type="text" name="Highlight" cols="78" rows="3">{{Highlight}}</textarea></span>
+							</div>
+						</td>
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="FocusArea" type="text" name="FocusArea" cols="78" rows="3">{{FocusArea}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{else}}
+		<tr class="summary">
+			<td>
+				<table width="100%">
+					<thead class="summary-label"><th scope="col">Rating Summary</th></thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="RatingSummaryRO" value="{{RatingSummary}}">
+							<div id="RatingSummaryReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summary">
+			<td>
+				<table width="100%">
+					<thead class="summary-label">
+						<th scope="col">Highlights</th>
+						<th scope="col">Focus Areas</th>
+					</thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="HighlightRO" value="{{Highlight}}">
+							<div id="HighlightReadOnly"></div>
+						</td>
+						<td>&nbsp;
+							<input type="hidden" name="FocusAreaRO" value="{{FocusArea}}">
+							<div id="FocusAreaReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{/if}}
 </table>
