@@ -39,10 +39,10 @@
 		</tr>
 		<tr class="target2Sat">
 			{{#if RJandT2SEditable}}
-				<!-- <input type="date" id="startDate" name="startDate" size="30"> -->
-				<td>Target to Sat</td>
+				<td><label for="Target2Sat">Target to Sat:<span class="ibm-required">*</span></label></td>
 				<td>
-					<span><input type="date" name="Target2Sat" id="Target2Sat" value="{{Target2Sat}}"></span>
+					<span><input type="date" name="Target2Sat" id="Target2Sat" value="{{Target2Sat}}"></span>&nbsp;
+					<span for="Target2Sat" class="ibm-calendar-link"></span>
 				</td>
 			{{/if}}
 		</tr>

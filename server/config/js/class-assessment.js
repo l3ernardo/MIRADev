@@ -180,22 +180,27 @@ var assessment = {
 						case "BU Country":
 							break;
 						case "Country Process":
-							doc[0].PrevRatingUpdate = doc[0].PeriodRating;
-							doc[0].PeriodRating = req.body.PeriodRating;
-							if (doc[0].PrevRatingUpdate != doc[0].PeriodRating) {
-								doc[0].RatingChangeWho = curruser;
-								doc[0].RatingChangeWhen = currdate;
-							}
-							doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
-							doc[0].ReviewComments = req.body.ReviewComments;
-							// doc[0].Target2Sat = "";
-							if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
-								doc[0].MIRAStatusChangeWho = curruser;
-								doc[0].MIRAStatusChangeWhen = currdate;
-							}
-							doc[0].MIRAStatus = req.body.MIRAStatus;
-							doc[0].NextQtrRating = req.body.NextQtrRating;
-							break;
+							//---Rating Summary Tab---//
+							doc[0].RatingSummary = req.body.RatingSummary;
+							doc[0].Highlight = req.body.Highlight;
+							doc[0].FocusArea = req.body.FocusArea;
+							//---Basics of Control Tab---//
+							doc[0].BoCResponse1 = req.body.BoCResponse1;
+							doc[0].BoCResponse2 = req.body.BoCResponse2;
+							doc[0].BoCResponse3 = req.body.BoCResponse3;
+							doc[0].BoCResponse4 = req.body.BoCResponse4;
+							doc[0].BoCResponse5 = req.body.BoCResponse5;
+							doc[0].BoCTargetCloseDate1 = req.body.BoCTargetCloseDate1;
+							doc[0].BoCTargetCloseDate2 = req.body.BoCTargetCloseDate2;
+							doc[0].BoCTargetCloseDate3 = req.body.BoCTargetCloseDate3;
+							doc[0].BoCTargetCloseDate4 = req.body.BoCTargetCloseDate4;
+							doc[0].BoCTargetCloseDate5 = req.body.BoCTargetCloseDate5;
+							doc[0].BoCComments1 = req.body.BoCComments1;
+							doc[0].BoCComments2 = req.body.BoCComments2;
+							doc[0].BoCComments3 = req.body.BoCComments3;
+							doc[0].BoCComments4 = req.body.BoCComments4;
+							doc[0].BoCComments5 = req.body.BoCComments5;
+  						break;
 						case "Account":
 							break;
 						case "Controllable Unit":
@@ -204,6 +209,24 @@ var assessment = {
 							break;
 					}
 
+					//---Basics Section---//
+					if (doc[0].PrevRatingUpdate != req.body.PeriodRating) {
+						doc[0].RatingChangeWho = curruser;
+						doc[0].RatingChangeWhen = currdate;
+						doc[0].PrevRatingUpdate = doc[0].PeriodRating;
+						doc[0].PeriodRating = req.body.PeriodRating;
+					}
+					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
+					doc[0].ReviewComments = req.body.ReviewComments;
+					doc[0].Target2Sat = req.body.Target2Sat;
+					if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
+						doc[0].MIRAStatusChangeWho = curruser;
+						doc[0].MIRAStatusChangeWhen = currdate;
+					}
+					doc[0].MIRAStatus = req.body.MIRAStatus;
+					doc[0].NextQtrRating = req.body.NextQtrRating;
+					doc[0].DecommitExplanation = req.body.DecommitExplanation;
+					//---Miscellaneous---//
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
 					doc[0].Log.push(addlog);
