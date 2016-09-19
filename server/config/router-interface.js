@@ -11,7 +11,7 @@ var varConf = require('../../configuration');
 INTERFACES FUNCTIONALITY
 ***************************************************************/
 /* Validate in Login page */
-interface.get('/wwbcitdata', function(req, res) {
+interface.get('/wwbcitdata', isAuthenticated, function(req, res) {
 	// /showdata?designdoc=wwbcitdocs&viewname=samplesprod
 	var query = varConf.mirainterfaces+"/showdata?designdoc="+req.query.doc+"&viewname="+req.query.id;
 	util.callhttp(query).then(function(data) {
@@ -47,7 +47,7 @@ interface.get('/wwbcitdata', function(req, res) {
 /**************************************************************
 RAW DATA ONE DOC DETAIL
 ***************************************************************/
-interface.get('/rawDataDetail/:viewname/:id', function(req, res) {
+interface.get('/rawDataDetail/:viewname/:id', isAuthenticated, function(req, res) {
 	var query = varConf.mirainterfaces+"/showDocDetail?id="+req.params.id;
 
 	util.callhttp(query).then(function(data) {
@@ -67,7 +67,7 @@ interface.get('/rawDataDetail/:viewname/:id', function(req, res) {
 });
 
 /* Load log page */
-interface.get('/listlog', function(req, res) {
+interface.get('/listlog', isAuthenticated, function(req, res) {
 	// /listlog
 	var query = varConf.mirainterfaces+"/listlog";
 	util.callhttp(query).then(function(data) {
@@ -100,7 +100,7 @@ interface.get('/listlog', function(req, res) {
 });
 
 /* Load log file */
-interface.get('/logDetail', function(req, res) {
+interface.get('/logDetail', isAuthenticated, function(req, res) {
 	// /listlog
 	util.callhttp(req.query.filepath).then(function(data) {
 		res.render('logDetail', { doc: data.doc });
