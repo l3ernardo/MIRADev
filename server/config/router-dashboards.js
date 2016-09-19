@@ -356,47 +356,6 @@ dashboards.get('/newassessableunit', isAuthenticated, function(req, res) {
 	})
 });
 
-/* Display assesment document */
-dashboards.get('/assessment', isAuthenticated, function(req, res) {
-	assessment.getAsmtbyID(req, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			if(data.doc) {
-				switch (data.doc[0].ParentDocSubType) {
-					case "Business Unit":
-						break;
-					case "Global Process":
-						break;
-					case "Sub-process":
-						break;
-					case "BU IOT":
-						break;
-					case "BU IMT":
-						break;
-					case "BU Country":
-						break;
-					case "Country Process":
-						res.render('asmtcountryprocess', data.doc[0] );
-						break;
-					case "Controllable Unit":
-						break;
-					case "BU Reporting Group":
-						break;
-					case "Account":
-						break;
-				}
-			} else {
-				res.render('error',{errorDescription: data.error});
-			}
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][assessment] - " + data.error);
-		}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][assessment] - " + err.error);
-	})
-});
-
 /* Save BU assessable unit document */
 dashboards.post('/savebuau', isAuthenticated, function(req, res){
 	aureq.validate(req);
@@ -475,6 +434,137 @@ dashboards.post('/savebuau', isAuthenticated, function(req, res){
 			console.log("[dashboards][savebuau] - " + err.error);
 		})
 	}
+
+});
+
+/* Display assesment document */
+dashboards.get('/assessment', isAuthenticated, function(req, res) {
+	assessment.getAsmtbyID(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				switch (data.doc[0].ParentDocSubType) {
+					case "Business Unit":
+						break;
+					case "Global Process":
+						break;
+					case "Sub-process":
+						break;
+					case "BU IOT":
+						break;
+					case "BU IMT":
+						break;
+					case "BU Country":
+						break;
+					case "Country Process":
+						if (data.doc[0].editmode) {
+							var lParams = ['PeriodRating','AssessmentStatus','NextQtrRating'];
+							parameter.getListParams(db, lParams).then(function(dataParam) {
+								if(dataParam.status==200 & !dataParam.error) {
+									data.doc[0].parameters = dataParam.parameters;
+									res.render('asmtcountryprocess', data.doc[0] );
+								} else {
+									res.render('error',{errorDescription: data.error});
+									console.log("[routes][assessment][getListParams] - " + dataParam.error);
+								}
+							}).catch(function(err) {
+								res.render('error',{errorDescription: err.error});
+								console.log("[routes][assessment][getListParams] - " + err.error);
+							})
+						} else {
+							res.render('asmtcountryprocess', data.doc[0] );
+						}
+						break;
+
+					case "Controllable Unit":
+						break;
+					case "BU Reporting Group":
+						break;
+					case "Account":
+						break;
+				}
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][assessment] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][assessment] - " + err.error);
+	})
+});
+
+/* Save Assessment document */
+dashboards.post('/saveasmt', isAuthenticated, function(req, res){
+	assessment.saveAsmt(req, db).then(function(data) {
+		req.query.id = data.body.id;
+		var close = req.body.close;
+		if(data.status==200 & !data.error) {
+			//New document need to update attachments
+			if(req.body.attachIDs != '' && req.body.docid == ""){
+				utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(dataF) {
+					if(dataF.status==200 & !dataF.error && data.body) {
+						assessment.getAsmtbyID(req, db).then(function(data) {
+							if(data.status==200 & !data.error) {
+								if(data.doc) {
+									if(close=='1') {
+										res.redirect('/processdashboard');
+									} else {
+										res.redirect('/assessment?id=' + data.doc[0]._id);
+									}
+								} else {
+									res.render('error',{errorDescription: data.error});
+								}
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][getassessmentbyID] - " + data.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][getassessmentbyID] - " + err.error);
+						});
+					} else {
+						res.render('error',{errorDescription: dataF.error});
+						console.log("[routes][saveasmt] - " + dataF.error);
+					}
+				}).catch(function(err) {
+					console.log("[dashboards][saveasmt] - " + err.error);
+				});
+			} else { //Old document doesn't need to update attachments
+				if(data.body) {
+					assessment.getAsmtbyID(req, db).then(function(data) {
+						if(data.status==200 & !data.error) {
+							if(data.doc) {
+								if(close=='1') {
+									res.redirect('/processdashboard');
+								} else {
+									res.redirect('/assessment?id=' + data.doc[0]._id);
+								}
+							} else {
+								res.render('error',{errorDescription: data.error});
+							}
+						} else {
+							res.render('error',{errorDescription: data.error});
+							console.log("[routes][getassessmentbyID] - " + data.error);
+						}
+					}).catch(function(err) {
+						res.render('error',{errorDescription: err.error});
+						console.log("[routes][getassessmentbyID] - " + err.error);
+					});
+				} else {
+					res.render('error',{errorDescription: dataF.error});
+					console.log("[routes][saveasmt] - " + dataF.error);
+				}
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[dashboards][saveasmt] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[dashboards][saveasmt] - " + err.error);
+	})
 
 });
 
