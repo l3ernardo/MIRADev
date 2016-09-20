@@ -7,18 +7,36 @@
 			<td>
 				<table width="100%" class="ar-asmt-label">
 					<thead>
-						<th scope="col" width="35%">Question</th>
+						<th scope="col" width="30%">Question</th>
 						<th scope="col" width="10%">Response</th>
-						<th scope="col" width="10%">Finding</th>
-						<th scope="col" width="10%">Explanation</th>
-						<th scope="col" width="35%">Target to Sat</th>
+						<th scope="col" width="15%">Finding</th>
+						<th scope="col" width="12%">Target to Sat</th>
+						<th scope="col" width="33%">Explanation</th>
 					</thead>
 					<tr>
 						<td>Have you analyzed the list of lessons learned to determine if there are similar exposures in the assessed unit?</td>
-						<td class="content-data">{{ARALLResponse}}</td>
-						<td class="content-data">{{ARALLQtrRating}}</td>
-						<td class="content-data">{{ARALLTarget2Sat}}</td>
-						<td class="content-data">{{ARALLExplanation}}</td>
+						{{#if editmode}}
+							<td class="content-data">{{{radioBtnVal "ARALLResponse" ARALLResponse}}}</td>
+							<td class="content-data">
+								<span>{{{uniqueSelect "ARALLQtrRating" parameters.AuditLessonsLearnedFinding.0.options "name" "name" ARALLQtrRating}}}</span>
+							</td>
+							<td class="content-data">
+								<span id="colARALLTarget2Sat">
+									<input type="date" name="ARALLTarget2Sat" id="ARALLTarget2Sat" value="{{ARALLTarget2Sat}}" size="10">
+									<span for="ARALLTarget2Sat" class="ibm-calendar-link"></span>
+								</span>
+							</td>
+							<td class="content-data">
+								<span id="colARALLExplanation">
+									<span class="content-data"><input type="text" name="ARALLExplanation" id="ARALLExplanation" value="{{ARALLExplanation}}" size="50"></span>
+								</span>
+							</td>
+						{{else}}
+							<td class="content-data">{{ARALLResponse}}</td>
+							<td class="content-data">{{ARALLQtrRating}}</td>
+							<td class="content-data">{{ARALLTarget2Sat}}</td>
+							<td class="content-data">{{ARALLExplanation}}</td>
+						{{/if}}
 					</tr>
 				</table>
 			</td>
