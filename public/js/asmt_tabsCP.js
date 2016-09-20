@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+	//---Start of Basics of Control Tab---//
 	$('#BoCTargetCloseDate1').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -25,7 +26,6 @@ $(document).ready(function() {
 		changeMonth: true,
 		numberOfMonths: 1
 	});
-
 
 	if( $('#BoCResponse1Yes').is(':checked')) {
 		$("#colBoCTargetCloseDate1").hide();
@@ -99,5 +99,43 @@ $(document).ready(function() {
 			$("#colBoCTargetCloseDate5").show();
 		}
 	});
+	//---End of Basics of Control Tab---//
+
+	//---Start of Audit Readiness Assessment---//
+	$('#ARALLTarget2Sat').datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1
+	});
+	if( $('#ARALLResponseYes').is(':checked')) {
+		$("#ARALLQtrRating").show();
+	} else {
+		$("#ARALLQtrRating").hide();
+		$("#ARALLQtrRating").val("");
+	}
+	if($("#ARALLQtrRating").val()=="Exposures found") {
+		$("#colARALLTarget2Sat").show();
+	}else{
+		$("#colARALLTarget2Sat").hide();
+		$("#ARALLTarget2Sat").val("");
+	}
+	//---on change events--//
+	$("input[name='ARALLResponse']").click(function(){
+		if( $('#ARALLResponseYes').is(':checked')) {
+			$("#ARALLQtrRating").show();
+		} else {
+			$("#ARALLQtrRating").hide();
+			$("#ARALLQtrRating").val("");
+		}
+	});
+	$("#ARALLQtrRating").change(function(){
+		if($("#ARALLQtrRating").val()=="Exposures found") {
+			$("#colARALLTarget2Sat").show();
+		}else{
+			$("#colARALLTarget2Sat").hide();
+			$("#ARALLTarget2Sat").val("");
+		}
+	});
+	//---End of Audit Readiness Assessment---//
 
 });

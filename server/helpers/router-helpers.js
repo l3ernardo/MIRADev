@@ -1,6 +1,9 @@
 var register = function(Handlebars) {
 	var helpers = {
 		// put all of your helpers inside this object
+		valuesToString: function(context) {
+	    return JSON.stringify(context);
+		},
 		foo: function(){
 			return "FOO";
 		},
