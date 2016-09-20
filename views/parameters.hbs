@@ -9,7 +9,7 @@
 			<br/>
 			<p>
 				<span class="ibm-sep"> </span>
-				<a href="#" onclick="ibmweb.overlay.show('Overlay_Parameter',this); newParam();" value="New Parameter" name="new_param" id="new_param" class="ibm-add1-link">New Parameter</a>
+				<a href="/newparam"  value="New Parameter" name="new_param" id="new_param" class="ibm-add1-link">New Parameter</a>
 			</p>
 			<br/>
 		</div>
@@ -20,11 +20,11 @@
 				<th scope="col">Key Name</th>
 				<th scope="col">Active</th>
 				<th scope="col">Description</th>
-			</thead>	 
+			</thead>
 			<tbody>
 				{{#each logList}}
 				<tr>
-					<td><a class="ibm-popup-link" href="Overlay_Parameter" onclick="ibmweb.overlay.show('Overlay_Parameter',this); editParam('{{keyName}}');return false;">{{ keyName }}</a></td>
+					<td><a class="ibm-popup-link" href="/formparam?keyName={{ keyName }}" >{{ keyName }}</a></td>
 					<td>{{ active }}</td>
 					<td>{{ description }}</td>
 				</tr>
@@ -33,54 +33,3 @@
 		</table>
 	</div>
 </div>
-<div class="ibm-common-overlay ibm-overlay-alt-two" id="Overlay_Parameter">
-	<div class="ibm-body">
-		<div class="ibm-main">
-			<div class="ibm-title ibm-subtitle">
-				<h2>Parameter</h2>
-			</div>
-			<div class="ibm-rule"><hr/></div>
-			<div class="ibm-container ibm-alternate ibm-buttons-last">
-				<div class="ibm-container-body">
-					<div id="paramContent" title="Param Details" style="display:;">
-						<form id="form" class="ibm-column-form ibm-styled-form" name="form" method="POST" action="/saveParam">
-							<input type="hidden" id="id" name="id">
-							<input type="hidden" id="rev" name="rev">
-							<p style="text-align:left">
-								<label for="title">Name:<span class="ibm-required">*</span></label>
-								<span><input type="text" id="fldname" name="fldname"></span>
-							</p>
-							<p style="text-align:left" class="ibm-form-elem-grp">
-								<label id="lblEnable" class="ibm-form-grp-lbl">Active:<span class="ibm-required">*</span></label>
-								<span class="ibm-input-group">
-									<input type="radio" name="fldtrue" value="true" checked ><label for="fldtrue">True</label>
-									<input type="radio" name="fldtrue" value="false" ><label for="fldtrue">False</label>
-								</span>
-							</p>
-							<p style="text-align:left">
-								<label for="fldvalue" align="left">Value:<span class="ibm-required">*</span></label>      
-								<span style="display:none;"><textarea id="fldvalue" name="fldvalue" rows="5" cols="50"></textarea></span>
-								<div id="jsoneditor"></div>
-								<script>$(document).ready(function() {JSONEdit("fldvalue");});</script>
-								
-							</p>
-							<p style="text-align:left">
-								<label for="flddescM">Description:<span class="ibm-required">*</span></label>
-								<span><input type="text" id="flddesc" name="flddesc" size="50" class="text"></span>
-							</p>
-							<div class="ibm-rule"><hr/></div>
-							<div class="ibm-buttons-row">
-								<p>
-									<input class="ibm-btn-arrow-pri" type="submit" id="btn_submit" value="Submit" />
-									<span class="ibm-sep">&nbsp;</span>
-									<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Cancel" />
-								</p>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-	
