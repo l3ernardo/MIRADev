@@ -457,7 +457,7 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 						break;
 					case "Country Process":
 						if (data.doc[0].editmode) {
-							var lParams = ['PeriodRating','AssessmentStatus','NextQtrRating'];
+							var lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','AuditLessonsLearnedFinding'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;
