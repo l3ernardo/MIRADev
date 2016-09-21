@@ -1,16 +1,16 @@
 /**************************************************************************************************
- * 
+ *
  * Dialog code for MIRA Web
  * Developed by : Carlos Kenji Takata
  * Date: 27 May 2016
- * 
+ *
  */
 
 var q  = require("q");
 
 var dialog = {
 	/* Display Non disclosure */
-	displayNonDisclosure: function(req, db) {
+	displayNonDisclosure: function(db) {
 		var deferred = q.defer();
 		try{
 			var obj = {
@@ -47,10 +47,31 @@ var dialog = {
 					deferred.resolve({"status": 200, "doc": doc});
 				}).catch(function(err) {
 					deferred.reject({"status": 500, "error": err.error.reason});
-				});			
+				});
 			} else {
 				deferred.reject({"status": 500, "error": "n/a"});
 			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+//Display Overview
+	displayOverview : function(db){
+		var deferred = q.defer();
+		try{
+			var obj = {
+				selector:{
+					"_id": {"$gt":0},
+					"keyName": "IndexOverview"
+				}
+			};
+			db.find(obj).then(function(data){
+				var doc = data.body.docs;
+				deferred.resolve({"status": 200, "doc": doc});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}

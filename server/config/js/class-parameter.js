@@ -16,34 +16,17 @@ var parameters = {
 			db.view('setup', 'view-setup', {include_docs: true}).then(function(data) {
 				var len = data.body.rows.length;
 				if(len > 0){
-					totalLog = len;
-					pageSize = 20;
-					pageCount = Math.ceil(totalLog/pageSize);
-					currentPage = 1;
-					log = [];
-					logArray = [];
 					logList = [];
-					for (var i = 0; i < totalLog; i++) {
-						log.push({
+					for (var i = 0; i < len; i++) {
+						logList.push({
 							id: data.body.rows[i].doc._id,
 							keyName: data.body.rows[i].doc.keyName,
 							active: data.body.rows[i].doc.active,
 							description: data.body.rows[i].doc.description
 						});
 					}
-					while (log.length > 0) {
-						logArray.push(log.splice(0, pageSize));
-					}
-					if (typeof req.query.page !== 'undefined') {
-						currentPage = +req.query.page;
-					}
-					logList = logArray[+currentPage - 1];
 					deferred.resolve({"status": 200, "parameters":{
-						logList: logList,
-						pageSize: pageSize,
-						totalLog: totalLog,
-						pageCount: pageCount,
-						currentPage: currentPage
+						logList: logList
 					}})
 				} else {
 					deferred.reject({"status": 500, "error": "No parameters in database."});
@@ -59,6 +42,9 @@ var parameters = {
 	/* Get specific parameter data by ID */
 	getParam: function(req, db) {
 		var deferred = q.defer();
+		if(typeof req.query.keyName === "undefined"){
+			deferred.reject({"status": 500, "error": "keyName does not exist"});
+		}else{
 		try{
 			var obj = {
 				selector : {
@@ -67,13 +53,18 @@ var parameters = {
 				}};
 			db.find(obj).then(function(data){
 				var doc = data.body.docs[0];
+				if(typeof doc === "undefined"){
+					deferred.reject({"status": 500, "error": "parameter does not exist"});
+				}else{
 				deferred.resolve({"status": 200, "doc": doc})
+			}
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
+	}
 		return deferred.promise;
 	},
 	/* Get all the list of parameter data by keyName list parameter */
