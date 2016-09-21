@@ -1,6 +1,6 @@
 var editor;
 $(document).ready(function() {
-	
+
 	$('h1#pageTitle').text("Parameter");
 	$('#btn_submit').click(function(evt) {
 		$('#fldvalue').val(JSON.stringify(editor.get(), null, 2));
@@ -39,34 +39,20 @@ function newParam() {
 	$('#flddesc').val('');
 	editor.set({});
 }
-function editParam(id) {
-	$.ajax({
-		url: '/getParam?keyName=' + id,
-		type: 'GET',
-		success: function(resp) {
-			if (resp) {
-				//alert(JSON.stringify(resp));
-				$('#id').val(resp._id);
-				$('#rev').val(resp._rev);
-				$('#fldname').val(resp.keyName);
+function editParam(ractive) {
+				$('div#ibm-navigation').hide();
+				JSONEdit("fldvalue");
+
 				$('input[name=fldtrue]').each(function() {
-					if (resp.active == this.value) {
+
+					if (ractive == this.value) {
 						this.click();
 					}
 				});
-				$('#fldvalue').val(JSON.stringify(resp.value));
-				$('#flddesc').val(resp.description);
-				editor.set(resp.value);
-			}
-		},
-		error: function(e) {
-			alert('error: ' + e);
-			return false;
-		}  
-	}); 
 }
 
 function JSONEdit(fldname) {
+
   var container = document.getElementById('jsoneditor');
   var options = {
     mode: 'text',
@@ -78,8 +64,9 @@ function JSONEdit(fldname) {
       console.log('Mode switched from', oldMode, 'to', newMode);
     }
   };
-  var json = document.getElementById(fldname).innerHTML
-  editor = new JSONEditor(container, options, json);
+  var json = document.getElementById(fldname).value;
+  editor = new JSONEditor(container, options, JSON.parse(json));
+
 }
 
 function IsJsonString(str) {

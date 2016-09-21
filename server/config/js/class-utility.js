@@ -181,7 +181,7 @@ var util = {
 		var deferred = q.defer();
 		try {
 			// Get URL credentials
-			var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+			var credentials = JSON.parse(fs.readFileSync('APIProfile.json', 'utf8'));
 			var host = credentials.host;
 			var username = credentials.username;
 			var password = credentials.password;
@@ -210,7 +210,7 @@ var util = {
 		var deferred = q.defer();
 		try {
 			// Get URL credentials
-			var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+			var credentials = JSON.parse(fs.readFileSync('APIProfile.json', 'utf8'));
 			var host = credentials.host;
 			var username = credentials.username;
 			var password = credentials.password;
@@ -414,7 +414,7 @@ var util = {
 	callhttp: function(url) {
 		var deferred = q.defer();
 		// Get URL credentials
-		var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+		var credentials = JSON.parse(fs.readFileSync('APIProfile.json', 'utf8'));
 		var host = credentials.host;
 		var username = credentials.username;
 		var password = credentials.password;

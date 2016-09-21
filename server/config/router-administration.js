@@ -51,6 +51,26 @@ administration.post('/saveSetup', isAuthenticated, function(req, res){
 /**************************************************************
 PARAMETERS FUNCTIONALITY
 ***************************************************************/
+//Add new parameter
+administration.get('/newparam', isAuthenticated, function(req, res){
+	var data = {"doc":{"value":{}}};
+	res.render('formparam', data );
+});
+
+//Edit existing parameter
+administration.get('/formparam', isAuthenticated, function(req, res){
+	parameter.getParam(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.render('formparam', data )
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][getParam] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][getParam] - " + err.error);
+	})
+});
 /* Load all parameters in view*/
 administration.get('/parameter', isAuthenticated, function(req, res){
 	parameter.listParam(req, db).then(function(data) {
