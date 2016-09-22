@@ -113,8 +113,8 @@ var util = {
 		var bgcn = [];
 		var bguid = [];
 		var urlemail = varConf.bgURL.replace('%t',req.query.group).replace('%f','email');
-		var urlcn = varConf.bgURL.replace('%t',req.query.group).replace('%f','cn');			
-		var urluid = varConf.bgURL.replace('%t',req.query.group).replace('%f','uid');			
+		var urlcn = varConf.bgURL.replace('%t',req.query.group).replace('%f','cn');
+		var urluid = varConf.bgURL.replace('%t',req.query.group).replace('%f','uid');
 		try {
 			require('request').get(urlemail, function(err, response, body) {
 				if(err) {
@@ -124,7 +124,7 @@ var util = {
 							result.group.member.forEach(function(member) {
 								bgemail.push({"email":member})
 							})
-						});					
+						});
 					try {
 						require('request').get(urlcn, function(err, response, body2) {
 							if(err) {
@@ -144,7 +144,7 @@ var util = {
 												result.group.member.forEach(function(member) {
 													bguid.push({"uid":member})
 												})
-											})												
+											})
 											// We got all values, now return in a single JSON
 											for(var i=0;i<bgemail.length;i++) {
 												bg.push({"member": bgcn[i].cn + " (" + bgemail[i].email+ ")","uid":bguid[i].uid})
@@ -152,7 +152,7 @@ var util = {
 											bg.sort(function(a, b){
 												var nameA=a.member.toLowerCase(), nameB=b.member.toLowerCase()
 												if (nameA < nameB) //sort string ascending
-													return -1 
+													return -1
 												if (nameA > nameB)
 													return 1
 												return 0 //default return value (no sorting)
@@ -164,13 +164,13 @@ var util = {
 								} catch(e) {
 									deferred.reject({"status": 500, "error": e});
 								}
-							}								
+							}
 						});
 						return deferred.promise;
 					} catch(e) {
 						deferred.reject({"status": 500, "error": e});
-					}							
-				}				
+					}
+				}
 			});
 			return deferred.promise;
 		} catch(e) {
@@ -193,7 +193,7 @@ var util = {
 					'User-Agent': 'request',
 				'Authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
 				}
-			};					
+			};
 			//console.log(url);
 			require('request').get(options, function(err, response, body) {
 				if(err) {
@@ -222,7 +222,7 @@ var util = {
 					'User-Agent': 'request',
 				'Authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
 				}
-			};					
+			};
 			console.log(url);
 			require('request').get(options, function(err, response, body) {
 				if(err) {
@@ -439,7 +439,7 @@ var util = {
 				} else {
 					console.log('Http request ran');
 					try {
-						deferred.resolve({"status": 200, "doc": JSON.parse(body)});	
+						deferred.resolve({"status": 200, "doc": JSON.parse(body)});
 					} catch(e) {
 						deferred.resolve({"status": 200, "doc": body});
 					}
@@ -463,6 +463,16 @@ var util = {
 		return arr.sort().filter(function(el,i,a) {
 			return (i==a.indexOf(el));
 		});
+	},
+	//check if a value exists in an object
+	getIndex: function(arr,key,value) {
+		for(var i = 0; i < arr.length; i += 1) {
+        if(arr[i][key] === value) {
+            return i;
+        }
+    }
+    return -1;
 	}
+
 }
 module.exports = util;
