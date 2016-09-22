@@ -63,7 +63,6 @@ var assessment = {
 						doc[0].editmode = 1;
 
 						// --- Start of Basic Section --- //
-
 						// check if Rating is editable
 						var ratingEditors = parentdoc[0].Owner + parentdoc[0].Focals;
 						if(ratingEditors.indexOf("(" + req.session.user.mail + ")") !== -1) {
@@ -74,7 +73,6 @@ var assessment = {
 									doc[0].RatingEditable = 1;
 							}
 						}
-
 						// --- End of Basic Section --- //
 
 					} else { // Read mode
@@ -190,21 +188,45 @@ var assessment = {
 							doc[0].BoCResponse3 = req.body.BoCResponse3;
 							doc[0].BoCResponse4 = req.body.BoCResponse4;
 							doc[0].BoCResponse5 = req.body.BoCResponse5;
-							if (doc[0].BoCResponse1 == "Yes") doc[0].BoCTargetCloseDate1 = "";
-							else doc[0].BoCTargetCloseDate1 = req.body.BoCTargetCloseDate1;
-							if (doc[0].BoCResponse2 == "Yes") doc[0].BoCTargetCloseDate2 = "";
-							else doc[0].BoCTargetCloseDate2 = req.body.BoCTargetCloseDate2;
-							if (doc[0].BoCResponse3 == "Yes") doc[0].BoCTargetCloseDate3 = "";
-							else doc[0].BoCTargetCloseDate3 = req.body.BoCTargetCloseDate3;
-							if (doc[0].BoCResponse4 == "Yes") doc[0].BoCTargetCloseDate4 = "";
-							else doc[0].BoCTargetCloseDate4 = req.body.BoCTargetCloseDate4;
-							if (doc[0].BoCResponse5 == "Yes") doc[0].BoCTargetCloseDate5 = "";
-							else doc[0].BoCTargetCloseDate5 = req.body.BoCTargetCloseDate5;
+							doc[0].BoCTargetCloseDate1 = req.body.BoCTargetCloseDate1;
+							doc[0].BoCTargetCloseDate2 = req.body.BoCTargetCloseDate2;
+							doc[0].BoCTargetCloseDate3 = req.body.BoCTargetCloseDate3;
+							doc[0].BoCTargetCloseDate4 = req.body.BoCTargetCloseDate4;
+							doc[0].BoCTargetCloseDate5 = req.body.BoCTargetCloseDate5;
 							doc[0].BoCComments1 = req.body.BoCComments1;
 							doc[0].BoCComments2 = req.body.BoCComments2;
 							doc[0].BoCComments3 = req.body.BoCComments3;
 							doc[0].BoCComments4 = req.body.BoCComments4;
 							doc[0].BoCComments5 = req.body.BoCComments5;
+							//---Audit Readiness Assessment Tab---//
+							if (req.session.businessunit == "GTS") {
+								doc[0].ARALLResponse = req.body.ARALLResponse;
+								doc[0].ARALLQtrRating = req.body.ARALLQtrRating;
+								doc[0].ARALLTarget2Sat = req.body.ARALLTarget2Sat;
+								doc[0].ARALLExplanation = req.body.ARALLExplanation;
+							}
+							//---Operational Metrics Tab Tab---//
+							var metricsID = req.body.opMetricIDs.split(",");
+							var tname, topush;
+							doc[0].OpMetric = [];
+							for (var i = 0; i < metricsID.length; ++i) {
+								if(metricsID[i] != undefined && metricsID[i] != "") {
+									topush = {
+										"id": metricsID[i]
+									};
+									doc[0].OpMetric.push(topush);
+									fname = metricsID[i]+"Name";
+									doc[0].OpMetric[i].name = req.body[fname];
+									fname = metricsID[i]+"Rating";
+									doc[0].OpMetric[i].rating = req.body[fname];
+									fname = metricsID[i]+"TargetSatDate";
+									doc[0].OpMetric[i].targetsatdate = req.body[fname];
+									fname = metricsID[i]+"Finding";
+									doc[0].OpMetric[i].finding = req.body[fname];
+									fname = metricsID[i]+"Action";
+									doc[0].OpMetric[i].action = req.body[fname];
+								}
+							}
   						break;
 						case "Account":
 							break;
