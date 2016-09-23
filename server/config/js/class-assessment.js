@@ -38,8 +38,8 @@ var assessment = {
 				doc[0].SampleData = doc[0].RiskData;
 				doc[0].EAData = doc[0].ARCData;
 
-				doc[0].CatP = "CRM";
-				doc[0].ShowEA = 1;
+				// doc[0].CatP = "CRM";
+				// doc[0].ShowEA = 1;
 				doc[0].PrevQtrs = [];
 				doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
@@ -227,6 +227,8 @@ var assessment = {
 									doc[0].OpMetric[i].action = req.body[fname];
 								}
 							}
+							//---Others Tab Tab---//
+							doc[0].AsmtOtherConsiderations = req.body.AsmtOtherConsiderations;
   						break;
 						case "Account":
 							break;
