@@ -64,8 +64,7 @@ function JSONEdit(fldname) {
       console.log('Mode switched from', oldMode, 'to', newMode);
     }
   };
-  var json = document.getElementById(fldname).innerHTML
-
+  var json = document.getElementById(fldname).value;
   editor = new JSONEditor(container, options, JSON.parse(json));
 
 }
