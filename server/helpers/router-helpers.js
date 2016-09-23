@@ -49,23 +49,62 @@ var register = function(Handlebars) {
 		},
 		ratingDisplay: function(rating, field) {
 			var ratinghtml;
-			if (rating == "Sat") {
-				ratinghtml = '<span style="background-color:#00ff00; padding-left:3em; padding-right:3em">'+rating+'</span>';
+			if (rating == undefined) {
+					ratinghtml = "";
 			} else {
-				if (rating == "Marg") {
-					ratinghtml = '<span style="background-color: #ffff00; padding-left:3em; padding-right:3em">'+rating+'</span>';
+				if (rating == "Sat") {
+					ratinghtml = '<span style="background-color:#00ff00; padding-left:2em; padding-right:2em">&nbsp;'+rating+'&nbsp;</span>';
 				} else {
-					if (rating == "Unsat") {
-						ratinghtml = '<span style="background-color: #ff0000; padding-left:3em; padding-right:3em">'+rating+'</span>';
+					if (rating == "Marg") {
+						ratinghtml = '<span style="background-color: #ffff00; padding-left:2em; padding-right:2em">'+rating+'</span>';
 					} else {
-						if (field = "NextQtrRating")
-							ratinghtml = "NA";
-						else
-							ratinghtml = rating;
+						if (rating == "Unsat") {
+							ratinghtml = '<span style="background-color: #ff0000; padding-left:2em; padding-right:2em; color: #ffffff">'+rating+'</span>';
+						} else {
+							if (field == "NextQtrRating")
+								ratinghtml = "NA";
+							else
+								ratinghtml = rating;
+						}
 					}
 				}
 			}
 			return ratinghtml;
+		},
+		findingDisplay: function(finding) {
+			var findinghtml;
+			if (finding == undefined) {
+			} else {
+				if (finding == "No exposures") {
+					findinghtml = '<span style="background-color:#00ff00; padding-left:2em; padding-right:2em">'+finding+'</span>';
+				} else {
+					if (finding == "Exposures found") {
+						findinghtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+finding+'</span>';
+					} else {
+						findinghtml = finding;
+					}
+				}
+			}
+			return findinghtml;
+		},
+		dateDisplay: function(date) {
+			var datehtml;
+			if (date == undefined) {
+
+			} else {
+				if (date == "") {
+					datehtml = '<span style="padding-left:1em; padding-right:1em">'+date+'</span>';
+				} else {
+					var currdate = new Date();
+					var dateval = new Date(date);
+					currdate.setHours(0,0,0,0);
+					if(dateval > currdate)
+						datehtml = '<span style="padding-left:1em; padding-right:1em">'+date+'</span>';
+					else
+						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
+				}
+			}
+			return datehtml;
 		},
 		radioBtnVal: function(fieldName, fieldVal) {
 			var radioBtnHtml;
