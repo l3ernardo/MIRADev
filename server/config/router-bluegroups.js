@@ -34,12 +34,19 @@ interface.get('/bgdetail', isAuthenticated, function(req, res) {
 	})
 });
 
-/* Load Bluegroups members */
-interface.get('/frmbg', isAuthenticated, function(req, res) {
-	util.getBluegroup(req).then(function(data) {
-		res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
-	})
-});
+
+	/* Load Bluegroups members */
+	interface.get('/frmbg', isAuthenticated, function(req, res) {
+		//console.log(req.session.businessunit);
+		if(req.query.group == "MIRA-ADMIN"){
+			util.getBluegroup(req).then(function(data) {
+				res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
+			});
+		}else{
+			util.getArea(req, db).then(function(data) {
+				res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
+			});}
+		});
 
 /* Process Bluegroups members */
 interface.post('/processbg', isAuthenticated, function(req,res) {
