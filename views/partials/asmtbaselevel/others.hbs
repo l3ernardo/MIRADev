@@ -16,7 +16,7 @@
 					<tr>
 						<td>Did you perform/complete an Enviromental Affairs Assessment?</td>
 						<td class="content-data">{{EAResponse}}</td>
-						<td class="content-data">{{EARating}}</td>
+						<td class="content-data">{{{ratingDisplay EARating}}}</td>
 						<td class="content-data">{{EATarget2Sat}}</td>
 						<td class="content-data">{{EARatingExplanation}}</td>
 					</tr>
@@ -47,6 +47,17 @@
 		<th class="other">Other Considerations</th>
 	</thead>
 	<tr class="other">
-		<td class="content-data">&nbsp;{{AsmtOtherConsiderations}}</td>
+		{{#if editmode}}
+			<td class="content-data">
+				<div class='yui-skin-sam'>
+					<span><textarea id="AsmtOtherConsiderations" type="text" name="AsmtOtherConsiderations" cols="168" rows="3">{{AsmtOtherConsiderations}}</textarea></span>
+				</div>
+			</td>
+		{{else}}
+			<td class="content-data">&nbsp;
+				<input type="hidden" name="AsmtOtherConsiderationsRO" value="{{AsmtOtherConsiderations}}">
+				<div id="AsmtOtherConsiderationsReadOnly"></div>
+			</td>
+		{{/if}}
 	</tr>
 </table>

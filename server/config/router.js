@@ -109,10 +109,10 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 										req.flash('url', '-');
 										res.redirect(rtn);
 									} else {
-										res.render('index');
+										res.redirect('index');
 									}
 								} else {
-									res.render('index');
+									res.redirect('index');
 								}
 							}
 						} else {
@@ -125,14 +125,14 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 										req.flash('url', '-');
 										res.redirect(rtn);
 								} else {
-									res.render('index');
+									res.redirect('index');
 								}
 							} else {
-								res.render('index');
+								res.redirect('index');
 							}
 						}
 					}).catch(function(err) {
-						res.render('index');
+						res.redirect('index');
 					})
 				}
 			})

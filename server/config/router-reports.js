@@ -39,4 +39,34 @@ reports.get('/reportcufile', isAuthenticated, function(req, res) {
 	})
 	
 });
+/* Load report status exceptions file page*/
+reports.get('/reportstaexc', isAuthenticated, function(req, res) {
+	report.statusexception(req, db).then(function(data){
+		if(data.status=="200" & !data.error){
+			res.render('reportstaexc', data);
+		}
+		else{
+			res.render('error',{errorDescription: data.error});
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][reportstaexc] - " + err.error);
+	})
+	
+});
+/* Load report auditable unit file page*/
+reports.get('/reportaudunifile', isAuthenticated, function(req, res) {
+	report.audunifiles(req, db).then(function(data){
+		if(data.status=="200" & !data.error){
+			res.render('reportaudunifile', data);
+		}
+		else{
+			res.render('error',{errorDescription: data.error});
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][reportaudunifile] - " + err.error);
+	})
+	
+});
 module.exports = reports;
