@@ -95,22 +95,22 @@ var calculatefield = {
   			if(dataParam.status==200 & !dataParam.error) {
   				if (dataParam.parameters.CRMProcess) {
   					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "CRM";
+  						if (doc[0].GlobalProcess == dataParam.parameters.CRMProcess[0].options[j].name) doc[0].CatP = "CRM";
   					}
   				}
   				if (dataParam.parameters.DeliveryProcess) {
   					for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatP = "Delivery";
+  						if (doc[0].GlobalProcess == dataParam.parameters.DeliveryProcess[0].options[j].name) doc[0].CatP = "Delivery";
   					}
   				}
   				if (dataParam.parameters.CRMCU) {
   					for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "CRM";
+  						if (doc[0].GlobalProcess == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
   					}
   				}
   				if (dataParam.parameters.DeliveryCU) {
   					for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters[0].options[j].name) doc[0].CatCU = "Delivery";
+  						if (doc[0].GlobalProcess == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
   					}
   				}
           if (dataParam.parameters[opMetricKey]) {
