@@ -33,8 +33,8 @@
 							</td>
 						{{else}}
 							<td class="content-data">{{ARALLResponse}}</td>
-							<td class="content-data">{{ARALLQtrRating}}</td>
-							<td class="content-data">{{ARALLTarget2Sat}}</td>
+							<td class="content-data">{{{findingDisplay ARALLQtrRating}}}</td>
+							<td class="content-data">{{{dateDisplay ARALLTarget2Sat}}}</td>
 							<td class="content-data">{{ARALLExplanation}}</td>
 						{{/if}}
 					</tr>
@@ -87,7 +87,7 @@
 						<tr>
 							<td>Did you perform/complete an Audit Readiness Self Assessment checklist (checklist is performed to a defined schedule, not necessarily quarterly)?</td>
 							<td class="content-data">{{ARCResponse}}</td>
-							<td class="content-data">{{ARCRating}}</td>
+							<td class="content-data">{{{ratingDisplay ARCRating}}}</td>
 							<td class="content-data">{{ARCTarget2Sat}}</td>
 							<td class="content-data">{{ARCRatingExplanation}}</td>
 						</tr>

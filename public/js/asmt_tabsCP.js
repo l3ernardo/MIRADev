@@ -138,4 +138,56 @@ $(document).ready(function() {
 	});
 	//---End of Audit Readiness Assessment---//
 
+	//---Start of Operational Metrics---//
+	var metrics = $("#opMetricIDs").val().split(',');
+	var i;
+	for (i = 0; i < metrics.length; ++i) {
+		$("#"+metrics[i]+"TargetSatDate").datepicker({
+			defaultDate: "+1w",
+			changeMonth: true,
+			numberOfMonths: 1
+		});
+		if($("#"+metrics[i]+"Rating").val()=="Marg" || $("#"+metrics[i]+"Rating").val()=="Unsat") {
+			$("#colDate"+metrics[i]).show();
+			$("#"+metrics[i]+"Finding").show();
+			$("#"+metrics[i]+"Action").show();
+		}else{
+			$("#colDate"+metrics[i]).hide();
+			$("#"+metrics[i]+"TargetSatDate").val("");
+			if($("#"+metrics[i]+"Rating").val()=="") {
+				$("#"+metrics[i]+"Finding").hide();
+				$("#"+metrics[i]+"Action").hide();
+			} else {
+				$("#"+metrics[i]+"Finding").show();
+				$("#"+metrics[i]+"Action").show();
+			}
+		}
+	}
+	//---on change events--//
+	$('#opmetric_content').click(function(){
+		metrics = $("#opMetricIDs").val().split(',');
+		for (i = 0; i < metrics.length; ++i) {
+			$("#"+metrics[i]+"TargetSatDate").datepicker({
+				defaultDate: "+1w",
+				changeMonth: true,
+				numberOfMonths: 1
+			});
+			if($("#"+metrics[i]+"Rating").val()=="Marg" || $("#"+metrics[i]+"Rating").val()=="Unsat") {
+				$("#colDate"+metrics[i]).show();
+				$("#"+metrics[i]+"Finding").show();
+				$("#"+metrics[i]+"Action").show();
+			}else{
+				$("#colDate"+metrics[i]).hide();
+				$("#"+metrics[i]+"TargetSatDate").val("");
+				if($("#"+metrics[i]+"Rating").val()=="") {
+					$("#"+metrics[i]+"Finding").hide();
+					$("#"+metrics[i]+"Action").hide();
+				} else {
+					$("#"+metrics[i]+"Finding").show();
+					$("#"+metrics[i]+"Action").show();
+				}
+			}
+		}
+	});
+	//---End of Operational Metrics---//
 });
