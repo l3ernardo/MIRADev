@@ -7,6 +7,7 @@
  */
 
  var param = require('./class-parameter.js');
+ var util = require('./class-utility.js');
  var q  = require("q");
 
 var calculatefield = {
@@ -74,17 +75,20 @@ var calculatefield = {
   				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
   			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
   				doc[0].CatP = "";
-  				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess',gpkey];
+  				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
   			} else {
   				lParams = ['GTSInstanceDesign'];
   			}
   		} else {
   			lParams = ['GBSInstanceDesign'];
   		}
-      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
+      if ((doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process")) {
         var opMetricKey;
-        if (doc[0].ParentDocSubType == "Country Process") opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-        else opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+        if (doc[0].ParentDocSubType == "Country Process") {
+          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+        }else{
+          opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+        }
         lParams.push(opMetricKey);
       }
   		param.getListParams(db, lParams).then(function(dataParam) {
@@ -110,14 +114,45 @@ var calculatefield = {
   					}
   				}
           if (dataParam.parameters[opMetricKey]) {
-            doc[0].OpMetric = [];
-            for (var j = 0; j < dataParam.parameters[opMetricKey][0].options.length; ++j) {
-                doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
-                doc[0].OpMetric[j].rating = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "Rating"];
-                doc[0].OpMetric[j].targetsatdate = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "TargetSatDate"];
-                doc[0].OpMetric[j].finding = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "Finding"];
-                doc[0].OpMetric[j].action = doc[0][dataParam.parameters[opMetricKey][0].options[j].id + "Action"];
+            var TmpOpMetric = [];
+            var opMetricIDs = "";
+            var opID;
+
+            if (doc[0].OpMetric) {
+              doc[0].OpMetricCurr = doc[0].OpMetric;
             }
+            doc[0].OpMetric = [];
+            var omIndex;
+            for (var j = 0; j < dataParam.parameters[opMetricKey][0].options.length; ++j) {
+                opID = dataParam.parameters[opMetricKey][0].options[j].id;
+                if (opMetricIDs == "")
+                  opMetricIDs = opID;
+                else
+                  opMetricIDs = opMetricIDs + "," + opID;
+                doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                doc[0].OpMetric[j].namefield = opID + "Name";
+                doc[0].OpMetric[j].ratingfield = opID + "Rating";
+                doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
+                doc[0].OpMetric[j].colDate = "colDate"+ opID;
+                doc[0].OpMetric[j].findingfield = opID + "Finding";
+                doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
+                doc[0].OpMetric[j].actionfield = opID + "Action";
+                doc[0].OpMetric[j].colFinding = "colAction"+ opID;
+                doc[0].OpMetric[j].rating = "";
+                doc[0].OpMetric[j].targetsatdate = "";
+                doc[0].OpMetric[j].finding = "";
+                doc[0].OpMetric[j].action = "";
+                if (doc[0].OpMetricCurr) {
+                  omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
+                  if (omIndex != -1) {
+                    doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
+                    doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
+                    doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
+                    doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                  }
+                }
+            }
+            doc[0].opMetricIDs = opMetricIDs;
           }
           if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
             doc[0].ShowEA = 1;
