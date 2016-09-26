@@ -16,7 +16,21 @@ router.get('/', isAuthenticated, function(req, res) {
 });
 /* Index page displayed */
 router.get('/index', isAuthenticated, function(req, res) {
-	res.render('index');
+	dialog.displayOverview(db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('index', {Message: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][index] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][index] - " + err.error);
+	})
 });
 
 /**************************************************************
@@ -24,7 +38,7 @@ DISCLOSURE FUNCTIONALITY
 ***************************************************************/
 /* Disclosure screen */
 router.get('/disclosure', function(req, res) {
-	dialog.displayNonDisclosure(req, db).then(function(data) {
+	dialog.displayNonDisclosure(db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('disclosure', {disclosure: JSON.stringify(data.doc[0].value.Message,null,'\\')} );
@@ -56,7 +70,7 @@ router.get('/businessunit', isAuthenticated, function(req, res){
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][businessunit] - " + err.error);
 	})
-	
+
 });
 /* Save Business Unit */
 router.post('/savebunit', isAuthenticated, function(req, res){
@@ -95,10 +109,10 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 										req.flash('url', '-');
 										res.redirect(rtn);
 									} else {
-										res.render('index');
+										res.redirect('index');
 									}
 								} else {
-									res.render('index');
+									res.redirect('index');
 								}
 							}
 						} else {
@@ -111,14 +125,14 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 										req.flash('url', '-');
 										res.redirect(rtn);
 								} else {
-									res.render('index');
+									res.redirect('index');
 								}
 							} else {
-								res.render('index');
+								res.redirect('index');
 							}
 						}
 					}).catch(function(err) {
-						res.render('index');
+						res.redirect('index');
 					})
 				}
 			})
