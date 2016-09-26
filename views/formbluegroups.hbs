@@ -1,10 +1,27 @@
 <link  href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 <script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
-<script src="./js/bluegroups.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <link rel="stylesheet" href="./css/jquery-ui.min.css">
 <script src="/lib/jquery.dataTables.js"></script>
+<script src="./js/bluegroups.js" type="text/javascript" charset="utf-8"></script>
+<script>
+//added by Carlos R.
+$(document).ready(function() {
+$('div#ibm-navigation').hide();
+});
+
+$('h1#pageTitle').text("Bluegroups");
+$('form input').on('keypress', function(e) {
+    return e.which !== 13;
+
+
+});
+
+
+
+
+</script>
 	<style>
 		.ui-autocomplete-loading {
 			background: white url("./images/animated-progress-20x20b.gif") right center no-repeat;
@@ -48,7 +65,7 @@
 							<p>
 								<input class="ibm-btn-arrow-pri" type="button" id="btn_submit" value="Submit" onclick="submitForm($('#form'));" />
 								<span class="ibm-sep">&nbsp;</span>
-								<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Cancel" />
+								<input class="ibm-btn-cancel-sec" onclick="location.href = '/bluegroups';"  type="button" id="btn_cancel" value="Cancel" />
 							</p>
 						</div>							
 					</form>
@@ -58,9 +75,4 @@
 	</div>
 </div>
 
-<script>
-$('h1#pageTitle').text("Bluegroups");
-$('form input').on('keypress', function(e) {
-    return e.which !== 13;
-});
-</script>
+
