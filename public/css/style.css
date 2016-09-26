@@ -3,7 +3,7 @@ Theme Name: jqueryui-com
 Template: jquery
 */
 .td_icon_empty {
-  background-image: url(/public/images/cancel.png);
+  background-image: url(/public/images/empty.png);
   background-repeat:no-repeat;
   background-position:center;
 }
