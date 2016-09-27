@@ -175,7 +175,114 @@ var calculatefield = {
 			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
+	},
+
+  /* Populates the Rating Profile table */
+	getRatingProfile: function(db, doc) {
+    var deferred = q.defer();
+		try {
+      switch (doc[0].ParentDocSubType) {
+        case "Global Process":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "ParentDocSubType": "Country Process",
+              "GPWWBCITKey": doc[0].WWBCITKey
+            }
+          };
+          break;
+      }
+      db.find(asmts).then(function(asmtsdata) {
+        var asmtsdocs = asmtsdata.body.docs;
+        var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0;
+        for (var i = 0; i < asmtsdocs.length; ++i) {
+          if (asmtsdocs[i].PeriodRating == "Sat") {
+            if (asmtsdocs[i].PeriodRatingPrev == "Marg" || asmtsdocs[i].PeriodRatingPrev == "Unsat")
+              satUp = satUp + 1;
+            else
+              satEq = satEq + 1;
+          } else if (asmtsdocs[i].PeriodRating == "Marg") {
+            if (asmtsdocs[i].PeriodRatingPrev == "Unsat")
+              margUp = margUp + 1;
+            else if (asmtsdocs[i].PeriodRatingPrev == "Sat")
+              margDwn = margDwn + 1;
+            else
+              margEq = margEq + 1;
+          } else if (asmtsdocs[i].PeriodRating == "Unsat") {
+            if (asmtsdocs[i].PeriodRatingPrev == "Sat" || asmtsdocs[i].PeriodRatingPrev == "Marg")
+             unsatDwn = unsatDwn + 1;
+            else
+             unsatEq = unsatEq + 1;
+          } else if (asmtsdocs[i].PeriodRating == "Exempt") {
+            exempt = exempt + 1;
+          } else {
+            nr = nr + 1;
+          }
+        }
+        doc[0].CPSatEqualCnt = satEq;
+        doc[0].CPSatPlusCnt = satUp;
+        doc[0].CPMargPlusCnt = margUp;
+        doc[0].CPMargEqualCnt = margEq;
+        doc[0].CPMargMinusCnt = margDwn;
+        doc[0].CPUnsatEqualCnt = unsatEq;
+        doc[0].CPUnsatMinusCnt = unsatDwn;
+        doc[0].CPEXEMPTCnt = exempt;
+        doc[0].CPNRCnt = nr;
+        doc[0].CPTotalCnt = satEq + satUp + margUp + margEq + margDwn + unsatEq + unsatDwn + exempt + nr;
+        if (satEq == 0)
+          doc[0].CPSatEqualPct = "0%";
+        else
+          doc[0].CPSatEqualPct = ((satEq/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (satUp == 0)
+          doc[0].CPSatPlusPct = "0%";
+        else
+          doc[0].CPSatPlusPct = ((satUp/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (margUp == 0)
+          doc[0].CPMargPlusPct = "0%";
+        else
+          doc[0].CPMargPlusPct = ((margUp/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (margEq == 0)
+          doc[0].CPMargEqualPct = "0%";
+        else
+          doc[0].CPMargEqualPct = ((margEq/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (margDwn == 0)
+          doc[0].CPMargMinusPct = "0%";
+        else
+          doc[0].CPMargMinusPct = ((margDwn/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (unsatEq == 0)
+          doc[0].CPUnsatEqualPct = "0%";
+        else
+          doc[0].CPUnsatEqualPct = ((unsatEq/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        var pct = (unsatDwn/doc[0].CPTotalCnt) * 100;
+        if (unsatDwn == 0)
+          doc[0].CPUnsatMinusPct = "0%";
+        else
+          doc[0].CPUnsatMinusPct = ((unsatDwn/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (exempt == 0)
+          doc[0].CPEXEMPTPct = "0%";
+        else
+          doc[0].CPEXEMPTPct = ((exempt/1) * 100).toFixed() + "%";
+        if (nr == 0)
+          doc[0].CPNRPct = "0%";
+        else
+          doc[0].CPNRPct = ((nr/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (doc[0].CPTotalCnt == 0)
+          doc[0].CPTotalPct = "0%";
+        else
+          doc[0].CPTotalPct = "100%";
+        deferred.resolve({"status": 200, "doc": doc});
+      }).catch(function(err) {
+        console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+    } catch(e) {
+      console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
 	}
+
 
 }
 module.exports = calculatefield;
