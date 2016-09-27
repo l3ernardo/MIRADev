@@ -6,6 +6,9 @@ $(document).ready(function(){
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
 	$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());
 	$("#FocusAreaReadOnly").html($("input[name='FocusAreaRO']").val());
+	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+		$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
+	}
 
 	//Code for Edit button
 	$('#btn_edit').click(function() {
@@ -30,11 +33,16 @@ $(document).ready(function(){
 		$('#Highlight').val(YmyEditor);
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
-
+		if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+			myEditorAsmtOtherConsiderations.saveHTML();
+			YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
+			$('#AsmtOtherConsiderations').val(YmyEditor);
+		}
 		$("#assessment").submit();
 	});
 	//Code for Save & Close button
 	$('#btn_save_close').click(function(evt) {
+		myEditor.saveHTML();
 		myEditor.saveHTML();
 		myEditorRatingSummary.saveHTML();
 		myEditorHighlight.saveHTML();
@@ -48,6 +56,11 @@ $(document).ready(function(){
 		$('#Highlight').val(YmyEditor);
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
+		if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+			myEditorAsmtOtherConsiderations.saveHTML();
+			YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
+			$('#AsmtOtherConsiderations').val(YmyEditor);
+		}
 
 		$('#close').val('1');
 		$("#assessment").submit();
@@ -67,12 +80,14 @@ $(document).ready(function(){
 	//Load the SimpleEditors
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
-	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
-	myEditorRatingSummary.render();
-	myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
-	myEditorHighlight.render();
-	myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
-	myEditorFocusArea.render();
+	// myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
+	// myEditorRatingSummary.render();
+	// myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
+	// myEditorHighlight.render();
+	// myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
+	// myEditorFocusArea.render();
+	// myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
+	// myEditorAsmtOtherConsiderations.render();
 	// --- end of rich text section --- //
 
 });
