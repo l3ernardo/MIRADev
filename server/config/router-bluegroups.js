@@ -61,7 +61,7 @@ interface.post('/processbg', isAuthenticated, function(req,res) {
                                         //delmembers.push(member.uid);
                                         util.delMember(req.body.group,member.uid).then(function(result) {
                                                 if(result) {
-                                                        console.log("Deleted: " + member.uid);
+                                                     //   console.log("Deleted: " + member.uid);
                                                 }
                                         });
                                 }
@@ -82,7 +82,7 @@ interface.post('/processbg', isAuthenticated, function(req,res) {
                                         membersList.push(newbie);
                                         util.addMember(req.body.group,uid).then(function(result) {
                                                 if(result) {
-                                                        console.log("Added: " + uid);
+                                                      //  console.log("Added: " + uid);
                                                         if(membersList.length == req.body.finalmembers.split(";").length){
                                                                 util.addGroupMember(db,req, membersList);
                                                         }
