@@ -23,6 +23,7 @@ var assessment = {
 			var doc = [];
 			doc.push(data.body);
 			doc[0].EnteredBU = req.session.businessunit;
+			doc[0].CPAsmtData = [];
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
 				switch (doc[0].DocSubType) {
@@ -41,6 +42,8 @@ var assessment = {
 						doc[0].EAData = doc[0].ARCData;
 						break;
 					case "Global Process":
+						break;
+					case "Controllable Unit":
 						break;
 				}
 
@@ -138,7 +141,7 @@ var assessment = {
 						"PeriodKey": pdoc[0].CurrentPeriod
 					};
 					doc.push(tmpdoc);
-					switch (doc[0].DocSubType) {
+					switch (doc[0].ParentDocSubType) {
 						case "BU IOT":
 							break;
 						case "BU IMT":
@@ -146,6 +149,7 @@ var assessment = {
 						case "BU Country":
 							break;
 						case "Account":
+							break;
 						case "BU Reporting Group":
 							break;
 					}
@@ -241,10 +245,14 @@ var assessment = {
 							}
 							//---Others Tab Tab---//
 							doc[0].AsmtOtherConsiderations = req.body.AsmtOtherConsiderations;
+							//---Backend Fields---//
+							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
   						break;
 						case "Account":
 							break;
 						case "Controllable Unit":
+							//---Backend Fields---//
+							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
 							break;
 						case "BU Reporting Group":
 							break;
