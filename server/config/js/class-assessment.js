@@ -25,21 +25,27 @@ var assessment = {
 			doc[0].EnteredBU = req.session.businessunit;
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
-				// test view data
-				doc[0].ALLData = fieldCalc.addTestViewData(6,3);
-				doc[0].ARCData = fieldCalc.addTestViewData(4,3);
-				doc[0].RiskData = fieldCalc.addTestViewData(11,3);
-				doc[0].AuditTrustedData = doc[0].RiskData;
-				doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
-				doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
-				doc[0].DRData = fieldCalc.addTestViewData(5,1);
-				doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
-				doc[0].SCTestData = doc[0].RCTestData;
-				doc[0].SampleData = doc[0].RiskData;
-				doc[0].EAData = doc[0].ARCData;
+				switch (doc[0].DocSubType) {
+					case "Country Process":
+						// test view data
+						doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+						doc[0].AuditTrustedData = doc[0].RiskData;
+						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
+						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+						doc[0].DRData = fieldCalc.addTestViewData(5,1);
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+						doc[0].SCTestData = doc[0].RCTestData;
+						doc[0].SampleData = doc[0].RiskData;
+						doc[0].EAData = doc[0].ARCData;
+						break;
+					case "Global Process":
+						break;
+				}
 
-				doc[0].CatP = "CRM";
-				doc[0].ShowEA = 1;
+				// doc[0].CatP = "CRM";
+				// doc[0].ShowEA = 1;
 				doc[0].PrevQtrs = [];
 				doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
@@ -78,9 +84,15 @@ var assessment = {
 					} else { // Read mode
 
 					}
-
-					deferred.resolve({"status": 200, "doc": doc});
-
+					if (doc[0].ParentDocSubType == "Global Process") {
+						fieldCalc.getRatingProfile(db, doc).then(function(data){
+							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err});
+						});
+					} else {
+						deferred.resolve({"status": 200, "doc": doc});
+					}
 				}).catch(function(err) {
 					deferred.reject({"status": 500, "error": err});
 				});
@@ -227,6 +239,8 @@ var assessment = {
 									doc[0].OpMetric[i].action = req.body[fname];
 								}
 							}
+							//---Others Tab Tab---//
+							doc[0].AsmtOtherConsiderations = req.body.AsmtOtherConsiderations;
   						break;
 						case "Account":
 							break;

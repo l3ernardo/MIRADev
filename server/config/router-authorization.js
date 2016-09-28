@@ -18,7 +18,7 @@ module.exports = function isAuthorized(req, res, next) {
 			var userinfo = buf.toString().split(":");
 			req.body.username = userinfo[0];
 			req.body.password = userinfo[1];
-			var credentials = JSON.parse(fs.readFileSync('./server/config/APIProfile.json', 'utf8'));
+			var credentials = JSON.parse(fs.readFileSync('./APIProfile.json', 'utf8'));
 			//console.log('Checking user...');
 			if(userinfo[0]==credentials.username) {	
 				// if we have to test the user and pass, the code should be here

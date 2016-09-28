@@ -93,11 +93,11 @@ var assessableunit = {
 						 {"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
 						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
-	}	,	
-			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
-		}				
+	}	,
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]
+		}
 	}
-	else 
+	else
 	{
 		var process =
 				{
@@ -107,17 +107,17 @@ var assessableunit = {
 			             {"Name": { "$ne": null }},
 				         {"key": "Assessable Unit"},
 						 {"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
-						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]}, 
+						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
-	}	,	
-			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
+	}	,
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]
 		}
-		
+
 	}
 	if(req.session.BG.indexOf("MIRA-ADMIN")> '-1')
     {
-			var geo =  
+			var geo =
 		{	"selector":{
 			"$and": [
 			             { "LevelType": { "$gt": null }},
@@ -125,14 +125,14 @@ var assessableunit = {
 				         {"key": "Assessable Unit"},
 					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit"]}},
 				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
-				]	
-			},	
+				]
+			},
 			"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
-        }		
+        }
 	}
 	else
 	    {
-			var geo =  
+			var geo =
 		{	"selector":{
 			"$and": [
 			             { "LevelType": { "$gt": null }},
@@ -141,10 +141,10 @@ var assessableunit = {
 					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit"]}},
 				         {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
-				]	
-			},	
+				]
+			},
 			"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
-        }		
+        }
 	}
     if(req.session.BG.indexOf("MIRA-ADMIN")> '-1')
     {
@@ -191,11 +191,11 @@ var assessableunit = {
 						 {"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
 						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
-	}	,	
-			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
-		}				
+	}	,
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]
+		}
 	}
-	else 
+	else
 	{
 		var subprocess =
 				{
@@ -205,13 +205,13 @@ var assessableunit = {
 			             {"Name": { "$ne": null }},
 				         {"key": "Assessable Unit"},
 						 {"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
-						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]}, 
+						 {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 						 {"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
-	}	,	
-			"sort": [{"LevelType":"asc"},{"Name":"asc"}]	
+	}	,
+			"sort": [{"LevelType":"asc"},{"Name":"asc"}]
 		}
-		
+
 	}
 
         if(req.url=='/processdashboard'){
@@ -395,15 +395,18 @@ else
 						doc[0].CUData = [];
 						break;
 					case "Global Process":
-						var constiobj = {
-							selector:{
-								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Country Process","Sub-process"]},
-								"BusinessUnit": doc[0].BusinessUnit,
-								"GlobalProcess": doc[0].GlobalProcess
-							}
-						};
+            var constiobj = {
+              selector:{
+                "_id": {"$gt":0},
+                "BusinessUnit": doc[0].BusinessUnit,
+                "GlobalProcess": doc[0].GlobalProcess,
+                "$or": [
+                  { "$and": [{"key": "Assessable Unit"},{"DocSubType": {"$or":["Country Process","Sub-process"]}}] },
+                  { "$and": [{"key": "Assessment"},{"ParentDocSubType": "Global Process"},{"parentid": doc[0]._id}] }
+                ]
+              }
+            };
+
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
@@ -511,7 +514,7 @@ else
 							toadd = {
 								"docid": constidocs[i]._id,
 								"col": [
-									constidocs[i].PeriodKey,
+									constidocs[i].CurrentPeriod,
 									constidocs[i].PeriodRating,
 									constidocs[i].Owner,
 									constidocs[i].Target2Sat
