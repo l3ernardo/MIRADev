@@ -278,13 +278,6 @@ router.get('/deleteAttachment', isAuthenticated, function(req, res){
 
 });
 /**************************************************************
-REFERENCES
-***************************************************************/
-/* Load reference by category page*/
-router.get('/referencebycat', isAuthenticated, function(req, res) {
-	res.render('referencebycat');
-});
-/**************************************************************
 ARCHIVE
 ***************************************************************/
 /* Load archive page*/
