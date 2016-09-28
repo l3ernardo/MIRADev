@@ -1,0 +1,110 @@
+<table id="po_table" class="ibm-data-table">
+	<tr class="ar-asmt-content">
+		<td>
+			<table width="100%">
+				<tr>
+					<th class="ar-asmt-label" width="25%">Performance Indicators</th>
+					<th class="ar-asmt-label" width="10%"></th>
+					<th class="ar-asmt-label" width="65%">Summary/Comments</th>
+				</tr>
+				<tr>
+					<td class="ar-asmt-label">Overall Assessment</td>
+					<td class="content-data"></td>
+					<td class="content-data"></td>
+				</tr>
+				<tr>
+					<td class="ar-asmt-label">KCFR Defect Rate</td>
+					<td class="content-data"></td>
+					<td class="content-data"></td>
+				</tr>
+				<tr>
+					<td class="ar-asmt-label">KCO Defect Rate</td>
+					<td class="content-data"></td>
+					<td class="content-data"></td>
+				</tr>
+				<tr>
+					<td class="ar-asmt-label">CHQ Internal Audit Score</td>
+					<td class="content-data"></td>
+					<td class="content-data"></td>
+				</tr>
+				<tr>
+					<td class="ar-asmt-label">Missed Risk Evaluations</td>
+					<td class="content-data"></td>
+					<td class="content-data"></td>
+				</tr>
+				<tr>
+					<td class="ar-asmt-label">Missed MSAC Commitments</td>
+					<td class="content-data"></td>
+					<td class="content-data"></td>
+				</tr>
+				<tr>
+					<th class="ar-asmt-label">Operational and Other Indicators</th>
+					<th class="ar-asmt-label"></th>
+					<th class="ar-asmt-label">Summary/Comments</th>
+				</tr>
+				{{#each OpMetric}}
+					<tr>
+						<td class="ar-asmt-label">{{name}}</td>
+						<td class="content-data">{{{ratingDisplay rating}}}</td>
+						<td class="content-data">{{action}}</td>
+					</tr>
+				{{/each}}
+				<tr>
+					<td class="ar-asmt-label">Basics of Control Exceptions</td>
+					<td class="content-data"></td>
+					<td class="content-data"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="ar-asmt-content">
+		<td>
+			<table width="100%">
+				<tr>
+					<td class="ar-asmt-label" width="25%">Other Explanation</td>
+					<td class="content-data" width="75%"></td>
+				</tr>
+				<tr>
+					<td class="ar-asmt-label">Critical Issues</td>
+					<td class="content-data"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="ar-asmt-content">
+		<th class="ar-asmt-label">Country Process Performance Indicators</th>
+	</tr>
+	<tr class="ar-asmt-content">
+		<td>
+			<table width="100%">
+				<thead>
+					<th class="ar-asmt-viewheader" scope="col" width="30%">Assessed Unit</th>
+					<th class="ar-asmt-viewheader" scope="col" width="6%">CQ-4</th>
+					<th class="ar-asmt-viewheader" scope="col" width="6%">CQ-3</th>
+					<th class="ar-asmt-viewheader" scope="col" width="6%">CQ-2</th>
+					<th class="ar-asmt-viewheader" scope="col" width="6%">CQ-1</th>
+					<th class="ar-asmt-viewheader" scope="col" width="6%">Current Quarter (CQ)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="10%">KCFR Defect Rate</th>
+					<th class="ar-asmt-viewheader" scope="col" width="10%">KCO Defect Rate</th>
+					<th class="ar-asmt-viewheader" scope="col" width="10%">Missed Risk Evaluations</th>
+					<th class="ar-asmt-viewheader" scope="col" width="10%">Missed MSAC Commitments</th>
+				</thead>
+				{{#each CPAsmtData}}
+					<tr class="asmt-viewdata">
+						<td><a href="/assessment?id={{docid}}">{{name}}</a></td>
+						<td>{{ratingPQ4}}</td>
+						<td>{{ratingPQ3}}</td>
+						<td>{{ratingPQ2}}</td>
+						<td>{{ratingPQ1}}</td>
+						<td>{{ratingCQ}}</td>
+						<td>{{kcfrDR}}</td>
+						<td>{{kcoDR}}</td>
+						<td>{{msdRisk}}</td>
+						<td>{{msdMSAC}}</td>
+					</tr>
+				{{/each}}
+				<tr>
+			</table>
+		</td>
+	</tr>
+</table>

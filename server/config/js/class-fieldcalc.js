@@ -26,6 +26,34 @@ var calculatefield = {
     return vwData;
   },
 
+  // adding empty Test View Data Only
+  getRatingCategory: function(rating, ratingPrev) {
+    var ratingCat;
+    if (rating == "Sat") {
+      if (ratingPrev == "Marg" || ratingPrev == "Unsat")
+        ratingCat = "Sat &#9650;";
+      else
+        ratingCat = "Sat &#61;";
+    } else if (rating == "Marg") {
+      if (ratingPrev == "Unsat")
+        ratingCat = "Marg &#9650;";
+      else if (ratingPrev == "Sat")
+        ratingCat = "Marg &#9660;";
+      else
+        ratingCat = "Marg &#61;";
+    } else if (rating == "Unsat") {
+      if (ratingPrev == "Sat" || ratingPrev == "Marg")
+       ratingCat = "Unsat &#9660;";
+      else
+       ratingCat = "Unsat &#61;";
+    } else if (rating == "Exempt") {
+      ratingCat = "Exempt";
+    } else {
+      ratingCat = "NR";
+    }
+    return ratingCat;
+  },
+
   getPrev4Qtrs: function(currentQtr) {
     var p4Qtrs = [];
     var current = currentQtr.split("Q");
@@ -196,30 +224,52 @@ var calculatefield = {
       db.find(asmts).then(function(asmtsdata) {
         var asmtsdocs = asmtsdata.body.docs;
         var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0;
+        var toadd;
         for (var i = 0; i < asmtsdocs.length; ++i) {
-          if (asmtsdocs[i].PeriodRating == "Sat") {
-            if (asmtsdocs[i].PeriodRatingPrev == "Marg" || asmtsdocs[i].PeriodRatingPrev == "Unsat")
+          toadd = {
+            "docid":asmtsdocs[i]._id,
+            "name":asmtsdocs[i].AssessableUnitName,
+            "ratingCQ":asmtsdocs[i].PeriodRating,
+            "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
+            "ratingPQ2":asmtsdocs[i].PeriodRatingPrev2,
+            "ratingPQ3":asmtsdocs[i].PeriodRatingPrev3,
+            "ratingPQ4":asmtsdocs[i].PeriodRatingPrev4,
+            "kcfrDR":asmtsdocs[i].KCFRDefectRate,
+            "kcoDR":asmtsdocs[i].KCODefectRate,
+            "msdRisk":asmtsdocs[i].MissedOpenIssueCount,
+            "msdMSAC":asmtsdocs[i].MissedMSACSatCount
+          };
+          doc[0].CPAsmtData.push(toadd);
+          switch (asmtsdocs[i].RatingCategory) {
+            case "Sat &#9650;":
               satUp = satUp + 1;
-            else
+              break;
+            case "Sat &#61;":
               satEq = satEq + 1;
-          } else if (asmtsdocs[i].PeriodRating == "Marg") {
-            if (asmtsdocs[i].PeriodRatingPrev == "Unsat")
+              break;
+            case "Marg &#9650;":
               margUp = margUp + 1;
-            else if (asmtsdocs[i].PeriodRatingPrev == "Sat")
+              break;
+            case "Marg &#9660;":
               margDwn = margDwn + 1;
-            else
+              break;
+            case "Marg &#61;":
               margEq = margEq + 1;
-          } else if (asmtsdocs[i].PeriodRating == "Unsat") {
-            if (asmtsdocs[i].PeriodRatingPrev == "Sat" || asmtsdocs[i].PeriodRatingPrev == "Marg")
-             unsatDwn = unsatDwn + 1;
-            else
-             unsatEq = unsatEq + 1;
-          } else if (asmtsdocs[i].PeriodRating == "Exempt") {
-            exempt = exempt + 1;
-          } else {
-            nr = nr + 1;
+              break;
+            case "Unsat &#9660;":
+              unsatDwn = unsatDwn + 1;
+              break;
+            case "Unsat &#61;":
+              unsatEq = unsatEq + 1;
+              break;
+            case "Exempt":
+              exempt = exempt + 1;
+              break;
+            default:
+              nr = nr + 1;
           }
         }
+
         doc[0].CPSatEqualCnt = satEq;
         doc[0].CPSatPlusCnt = satUp;
         doc[0].CPMargPlusCnt = margUp;

@@ -21,7 +21,7 @@
 		<div>
 			<table id="rg_dashboard_treeview" cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table">
 				<thead>
-					<tr> 
+					<tr>
 						<th scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
 						<th>Assessable Unit</th>
 						<th>Type</th>
@@ -42,7 +42,7 @@
 						<td>{{Name}}</td>
 						<td></td>
 						{{else}}
-						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>	
+						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
 						<td>{{DocSubType}}</td>
 						{{/if_equal}}
 						<td>{{PeriodRatingPrev}}</td>
@@ -60,7 +60,7 @@
 		<div>
 			<table id="rg_dashboard_flatview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" style='display : none'>
 				<thead>
-					<tr> 
+					<tr>
 						<th scope="col"><input type="checkbox" class="mira_checkbox_flat" id="mira_checkbox_flat" name="mira_checkbox "/></th>
 						<th>Assessable Unit</th>
 						<th>Type</th>
@@ -77,7 +77,7 @@
 				{{#each doc}}
 					<tr>
 						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>
-						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>	
+						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
 						{{#if_equal  DocSubType "GroupName"}}
 						<td></td>
 						{{else}}
