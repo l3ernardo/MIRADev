@@ -26,6 +26,34 @@ var calculatefield = {
     return vwData;
   },
 
+  // adding empty Test View Data Only
+  getRatingCategory: function(rating, ratingPrev) {
+    var ratingCat;
+    if (rating == "Sat") {
+      if (ratingPrev == "Marg" || ratingPrev == "Unsat")
+        ratingCat = "Sat &#9650;";
+      else
+        ratingCat = "Sat &#61;";
+    } else if (rating == "Marg") {
+      if (ratingPrev == "Unsat")
+        ratingCat = "Marg &#9650;";
+      else if (ratingPrev == "Sat")
+        ratingCat = "Marg &#9660;";
+      else
+        ratingCat = "Marg &#61;";
+    } else if (rating == "Unsat") {
+      if (ratingPrev == "Sat" || ratingPrev == "Marg")
+       ratingCat = "Unsat &#9660;";
+      else
+       ratingCat = "Unsat &#61;";
+    } else if (rating == "Exempt") {
+      ratingCat = "Exempt";
+    } else {
+      ratingCat = "NR";
+    }
+    return ratingCat;
+  },
+
   getPrev4Qtrs: function(currentQtr) {
     var p4Qtrs = [];
     var current = currentQtr.split("Q");
@@ -175,7 +203,136 @@ var calculatefield = {
 			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
+	},
+
+  /* Populates the Rating Profile table */
+	getRatingProfile: function(db, doc) {
+    var deferred = q.defer();
+		try {
+      switch (doc[0].ParentDocSubType) {
+        case "Global Process":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "ParentDocSubType": "Country Process",
+              "GPWWBCITKey": doc[0].WWBCITKey
+            }
+          };
+          break;
+      }
+      db.find(asmts).then(function(asmtsdata) {
+        var asmtsdocs = asmtsdata.body.docs;
+        var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0;
+        var toadd;
+        for (var i = 0; i < asmtsdocs.length; ++i) {
+          toadd = {
+            "docid":asmtsdocs[i]._id,
+            "name":asmtsdocs[i].AssessableUnitName,
+            "ratingCQ":asmtsdocs[i].PeriodRating,
+            "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
+            "ratingPQ2":asmtsdocs[i].PeriodRatingPrev2,
+            "ratingPQ3":asmtsdocs[i].PeriodRatingPrev3,
+            "ratingPQ4":asmtsdocs[i].PeriodRatingPrev4,
+            "kcfrDR":asmtsdocs[i].KCFRDefectRate,
+            "kcoDR":asmtsdocs[i].KCODefectRate,
+            "msdRisk":asmtsdocs[i].MissedOpenIssueCount,
+            "msdMSAC":asmtsdocs[i].MissedMSACSatCount
+          };
+          doc[0].CPAsmtData.push(toadd);
+          switch (asmtsdocs[i].RatingCategory) {
+            case "Sat &#9650;":
+              satUp = satUp + 1;
+              break;
+            case "Sat &#61;":
+              satEq = satEq + 1;
+              break;
+            case "Marg &#9650;":
+              margUp = margUp + 1;
+              break;
+            case "Marg &#9660;":
+              margDwn = margDwn + 1;
+              break;
+            case "Marg &#61;":
+              margEq = margEq + 1;
+              break;
+            case "Unsat &#9660;":
+              unsatDwn = unsatDwn + 1;
+              break;
+            case "Unsat &#61;":
+              unsatEq = unsatEq + 1;
+              break;
+            case "Exempt":
+              exempt = exempt + 1;
+              break;
+            default:
+              nr = nr + 1;
+          }
+        }
+
+        doc[0].CPSatEqualCnt = satEq;
+        doc[0].CPSatPlusCnt = satUp;
+        doc[0].CPMargPlusCnt = margUp;
+        doc[0].CPMargEqualCnt = margEq;
+        doc[0].CPMargMinusCnt = margDwn;
+        doc[0].CPUnsatEqualCnt = unsatEq;
+        doc[0].CPUnsatMinusCnt = unsatDwn;
+        doc[0].CPEXEMPTCnt = exempt;
+        doc[0].CPNRCnt = nr;
+        doc[0].CPTotalCnt = satEq + satUp + margUp + margEq + margDwn + unsatEq + unsatDwn + exempt + nr;
+        if (satEq == 0)
+          doc[0].CPSatEqualPct = "0%";
+        else
+          doc[0].CPSatEqualPct = ((satEq/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (satUp == 0)
+          doc[0].CPSatPlusPct = "0%";
+        else
+          doc[0].CPSatPlusPct = ((satUp/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (margUp == 0)
+          doc[0].CPMargPlusPct = "0%";
+        else
+          doc[0].CPMargPlusPct = ((margUp/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (margEq == 0)
+          doc[0].CPMargEqualPct = "0%";
+        else
+          doc[0].CPMargEqualPct = ((margEq/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (margDwn == 0)
+          doc[0].CPMargMinusPct = "0%";
+        else
+          doc[0].CPMargMinusPct = ((margDwn/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (unsatEq == 0)
+          doc[0].CPUnsatEqualPct = "0%";
+        else
+          doc[0].CPUnsatEqualPct = ((unsatEq/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        var pct = (unsatDwn/doc[0].CPTotalCnt) * 100;
+        if (unsatDwn == 0)
+          doc[0].CPUnsatMinusPct = "0%";
+        else
+          doc[0].CPUnsatMinusPct = ((unsatDwn/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (exempt == 0)
+          doc[0].CPEXEMPTPct = "0%";
+        else
+          doc[0].CPEXEMPTPct = ((exempt/1) * 100).toFixed() + "%";
+        if (nr == 0)
+          doc[0].CPNRPct = "0%";
+        else
+          doc[0].CPNRPct = ((nr/doc[0].CPTotalCnt) * 100).toFixed() + "%";
+        if (doc[0].CPTotalCnt == 0)
+          doc[0].CPTotalPct = "0%";
+        else
+          doc[0].CPTotalPct = "100%";
+        deferred.resolve({"status": 200, "doc": doc});
+      }).catch(function(err) {
+        console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+    } catch(e) {
+      console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
 	}
+
 
 }
 module.exports = calculatefield;
