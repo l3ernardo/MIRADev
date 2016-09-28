@@ -21,7 +21,7 @@
 		<div id='reportstaexc'>
 			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" class="display nowrap">
 				<thead>
-					<tr> 
+					<tr>
 					    <th scope="col">Auditable Unit Name</th>
 						<th scope="col">Type</th>
 						<th scope="col">Auditable Process</th>
@@ -43,21 +43,21 @@
 				{{#each doc}}
 					<tr>
       				    <td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-					    <td>{{DocSubType}}</td>	
-                        <td>{{AuditableProcess}}</td>	
+					    <td>{{DocSubType}}</td>
+                        <td>{{AuditableProcess}}</td>
                         <td>{{AuditReadiness}}</td>
                         <td>{{CQ4}}</td>
 						<td>{{CQ3}}</td>
-                        <td>{{CQ2}}</td>	
+                        <td>{{CQ2}}</td>
                         <td>{{CQ1}}</td>
 						<td>{{AUNextQtrRating}}</td>
 						<td>{{Target2Sat}}</td>
-                        <td></td>						
+                        <td></td>
 						<td>{{MIRAAssessmentStatus}}</td>
 						<td>{{WWBCITAssessmentStatus}}</td>
 						<td>{{PeriodRatingPrev}}</td>
 						<td>{{PeriodRating}}</td>
-						
+
 					</tr>
 				{{/each}}
 				</tbody>
