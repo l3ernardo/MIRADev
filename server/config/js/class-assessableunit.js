@@ -123,7 +123,7 @@ var assessableunit = {
 			             { "LevelType": { "$gt": null }},
 			             {"Name": { "$ne": null }},
 				         {"key": "Assessable Unit"},
-					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit"]}},
+					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
 				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
 			},
@@ -138,7 +138,7 @@ var assessableunit = {
 			             { "LevelType": { "$gt": null }},
 			             {"Name": { "$ne": null }},
 				         {"key": "Assessable Unit"},
-					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit"]}},
+					     {"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
 				         {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
