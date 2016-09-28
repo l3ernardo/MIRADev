@@ -80,14 +80,16 @@ $(document).ready(function(){
 	//Load the SimpleEditors
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
-	// myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
-	// myEditorRatingSummary.render();
-	// myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
-	// myEditorHighlight.render();
-	// myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
-	// myEditorFocusArea.render();
-	// myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
-	// myEditorAsmtOtherConsiderations.render();
+	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
+	myEditorRatingSummary.render();
+	myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
+	myEditorHighlight.render();
+	myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
+	myEditorFocusArea.render();
+	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+		myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
+		myEditorAsmtOtherConsiderations.render();
+	}
 	// --- end of rich text section --- //
 
 });
