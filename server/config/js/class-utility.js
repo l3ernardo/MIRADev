@@ -482,7 +482,7 @@ var util = {
 	Date: 22/09/2016
 	**************************************************/
 	//Show ALL data -Used by data-transformation process
-	getBusinessDocs : function(req, designdoc, viewname){
+	getBusinessDocs : function(db, req, designdoc, viewname){
 		var deferred = q.defer();
 		db.view(designdoc, 'view-'+viewname, {include_docs: true}).then(function(data){
 			// console.log(data);
