@@ -71,6 +71,38 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+		ratingDisplayView: function(rating, field) {
+			var ratinghtml;
+			if (rating == undefined) {
+					ratinghtml = '<td class="asmt-viewdata"></td>';
+			} else {
+				if (rating == "Sat")
+					ratinghtml = '<td class="asmt-viewdata-green">'+rating+'</td>';
+				else if (rating == "Marg")
+					ratinghtml = '<td class="asmt-viewdata-yellow">'+rating+'</td>';
+				else if (rating == "Unsat")
+					ratinghtml = '<td class="asmt-viewdata-red">'+rating+'</td>';
+				else
+					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
+			}
+			return ratinghtml;
+		},
+		defectRateDisplayView: function(dr, margThreshold, unsatThreshold) {
+			var drhtml;
+			if (dr == undefined || dr == "") {
+				drhtml = '<td class="asmt-viewdata"></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'%</td>';
+			} else {
+				if (dr < margThreshold)
+					drhtml = '<td class="asmt-viewdata-green">'+dr+'%</td>';
+				else if (dr >= unsatThreshold)
+					drhtml = '<td class="asmt-viewdata-red">'+dr+'%</td>';
+				else
+					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'%</td>';
+			}
+			return drhtml;
+		},
 		findingDisplay: function(finding) {
 			var findinghtml;
 			if (finding == undefined) {

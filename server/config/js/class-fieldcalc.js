@@ -25,7 +25,21 @@ var calculatefield = {
     }
     return vwData;
   },
+  addTestViewDataPadding: function(obj, colnum, rownum) {
+    var col = [];
+    if (obj.length > 0) {
+      for (var i = 0; i < rownum; i++) {
+        obj.push({"":""});
+        for (var prop in obj[0]) {
+          if (obj[0].hasOwnProperty(prop)) {
+            obj[(obj.length-1)][prop] = "";
+          }
+        }
+      }
+    } else {
 
+    }
+  },
   // adding empty Test View Data Only
   getRatingCategory: function(rating, ratingPrev) {
     var ratingCat;
@@ -215,6 +229,7 @@ var calculatefield = {
             selector:{
               "_id": {"$gt":0},
               "key": "Assessment",
+              "AUStatus": "Active",
               "ParentDocSubType": "Country Process",
               "GPWWBCITKey": doc[0].WWBCITKey
             }
@@ -223,9 +238,12 @@ var calculatefield = {
       }
       db.find(asmts).then(function(asmtsdata) {
         var asmtsdocs = asmtsdata.body.docs;
-        var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0;
+        var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0, bocEx = 0;
         var toadd;
+
         for (var i = 0; i < asmtsdocs.length; ++i) {
+
+          // PO tab performance indicators view
           toadd = {
             "docid":asmtsdocs[i]._id,
             "name":asmtsdocs[i].AssessableUnitName,
@@ -239,7 +257,22 @@ var calculatefield = {
             "msdRisk":asmtsdocs[i].MissedOpenIssueCount,
             "msdMSAC":asmtsdocs[i].MissedMSACSatCount
           };
-          doc[0].CPAsmtData.push(toadd);
+          doc[0].CPAsmtDataPIview.push(toadd);
+
+          // PO tab other indicators view
+          toadd = {
+            "docid":asmtsdocs[i]._id,
+            "name":asmtsdocs[i].AssessableUnitName,
+            "bocExCount":asmtsdocs[i].BOCExceptionCount
+          };
+          doc[0].CPAsmtDataOIview.push(toadd);
+          for (var j = 0; j < asmtsdocs[i].OpMetric.length; ++j) {
+            doc[0].CPAsmtDataOIview[i][asmtsdocs[i].OpMetric[j].id+"Rating"] = asmtsdocs[i].OpMetric[j].rating;
+          }
+
+          // Basics of Control Exception Counter
+          if (asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
+
           switch (asmtsdocs[i].RatingCategory) {
             case "Sat &#9650;":
               satUp = satUp + 1;
@@ -270,6 +303,7 @@ var calculatefield = {
           }
         }
 
+        doc[0].BOCExceptionCount = bocEx;
         doc[0].CPSatEqualCnt = satEq;
         doc[0].CPSatPlusCnt = satUp;
         doc[0].CPMargPlusCnt = margUp;
