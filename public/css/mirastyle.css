@@ -212,6 +212,16 @@
 	font-size: 11px;
 	background-color: #ffffff;
 }
+.ibm-data-table .asmt-richtext-readmode-tall {
+	font-size: 11px;
+	background-color: #ffffff;
+	height:100px;
+}
+.ibm-data-table .asmt-richtext-readmode-short {
+	font-size: 11px;
+	background-color: #ffffff;
+	height:20px;
+}
 .ibm-data-table .asmt-viewdata-centered {
 	text-align: center;
 	font-size: 11px;
@@ -261,6 +271,11 @@
   color: #ffffff;
   background-color: #4181c0;
 	border: 20px solid #4181c0;
+}
+.ibm-data-table .audit-review-header {
+  color: #ffffff;
+  background-color: #4181c0;
+	border: #4181c0;
 }
 .ibm-data-table .audit-review-label {
 	background-color: #c2efff;

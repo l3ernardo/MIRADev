@@ -1,7 +1,7 @@
 <table id="po_table" class="ibm-data-table">
 	<tr class="ar-asmt-content">
 		<td>
-			<table width="100%">
+			<table width="100%" class="ibm-data-table">
 				<tr>
 					<th class="ar-asmt-label" width="25%">Performance Indicators</th>
 					<th class="ar-asmt-label" width="10%"></th>
@@ -9,17 +9,17 @@
 				</tr>
 				<tr>
 					<td class="ar-asmt-label">Overall Assessment</td>
-					<td class="content-data"></td>
+					{{{ratingDisplayView PeriodRating}}}
 					<td class="content-data"></td>
 				</tr>
 				<tr>
 					<td class="ar-asmt-label">KCFR Defect Rate</td>
-					<td class="content-data"></td>
+					{{{defectRateDisplayView KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 					<td class="content-data"></td>
 				</tr>
 				<tr>
 					<td class="ar-asmt-label">KCO Defect Rate</td>
-					<td class="content-data"></td>
+					{{{defectRateDisplayView KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 					<td class="content-data"></td>
 				</tr>
 				<tr>
@@ -51,7 +51,7 @@
 				{{/each}}
 				<tr>
 					<td class="ar-asmt-label">Basics of Control Exceptions</td>
-					<td class="content-data"></td>
+					<td class="asmt-viewdata-centered">{{BOCExceptionCount}}</td>
 					<td class="content-data"></td>
 				</tr>
 			</table>

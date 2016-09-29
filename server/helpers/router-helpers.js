@@ -83,7 +83,7 @@ var register = function(Handlebars) {
 				else if (rating == "Unsat")
 					ratinghtml = '<td class="asmt-viewdata-red">'+rating+'</td>';
 				else
-					ratinghtml = '<td class="asmt-viewdata">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
 			}
 			return ratinghtml;
 		},
@@ -92,7 +92,7 @@ var register = function(Handlebars) {
 			if (dr == undefined || dr == "") {
 				drhtml = '<td class="asmt-viewdata"></td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
-				drhtml = '<td class="asmt-viewdata">'+dr+'%</td>';
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'%</td>';
 			} else {
 				if (dr < margThreshold)
 					drhtml = '<td class="asmt-viewdata-green">'+dr+'%</td>';
