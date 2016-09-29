@@ -7,6 +7,7 @@ Date: 20/09/2016
 ***************************************************************/
 
 var express = require("express");
+var datatrans = express.Router();
 var passport = require('passport');
 var interface = express.Router();
 var isAuthenticated = require('./router-authentication.js');
