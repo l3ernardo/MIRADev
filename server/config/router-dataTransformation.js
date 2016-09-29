@@ -18,8 +18,8 @@ var varConf = require('../../configuration');
 
 
 datatrans.get('/checkData', function(req, res) {
-	console.log(req.query.designdoc, req.query.viewname)
-	util.getBusinessDocs(req, req.query.designdoc, req.query.viewname).then(function(data) {
+	// console.log(req.query.designdoc, req.query.viewname)
+	util.getBusinessDocs(db, req, req.query.designdoc, req.query.viewname).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data) {
 				res.setHeader('Content-Type', 'application/json');
