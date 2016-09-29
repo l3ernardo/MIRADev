@@ -212,6 +212,27 @@
 	font-size: 11px;
 	background-color: #ffffff;
 }
+.ibm-data-table .asmt-viewdata-centered {
+	text-align: center;
+	font-size: 11px;
+	background-color: #ffffff;
+}
+.ibm-data-table .asmt-viewdata-green {
+	text-align: center;
+	font-size: 11px;
+	background-color: #00ff00;
+}
+.ibm-data-table .asmt-viewdata-red {
+	text-align: center;
+	font-size: 11px;
+	color: #ffffff;
+	background-color: #ff0000;
+}
+.ibm-data-table .asmt-viewdata-yellow {
+	text-align: center;
+	font-size: 11px;
+	background-color: #ffff00;
+}
 .ibm-data-table .ar-asmt-label {
 	font-size: 11px;
   background-color: #e7d8cf;
