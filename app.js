@@ -72,7 +72,6 @@ app.use(require('./server/config/router-interface.js'));
 app.use(require('./server/config/router-bluegroups.js'));
 app.use(require('./server/config/router-dashboards.js'));
 app.use(require('./server/config/router-reports.js'));
-app.use(require('./server/config/router-dataTransformation.js'));
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {
