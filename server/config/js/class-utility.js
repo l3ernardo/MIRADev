@@ -533,7 +533,7 @@ var util = {
                 //get the list of all users per group
                 try{
 
-                db.view("userBG","Area", {include_docs: true}).then(function(data){ //download the group information
+                db.view("bluegroups","view-bluegroups", {include_docs: true}).then(function(data){ //download the group information
                         var response = data.body.rows[0].doc;
                         response.area[req.session.businessunit][req.body.group] = members;
                                 

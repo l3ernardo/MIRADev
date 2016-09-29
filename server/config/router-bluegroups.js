@@ -34,12 +34,19 @@ interface.get('/bgdetail', isAuthenticated, function(req, res) {
 	})
 });
 
-/* Load Bluegroups members */
-interface.get('/frmbg', isAuthenticated, function(req, res) {
-	util.getBluegroup(req).then(function(data) {
-		res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
-	})
-});
+
+	/* Load Bluegroups members */
+	interface.get('/frmbg', isAuthenticated, function(req, res) {
+		//console.log(req.session.businessunit);
+		if(req.query.group == "MIRA-ADMIN"){
+			util.getBluegroup(req).then(function(data) {
+				res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
+			});
+		}else{
+			util.getArea(req, db).then(function(data) {
+				res.render('formbluegroups', {bgname: req.query.group, alldata: data.doc});
+			});}
+		});
 
 /* Process Bluegroups members */
 interface.post('/processbg', isAuthenticated, function(req,res) {
@@ -54,7 +61,7 @@ interface.post('/processbg', isAuthenticated, function(req,res) {
                                         //delmembers.push(member.uid);
                                         util.delMember(req.body.group,member.uid).then(function(result) {
                                                 if(result) {
-                                                        console.log("Deleted: " + member.uid);
+                                                     //   console.log("Deleted: " + member.uid);
                                                 }
                                         });
                                 }
@@ -75,7 +82,7 @@ interface.post('/processbg', isAuthenticated, function(req,res) {
                                         membersList.push(newbie);
                                         util.addMember(req.body.group,uid).then(function(result) {
                                                 if(result) {
-                                                        console.log("Added: " + uid);
+                                                      //  console.log("Added: " + uid);
                                                         if(membersList.length == req.body.finalmembers.split(";").length){
                                                                 util.addGroupMember(db,req, membersList);
                                                         }

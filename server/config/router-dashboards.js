@@ -445,16 +445,39 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 				switch (data.doc[0].ParentDocSubType) {
 					case "Business Unit":
 						break;
+
 					case "Global Process":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtglobalprocess', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][GPassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][GPassessment][getListParams] - " + err.error);
+						})						
 						break;
+
 					case "Sub-process":
 						break;
+
 					case "BU IOT":
 						break;
+
 					case "BU IMT":
 						break;
+
 					case "BU Country":
 						break;
+
 					case "Country Process":
 						if (data.doc[0].editmode) {
 							var lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','AuditLessonsLearnedFinding','OpMetricRating'];
@@ -464,11 +487,11 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 									res.render('asmtcountryprocess', data.doc[0] );
 								} else {
 									res.render('error',{errorDescription: data.error});
-									console.log("[routes][assessment][getListParams] - " + dataParam.error);
+									console.log("[routes][CPassessment][getListParams] - " + dataParam.error);
 								}
 							}).catch(function(err) {
 								res.render('error',{errorDescription: err.error});
-								console.log("[routes][assessment][getListParams] - " + err.error);
+								console.log("[routes][CPassessment][getListParams] - " + err.error);
 							})
 						} else {
 							res.render('asmtcountryprocess', data.doc[0] );
@@ -477,8 +500,10 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 
 					case "Controllable Unit":
 						break;
+
 					case "BU Reporting Group":
 						break;
+
 					case "Account":
 						break;
 				}
