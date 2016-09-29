@@ -41,6 +41,9 @@ var assessment = {
 						doc[0].EAData = doc[0].ARCData;
 						break;
 					case "Global Process":
+						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+						doc[0].OtherAuditsData = doc[0].InternalAuditData;
 						break;
 					case "Controllable Unit":
 						break;
