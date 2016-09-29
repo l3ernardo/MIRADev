@@ -23,10 +23,9 @@ var assessment = {
 			var doc = [];
 			doc.push(data.body);
 			doc[0].EnteredBU = req.session.businessunit;
-			doc[0].CPAsmtData = [];
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
-				switch (doc[0].DocSubType) {
+				switch (doc[0].ParentDocSubType) {
 					case "Country Process":
 						// test view data
 						doc[0].ALLData = fieldCalc.addTestViewData(6,3);
@@ -88,7 +87,15 @@ var assessment = {
 
 					}
 					if (doc[0].ParentDocSubType == "Global Process") {
+						doc[0].CPAsmtDataOIview = [];
+						doc[0].CPAsmtDataPIview = [];
 						fieldCalc.getRatingProfile(db, doc).then(function(data){
+							if (doc[0].CPAsmtDataPIview.length < 3) {
+								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+							}
+							if (doc[0].CPAsmtDataOIview.length < 3) {
+								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+							}
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
@@ -214,6 +221,8 @@ var assessment = {
 							doc[0].BoCComments3 = req.body.BoCComments3;
 							doc[0].BoCComments4 = req.body.BoCComments4;
 							doc[0].BoCComments5 = req.body.BoCComments5;
+							if (doc[0].BoCResponse1 == "No" || doc[0].BoCResponse2 == "No" || doc[0].BoCResponse3 == "No" || doc[0].BoCResponse4 == "No" || doc[0].BoCResponse5 == "No")
+								doc[0].BOCExceptionCount = 1;
 							//---Audit Readiness Assessment Tab---//
 							if (req.session.businessunit == "GTS") {
 								doc[0].ARALLResponse = req.body.ARALLResponse;
