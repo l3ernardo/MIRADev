@@ -106,7 +106,7 @@ var report = {
 			}
 			db.find(objAUFR).then(function(data){
 				var doc = data.body.docs;
-				var len= doc.length;
+				var len = doc.length;
 				var view_auFileReport = [];
 				if(len > 0){
 					for (var i = 0; i < len; i++){
@@ -158,27 +158,14 @@ var report = {
 			db.find(objAUFR).then(function(data){
 				var doc = data.body.docs;
 				var len= doc.length;
-				var view_auFileReport = [];
+				var view_cuFileReport = [];
 				if(len > 0){
 					for (var i = 0; i < len; i++){
-						view_auFileReport.push({
-							_id: doc[i]._id,
-							Name: doc[i].Name,
-							Status: doc[i].Status,
-							Portafolio: doc[i].Portafolio,
-							AuditableFlag: doc[i].AuditableFlag,
-							AuditProgram: doc[i].AuditProgram,
-							PeriodRatingPrev: doc[i].PeriodRatingPrev,
-							PeriodRating: doc[i].PeriodRating,
-							AUNextQtrRating: doc[i].AUNextQtrRating,
-							Target2Sat:doc[i].Target2Sat,
-							Owner:doc[i].Owner,
-							DocSubType:doc[i].DocSubType
-						});
+						view_cuFileReport.push(doc[i]);
 					}
 				}
-				view=JSON.stringify(view_auFileReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_auFileReport});
+				view=JSON.stringify(view_cuFileReport, 'utf8');
+				deferred.resolve({"status": 200, "doc":view_cuFileReport});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
