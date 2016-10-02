@@ -474,27 +474,6 @@ var util = {
     return -1;
 	},
 
-	/**************************************************
-	DATA TRANSFORMATION FUNCTIONALITY
-
-	Created by: Valdenir Alves
-	email:  silvav@br.ibm.com
-	Date: 22/09/2016
-	**************************************************/
-	//Show ALL data -Used by data-transformation process
-	getBusinessDocs : function(req, designdoc, viewname){
-		var deferred = q.defer();
-		db.view(designdoc, 'view-'+viewname, {include_docs: true}).then(function(data){
-			// console.log(data);
-			if(data.status == 200 & !data.error){
-				deferred.resolve({status:"200", data:data.body.rows});
-			}
-		}).catch(function(err){
-			console.log('[class-utility][getBusinessDocs]: '+err.error)
-			deferred.reject({status:"400", data:err.error});
-		});
-		return deferred.promise;
-	},//end showData
 
 	//load the groups to be display
 	loadBlueGroupPage: function(db,req){
@@ -533,7 +512,7 @@ var util = {
                 //get the list of all users per group
                 try{
 
-                db.view("userBG","Area", {include_docs: true}).then(function(data){ //download the group information
+                db.view("bluegroups","view-bluegroups", {include_docs: true}).then(function(data){ //download the group information
                         var response = data.body.rows[0].doc;
                         response.area[req.session.businessunit][req.body.group] = members;
                                 
