@@ -311,6 +311,11 @@
   background-color: #ff8141;
 	border: 20px solid #ff8141;
 }
+.ibm-data-table .kc-test-header {
+  color: #ffffff;
+  background-color: #ff8141;
+	border: #ff8141;
+}
 .ibm-data-table .kc-test-viewheader {
 	text-align: center;
 	font-size: 11px;
