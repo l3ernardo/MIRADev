@@ -25,18 +25,29 @@ var assessment = {
 			doc[0].EnteredBU = req.session.businessunit;
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
-				// test view data
-				doc[0].ALLData = fieldCalc.addTestViewData(6,3);
-				doc[0].ARCData = fieldCalc.addTestViewData(4,3);
-				doc[0].RiskData = fieldCalc.addTestViewData(11,3);
-				doc[0].AuditTrustedData = doc[0].RiskData;
-				doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
-				doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
-				doc[0].DRData = fieldCalc.addTestViewData(5,1);
-				doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
-				doc[0].SCTestData = doc[0].RCTestData;
-				doc[0].SampleData = doc[0].RiskData;
-				doc[0].EAData = doc[0].ARCData;
+				switch (doc[0].ParentDocSubType) {
+					case "Country Process":
+						// test view data
+						doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+						doc[0].AuditTrustedData = doc[0].RiskData;
+						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
+						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+						doc[0].DRData = fieldCalc.addTestViewData(5,1);
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+						doc[0].SCTestData = doc[0].RCTestData;
+						doc[0].SampleData = doc[0].RiskData;
+						doc[0].EAData = doc[0].ARCData;
+						break;
+					case "Global Process":
+						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+						doc[0].OtherAuditsData = doc[0].InternalAuditData;
+						break;
+					case "Controllable Unit":
+						break;
+				}
 
 				// doc[0].CatP = "CRM";
 				// doc[0].ShowEA = 1;
@@ -78,9 +89,27 @@ var assessment = {
 					} else { // Read mode
 
 					}
-
-					deferred.resolve({"status": 200, "doc": doc});
-
+					if (doc[0].ParentDocSubType == "Global Process") {
+						doc[0].CPAsmtDataOIview = [];
+						doc[0].CPAsmtDataPIview = [];
+						doc[0].CPAsmtDataPR1view = [];
+						fieldCalc.getRatingProfile(db, doc).then(function(data){
+							if (doc[0].CPAsmtDataPIview.length < 3) {
+								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+							}
+							if (doc[0].CPAsmtDataOIview.length < 3) {
+								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+							}
+							if (doc[0].CPAsmtDataPR1view.length < 3) {
+								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
+							}
+							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err});
+						});
+					} else {
+						deferred.resolve({"status": 200, "doc": doc});
+					}
 				}).catch(function(err) {
 					deferred.reject({"status": 500, "error": err});
 				});
@@ -126,7 +155,7 @@ var assessment = {
 						"PeriodKey": pdoc[0].CurrentPeriod
 					};
 					doc.push(tmpdoc);
-					switch (doc[0].DocSubType) {
+					switch (doc[0].ParentDocSubType) {
 						case "BU IOT":
 							break;
 						case "BU IMT":
@@ -134,6 +163,7 @@ var assessment = {
 						case "BU Country":
 							break;
 						case "Account":
+							break;
 						case "BU Reporting Group":
 							break;
 					}
@@ -198,6 +228,8 @@ var assessment = {
 							doc[0].BoCComments3 = req.body.BoCComments3;
 							doc[0].BoCComments4 = req.body.BoCComments4;
 							doc[0].BoCComments5 = req.body.BoCComments5;
+							if (doc[0].BoCResponse1 == "No" || doc[0].BoCResponse2 == "No" || doc[0].BoCResponse3 == "No" || doc[0].BoCResponse4 == "No" || doc[0].BoCResponse5 == "No")
+								doc[0].BOCExceptionCount = 1;
 							//---Audit Readiness Assessment Tab---//
 							if (req.session.businessunit == "GTS") {
 								doc[0].ARALLResponse = req.body.ARALLResponse;
@@ -229,10 +261,14 @@ var assessment = {
 							}
 							//---Others Tab Tab---//
 							doc[0].AsmtOtherConsiderations = req.body.AsmtOtherConsiderations;
+							//---Backend Fields---//
+							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
   						break;
 						case "Account":
 							break;
 						case "Controllable Unit":
+							//---Backend Fields---//
+							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
 							break;
 						case "BU Reporting Group":
 							break;

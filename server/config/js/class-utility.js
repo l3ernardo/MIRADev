@@ -474,27 +474,95 @@ var util = {
     return -1;
 	},
 
-	/**************************************************
-	DATA TRANSFORMATION FUNCTIONALITY
 
-	Created by: Valdenir Alves
-	email:  silvav@br.ibm.com
-	Date: 22/09/2016
-	**************************************************/
-	//Show ALL data -Used by data-transformation process
-	getBusinessDocs : function(req, designdoc, viewname){
+	//load the groups to be display
+	loadBlueGroupPage: function(db,req){
+
+	
 		var deferred = q.defer();
-		db.view(designdoc, 'view-'+viewname, {include_docs: true}).then(function(data){
-			// console.log(data);
-			if(data.status == 200 & !data.error){
-				deferred.resolve({status:"200", data:data.body.rows});
-			}
-		}).catch(function(err){
-			console.log('[class-utility][getBusinessDocs]: '+err.error)
-			deferred.reject({status:"400", data:err.error});
+		try{
+
+			var obj = {
+			selector : {
+			//"_id": req.query.id
+			"_id": {"$gt":0},
+			keyName: "Bluegroups"
+		}};
+
+		db.find(obj).then(function(data){
+		var doc = JSON.stringify(data.body.docs[0].value);	
+		deferred.resolve(doc);
+		}).catch(function(err) {
+			console.log("[routes][bluegroups] - " + err);
+			deferred.reject({"status": 500, "error": err.error.reason});
 		});
+
+
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+	
 		return deferred.promise;
-	},//end showData
+	},//en load blue group page
+
+	//add a group member on clud
+	addGroupMember: function(db,req, members){
+                var deferred = q.defer();
+                //console.log("enter");
+                //get the list of all users per group
+                try{
+
+                db.view("bluegroups","view-bluegroups", {include_docs: true}).then(function(data){ //download the group information
+                        var response = data.body.rows[0].doc;
+                        response.area[req.session.businessunit][req.body.group] = members;
+                                
+                         db.save(response).then(function (data){
+                                     deferred.resolve({"status": 200});
+                         }).catch(function(err) {
+                                      
+                                     deferred.reject({"status": 500, "error": err.error.reason});
+                         });
+                                deferred.resolve(response);
+
+
+                }).catch(function(err) {
+                        console.log("[routes][bluegroups] - " + err);
+                        deferred.reject({"status": 500, "error": err.error.reason});
+                });
+
+                }catch(e){
+                        deferred.reject({"status": 500, "error": e});
+                }
+                return deferred.promise;
+        }, 
+
+
+
+	getArea: function(req,db) {
+		var deferred = q.defer();
+		var bg = [];
+		try{
+			db.view('userBG', 'Area', {include_docs: true}).then(function(data) {
+				for(var i=0;i<data.body.rows[0].doc.area[req.session.businessunit][req.query.group].length;i++) {
+					bg.push({"member": data.body.rows[0].doc.area[req.session.businessunit][req.query.group][i].name + " (" + data.body.rows[0].doc.area[req.session.businessunit][req.query.group][i].id+ ")","uid":data.body.rows[0].doc.area[req.session.businessunit][req.query.group][i].uid})
+				}
+				bg.sort(function(a, b){
+					var nameA=a.member.toLowerCase(), nameB=b.member.toLowerCase()
+					if (nameA < nameB) //sort string ascending
+						return -1
+					if (nameA > nameB)
+						return 1
+					return 0 //default return value (no sorting)
+				});
+				deferred.resolve({"status": 200, "doc": bg});
+			}).catch(function(error){
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
 
 }
 module.exports = util;

@@ -1,12 +1,16 @@
 $(document).ready(function(){
 	//Hide left navigation
 	hide_divs();
-	//display rich texts
+	//display as htmls
+	$("#ratingcategoryDisplay").html($("input[name='ratingcategory']").val());
+	$("#ratingcategoryDisplayByIOT").html($("input[name='ratingcategory']").val());
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
 	$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());
 	$("#FocusAreaReadOnly").html($("input[name='FocusAreaRO']").val());
-	$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
+	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+		$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
+	}
 
 	//Code for Edit button
 	$('#btn_edit').click(function() {
@@ -22,7 +26,6 @@ $(document).ready(function(){
 		myEditorRatingSummary.saveHTML();
 		myEditorHighlight.saveHTML();
 		myEditorFocusArea.saveHTML();
-		myEditorAsmtOtherConsiderations.saveHTML();
 
 		var YmyEditor = myEditor.get('element').value;
 		$('#Notes').val(YmyEditor);
@@ -32,18 +35,20 @@ $(document).ready(function(){
 		$('#Highlight').val(YmyEditor);
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
-		YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
-		$('#AsmtOtherConsiderations').val(YmyEditor);
-
+		if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+			myEditorAsmtOtherConsiderations.saveHTML();
+			YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
+			$('#AsmtOtherConsiderations').val(YmyEditor);
+		}
 		$("#assessment").submit();
 	});
 	//Code for Save & Close button
 	$('#btn_save_close').click(function(evt) {
 		myEditor.saveHTML();
+		myEditor.saveHTML();
 		myEditorRatingSummary.saveHTML();
 		myEditorHighlight.saveHTML();
 		myEditorFocusArea.saveHTML();
-		myEditorAsmtOtherConsiderations.saveHTML();
 
 		var YmyEditor = myEditor.get('element').value;
 		$('#Notes').val(YmyEditor);
@@ -53,8 +58,11 @@ $(document).ready(function(){
 		$('#Highlight').val(YmyEditor);
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
-		YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
-		$('#AsmtOtherConsiderations').val(YmyEditor);
+		if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+			myEditorAsmtOtherConsiderations.saveHTML();
+			YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
+			$('#AsmtOtherConsiderations').val(YmyEditor);
+		}
 
 		$('#close').val('1');
 		$("#assessment").submit();
@@ -80,8 +88,10 @@ $(document).ready(function(){
 	myEditorHighlight.render();
 	myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
 	myEditorFocusArea.render();
-	myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
-	myEditorAsmtOtherConsiderations.render();
+	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+		myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
+		myEditorAsmtOtherConsiderations.render();
+	}
 	// --- end of rich text section --- //
 
 });

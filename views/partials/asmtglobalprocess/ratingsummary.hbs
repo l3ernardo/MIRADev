@@ -1,0 +1,120 @@
+<table id="summary_table" class="ibm-data-table">
+	{{#if editmode}}
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label"><th scope="col"><label for="RatingSummary">Rating Summary</label></th></thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="RatingSummary" type="text" name="RatingSummary" cols="168" rows="3">{{RatingSummary}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col"><label for="Highlight">Highlights</label></th>
+						<th scope="col"><label for="FocusArea">Focus Areas</label></th>
+					</thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="Highlight" type="text" name="Highlight" cols="78" rows="3">{{Highlight}}</textarea></span>
+							</div>
+						</td>
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="FocusArea" type="text" name="FocusArea" cols="78" rows="3">{{FocusArea}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{else}}
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label"><th scope="col">Rating Summary</th></thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="RatingSummaryRO" value="{{RatingSummary}}">
+							<div id="RatingSummaryReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col">Highlights</th>
+						<th scope="col">Focus Areas</th>
+					</thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="HighlightRO" value="{{Highlight}}">
+							<div id="HighlightReadOnly"></div>
+						</td>
+						<td>&nbsp;
+							<input type="hidden" name="FocusAreaRO" value="{{FocusArea}}">
+							<div id="FocusAreaReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{/if}}
+	<tr class="summaryrollup">
+		<td>
+			<table width="100%">
+				<thead class="summaryrollup-label"><th scope="col" colspan="11">Country Process Ratings Profile</th></thead>
+				<tr>
+					<td width="16%" class="summaryrollup-label"></td>
+					<td width="8%" class="sat-bg">Sat &#61;</td>
+					<td width="8%" class="sat-bg">Sat &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#61;</td>
+					<td width="8%" class="marg-bg">Marg &#9660;</td>
+					<td width="8%" class="unsat-bg">Unsat &#61;</td>
+					<td width="8%" class="unsat-bg">Unsat &#9660;</td>
+					<td width="8%" class="unrated-bg">Exempt</td>
+					<td width="8%" class="unrated-bg">NR</td>
+					<td width="12%" class="summaryrollup-viewheader">Total</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Counts</td>
+					<td class="content-data-centered">{{CPSatEqualCnt}}</td>
+					<td class="content-data-centered">{{CPSatPlusCnt}}</td>
+					<td class="content-data-centered">{{CPMargPlusCnt}}</td>
+					<td class="content-data-centered">{{CPMargEqualCnt}}</td>
+					<td class="content-data-centered">{{CPMargMinusCnt}}</td>
+					<td class="content-data-centered">{{CPUnsatEqualCnt}}</td>
+					<td class="content-data-centered">{{CPUnsatMinusCnt}}</td>
+					<td class="content-data-centered">{{CPEXEMPTCnt}}</td>
+					<td class="content-data-centered">{{CPNRCnt}}</td>
+					<td class="content-data-centered">{{CPTotalCnt}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Percentages</td>
+					<td class="content-data-centered">{{CPSatEqualPct}}</td>
+					<td class="content-data-centered">{{CPSatPlusPct}}</td>
+					<td class="content-data-centered">{{CPMargPlusPct}}</td>
+					<td class="content-data-centered">{{CPMargEqualPct}}</td>
+					<td class="content-data-centered">{{CPMargMinusPct}}</td>
+					<td class="content-data-centered">{{CPUnsatEqualPct}}</td>
+					<td class="content-data-centered">{{CPUnsatMinusPct}}</td>
+					<td class="content-data-centered">{{CPEXEMPTPct}}</td>
+					<td class="content-data-centered">{{CPNRPct}}</td>
+					<td class="content-data-centered">{{CPTotalPct}}</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>

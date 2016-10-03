@@ -1,0 +1,122 @@
+<table id="auditreview_table" class="ibm-data-table" width="100%">
+	<tr class="audit-review-content">
+		<th class="audit-review-header" width="75%">Internal Audits</th>
+		<th class="audit-review-header" width="25%">Explanations</th>
+	</tr>
+	<tr class="audit-review-content">
+		<td>
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
+					<th class="audit-review-viewheader" scope="col" width="15%">IMT</th>
+					<th class="audit-review-viewheader" scope="col" width="8%">Engagement</th>
+					<th class="audit-review-viewheader" scope="col" width="30%">Audited Unit</th>
+					<th class="audit-review-viewheader" scope="col" width="15%">Type</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Last MSAC</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Size</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Score</th>
+				</thead>
+				{{#each InternalAuditData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+		<td class="audit-review-header">
+			<table width="100%" class="ibm-data-table">
+				<tr><td class="asmt-richtext-readmode-tall"></td></tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="audit-review-content">
+		<th class="audit-review-header">Proactive Reviews - Quarterly Recommendation Status</th>
+		<th class="audit-review-header">Explanations</th>
+	</tr>
+	<tr class="audit-review-content">
+		<td>
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="audit-review-viewheader" scope="col" width="7%">Type</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Pd</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Sts</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">LoB</th>
+					<th class="audit-review-viewheader" scope="col" width="8%">Review ID</th>
+					<th class="audit-review-viewheader" scope="col" width="30%">Country Process</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">Type</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Total Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Open Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Count</th>
+				</thead>
+				{{#each PPRData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+		<td class="audit-review-header">
+			<table width="100%" class="ibm-data-table">
+				<tr><td class="asmt-richtext-readmode-tall"></td></tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="audit-review-content">
+		<th class="audit-review-header">Other Audits and Reviews</th>
+		<th class="audit-review-header">Explanations</th>
+	</tr>
+	<tr class="audit-review-content">
+		<td>
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="audit-review-viewheader" scope="col" width="8%">Type</th>
+					<th class="audit-review-viewheader" scope="col" width="8%">Rating/Status</th>
+					<th class="audit-review-viewheader" scope="col" width="8%">IMT</th>
+					<th class="audit-review-viewheader" scope="col" width="8%">Date</th>
+					<th class="audit-review-viewheader" scope="col" width="30%">Assessable Unit</th>
+					<th class="audit-review-viewheader" scope="col" width="8%">Type</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Last MSAC</th>
+					<th class="audit-review-viewheader" scope="col" width="5%">Size</th>
+					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
+				</thead>
+				{{#each OtherAuditsData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+		<td class="audit-review-header">
+			<table width="100%" class="ibm-data-table">
+				<tr><td class="asmt-richtext-readmode-tall"></td></tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="audit-review-content">
+		<th class="audit-review-header" colspan="2">Focus items, key changes, open items, comments for current & next quarter</th>
+	</tr>
+	<tr class="audit-review-content">
+		<td colspan="2" class="asmt-richtext-readmode-short"></td>
+	</tr>
+</table>
