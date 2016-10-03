@@ -1,7 +1,9 @@
 $(document).ready(function(){
 	//Hide left navigation
 	hide_divs();
-	//display rich texts
+	//display as htmls
+	$("#ratingcategoryDisplay").html($("input[name='ratingcategory']").val());
+	$("#ratingcategoryDisplayByIOT").html($("input[name='ratingcategory']").val());
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
 	$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());
@@ -80,14 +82,16 @@ $(document).ready(function(){
 	//Load the SimpleEditors
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
-	// myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
-	// myEditorRatingSummary.render();
-	// myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
-	// myEditorHighlight.render();
-	// myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
-	// myEditorFocusArea.render();
-	// myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
-	// myEditorAsmtOtherConsiderations.render();
+	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
+	myEditorRatingSummary.render();
+	myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
+	myEditorHighlight.render();
+	myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
+	myEditorFocusArea.render();
+	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+		myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
+		myEditorAsmtOtherConsiderations.render();
+	}
 	// --- end of rich text section --- //
 
 });
