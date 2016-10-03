@@ -92,12 +92,16 @@ var assessment = {
 					if (doc[0].ParentDocSubType == "Global Process") {
 						doc[0].CPAsmtDataOIview = [];
 						doc[0].CPAsmtDataPIview = [];
+						doc[0].CPAsmtDataPR1view = [];
 						fieldCalc.getRatingProfile(db, doc).then(function(data){
 							if (doc[0].CPAsmtDataPIview.length < 3) {
 								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
 							}
 							if (doc[0].CPAsmtDataOIview.length < 3) {
 								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+							}
+							if (doc[0].CPAsmtDataPR1view.length < 3) {
+								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
 							}
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {

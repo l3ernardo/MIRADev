@@ -132,6 +132,23 @@
   color: #0060A0;
   font-size:11px
 }
+.ibm-data-table .processrating {
+  background-color: #00c1c2;
+	border: 20px solid #00c1c2;
+}
+.ibm-data-table .processrating-label {
+  background-color: #d0ffff;
+}
+.ibm-data-table .processrating-viewheader {
+	text-align: center;
+	font-size: 11px;
+	background-color: #d0ffff;
+}
+.ibm-data-table .processrating-legend {
+	font-size: 10px;
+  background-color: #00c1c2;
+	border: solid #00c1c2;
+}
 .ibm-data-table .summaryrollup {
   background-color: #71b2cf;
 	border: 20px solid #71b2cf;
@@ -215,7 +232,7 @@
 .ibm-data-table .asmt-richtext-readmode-tall {
 	font-size: 11px;
 	background-color: #ffffff;
-	height:100px;
+	height:110px;
 }
 .ibm-data-table .asmt-richtext-readmode-short {
 	font-size: 11px;
