@@ -280,8 +280,6 @@ var calculatefield = {
             "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
             "targettosat":asmtsdocs[i].Target2Sat,
             "targettosatprev":asmtsdocs[i].Target2SatPrev,
-            "count":i,
-            "percent":"",
             "reviewcomments":asmtsdocs[i].ReviewComments
           };
           doc[0].CPAsmtDataPR1view.push(toadd);

@@ -37,6 +37,7 @@ var assessment = {
 						doc[0].DRData = fieldCalc.addTestViewData(5,1);
 						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
 						doc[0].SCTestData = doc[0].RCTestData;
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
 						doc[0].SampleData = doc[0].RiskData;
 						doc[0].EAData = doc[0].ARCData;
 						break;
@@ -44,6 +45,9 @@ var assessment = {
 						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
 						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
 						doc[0].OtherAuditsData = doc[0].InternalAuditData;
+						doc[0].KCTest1Data = fieldCalc.addTestViewData(7,3);
+						doc[0].KCTest2Data = fieldCalc.addTestViewData(9,3);
+						doc[0].KCTest3Data = fieldCalc.addTestViewData(10,3);
 						break;
 					case "Controllable Unit":
 						break;
