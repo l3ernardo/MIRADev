@@ -4,7 +4,7 @@
 	</tr>
 	<tr class="kc-test-content">
 		<td width="35%" class="kc-test-content">
-			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table width="100%" class="ibm-data-table">
 				<thead class="kc-test-viewheader">
 					<th colspan="5" class="kc-test-viewheader">Defect Rates (%) for Prior and Current Quarters</th>
 				</thead>
@@ -14,13 +14,13 @@
 					{{/each}}
 					<td class="asmt-viewdata" width="20%">{{CurrentPeriod}}</td>
 				</tr>
-				{{#each DRData}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
-					</tr>
-				{{/each}}
+				<tr class="asmt-viewdata">
+					{{{defectRateDisplayView AUDefectRatePrev4 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRatePrev3 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRatePrev2 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRatePrev1 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+				</tr>
 			</table>
 		</td>
 		<td width="65%" class="kc-test-content"></td>

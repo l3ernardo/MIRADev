@@ -1,3 +1,5 @@
+<link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+<link href="/public/css/style.css" rel="stylesheet" type="text/css" />
 <script src='./js/report.js'></script>
 <script src='./js/utility.js'></script>
 <link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
@@ -18,12 +20,15 @@
 			</p>
 			<br/>
 		</div>
-		<div id='reportstaexc'>
-			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" class="display nowrap">
+		<div>
+			<table id="reports_treeview" cellspacing="0" cellpadding="0" border="0" style="width:100%"  class="display nowrap" class="mira-dashboard-table">
 				<thead>
-					<tr>
-					    <th scope="col">Auditable Unit Name</th>
-						<th scope="col">Type</th>
+					<tr> 
+					    <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+						<th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+					    <th >Auditable Unit Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+						<th scope="col" FF0808>Count</th>
+						<th scope="col">Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 						<th scope="col">Auditable Process</th>
 						<th scope="col">Audit Readiness Review Status</th>
 						<th scope="col">CQ - 4</th>
@@ -41,23 +46,25 @@
 				</thead>
 				<tbody>
 				{{#each doc}}
-					<tr>
-      				    <td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-					    <td>{{DocSubType}}</td>
-                        <td>{{AuditableProcess}}</td>
+					    <tr data-tt-id={{_id}} data-tt-parent-id={{parentidauf}}>
+					    <th><font COLOR="red">{{Total}}</font></th>
+						<th><font COLOR="red">{{CategoryName}}</font></th>
+						<td>{{{in_Count Name Name}}}</td>
+						<td>{{Count}}</td>							
+						<td>{{{in_Type DocSubType DocSubType}}}</td>
+					    <td>{{AuditableProcess}}</td>	
                         <td>{{AuditReadiness}}</td>
                         <td>{{CQ4}}</td>
 						<td>{{CQ3}}</td>
-                        <td>{{CQ2}}</td>
+                        <td>{{CQ2}}</td>	
                         <td>{{CQ1}}</td>
 						<td>{{AUNextQtrRating}}</td>
 						<td>{{Target2Sat}}</td>
-                        <td></td>
+                        <td></td>						
 						<td>{{MIRAAssessmentStatus}}</td>
 						<td>{{WWBCITAssessmentStatus}}</td>
 						<td>{{PeriodRatingPrev}}</td>
-						<td>{{PeriodRating}}</td>
-
+						<td>{{PeriodRating}}</td>						
 					</tr>
 				{{/each}}
 				</tbody>

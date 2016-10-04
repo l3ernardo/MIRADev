@@ -83,7 +83,7 @@ var register = function(Handlebars) {
 				else if (rating == "Unsat")
 					ratinghtml = '<td class="asmt-viewdata-red">'+rating+'</td>';
 				else
-					ratinghtml = '<td class="asmt-viewdata">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
 			}
 			return ratinghtml;
 		},
@@ -92,7 +92,7 @@ var register = function(Handlebars) {
 			if (dr == undefined || dr == "") {
 				drhtml = '<td class="asmt-viewdata"></td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
-				drhtml = '<td class="asmt-viewdata">'+dr+'%</td>';
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'%</td>';
 			} else {
 				if (dr < margThreshold)
 					drhtml = '<td class="asmt-viewdata-green">'+dr+'%</td>';
@@ -149,6 +149,24 @@ var register = function(Handlebars) {
 					radioBtnHtml = '<input type="radio" name="'+fieldName+'" id="'+fieldName+'Yes'+'" value="Yes">Yes<input type="radio" name="'+fieldName+'" id="'+fieldName+'No'+'" value="No">No'
 			}
 			return radioBtnHtml;
+		},
+		in_Count: function(fieldName, fieldVal) {
+			var nameHtml;
+			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
+				nameHtml = '';
+			} else {
+				nameHtml = '<a href="/assessableunit?id={{_id}}">'+fieldName+'</a>'; 
+			}
+			return nameHtml;
+		},
+		in_Type: function(fieldName, fieldVal) {
+			var nameHtml;
+			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
+				nameHtml = '';
+			} else {
+				nameHtml = fieldName; 
+			}
+			return nameHtml;
 		},
 		if_equal: function(a, b, opts) {
 			if(a == b) return opts.fn(this);
