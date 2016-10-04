@@ -270,6 +270,20 @@ var calculatefield = {
             doc[0].CPAsmtDataOIview[i][asmtsdocs[i].OpMetric[j].id+"Rating"] = asmtsdocs[i].OpMetric[j].rating;
           }
 
+          // Process Ratings tab first embedded view
+          toadd = {
+            "docid":asmtsdocs[i]._id,
+            "country":asmtsdocs[i].Country,
+            "iot":asmtsdocs[i].IOT,
+            "ratingcategory":asmtsdocs[i].RatingCategory,
+            "ratingCQ":asmtsdocs[i].PeriodRating,
+            "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
+            "targettosat":asmtsdocs[i].Target2Sat,
+            "targettosatprev":asmtsdocs[i].Target2SatPrev,
+            "reviewcomments":asmtsdocs[i].ReviewComments
+          };
+          doc[0].CPAsmtDataPR1view.push(toadd);
+
           // Basics of Control Exception Counter
           if (asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
 

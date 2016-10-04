@@ -1,7 +1,9 @@
 $(document).ready(function(){
 	//Hide left navigation
 	hide_divs();
-	//display rich texts
+	//display as htmls
+	$("#ratingcategoryDisplay").html($("input[name='ratingcategory']").val());
+	$("#ratingcategoryDisplayByIOT").html($("input[name='ratingcategory']").val());
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
 	$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());

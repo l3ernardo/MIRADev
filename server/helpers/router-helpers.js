@@ -150,6 +150,24 @@ var register = function(Handlebars) {
 			}
 			return radioBtnHtml;
 		},
+		in_Count: function(fieldName, fieldVal) {
+			var nameHtml;
+			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
+				nameHtml = '';
+			} else {
+				nameHtml = '<a href="/assessableunit?id={{_id}}">'+fieldName+'</a>'; 
+			}
+			return nameHtml;
+		},
+		in_Type: function(fieldName, fieldVal) {
+			var nameHtml;
+			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
+				nameHtml = '';
+			} else {
+				nameHtml = fieldName; 
+			}
+			return nameHtml;
+		},
 		if_equal: function(a, b, opts) {
 			if(a == b) return opts.fn(this);
      	else return opts.inverse(this);
