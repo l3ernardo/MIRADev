@@ -1,0 +1,175 @@
+<table id="processrating_table" class="ibm-data-table">
+	<tr class="processrating">
+		<td width="65%">
+			<table width="100%">
+				<thead class="processrating-label"><th scope="col" colspan="11">Country Process Ratings Profile</th></thead>
+				<tr>
+					<td width="16%" class="processrating-label"></td>
+					<td width="8%" class="sat-bg">Sat &#61;</td>
+					<td width="8%" class="sat-bg">Sat &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#61;</td>
+					<td width="8%" class="marg-bg">Marg &#9660;</td>
+					<td width="8%" class="unsat-bg">Unsat &#61;</td>
+					<td width="8%" class="unsat-bg">Unsat &#9660;</td>
+					<td width="8%" class="unrated-bg">Exempt</td>
+					<td width="8%" class="unrated-bg">NR</td>
+					<td width="12%" class="processrating-viewheader">Total</td>
+				</tr>
+				<tr class="content-data">
+					<td class="processrating-label">Counts</td>
+					<td class="content-data-centered">{{CPSatEqualCnt}}</td>
+					<td class="content-data-centered">{{CPSatPlusCnt}}</td>
+					<td class="content-data-centered">{{CPMargPlusCnt}}</td>
+					<td class="content-data-centered">{{CPMargEqualCnt}}</td>
+					<td class="content-data-centered">{{CPMargMinusCnt}}</td>
+					<td class="content-data-centered">{{CPUnsatEqualCnt}}</td>
+					<td class="content-data-centered">{{CPUnsatMinusCnt}}</td>
+					<td class="content-data-centered">{{CPEXEMPTCnt}}</td>
+					<td class="content-data-centered">{{CPNRCnt}}</td>
+					<td class="content-data-centered">{{CPTotalCnt}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="processrating-label">Percentages</td>
+					<td class="content-data-centered">{{CPSatEqualPct}}</td>
+					<td class="content-data-centered">{{CPSatPlusPct}}</td>
+					<td class="content-data-centered">{{CPMargPlusPct}}</td>
+					<td class="content-data-centered">{{CPMargEqualPct}}</td>
+					<td class="content-data-centered">{{CPMargMinusPct}}</td>
+					<td class="content-data-centered">{{CPUnsatEqualPct}}</td>
+					<td class="content-data-centered">{{CPUnsatMinusPct}}</td>
+					<td class="content-data-centered">{{CPEXEMPTPct}}</td>
+					<td class="content-data-centered">{{CPNRPct}}</td>
+					<td class="content-data-centered">{{CPTotalPct}}</td>
+				</tr>
+			</table>
+		</td>
+		<td width="5%" class="processrating-legend">&nbsp;</td>
+		<td width="30%" class="processrating-legend">
+			<table width="100%">
+				<thead>
+					<th colspan="3">Key/Comments</th>
+				</thead>
+				<tr>
+					<td class="sat-bg" width="3%"></td>
+					<td class="processrating-legend" width="20%">
+						Sat &#61;<br \>
+						Sat &#9650;</td>
+					<td class="processrating-legend" width="77%">
+						: unchanged or not rated in prior quarter<br \>
+						: improved from marg/unsat</td>
+				</tr>
+				<tr>
+					<td class="marg-bg"></td>
+					<td class="processrating-legend">
+						Marg &#9650;<br \>
+						Marg &#61;<br \>
+						Marg &#9660;
+					</td>
+					<td class="processrating-legend">
+						: improved from unsat<br \>
+						: unchanged or not rated in prior quarter<br \>
+						: deteriorated from sat
+					</td>
+				</tr>
+				<tr>
+					<td class="unsat-bg"></td>
+					<td class="processrating-legend">
+						Unsat &#61;<br \>
+						Unsat &#9660;
+					</td>
+					<td class="processrating-legend">
+						: unchanged<br \>
+						: deteriorated from sat/marg
+					</td>
+				</tr>
+				<tr>
+					<td class="unrated-bg"></td>
+					<td class="processrating-legend">NR</td>
+					<td class="processrating-legend">: not rated</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="processrating">
+		<th colspan="3" class="processrating">Country Processes by Rating</th>
+	</tr>
+	<tr class="processrating">
+		<td colspan="3">
+			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Country</th>
+					<th class="processrating-viewheader" scope="col" width="5%">Count</th>
+					<th class="processrating-viewheader" scope="col" width="5%">Percent</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Prior Q</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Curr Q</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Prior Target to Sat</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Target to Sat</th>
+					<th class="processrating-viewheader" scope="col" width="30%">Explanations</th>
+				</thead>
+				{{#each CPAsmtDataPR1view}}
+					<tr class="asmt-viewdata">
+						<td class="asmt-viewdata">
+							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
+							<div id="ratingcategoryDisplay"></div>
+						</td>
+						{{#if_equal country ""}}
+							<td class="asmt-viewdata">&nbsp;</td>
+						{{else}}
+							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{country}}</a></td>
+						{{/if_equal}}
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"></td>
+						{{{ratingDisplayView ratingPQ1}}}
+						{{{ratingDisplayView ratingCQ}}}
+						<td class="asmt-viewdata">{{targettosat}}</td>
+						<td class="asmt-viewdata">{{targettosatprev}}</td>
+						<td class="asmt-viewdata">{{reviewcomments}}</td>
+					</tr>
+				{{/each}}
+				<tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="processrating">
+		<th colspan="3" class="processrating">Country Processes by IOT</th>
+	</tr>
+	<tr class="processrating">
+		<td colspan="3">
+			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="processrating-viewheader" scope="col" width="10%"></th>
+					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Country</th>
+					<th class="processrating-viewheader" scope="col" width="5%">Count</th>
+					<th class="processrating-viewheader" scope="col" width="5%">Percent</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Prior Q</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Curr Q</th>
+					<th class="processrating-viewheader" scope="col" width="10%">Target to Sat</th>
+					<th class="processrating-viewheader" scope="col" width="30%">Explanations</th>
+				</thead>
+				{{#each CPAsmtDataPR1view}}
+					<tr class="asmt-viewdata">
+						<td class="asmt-viewdata">{{iot}}</td>
+						<td class="asmt-viewdata">
+							<div id="ratingcategoryDisplayByIOT"></div>
+						</td>
+						{{#if_equal country ""}}
+							<td class="asmt-viewdata">&nbsp;</td>
+						{{else}}
+							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{country}}</a></td>
+						{{/if_equal}}
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"></td>
+						{{{ratingDisplayView ratingPQ1}}}
+						{{{ratingDisplayView ratingCQ}}}
+						<td class="asmt-viewdata">{{targettosat}}</td>
+						<td class="asmt-viewdata">{{reviewcomments}}</td>
+					</tr>
+				{{/each}}
+				<tr>
+			</table>
+		</td>
+	</tr>
+</table>
