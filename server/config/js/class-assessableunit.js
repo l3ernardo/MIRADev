@@ -156,6 +156,7 @@ var assessableunit = {
 				         {"key": "Assessable Unit"},
 						 //{"DocSubType":{"$in":["BU Reporting Group"]}},
 					     {"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
+						 {"$not": {"Name":"Reporting Group"}},
 				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
 			},
@@ -172,6 +173,7 @@ var assessableunit = {
 				         {"key": "Assessable Unit"},
 						 //{"DocSubType":{"$in":["BU Reporting Group"]}},
 					     {"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
+						 {"$not": {"Name":"Reporting Group"}},
 				         {"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 				         {"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 				]
