@@ -74,28 +74,28 @@ var calculatefield = {
     var prevYr = current[1]-1;
     switch (current[0]) {
       case "1":
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
-        p4Qtrs.push("2Q"+prevYr);
         p4Qtrs.push("1Q"+prevYr1);
+        p4Qtrs.push("2Q"+prevYr);
+        p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
         break;
       case "2":
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
         p4Qtrs.push("2Q"+prevYr);
+        p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
         break;
       case "3":
-        p4Qtrs.push("2Q"+current[1]);
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("4Q"+prevYr);
         p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
+        p4Qtrs.push("2Q"+current[1]);
         break;
       case "4":
-        p4Qtrs.push("3Q"+current[1]);
-        p4Qtrs.push("2Q"+current[1]);
-        p4Qtrs.push("1Q"+current[1]);
         p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
+        p4Qtrs.push("2Q"+current[1]);
+        p4Qtrs.push("3Q"+current[1]);
         break;
     }
     return p4Qtrs;
