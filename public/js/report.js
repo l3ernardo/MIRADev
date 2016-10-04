@@ -6,12 +6,14 @@ $(document).ready(function() {
 		"paginate": false,
 		"scrollX": true,
 		"scrollY": 250,
+		"ordering":false
 	});
 	$('#reports_table').DataTable({
 		select: true,
 		"paginate": false,
 		"scrollX": true,
 		"scrollY": 250,
+		"ordering":false
 	});
 	$('#lnk_exportxls').click(function(){
 		var table="<table border='2px'>";
