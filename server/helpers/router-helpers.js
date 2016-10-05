@@ -71,6 +71,27 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+		ratingBGDisplay: function(rating, field) {
+			var ratinghtml;
+			if (rating == undefined) {
+					ratinghtml = "";
+			} else {
+				if (rating == "Sat") {
+					ratinghtml = '<span style="background-color:#00ff00; padding-left:1em; padding-right:1em"></span>';
+				} else {
+					if (rating == "Marg") {
+						ratinghtml = '<span style="background-color: #ffff00; padding-left:1em; padding-right:1em"></span>';
+					} else {
+						if (rating == "Unsat") {
+							ratinghtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff"></span>';
+						} else {
+							ratinghtml = "";
+						}
+					}
+				}
+			}
+			return ratinghtml;
+		},
 		ratingDisplayView: function(rating, field) {
 			var ratinghtml;
 			if (rating == undefined) {
@@ -155,7 +176,7 @@ var register = function(Handlebars) {
 			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
 				nameHtml = '';
 			} else {
-				nameHtml = '<a href="/assessableunit?id={{_id}}">'+fieldName+'</a>'; 
+				nameHtml = '<a href="/assessableunit?id={{_id}}">'+fieldName+'</a>';
 			}
 			return nameHtml;
 		},
@@ -164,7 +185,7 @@ var register = function(Handlebars) {
 			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
 				nameHtml = '';
 			} else {
-				nameHtml = fieldName; 
+				nameHtml = fieldName;
 			}
 			return nameHtml;
 		},
