@@ -276,6 +276,7 @@
 	border: 20px solid #00c150;
 }
 .ibm-data-table .risk-msdcommit-label {
+	font-size: 11px;
 	background-color: #e0ffdf;
 }
 .ibm-data-table .risk-msdcommit-viewheader {

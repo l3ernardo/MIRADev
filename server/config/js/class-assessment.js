@@ -51,6 +51,8 @@ var assessment = {
 						doc[0].KC2Test1Data = fieldCalc.addTestViewData(4,3);
 						doc[0].KC2Test2Data = fieldCalc.addTestViewData(8,3);
 						doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,3);
+						doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+						doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
 						break;
 					case "Controllable Unit":
 						break;
