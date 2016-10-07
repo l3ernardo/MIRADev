@@ -171,12 +171,12 @@ var register = function(Handlebars) {
 			}
 			return radioBtnHtml;
 		},
-		in_Count: function(fieldName, fieldVal) {
+		in_Count: function(fieldName, fieldId,fieldVal) {
 			var nameHtml;
 			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
 				nameHtml = '';
 			} else {
-				nameHtml = '<a href="/assessableunit?id={{_id}}">'+fieldName+'</a>';
+				nameHtml = '<a href="/assessableunit?id='+fieldId+'">'+fieldName+'</a>'; 
 			}
 			return nameHtml;
 		},
