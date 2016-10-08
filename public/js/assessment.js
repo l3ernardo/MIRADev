@@ -8,6 +8,29 @@ $(document).ready(function(){
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
 	$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());
 	$("#FocusAreaReadOnly").html($("input[name='FocusAreaRO']").val());
+	switch ($("input[name='parentdocsubtype']").val()) {
+		case "Country Process":
+			$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
+			break;
+		case "Global Process":
+			$("#OverallAssessmentCommentsReadOnly").html($("input[name='OverallAssessmentCommentsRO']").val());
+			$("#KCFRTestingCommentsReadOnly").html($("input[name='KCFRTestingCommentsRO']").val());
+			$("#KCOTestingCommentsReadOnly").html($("input[name='KCOTestingCommentsRO']").val());
+			$("#CorpIACommentsReadOnly").html($("input[name='CorpIACommentsRO']").val());
+			$("#MissedRECommentsReadOnly").html($("input[name='MissedRECommentsRO']").val());
+			$("#MissedMSACCommentsReadOnly").html($("input[name='MissedMSACCommentsRO']").val());
+			$("#BoCCommentsReadOnly").html($("input[name='BoCCommentsRO']").val());
+			$("#PerfOverviewOtherExplanationReadOnly").html($("input[name='PerfOverviewOtherExplanationRO']").val());
+			$("#PerfOverviewCriticaExplanationReadOnly").html($("input[name='PerfOverviewCriticaExplanationRO']").val());
+			// Rich text fields for metrics
+			var metrics = $("#opMetricIDs").val().split(',');
+			var i;
+			for (i = 0; i < metrics.length; ++i) {
+				$("#"+metrics[i]+"commentfieldReadOnly").html($("input[name='"+metrics[i]+"commentfieldRO']").val());
+			}
+			break;
+	}
+
 	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
 		$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
 	}
@@ -35,10 +58,14 @@ $(document).ready(function(){
 		$('#Highlight').val(YmyEditor);
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
-		if ($("input[name='parentdocsubtype']").val() == "Country Process") {
-			myEditorAsmtOtherConsiderations.saveHTML();
-			YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
-			$('#AsmtOtherConsiderations').val(YmyEditor);
+		switch ($("input[name='parentdocsubtype']").val()) {
+			case "Country Process":
+				myEditorAsmtOtherConsiderations.saveHTML();
+				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
+				$('#AsmtOtherConsiderations').val(YmyEditor);
+				break;
+			case "Global Process":
+				break;
 		}
 		$("#assessment").submit();
 	});
@@ -58,10 +85,14 @@ $(document).ready(function(){
 		$('#Highlight').val(YmyEditor);
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
-		if ($("input[name='parentdocsubtype']").val() == "Country Process") {
-			myEditorAsmtOtherConsiderations.saveHTML();
-			YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
-			$('#AsmtOtherConsiderations').val(YmyEditor);
+		switch ($("input[name='parentdocsubtype']").val()) {
+			case "Country Process":
+				myEditorAsmtOtherConsiderations.saveHTML();
+				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
+				$('#AsmtOtherConsiderations').val(YmyEditor);
+				break;
+			case "Global Process":
+				break;
 		}
 
 		$('#close').val('1');
@@ -82,15 +113,44 @@ $(document).ready(function(){
 	//Load the SimpleEditors
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
-	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
-	myEditorRatingSummary.render();
-	myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
-	myEditorHighlight.render();
-	myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
-	myEditorFocusArea.render();
-	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
-		myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
-		myEditorAsmtOtherConsiderations.render();
+	myEditor = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
+	myEditor.render();
+	myEditor = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
+	myEditor.render();
+	myEditor = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
+	myEditor.render();
+	switch ($("input[name='parentdocsubtype']").val()) {
+		case "Country Process":
+			myEditor = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
+			myEditor.render();
+			break;
+		case "Global Process":
+			myEditor = new YAHOO.widget.SimpleEditor('OverallAssessmentComments', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('KCFRTestingComments', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('KCOTestingComments', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('CorpIAComments', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('MissedREComments', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('MissedMSACComments', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('BoCComments', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('PerfOverviewOtherExplanation', myConfig);
+			myEditor.render();
+			myEditor = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanation', myConfig);
+			myEditor.render();
+			// Rich text fields for metrics
+			var metrics = $("#opMetricIDs").val().split(',');
+			var i;
+			for (i = 0; i < metrics.length; ++i) {
+				myEditor = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
+				myEditor.render();
+			}
+			break;
 	}
 	// --- end of rich text section --- //
 

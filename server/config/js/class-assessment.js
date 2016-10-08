@@ -210,6 +210,10 @@ var assessment = {
 						case "Subprocess":
 							break;
 						case "Global Process":
+							//---Rating Summary Tab---//
+							doc[0].RatingSummary = req.body.RatingSummary;
+							doc[0].Highlight = req.body.Highlight;
+							doc[0].FocusArea = req.body.FocusArea;
 							break;
 						case "BU IOT":
 							break;
