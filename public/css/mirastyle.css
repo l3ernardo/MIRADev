@@ -223,6 +223,16 @@
 	background-color: #7f604f;
 	border: 20px solid #7f604f;
 }
+.ibm-data-table .ar-asmt-header {
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #7f604f;
+	border: #7f604f;
+}
+.ibm-data-table .ar-asmt-label {
+	font-size: 11px;
+  background-color: #e7d8cf;
+}
 .ibm-data-table .ar-asmt-viewheader {
 	text-align: center;
 	font-size: 11px;
@@ -262,10 +272,6 @@
 	text-align: center;
 	font-size: 11px;
 	background-color: #ffff00;
-}
-.ibm-data-table .ar-asmt-label {
-	font-size: 11px;
-  background-color: #e7d8cf;
 }
 .ibm-data-table .risk-msdcommit {
   color: #ffffff;

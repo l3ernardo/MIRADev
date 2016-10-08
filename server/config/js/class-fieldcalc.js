@@ -171,26 +171,58 @@ var calculatefield = {
                   opMetricIDs = opID;
                 else
                   opMetricIDs = opMetricIDs + "," + opID;
-                doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
-                doc[0].OpMetric[j].namefield = opID + "Name";
-                doc[0].OpMetric[j].ratingfield = opID + "Rating";
-                doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
-                doc[0].OpMetric[j].colDate = "colDate"+ opID;
-                doc[0].OpMetric[j].findingfield = opID + "Finding";
-                doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
-                doc[0].OpMetric[j].actionfield = opID + "Action";
-                doc[0].OpMetric[j].colFinding = "colAction"+ opID;
-                doc[0].OpMetric[j].rating = "";
-                doc[0].OpMetric[j].targetsatdate = "";
-                doc[0].OpMetric[j].finding = "";
-                doc[0].OpMetric[j].action = "";
-                if (doc[0].OpMetricCurr) {
-                  omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
-                  if (omIndex != -1) {
-                    doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
-                    doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
-                    doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
-                    doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                if (doc[0].ParentDocSubType == "Country Process") {
+                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                  doc[0].OpMetric[j].namefield = opID + "Name";
+                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
+                  doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
+                  doc[0].OpMetric[j].colDate = "colDate"+ opID;
+                  doc[0].OpMetric[j].findingfield = opID + "Finding";
+                  doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
+                  doc[0].OpMetric[j].actionfield = opID + "Action";
+                  doc[0].OpMetric[j].colFinding = "colAction"+ opID;
+                  doc[0].OpMetric[j].rating = "";
+                  doc[0].OpMetric[j].targetsatdate = "";
+                  doc[0].OpMetric[j].finding = "";
+                  doc[0].OpMetric[j].action = "";
+                  if (doc[0].OpMetricCurr) {
+                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
+                    if (omIndex != -1) {
+                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
+                      doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
+                      doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
+                      doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                    }
+                  }
+                } else {
+                  // For Global Process
+                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                  // doc[0].OpMetric[j].namefield = opID + "Name";
+                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
+                  doc[0].OpMetric[j].commentfield = opID + "Comment";
+                  doc[0].OpMetric[j].commentfieldRO = opID + "commentfieldRO";
+                  doc[0].OpMetric[j].commentfieldReadOnly = opID + "commentfieldReadOnly";
+                  // doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
+                  // doc[0].OpMetric[j].colDate = "colDate"+ opID;
+                  // doc[0].OpMetric[j].findingfield = opID + "Finding";
+                  // doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
+                  // doc[0].OpMetric[j].actionfield = opID + "Action";
+                  // doc[0].OpMetric[j].colFinding = "colAction"+ opID;
+                  doc[0].OpMetric[j].rating = "";
+                  doc[0].OpMetric[j].comment = "";
+                  // doc[0].OpMetric[j].targetsatdate = "";
+                  // doc[0].OpMetric[j].finding = "";
+                  // doc[0].OpMetric[j].action = "";
+                  doc[0].OpMetric[j].comment = "";
+                  if (doc[0].OpMetricCurr) {
+                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
+                    if (omIndex != -1) {
+                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
+                      doc[0].OpMetric[j].comment = doc[0].OpMetricCurr[omIndex].comment;
+                      // doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
+                      // doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
+                      // doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                    }
                   }
                 }
             }
