@@ -20,7 +20,7 @@
 					</tr>
 					<tr>
 						<td class="ar-asmt-label"><label for="KCFRTestingComments">KCFR Defect Rate</label></td>
-						{{{defectRateDisplayView KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
 							<div class='yui-skin-sam'>
 								<span><textarea id="KCFRTestingComments" type="text" name="KCFRTestingComments">{{KCFRTestingComments}}</textarea></span>
@@ -29,7 +29,7 @@
 					</tr>
 					<tr>
 						<td class="ar-asmt-label"><label for="KCOTestingComments">KCO Defect Rate</label></td>
-						{{{defectRateDisplayView KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
 							<div class='yui-skin-sam'>
 								<span><textarea id="KCOTestingComments" type="text" name="KCOTestingComments">{{KCOTestingComments}}</textarea></span>
@@ -78,9 +78,12 @@
 							</td>
 							<td class="content-data">
 								<div class='yui-skin-sam'>
-									<span class="content-data" id={{colComment}}>
-										<textarea id="commentfield" type="text" name="commentfield">{{comment}}</textarea>
+									<span>
+										<textarea id="{{commentfield}}" type="text" name="{{commentfield}}">{{comment}}</textarea>
 									</span>
+									<!-- <span class="content-data" id={{colComment}}>
+										<textarea id="commentfield" type="text" name="commentfield">{{comment}}</textarea>
+									</span> -->
 								</div>
 							</td>
 						</tr>
@@ -115,7 +118,7 @@
 				</table>
 			</td>
 		</tr>
-	{{else}}
+	{{else}} <!-- Read Mode  -->
 		<tr class="ar-asmt-content">
 			<td>
 				<table width="100%" class="ibm-data-table">
@@ -134,12 +137,12 @@
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
-						{{{defectRateDisplayView KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">{{KCFRTestingComments}}</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">KCO Defect Rate</td>
-						{{{defectRateDisplayView KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
 							<input type="hidden" name="KCOTestingCommentsRO" value="{{KCOTestingComments}}">
 							<div id="KCOTestingCommentsReadOnly"></div>
