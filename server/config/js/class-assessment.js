@@ -53,6 +53,7 @@ var assessment = {
 						doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,3);
 						doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
 						doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+						doc[0].AUData = fieldCalc.addTestViewData(17,10);
 						break;
 					case "Controllable Unit":
 						break;
@@ -209,6 +210,10 @@ var assessment = {
 						case "Subprocess":
 							break;
 						case "Global Process":
+							//---Rating Summary Tab---//
+							doc[0].RatingSummary = req.body.RatingSummary;
+							doc[0].Highlight = req.body.Highlight;
+							doc[0].FocusArea = req.body.FocusArea;
 							break;
 						case "BU IOT":
 							break;

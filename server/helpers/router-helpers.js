@@ -113,6 +113,22 @@ var register = function(Handlebars) {
 			if (dr == undefined || dr == "") {
 				drhtml = '<td class="asmt-viewdata"></td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
+			} else {
+				if (dr < margThreshold)
+					drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
+				else if (dr >= unsatThreshold)
+					drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
+				else
+					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
+			}
+			return drhtml;
+		},
+		defectRateDisplayViewWpercent: function(dr, margThreshold, unsatThreshold) {
+			var drhtml;
+			if (dr == undefined || dr == "") {
+				drhtml = '<td class="asmt-viewdata"></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
 				drhtml = '<td class="asmt-viewdata-centered">'+dr+'%</td>';
 			} else {
 				if (dr < margThreshold)
@@ -176,7 +192,7 @@ var register = function(Handlebars) {
 			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
 				nameHtml = '';
 			} else {
-				nameHtml = '<a href="/assessableunit?id='+fieldId+'">'+fieldName+'</a>'; 
+				nameHtml = '<a href="/assessableunit?id='+fieldId+'">'+fieldName+'</a>';
 			}
 			return nameHtml;
 		},
