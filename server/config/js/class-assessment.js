@@ -37,6 +37,7 @@ var assessment = {
 						doc[0].DRData = fieldCalc.addTestViewData(5,1);
 						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
 						doc[0].SCTestData = doc[0].RCTestData;
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
 						doc[0].SampleData = doc[0].RiskData;
 						doc[0].EAData = doc[0].ARCData;
 						break;
@@ -44,6 +45,15 @@ var assessment = {
 						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
 						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
 						doc[0].OtherAuditsData = doc[0].InternalAuditData;
+						doc[0].KCTest1Data = fieldCalc.addTestViewData(7,3);
+						doc[0].KCTest2Data = fieldCalc.addTestViewData(9,3);
+						doc[0].KCTest3Data = fieldCalc.addTestViewData(10,3);
+						doc[0].KC2Test1Data = fieldCalc.addTestViewData(4,3);
+						doc[0].KC2Test2Data = fieldCalc.addTestViewData(8,3);
+						doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,3);
+						doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+						doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+						doc[0].AUData = fieldCalc.addTestViewData(17,10);
 						break;
 					case "Controllable Unit":
 						break;
@@ -200,6 +210,10 @@ var assessment = {
 						case "Subprocess":
 							break;
 						case "Global Process":
+							//---Rating Summary Tab---//
+							doc[0].RatingSummary = req.body.RatingSummary;
+							doc[0].Highlight = req.body.Highlight;
+							doc[0].FocusArea = req.body.FocusArea;
 							break;
 						case "BU IOT":
 							break;

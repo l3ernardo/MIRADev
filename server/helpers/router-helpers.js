@@ -71,6 +71,27 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+		ratingBGDisplay: function(rating, field) {
+			var ratinghtml;
+			if (rating == undefined) {
+					ratinghtml = "";
+			} else {
+				if (rating == "Sat") {
+					ratinghtml = '<span style="background-color:#00ff00; padding-left:1em; padding-right:1em"></span>';
+				} else {
+					if (rating == "Marg") {
+						ratinghtml = '<span style="background-color: #ffff00; padding-left:1em; padding-right:1em"></span>';
+					} else {
+						if (rating == "Unsat") {
+							ratinghtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff"></span>';
+						} else {
+							ratinghtml = "";
+						}
+					}
+				}
+			}
+			return ratinghtml;
+		},
 		ratingDisplayView: function(rating, field) {
 			var ratinghtml;
 			if (rating == undefined) {
@@ -88,6 +109,22 @@ var register = function(Handlebars) {
 			return ratinghtml;
 		},
 		defectRateDisplayView: function(dr, margThreshold, unsatThreshold) {
+			var drhtml;
+			if (dr == undefined || dr == "") {
+				drhtml = '<td class="asmt-viewdata"></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
+			} else {
+				if (dr < margThreshold)
+					drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
+				else if (dr >= unsatThreshold)
+					drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
+				else
+					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
+			}
+			return drhtml;
+		},
+		defectRateDisplayViewWpercent: function(dr, margThreshold, unsatThreshold) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
 				drhtml = '<td class="asmt-viewdata"></td>';
@@ -149,6 +186,24 @@ var register = function(Handlebars) {
 					radioBtnHtml = '<input type="radio" name="'+fieldName+'" id="'+fieldName+'Yes'+'" value="Yes">Yes<input type="radio" name="'+fieldName+'" id="'+fieldName+'No'+'" value="No">No'
 			}
 			return radioBtnHtml;
+		},
+		in_Count: function(fieldName, fieldId,fieldVal) {
+			var nameHtml;
+			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
+				nameHtml = '';
+			} else {
+				nameHtml = '<a href="/assessableunit?id='+fieldId+'">'+fieldName+'</a>';
+			}
+			return nameHtml;
+		},
+		in_Type: function(fieldName, fieldVal) {
+			var nameHtml;
+			if (fieldVal == "Total" || fieldVal == "Sat" || fieldVal == "Unsat" || fieldVal == "Marg"  || fieldVal == "Pending" || fieldVal == "Excempt"  || fieldVal == "NR"  ) {
+				nameHtml = '';
+			} else {
+				nameHtml = fieldName;
+			}
+			return nameHtml;
 		},
 		if_equal: function(a, b, opts) {
 			if(a == b) return opts.fn(this);
