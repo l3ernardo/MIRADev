@@ -388,7 +388,6 @@ for (i=0;i<len;i++)
 
 	}
 }
-
 					for (var i = 0; i <  G.length; i++){
 						if(G[i].Name=='Total'){
 							view_auFileReport.push({
