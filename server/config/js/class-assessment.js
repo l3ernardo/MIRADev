@@ -210,10 +210,55 @@ var assessment = {
 						case "Subprocess":
 							break;
 						case "Global Process":
-							//---Rating Summary Tab---//
+							//---Summary Tab---//
 							doc[0].RatingSummary = req.body.RatingSummary;
 							doc[0].Highlight = req.body.Highlight;
 							doc[0].FocusArea = req.body.FocusArea;
+							//---Performance Overview Tab---//
+							doc[0].OverallAssessmentComments = req.body.OverallAssessmentComments;
+							doc[0].KCFRTestingComments = req.body.KCFRTestingComments;
+							doc[0].KCOTestingComments = req.body.KCOTestingComments;
+							doc[0].CorpIAComments = req.body.CorpIAComments;
+							doc[0].MissedREComments = req.body.MissedREComments;
+							doc[0].MissedMSACComments = req.body.MissedMSACComments;
+							doc[0].BoCComments = req.body.BoCComments;
+							doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
+							doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
+							//---Perfromance Overview Tab operational metrics---//
+							var metricsID = req.body.opMetricIDs.split(",");
+							var tname, topush;
+							doc[0].OpMetric = [];
+							for (var i = 0; i < metricsID.length; ++i) {
+								if(metricsID[i] != undefined && metricsID[i] != "") {
+									topush = {
+										"id": metricsID[i]
+									};
+									doc[0].OpMetric.push(topush);
+									fname = metricsID[i]+"Name";
+									doc[0].OpMetric[i].name = req.body[fname];
+									fname = metricsID[i]+"Rating";
+									doc[0].OpMetric[i].rating = req.body[fname];
+									fname = metricsID[i]+"Comment";
+									doc[0].OpMetric[i].action = req.body[fname];
+								}
+							}
+							//---Performance Overview Tab---//
+							doc[0].IAExplanations = req.body.IAExplanations;
+							doc[0].PRExplanations = req.body.PRExplanations;
+							doc[0].ARRExplanations = req.body.ARRExplanations;
+							doc[0].AuditFocusText = req.body.AuditFocusText;
+							//---Key Controls Testign 1 Tab---//
+							doc[0].KCT1Section1Explanations = req.body.KCT1Section1Explanations;
+							doc[0].KCT1Section2Explanations = req.body.KCT1Section2Explanations;
+							doc[0].KCT1Section3Explanations = req.body.KCT1Section3Explanations;
+							//---Key Controls Testign 2 Tab---//
+							doc[0].SOXProcessTestingExplanations = req.body.SOXProcessTestingExplanations;
+							doc[0].ProcessTestingFocusItems = req.body.ProcessTestingFocusItems;
+							//---Open Risks and Missed Commits Tab---//
+							doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
+							doc[0].GCSFocusItems = req.body.GCSFocusItems;
+							doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
+							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "BU IOT":
 							break;

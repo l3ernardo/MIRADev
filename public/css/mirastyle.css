@@ -248,6 +248,11 @@
 	font-size: 11px;
 	background-color: #ffffff;
 }
+.ibm-data-table .asmt-viewdata-centered {
+	text-align: center;
+	font-size: 11px;
+	background-color: #ffffff;
+}
 .ibm-data-table .asmt-richtext-readmode-tall {
 	font-size: 11px;
 	background-color: #ffffff;
@@ -257,11 +262,6 @@
 	font-size: 11px;
 	background-color: #ffffff;
 	height:20px;
-}
-.ibm-data-table .asmt-viewdata-centered {
-	text-align: center;
-	font-size: 11px;
-	background-color: #ffffff;
 }
 .ibm-data-table .asmt-viewdata-green {
 	text-align: center;

@@ -449,9 +449,9 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 					case "Global Process":
 						var lParams;
 						if (data.doc[0].editmode)
-							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating'];
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
 						else
-							lParams = ['UnsatThresholdPercent','MargThresholdPercent'];
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;

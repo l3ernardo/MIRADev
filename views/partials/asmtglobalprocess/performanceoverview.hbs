@@ -76,15 +76,12 @@
 								{{{ratingDisplay rating}}}
 								<span>{{{uniqueSelect ratingfield ../parameters.OpMetricRating.0.options "name" "name" rating}}}</span>
 							</td>
-							<td class="content-data">
-								<div class='yui-skin-sam'>
+							<td class="content-data">{{commentfield}}
+								<!-- <div class='yui-skin-sam'>
 									<span>
 										<textarea id="{{commentfield}}" type="text" name="{{commentfield}}">{{comment}}</textarea>
 									</span>
-									<!-- <span class="content-data" id={{colComment}}>
-										<textarea id="commentfield" type="text" name="commentfield">{{comment}}</textarea>
-									</span> -->
-								</div>
+								</div> -->
 							</td>
 						</tr>
 					{{/each}}
@@ -138,7 +135,10 @@
 					<tr>
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td class="content-data">{{KCFRTestingComments}}</td>
+						<td class="content-data">
+							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}">
+							<div id="KCFRTestingCommentsReadOnly"></div>
+						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">KCO Defect Rate</td>
@@ -181,9 +181,9 @@
 						<tr>
 							<td class="ar-asmt-label">{{name}}</td>
 							<td class="content-data">{{{ratingDisplay rating}}}</td>
-							<td class="content-data">
-								<input type="hidden" name="{{commentfieldRO}}" value="{{comment}}">
-								<div id="{{commentfieldReadOnly}}"></div>
+							<td class="content-data">{{comment}}
+								<!-- <input type="hidden" name="{{commentfieldRO}}" value="{{comment}}">
+								<div id="{{commentfieldReadOnly}}"></div> -->
 							</td>
 						</tr>
 					{{/each}}
@@ -209,7 +209,6 @@
 						<td class="content-data">
 							<input type="hidden" name="PerfOverviewCriticaExplanationRO" value="{{PerfOverviewCriticaExplanation}}">
 							<div id="PerfOverviewCriticaExplanationReadOnly"></div>
-							{{PerfOverviewCriticaExplanation}}
 						</td>
 					</tr>
 				</table>
