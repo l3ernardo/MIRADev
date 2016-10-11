@@ -74,28 +74,28 @@ var calculatefield = {
     var prevYr = current[1]-1;
     switch (current[0]) {
       case "1":
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
-        p4Qtrs.push("2Q"+prevYr);
         p4Qtrs.push("1Q"+prevYr1);
+        p4Qtrs.push("2Q"+prevYr);
+        p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
         break;
       case "2":
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
         p4Qtrs.push("2Q"+prevYr);
+        p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
         break;
       case "3":
-        p4Qtrs.push("2Q"+current[1]);
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("4Q"+prevYr);
         p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
+        p4Qtrs.push("2Q"+current[1]);
         break;
       case "4":
-        p4Qtrs.push("3Q"+current[1]);
-        p4Qtrs.push("2Q"+current[1]);
-        p4Qtrs.push("1Q"+current[1]);
         p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
+        p4Qtrs.push("2Q"+current[1]);
+        p4Qtrs.push("3Q"+current[1]);
         break;
     }
     return p4Qtrs;
@@ -171,26 +171,58 @@ var calculatefield = {
                   opMetricIDs = opID;
                 else
                   opMetricIDs = opMetricIDs + "," + opID;
-                doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
-                doc[0].OpMetric[j].namefield = opID + "Name";
-                doc[0].OpMetric[j].ratingfield = opID + "Rating";
-                doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
-                doc[0].OpMetric[j].colDate = "colDate"+ opID;
-                doc[0].OpMetric[j].findingfield = opID + "Finding";
-                doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
-                doc[0].OpMetric[j].actionfield = opID + "Action";
-                doc[0].OpMetric[j].colFinding = "colAction"+ opID;
-                doc[0].OpMetric[j].rating = "";
-                doc[0].OpMetric[j].targetsatdate = "";
-                doc[0].OpMetric[j].finding = "";
-                doc[0].OpMetric[j].action = "";
-                if (doc[0].OpMetricCurr) {
-                  omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
-                  if (omIndex != -1) {
-                    doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
-                    doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
-                    doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
-                    doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                if (doc[0].ParentDocSubType == "Country Process") {
+                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                  doc[0].OpMetric[j].namefield = opID + "Name";
+                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
+                  doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
+                  doc[0].OpMetric[j].colDate = "colDate"+ opID;
+                  doc[0].OpMetric[j].findingfield = opID + "Finding";
+                  doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
+                  doc[0].OpMetric[j].actionfield = opID + "Action";
+                  doc[0].OpMetric[j].colFinding = "colAction"+ opID;
+                  doc[0].OpMetric[j].rating = "";
+                  doc[0].OpMetric[j].targetsatdate = "";
+                  doc[0].OpMetric[j].finding = "";
+                  doc[0].OpMetric[j].action = "";
+                  if (doc[0].OpMetricCurr) {
+                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
+                    if (omIndex != -1) {
+                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
+                      doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
+                      doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
+                      doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                    }
+                  }
+                } else {
+                  // For Global Process
+                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                  // doc[0].OpMetric[j].namefield = opID + "Name";
+                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
+                  doc[0].OpMetric[j].commentfield = opID + "Comment";
+                  doc[0].OpMetric[j].commentfieldRO = opID + "commentfieldRO";
+                  doc[0].OpMetric[j].commentfieldReadOnly = opID + "commentfieldReadOnly";
+                  // doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
+                  // doc[0].OpMetric[j].colDate = "colDate"+ opID;
+                  // doc[0].OpMetric[j].findingfield = opID + "Finding";
+                  // doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
+                  // doc[0].OpMetric[j].actionfield = opID + "Action";
+                  // doc[0].OpMetric[j].colFinding = "colAction"+ opID;
+                  doc[0].OpMetric[j].rating = "";
+                  doc[0].OpMetric[j].comment = "";
+                  // doc[0].OpMetric[j].targetsatdate = "";
+                  // doc[0].OpMetric[j].finding = "";
+                  // doc[0].OpMetric[j].action = "";
+                  doc[0].OpMetric[j].comment = "";
+                  if (doc[0].OpMetricCurr) {
+                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
+                    if (omIndex != -1) {
+                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
+                      doc[0].OpMetric[j].comment = doc[0].OpMetricCurr[omIndex].comment;
+                      // doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
+                      // doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
+                      // doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                    }
                   }
                 }
             }
@@ -280,8 +312,6 @@ var calculatefield = {
             "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
             "targettosat":asmtsdocs[i].Target2Sat,
             "targettosatprev":asmtsdocs[i].Target2SatPrev,
-            "count":i,
-            "percent":"",
             "reviewcomments":asmtsdocs[i].ReviewComments
           };
           doc[0].CPAsmtDataPR1view.push(toadd);
