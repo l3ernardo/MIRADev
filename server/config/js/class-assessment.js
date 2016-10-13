@@ -214,6 +214,11 @@ var assessment = {
 							doc[0].RatingSummary = req.body.RatingSummary;
 							doc[0].Highlight = req.body.Highlight;
 							doc[0].FocusArea = req.body.FocusArea;
+							doc[0].Insight1 = req.body.Insight1;
+							doc[0].Insight2 = req.body.Insight2;
+							doc[0].Insight3 = req.body.Insight3;
+							doc[0].Insight4 = req.body.Insight4;
+							doc[0].Insight5 = req.body.Insight5;
 							//---Performance Overview Tab---//
 							doc[0].OverallAssessmentComments = req.body.OverallAssessmentComments;
 							doc[0].KCFRTestingComments = req.body.KCFRTestingComments;
