@@ -9,7 +9,8 @@
 				<a id="{{this.id}}-a" href="{{this.link}}">{{this.title}}</a>
 				<ul id="{{this.id}}-options" style="display:none">
 				{{#each	this.entries}}
-					<li><a href="{{this.link}}" id="{{this.id}}">{{this.name}}</a></li>
+					
+					<li {{#if this.color}} style="background: {{this.color}}" {{/if}}><a href="{{this.link}}" id="{{this.id}}">{{this.name}}</a></li>
 				{{/each}}
 				</ul>
 			</li>		
