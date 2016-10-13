@@ -165,6 +165,10 @@
 .ibm-data-table .summaryrollup-label {
   background-color: #c2efff;
 }
+.ibm-data-table .summaryrollup-sublabel {
+	font-size: 11px;
+  background-color: #c2efff;
+}
 .ibm-data-table .summaryrollup-viewheader {
 	text-align: center;
 	font-size: 11px;
