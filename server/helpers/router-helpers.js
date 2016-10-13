@@ -264,7 +264,32 @@ var register = function(Handlebars) {
 			if(app.locals.submenu) {
 				return app.locals.submenu;
 			}
+		},
+		listWithComa: function(list){
+			var newList='';
+
+		if(typeof list != 'undefined'){ 
+			for(i=0; i<list.length; i++){
+				
+				if(list.charAt(i) != ',')
+				newList += list.charAt(i);
+				else
+				newList += '</br>';
+				
+ 
+			} 
 		}
+			
+		return newList;
+		},
+		
+		getSourceColor: function(option){
+
+			if(option == "WWBCIT")
+			return "background-color: #C0E1FF;"
+			else return "background-color: #C2FF91;"		
+
+		} 
 	};
 
 	if (Handlebars && typeof Handlebars.registerHelper === "function") {
