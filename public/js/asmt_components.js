@@ -440,6 +440,7 @@ function displaySelectedGPCompTab(){
 /* main */
 $(document).ready(function() {
   switch ($("input[name='parentdocsubtype']").val()) {
+		case "Controllable Unit":
 		case "Country Process":
       addEventsCompCP();
     	window.addEventListener("load", displaySelectedCPCompTab());

@@ -75,12 +75,13 @@
 							<td class="content-data">
 									<span>{{{uniqueSelect ratingfield ../parameters.OpMetricRating.0.options "name" "name" rating}}}</span>
 							</td>
-							<td class="content-data">{{commentfield}}
-								<!-- <div class='yui-skin-sam'>
+							<td class="content-data">
+								<!-- {{commentfield}} -->
+								<div class='yui-skin-sam'>
 									<span>
-										<textarea id="{{commentfield}}" type="text" name="{{commentfield}}">{{comment}}</textarea>
+										<textarea id="{{commentfield}}" type="text" name="{{commentfield}}">{{action}}</textarea>
 									</span>
-								</div> -->
+								</div>
 							</td>
 						</tr>
 					{{/each}}
@@ -180,9 +181,9 @@
 						<tr>
 							<td class="ar-asmt-label">{{name}}</td>
 							{{{ratingDisplayView rating}}}
-							<td class="content-data">{{comment}}
-								<!-- <input type="hidden" name="{{commentfieldRO}}" value="{{comment}}">
-								<div id="{{commentfieldReadOnly}}"></div> -->
+							<td class="content-data">
+								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}">
+								<div id="{{commentfieldReadOnly}}"></div>
 							</td>
 						</tr>
 					{{/each}}

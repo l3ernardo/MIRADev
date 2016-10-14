@@ -24,10 +24,10 @@ $(document).ready(function(){
 			$("#PerfOverviewCriticaExplanationReadOnly").html($("input[name='PerfOverviewCriticaExplanationRO']").val());
 			// Rich text fields for metrics
 			var metrics = $("#opMetricIDs").val().split(',');
-			// var i;
-			// for (i = 0; i < metrics.length; ++i) {
-			// 	$("#"+metrics[i]+"commentfieldReadOnly").html($("input[name='"+metrics[i]+"commentfieldRO']").val());
-			// }
+			var i;
+			for (i = 0; i < metrics.length; ++i) {
+				$("#"+metrics[i]+"commentfieldReadOnly").html($("input[name='"+metrics[i]+"commentfieldRO']").val());
+			}
 			break;
 	}
 
@@ -95,14 +95,14 @@ $(document).ready(function(){
 				myEditorPerfOverviewCriticaExplanation.saveHTML();
 				YmyEditor = myEditorPerfOverviewCriticaExplanation.get('element').value;
 				$('#PerfOverviewCriticaExplanation').val(YmyEditor);
-
 				// Rich text fields for metrics
-				// var metrics = $("#opMetricIDs").val().split(',');
-				// var i;
-				// for (i = 0; i < metrics.length; ++i) {
-				// 	myEditor+metrics[i]+'Comment' = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
-				// 	myEditor+metrics[i]+'Comment'.render();
-				// }
+				var metrics = $("#opMetricIDs").val().split(',');
+				var i;
+				for (i = 0; i < metrics.length; ++i) {
+					vars['myEditor'+metrics[i]+'Comment'].saveHTML();
+					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
+					$('#'+metrics[i]+'Comment').val(YmyEditor);
+				}
 				break;
 		}
 		$("#assessment").submit();
@@ -159,14 +159,14 @@ $(document).ready(function(){
 				myEditorPerfOverviewCriticaExplanation.saveHTML();
 				YmyEditor = myEditorPerfOverviewCriticaExplanation.get('element').value;
 				$('#PerfOverviewCriticaExplanation').val(YmyEditor);
-
 				// Rich text fields for metrics
-				// var metrics = $("#opMetricIDs").val().split(',');
-				// var i;
-				// for (i = 0; i < metrics.length; ++i) {
-				// 	myEditor+metrics[i]+'Comment' = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
-				// 	myEditor+metrics[i]+'Comment'.render();
-				// }
+				var metrics = $("#opMetricIDs").val().split(',');
+				var i;
+				for (i = 0; i < metrics.length; ++i) {
+					vars['myEditor'+metrics[i]+'Comment'].saveHTML();
+					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
+					$('#'+metrics[i]+'Comment').val(YmyEditor);
+				}
 				break;
 		}
 
@@ -219,12 +219,13 @@ $(document).ready(function(){
 			myEditorPerfOverviewCriticaExplanation = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanation', myConfig);
 			myEditorPerfOverviewCriticaExplanation.render();
 			// Rich text fields for metrics
-			// var metrics = $("#opMetricIDs").val().split(',');
-			// var i;
-			// for (i = 0; i < metrics.length; ++i) {
-			// 	myEditor+metrics[i]+'Comment' = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
-			// 	myEditor+metrics[i]+'Comment'.render();
-			// }
+			var metrics = $("#opMetricIDs").val().split(',');
+			var i;
+			var vars = {};
+			for (i = 0; i < metrics.length; ++i) {
+				vars['myEditor'+metrics[i]+'Comment'] = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
+				vars['myEditor'+metrics[i]+'Comment'].render();
+			}
 			break;
 	}
 	// --- end of rich text section --- //
