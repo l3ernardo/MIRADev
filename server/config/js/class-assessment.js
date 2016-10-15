@@ -358,13 +358,18 @@ var assessment = {
 						doc[0].PrevRatingUpdate = doc[0].PeriodRating;
 						doc[0].PeriodRating = req.body.PeriodRating;
 					}
-					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
-					doc[0].ReviewComments = req.body.ReviewComments;
-					doc[0].Target2Sat = req.body.Target2Sat;
+					if ( doc[0].PeriodRating  ==  "Sat") {
+						doc[0].ReviewComments = "";
+						doc[0].Target2Sat = "";
+					} else {
+						doc[0].ReviewComments = req.body.ReviewComments;
+						doc[0].Target2Sat = req.body.Target2Sat;
+					}
 					if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
 						doc[0].MIRAStatusChangeWho = curruser;
 						doc[0].MIRAStatusChangeWhen = currdate;
 					}
+					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
 					doc[0].MIRAStatus = req.body.MIRAStatus;
 					doc[0].NextQtrRating = req.body.NextQtrRating;
 					doc[0].DecommitExplanation = req.body.DecommitExplanation;
