@@ -1169,7 +1169,24 @@ var assessableunit = {
 					doc = accessupdates.updateAccessExistDoc(req,doc);
 					//Save document
 					db.save(doc[0]).then(function(data){
-						deferred.resolve(data);
+						// Get current quarter Assessment
+						fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
+							var asmtdoc = [];
+							asmtdoc.push(asmtdata.doc);
+							// Pass data to current quarter assessment
+							switch (doc[0].DocSubType) {
+								case "Controllable Unit":
+									asmtdoc[0].AuditProgram = doc[0].AuditProgram
+									break;
+							}
+							db.save(asmtdoc[0]).then(function(asmtdata){
+								deferred.resolve(data);
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err.error.reason});
+							});
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err.error.reason});
+						});
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
