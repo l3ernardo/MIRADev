@@ -12,18 +12,9 @@ $(document).ready(function() {
 	//meeting button event
 	$('#btn_meeting').click(function() {
 		clearFields();
-		//$('#eTitle').text("Meeting/Event");
 		$('#eventType').attr('value', 'Meeting/Event');
 		ibmweb.overlay.show('Overlay_Event');
 	});
-
-	//milestone button event
-	// $('#btn_milestone').click(function() {
-		// clearFields();
-		// $('#eTitle').text('Milestone');
-		// $('#eventType').attr('value', 'Milestone');
-		// ibmweb.overlay.show('Overlay_Event');
-	// });
 
 	$('#startDate').datepicker({
 		defaultDate: "+1w",
@@ -65,27 +56,8 @@ $(document).ready(function() {
 
 	//button cancel
 	$('#btn_cancel').click(function() {
-		if($('#id').val()=="" && $('#attachIDs').val()!="" && $('#attachIDs').val()!="[]"){
-			ibmweb.overlay.show('divDeleteImg');
-			$.ajax({
-				url: "/cancelEvent",
-				type: 'GET',
-				data: { attachIDs: $('#attachIDs').val() },
-				contentType: 'application/json',
-				success: function (data) {
-					ibmweb.overlay.hide('divDeleteImg');
-					ibmweb.overlay.hide('Overlay_Event');
-					$('#calendar').fullCalendar('refetchEvents');
-				},
-				error: function() {
-					ibmweb.overlay.hide('divDeleteImg');
-					alert("There was an error when deleting the Attachment(s)");
-				}
-			});
-		}else{
-			ibmweb.overlay.hide('Overlay_Event');
-			$('#btn_submit').prop("disabled", true);
-		}
+		ibmweb.overlay.hide('Overlay_Event');
+		$('#btn_submit').prop("disabled", true);
 	});
 
 	//button delete
@@ -117,8 +89,6 @@ $(document).ready(function() {
 		if ($('#title').val() != '' && $('#startDate').val() != '') {
 			//copy to a new event
 			$('#id').val('');
-			//copy without attachments
-			//$('#attachIDs').val('');
 			ibmweb.overlay.show('divSavingImg');
 			var form = $('#formCalendar');
 			$.ajax({
@@ -166,38 +136,14 @@ $(document).ready(function() {
 			url:'/getEvents?id='+optCal,
 			success: function(data){
 				for (var i in data) {
-					// if(data[i].eventType == "Milestone"){
-						// data[i].color = "#17af4b";
-					// }
-					var objLink = eval("$('a#" + "calendaridbu" + "')");
+					var objLink = eval("$('ul#calendar-options > li > a#" + data[i].ownerId + "')");
 					var style = objLink.parent().attr("style");
+					
 					if(style!=undefined){
-						style = style.split(" ")[1];
+						style = style.split(": ")[1];
+						style = style.split(" none")[0];
 						data[i].color = style;
 					}
-
-					
-					// if(ownerId == "calendaridcbc")
-						// data[i].color = "#4181c0";
-					// else if(ownerId == "calendaridbu")
-						// data[i].color = "#c2ff91";
-					// else if(ownerId == "calendarideu")
-						// data[i].color = "#003f69";
-					// else if(ownerId == "calendaridap")
-						// data[i].color = "#ffffc2";
-					// else if(ownerId == "calendaridgcg")
-						// data[i].color = "#b1b1d2";
-					// else if(ownerId == "calendaridjp")
-						// data[i].color = "#ffe0e6";
-					// else if(ownerId == "calendaridmea")
-						// data[i].color = "#c2efff";
-					// else if(ownerId == "calendaridna")
-						// data[i].color = "#c2efff";
-					// else if(ownerId == "calendaridla")
-						// data[i].color = "#ffe1b0";
-					// else if(ownerId == "calendaridgdc")
-						// data[i].color = "#d0b1a1";
-					
 				}
 			}
 		},
@@ -209,7 +155,6 @@ $(document).ready(function() {
 				//enable submit and cancel button if they are disabled
 				$('#btn_cancel').prop("disabled", false);
 
-				//$('#eTitle').text(event.eventType);
 				$('#creatorInfo').html('<span style="color: #5C87C4">Created by</span> ' + event.log[0].name + ' <span style="color: #5C87C4">on</span> ' + event.log[0].date +' <span style="color: #5C87C4">at</span> ' + event.log[0].time);
 				$('#id').val(event._id);
 				$('#rev').val(event._rev);
@@ -217,7 +162,6 @@ $(document).ready(function() {
 				$('#ownerId').val(event.ownerId);
 
 				$('#eventInfo').val(event.eventInfo);
-				//$('#attachIDs').val(event.attachIDs);
 				$('input[type=checkbox]').prop('checked', false);
 
 				if (event.targetCalendar) {
@@ -257,7 +201,6 @@ $(document).ready(function() {
 					$('input[type=checkbox]').prop('disabled', true);
 
 				}
-				//loadAttachments('attachIDs');
 				ibmweb.overlay.show('Overlay_Event');
 			});
 		},
@@ -316,9 +259,6 @@ function clearFields(){
 	$('#startDate').val('');
 	$('#endDate').val('');
 	$('#eventInfo').val('');
-	//$('#attachIDs').val('');
-	$('#divDownload').html('');
-	//resetAttachments();
 	$('input[type=checkbox]').prop('checked', false);
 
 	$('input[type=checkbox]').each(function() {

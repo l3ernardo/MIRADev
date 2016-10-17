@@ -3,6 +3,8 @@ $(document).ready(function(){
 	//Update breadcrumb
 	addEventToMenu();
 	showBreadCrumb();
+	//Define colors for calendars options
+	defineColorCalendar();
 });
 
 function selectedMenuOption(){
@@ -61,4 +63,13 @@ function breadcrumbUpdate(aid, link, text) {
 			sessionStorage.breadcrumb = "";
 	}
 	showBreadCrumb();
+}
+function defineColorCalendar(){
+	
+	var colorsArray = ["#FAFAFA", "#2eacf5", "#c2efff", "#a1d3e8", "#BEFFB3", "#dbdbdb", "#ffdca3", "#f0e6bc", "#e2c3b1", "#cca3a3", "#f3d3dc"];
+
+	$.each($("ul#calendar-options > li"), function(index){
+		$(this).css({'background': colorsArray[index]});
+	});
+
 }
