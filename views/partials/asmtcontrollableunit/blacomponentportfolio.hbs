@@ -6,11 +6,12 @@
 		<ul class="ibm-tabs">
 			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
 			<li id="basiccontrol-li"><a href="javascript:void(0)" class="mira-subdata">Basics of Control</a></li>
-			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Assessment</a></li>
+			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Asmt</a></li>
 			<li id="riskmsdcommit-li"><a href="javascript:void(0)" class="mira-subdata">Open Risks &amp; Missed Commits</a></li>
 			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
-			<li id="kctest-li"><a href="javascript:void(0)" class="mira-subdata">Key Controls Testing</a></li>
+			<li id="kctest-li"><a href="javascript:void(0)" class="mira-subdata">Key Ctrls Testing</a></li>
 			<li id="opmetric-li"><a href="javascript:void(0)" class="mira-subdata">Operational Metrics</a></li>
+			<li id="accountrating-li"><a href="javascript:void(0)" class="mira-subdata">Account Ratings</a></li>
 			<li id="other-li"><a href="javascript:void(0)" class="mira-subdata">Others</a></li>
 		</ul>
 	</div>
@@ -34,6 +35,9 @@
 	</div>
 	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/operationalmetrics}}
+	</div>
+	<div id="accountrating" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/accountratings}}
 	</div>
 	<div id="other" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/others}}

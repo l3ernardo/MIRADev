@@ -1176,7 +1176,8 @@ var assessableunit = {
 							// Pass data to current quarter assessment
 							switch (doc[0].DocSubType) {
 								case "Controllable Unit":
-									asmtdoc[0].AuditProgram = doc[0].AuditProgram
+									asmtdoc[0].AuditProgram = doc[0].AuditProgram;
+									asmtdoc[0].Portfolio = doc[0].Portfolio;
 									break;
 							}
 							db.save(asmtdoc[0]).then(function(asmtdata){

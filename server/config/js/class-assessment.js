@@ -69,6 +69,7 @@ var assessment = {
 						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
 						doc[0].SampleData = doc[0].RiskData;
 						doc[0].EAData = doc[0].ARCData;
+						doc[0].AccountData = doc[0].RiskData;
 						break;
 				}
 
@@ -344,6 +345,8 @@ var assessment = {
 						case "Account":
 							break;
 						case "Controllable Unit":
+							//---Account Ratings Tab---//
+							doc[0].CUFocusItems = req.body.CUFocusItems;
 							//---Backend Fields---//
 							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
 							break;
