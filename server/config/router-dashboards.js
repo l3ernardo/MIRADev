@@ -505,14 +505,10 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','AuditLessonsLearnedFinding','OpMetricRating','UnsatThresholdPercent','MargThresholdPercent'];
 						else
 							lParams = ['UnsatThresholdPercent','MargThresholdPercent'];
-						parameter.getListParams(db, lParams).then(function(dataParam) {
+							parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
-								if(data.doc[0].Country != undefined || data.doc[0].Country != "" ) {
-									res.render('asmtcontrollableunit', data.doc[0] );
-								} else {
-									// This is to do
-								}
+								res.render('asmtcontrollableunit', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[routes][CPassessment][getListParams] - " + dataParam.error);

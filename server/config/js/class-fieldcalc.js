@@ -106,8 +106,6 @@ var calculatefield = {
     var deferred = q.defer();
 		try{
 
-      // if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
-
       /* Calculate for Instance Design Specifics and parameters*/
   		var lParams = [];
   		// Get required paramaters
@@ -134,7 +132,7 @@ var calculatefield = {
             opMetricKey = "OpMetric" + doc[0].WWBCITKey;
             break;
           case "Controllable Unit":
-            opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("");
+            opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
             break;
         }
         lParams.push(opMetricKey);

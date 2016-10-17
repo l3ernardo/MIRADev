@@ -35,6 +35,8 @@
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
+		<input type="hidden" name="country" value="{{Country}}">
+		<input type="hidden" name="portfolio" value="{{Portfolio}}">
 		<input type="hidden" name="close" id="close" value="0">
 		<!-- Basic Details -->
 		{{>asmtcontrollableunit/basics}}
@@ -45,7 +47,11 @@
 		<!-- Assessment components guide -->
 		{{>asmtbaselevel/compguide}}<br /><br />
 		<!-- Assessment components tabs -->
-		{{>asmtcontrollableunit/blacomponent}}<br /><br />
+		{{#if_equal Portfolio "Yes"}}
+			{{>asmtcontrollableunit/blacomponentportfolio}}<br /><br />
+		{{else}}
+			{{>asmtcontrollableunit/blacomponent}}<br /><br />
+		{{/if_equal}}
 		<!-- NOTES & LINKS SECTION -->
 		{{>comments}}
 		<!-- BUTTONS AREA -->
