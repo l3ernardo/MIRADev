@@ -73,17 +73,14 @@
 						<tr>
 							<td class="ar-asmt-label">{{name}}</td>
 							<td class="content-data">
-								{{{ratingDisplay rating}}}
-								<span>{{{uniqueSelect ratingfield ../parameters.OpMetricRating.0.options "name" "name" rating}}}</span>
+									<span>{{{uniqueSelect ratingfield ../parameters.OpMetricRating.0.options "name" "name" rating}}}</span>
 							</td>
 							<td class="content-data">
+								<!-- {{commentfield}} -->
 								<div class='yui-skin-sam'>
 									<span>
-										<textarea id="{{commentfield}}" type="text" name="{{commentfield}}">{{comment}}</textarea>
+										<textarea id="{{commentfield}}" type="text" name="{{commentfield}}">{{action}}</textarea>
 									</span>
-									<!-- <span class="content-data" id={{colComment}}>
-										<textarea id="commentfield" type="text" name="commentfield">{{comment}}</textarea>
-									</span> -->
 								</div>
 							</td>
 						</tr>
@@ -138,7 +135,10 @@
 					<tr>
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td class="content-data">{{KCFRTestingComments}}</td>
+						<td class="content-data">
+							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}">
+							<div id="KCFRTestingCommentsReadOnly"></div>
+						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">KCO Defect Rate</td>
@@ -180,9 +180,9 @@
 					{{#each OpMetric}}
 						<tr>
 							<td class="ar-asmt-label">{{name}}</td>
-							<td class="content-data">{{{ratingDisplay rating}}}</td>
+							{{{ratingDisplayView rating}}}
 							<td class="content-data">
-								<input type="hidden" name="{{commentfieldRO}}" value="{{comment}}">
+								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}">
 								<div id="{{commentfieldReadOnly}}"></div>
 							</td>
 						</tr>
@@ -209,7 +209,6 @@
 						<td class="content-data">
 							<input type="hidden" name="PerfOverviewCriticaExplanationRO" value="{{PerfOverviewCriticaExplanation}}">
 							<div id="PerfOverviewCriticaExplanationReadOnly"></div>
-							{{PerfOverviewCriticaExplanation}}
 						</td>
 					</tr>
 				</table>

@@ -65,13 +65,50 @@ $(document).ready(function(){
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
 			case "Global Process":
+				myEditorOverallAssessmentComments.saveHTML();
+				YmyEditor = myEditorOverallAssessmentComments.get('element').value;
+				$('#OverallAssessmentComments').val(YmyEditor);
+				myEditorKCFRTestingComments.saveHTML();
+				YmyEditor = myEditorKCFRTestingComments.get('element').value;
+				$('#KCFRTestingComments').val(YmyEditor);
+				myEditorKCOTestingComments.saveHTML();
+				YmyEditor = myEditorKCOTestingComments.get('element').value;
+				$('#KCOTestingComments').val(YmyEditor);
+				myEditorKCOTestingComments.saveHTML();
+				YmyEditor = myEditorKCOTestingComments.get('element').value;
+				$('#KCOTestingComments').val(YmyEditor);
+				myEditorCorpIAComments.saveHTML();
+				YmyEditor = myEditorCorpIAComments.get('element').value;
+				$('#CorpIAComments').val(YmyEditor);
+				myEditorMissedREComments.saveHTML();
+				YmyEditor = myEditorMissedREComments.get('element').value;
+				$('#MissedREComments').val(YmyEditor);
+				myEditorMissedMSACComments.saveHTML();
+				YmyEditor = myEditorMissedMSACComments.get('element').value;
+				$('#MissedMSACComments').val(YmyEditor);
+				myEditorBoCComments.saveHTML();
+				YmyEditor = myEditorBoCComments.get('element').value;
+				$('#BoCComments').val(YmyEditor);
+				myEditorPerfOverviewOtherExplanation.saveHTML();
+				YmyEditor = myEditorPerfOverviewOtherExplanation.get('element').value;
+				$('#PerfOverviewOtherExplanation').val(YmyEditor);
+				myEditorPerfOverviewCriticaExplanation.saveHTML();
+				YmyEditor = myEditorPerfOverviewCriticaExplanation.get('element').value;
+				$('#PerfOverviewCriticaExplanation').val(YmyEditor);
+				// Rich text fields for metrics
+				var metrics = $("#opMetricIDs").val().split(',');
+				var i;
+				for (i = 0; i < metrics.length; ++i) {
+					vars['myEditor'+metrics[i]+'Comment'].saveHTML();
+					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
+					$('#'+metrics[i]+'Comment').val(YmyEditor);
+				}
 				break;
 		}
 		$("#assessment").submit();
 	});
 	//Code for Save & Close button
 	$('#btn_save_close').click(function(evt) {
-		myEditor.saveHTML();
 		myEditor.saveHTML();
 		myEditorRatingSummary.saveHTML();
 		myEditorHighlight.saveHTML();
@@ -92,6 +129,44 @@ $(document).ready(function(){
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
 			case "Global Process":
+				myEditorOverallAssessmentComments.saveHTML();
+				YmyEditor = myEditorOverallAssessmentComments.get('element').value;
+				$('#OverallAssessmentComments').val(YmyEditor);
+				myEditorKCFRTestingComments.saveHTML();
+				YmyEditor = myEditorKCFRTestingComments.get('element').value;
+				$('#KCFRTestingComments').val(YmyEditor);
+				myEditorKCOTestingComments.saveHTML();
+				YmyEditor = myEditorKCOTestingComments.get('element').value;
+				$('#KCOTestingComments').val(YmyEditor);
+				myEditorKCOTestingComments.saveHTML();
+				YmyEditor = myEditorKCOTestingComments.get('element').value;
+				$('#KCOTestingComments').val(YmyEditor);
+				myEditorCorpIAComments.saveHTML();
+				YmyEditor = myEditorCorpIAComments.get('element').value;
+				$('#CorpIAComments').val(YmyEditor);
+				myEditorMissedREComments.saveHTML();
+				YmyEditor = myEditorMissedREComments.get('element').value;
+				$('#MissedREComments').val(YmyEditor);
+				myEditorMissedMSACComments.saveHTML();
+				YmyEditor = myEditorMissedMSACComments.get('element').value;
+				$('#MissedMSACComments').val(YmyEditor);
+				myEditorBoCComments.saveHTML();
+				YmyEditor = myEditorBoCComments.get('element').value;
+				$('#BoCComments').val(YmyEditor);
+				myEditorPerfOverviewOtherExplanation.saveHTML();
+				YmyEditor = myEditorPerfOverviewOtherExplanation.get('element').value;
+				$('#PerfOverviewOtherExplanation').val(YmyEditor);
+				myEditorPerfOverviewCriticaExplanation.saveHTML();
+				YmyEditor = myEditorPerfOverviewCriticaExplanation.get('element').value;
+				$('#PerfOverviewCriticaExplanation').val(YmyEditor);
+				// Rich text fields for metrics
+				var metrics = $("#opMetricIDs").val().split(',');
+				var i;
+				for (i = 0; i < metrics.length; ++i) {
+					vars['myEditor'+metrics[i]+'Comment'].saveHTML();
+					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
+					$('#'+metrics[i]+'Comment').val(YmyEditor);
+				}
 				break;
 		}
 
@@ -113,42 +188,43 @@ $(document).ready(function(){
 	//Load the SimpleEditors
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
-	myEditor = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
-	myEditor.render();
-	myEditor = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
-	myEditor.render();
-	myEditor = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
-	myEditor.render();
+	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
+	myEditorRatingSummary.render();
+	myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
+	myEditorHighlight.render();
+	myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
+	myEditorFocusArea.render();
 	switch ($("input[name='parentdocsubtype']").val()) {
 		case "Country Process":
-			myEditor = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
-			myEditor.render();
+			myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
+			myEditorAsmtOtherConsiderations.render();
 			break;
 		case "Global Process":
-			myEditor = new YAHOO.widget.SimpleEditor('OverallAssessmentComments', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('KCFRTestingComments', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('KCOTestingComments', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('CorpIAComments', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('MissedREComments', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('MissedMSACComments', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('BoCComments', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('PerfOverviewOtherExplanation', myConfig);
-			myEditor.render();
-			myEditor = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanation', myConfig);
-			myEditor.render();
+			myEditorOverallAssessmentComments = new YAHOO.widget.SimpleEditor('OverallAssessmentComments', myConfig);
+			myEditorOverallAssessmentComments.render();
+			myEditorKCFRTestingComments = new YAHOO.widget.SimpleEditor('KCFRTestingComments', myConfig);
+			myEditorKCFRTestingComments.render();
+			myEditorKCOTestingComments = new YAHOO.widget.SimpleEditor('KCOTestingComments', myConfig);
+			myEditorKCOTestingComments.render();
+			myEditorCorpIAComments = new YAHOO.widget.SimpleEditor('CorpIAComments', myConfig);
+			myEditorCorpIAComments.render();
+			myEditorMissedREComments = new YAHOO.widget.SimpleEditor('MissedREComments', myConfig);
+			myEditorMissedREComments.render();
+			myEditorMissedMSACComments = new YAHOO.widget.SimpleEditor('MissedMSACComments', myConfig);
+			myEditorMissedMSACComments.render();
+			myEditorBoCComments = new YAHOO.widget.SimpleEditor('BoCComments', myConfig);
+			myEditorBoCComments.render();
+			myEditorPerfOverviewOtherExplanation = new YAHOO.widget.SimpleEditor('PerfOverviewOtherExplanation', myConfig);
+			myEditorPerfOverviewOtherExplanation.render();
+			myEditorPerfOverviewCriticaExplanation = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanation', myConfig);
+			myEditorPerfOverviewCriticaExplanation.render();
 			// Rich text fields for metrics
 			var metrics = $("#opMetricIDs").val().split(',');
 			var i;
+			var vars = {};
 			for (i = 0; i < metrics.length; ++i) {
-				myEditor = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
-				myEditor.render();
+				vars['myEditor'+metrics[i]+'Comment'] = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
+				vars['myEditor'+metrics[i]+'Comment'].render();
 			}
 			break;
 	}

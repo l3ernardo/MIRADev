@@ -56,6 +56,20 @@ var assessment = {
 						doc[0].AUData = fieldCalc.addTestViewData(17,10);
 						break;
 					case "Controllable Unit":
+						// test view data
+						doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+						doc[0].AuditTrustedData = doc[0].RiskData;
+						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
+						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+						doc[0].DRData = fieldCalc.addTestViewData(5,1);
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+						doc[0].SCTestData = doc[0].RCTestData;
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+						doc[0].SampleData = doc[0].RiskData;
+						doc[0].EAData = doc[0].ARCData;
+						doc[0].AccountData = doc[0].RiskData;
 						break;
 				}
 
@@ -210,10 +224,60 @@ var assessment = {
 						case "Subprocess":
 							break;
 						case "Global Process":
-							//---Rating Summary Tab---//
+							//---Summary Tab---//
 							doc[0].RatingSummary = req.body.RatingSummary;
 							doc[0].Highlight = req.body.Highlight;
 							doc[0].FocusArea = req.body.FocusArea;
+							doc[0].Insight1 = req.body.Insight1;
+							doc[0].Insight2 = req.body.Insight2;
+							doc[0].Insight3 = req.body.Insight3;
+							doc[0].Insight4 = req.body.Insight4;
+							doc[0].Insight5 = req.body.Insight5;
+							//---Performance Overview Tab---//
+							doc[0].OverallAssessmentComments = req.body.OverallAssessmentComments;
+							doc[0].KCFRTestingComments = req.body.KCFRTestingComments;
+							doc[0].KCOTestingComments = req.body.KCOTestingComments;
+							doc[0].CorpIAComments = req.body.CorpIAComments;
+							doc[0].MissedREComments = req.body.MissedREComments;
+							doc[0].MissedMSACComments = req.body.MissedMSACComments;
+							doc[0].BoCComments = req.body.BoCComments;
+							doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
+							doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
+							//---Perfromance Overview Tab operational metrics---//
+							var metricsID = req.body.opMetricIDs.split(",");
+							var tname, topush;
+							doc[0].OpMetric = [];
+							for (var i = 0; i < metricsID.length; ++i) {
+								if(metricsID[i] != undefined && metricsID[i] != "") {
+									topush = {
+										"id": metricsID[i]
+									};
+									doc[0].OpMetric.push(topush);
+									fname = metricsID[i]+"Name";
+									doc[0].OpMetric[i].name = req.body[fname];
+									fname = metricsID[i]+"Rating";
+									doc[0].OpMetric[i].rating = req.body[fname];
+									fname = metricsID[i]+"Comment";
+									doc[0].OpMetric[i].action = req.body[fname];
+								}
+							}
+							//---Performance Overview Tab---//
+							doc[0].IAExplanations = req.body.IAExplanations;
+							doc[0].PRExplanations = req.body.PRExplanations;
+							doc[0].ARRExplanations = req.body.ARRExplanations;
+							doc[0].AuditFocusText = req.body.AuditFocusText;
+							//---Key Controls Testign 1 Tab---//
+							doc[0].KCT1Section1Explanations = req.body.KCT1Section1Explanations;
+							doc[0].KCT1Section2Explanations = req.body.KCT1Section2Explanations;
+							doc[0].KCT1Section3Explanations = req.body.KCT1Section3Explanations;
+							//---Key Controls Testign 2 Tab---//
+							doc[0].SOXProcessTestingExplanations = req.body.SOXProcessTestingExplanations;
+							doc[0].ProcessTestingFocusItems = req.body.ProcessTestingFocusItems;
+							//---Open Risks and Missed Commits Tab---//
+							doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
+							doc[0].GCSFocusItems = req.body.GCSFocusItems;
+							doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
+							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "BU IOT":
 							break;
@@ -281,6 +345,8 @@ var assessment = {
 						case "Account":
 							break;
 						case "Controllable Unit":
+							//---Account Ratings Tab---//
+							doc[0].CUFocusItems = req.body.CUFocusItems;
 							//---Backend Fields---//
 							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
 							break;
@@ -295,13 +361,18 @@ var assessment = {
 						doc[0].PrevRatingUpdate = doc[0].PeriodRating;
 						doc[0].PeriodRating = req.body.PeriodRating;
 					}
-					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
-					doc[0].ReviewComments = req.body.ReviewComments;
-					doc[0].Target2Sat = req.body.Target2Sat;
+					if ( doc[0].PeriodRating  ==  "Sat") {
+						doc[0].ReviewComments = "";
+						doc[0].Target2Sat = "";
+					} else {
+						doc[0].ReviewComments = req.body.ReviewComments;
+						doc[0].Target2Sat = req.body.Target2Sat;
+					}
 					if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
 						doc[0].MIRAStatusChangeWho = curruser;
 						doc[0].MIRAStatusChangeWhen = currdate;
 					}
+					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
 					doc[0].MIRAStatus = req.body.MIRAStatus;
 					doc[0].NextQtrRating = req.body.NextQtrRating;
 					doc[0].DecommitExplanation = req.body.DecommitExplanation;

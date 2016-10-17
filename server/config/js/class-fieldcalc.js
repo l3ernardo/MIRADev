@@ -106,8 +106,6 @@ var calculatefield = {
     var deferred = q.defer();
 		try{
 
-      // if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
-
       /* Calculate for Instance Design Specifics and parameters*/
   		var lParams = [];
   		// Get required paramaters
@@ -124,12 +122,18 @@ var calculatefield = {
   		} else {
   			lParams = ['GBSInstanceDesign'];
   		}
-      if ((doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process")) {
+      if ((doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit")) {
         var opMetricKey;
-        if (doc[0].ParentDocSubType == "Country Process") {
-          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-        }else{
-          opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+        switch (doc[0].ParentDocSubType) {
+          case "Country Process":
+            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+            break;
+          case "Global Process":
+            opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+            break;
+          case "Controllable Unit":
+            opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
+            break;
         }
         lParams.push(opMetricKey);
       }
@@ -171,8 +175,9 @@ var calculatefield = {
                   opMetricIDs = opID;
                 else
                   opMetricIDs = opMetricIDs + "," + opID;
-                if (doc[0].ParentDocSubType == "Country Process") {
+                if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit") {
                   doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                  doc[0].OpMetric[j].desc = dataParam.parameters[opMetricKey][0].options[j].desc;
                   doc[0].OpMetric[j].namefield = opID + "Name";
                   doc[0].OpMetric[j].ratingfield = opID + "Rating";
                   doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
@@ -197,31 +202,17 @@ var calculatefield = {
                 } else {
                   // For Global Process
                   doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
-                  // doc[0].OpMetric[j].namefield = opID + "Name";
                   doc[0].OpMetric[j].ratingfield = opID + "Rating";
                   doc[0].OpMetric[j].commentfield = opID + "Comment";
                   doc[0].OpMetric[j].commentfieldRO = opID + "commentfieldRO";
                   doc[0].OpMetric[j].commentfieldReadOnly = opID + "commentfieldReadOnly";
-                  // doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
-                  // doc[0].OpMetric[j].colDate = "colDate"+ opID;
-                  // doc[0].OpMetric[j].findingfield = opID + "Finding";
-                  // doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
-                  // doc[0].OpMetric[j].actionfield = opID + "Action";
-                  // doc[0].OpMetric[j].colFinding = "colAction"+ opID;
                   doc[0].OpMetric[j].rating = "";
-                  doc[0].OpMetric[j].comment = "";
-                  // doc[0].OpMetric[j].targetsatdate = "";
-                  // doc[0].OpMetric[j].finding = "";
-                  // doc[0].OpMetric[j].action = "";
-                  doc[0].OpMetric[j].comment = "";
+                  doc[0].OpMetric[j].action = "";
                   if (doc[0].OpMetricCurr) {
                     omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
                     if (omIndex != -1) {
                       doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
-                      doc[0].OpMetric[j].comment = doc[0].OpMetricCurr[omIndex].comment;
-                      // doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
-                      // doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
-                      // doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                      doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
                     }
                   }
                 }
@@ -248,6 +239,40 @@ var calculatefield = {
     }catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
+		return deferred.promise;
+	},
+
+  /* Pass data from Assessable Unit to Current Quarter Assessment */
+	getCurrentAsmt: function(db, doc) {
+    var deferred = q.defer();
+
+		try {
+
+      // Get cuurent quarter assessment
+      var asmt = {
+        selector:{
+          "_id": {"$gt":0},
+          "key": "Assessment",
+          "AUStatus": "Active",
+          "ParentDocSubType": doc[0].DocSubType,
+          "WWBCITKey": doc[0].WWBCITKey,
+          "CurrentPeriod": doc[0].CurrentPeriod
+        }
+      };
+      db.find(asmt).then(function(asmtdata) {
+        deferred.resolve({"status": 200, "doc": asmtdata.body.docs[0]});
+      }).catch(function(err) {
+        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+
+    } catch(e) {
+
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+			deferred.reject({"status": 500, "error": e});
+
+		}
+
 		return deferred.promise;
 	},
 
