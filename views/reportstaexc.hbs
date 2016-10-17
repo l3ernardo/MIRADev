@@ -17,26 +17,26 @@
 			<br/>
 		</div>
 		<div>
-			<table id="reports_treeview" cellspacing="0" cellpadding="0" border="0" style="width:100%"  class="display nowrap" class="mira-dashboard-table">
+			<table id="reports_treeview1" cellspacing="0" cellpadding="0" border="0" style="width:100%"  class="display nowrap" class="mira-dashboard-table">
 				<thead>
 					<tr> 
 					<th scope="col"></th>
 					<th scope="col">BU IOT</th>
 					<th scope="col">Type</th>
 					<th scope="col">Assessable Unit</th>
-						<th scope="col">MIRA</th>
-						<th scope="col">WWBCIT</th>
-						<th scope="col">PriorQ</th>
-						<th scope="col">CurrentQ</th>
-						<th scope="col">Outlook</th>
-						<th scope="col">Target to Sat</th>
+					<th scope="col">MIRA</th>
+					<th scope="col">WWBCIT</th>
+					<th scope="col">PriorQ</th>
+					<th scope="col">CurrentQ</th>
+					<th scope="col">Outlook</th>
+					<th scope="col">Target to Sat</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{#each doc}}
 					<tr data-tt-id={{_id}} data-tt-parent-id={{parentidrse}}>
-					    <td>{{GroupingName}}</a></td>	
-						<td>{{IOT}}</a></td>	
+					    <td>{{GroupingName}}</td>	
+						<td>{{IOT}}</td>	
 						{{#if_equal  DocSubType "GroupName"}}
 						<td></td>
 						{{else}}

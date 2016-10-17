@@ -9,7 +9,6 @@ var express = require("express");
 var calendars = express.Router();
 var db = require('./js/class-conn.js');
 var calendar = require('./js/class-calendar.js');
-var utility = require('./js/class-utility.js');
 var isAuthenticated = require('./router-authentication.js');
 var varConf = require('../../configuration');
 
@@ -58,19 +57,7 @@ calendars.get('/getTargetCalendars', isAuthenticated, function(req, res){
 calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 	calendar.saveEvent(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			if(req.body.attachIDs != ''){
-				utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(data) {
-					if(data.status==200 & !data.error) {
-						res.redirect("/calendar?id=all");
-					} else {
-						console.log("[calendars][saveEvent] - " + data.error);
-					}
-				}).catch(function(err) {
-					console.log("[calendars][saveEvent] - " + err.error);
-				})
-			}else{
-				res.redirect("/calendar?id=all");
-			}
+			res.redirect("/calendar?id=all");
 		} else {
 			console.log("[calendars][saveEvent] - " + data.error);
 		}
@@ -80,17 +67,9 @@ calendars.post('/saveEvent', isAuthenticated, function(req, res) {
 });
 //Delete event
 calendars.get('/deleteEvent', isAuthenticated, function(req, res) {
-	utility.deleteFilesParentID(req.query.id, db).then(function(data) {
+	calendar.deleteEvent(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			calendar.deleteEvent(req, db).then(function(data) {
-				if(data.status==200 & !data.error) {
-					res.redirect("/calendar?id=all");
-				} else {
-					console.log("[calendars][deleteEvent] - " + data.error);
-				}
-			}).catch(function(err) {
-				console.log("[calendars][deleteEvent] - " + err.error);
-			});
+			res.redirect("/calendar?id=all");
 		} else {
 			console.log("[calendars][deleteEvent] - " + data.error);
 		}
@@ -98,18 +77,5 @@ calendars.get('/deleteEvent', isAuthenticated, function(req, res) {
 		console.log("[calendars][deleteEvent] - " + err.error);
 	});
 }); 
-//Cancel event
-calendars.get('/cancelEvent', isAuthenticated, function(req, res) {
-	utility.deleteFilesByIDs(req.query.attachIDs, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			res.redirect("/calendar?id=all");
-		} else {
-			console.log("[calendars][cancelEvent] - " + data.error);
-		}
-	}).catch(function(err) {
-		console.log("[calendars][cancelEvent] - " + err.error);
-	});
-}); 
-
 
 module.exports = calendars;
