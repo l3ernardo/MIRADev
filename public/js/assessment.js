@@ -4,6 +4,7 @@ $(document).ready(function(){
 	//display as htmls
 	$("#ratingcategoryDisplay").html($("input[name='ratingcategory']").val());
 	$("#ratingcategoryDisplayByIOT").html($("input[name='ratingcategory']").val());
+	$("#ratingcategoryDisplayByCountry").html($("input[name='ratingcategory']").val());
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
 	$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());

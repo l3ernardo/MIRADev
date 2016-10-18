@@ -1,0 +1,50 @@
+{{!-- AU BU IOT form - Constituent section - Edit/Read Mode --}}
+<h3>{{AssessableUnitName}}</h3><br/><br/>
+<div class="ibm-columns ibm-graphic-tabs">
+
+	<div class="ibm-tab-section">
+		<ul class="ibm-tabs">
+			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
+			<li id="basiccontrol-li"><a href="javascript:void(0)" class="mira-subdata">Basics of Control</a></li>
+			<li id="cprating-li"><a href="javascript:void(0)" class="mira-subdata">Process Ratings</a></li>
+			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Asmt</a></li>
+			<li id="riskmsdcommit-li"><a href="javascript:void(0)" class="mira-subdata">Open Risks &amp; Missed Commits</a></li>
+			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
+			<li id="kctest-li"><a href="javascript:void(0)" class="mira-subdata">Key Ctrls Testing</a></li>
+			<li id="opmetric-li"><a href="javascript:void(0)" class="mira-subdata">Operational Metrics</a></li>
+			<li id="accountrating-li"><a href="javascript:void(0)" class="mira-subdata">Account Ratings</a></li>
+			<li id="other-li"><a href="javascript:void(0)" class="mira-subdata">Others</a></li>
+		</ul>
+	</div>
+	<div id="summary" class="ibm-tabs-content">
+		{{>asmtbaselevel/ratingsummary}}
+	</div>
+	<div id="basiccontrol" class="ibm-tabs-content" style='display : none'>
+		{{>asmtbaselevel/basicsofcontrol}}
+	</div>
+	<div id="cprating" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/processratings}}
+	</div>
+	<div id="auditreadyasmt" class="ibm-tabs-content" style='display : none'>
+		{{>asmtbaselevel/auditreadinessasmt}}
+	</div>
+	<div id="riskmsdcommit" class="ibm-tabs-content" style='display : none'>
+		{{>asmtbaselevel/openrisksmsdcommits}}
+	</div>
+	<div id="auditreview" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/auditsandreviews}}
+	</div>
+	<div id="kctest" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/kctesting}}
+	</div>
+	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/operationalmetrics}}
+	</div>
+	<div id="accountrating" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/accountratings}}
+	</div>
+	<div id="other" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/others}}
+	</div>
+
+</div>
