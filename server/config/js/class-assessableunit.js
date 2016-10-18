@@ -209,7 +209,7 @@ var assessableunit = {
 				}
 				obj = subprocess;
 			}
-			
+
 			db.find(obj).then(function(data){
 				var doc = data.body.docs;
 				var len = doc.length;
@@ -253,7 +253,7 @@ var assessableunit = {
 							}
 						}
 					}
-					
+
 					for (var i = 0; i < F.length; i++){
 						view_dashboard.push({
 							assessableUnit: F[i].Name,
@@ -424,10 +424,11 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": "Account",
 								"BusinessUnit": doc[0].BusinessUnit,
-								"ControllableUnit": doc[0].ControllableUnit,
+								"$or": [
+									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": "Account"},{"ControllableUnit": doc[0].ControllableUnit}] },
+									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Controllable Unit"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].AccountData = [];
@@ -779,7 +780,7 @@ var assessableunit = {
 									break;
 								}//end of read mode switch
 							}
-						
+
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err});
 					});
@@ -1168,7 +1169,25 @@ var assessableunit = {
 					doc = accessupdates.updateAccessExistDoc(req,doc);
 					//Save document
 					db.save(doc[0]).then(function(data){
-						deferred.resolve(data);
+						// Get current quarter Assessment
+						fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
+							var asmtdoc = [];
+							asmtdoc.push(asmtdata.doc);
+							// Pass data to current quarter assessment
+							switch (doc[0].DocSubType) {
+								case "Controllable Unit":
+									asmtdoc[0].AuditProgram = doc[0].AuditProgram;
+									asmtdoc[0].Portfolio = doc[0].Portfolio;
+									break;
+							}
+							db.save(asmtdoc[0]).then(function(asmtdata){
+								deferred.resolve(data);
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err.error.reason});
+							});
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err.error.reason});
+						});
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});

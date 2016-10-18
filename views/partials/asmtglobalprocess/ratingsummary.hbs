@@ -32,7 +32,75 @@
 				</table>
 			</td>
 		</tr>
-	{{else}}
+		<tr class="summaryrollup">
+			<td class="summaryrollup-label">
+				<ul class="ibm-twisty">
+					<li>
+						<a class="ibm-twisty-trigger" href="#toggle"><img alt="-" src="//www.ibm.com/i/c.gif" /></a>
+						<span class="ibm-twisty-head">Business Insights</span>
+						<div class="ibm-twisty-body">
+							<br /><br />
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Significant Organization Changes</th></thead>
+								<tr class="asmt-viewdata">
+									<td>
+										<span class="mira-subdata2">
+											<i>Significant organization, location, and mission changes including centralization of activities <strong>and their impact on the controls environment</strong>. Identify from/to organizations, new/dissolved organizations, scope/responsibilities of mission changes, process(es) impacted, etc.</i>
+										</span><br />
+										<input type="text" name="Insight1" id="Insight1" value="{{Insight1}}" size="160">
+									</td>
+								</tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Significant Process Changes</th></thead>
+								<tr class="asmt-viewdata">
+									<td>
+										<span class="mira-subdata2">
+											<i>Significant process changes <strong>and their impact on the controls environment</strong>. Include the reason for the change such as harmonization, centralization, reorganization, etc.</i>
+										</span><br />
+										<input type="text" name="Insight2" id="Insight2" value="{{Insight2}}" size="160">
+									</td>
+								</tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Strategic Business Development Activities (acquisitions &amp; divestitures)</th></thead>
+								<tr class="asmt-viewdata">
+									<td>
+										<span class="mira-subdata2">
+											<i>Business development activities (acquisitions, divestitures and joint ventures) <strong>and their impact on the controls environment</strong>. Provide a brief description, including scope and size, process(es) impacted, etc.</i>
+										</span><br />
+										<input type="text" name="Insight3" id="Insight3" value="{{Insight3}}" size="160">
+									</td>
+								</tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Outsourcing of internal controls to an external 3rd party or changes to an outsourcing arrangement impacting internal controls</th></thead>
+								<tr class="asmt-viewdata">
+									<td>
+										<span class="mira-subdata2">
+											<i>Outsourcing of internal processes to an external 3rd party <strong>and their impact on the controls environment</strong>. Provide a brief description, including scope and size, processes impacted, etc. Include changes to existing agreements as well as new or terminated agreements</i>
+										</span><br />
+										<input type="text" name="Insight4" id="Insight4" value="{{Insight4}}" size="160">
+									</td>
+								</tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Other information (significant items that have not been reported, emerging regulatory requirements, and new or emerging risk areas)</th></thead>
+								<tr class="asmt-viewdata">
+									<td>
+										<span class="mira-subdata2">
+											<i>Other information <strong>and the impact on the controls environment</strong> (e.g.: significant IT system installations, changes necessitated by regulatory requirements, new or emerging risk areas, and other focus items).</i>
+										</span><br />
+										<input type="text" name="Insight5" id="Insight5" value="{{Insight5}}" size="160">
+									</td>
+								</tr>
+							</table>
+						</div>
+					</li>
+				</ul>
+			</td>
+		</tr>
+	{{else}} <!-- Read Mode -->
 		<tr class="summaryrollup">
 			<td>
 				<table width="100%">
@@ -60,6 +128,39 @@
 						</td>
 					</tr>
 				</table>
+			</td>
+		</tr>
+		<tr class="summaryrollup">
+			<td class="summaryrollup-label">
+				<ul class="ibm-twisty">
+					<li>
+						<a class="ibm-twisty-trigger" href="#toggle"><img alt="-" src="//www.ibm.com/i/c.gif" /></a>
+						<span class="ibm-twisty-head">Business Insights</span>
+						<div class="ibm-twisty-body">
+							<br /><br />
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Significant Organization Changes</th></thead>
+								<tr class="asmt-viewdata"><td>&nbsp;{{Insight1}}</td></tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Significant Process Changes</th></thead>
+								<tr class="asmt-viewdata"><td>&nbsp;{{Insight2}}</td></tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Strategic Business Development Activities (acquisitions &amp; divestitures)</th></thead>
+								<tr class="asmt-viewdata"><td>&nbsp;{{Insight3}}</td></tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Outsourcing of internal controls to an external 3rd party or changes to an outsourcing arrangement impacting internal controls</th></thead>
+								<tr class="asmt-viewdata"><td>&nbsp;{{Insight4}}</td></tr>
+							</table>
+							<table width="100%">
+								<thead class="summaryrollup-sublabel"><th scope="col">Other information (significant items that have not been reported, emerging regulatory requirements, and new or emerging risk areas)</th></thead>
+								<tr class="asmt-viewdata"><td>&nbsp;{{Insight5}}</td></tr>
+							</table>
+						</div>
+					</li>
+				</ul>
 			</td>
 		</tr>
 	{{/if}}

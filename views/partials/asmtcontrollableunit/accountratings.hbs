@@ -1,0 +1,42 @@
+<table id="accntratings_table" class="ibm-data-table">
+	<tr class="account-ratings-content">
+		<td>
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="account-ratings-viewheader" scope="col" width="5%">MSAC Rating</th>
+					<th class="account-ratings-viewheader" scope="col" width="25%">Account</th>
+					<th class="account-ratings-viewheader" scope="col" width="5%">Count</th>
+					<th class="account-ratings-viewheader" scope="col" width="5%">% of Total Count</th>
+					<th class="account-ratings-viewheader" scope="col" width="5%">% Portfolio $ Value</th>
+					<th class="account-ratings-viewheader" scope="col" width="5%">Prior Q MSAC</th>
+					<th class="account-ratings-viewheader" scope="col" width="5%">Curr Q MSAC</th>
+					<th class="account-ratings-viewheader" scope="col" width="5%">Target to Sat</th>
+					<th class="account-ratings-viewheader" scope="col" width="5%">ARC</th>
+					<th class="account-ratings-viewheader" scope="col" width="10%">Basics of Control Exceptions</th>
+					<th class="account-ratings-viewheader" scope="col" width="25%">Explanations</th>
+				</thead>
+				{{#each AccountData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/assessment?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+			<table width="100%" class="ibm-data-table">
+				<thead><th class="account-ratings-label">Focus items, key changes, open items, comments for current &amp; next quarter</th></thead>
+				<tr>
+					{{#if editmode}}
+						<td class="asmt-viewdata"><input type="text" name="CUFocusItems" id="CUFocusItems" value="{{CUFocusItems}}" size="165"></td>
+					{{else}}
+						<td class="asmt-viewdata">{{CUFocusItems}}</td>
+					{{/if}}
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>

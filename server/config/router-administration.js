@@ -11,6 +11,7 @@ var setup = require('./js/class-setup.js');
 var isAuthenticated = require('./router-authentication.js');
 var isAuthorized = require('./router-authorization.js');
 var simpleAuthentication = require('./router-simpleAuthentication.js');
+var accesssumary = require('./js/class-accesssummary.js')
 
 /**************************************************************
 SETUP FUNCTIONALITY
@@ -141,6 +142,34 @@ administration.get('/getListParams', isAuthenticated, function(req, res) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][getListParams] - " + err.error);
 	})
+});
+/**************************************************************
+Explicit user summary
+***************************************************************/
+
+administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
+
+		accesssumary.getUserAccessSummary(req,db).then(function (data){
+
+			if(data.status==200 & !data.error) { 
+			
+				res.render('accesssummary',data.data);
+						
+			}else{
+				
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][explicitAccessSummary] - " + data.error);
+			
+			
+			}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][explicitAccessSummary] - " + err.error);
+
+		});
+
+
+
 });
 
 module.exports = administration;
