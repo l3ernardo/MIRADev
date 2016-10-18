@@ -113,26 +113,43 @@ var assessment = {
 					} else { // Read mode
 
 					}
-					if (doc[0].ParentDocSubType == "Global Process") {
-						doc[0].CPAsmtDataOIview = [];
-						doc[0].CPAsmtDataPIview = [];
-						doc[0].CPAsmtDataPR1view = [];
-						fieldCalc.getRatingProfile(db, doc).then(function(data){
-							if (doc[0].CPAsmtDataPIview.length < 3) {
-								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
-							}
-							if (doc[0].CPAsmtDataOIview.length < 3) {
-								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
-							}
-							if (doc[0].CPAsmtDataPR1view.length < 3) {
-								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
-							}
+					switch (doc[0].ParentDocSubType) {
+						case "Global Process":
+							doc[0].CPAsmtDataOIview = [];
+							doc[0].CPAsmtDataPIview = [];
+							doc[0].CPAsmtDataPR1view = [];
+							fieldCalc.getRatingProfile(db, doc).then(function(data){
+								if (doc[0].CPAsmtDataPIview.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+								}
+								if (doc[0].CPAsmtDataOIview.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+								}
+								if (doc[0].CPAsmtDataPR1view.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+						case "Controllable Unit":
+							doc[0].CUAsmtDataPR1view = [];
+							fieldCalc.getRatingProfile(db, doc).then(function(data){
+								if (doc[0].CUAsmtDataPR1view.length < 3) {
+									if (doc[0].CUAsmtDataPR1view.length == 0) {
+										doc[0].CUAsmtDataPR1view = fieldCalc.addTestViewData(9,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(3-doc[0].CUAsmtDataPR1view.length));
+									}
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+						default:
 							deferred.resolve({"status": 200, "doc": doc});
-						}).catch(function(err) {
-							deferred.reject({"status": 500, "error": err});
-						});
-					} else {
-						deferred.resolve({"status": 200, "doc": doc});
 					}
 				}).catch(function(err) {
 					deferred.reject({"status": 500, "error": err});
