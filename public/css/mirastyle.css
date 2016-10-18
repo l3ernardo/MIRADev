@@ -283,6 +283,19 @@
 	font-size: 11px;
 	background-color: #ffff00;
 }
+.ibm-data-table .account-ratings-content {
+  background-color: #d2b06b;
+	border: 20px solid #d2b06b;
+}
+.ibm-data-table .account-ratings-viewheader {
+	text-align: center;
+	font-size: 11px;
+	background-color: #f0e4cc;
+}
+.ibm-data-table .account-ratings-label {
+	font-size: 11px;
+	background-color: #f0e4cc;
+}
 .ibm-data-table .risk-msdcommit {
   color: #ffffff;
   background-color: #00c150;

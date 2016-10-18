@@ -6,6 +6,7 @@
 		<ul class="ibm-tabs">
 			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
 			<li id="basiccontrol-li"><a href="javascript:void(0)" class="mira-subdata">Basics of Control</a></li>
+			<li id="cprating-li"><a href="javascript:void(0)" class="mira-subdata">Process Ratings</a></li>
 			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Assessment</a></li>
 			<li id="riskmsdcommit-li"><a href="javascript:void(0)" class="mira-subdata">Open Risks &amp; Missed Commits</a></li>
 			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
@@ -20,6 +21,9 @@
 	<div id="basiccontrol" class="ibm-tabs-content" style='display : none'>
 		{{>asmtbaselevel/basicsofcontrol}}
 	</div>
+	<div id="cprating" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/processratings}}
+	</div>
 	<div id="auditreadyasmt" class="ibm-tabs-content" style='display : none'>
 		{{>asmtbaselevel/auditreadinessasmt}}
 	</div>
@@ -27,16 +31,16 @@
 		{{>asmtbaselevel/openrisksmsdcommits}}
 	</div>
 	<div id="auditreview" class="ibm-tabs-content" style='display : none'>
-		{{>asmtcountryprocess/auditsandreviews}}
+		{{>asmtcontrollableunit/auditsandreviews}}
 	</div>
 	<div id="kctest" class="ibm-tabs-content" style='display : none'>
-		{{>asmtcountryprocess/kctesting}}
+		{{>asmtcontrollableunit/kctesting}}
 	</div>
 	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-		{{>asmtbaselevel/operationalmetrics}}
+		{{>asmtcontrollableunit/operationalmetrics}}
 	</div>
 	<div id="other" class="ibm-tabs-content" style='display : none'>
-		{{>asmtcountryprocess/others}}
+		{{>asmtcontrollableunit/others}}
 	</div>
 
 </div>

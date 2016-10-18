@@ -56,6 +56,20 @@ var assessment = {
 						doc[0].AUData = fieldCalc.addTestViewData(17,10);
 						break;
 					case "Controllable Unit":
+						// test view data
+						doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+						doc[0].AuditTrustedData = doc[0].RiskData;
+						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
+						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+						doc[0].DRData = fieldCalc.addTestViewData(5,1);
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+						doc[0].SCTestData = doc[0].RCTestData;
+						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+						doc[0].SampleData = doc[0].RiskData;
+						doc[0].EAData = doc[0].ARCData;
+						doc[0].AccountData = doc[0].RiskData;
 						break;
 				}
 
@@ -99,26 +113,43 @@ var assessment = {
 					} else { // Read mode
 
 					}
-					if (doc[0].ParentDocSubType == "Global Process") {
-						doc[0].CPAsmtDataOIview = [];
-						doc[0].CPAsmtDataPIview = [];
-						doc[0].CPAsmtDataPR1view = [];
-						fieldCalc.getRatingProfile(db, doc).then(function(data){
-							if (doc[0].CPAsmtDataPIview.length < 3) {
-								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
-							}
-							if (doc[0].CPAsmtDataOIview.length < 3) {
-								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
-							}
-							if (doc[0].CPAsmtDataPR1view.length < 3) {
-								fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
-							}
+					switch (doc[0].ParentDocSubType) {
+						case "Global Process":
+							doc[0].CPAsmtDataOIview = [];
+							doc[0].CPAsmtDataPIview = [];
+							doc[0].CPAsmtDataPR1view = [];
+							fieldCalc.getRatingProfile(db, doc).then(function(data){
+								if (doc[0].CPAsmtDataPIview.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+								}
+								if (doc[0].CPAsmtDataOIview.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+								}
+								if (doc[0].CPAsmtDataPR1view.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+						case "Controllable Unit":
+							doc[0].CUAsmtDataPR1view = [];
+							fieldCalc.getRatingProfile(db, doc).then(function(data){
+								if (doc[0].CUAsmtDataPR1view.length < 3) {
+									if (doc[0].CUAsmtDataPR1view.length == 0) {
+										doc[0].CUAsmtDataPR1view = fieldCalc.addTestViewData(9,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(3-doc[0].CUAsmtDataPR1view.length));
+									}
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+						default:
 							deferred.resolve({"status": 200, "doc": doc});
-						}).catch(function(err) {
-							deferred.reject({"status": 500, "error": err});
-						});
-					} else {
-						deferred.resolve({"status": 200, "doc": doc});
 					}
 				}).catch(function(err) {
 					deferred.reject({"status": 500, "error": err});
@@ -331,6 +362,8 @@ var assessment = {
 						case "Account":
 							break;
 						case "Controllable Unit":
+							//---Account Ratings Tab---//
+							doc[0].CUFocusItems = req.body.CUFocusItems;
 							//---Backend Fields---//
 							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
 							break;
@@ -345,13 +378,18 @@ var assessment = {
 						doc[0].PrevRatingUpdate = doc[0].PeriodRating;
 						doc[0].PeriodRating = req.body.PeriodRating;
 					}
-					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
-					doc[0].ReviewComments = req.body.ReviewComments;
-					doc[0].Target2Sat = req.body.Target2Sat;
+					if ( doc[0].PeriodRating  ==  "Sat") {
+						doc[0].ReviewComments = "";
+						doc[0].Target2Sat = "";
+					} else {
+						doc[0].ReviewComments = req.body.ReviewComments;
+						doc[0].Target2Sat = req.body.Target2Sat;
+					}
 					if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
 						doc[0].MIRAStatusChangeWho = curruser;
 						doc[0].MIRAStatusChangeWhen = currdate;
 					}
+					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
 					doc[0].MIRAStatus = req.body.MIRAStatus;
 					doc[0].NextQtrRating = req.body.NextQtrRating;
 					doc[0].DecommitExplanation = req.body.DecommitExplanation;

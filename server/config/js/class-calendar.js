@@ -80,7 +80,7 @@ var calendar = {
 		}
 		return deferred.promise;
 	},
-	/* Get events */
+	/* Get events by Business Unit*/
 	getEvents: function(req, db, keyIntCal){
 		var deferred = q.defer();
 		try{
@@ -90,7 +90,8 @@ var calendar = {
 				var obj = {
 					selector : {
 						"_id": {"$gt":0},
-						"type": "Calendar"
+						"type": "Calendar",
+						"businessUnit" : req.session.businessunit
 					}
 				};
 			}else{
@@ -98,7 +99,8 @@ var calendar = {
 					selector : {
 						"_id": {"$gt":0},
 						"type": "Calendar",
-						$or: [ { "ownerId": ownerCalendar }, { "targetCalendar": { $in: [ownerCalendar] } } ]
+						$or: [ { "ownerId": ownerCalendar }, { "targetCalendar": { $in: [ownerCalendar] } } ],
+						"businessUnit" : req.session.businessunit
 					}
 				};
 			}
@@ -135,13 +137,12 @@ var calendar = {
 					doc.push(data.body);
 					doc[0].title = req.body.title;
 					doc[0].eventInfo = req.body.eventInfo;
-					doc[0].attachIDs = req.body.attachIDs;
 					doc[0].log.push(addlog);
 					doc[0].start = req.body.startDate;
 					doc[0].end = req.body.endDate;
 					doc[0].eventInfo = req.body.eventInfo;
 					doc[0].targetCalendar = req.body.chkTarCal;
-
+					doc[0].businessUnit = req.session.businessunit;
 					db.save(doc[0]).then(function(data){
 						deferred.resolve(data);
 					}).catch(function(err) {
@@ -163,8 +164,8 @@ var calendar = {
 					"owner" : req.body.owner,
 					"ownerId" : req.body.ownerId,
 					"targetCalendar" : req.body.chkTarCal,
-					"attachIDs" : req.body.attachIDs,
-					"log" : log
+					"log" : log,
+					"businessUnit" : req.session.businessunit
 				};
 				// save event
 				db.save(object).then(function(data){
@@ -186,7 +187,6 @@ var calendar = {
 			var rev = req.query.rev;
 			// delete event
 			db.del(id, rev).then(function(data){
-				//delete files
 				deferred.resolve(data);
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
