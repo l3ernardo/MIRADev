@@ -211,7 +211,7 @@ var register = function(Handlebars) {
 					var currdate = new Date();
 					var dateval = new Date(date);
 					currdate.setHours(0,0,0,0);
-					if(dateval > currdate)
+					if(dateval >= currdate)
 						datehtml = '<span style="padding-left:1em; padding-right:1em">'+date+'</span>';
 					else
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
