@@ -139,6 +139,11 @@
   background-color: #00c1c2;
 	border: 20px solid #00c1c2;
 }
+.ibm-data-table .processrating-header {
+  background-color: #00c1c2;
+	border: #00c1c2;
+	font-weight: bold;
+}
 .ibm-data-table .processrating-label {
   background-color: #d0ffff;
 }
@@ -149,6 +154,7 @@
 }
 .ibm-data-table .processrating-legend {
 	font-size: 10px;
+	color: black;
   background-color: #00c1c2;
 	border: #00c1c2;
 }
@@ -157,6 +163,10 @@
 	border: 20px solid #71b2cf;
 }
 .ibm-data-table .summaryrollup-label {
+  background-color: #c2efff;
+}
+.ibm-data-table .summaryrollup-sublabel {
+	font-size: 11px;
   background-color: #c2efff;
 }
 .ibm-data-table .summaryrollup-viewheader {
@@ -223,12 +233,27 @@
 	background-color: #7f604f;
 	border: 20px solid #7f604f;
 }
+.ibm-data-table .ar-asmt-header {
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #7f604f;
+	border: #7f604f;
+}
+.ibm-data-table .ar-asmt-label {
+	font-size: 11px;
+  background-color: #e7d8cf;
+}
 .ibm-data-table .ar-asmt-viewheader {
 	text-align: center;
 	font-size: 11px;
 	background-color: #e7d8cf;
 }
 .ibm-data-table .asmt-viewdata {
+	font-size: 11px;
+	background-color: #ffffff;
+}
+.ibm-data-table .asmt-viewdata-centered {
+	text-align: center;
 	font-size: 11px;
 	background-color: #ffffff;
 }
@@ -241,11 +266,6 @@
 	font-size: 11px;
 	background-color: #ffffff;
 	height:20px;
-}
-.ibm-data-table .asmt-viewdata-centered {
-	text-align: center;
-	font-size: 11px;
-	background-color: #ffffff;
 }
 .ibm-data-table .asmt-viewdata-green {
 	text-align: center;
@@ -263,9 +283,18 @@
 	font-size: 11px;
 	background-color: #ffff00;
 }
-.ibm-data-table .ar-asmt-label {
+.ibm-data-table .account-ratings-content {
+  background-color: #d2b06b;
+	border: 20px solid #d2b06b;
+}
+.ibm-data-table .account-ratings-viewheader {
+	text-align: center;
 	font-size: 11px;
-  background-color: #e7d8cf;
+	background-color: #f0e4cc;
+}
+.ibm-data-table .account-ratings-label {
+	font-size: 11px;
+	background-color: #f0e4cc;
 }
 .ibm-data-table .risk-msdcommit {
   color: #ffffff;
@@ -306,6 +335,16 @@
 	font-size: 11px;
 	background-color: #c2efff;
 }
+.ibm-data-table .audit-review-viewheader-ar {
+	text-align: right;
+	font-size: 11px;
+	background-color: #c2efff;
+}
+.ibm-data-table .audit-review-viewheader-al {
+	text-align: left;
+	font-size: 11px;
+	background-color: #c2efff;
+}
 .ibm-data-table .kc-test {
   color: #ffffff;
   background-color: #ff8141;
@@ -332,6 +371,11 @@
 }
 .ibm-data-table .kc-test-viewheader {
 	text-align: center;
+	font-size: 11px;
+	background-color: #ffd1bb;
+}
+.ibm-data-table .kc-test-viewheader-al {
+	text-align: left;
 	font-size: 11px;
 	background-color: #ffd1bb;
 }

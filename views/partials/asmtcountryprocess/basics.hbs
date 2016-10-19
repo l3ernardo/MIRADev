@@ -2,7 +2,7 @@
 <table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
 	<tr>
-		<td width="25%">Country Process:</td><td><b>{{AssessableUnitName}}</b></td>
+		<td width="25%">Country Process:</td><td><strong>{{AssessableUnitName}}</strong></td>
 	</tr>
 	{{#if editmode}}
 		<tr>
@@ -15,6 +15,7 @@
 			{{else}}
 				<td>Holistic Rating:</td>
 				<td>
+					<input type="hidden" name="PeriodRating" id="PeriodRating" value="{{PeriodRating}}">
 					{{PeriodRating}}<br />
 					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 				</td>
@@ -78,6 +79,7 @@
 		<tr>
 			<td>Holistic Rating:</td>
 			<td>
+				<input type="hidden" name="PeriodRating" id="PeriodRating" value="{{PeriodRating}}">
 				{{{ratingDisplay PeriodRating "PeriodRating"}}}<br />
 				<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 			</td>
