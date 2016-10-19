@@ -4,7 +4,7 @@ var administration = express.Router();
 var app = express();
 var db = require('./js/class-conn.js');
 var varConf = require('../../configuration');
-
+var auditlesson = require('./js/class-auditlesson.js');
 // Add functionalities from other JS files
 var parameter = require('./js/class-parameter.js');
 var setup = require('./js/class-setup.js');
@@ -151,16 +151,16 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 
 		accesssumary.getUserAccessSummary(req,db).then(function (data){
 
-			if(data.status==200 & !data.error) { 
-			
+			if(data.status==200 & !data.error) {
+
 				res.render('accesssummary',data.data);
-						
+
 			}else{
-				
+
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][explicitAccessSummary] - " + data.error);
-			
-			
+
+
 			}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
@@ -170,6 +170,59 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 
 
 
+});
+
+
+/**************************************************************
+AUDITLESSON FUNCTIONALITY
+***************************************************************/
+
+/* View audit lesson documents */
+administration.get('/auditlessonlearned', isAuthenticated, function(req, res) {
+		auditlesson.getLessonByID(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				res.render('auditlessonlearned', data.doc );
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][auditlesson] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][auditlesson] - " + err.error);
+	})
+});
+/* View audit lessons list */
+administration.get('/auditlessons', isAuthenticated, function(req, res) {
+	auditlesson.getAllLessons(req, db).then(function(data){
+		//console.log(data);
+			res.render('auditlessons', data );
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][auditlessonsave] - " + err.error);
+	});
+});
+/* Save Audit Lesson in cloudant */
+administration.post('/saveaulesson', isAuthenticated, function(req, res) {
+	auditlesson.saveAL(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.id == "new"){
+				res.redirect('/auditlessons');
+			}else {
+				//console.log(data.id);
+				res.redirect('/auditlessonlearned?id='+data.id);
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][auditlessonsave] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][auditlessonsave] - " + err.error);
+	});
 });
 
 module.exports = administration;

@@ -10,6 +10,7 @@ $(document).ready(function(){
 	$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());
 	$("#FocusAreaReadOnly").html($("input[name='FocusAreaRO']").val());
 	switch ($("input[name='parentdocsubtype']").val()) {
+		case "Controllable Unit":
 		case "Country Process":
 			$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
 			break;
@@ -32,7 +33,7 @@ $(document).ready(function(){
 			break;
 	}
 
-	if ($("input[name='parentdocsubtype']").val() == "Country Process") {
+	if ($("input[name='parentdocsubtype']").val() == "Country Process" || $("input[name='parentdocsubtype']").val() == "Controllable Unit") {
 		$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
 	}
 
@@ -60,6 +61,7 @@ $(document).ready(function(){
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
 		switch ($("input[name='parentdocsubtype']").val()) {
+			case "Controllable Unit":
 			case "Country Process":
 				myEditorAsmtOtherConsiderations.saveHTML();
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
@@ -124,6 +126,7 @@ $(document).ready(function(){
 		YmyEditor = myEditorFocusArea.get('element').value;
 		$('#FocusArea').val(YmyEditor);
 		switch ($("input[name='parentdocsubtype']").val()) {
+			case "Controllable Unit":
 			case "Country Process":
 				myEditorAsmtOtherConsiderations.saveHTML();
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
@@ -196,6 +199,7 @@ $(document).ready(function(){
 	myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
 	myEditorFocusArea.render();
 	switch ($("input[name='parentdocsubtype']").val()) {
+		case "Controllable Unit":
 		case "Country Process":
 			myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
 			myEditorAsmtOtherConsiderations.render();

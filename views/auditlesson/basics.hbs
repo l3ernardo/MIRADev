@@ -1,0 +1,63 @@
+{{!-- auditlesson form - Basic section - Edit Mode --}}
+<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>Basics</em></caption>
+	{{#if editmode}}
+	<tr>
+		<td width="25%">Engagement ID:</td><td>
+			<input type="text" name="engagementIDone" value="{{engagementIDone}}" size="2" maxlength="2">
+			<input type="text" name="engagementIDtwo" value="{{engagementIDtwo}}" size="2" maxlength="2">
+			<input type="text" name="engagementIDthree" value="{{engagementIDthree}}" size="2" maxlength="2">
+		</td>
+	</tr>
+	<tr>
+		<td>Recommendation #:</td><td><input type="text" name="recommendationNum" value="{{recommendationNum}}" size="100" maxlength="300"></td>
+	</tr>
+	<tr>
+		<td>Audit program:</td><td>
+	{{{uniqueSelect "auditProgram" programs "name" "name" auditProgram}}}<br>
+		{{#if auditSelectYes}}
+			<input class="showsize" type="radio" id="auditSelect" name="auditProgramSelect" value="Audit" checked>Audit
+			<input type="radio" name="auditProgramSelect" id="AuditSelect" value="Car">Car
+		{{else}}
+		<input class="showsize" type="radio" id="auditSelect" name="auditProgramSelect" value="Audit">Audit
+			<input type="radio" name="auditProgramSelect" id="AuditSelect" value="Car" checked>Car
+		{{/if}}
+	</tr><tr>
+		<td>Observation category (as <br> stated in the audit report):</td>
+		<td><input type="text" name="observationCategory" value="{{observationCategory}}" size="100" maxlength="300"></td>
+	</tr><tr>
+		<td>Reporting period:</td>
+		<td><b class="ibm-important"><span>
+		{{{uniqueSelect "reportingQuarter" reportingQuarters "quarter" "quarter" reportingQuarter}}}
+	</span>Q<span>
+		{{{uniqueSelect "reportingYear" reportingYears "year" "year" reportingYear}}}
+		</span></b></td>
+	</tr>
+	{{else}}
+
+
+	{{!-- auditlesson form - Basic section - Read Mode --}}
+	<tr>
+		<td width="25%">Engagement ID:</td>
+		<td>{{engagementIDone}}-{{engagementIDtwo}}-{{engagementIDthree}}</td>
+	</tr>
+	<tr>
+		<td>Recommendation #:</td><td>{{recommendationNum}}</td>
+	</tr>
+	<tr>
+		<td>Audit program:</td><td>
+				{{auditProgram}}
+			<br>
+			{{#if auditSelectYes}}
+			<input class="showsize" type="radio" id="auditSelect" name="AuditableFlag" value="Audit" checked>Audit
+			{{else}}
+			<input type="radio" name="AuditableFlag" id="AuditSelect" value="Car" checked>Car
+			{{/if}}
+		</td>
+	</tr><tr>
+		<td>Observation category (as <br> stated in the audit report):</td><td>{{observationCategory}}</td>
+	</tr><tr>
+		<td>Reporting period:</td><td><b class="ibm-important">{{reportingPeriod}}</b></td>
+	</tr>
+	{{/if}}
+</table>

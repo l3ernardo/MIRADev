@@ -1,0 +1,24 @@
+<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>Lesson Learned (Summary of Issue and Recommendations)</em></caption>
+{{#if editmode}}
+{{!-- Comments section - Edit Mode --}}
+		<tr>
+			<td>
+				<div class='yui-skin-sam'>
+					<span><textarea id="Notes" type="text" name="Notes" cols="125" rows="8">{{summary}}</textarea></span>
+				</div>
+			</td>
+		</tr>
+	</table>
+{{else}}
+{{!-- Comments section - Read Mode --}}
+
+		<tr>
+			<td>
+				<input type="hidden" name="NotesRO" value="{{summary}}">
+				<div id="NotesReadOnly"></div>
+			</td>
+		</tr>
+
+{{/if}}
+</table>
