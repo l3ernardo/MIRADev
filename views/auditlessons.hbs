@@ -40,17 +40,18 @@
 				<tbody>
 				{{#each doc}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
-						<th style="width:1%;" scope="row" class="ibm-table-row">{{#if _id}}<input type="checkbox" class="mira_checkbox_tree"/>{{/if}}</th>
-						<td style="width:14%;height:12px; overflow:hidden;">{{name}}</td>
-						<td style="width:5%;"><div style="height:12px; overflow:hidden;">{{#if _id}}<a href="/auditlessonlearned?id={{_id}}">{{engagementID}}&nbsp;{{recommendationNum}}</a>{{/if}}</div></td>
-						<td style="width:5%;"><div style="height:12px; overflow:hidden;">{{IOT}}</div></td>
-						<td style="width:5%;"><div style="height:12px; overflow:hidden;">{{IMT}}</div></td>
-						<td style="width:5%;"><div style="height:12px; overflow:hidden;">{{country}}</div></td>
-						<td style="width:5%;"><div style="height:12px; overflow:hidden;">{{LoB}}</div></td>
-						<td style="width:10%;"><div style="height:12px; overflow:hidden;">{{process}}</div></td>
-						<td style="width:5%;"><div style="height:12px; overflow:hidden;">{{subprocess}}</div></td>
-						<td style="width:5%;"><div style="height:12px; overflow:hidden;">{{observationCategory}}</div></td>
-						<td style="width:40%;"><div style="height:12px; overflow:hidden;">{{{summary}}}</div></td>
+
+						<th style="width:1%;" scope="row" class="ibm-table-row"></th>
+						<td style="width:14%;">{{name}}</td>
+						<td style="width:5%;">{{#if _id}}<input type="checkbox" class="mira_checkbox_tree"/><a href="/auditlessonlearned?id={{_id}}">{{engagementID}}&nbsp;{{recommendationNum}}</a>{{/if}}</td>
+						<td style="width:10%;">{{IOT}}</td>
+						<td style="width:10%;">{{IMT}}</td>
+						<td style="width:5%;">{{country}}</td>
+						<td style="width:5%;">{{LoB}}</td>
+						<td style="width:10%;">{{process}}</td>
+						<td style="width:5%;">{{subprocess}}</td>
+						<td style="width:5%;">{{observationCategory}}</td>
+						<td style="width:30%;">{{{summary}}}</td>
 					</tr>
 				{{/each}}
 				</tbody>
