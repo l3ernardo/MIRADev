@@ -205,6 +205,7 @@ var calculatefield = {
                       doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
                       doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
                       doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                      if (doc[0].OpMetric[j].rating == "Marg" || doc[0].OpMetric[j].rating == "Unsat") doc[0].opMetricException = 1;
                     }
                   }
                 } else {
