@@ -262,7 +262,7 @@ var auditlesson = {
                       id: docs[i]["_id"],
                       parent:docs[i].auditProgram.replace(/ /g,'')+""+docs[i].reportingPeriod,
 
-                      engagementID: docs[i].engagementIDone +"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree,
+                      engagementID: docs[i].engagementIDone +"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum,
                       //businessUnit: docs[i].businessUnit,
                       IOT: docs[i].IOT,
                       IMT: docs[i].IMT,
@@ -277,7 +277,7 @@ var auditlesson = {
                       BU: docs[i].businessUnit,
                       period: docs[i].reportingPeriod,
                       type: docs[i].auditProgram,
-                      engagementID: docs[i].engagementIDone +"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree,
+                      engagementID: docs[i].engagementIDone +"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum,
                       IOT: docs[i].IOT,
                       IMT: docs[i].IMT,
                       country: docs[i].country,
@@ -289,50 +289,6 @@ var auditlesson = {
                     });
 
                   }
-                  //console.log(uniquePrograms);
-                  //console.log(list);
-                  /*var programs = data.body.docs.map(function(obj){
-                    if(uniqueBUs.indexOf(obj.businessUnit) == -1){
-                      uniqueBUs.push(obj.businessUnit);
-                    }
-                    if(typeof uniquePeriods[obj.reportingPeriod] === "undefined"){
-                      uniquePeriods[obj.reportingPeriod] = obj.businessUnit.replace(/ /g,'') ;
-                    }
-                    obj.name = obj.engagementIDone + "-"+engagementIDtwo +"-"+ engagementIDthree;
-                    obj.id = obj["_id"];
-                    obj.parent = (obj.auditProgram).replace(/ /g,'');
-                    return { id: obj.parent,
-                      parent:obj.reportingPeriod,
-                      name: obj.auditProgram
-                    };
-                  });
-                  //console.log(programs);
-                  uniqueBUs = uniqueBUs.map(function(obj){
-                    return {id: obj.replace(/ /g,''),
-                    name: obj};
-                  });
-
-                  var uniquePrograms = programs.filter(function(elem, index, self) {
-                    return index == self.indexOf(elem);
-                  });
-
-                  //console.log(uniquePrograms);
-
-                  var all = uniqueBUs.concat(data.body.docs);
-                  //data.body.docs.splice(0, 0, item);
-                  var pos = 1;
-                  for(var i = 0; i < uniquePrograms.length; i ++) {
-                    for(var j = pos; j < all.length; j ++) {
-                      if(all[j].parent == uniquePrograms[i].id) {
-                        all.splice(j,0,uniquePrograms[i]);
-                        pos = j+1;
-                        break;
-                      }
-                    }
-                  }*/
-                  //console.log(all);
-                  //var all= uniqueBUs.concat(uniquePrograms);
-                  //all = all.concat(data.body.docs);
 
                   deferred.resolve({"status": 200, "dataExport": dataExport,"doc": list});
                 }).catch(function(err){
@@ -348,7 +304,7 @@ var auditlesson = {
             saveAL: function(req, db) {
               var deferred = q.defer();
               //console.log(req.body);
-              //delete myObject.keyname;
+
               try{
                 var docid = req.body["_id"];
                 var now = moment(new Date());
