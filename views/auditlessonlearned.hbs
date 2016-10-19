@@ -1,0 +1,64 @@
+<script src="/js/auditlesson.js" type="text/javascript"></script>
+
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
+
+<link rel="stylesheet" href="./css/multiselect.css" />
+
+<!-- JS and CSS for rich text edit -->
+<link rel="stylesheet" type="text/css" href="./css/skin.css">
+<!-- Utility Dependencies -->
+<script src="./lib/yahoo-dom-event.js"></script>
+<script src="./lib/element-min.js"></script>
+<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+<script src="./lib/container_core-min.js"></script>
+<!-- Source file for Rich Text Editor-->
+<script src="./lib/simpleeditor-min.js"></script>
+<script src="./lib/yui-min.js"></script>
+<!-- end rich text -->
+
+<input type="hidden" id="docTitle" value="Audit Lesson Learned">
+<input type="hidden" id="docSubTitle" value="{{observationCategory}}">
+
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').text($('input#docSubTitle').val());
+	$('input#docTitle').remove();
+	$('input#docSubTitle').remove();
+</script>
+<div class="ibm-container" style="width:80%">
+{{#unless editmode}}
+	<p style="text-align:right">
+		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+		<span style="color: #5C87C4">Last modified by</span> {{Log.1.name}} <span style="color: #5C87C4">on</span> {{Log.1.date}} <span style="color: #5C87C4">at</span> {{Log.1.time}}
+	</p>
+	{{/unless}}
+	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/saveaulesson">
+		<input type="hidden" name="_id" id="_id" value="{{_id}}">
+		<input type="hidden" name="editmode" value="{{editmode}}">
+		<!-- BASICS SECTION -->
+		{{>auditlesson/basics}}
+		<!-- APPLICABILITY SECTION -->
+		{{>auditlesson/applicability}}
+		<!-- SUMMARY SECTION -->
+		{{>auditlesson/summary}}
+		<!-- BUTTONS AREA -->
+		<div class="ibm-buttons-row">
+			<p>
+				{{#if editmode}}
+					<input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Save"/>
+					<span class="ibm-sep">&nbsp;</span>
+					<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
+				{{else}}
+				<input class="ibm-btn-arrow-pri" type="button" id="btn_edit" value="Edit"/>
+				<span class="ibm-sep">&nbsp;</span>
+				<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
+				{{/if}}
+			</p>
+		</div>
+	</form>
+</div>
