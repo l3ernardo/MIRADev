@@ -8,6 +8,7 @@
 var varConf = require('../../../configuration');
 var q  = require("q");
 var moment = require('moment');
+var mtz = require('moment-timezone');
 var xml2js = require('xml2js');
 
 var util = {
@@ -563,6 +564,39 @@ var util = {
 		}
 		return deferred.promise;
 	},
+	
+	getDateTime: function(dt, format) {
+		var now;
+		if(dt==undefined || dt=="") {
+			now = moment(new Date());
+		} else {
+			// Acceptable format: YYYY-MM-DD HH:MM:SS
+			try {
+				var newdate = dt.split(" ");
+				var year = newdate[0].split("-")[0];
+				var month = newdate[0].split("-")[1];
+				var day = newdate[0].split("-")[2];
+				var hour = newdate[1].split("-")[0];
+				var minute = newdate[1].split("-")[1];
+				var second = newdate[1].split("-")[2];
+				now = moment(new Date(year, month, day, hour, minute, second));
+			} catch(e) {
+				console.log("[class-utility][getDateTime] - Invalid date format (YYY-MM-DD HH:MM:SS): " + dt);
+				now = moment(new Date());
+			}
+		}
+		switch(format) {
+			case "date":
+				return now.format("MM/DD/YYYY");
+			break;
+			case "time":
+				return now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr();
+			break;
+			default:
+				return now.format("MM/DD/YYYY") + " " + now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr();
+			break;
+		}
+	}
 
 }
 module.exports = util;
