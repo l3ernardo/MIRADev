@@ -8,7 +8,8 @@
 
 var q  = require("q");
 var moment = require('moment');
-var mtz = require('moment-timezone');
+var utility = require('./class-utility.js');
+//var mtz = require('moment-timezone');
 
 var auditlesson = {
   /* Get lesson parameter data by ID */
@@ -311,10 +312,11 @@ var auditlesson = {
                 var curruser = req.session.user.notesId;
                 var currdate = now.format("MM/DD/YYYY");
                 var addlog = {
-                  "name": curruser,
-                  "date": currdate,
-                  "time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
-                };
+                "name": curruser,
+                "date": utility.getDateTime("","date"),
+                "time": utility.getDateTime("","time")
+            };
+                
                 if(req.body.editmode == "new"){
                   var newAudit = {};
                   newAudit.docType= "auditLesson",
