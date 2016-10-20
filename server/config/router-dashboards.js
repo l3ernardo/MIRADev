@@ -374,8 +374,8 @@ dashboards.post('/savebuau', isAuthenticated, function(req, res){
 							assessableunit.getAUbyID(req, db).then(function(data) {
 								if(data.status==200 & !data.error) {
 									if(data.doc) {
-										if(close=='1') {
-											res.redirect('/processdashboard');
+										if(close!= 0) {
+											res.redirect(close);
 										} else {
 											res.redirect('/assessableunit?id=' + data.doc[0]._id);
 										}
@@ -403,8 +403,8 @@ dashboards.post('/savebuau', isAuthenticated, function(req, res){
 						assessableunit.getAUbyID(req, db).then(function(data) {
 							if(data.status==200 & !data.error) {
 								if(data.doc) {
-									if(close=='1') {
-										res.redirect('/processdashboard');
+									if(close!= 0) {
+											res.redirect(close);
 									} else {
 										res.redirect('/assessableunit?id=' + data.doc[0]._id);
 									}
