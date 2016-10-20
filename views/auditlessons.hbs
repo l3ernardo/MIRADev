@@ -1,0 +1,67 @@
+<link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+<link href="/public/css/style.css" rel="stylesheet" type="text/css" />
+<script src="./js/auditlessons.js"/></script>
+<script src='./js/utility.js'></script>
+
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<span><br/></span>
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
+			<p>
+        <span class="ibm-sep"> </span>
+				<a href="/auditlessonlearned?new" name="link-new" id="link-new" class="ibm-forward-link">New</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Excel" name="link-export" id="link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="link-export2" id="link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			</p>
+			<br/>
+		</div>
+		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{valuesToString dataExport}}</textarea>
+		<div>
+			<table id="audit_lessons_treeview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" >
+				<thead>
+					<tr>
+						<th style="width:1%;" scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
+						<th style="width:14%;">BU</th>
+						<th style="display:none;">QTR</th>
+						<th style="display:none;"> Type</th>
+						<th style="width:5%;">Engament ID</th>
+						<th style="width:5%;">BU IOT</th>
+						<th style="width:5%;">BU IMT</th>
+						<th style="width:5%;">Country</th>
+						<th style="width:5%;">LoB</th>
+						<th style="width:10%;">Process</th>
+						<th style="width:5%;">Subprocess</th>
+						<th style="width:5%;">Observation Category</th>
+						<th style="width:40%;">Summary of Issue / Recommendation</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{#each doc}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
+
+						<th style="width:1%;" scope="row" class="ibm-table-row"></th>
+						<td style="width:14%;">{{name}}</td>
+						<td style="width:5%;">{{#if _id}}<input type="checkbox" class="mira_checkbox_tree"/><a href="/auditlessonlearned?id={{_id}}">{{engagementID}}&nbsp;{{recommendationNum}}</a>{{/if}}</td>
+						<td style="width:10%;">{{IOT}}</td>
+						<td style="width:10%;">{{IMT}}</td>
+						<td style="width:5%;">{{country}}</td>
+						<td style="width:5%;">{{LoB}}</td>
+						<td style="width:10%;">{{process}}</td>
+						<td style="width:5%;">{{subprocess}}</td>
+						<td style="width:5%;">{{observationCategory}}</td>
+						<td style="width:30%;">{{{summary}}}</td>
+					</tr>
+				{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+	//Load document's name
+	$('h1#pageTitle').text("Audit Lessons Learned");
+	$("#audit_lessons_treeview").treetable({expandable: true });
+
+</script>

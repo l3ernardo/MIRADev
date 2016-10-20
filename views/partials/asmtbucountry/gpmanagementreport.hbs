@@ -1,0 +1,42 @@
+{{!-- AU BU IOT form - Constituent section - Edit/Read Mode --}}
+<h3>{{AssessableUnitName}}</h3><br/><br/>
+<div class="ibm-columns ibm-graphic-tabs">
+
+	<div class="ibm-tab-section">
+		<ul class="ibm-tabs">
+			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
+			<li id="perfoverview-li"><a href="javascript:void(0)" class="mira-subdata">Performance Overview</a></li>
+			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
+			<li id="processrating-li"><a href="javascript:void(0)" class="mira-subdata">Process Ratings</a></li>
+			<li id="kctest1-li"><a href="javascript:void(0)" class="mira-subdata">Key Ctrls Testing (1)</a></li>
+			<li id="kctest2-li"><a href="javascript:void(0)" class="mira-subdata">Key Ctrls Testing (2)</a></li>
+			<li id="riskmsdcommit-li"><a href="javascript:void(0)" class="mira-subdata">Open Risks &amp; Missed Commits</a></li>
+			<li id="audituniverse-li"><a href="javascript:void(0)" class="mira-subdata">Audit Universe</a></li>
+		</ul>
+	</div>
+	<div id="summary" class="ibm-tabs-content">
+		{{>asmtglobalprocess/ratingsummary}}
+	</div>
+	<div id="perfoverview" class="ibm-tabs-content" style='display : none'>
+		{{>asmtglobalprocess/performanceoverview}}
+	</div>
+	<div id="auditreview" class="ibm-tabs-content" style='display : none'>
+		{{>asmtglobalprocess/auditsandreviews}}
+	</div>
+	<div id="processrating" class="ibm-tabs-content" style='display : none'>
+		{{>asmtglobalprocess/processratings}}
+	</div>
+	<div id="kctest1" class="ibm-tabs-content" style='display : none'>
+		{{>asmtglobalprocess/kctesting1}}
+	</div>
+	<div id="kctest2" class="ibm-tabs-content" style='display : none'>
+		{{>asmtglobalprocess/kctesting2}}
+	</div>
+	<div id="riskmsdcommit" class="ibm-tabs-content" style='display : none'>
+		{{>asmtglobalprocess/openrisksmsdcommits}}
+	</div>
+	<div id="audituniverse" class="ibm-tabs-content" style='display : none'>
+		{{>asmtglobalprocess/audituniverse}}
+	</div>
+
+</div>
