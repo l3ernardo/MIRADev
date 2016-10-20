@@ -71,6 +71,20 @@ var assessment = {
 						doc[0].EAData = doc[0].ARCData;
 						doc[0].AccountData = doc[0].RiskData;
 						break;
+					case "BU Country":
+						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+						doc[0].OtherAuditsData = doc[0].InternalAuditData;
+						doc[0].KCTest1Data = fieldCalc.addTestViewData(7,3);
+						doc[0].KCTest2Data = fieldCalc.addTestViewData(9,3);
+						doc[0].KCTest3Data = fieldCalc.addTestViewData(10,3);
+						doc[0].KC2Test1Data = fieldCalc.addTestViewData(4,3);
+						doc[0].KC2Test2Data = fieldCalc.addTestViewData(8,3);
+						doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,3);
+						doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+						doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+						doc[0].AUData = fieldCalc.addTestViewData(17,10);
+						break;
 				}
 
 				// doc[0].CatP = "CRM";
@@ -115,6 +129,25 @@ var assessment = {
 					}
 					switch (doc[0].ParentDocSubType) {
 						case "Global Process":
+							doc[0].CPAsmtDataOIview = [];
+							doc[0].CPAsmtDataPIview = [];
+							doc[0].CPAsmtDataPR1view = [];
+							fieldCalc.getRatingProfile(db, doc).then(function(data){
+								if (doc[0].CPAsmtDataPIview.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+								}
+								if (doc[0].CPAsmtDataOIview.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+								}
+								if (doc[0].CPAsmtDataPR1view.length < 3) {
+									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+						case "BU Country":
 							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPIview = [];
 							doc[0].CPAsmtDataPR1view = [];

@@ -140,6 +140,9 @@ var assessableunit = {
 				obj = geo;
 			}
 			//Reporting Group Dashboard
+			/*-----------------------------------------------------*/
+			// Change reporting groups to list all documents by id of reporting group(All AU but not BU neither Account). Look id in BRGMembership
+			/*-----------------------------------------------------*/
 			else if(req.url=='/reportingdashboard'){
 				if(req.session.BG.indexOf("MIRA-ADMIN")> '-1'){
 					var rg = {
@@ -148,8 +151,8 @@ var assessableunit = {
 								{ "LevelTypeG": { "$gt": null }},
 								{"Name": { "$ne": null }},
 								{"key": "Assessable Unit"},
-								//{"DocSubType":{"$in":["BU Reporting Group"]}},
-								{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
+								{"DocSubType":{"$in":["BU Reporting Group"]}},
+								//{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
 								{"$not": {"Name":"Reporting Group"}},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
@@ -164,8 +167,8 @@ var assessableunit = {
 								{ "LevelTypeG": { "$gt": null }},
 								{"Name": { "$ne": null }},
 								{"key": "Assessable Unit"},
-								//{"DocSubType":{"$in":["BU Reporting Group"]}},
-								{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
+								{"DocSubType":{"$in":["BU Reporting Group"]}},
+								//{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
 								{"$not": {"Name":"Reporting Group"}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
@@ -1036,6 +1039,7 @@ var assessableunit = {
 					doc.push(tmpdoc);
 					switch (doc[0].DocSubType) {
 						case "BU IOT":
+							doc[0].LevelType = "2";
 							doc[0].RGRollup = req.body.RGRollup;
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].BUCountryIOT = req.body.BUCountryIOT;
@@ -1043,12 +1047,14 @@ var assessableunit = {
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 							break;
 						case "BU IMT":
+							doc[0].LevelType = "3";
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].IOT = req.body.IOT;
 							doc[0].IMT = req.body.IMT;
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 							break;
 						case "BU Country":
+							doc[0].LevelType = "4";
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].IOT = req.body.IOT;
 							doc[0].IMT = req.body.IMT;
@@ -1057,13 +1063,17 @@ var assessableunit = {
 							doc[0].ExcludeGeo = req.body.ExcludeGeo;
 							break;
 						case "Account":
+							var levelT = parseInt(pdoc[0].LevelType) + 1;
+							doc[0].LevelType = levelT.toString();
 							doc[0].ControllableUnit = pdoc[0].ControllableUnit;
 							doc[0].Category = pdoc[0].Category;
 							doc[0].AuditProgram = pdoc[0].AuditProgram;
 							doc[0].Name = req.body.Name;
 							doc[0].MetricsCriteria = req.body.MetricsCriteria;
-							doc[0].MetricsValue = req.body.MetricsValue
+							doc[0].MetricsValue = req.body.MetricsValue;
+							break;
 						case "BU Reporting Group":
+							doc[0].LevelTypeG = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							break;
@@ -1143,6 +1153,9 @@ var assessableunit = {
 							doc[0].Status = req.body.Status;
 							break;
 						case "Controllable Unit":
+							/* --------------------------------------------------------------------------- */
+							//Add LevelType based on ParentDocSubType - Missing functionality of Update parent
+							/* --------------------------------------------------------------------------- */
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].CUSize = req.body.CUSize;
 							doc[0].LifetimeTCV= req.body.LifetimeTCV;
