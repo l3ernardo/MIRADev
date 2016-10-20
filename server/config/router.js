@@ -34,6 +34,17 @@ router.get('/index', isAuthenticated, function(req, res) {
 });
 
 /**************************************************************
+DATE TIME FUNCTIONALITY
+***************************************************************/
+router.get('/getDateTime', function(req, res) {
+	if(req.query.dt) {
+		res.send(utility.getDateTime(req.query.dt,"full"));
+	} else {
+		res.send(utility.getDateTime("","full"));
+	}
+})
+
+/**************************************************************
 DISCLOSURE FUNCTIONALITY
 ***************************************************************/
 /* Disclosure screen */
