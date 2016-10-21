@@ -560,7 +560,7 @@ dashboards.get('/newassessment', isAuthenticated, function(req, res) {
 	assessment.newAsmtByPID(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
-				switch (data.doc[0].DocSubType) {
+				switch (data.doc[0].ParentDocSubType) {
 					case "BU Country":
 						var lParams;
 						if (data.doc[0].editmode)

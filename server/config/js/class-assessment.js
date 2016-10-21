@@ -208,16 +208,18 @@ var assessment = {
 				var pdoc = [];
 				var doc = [];
 				pdoc.push(data.body);
+
+				/* Get access and roles */
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
-				/* Check if user is admin to the parent doc where the new unit is created from */
 				accessrules.getRules(req,peditors);
+				var editors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 
 				if (accessrules.rules.editor) {
 					var tmpdoc = {
 						"key": "Assessment",
 						"DocType": "Assessment",
 						"parentid": pid,
-						"DocSubType": pdoc[0].DocSubType,
+						"ParentDocSubType": pdoc[0].DocSubType,
 						"AssessableUnitName": pdoc[0].Name,
 						"PeriodRating": "NR",
 						"MIRAStatus": "Draft",
@@ -232,10 +234,11 @@ var assessment = {
 						"Owner": pdoc[0].Owner,
 						"ExcludeGeo": pdoc[0].ExcludeGeo,
 						"editmode": 1,
-						// "admin": 1,
-						// "grantaccess": 1,
-						// "MIRAunit": 1,
-						// "newunit": 1
+						"RJandT2SEditable": 1,
+						"RatingEditable": 1,
+						"editor": accessrules.rules.editor,
+						"admin": accessrules.rules.admin,
+						"resetstatus": accessrules.rules.resetstatus,
 					};
 					doc.push(tmpdoc);
 
@@ -246,8 +249,7 @@ var assessment = {
 							- previous 4 qtrs unremed defects
 					*/
 
-
-					switch (doc[0].DocSubType) {
+					switch (doc[0].ParentDocSubType) {
 						case "Account":
 							if (pdoc[0].IOT != undefined) {
 								doc[0].IOT = pdoc[0].IOT;
