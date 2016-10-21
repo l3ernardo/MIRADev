@@ -32,74 +32,6 @@
 				</table>
 			</td>
 		</tr>
-		<tr class="summaryrollup">
-			<td class="summaryrollup-label">
-				<ul class="ibm-twisty">
-					<li>
-						<a class="ibm-twisty-trigger" href="#toggle"><img alt="-" src="//www.ibm.com/i/c.gif" /></a>
-						<span class="ibm-twisty-head">Business Insights</span>
-						<div class="ibm-twisty-body">
-							<br /><br />
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Significant Organization Changes</th></thead>
-								<tr class="asmt-viewdata">
-									<td>
-										<span class="mira-subdata2">
-											<i>Significant organization, location, and mission changes including centralization of activities <strong>and their impact on the controls environment</strong>. Identify from/to organizations, new/dissolved organizations, scope/responsibilities of mission changes, process(es) impacted, etc.</i>
-										</span><br />
-										<input type="text" name="Insight1" id="Insight1" value="{{Insight1}}" size="160">
-									</td>
-								</tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Significant Process Changes</th></thead>
-								<tr class="asmt-viewdata">
-									<td>
-										<span class="mira-subdata2">
-											<i>Significant process changes <strong>and their impact on the controls environment</strong>. Include the reason for the change such as harmonization, centralization, reorganization, etc.</i>
-										</span><br />
-										<input type="text" name="Insight2" id="Insight2" value="{{Insight2}}" size="160">
-									</td>
-								</tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Strategic Business Development Activities (acquisitions &amp; divestitures)</th></thead>
-								<tr class="asmt-viewdata">
-									<td>
-										<span class="mira-subdata2">
-											<i>Business development activities (acquisitions, divestitures and joint ventures) <strong>and their impact on the controls environment</strong>. Provide a brief description, including scope and size, process(es) impacted, etc.</i>
-										</span><br />
-										<input type="text" name="Insight3" id="Insight3" value="{{Insight3}}" size="160">
-									</td>
-								</tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Outsourcing of internal controls to an external 3rd party or changes to an outsourcing arrangement impacting internal controls</th></thead>
-								<tr class="asmt-viewdata">
-									<td>
-										<span class="mira-subdata2">
-											<i>Outsourcing of internal processes to an external 3rd party <strong>and their impact on the controls environment</strong>. Provide a brief description, including scope and size, processes impacted, etc. Include changes to existing agreements as well as new or terminated agreements</i>
-										</span><br />
-										<input type="text" name="Insight4" id="Insight4" value="{{Insight4}}" size="160">
-									</td>
-								</tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Other information (significant items that have not been reported, emerging regulatory requirements, and new or emerging risk areas)</th></thead>
-								<tr class="asmt-viewdata">
-									<td>
-										<span class="mira-subdata2">
-											<i>Other information <strong>and the impact on the controls environment</strong> (e.g.: significant IT system installations, changes necessitated by regulatory requirements, new or emerging risk areas, and other focus items).</i>
-										</span><br />
-										<input type="text" name="Insight5" id="Insight5" value="{{Insight5}}" size="160">
-									</td>
-								</tr>
-							</table>
-						</div>
-					</li>
-				</ul>
-			</td>
-		</tr>
 	{{else}} <!-- Read Mode -->
 		<tr class="summaryrollup">
 			<td>
@@ -128,39 +60,6 @@
 						</td>
 					</tr>
 				</table>
-			</td>
-		</tr>
-		<tr class="summaryrollup">
-			<td class="summaryrollup-label">
-				<ul class="ibm-twisty">
-					<li>
-						<a class="ibm-twisty-trigger" href="#toggle"><img alt="-" src="//www.ibm.com/i/c.gif" /></a>
-						<span class="ibm-twisty-head">Business Insights</span>
-						<div class="ibm-twisty-body">
-							<br /><br />
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Significant Organization Changes</th></thead>
-								<tr class="asmt-viewdata"><td>&nbsp;{{Insight1}}</td></tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Significant Process Changes</th></thead>
-								<tr class="asmt-viewdata"><td>&nbsp;{{Insight2}}</td></tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Strategic Business Development Activities (acquisitions &amp; divestitures)</th></thead>
-								<tr class="asmt-viewdata"><td>&nbsp;{{Insight3}}</td></tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Outsourcing of internal controls to an external 3rd party or changes to an outsourcing arrangement impacting internal controls</th></thead>
-								<tr class="asmt-viewdata"><td>&nbsp;{{Insight4}}</td></tr>
-							</table>
-							<table width="100%">
-								<thead class="summaryrollup-sublabel"><th scope="col">Other information (significant items that have not been reported, emerging regulatory requirements, and new or emerging risk areas)</th></thead>
-								<tr class="asmt-viewdata"><td>&nbsp;{{Insight5}}</td></tr>
-							</table>
-						</div>
-					</li>
-				</ul>
 			</td>
 		</tr>
 	{{/if}}
@@ -206,6 +105,60 @@
 					<td class="content-data-centered">{{CPEXEMPTPct}}</td>
 					<td class="content-data-centered">{{CPNRPct}}</td>
 					<td class="content-data-centered">{{CPTotalPct}}</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="summaryrollup">
+		<td>
+			<table width="100%">
+				<thead class="summaryrollup-label"><th scope="col" colspan="11">Controllable Unit (CU) Ratings Profile</th></thead>
+				<tr>
+					<td width="16%" class="summaryrollup-label"></td>
+					<td width="8%" class="sat-bg">Sat &#61;</td>
+					<td width="8%" class="sat-bg">Sat &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#61;</td>
+					<td width="8%" class="marg-bg">Marg &#9660;</td>
+					<td width="8%" class="unsat-bg">Unsat &#61;</td>
+					<td width="8%" class="unsat-bg">Unsat &#9660;</td>
+					<td width="8%" class="unrated-bg">Exempt</td>
+					<td width="8%" class="unrated-bg">NR</td>
+					<td width="12%" class="summaryrollup-viewheader">Total</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Counts</td>
+					<td class="content-data-centered">{{CUSatEqualCnt}}</td>
+					<td class="content-data-centered">{{CUSatPlusCnt}}</td>
+					<td class="content-data-centered">{{CUMargPlusCnt}}</td>
+					<td class="content-data-centered">{{CUMargEqualCnt}}</td>
+					<td class="content-data-centered">{{CUMargMinusCnt}}</td>
+					<td class="content-data-centered">{{CUUnsatEqualCnt}}</td>
+					<td class="content-data-centered">{{CUUnsatMinusCnt}}</td>
+					<td class="content-data-centered">{{CUEXEMPTCnt}}</td>
+					<td class="content-data-centered">{{CUNRCnt}}</td>
+					<td class="content-data-centered">{{CUTotalCnt}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Percentages</td>
+					<td class="content-data-centered">{{CUSatEqualPct}}</td>
+					<td class="content-data-centered">{{CUSatPlusPct}}</td>
+					<td class="content-data-centered">{{CUMargPlusPct}}</td>
+					<td class="content-data-centered">{{CUMargEqualPct}}</td>
+					<td class="content-data-centered">{{CUMargMinusPct}}</td>
+					<td class="content-data-centered">{{CUUnsatEqualPct}}</td>
+					<td class="content-data-centered">{{CUUnsatMinusPct}}</td>
+					<td class="content-data-centered">{{CUEXEMPTPct}}</td>
+					<td class="content-data-centered">{{CUNRPct}}</td>
+					<td class="content-data-centered">{{CUTotalPct}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label" colspan="10">Weighted Score</td>
+					<td class="content-data-centered">{{WeightedCUScore}}</td>
+				</tr>
+				<tr class="summaryrollup-legend">
+					<td class="summaryrollup-legend" colspan="8">Weighted Score Key</td>
+
 				</tr>
 			</table>
 		</td>
