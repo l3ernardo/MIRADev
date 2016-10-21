@@ -10,6 +10,7 @@ var businessunit = require('./js/class-businessunit.js');
 var submenu = require('./js/class-submenu.js');
 var utility = require('./js/class-utility.js');
 var isAuthenticated = require('./router-authentication.js');
+var geohierarchy = require('./js/class-geohierarchy.js');
 
 router.get('/', isAuthenticated, function(req, res) {
 	res.redirect('index');
@@ -80,9 +81,38 @@ router.get('/businessunit', isAuthenticated, function(req, res){
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][businessunit] - " + err.error);
-	})
+	});
+
+
+
+//Create GEO Hierarchy
+
+	geohierarchy.createGEOHierarchy(req,db).then(function (data){
+
+			if(data.status==200 & !data.error) { 
+		
+				req.session["hierarchy"] = data.response; //hierarchy saved on session var with the structure of req.session.hierarchy.IMT / req.session.hierarchy.IOT / req.session.hierarchy.countries
+		
+						
+			}else{
+				
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][createGeoHierarchy] - " + data.error);
+			
+			
+			}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][createGeoHierarchy] - " + err.error);
+
+		});
+
+
 
 });
+
+
+
 /* Save Business Unit */
 router.post('/savebunit', isAuthenticated, function(req, res){
 	businessunit.saveBU(req, db).then(function(data) {

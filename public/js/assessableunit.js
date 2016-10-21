@@ -5,7 +5,7 @@ $(document).ready(function(){
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	//Code for Cancel button
 	$('#btn_cancel').click(function() {
-		window.location.href = "/processdashboard";
+		window.location.href = $("li#breadcrumb > a").attr("href");
 	});
 	//Code for Save button
 	$('#btn_save').click(function(evt) {
@@ -25,7 +25,7 @@ $(document).ready(function(){
 			myEditor.saveHTML();
 			var YmyEditor = myEditor.get('element').value;
 			$('#Notes').val(YmyEditor);
-			$('#close').val('1');
+			$('#close').val($("li#breadcrumb > a").attr("href"));
 			$("#assessableunit").submit();
 		} else {
 			evt.preventDefault();
