@@ -256,7 +256,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 	})
 });
 
-/* Display BU assessable unit document */
+/* Create New assessable unit document */
 dashboards.get('/newassessableunit', isAuthenticated, function(req, res) {
 	assessableunit.newAUbyPID(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
@@ -374,8 +374,8 @@ dashboards.post('/savebuau', isAuthenticated, function(req, res){
 							assessableunit.getAUbyID(req, db).then(function(data) {
 								if(data.status==200 & !data.error) {
 									if(data.doc) {
-										if(close=='1') {
-											res.redirect('/processdashboard');
+										if(close!= 0) {
+											res.redirect(close);
 										} else {
 											res.redirect('/assessableunit?id=' + data.doc[0]._id);
 										}
@@ -403,8 +403,8 @@ dashboards.post('/savebuau', isAuthenticated, function(req, res){
 						assessableunit.getAUbyID(req, db).then(function(data) {
 							if(data.status==200 & !data.error) {
 								if(data.doc) {
-									if(close=='1') {
-										res.redirect('/processdashboard');
+									if(close!= 0) {
+											res.redirect(close);
 									} else {
 										res.redirect('/assessableunit?id=' + data.doc[0]._id);
 									}
@@ -540,6 +540,45 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 						break;
 
 					case "Account":
+						break;
+				}
+			} else {
+				res.render('error',{errorDescription: data.error});
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][assessment] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][assessment] - " + err.error);
+	})
+});
+
+/* Create new assesment document */
+dashboards.get('/newassessment', isAuthenticated, function(req, res) {
+	assessment.newAsmtByPID(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(data.doc) {
+				switch (data.doc[0].ParentDocSubType) {
+					case "BU Country":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbucountry', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][BUCountryassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][BUCountryassessment][getListParams] - " + err.error);
+						})
 						break;
 				}
 			} else {

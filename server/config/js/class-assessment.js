@@ -198,6 +198,218 @@ var assessment = {
 		return deferred.promise;
 	},
 
+	/* New assessment by parent ID */
+	newAsmtByPID: function(req, db) {
+		var deferred = q.defer();
+		try{
+			var pid = req.query.pid
+
+			db.get(pid).then(function(data){
+				var pdoc = [];
+				var doc = [];
+				pdoc.push(data.body);
+
+				/* Get access and roles */
+				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
+				accessrules.getRules(req,peditors);
+				var editors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
+
+				if (accessrules.rules.editor) {
+					var tmpdoc = {
+						"key": "Assessment",
+						"DocType": "Assessment",
+						"parentid": pid,
+						"ParentDocSubType": pdoc[0].DocSubType,
+						"AssessableUnitName": pdoc[0].Name,
+						"PeriodRating": "NR",
+						"MIRAStatus": "Draft",
+						"AUStatus": "Active",
+						"BusinessUnit": pdoc[0].BusinessUnit,
+						"CurrentPeriod": pdoc[0].CurrentPeriod,
+						"Country": pdoc[0].Country,
+						"IMT": pdoc[0].IMT,
+						"IOT": pdoc[0].IOT,
+						"AllEditors": pdoc[0].AllEditors,
+						"AllReaders": pdoc[0].AllReaders,
+						"Owner": pdoc[0].Owner,
+						"ExcludeGeo": pdoc[0].ExcludeGeo,
+						"editmode": 1,
+						"RJandT2SEditable": 1,
+						"RatingEditable": 1,
+						"editor": accessrules.rules.editor,
+						"admin": accessrules.rules.admin,
+						"resetstatus": accessrules.rules.resetstatus,
+					};
+					doc.push(tmpdoc);
+
+					/* Get previous 4 quarter assessments to get historical data from:
+							- previous 4 qtrs Ratings
+							- prrevious 4 qtrs target to Status
+							- previous 4 qtrs DR & TR
+							- previous 4 qtrs unremed defects
+					*/
+
+					switch (doc[0].ParentDocSubType) {
+						case "Account":
+							if (pdoc[0].IOT != undefined) {
+								doc[0].IOT = pdoc[0].IOT;
+							}
+							if (pdoc[0].IMT != undefined) {
+								doc[0].IMT = pdoc[0].IMT;
+							}
+							if (pdoc[0].Country != undefined) {
+								doc[0].Country = pdoc[0].Country;
+							}
+
+							doc[0].ControllableUnit = pdoc[0].ControllableUnit;
+							doc[0].Category = pdoc[0].Category;
+							doc[0].AuditProgram = pdoc[0].AuditProgram;
+							doc[0].ReportingGroupList = [];
+							var searchobj = {
+								selector:{
+									"_id": {"$gt":0},
+									"key": "Assessable Unit",
+									"Status": "Active",
+									"BusinessUnit": doc[0].BusinessUnit,
+									"DocSubType": "BU Reporting Group"
+								}
+							};
+
+							db.find(searchobj).then(function(resdata) {
+								var resdocs = resdata.body.docs;
+								for (var i = 0; i < resdocs.length; ++i) {
+									doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								console.log("[assessableunit][AccountLists][NewAccount]" + resdata.error);
+								deferred.reject({"status": 500, "error": err.error.reason});
+							});
+							break;
+						case "BU IOT":
+
+							doc[0].BUCountryList = [];
+							doc[0].ReportingGroupList = [];
+							doc[0].IOTList = [];
+							doc[0].IOTAUList = [];
+
+							var searchobj = {
+								selector:{
+									"_id": {"$gt":0},
+									"key": "Assessable Unit",
+									"Status": "Active",
+									$or: [
+										{$and:[{$or:[{"DocSubType": "BU Country"},{"DocSubType": "BU IOT"},{"DocSubType": "BU Reporting Group"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
+										{"DocSubType": "IOT"}
+									]
+								}
+							};
+							doc[0].IOTList.push({"docid":"","name":""});
+							db.find(searchobj).then(function(resdata) {
+								var resdocs = resdata.body.docs;
+								for (var i = 0; i < resdocs.length; ++i) {
+									if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+									if (resdocs[i].DocSubType == "IOT") doc[0].IOTList.push({"docid":resdocs[i]._id,"name":resdocs[i].IOT});
+									if (resdocs[i].DocSubType == "BU IOT") doc[0].IOTAUList.push({"name":resdocs[i].IOT});
+								}
+								for (var i = 0; i < doc[0].IOTAUList.length; ++i) {
+									util.findAndRemove(doc[0].IOTList,'name',doc[0].IOTAUList[i].IOT)
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								console.log("[assessableunit][IOTLists][NewIOT]" + resdata.error);
+								deferred.reject({"status": 500, "error": err.error.reason});
+							});
+							break;
+						case "BU IMT":
+							doc[0].IOT = pdoc[0].IOT;
+							doc[0].ReportingGroupList = [];
+							doc[0].IMTList = [];
+							doc[0].IMTAUList = [];
+
+							var searchobj = {
+								selector:{
+									"_id": {"$gt":0},
+									"key": "Assessable Unit",
+									"Status": "Active",
+									$or: [
+										{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU IMT"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
+										{$and:[{"DocSubType": "IMT"},{"IOT":doc[0].IOT}]}
+									]
+								}
+							};
+							doc[0].IMTList.push({"docid":"","name":""});
+							db.find(searchobj).then(function(resdata) {
+								var resdocs = resdata.body.docs;
+								for (var i = 0; i < resdocs.length; ++i) {
+									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+									if (resdocs[i].DocSubType == "IMT") doc[0].IMTList.push({"docid":resdocs[i]._id,"name":resdocs[i].IMT});
+									if (resdocs[i].DocSubType == "BU IMT") doc[0].IMTAUList.push({"name":resdocs[i].IMT});
+								}
+								for (var i = 0; i < doc[0].IMTAUList.length; ++i) {
+									util.findAndRemove(doc[0].IMTList,'name',doc[0].IMTAUList[i].IMT)
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								console.log("[assessableunit][IMTLists][NewIMT]" + resdata.error);
+								deferred.reject({"status": 500, "error": err.error.reason});
+							});
+							break;
+						case "BU Country":
+							deferred.resolve({"status": 200, "doc": doc});
+
+							// doc[0].IOT = pdoc[0].IOT;
+							// doc[0].IMT = pdoc[0].IMT;
+							// doc[0].ReportingGroupList = [];
+							// doc[0].CountryList = [];
+							// doc[0].CountryAUList = [];
+
+							// var searchobj = {
+							// 	selector:{
+							// 		"_id": {"$gt":0},
+							// 		"key": "Assessable Unit",
+							// 		"Status": "Active",
+							// 		$or: [
+							// 			{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU Country"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
+							// 			{$and:[{"DocSubType": "Country"},{"IMT":doc[0].IMT}]}
+							// 		]
+							// 	}
+							// };
+							// doc[0].CountryList.push({"docid":"","name":""});
+							// db.find(searchobj).then(function(resdata) {
+							// 	var resdocs = resdata.body.docs;
+							// 	for (var i = 0; i < resdocs.length; ++i) {
+							// 		if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+							// 		if (resdocs[i].DocSubType == "Country") doc[0].CountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Country});
+							// 		if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"name":resdocs[i].Country});
+							// 	}
+							// 	for (var i = 0; i < doc[0].CountryAUList.length; ++i) {
+							// 		util.findAndRemove(doc[0].CountryList,'name',doc[0].CountryAUList[i].Country)
+							// 	}
+							// 	deferred.resolve({"status": 200, "doc": doc});
+							// }).catch(function(err) {
+							// 	console.log("[assessableunit][BUCountryLists][NewBUCountry]" + resdata.error);
+							// 	deferred.reject({"status": 500, "error": err.error.reason});
+							// });
+							break;
+						default:
+							deferred.resolve({"status": 200, "doc": doc});
+							break;
+					}
+				} else {
+					deferred.reject({"status": 500, "error": "Access denied!"});
+				}
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+
+
 	/* Save Assessment document */
 	saveAsmt: function(req, db) {
 		var deferred = q.defer();
