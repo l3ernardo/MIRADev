@@ -231,12 +231,11 @@ var assessment = {
 						"AllReaders": pdoc[0].AllReaders,
 						"Owner": pdoc[0].Owner,
 						"ExcludeGeo": pdoc[0].ExcludeGeo,
-
 						"editmode": 1,
-						"admin": 1,
-						"grantaccess": 1,
-						"MIRAunit": 1,
-						"newunit": 1
+						// "admin": 1,
+						// "grantaccess": 1,
+						// "MIRAunit": 1,
+						// "newunit": 1
 					};
 					doc.push(tmpdoc);
 
@@ -356,39 +355,41 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
-							doc[0].IOT = pdoc[0].IOT;
-							doc[0].IMT = pdoc[0].IMT;
-							doc[0].ReportingGroupList = [];
-							doc[0].CountryList = [];
-							doc[0].CountryAUList = [];
+							deferred.resolve({"status": 200, "doc": doc});
 
-							var searchobj = {
-								selector:{
-									"_id": {"$gt":0},
-									"key": "Assessable Unit",
-									"Status": "Active",
-									$or: [
-										{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU Country"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
-										{$and:[{"DocSubType": "Country"},{"IMT":doc[0].IMT}]}
-									]
-								}
-							};
-							doc[0].CountryList.push({"docid":"","name":""});
-							db.find(searchobj).then(function(resdata) {
-								var resdocs = resdata.body.docs;
-								for (var i = 0; i < resdocs.length; ++i) {
-									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-									if (resdocs[i].DocSubType == "Country") doc[0].CountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Country});
-									if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"name":resdocs[i].Country});
-								}
-								for (var i = 0; i < doc[0].CountryAUList.length; ++i) {
-									util.findAndRemove(doc[0].CountryList,'name',doc[0].CountryAUList[i].Country)
-								}
-								deferred.resolve({"status": 200, "doc": doc});
-							}).catch(function(err) {
-								console.log("[assessableunit][BUCountryLists][NewBUCountry]" + resdata.error);
-								deferred.reject({"status": 500, "error": err.error.reason});
-							});
+							// doc[0].IOT = pdoc[0].IOT;
+							// doc[0].IMT = pdoc[0].IMT;
+							// doc[0].ReportingGroupList = [];
+							// doc[0].CountryList = [];
+							// doc[0].CountryAUList = [];
+
+							// var searchobj = {
+							// 	selector:{
+							// 		"_id": {"$gt":0},
+							// 		"key": "Assessable Unit",
+							// 		"Status": "Active",
+							// 		$or: [
+							// 			{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU Country"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
+							// 			{$and:[{"DocSubType": "Country"},{"IMT":doc[0].IMT}]}
+							// 		]
+							// 	}
+							// };
+							// doc[0].CountryList.push({"docid":"","name":""});
+							// db.find(searchobj).then(function(resdata) {
+							// 	var resdocs = resdata.body.docs;
+							// 	for (var i = 0; i < resdocs.length; ++i) {
+							// 		if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+							// 		if (resdocs[i].DocSubType == "Country") doc[0].CountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Country});
+							// 		if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"name":resdocs[i].Country});
+							// 	}
+							// 	for (var i = 0; i < doc[0].CountryAUList.length; ++i) {
+							// 		util.findAndRemove(doc[0].CountryList,'name',doc[0].CountryAUList[i].Country)
+							// 	}
+							// 	deferred.resolve({"status": 200, "doc": doc});
+							// }).catch(function(err) {
+							// 	console.log("[assessableunit][BUCountryLists][NewBUCountry]" + resdata.error);
+							// 	deferred.reject({"status": 500, "error": err.error.reason});
+							// });
 							break;
 						default:
 							deferred.resolve({"status": 200, "doc": doc});
