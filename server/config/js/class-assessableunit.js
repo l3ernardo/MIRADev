@@ -1010,10 +1010,8 @@ var assessableunit = {
 			var currdate = now.format("MM/DD/YYYY");
 			var addlog = {
 				"name": curruser,
-				"date": util.getDateTime("","date"),
-				"time": util.getDateTime("","time")
-				// "date": currdate,
-				// "time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
+				"date": currdate,
+				"time": now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr(),
 			};
 
 			if (docid == "") {
