@@ -471,6 +471,7 @@ var assessableunit = {
 				db.find(constiobj).then(function(constidata) {
 					var constidocs = constidata.body.docs;
 					doc[0].AssessmentData = [];
+					var hasCurQAsmt = false;
 					for (var i = 0; i < constidocs.length; ++i) {
 						if (constidocs[i].DocType == "Assessment") {
 							toadd = {
@@ -483,6 +484,7 @@ var assessableunit = {
 								]
 							};
 							doc[0].AssessmentData.push(toadd);
+							if (constidocs[i].CurrentPeriod ==  doc[0].CurrentPeriod) hasCurQAsmt = true;
 						} else {
 							toadd = {
 								"docid": constidocs[i]._id,
@@ -505,6 +507,10 @@ var assessableunit = {
 							else if(constidocs[i].DocSubType == "Controllable Unit") doc[0].CUData.push(toadd);
 							else doc[0].SPData.push(toadd);
 						}
+					}
+					/* Check if user can create assessment */
+					if ( (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") && doc[0].Status == "Active" && hasCurQAsmt == false && doc[0].editor && doc[0].DocSubType == "BU Country") {
+						doc[0].CreateAsmt = true;
 					}
 					/* Calculate for Instance Design Specifics and parameters*/
 					doc[0].EnteredBU = req.session.businessunit;
@@ -820,7 +826,6 @@ var assessableunit = {
 					  "DocType": "Assessable Unit",
 						"parentid": pid,
 					  "DocSubType": req.query.docsubtype,
-					  "Status": "Draft",
 					  "BusinessUnit": pdoc[0].BusinessUnit,
 					  "CurrentPeriod": pdoc[0].CurrentPeriod,
 						"Status": "Active",
