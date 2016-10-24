@@ -1,10 +1,8 @@
 <table id="kctest_table" width="100%" class="ibm-data-table">
 	<tr class="kc-test-content">
-		<th class="kc-test-content" colspan="2">Process Testing Summary</th>
-	</tr>
-	<tr class="kc-test-content">
 		<td width="35%" class="kc-test-content">
-			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<span class="kc-test-header"><b>Process Testing Summary</b></span><br /><br />
+			<table width="100%" class="ibm-data-table">
 				<thead class="kc-test-viewheader">
 					<th colspan="5" class="kc-test-viewheader">Defect Rates (%) for Prior and Current Quarters</th>
 				</thead>
@@ -14,19 +12,16 @@
 					{{/each}}
 					<td class="asmt-viewdata" width="20%">{{CurrentPeriod}}</td>
 				</tr>
-				{{#each DRData}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
-					</tr>
-				{{/each}}
+				<tr class="asmt-viewdata">
+					{{{defectRateDisplayView AUDefectRatePrev4 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRatePrev3 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRatePrev2 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRatePrev1 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+				</tr>
 			</table>
 		</td>
 		<td width="65%" class="kc-test-content"></td>
-	</tr>
-	<tr class="kc-test-content">
-		<th class="kc-test-content" colspan="2">Reporting Country Testing</th>
 	</tr>
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
@@ -51,21 +46,23 @@
 		</td>
 	</tr>
 	<tr class="kc-test-content">
-		<th class="kc-test-content" colspan="2">Sampled Country Testing</th>
-	</tr>
-	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
+			<span class="kc-test-header"><b>Current Period Samples with Defects (includes all test types)</b></span><br /><br />
 			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader" width="10">Period</th>
-					<th class="kc-test-viewheader" width="15">Type</th>
-					<th class="kc-test-viewheader" width="15">Control</th>
-					<th class="kc-test-viewheader" width="30">Reporting Country</th>
-					<th class="kc-test-viewheader" width="10">Tests</th>
-					<th class="kc-test-viewheader" width="10">Defects</th>
-					<th class="kc-test-viewheader" width="10">Defect Rate %</th>
+				<thead>
+					<th class="kc-test-viewheader" width="5">Cat</th>
+					<th class="kc-test-viewheader" width="5">Process</th>
+					<th class="kc-test-viewheader" width="5">Control</th>
+					<th class="kc-test-viewheader" width="10">Sample ID</th>
+					<th class="kc-test-viewheader" width="5">Defects</th>
+					<th class="kc-test-viewheader" width="10">Defect Type</th>
+					<th class="kc-test-viewheader" width="10">Remed. Status</th>
+					<th class="kc-test-viewheader" width="5">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="13">Original Target to Close</th>
+					<th class="kc-test-viewheader" width="12">Current Target to Close</th>
+					<th class="kc-test-viewheader" width="20">Defect Abstract</th>
 				</thead>
-				{{#each SCTestData}}
+				{{#each SampleData}}
 					<tr class="asmt-viewdata">
 						{{#each col}}
 								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
@@ -76,19 +73,17 @@
 		</td>
 	</tr>
 	<tr class="kc-test-content">
-		<th class="kc-test-content" colspan="2">Current Period Samples with Defects (includes all test types)</th>
-	</tr>
-	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
+			<span class="kc-test-header"><b>Unremediated Samples from Prior Periods (includes all test types)</b></span><br /><br />
 			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 				<thead>
-					<th class="kc-test-viewheader" width="5">Cat</th>
-					<th class="kc-test-viewheader" width="5">Process</th>
-					<th class="kc-test-viewheader" width="5">Control</th>
+					<th class="kc-test-viewheader" width="5">Period</th>
+					<th class="kc-test-viewheader" width="5">Type</th>
+					<th class="kc-test-viewheader" width="10">Control</th>
 					<th class="kc-test-viewheader" width="10">Sample ID</th>
+					<th class="kc-test-viewheader" width="10">Process</th>
 					<th class="kc-test-viewheader" width="5">Defects</th>
-					<th class="kc-test-viewheader" width="10">Defect Type</th>
-					<th class="kc-test-viewheader" width="10">Remed. Status</th>
+					<th class="kc-test-viewheader" width="5">Defect Type</th>
 					<th class="kc-test-viewheader" width="5">Remaining Fin. Impact</th>
 					<th class="kc-test-viewheader" width="13">Original Target to Close</th>
 					<th class="kc-test-viewheader" width="12">Current Target to Close</th>

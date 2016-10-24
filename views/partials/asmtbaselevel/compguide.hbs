@@ -1,16 +1,17 @@
 <table id="guide_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<input type="hidden" name="BOCExceptionCount" id="BOCExceptionCount" value="{{BOCExceptionCount}}">
 	<tr>
-		<td width="12%"><p class="ibm-ind-caution mira-alert-sign">&nbsp;</p></td>
+		<td width="12%"><div id="compguideboc"></div></td>
 		<td width="2.5%"></td>
-		<td width="12%"><p class="ibm-ind-caution mira-alert-sign">&nbsp;</p></td>
+		<td width="12%"><div id="compguideara"></td>
 		<td width="2.5%"></td>
-		<td width="14%"><p class="ibm-ind-caution mira-alert-sign">&nbsp;</p></td>
+		<td width="14%"><div id="compguideormc"></td>
 		<td width="2.5%"></td>
-		<td width="10%"><p class="ibm-ind-caution mira-alert-sign">&nbsp;</p></td>
+		<td width="10%"><div id="compguideaar"></td>
 		<td width="2.5%"></td>
-		<td width="12%"><p class="ibm-ind-caution mira-alert-sign">&nbsp;</p></td>
+		<td width="12%"><div id="compguidekct"></td>
 		<td width="2.5%"></td>
-		<td width="12%"><p class="ibm-ind-caution mira-alert-sign">&nbsp;</p></td>
+		<td width="12%"><div id="compguideom"></td>
 		<td width="2.5%"></td>
 		<td width="13%"></td>
 	</tr>
@@ -33,6 +34,8 @@
 				</td></tr>
 			</table>
 		</td>
+		{{#if_equal  ParentDocSubType "Account"}}
+		{{else}}
 		<td><h1 class="mira-plus-sign">+</h1></td>
 		<td>
 			<table>
@@ -40,6 +43,7 @@
 				<tr><td>Do you have Open Risk Evaluations in the current and/or prior quarters?<br /><br />Do any have missed Commitment dates?</td></tr>
 			</table>
 		</td>
+		{{/if_equal}}
 		<td><h1 class="mira-plus-sign">+</h1></td>
 		<td>
 			<table>

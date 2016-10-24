@@ -8,6 +8,7 @@
 var varConf = require('../../../configuration');
 var q  = require("q");
 var moment = require('moment');
+var mtz = require('moment-timezone');
 var xml2js = require('xml2js');
 
 var util = {
@@ -474,27 +475,6 @@ var util = {
     return -1;
 	},
 
-	/**************************************************
-	DATA TRANSFORMATION FUNCTIONALITY
-
-	Created by: Valdenir Alves
-	email:  silvav@br.ibm.com
-	Date: 22/09/2016
-	**************************************************/
-	//Show ALL data -Used by data-transformation process
-	getBusinessDocs : function(req, designdoc, viewname){
-		var deferred = q.defer();
-		db.view(designdoc, 'view-'+viewname, {include_docs: true}).then(function(data){
-			// console.log(data);
-			if(data.status == 200 & !data.error){
-				deferred.resolve({status:"200", data:data.body.rows});
-			}
-		}).catch(function(err){
-			console.log('[class-utility][getBusinessDocs]: '+err.error)
-			deferred.reject({status:"400", data:err.error});
-		});
-		return deferred.promise;
-	},//end showData
 
 	//load the groups to be display
 	loadBlueGroupPage: function(db,req){
@@ -584,6 +564,72 @@ var util = {
 		}
 		return deferred.promise;
 	},
+	
+	getDateTime: function(dt, format) {
+		var now;
+		if(dt==undefined || dt=="") {
+			now = moment(new Date());
+		} else {
+			// Acceptable format: YYYY-MM-DD HH:MM:SS
+			try {
+				var newdate = dt.split(" ");
+				var year = newdate[0].split("-")[0];
+				var month = newdate[0].split("-")[1];
+				var day = newdate[0].split("-")[2];
+				var hour = newdate[1].split("-")[0];
+				var minute = newdate[1].split("-")[1];
+				var second = newdate[1].split("-")[2];
+				now = moment(new Date(year, month, day, hour, minute, second));
+			} catch(e) {
+				console.log("[class-utility][getDateTime] - Invalid date format (YYY-MM-DD HH:MM:SS): " + dt);
+				now = moment(new Date());
+			}
+		}
+		switch(format) {
+			case "date":
+				return now.format("MM/DD/YYYY");
+			break;
+			case "time":
+				return now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr();
+			break;
+			default:
+				return now.format("MM/DD/YYYY") + " " + now.format("hh:mmA") + " " + mtz.tz(mtz.tz.guess()).zoneAbbr();
+			break;
+		}
+	},
+
+	logDoc: function(req, olddoc, newdoc) {
+		// this function will compare both documents and provide a list of changed fields
+		var fldlist = [];
+		if(olddoc=="") {
+			var addlog = {
+				"name": req.session.user.notesId,
+				"date": module.exports.getDateTime("","date"),
+				"time": module.exports.getDateTime("","time")
+			};
+			return {"Log": addlog, "fldlist": fldlist}			
+		} else {
+			for (fld in newdoc) {
+				var cp1 = JSON.stringify(olddoc[fld]);
+				var cp2 = JSON.stringify(newdoc[fld]);
+				if(cp1!=cp2) {
+					fldlist.push("Field (" + fld + "): " + cp1);
+				}
+			}
+			if(fldlist.length>0 && fldlist[0]!="") {
+				var addlog = {
+					"name": req.session.user.notesId,
+					"date": module.exports.getDateTime("","date"),
+					"time": module.exports.getDateTime("","time")
+				};
+				var buff = olddoc["Log"];
+				buff.push(addlog);
+				return {"Log": buff, "fldlist": fldlist}
+			} else {
+				return {"Log": olddoc["Log"], "fldlist": ""}
+			}
+		}
+	}
 
 }
 module.exports = util;

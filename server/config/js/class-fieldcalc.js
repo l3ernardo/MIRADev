@@ -25,7 +25,21 @@ var calculatefield = {
     }
     return vwData;
   },
+  addTestViewDataPadding: function(obj, colnum, rownum) {
+    var col = [];
+    if (obj.length > 0) {
+      for (var i = 0; i < rownum; i++) {
+        obj.push({"":""});
+        for (var prop in obj[0]) {
+          if (obj[0].hasOwnProperty(prop)) {
+            obj[(obj.length-1)][prop] = "";
+          }
+        }
+      }
+    } else {
 
+    }
+  },
   // adding empty Test View Data Only
   getRatingCategory: function(rating, ratingPrev) {
     var ratingCat;
@@ -60,28 +74,28 @@ var calculatefield = {
     var prevYr = current[1]-1;
     switch (current[0]) {
       case "1":
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
-        p4Qtrs.push("2Q"+prevYr);
         p4Qtrs.push("1Q"+prevYr1);
+        p4Qtrs.push("2Q"+prevYr);
+        p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
         break;
       case "2":
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
         p4Qtrs.push("2Q"+prevYr);
+        p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
         break;
       case "3":
-        p4Qtrs.push("2Q"+current[1]);
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("4Q"+prevYr);
         p4Qtrs.push("3Q"+prevYr);
+        p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
+        p4Qtrs.push("2Q"+current[1]);
         break;
       case "4":
-        p4Qtrs.push("3Q"+current[1]);
-        p4Qtrs.push("2Q"+current[1]);
-        p4Qtrs.push("1Q"+current[1]);
         p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push("1Q"+current[1]);
+        p4Qtrs.push("2Q"+current[1]);
+        p4Qtrs.push("3Q"+current[1]);
         break;
     }
     return p4Qtrs;
@@ -91,8 +105,6 @@ var calculatefield = {
 	getDocParams: function(req, db, doc) {
     var deferred = q.defer();
 		try{
-
-      // if(doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "Country Process" || (doc[0].DocSubType == "BU Reporting Group" && req.session.businessunit == "GBS")) {
 
       /* Calculate for Instance Design Specifics and parameters*/
   		var lParams = [];
@@ -108,14 +120,26 @@ var calculatefield = {
   				lParams = ['GTSInstanceDesign'];
   			}
   		} else {
-  			lParams = ['GBSInstanceDesign'];
+        lParams.push('GBSInstanceDesign');
   		}
-      if ((doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process")) {
+      if ((doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account")) {
         var opMetricKey;
-        if (doc[0].ParentDocSubType == "Country Process") {
-          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-        }else{
-          opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+        switch (doc[0].ParentDocSubType) {
+          case "Country Process":
+            lParams.push('ProcessCatFIN');
+            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+            break;
+		 case "Account":
+            lParams.push('ProcessCatFIN');
+            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+            break;
+          case "Global Process":
+            lParams.push('ProcessCatFIN');
+            opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+            break;
+          case "Controllable Unit":
+            opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
+            break;
         }
         lParams.push(opMetricKey);
       }
@@ -141,6 +165,12 @@ var calculatefield = {
   						if (doc[0].GlobalProcess == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
   					}
   				}
+          if (dataParam.parameters.ProcessCatFIN) {
+            doc[0].ProcessCategory = "OPS";
+  					for (var j = 0; j < dataParam.parameters.ProcessCatFIN[0].options.length; ++j) {
+  						if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name) doc[0].ProcessCategory = "FIN";
+  					}
+  				}
           if (dataParam.parameters[opMetricKey]) {
             var TmpOpMetric = [];
             var opMetricIDs = "";
@@ -157,26 +187,46 @@ var calculatefield = {
                   opMetricIDs = opID;
                 else
                   opMetricIDs = opMetricIDs + "," + opID;
-                doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
-                doc[0].OpMetric[j].namefield = opID + "Name";
-                doc[0].OpMetric[j].ratingfield = opID + "Rating";
-                doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
-                doc[0].OpMetric[j].colDate = "colDate"+ opID;
-                doc[0].OpMetric[j].findingfield = opID + "Finding";
-                doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
-                doc[0].OpMetric[j].actionfield = opID + "Action";
-                doc[0].OpMetric[j].colFinding = "colAction"+ opID;
-                doc[0].OpMetric[j].rating = "";
-                doc[0].OpMetric[j].targetsatdate = "";
-                doc[0].OpMetric[j].finding = "";
-                doc[0].OpMetric[j].action = "";
-                if (doc[0].OpMetricCurr) {
-                  omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
-                  if (omIndex != -1) {
-                    doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
-                    doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
-                    doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
-                    doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" ) {
+                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                  doc[0].OpMetric[j].desc = dataParam.parameters[opMetricKey][0].options[j].desc;
+                  doc[0].OpMetric[j].namefield = opID + "Name";
+                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
+                  doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
+                  doc[0].OpMetric[j].colDate = "colDate"+ opID;
+                  doc[0].OpMetric[j].findingfield = opID + "Finding";
+                  doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
+                  doc[0].OpMetric[j].actionfield = opID + "Action";
+                  doc[0].OpMetric[j].colFinding = "colAction"+ opID;
+                  doc[0].OpMetric[j].rating = "";
+                  doc[0].OpMetric[j].targetsatdate = "";
+                  doc[0].OpMetric[j].finding = "";
+                  doc[0].OpMetric[j].action = "";
+                  if (doc[0].OpMetricCurr) {
+                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
+                    if (omIndex != -1) {
+                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
+                      doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
+                      doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
+                      doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                      if (doc[0].OpMetric[j].rating == "Marg" || doc[0].OpMetric[j].rating == "Unsat") doc[0].opMetricException = 1;
+                    }
+                  }
+                } else {
+                  // For Global Process
+                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
+                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
+                  doc[0].OpMetric[j].commentfield = opID + "Comment";
+                  doc[0].OpMetric[j].commentfieldRO = opID + "commentfieldRO";
+                  doc[0].OpMetric[j].commentfieldReadOnly = opID + "commentfieldReadOnly";
+                  doc[0].OpMetric[j].rating = "";
+                  doc[0].OpMetric[j].action = "";
+                  if (doc[0].OpMetricCurr) {
+                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
+                    if (omIndex != -1) {
+                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
+                      doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
+                    }
                   }
                 }
             }
@@ -205,6 +255,40 @@ var calculatefield = {
 		return deferred.promise;
 	},
 
+  /* Pass data from Assessable Unit to Current Quarter Assessment */
+	getCurrentAsmt: function(db, doc) {
+    var deferred = q.defer();
+
+		try {
+
+      // Get cuurent quarter assessment
+      var asmt = {
+        selector:{
+          "_id": {"$gt":0},
+          "key": "Assessment",
+          "AUStatus": "Active",
+          "ParentDocSubType": doc[0].DocSubType,
+          "WWBCITKey": doc[0].WWBCITKey,
+          "CurrentPeriod": doc[0].CurrentPeriod
+        }
+      };
+      db.find(asmt).then(function(asmtdata) {
+        deferred.resolve({"status": 200, "doc": asmtdata.body.docs[0]});
+      }).catch(function(err) {
+        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+
+    } catch(e) {
+
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+			deferred.reject({"status": 500, "error": e});
+
+		}
+
+		return deferred.promise;
+	},
+
   /* Populates the Rating Profile table */
 	getRatingProfile: function(db, doc) {
     var deferred = q.defer();
@@ -215,61 +299,253 @@ var calculatefield = {
             selector:{
               "_id": {"$gt":0},
               "key": "Assessment",
+              "AUStatus": "Active",
               "ParentDocSubType": "Country Process",
               "GPWWBCITKey": doc[0].WWBCITKey
+            }
+          };
+          break;
+        case "Controllable Unit":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "ParentDocSubType": "Country Process",
+              "AssessableUnitName":{"$in":doc[0].RelevantCountryProcesses}
             }
           };
           break;
       }
       db.find(asmts).then(function(asmtsdata) {
         var asmtsdocs = asmtsdata.body.docs;
-        var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0;
+        var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0, bocEx = 0;
+        var satEqFin = 0, satUpFin = 0, margUpFin = 0, margEqFin = 0, margDwnFin = 0, unsatEqFin = 0, unsatDwnFin = 0, exemptFin = 0, nrFin = 0;
+        var satEqOps = 0, satUpOps = 0, margUpOps = 0, margEqOps = 0, margDwnOps = 0, unsatEqOps = 0, unsatDwnOps = 0, exemptOps = 0, nrOps = 0;
         var toadd;
+
         for (var i = 0; i < asmtsdocs.length; ++i) {
-          toadd = {
-            "docid":asmtsdocs[i]._id,
-            "name":asmtsdocs[i].AssessableUnitName,
-            "ratingCQ":asmtsdocs[i].PeriodRating,
-            "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
-            "ratingPQ2":asmtsdocs[i].PeriodRatingPrev2,
-            "ratingPQ3":asmtsdocs[i].PeriodRatingPrev3,
-            "ratingPQ4":asmtsdocs[i].PeriodRatingPrev4,
-            "kcfrDR":asmtsdocs[i].KCFRDefectRate,
-            "kcoDR":asmtsdocs[i].KCODefectRate,
-            "msdRisk":asmtsdocs[i].MissedOpenIssueCount,
-            "msdMSAC":asmtsdocs[i].MissedMSACSatCount
-          };
-          doc[0].CPAsmtData.push(toadd);
+
+          switch (doc[0].ParentDocSubType) {
+
+            case "Global Process":
+              // PO tab performance indicators view
+              toadd = {
+                "docid":asmtsdocs[i]._id,
+                "name":asmtsdocs[i].AssessableUnitName,
+                "ratingCQ":asmtsdocs[i].PeriodRating,
+                "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
+                "ratingPQ2":asmtsdocs[i].PeriodRatingPrev2,
+                "ratingPQ3":asmtsdocs[i].PeriodRatingPrev3,
+                "ratingPQ4":asmtsdocs[i].PeriodRatingPrev4,
+                "kcfrDR":asmtsdocs[i].KCFRDefectRate,
+                "kcoDR":asmtsdocs[i].KCODefectRate,
+                "msdRisk":asmtsdocs[i].MissedOpenIssueCount,
+                "msdMSAC":asmtsdocs[i].MissedMSACSatCount
+              };
+              doc[0].CPAsmtDataPIview.push(toadd);
+              // PO tab other indicators view
+              toadd = {
+                "docid":asmtsdocs[i]._id,
+                "name":asmtsdocs[i].AssessableUnitName,
+                "bocExCount":asmtsdocs[i].BOCExceptionCount
+              };
+              doc[0].CPAsmtDataOIview.push(toadd);
+              for (var j = 0; j < asmtsdocs[i].OpMetric.length; ++j) {
+                doc[0].CPAsmtDataOIview[i][asmtsdocs[i].OpMetric[j].id+"Rating"] = asmtsdocs[i].OpMetric[j].rating;
+              }
+              // Process Ratings tab first embedded view
+              toadd = {
+                "docid":asmtsdocs[i]._id,
+                "country":asmtsdocs[i].Country,
+                "iot":asmtsdocs[i].IOT,
+                "ratingcategory":asmtsdocs[i].RatingCategory,
+                "ratingCQ":asmtsdocs[i].PeriodRating,
+                "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
+                "targettosat":asmtsdocs[i].Target2Sat,
+                "targettosatprev":asmtsdocs[i].Target2SatPrev,
+                "reviewcomments":asmtsdocs[i].ReviewComments
+              };
+              doc[0].CPAsmtDataPR1view.push(toadd);
+              // Basics of Control Exception Counter
+              if (asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
+              break;
+
+            case "Controllable Unit":
+              // Process Ratings Tab embedded views
+              toadd = {
+                "docid":asmtsdocs[i]._id,
+                "name":asmtsdocs[i].AssessableUnitName,
+                "country":asmtsdocs[i].Country,
+                "ratingcategory":asmtsdocs[i].RatingCategory,
+                "ratingCQ":asmtsdocs[i].PeriodRating,
+                "ratingPQ1":asmtsdocs[i].PeriodRatingPrev1,
+                "targettosat":asmtsdocs[i].Target2Sat,
+                "targettosatprev":asmtsdocs[i].Target2SatPrev,
+                "reviewcomments":asmtsdocs[i].ReviewComments
+              };
+              doc[0].CUAsmtDataPR1view.push(toadd);
+              break;
+          }
+
+          // Rating Category Counters
           switch (asmtsdocs[i].RatingCategory) {
             case "Sat &#9650;":
-              satUp = satUp + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") satUpFin = satUpFin + 1;
+              else satUpOps = satUpOps + 1;
               break;
             case "Sat &#61;":
-              satEq = satEq + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") satEqFin = satEqFin + 1;
+              else satEqOps = satEqOps + 1;
               break;
             case "Marg &#9650;":
-              margUp = margUp + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") margUpFin = margUpFin + 1;
+              else margUpOps = margUpOps + 1;
               break;
             case "Marg &#9660;":
-              margDwn = margDwn + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") margDwnFin = margDwnFin + 1;
+              else margDwnOps = margDwnOps + 1;
               break;
             case "Marg &#61;":
-              margEq = margEq + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") margEqFin = margEqFin + 1;
+              else margEqOps = margEqOps + 1;
               break;
             case "Unsat &#9660;":
-              unsatDwn = unsatDwn + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") unsatDwnFin = unsatDwnFin + 1;
+              else unsatDwnOps = unsatDwnOps + 1;
               break;
             case "Unsat &#61;":
-              unsatEq = unsatEq + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") unsatEqFin = unsatEqFin + 1;
+              else unsatEqOps = unsatEqOps + 1;
               break;
             case "Exempt":
-              exempt = exempt + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") exemptFin = exemptFin + 1;
+              else exemptOps = exemptOps + 1;
               break;
             default:
-              nr = nr + 1;
+              if (asmtsdocs[i].ProcessCategory == "FIN") nrFin = nrFin + 1;
+              else nrOps = nrOps + 1;
           }
         }
 
+        if (doc[0].ParentDocSubType == "Global Process") doc[0].BOCExceptionCount = bocEx;
+
+        // Processing Financial processes
+        doc[0].FINCPSatEqualCnt = satEqFin;
+        doc[0].FINCPSatPlusCnt = satUpFin;
+        doc[0].FINCPMargPlusCnt = margUpFin;
+        doc[0].FINCPMargEqualCnt = margEqFin;
+        doc[0].FINCPMargMinusCnt = margDwnFin;
+        doc[0].FINCPUnsatEqualCnt = unsatEqFin;
+        doc[0].FINCPUnsatMinusCnt = unsatDwnFin;
+        doc[0].FINCPEXEMPTCnt = exemptFin;
+        doc[0].FINCPNRCnt = nrFin;
+        doc[0].FINCPTotalCnt = satEqFin + satUpFin + margUpFin + margEqFin + margDwnFin + unsatEqFin + unsatDwnFin + exemptFin + nrFin;
+        if (satEqFin == 0)
+          doc[0].FINCPSatEqualPct = "0%";
+        else
+          doc[0].FINCPSatEqualPct = ((satEqFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        if (satUpFin == 0)
+          doc[0].FINCPSatPlusPct = "0%";
+        else
+          doc[0].FINCPSatPlusPct = ((satUpFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        if (margUpFin == 0)
+          doc[0].FINCPMargPlusPct = "0%";
+        else
+          doc[0].FINCPMargPlusPct = ((margUpFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        if (margEqFin == 0)
+          doc[0].FINCPMargEqualPct = "0%";
+        else
+          doc[0].FINCPMargEqualPct = ((margEqFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        if (margDwnFin == 0)
+          doc[0].FINCPMargMinusPct = "0%";
+        else
+          doc[0].FINCPMargMinusPct = ((margDwnFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        if (unsatEqFin == 0)
+          doc[0].FINCPUnsatEqualPct = "0%";
+        else
+          doc[0].FINCPUnsatEqualPct = ((unsatEqFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        // var pctFin = (unsatDwnFin/doc[0].FINCPTotalCnt) * 100;
+        if (unsatDwnFin == 0)
+          doc[0].FINCPUnsatMinusPct = "0%";
+        else
+          doc[0].FINCPUnsatMinusPct = ((unsatDwnFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        if (exemptFin == 0)
+          doc[0].FINCPEXEMPTPct = "0%";
+        else
+          doc[0].FINCPEXEMPTPct = ((exemptFin/1) * 100).toFixed() + "%";
+        if (nrFin == 0)
+          doc[0].FINCPNRPct = "0%";
+        else
+          doc[0].FINCPNRPct = ((nrFin/doc[0].FINCPTotalCnt) * 100).toFixed() + "%";
+        if (doc[0].FINCPTotalCnt == 0)
+          doc[0].FINCPTotalPct = "0%";
+        else
+          doc[0].FINCPTotalPct = "100%";
+
+        // Processing Operatioanl processes
+        doc[0].OPSCPSatEqualCnt = satEqOps;
+        doc[0].OPSCPSatPlusCnt = satUpOps;
+        doc[0].OPSCPMargPlusCnt = margUpOps;
+        doc[0].OPSCPMargEqualCnt = margEqOps;
+        doc[0].OPSCPMargMinusCnt = margDwnOps;
+        doc[0].OPSCPUnsatEqualCnt = unsatEqOps;
+        doc[0].OPSCPUnsatMinusCnt = unsatDwnOps;
+        doc[0].OPSCPEXEMPTCnt = exemptOps;
+        doc[0].OPSCPNRCnt = nrOps;
+        doc[0].OPSCPTotalCnt = satEqOps + satUpOps + margUpOps + margEqOps + margDwnOps + unsatEqOps + unsatDwnOps + exemptOps + nrOps;
+        if (satEqOps == 0)
+          doc[0].FINCPSatEqualPct = "0%";
+        else
+          doc[0].OPSCPSatEqualPct = ((satEqOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        if (satUpOps == 0)
+          doc[0].OPSCPSatPlusPct = "0%";
+        else
+          doc[0].OPSCPSatPlusPct = ((satUpOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        if (margUpOps == 0)
+          doc[0].OPSCPMargPlusPct = "0%";
+        else
+          doc[0].OPSCPMargPlusPct = ((margUpOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        if (margEqOps == 0)
+          doc[0].OPSCPMargEqualPct = "0%";
+        else
+          doc[0].OPSCPMargEqualPct = ((margEqOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        if (margDwnOps == 0)
+          doc[0].OPSCPMargMinusPct = "0%";
+        else
+          doc[0].OPSCPMargMinusPct = ((margDwnOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        if (unsatEqOps == 0)
+          doc[0].OPSCPUnsatEqualPct = "0%";
+        else
+          doc[0].OPSCPUnsatEqualPct = ((unsatEqOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        // var pctOps = (unsatDwnOps/doc[0].OPSCPTotalCnt) * 100;
+        if (unsatDwnOps == 0)
+          doc[0].OPSCPUnsatMinusPct = "0%";
+        else
+          doc[0].OPSCPUnsatMinusPct = ((unsatDwnOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        if (exemptOps == 0)
+          doc[0].OPSCPEXEMPTPct = "0%";
+        else
+          doc[0].OPSCPEXEMPTPct = ((exemptOps/1) * 100).toFixed() + "%";
+        if (nrOps == 0)
+          doc[0].OPSCPNRPct = "0%";
+        else
+          doc[0].OPSCPNRPct = ((nrOps/doc[0].OPSCPTotalCnt) * 100).toFixed() + "%";
+        if (doc[0].OPSCPTotalCnt == 0)
+          doc[0].OPSCPTotalPct = "0%";
+        else
+          doc[0].OPSCPTotalPct = "100%";
+
+        // Processing totals of financial and operational processes
+        satUp = satUpFin + satUpOps;
+        satEq = satEqFin + satEqOps;
+        margUp = margUpFin + margUpOps;
+        margDwn = margDwnFin + margDwnOps;
+        margEq = margEqFin + margEqOps;
+        unsatDwn = unsatDwnFin + unsatDwnOps;
+        unsatEq = unsatEqFin + unsatEqOps;
+        exempt = exemptFin + exemptOps;
+        nr = nrFin + nrOps;
         doc[0].CPSatEqualCnt = satEq;
         doc[0].CPSatPlusCnt = satUp;
         doc[0].CPMargPlusCnt = margUp;
@@ -280,6 +556,7 @@ var calculatefield = {
         doc[0].CPEXEMPTCnt = exempt;
         doc[0].CPNRCnt = nr;
         doc[0].CPTotalCnt = satEq + satUp + margUp + margEq + margDwn + unsatEq + unsatDwn + exempt + nr;
+
         if (satEq == 0)
           doc[0].CPSatEqualPct = "0%";
         else
@@ -304,7 +581,7 @@ var calculatefield = {
           doc[0].CPUnsatEqualPct = "0%";
         else
           doc[0].CPUnsatEqualPct = ((unsatEq/doc[0].CPTotalCnt) * 100).toFixed() + "%";
-        var pct = (unsatDwn/doc[0].CPTotalCnt) * 100;
+        // var pct = (unsatDwn/doc[0].CPTotalCnt) * 100;
         if (unsatDwn == 0)
           doc[0].CPUnsatMinusPct = "0%";
         else
@@ -321,6 +598,7 @@ var calculatefield = {
           doc[0].CPTotalPct = "0%";
         else
           doc[0].CPTotalPct = "100%";
+
         deferred.resolve({"status": 200, "doc": doc});
       }).catch(function(err) {
         console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
