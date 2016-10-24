@@ -1,0 +1,30 @@
+<table id="auditreview_table" class="ibm-data-table">
+	<tr class="audit-review-content">
+		<td>
+			<span class="audit-review"><b>Audits &amp; Reviews (data managed locally)</b></span><br /><br />
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="audit-review-viewheader" scope="col" width="7%">Period</th>
+					<th class="audit-review-viewheader" scope="col" width="20%">Audit or Review</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Date</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Rating</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">Total Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="9%">Open Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="10%">Target to Close</th>
+					<th class="audit-review-viewheader" scope="col" width="30%">Comments</th>
+				</thead>
+				{{#each AuditLocalData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+</table>
