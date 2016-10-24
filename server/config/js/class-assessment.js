@@ -71,6 +71,22 @@ var assessment = {
 						doc[0].EAData = doc[0].ARCData;
 						doc[0].AccountData = doc[0].RiskData;
 						break;
+					case "Account":
+						// test view data
+						doc[0].ALLData = fieldCalc.addTestViewData(7,3);
+						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+						doc[0].AuditTrustedData = doc[0].RiskData;
+						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(9,3);
+						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+						doc[0].DRData = fieldCalc.addTestViewData(5,1);
+						doc[0].RCTestData = fieldCalc.addTestViewData(9,3);
+						doc[0].SCTestData = doc[0].RCTestData;
+						doc[0].RCTestData = fieldCalc.addTestViewData(9,3);
+						doc[0].SampleData = doc[0].RiskData;
+						doc[0].EAData = doc[0].ARCData;
+						doc[0].AccountData = doc[0].RiskData;
+						break;
 					case "BU Country":
 						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
 						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
@@ -610,6 +626,66 @@ var assessment = {
 							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
   						break;
 						case "Account":
+						    //---Rating Summary Tab---//
+							doc[0].RatingSummary = req.body.RatingSummary;
+							doc[0].Highlight = req.body.Highlight;
+							doc[0].FocusArea = req.body.FocusArea;
+							//---Basics of Control Tab---//
+							doc[0].BoCResponse1 = req.body.BoCResponse1;
+							doc[0].BoCResponse2 = req.body.BoCResponse2;
+							doc[0].BoCResponse3 = req.body.BoCResponse3;
+							doc[0].BoCResponse4 = req.body.BoCResponse4;
+							doc[0].BoCResponse5 = req.body.BoCResponse5;
+							doc[0].BoCTargetCloseDate1 = req.body.BoCTargetCloseDate1;
+							doc[0].BoCTargetCloseDate2 = req.body.BoCTargetCloseDate2;
+							doc[0].BoCTargetCloseDate3 = req.body.BoCTargetCloseDate3;
+							doc[0].BoCTargetCloseDate4 = req.body.BoCTargetCloseDate4;
+							doc[0].BoCTargetCloseDate5 = req.body.BoCTargetCloseDate5;
+							doc[0].BoCComments1 = req.body.BoCComments1;
+							doc[0].BoCComments2 = req.body.BoCComments2;
+							doc[0].BoCComments3 = req.body.BoCComments3;
+							doc[0].BoCComments4 = req.body.BoCComments4;
+							doc[0].BoCComments5 = req.body.BoCComments5;
+							doc[0].BOCExceptionCount = req.body.BOCExceptionCount;
+
+							//---Audit Readiness Assessment Tab---//
+							if (req.session.businessunit == "GTS") {
+								doc[0].ARALLResponse = req.body.ARALLResponse;
+								doc[0].ARALLQtrRating = req.body.ARALLQtrRating;
+								doc[0].ARALLTarget2Sat = req.body.ARALLTarget2Sat;
+								doc[0].ARALLExplanation = req.body.ARALLExplanation;
+							}
+							//---Operational Metrics Tab Tab---//
+							
+							var metricsID = req.body.opMetricIDs.split(",");
+							var tname, topush;
+							doc[0].OpMetric = [];
+							for (var i = 0; i < metricsID.length; ++i) {
+								if(metricsID[i] != undefined && metricsID[i] != "") {
+									topush = {
+										"id": metricsID[i] 
+									};
+									doc[0].OpMetric.push(topush);
+									fname = metricsID[i]+"Name";
+									doc[0].OpMetric[i].name = req.body[fname];
+									fname = metricsID[i]+"Rating";
+									doc[0].OpMetric[i].rating = req.body[fname];
+									fname = metricsID[i]+"TargetSatDate";
+									doc[0].OpMetric[i].targetsatdate = req.body[fname];
+									fname = metricsID[i]+"Finding";
+									doc[0].OpMetric[i].finding = req.body[fname];
+									fname = metricsID[i]+"Action";
+									doc[0].OpMetric[i].action = req.body[fname];
+								}
+							}
+							//---Others Tab Tab---//
+							doc[0].AsmtOtherConsiderations = req.body.AsmtOtherConsiderations;
+							//---Account Ratings Tab (For Portfolio CU only)---//
+							if (doc[0].ParentDocSubType == "Controllable Unit" && doc[0].Portfolio == "Yes") {
+								doc[0].CUFocusItems = req.body.CUFocusItems;
+							}
+							//---Backend Fields---//
+							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
 							break;
 						case "BU Reporting Group":
 							break;

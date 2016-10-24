@@ -1,0 +1,27 @@
+<table id="kctest_table" width="100%" class="ibm-data-table">
+	<tr class="kc-test-content">
+		<td class="kc-test-content" colspan="2">
+			<span class="kc-test-header"><b></b></span><br /><br />
+			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="kc-test-viewheader" width="10">Process</th>
+					<th class="kc-test-viewheader" width="10">Event Date</th>
+					<th class="kc-test-viewheader" width="10">Tests</th>
+					<th class="kc-test-viewheader" width="10">Process Defects</th>
+					<th class="kc-test-viewheader" width="5">Control Deficiences</th>
+					<th class="kc-test-viewheader" width="10">Defect Rate</th>
+					<th class="kc-test-viewheader" width="10">Remediation Status</th>
+					<th class="kc-test-viewheader" width="18">Target to Close</th>
+					<th class="kc-test-viewheader" width="17">Comments</th>
+				</thead>
+				{{#each RCTestData}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+</table>
