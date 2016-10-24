@@ -122,10 +122,14 @@ var calculatefield = {
   		} else {
         lParams.push('GBSInstanceDesign');
   		}
-      if ((doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit")) {
+      if ((doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account")) {
         var opMetricKey;
         switch (doc[0].ParentDocSubType) {
           case "Country Process":
+            lParams.push('ProcessCatFIN');
+            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+            break;
+		 case "Account":
             lParams.push('ProcessCatFIN');
             opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
             break;
@@ -183,7 +187,7 @@ var calculatefield = {
                   opMetricIDs = opID;
                 else
                   opMetricIDs = opMetricIDs + "," + opID;
-                if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit") {
+                if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" ) {
                   doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
                   doc[0].OpMetric[j].desc = dataParam.parameters[opMetricKey][0].options[j].desc;
                   doc[0].OpMetric[j].namefield = opID + "Name";
