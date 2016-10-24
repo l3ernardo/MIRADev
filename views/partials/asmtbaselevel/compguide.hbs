@@ -34,6 +34,8 @@
 				</td></tr>
 			</table>
 		</td>
+		{{#if_equal  ParentDocSubType "Account"}}
+		{{else}}
 		<td><h1 class="mira-plus-sign">+</h1></td>
 		<td>
 			<table>
@@ -41,6 +43,7 @@
 				<tr><td>Do you have Open Risk Evaluations in the current and/or prior quarters?<br /><br />Do any have missed Commitment dates?</td></tr>
 			</table>
 		</td>
+		{{/if_equal}}
 		<td><h1 class="mira-plus-sign">+</h1></td>
 		<td>
 			<table>

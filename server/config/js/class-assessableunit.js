@@ -326,12 +326,17 @@ var assessableunit = {
 				switch (doc[0].DocSubType) {
 					case "Account":
 						constiobj = {
-							selector:{
+							/*selector:{
 								"_id": {"$gt":0},
 								"key": "Assessable Unit",
 								"DocSubType": "Account",
 								"ParentSubject":doc[0].ParentSubject,
 								"BusinessUnit": doc[0].BusinessUnit
+							}*/
+							selector:{
+								"_id": {"$gt":0},
+                                "BusinessUnit": doc[0].BusinessUnit,
+                                "$and": [{"key": "Assessment"},{"ParentDocSubType": "Account"},{"parentid": doc[0]._id}] 
 							}
 						};
 						doc[0].AccountData = [];
@@ -738,6 +743,7 @@ var assessableunit = {
 								case "BU IMT":
 								case "BU Country":
 								case "Country Process":
+								case "Account":
 								case "Controllable Unit":
 									/* start: get names of admin section IDs for display and IMT name for BU IMT unit*/
 									var $or = [];
