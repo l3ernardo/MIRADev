@@ -19,7 +19,7 @@ createGEOHierarchy: function(req){
 			var IOT = [];
 			var IMT = {};
 			var key = {};
-			var countries = {};
+			var countries = [];
 			var country = {};
 			var iot = {};
 			var indexIOT = {};
@@ -34,9 +34,11 @@ createGEOHierarchy: function(req){
 				try{
 					for(var i=0;i<json.length;i++){  //Iterate on all the response by country
 								 country["id"] = json[i].ID;
+								 country["name"] = json[i].COUNTRY;
 								 country["IMT"] = json[i].SUB_GEO;
 								 country["IOT"] = json[i].GEO;
-								 countries[json[i].COUNTRY]= country;
+								 
+								 countries.push(country);
 								 
 								 if(typeof IMT[json[i].SUB_GEO] !== 'undefined'){ // check if IMT exist and add the addional countries
 									IMT[json[i].SUB_GEO].push(json[i].COUNTRY);
