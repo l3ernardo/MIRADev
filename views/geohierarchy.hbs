@@ -1,0 +1,53 @@
+<link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+<link href="/public/css/style.css" rel="stylesheet" type="text/css" />
+<script src='./js/utility.js'></script>
+<script src='./js/geohierarchy.js'></script>
+
+<script>
+	//Load document's name
+	$('h1#pageTitle').text("Geo Hierarchy");
+	$("#reports_treeview").treetable({expandable: true });
+	//change color depending on source (mira/WWBCIT)
+	document.getElementById("ccc").style.backgroundColor = "red";
+</script>
+
+<style>
+  table td {width:100px; word-wrap:break-word;}
+</style>
+
+<div class="ibm-container" style="width:100%">
+  <div class="ibm-container-body">
+    <span><br/></span>
+    <div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
+      <p>
+        <span class="ibm-sep"> </span>
+        <a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
+        <span class="ibm-sep"> </span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+      </p>
+      <br/>
+    </div>
+		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{valuesToString data}}</textarea>
+    <div id="geohierarchy_div">
+			<table id="geohierarchy_treeview" cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
+				<thead>
+					<tr>
+
+						<th style="width:50%;" scope="col">Type</th>
+						<th style="width:50%;">Assessable Unit</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#each data}}
+						<tr data-tt-id={{id}} data-tt-parent-id={{parentID}}>
+
+							<td style="width:50%;" scope="row">{{type}}</td>
+							<td style="width:50%;" scope="row">{{name}}</td>
+						</tr>
+					{{/each}}
+
+				</tbody>
+			</table>
+		</div>
+  </div>
+</div>
