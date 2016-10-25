@@ -336,7 +336,7 @@ var assessableunit = {
 							selector:{
 								"_id": {"$gt":0},
                                 "BusinessUnit": doc[0].BusinessUnit,
-                                "$and": [{"key": "Assessment"},{"ParentDocSubType": "Account"},{"parentid": doc[0]._id}] 
+                                "$and": [{"key": "Assessment"},{"ParentDocSubType": "Account"},{"parentid": doc[0]._id}]
 							}
 						};
 						doc[0].AccountData = [];
@@ -1119,6 +1119,10 @@ var assessableunit = {
 				db.get(docid).then(function(data){
 					var doc = [];
 					doc.push(data.body);
+					if(req.body.Status !== doc[0].Status){
+						doc[0].StatusChangeWho = curruser;
+						doc[0].StatusChangeWhen = currdate;
+					}
 					switch (doc[0].DocSubType) {
 						case "Business Unit":
 							doc[0].RGRollup = req.body.RGRollup;
@@ -1194,16 +1198,13 @@ var assessableunit = {
 					//Save document
 					db.save(doc[0]).then(function(data){
 						// Get current quarter Assessment
+						if(doc[0].DocSubType == "Controllable Unit"){
 						fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
 							var asmtdoc = [];
 							asmtdoc.push(asmtdata.doc);
 							// Pass data to current quarter assessment
-							switch (doc[0].DocSubType) {
-								case "Controllable Unit":
 									asmtdoc[0].AuditProgram = doc[0].AuditProgram;
 									asmtdoc[0].Portfolio = doc[0].Portfolio;
-									break;
-							}
 							db.save(asmtdoc[0]).then(function(asmtdata){
 								deferred.resolve(data);
 							}).catch(function(err) {
@@ -1211,7 +1212,11 @@ var assessableunit = {
 							});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err.error.reason});
-						});
+						})
+					}else{
+						deferred.resolve(data);
+						}
+
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
