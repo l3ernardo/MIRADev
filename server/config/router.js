@@ -84,39 +84,17 @@ router.get('/businessunit', isAuthenticated, function(req, res){
 	});
 
 
-
-//Create GEO Hierarchy
-
-	geohierarchy.createGEOHierarchy(req,db).then(function (data){
-
-			if(data.status==200 & !data.error) { 
-		
-				req.session["hierarchy"] = data.response; //hierarchy saved on session var with the structure of req.session.hierarchy.IMT / req.session.hierarchy.IOT / req.session.hierarchy.countries
-		
-						
-			}else{
-				
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][createGeoHierarchy] - " + data.error);
-			
-			
-			}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][createGeoHierarchy] - " + err.error);
-
-		});
-
-
-
 });
 
 
 
 /* Save Business Unit */
 router.post('/savebunit', isAuthenticated, function(req, res){
+	geohierarchy.createGEOHierarchy(req,db).then(function(response){	
+		
 	businessunit.saveBU(req, db).then(function(data) {
-		if(data.status==200 & !data.error) {
+		if(data.status==200 & !data.error) { 
+			req.app.locals.hierarchy = response.response;//save in locals due to session 1 K limit
 			req.session.businessunit = data.bunit;
 			req.session.user.version = data.version;
 			businessunit.getMenu(req,db).then(function(data) {
@@ -135,6 +113,7 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 										req.flash('url', '-');
 										res.redirect(rtn);
 									} else {
+										
 										res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
 									}
 								} else {
@@ -174,17 +153,29 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 						}
 					}).catch(function(err) {
 						res.redirect('index');
-					})
+					});
 				}
-			})
+			});
+
+		
+
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][savebunit] - " + data.error);
-		}
-	}).catch(function(err) {
+
+
+
+		
+		}//end if saveBU
+	}).catch(function(err) {//end saveBU
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][savebunit] - " + err.error);
-	})
+	});
+
+}).catch(function(err) {//end GEO Hierarchy
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][Hierarchy] - " + err.error);
+				});
 });
 /**************************************************************
 BULLETIN FUNCTIONALITY
