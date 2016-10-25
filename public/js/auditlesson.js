@@ -92,6 +92,12 @@ $('#globalProcessList input[type="checkbox"]').on('click', function() {
 	updateIDlist("globalProcess","processList","globalProcessList");
 });
 
+$('#country').on('change', function() {
+	var tmp =  $.parseJSON($('textarea#dataForIOTIMTs').val());
+	$('#IMT').val(tmp[this.value].IMT);
+	$('#IOT').val(tmp[this.value].IOT);
+});
+
 function getSelectedValue(id) {
 	return $("#" + id).find("dt a span.value").html();
 };
