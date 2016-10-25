@@ -98,7 +98,6 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 						res.render('auglobalprocess', data.doc[0] );
 						break;
 					case "Sub-process":
-						console.log(data.doc[0]);
 						res.render('ausubprocess', data.doc[0] );
 						break;
 					case "BU IOT":
