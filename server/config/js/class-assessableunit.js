@@ -326,12 +326,17 @@ var assessableunit = {
 				switch (doc[0].DocSubType) {
 					case "Account":
 						constiobj = {
-							selector:{
+							/*selector:{
 								"_id": {"$gt":0},
 								"key": "Assessable Unit",
 								"DocSubType": "Account",
 								"ParentSubject":doc[0].ParentSubject,
 								"BusinessUnit": doc[0].BusinessUnit
+							}*/
+							selector:{
+								"_id": {"$gt":0},
+                                "BusinessUnit": doc[0].BusinessUnit,
+                                "$and": [{"key": "Assessment"},{"ParentDocSubType": "Account"},{"parentid": doc[0]._id}]
 							}
 						};
 						doc[0].AccountData = [];
@@ -738,6 +743,7 @@ var assessableunit = {
 								case "BU IMT":
 								case "BU Country":
 								case "Country Process":
+								case "Account":
 								case "Controllable Unit":
 									/* start: get names of admin section IDs for display and IMT name for BU IMT unit*/
 									var $or = [];
@@ -823,21 +829,22 @@ var assessableunit = {
 				if (accessrules.rules.admin) {
 					var tmpdoc = {
 						"key": "Assessable Unit",
-					  "DocType": "Assessable Unit",
+						"DocType": "Assessable Unit",
 						"parentid": pid,
-					  "DocSubType": req.query.docsubtype,
-					  "BusinessUnit": pdoc[0].BusinessUnit,
-					  "CurrentPeriod": pdoc[0].CurrentPeriod,
+						"DocSubType": req.query.docsubtype,
+						"BusinessUnit": pdoc[0].BusinessUnit,
+						"CurrentPeriod": pdoc[0].CurrentPeriod,
 						"Status": "Active",
 						"editmode": 1,
 						"admin": 1,
 						"grantaccess": 1,
 						"MIRAunit": 1,
-						"newunit": 1
+						"newunit": 1,
+						"EnteredBU": req.session.businessunit
 					};
 
 					doc.push(tmpdoc);
-
+					
 					switch (doc[0].DocSubType) {
 						case "Account":
 							if (pdoc[0].IOT != undefined) {
@@ -1113,6 +1120,10 @@ var assessableunit = {
 				db.get(docid).then(function(data){
 					var doc = [];
 					doc.push(data.body);
+					if(req.body.Status !== doc[0].Status){
+						doc[0].StatusChangeWho = curruser;
+						doc[0].StatusChangeWhen = currdate;
+					}
 					switch (doc[0].DocSubType) {
 						case "Business Unit":
 							doc[0].RGRollup = req.body.RGRollup;
@@ -1188,24 +1199,25 @@ var assessableunit = {
 					//Save document
 					db.save(doc[0]).then(function(data){
 						// Get current quarter Assessment
-						fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
-							var asmtdoc = [];
-							asmtdoc.push(asmtdata.doc);
-							// Pass data to current quarter assessment
-							switch (doc[0].DocSubType) {
-								case "Controllable Unit":
-									asmtdoc[0].AuditProgram = doc[0].AuditProgram;
-									asmtdoc[0].Portfolio = doc[0].Portfolio;
-									break;
-							}
-							db.save(asmtdoc[0]).then(function(asmtdata){
-								deferred.resolve(data);
+						if(doc[0].DocSubType == "Controllable Unit"){
+							fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
+								var asmtdoc = [];
+								asmtdoc.push(asmtdata.doc);
+								// Pass data to current quarter assessment
+								asmtdoc[0].AuditProgram = doc[0].AuditProgram;
+								asmtdoc[0].Portfolio = doc[0].Portfolio;
+								db.save(asmtdoc[0]).then(function(asmtdata){
+									deferred.resolve(data);
+								}).catch(function(err) {
+									deferred.reject({"status": 500, "error": err.error.reason});
+								});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err.error.reason});
 							});
-						}).catch(function(err) {
-							deferred.reject({"status": 500, "error": err.error.reason});
-						});
+						}else{
+							deferred.resolve(data);
+						}
+
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
