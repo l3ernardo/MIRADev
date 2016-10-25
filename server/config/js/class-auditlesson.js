@@ -18,6 +18,13 @@ var auditlesson = {
     //Load data for new audit lesson
     if(typeof req.query.new !== "undefined"){
       var doc = {};
+      //doc.countries = Object.keys(req.app.locals.hierarchy.countries);
+      var tmpcountries = [];
+      for(var key in req.app.locals.hierarchy.countries){
+        tmpcountries.push({"name": key});
+      }
+      doc.countries = tmpcountries;
+      doc.IOTIMTs = req.app.locals.hierarchy.countries;
       doc.editmode = "new";
       doc.reportingQuarters = [
         {quarter:1},
@@ -105,6 +112,12 @@ var auditlesson = {
             try{
               db.get(req.query.id).then(function(data){
                 var doc = data.body;
+                var tmpcountries = [];
+                for(var key in req.app.locals.hierarchy.countries){
+                  tmpcountries.push({"name": key});
+                }
+                doc.countries = tmpcountries;
+                doc.IOTIMTs = req.app.locals.hierarchy.countries;
                 if(typeof doc === "undefined"){
                   deferred.reject({"status": 500, "error": "Audit Lesson does not exist"});
                 }else{
@@ -221,6 +234,8 @@ var auditlesson = {
 
           /* Get all Audit Lesson in cloudant */
           getAllLessons: function(req, db) {
+            //console.log(req.app.locals.hierarchy.countries);
+            //console.log(Object.keys(req.app.locals.hierarchy.countries));
             var deferred = q.defer();
             try{
               var view = [];
@@ -268,7 +283,7 @@ var auditlesson = {
                       IOT: docs[i].IOT,
                       IMT: docs[i].IMT,
                       country: docs[i].country,
-                      LoB: docs[i].LoB,
+                      //LoB: docs[i].LoB,
                       process: docs[i].globalProcess,
                       subprocess: docs[i].subprocess,
                       observationCategory: docs[i].observationCategory,
@@ -282,7 +297,7 @@ var auditlesson = {
                       IOT: docs[i].IOT,
                       IMT: docs[i].IMT,
                       country: docs[i].country,
-                      LoB: docs[i].LoB,
+                      //LoB: docs[i].LoB,
                       process: docs[i].globalProcess,
                       subprocess: docs[i].subprocess,
                       observationCategory: docs[i].observationCategory,
@@ -316,7 +331,7 @@ var auditlesson = {
                 "date": utility.getDateTime("","date"),
                 "time": utility.getDateTime("","time")
             };
-                
+
                 if(req.body.editmode == "new"){
                   var newAudit = {};
                   newAudit.docType= "auditLesson",
@@ -334,12 +349,12 @@ var auditlesson = {
                   newAudit.reportingYear = req.body.reportingYear;*/
                   newAudit.businessUnit = req.body.BU;
                   newAudit.country = req.body.country;
-                  newAudit.GMRRegion = req.body.GMRRegion;
+                  //newAudit.GMRRegion = req.body.GMRRegion;
                   newAudit.IMT = req.body.IMT;
                   newAudit.IOT = req.body.IOT;
                   newAudit.globalProcess = req.body.globalProcess;
                   newAudit.subprocess = req.body.subprocess;
-                  newAudit.LoB = req.body.LoB;
+                  //newAudit.LoB = req.body.LoB;
                   newAudit.summary = req.body.Notes;
 
                   db.save(newAudit).then(function(data){
@@ -373,12 +388,12 @@ var auditlesson = {
                     data.body.docs[0].reportingPeriod = req.body.reportingQuarter + "Q"+req.body.reportingYear;
                     data.body.docs[0].businessUnit = req.body.BU;
                     data.body.docs[0].country = req.body.country;
-                    data.body.docs[0].GMRRegion = req.body.GMRRegion;
+                    //data.body.docs[0].GMRRegion = req.body.GMRRegion;
                     data.body.docs[0].IMT = req.body.IMT;
                     data.body.docs[0].IOT = req.body.IOT;
                     data.body.docs[0].globalProcess = req.body.globalProcess;
                     data.body.docs[0].subprocess = req.body.subprocess;
-                    data.body.docs[0].LoB = req.body.LoB;
+                    //data.body.docs[0].LoB = req.body.LoB;
                     data.body.docs[0].summary = req.body.Notes;
                     //console.log(data.body.docs[0]);
 
