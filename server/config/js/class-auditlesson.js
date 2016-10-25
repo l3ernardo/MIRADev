@@ -9,7 +9,6 @@
 var q  = require("q");
 var moment = require('moment');
 var utility = require('./class-utility.js');
-//var mtz = require('moment-timezone');
 
 var auditlesson = {
   /* Get lesson parameter data by ID */
@@ -18,7 +17,6 @@ var auditlesson = {
     //Load data for new audit lesson
     if(typeof req.query.new !== "undefined"){
       var doc = {};
-      //doc.countries = Object.keys(req.app.locals.hierarchy.countries);
       var tmpcountries = [];
       for(var key in req.app.locals.hierarchy.countries){
         tmpcountries.push({"name": key});
@@ -103,7 +101,6 @@ var auditlesson = {
             deferred.reject({"status": 500, "error": err.error.reason});
           });
 
-          //deferred.resolve({"status": 200, "doc": doc})
         }else{
           //load audit lesson by id
           if(typeof req.query.id === "undefined"){
@@ -234,8 +231,6 @@ var auditlesson = {
 
           /* Get all Audit Lesson in cloudant */
           getAllLessons: function(req, db) {
-            //console.log(req.app.locals.hierarchy.countries);
-            //console.log(Object.keys(req.app.locals.hierarchy.countries));
             var deferred = q.defer();
             try{
               var view = [];
@@ -251,7 +246,6 @@ var auditlesson = {
               };
 
                 db.find(obj).then(function(data){
-                  //console.log(data.body.docs);
                   var uniqueBUs = {};
                   var uniquePeriods = {};
                   var uniquePrograms = {};
@@ -279,11 +273,9 @@ var auditlesson = {
                       parent:docs[i].auditProgram.replace(/ /g,'')+""+docs[i].reportingPeriod,
 
                       engagementID: docs[i].engagementIDone +"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum,
-                      //businessUnit: docs[i].businessUnit,
                       IOT: docs[i].IOT,
                       IMT: docs[i].IMT,
                       country: docs[i].country,
-                      //LoB: docs[i].LoB,
                       process: docs[i].globalProcess,
                       subprocess: docs[i].subprocess,
                       observationCategory: docs[i].observationCategory,
@@ -297,7 +289,6 @@ var auditlesson = {
                       IOT: docs[i].IOT,
                       IMT: docs[i].IMT,
                       country: docs[i].country,
-                      //LoB: docs[i].LoB,
                       process: docs[i].globalProcess,
                       subprocess: docs[i].subprocess,
                       observationCategory: docs[i].observationCategory,
@@ -319,8 +310,6 @@ var auditlesson = {
             /* Save Audit Lesson in cloudant */
             saveAL: function(req, db) {
               var deferred = q.defer();
-              //console.log(req.body);
-
               try{
                 var docid = req.body["_id"];
                 var now = moment(new Date());
@@ -345,16 +334,12 @@ var auditlesson = {
                   newAudit.auditProgramSelect = req.body.auditProgramSelect;
                   newAudit.observationCategory = req.body.observationCategory;
                   newAudit.reportingPeriod = req.body.reportingQuarter+"Q"+req.body.reportingYear;
-                  /*newAudit.reportingQuarter = req.body.reportingQuarter;
-                  newAudit.reportingYear = req.body.reportingYear;*/
                   newAudit.businessUnit = req.body.BU;
                   newAudit.country = req.body.country;
-                  //newAudit.GMRRegion = req.body.GMRRegion;
                   newAudit.IMT = req.body.IMT;
                   newAudit.IOT = req.body.IOT;
                   newAudit.globalProcess = req.body.globalProcess;
                   newAudit.subprocess = req.body.subprocess;
-                  //newAudit.LoB = req.body.LoB;
                   newAudit.summary = req.body.Notes;
 
                   db.save(newAudit).then(function(data){
@@ -363,7 +348,6 @@ var auditlesson = {
                     deferred.reject({"status": 500, "error": err.error.reason});
                   });
                 }else{
-                  //console.log(addlog);
                   var obj = {
                     selector:{
                       "_id": docid,
@@ -375,7 +359,6 @@ var auditlesson = {
                       "Log"
                     ]
                   };
-                  //console.log("jalando info");
                   db.find(obj).then(function(data){
                     data.body.docs[0].Log.push(addlog);
                     data.body.docs[0].engagementIDone = req.body.engagementIDone;
@@ -388,14 +371,11 @@ var auditlesson = {
                     data.body.docs[0].reportingPeriod = req.body.reportingQuarter + "Q"+req.body.reportingYear;
                     data.body.docs[0].businessUnit = req.body.BU;
                     data.body.docs[0].country = req.body.country;
-                    //data.body.docs[0].GMRRegion = req.body.GMRRegion;
                     data.body.docs[0].IMT = req.body.IMT;
                     data.body.docs[0].IOT = req.body.IOT;
                     data.body.docs[0].globalProcess = req.body.globalProcess;
                     data.body.docs[0].subprocess = req.body.subprocess;
-                    //data.body.docs[0].LoB = req.body.LoB;
                     data.body.docs[0].summary = req.body.Notes;
-                    //console.log(data.body.docs[0]);
 
                     db.save(data.body.docs[0]).then(function(data){
                       deferred.resolve({"status": 200, "id": data.body.id});
