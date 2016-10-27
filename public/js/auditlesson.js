@@ -38,16 +38,13 @@ $(document).ready(function(){
 		var listItems = $("#"+selID+" input");
 		var newlist = "";
 		listItems.each(function(idx, cbx) {
-			//alert($(this).val());
 			if ($("[id='"+scope+""+$(this).val()+"']").is(':checked')) {
-				//alert("update");
 				if (newlist == "") newlist = $(this).val();
 				else newlist = newlist + "," + $(this).val();
 			}
 		});
 		if (newlist == "") $("#"+selID+"Sel").show();
 		$("input[name='" + id +"']").val(newlist);
-		//alert($("input[name='" + id +"']").val());
 	};
 	$('#btn_save').click(function(evt) {
 			myEditor.saveHTML();
@@ -81,15 +78,19 @@ $('#globalProcessList input[type="checkbox"]').on('click', function() {
 	var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
 	title = $(this).attr('name') + ",";
 	if ($(this).is(':checked')) {
-		//alert("entro");
 		var html = '<span id="globalProcessList'+$(this).val()+'" title="' + title + '">' + title + '</span>';
 		$('#processList').append(html);
 		$("#globalProcessListSel").hide();
 	} else {
 		$("[id='globalProcessList"+$(this).val()+"']").remove();
-		//$("#globalProcessList"+$(this).val()).remove();
 	}
 	updateIDlist("globalProcess","processList","globalProcessList");
+});
+
+$('#country').on('change', function() {
+	var tmp =  $.parseJSON($('textarea#dataForIOTIMTs').val());
+	$('#IMT').val(tmp[this.value].IMT);
+	$('#IOT').val(tmp[this.value].IOT);
 });
 
 function getSelectedValue(id) {

@@ -1,0 +1,156 @@
+<table id="curating_table" class="ibm-data-table">
+	<tr class="curating">
+		<td width="70%" class="curating-legend">
+			<table width="100%">
+				<thead class="curating-label"><th scope="col" colspan="11">CU Ratings Profile</th></thead>
+				<tr>
+					<td width="16%" class="curating-label"></td>
+					<td width="8%" class="sat-bg">Sat &#61;</td>
+					<td width="8%" class="sat-bg">Sat &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#61;</td>
+					<td width="8%" class="marg-bg">Marg &#9660;</td>
+					<td width="8%" class="unsat-bg">Unsat &#61;</td>
+					<td width="8%" class="unsat-bg">Unsat &#9660;</td>
+					<td width="8%" class="unrated-bg">Exempt</td>
+					<td width="8%" class="unrated-bg">NR</td>
+					<td width="12%" class="curating-viewheader">Total</td>
+				</tr>
+				<tr class="content-data">
+					<td class="curating-label">Counts</td>
+					<td class="content-data-centered">{{CUSatEqualCnt}}</td>
+					<td class="content-data-centered">{{CUSatPlusCnt}}</td>
+					<td class="content-data-centered">{{CUMargPlusCnt}}</td>
+					<td class="content-data-centered">{{CUMargEqualCnt}}</td>
+					<td class="content-data-centered">{{CUMargMinusCnt}}</td>
+					<td class="content-data-centered">{{CUUnsatEqualCnt}}</td>
+					<td class="content-data-centered">{{CUUnsatMinusCnt}}</td>
+					<td class="content-data-centered">{{CUEXEMPTCnt}}</td>
+					<td class="content-data-centered">{{CUNRCnt}}</td>
+					<td class="content-data-centered">{{CUTotalCnt}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="curating-label">Percentages</td>
+					<td class="content-data-centered">{{CUSatEqualPct}}</td>
+					<td class="content-data-centered">{{CUSatPlusPct}}</td>
+					<td class="content-data-centered">{{CUMargPlusPct}}</td>
+					<td class="content-data-centered">{{CUMargEqualPct}}</td>
+					<td class="content-data-centered">{{CUMargMinusPct}}</td>
+					<td class="content-data-centered">{{CUUnsatEqualPct}}</td>
+					<td class="content-data-centered">{{CUUnsatMinusPct}}</td>
+					<td class="content-data-centered">{{CUEXEMPTPct}}</td>
+					<td class="content-data-centered">{{CUNRPct}}</td>
+					<td class="content-data-centered">{{CUTotalPct}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="curating-label-ar" colspan="10">Weighted Score</td>
+					<td class="content-data-centered">{{WeightedCUScore}}</td>
+				</tr>
+				<tr class="curating-legend">
+					<td class="curating-legend" colspan="11">&nbsp;</td>
+				</tr>
+				<tr class="curating-legend">
+					<td class="curating-legend-ar" colspan="8">Weighted Score Key</td>
+					<td class="asmt-viewdata-red">Unsat<br />&lt; 75%</td>
+					<td class="asmt-viewdata-yellow">Marg<br />75 - 89%</td>
+					<td class="asmt-viewdata-green">Sat<br />90% +</td>
+				</tr>
+			</table>
+		</td>
+		<td width="2%" class="curating-legend">&nbsp;</td>
+		<td width="28%" class="curating-legend">
+			<table width="100%">
+				<thead>
+					<th class="curating-legend" colspan="3">Key/Comments</th>
+				</thead>
+				<tr>
+					<td class="sat-bg" width="3%"></td>
+					<td class="curating-legend" width="20%">
+						Sat &#61;<br \>
+						Sat &#9650;</td>
+					<td class="curating-legend" width="77%">
+						: unchanged or not rated in prior quarter<br \>
+						: improved from marg/unsat</td>
+				</tr>
+				<tr>
+					<td class="marg-bg"></td>
+					<td class="curating-legend">
+						Marg &#9650;<br \>
+						Marg &#61;<br \>
+						Marg &#9660;
+					</td>
+					<td class="curating-legend">
+						: improved from unsat<br \>
+						: unchanged or not rated in prior quarter<br \>
+						: deteriorated from sat
+					</td>
+				</tr>
+				<tr>
+					<td class="unsat-bg"></td>
+					<td class="curating-legend">
+						Unsat &#61;<br \>
+						Unsat &#9660;
+					</td>
+					<td class="curating-legend">
+						: unchanged<br \>
+						: deteriorated from sat/marg
+					</td>
+				</tr>
+				<tr>
+					<td class="unrated-bg"></td>
+					<td class="curating-legend">NR</td>
+					<td class="curating-legend">: not rated</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="curating">
+		<td colspan="3">
+			<span class="curating-header">Processes by Rating</span><br /><br />
+			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="curating-viewheader" scope="col" width="3%"></th>
+					<th class="curating-viewheader" scope="col" width="5%">Rating</th>
+					<th class="curating-viewheader" scope="col" width="20%">Controllable Unit</th>
+					<th class="curating-viewheader" scope="col" width="5%">Count</th>
+					<th class="curating-viewheader" scope="col" width="5%">Percent</th>
+					<th class="curating-viewheader" scope="col" width="5%">Prior Q</th>
+					<th class="curating-viewheader" scope="col" width="5%">Curr Q</th>
+					<th class="curating-viewheader" scope="col" width="10%">Prior Target to Sat</th>
+					<th class="curating-viewheader" scope="col" width="10%">Target to Sat</th>
+					<th class="curating-viewheader" scope="col" width="5%">Size</th>
+					<th class="curating-viewheader" scope="col" width="5%">Max Score</th>
+					<th class="curating-viewheader" scope="col" width="5%">CQ Score</th>
+					<th class="curating-viewheader" scope="col" width="5%">PQ Score</th>
+					<th class="curating-viewheader" scope="col" width="12%">Explanations</th>
+				</thead>
+				{{#each BUCAsmtDataCURview}}
+					<tr class="asmt-viewdata">
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">
+							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
+							<div id="ratingcategoryDisplay"></div>
+						</td>
+						{{#if name}}
+							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+						{{else}}
+							<td class="asmt-viewdata">&nbsp;</td>
+						{{/if}}
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"></td>
+						{{{ratingDisplayView ratingPQ1}}}
+						{{{ratingDisplayView ratingCQ}}}
+						<td class="asmt-viewdata">{{targettosat}}</td>
+						<td class="asmt-viewdata">{{targettosatprev}}</td>
+						<td class="asmt-viewdata">{{size}}</td>
+						<td class="asmt-viewdata">{{maxscore}}</td>
+						<td class="asmt-viewdata">{{cqscore}}</td>
+						<td class="asmt-viewdata">{{pqscore}}</td>
+						<td class="asmt-viewdata">{{reviewcomments}}</td>
+					</tr>
+				{{/each}}
+				<tr>
+			</table>
+		</td>
+	</tr>
+</table>
