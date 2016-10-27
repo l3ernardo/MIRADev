@@ -148,15 +148,28 @@ var assessment = {
 							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPIview = [];
 							doc[0].CPAsmtDataPR1view = [];
-							fieldCalc.getRatingProfile(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc).then(function(data){
+								fieldCalc.getRatingProfile(doc);
 								if (doc[0].CPAsmtDataPIview.length < 3) {
-									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+									if (doc[0].CPAsmtDataPIview.length == 0) {
+										doc[0].CPAsmtDataPIview = fieldCalc.addTestViewData(10,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+									}
 								}
 								if (doc[0].CPAsmtDataOIview.length < 3) {
-									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+									if (doc[0].CPAsmtDataOIview.length == 0) {
+										doc[0].CPAsmtDataOIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
+									}
 								}
 								if (doc[0].CPAsmtDataPR1view.length < 3) {
-									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
+									if (doc[0].CPAsmtDataPR1view.length == 0) {
+										doc[0].CPAsmtDataPR1view = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
+									}
 								}
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
@@ -164,18 +177,23 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
-							doc[0].CPAsmtDataOIview = [];
-							doc[0].CPAsmtDataPIview = [];
-							doc[0].CPAsmtDataPR1view = [];
-							fieldCalc.getRatingProfile(db, doc).then(function(data){
-								if (doc[0].CPAsmtDataPIview.length < 3) {
-									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(3-doc[0].CPAsmtDataPIview.length));
+							doc[0].BUCAsmtDataPRview = [];
+							doc[0].BUCAsmtDataCURview = [];
+							fieldCalc.getAssessments(db, doc).then(function(data){
+								fieldCalc.getRatingProfile(doc);
+								if (doc[0].BUCAsmtDataPRview.length < 3) {
+									if (doc[0].BUCAsmtDataPRview.length == 0) {
+										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(3-doc[0].BUCAsmtDataPRview.length));
+									}
 								}
-								if (doc[0].CPAsmtDataOIview.length < 3) {
-									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(3-doc[0].CPAsmtDataOIview.length));
-								}
-								if (doc[0].CPAsmtDataPR1view.length < 3) {
-									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(3-doc[0].CPAsmtDataPR1view.length));
+								if (doc[0].BUCAsmtDataCURview.length < 3) {
+									if (doc[0].BUCAsmtDataCURview.length == 0) {
+										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataCURview.length));
+									}
 								}
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
@@ -184,7 +202,8 @@ var assessment = {
 							break;
 						case "Controllable Unit":
 							doc[0].CUAsmtDataPR1view = [];
-							fieldCalc.getRatingProfile(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc).then(function(data){
+								fieldCalc.getRatingProfile(doc);
 								if (doc[0].CUAsmtDataPR1view.length < 3) {
 									if (doc[0].CUAsmtDataPR1view.length == 0) {
 										doc[0].CUAsmtDataPR1view = fieldCalc.addTestViewData(9,3);
@@ -258,14 +277,27 @@ var assessment = {
 					};
 					doc.push(tmpdoc);
 
-					/* Get previous 4 quarter assessments to get historical data from:
-							- previous 4 qtrs Ratings
-							- prrevious 4 qtrs target to Status
-							- previous 4 qtrs DR & TR
-							- previous 4 qtrs unremed defects
-					*/
+					fieldCalc.getDocParams(req, db, doc).then(function(data){
 
-					switch (doc[0].ParentDocSubType) {
+						/* Get previous 4 quarter assessments to get historical data from:
+								- previous 4 qtrs Ratings
+								- prrevious 4 qtrs target to Status
+								- previous 4 qtrs DR & TR
+								- previous 4 qtrs unremed defects
+						*/
+						// var searchobj = {
+						// 	selector:{
+						// 		"_id": {"$gt":0},
+						// 		"key": "Assessable Unit",
+						// 		"Status": "Active",
+						// 		$or: [
+						// 			{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU IMT"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
+						// 			{$and:[{"DocSubType": "IMT"},{"IOT":doc[0].IOT}]}
+						// 		]
+						// 	}
+						// };
+
+						switch (doc[0].ParentDocSubType) {
 						case "Account":
 							if (pdoc[0].IOT != undefined) {
 								doc[0].IOT = pdoc[0].IOT;
@@ -373,46 +405,38 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
-							deferred.resolve({"status": 200, "doc": doc});
-
-							// doc[0].IOT = pdoc[0].IOT;
-							// doc[0].IMT = pdoc[0].IMT;
-							// doc[0].ReportingGroupList = [];
-							// doc[0].CountryList = [];
-							// doc[0].CountryAUList = [];
-
-							// var searchobj = {
-							// 	selector:{
-							// 		"_id": {"$gt":0},
-							// 		"key": "Assessable Unit",
-							// 		"Status": "Active",
-							// 		$or: [
-							// 			{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU Country"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
-							// 			{$and:[{"DocSubType": "Country"},{"IMT":doc[0].IMT}]}
-							// 		]
-							// 	}
-							// };
-							// doc[0].CountryList.push({"docid":"","name":""});
-							// db.find(searchobj).then(function(resdata) {
-							// 	var resdocs = resdata.body.docs;
-							// 	for (var i = 0; i < resdocs.length; ++i) {
-							// 		if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-							// 		if (resdocs[i].DocSubType == "Country") doc[0].CountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Country});
-							// 		if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"name":resdocs[i].Country});
-							// 	}
-							// 	for (var i = 0; i < doc[0].CountryAUList.length; ++i) {
-							// 		util.findAndRemove(doc[0].CountryList,'name',doc[0].CountryAUList[i].Country)
-							// 	}
-							// 	deferred.resolve({"status": 200, "doc": doc});
-							// }).catch(function(err) {
-							// 	console.log("[assessableunit][BUCountryLists][NewBUCountry]" + resdata.error);
-							// 	deferred.reject({"status": 500, "error": err.error.reason});
-							// });
+							doc[0].BUCAsmtDataPRview = [];
+							doc[0].BUCAsmtDataCURview = [];
+							fieldCalc.getAssessments(db, doc).then(function(data){
+								fieldCalc.getRatingProfile(doc);
+								if (doc[0].BUCAsmtDataPRview.length < 3) {
+									if (doc[0].BUCAsmtDataPRview.length == 0) {
+										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(3-doc[0].BUCAsmtDataPRview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataCURview.length < 3) {
+									if (doc[0].BUCAsmtDataCURview.length == 0) {
+										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataPRview.length));
+									}
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
 							break;
 						default:
 							deferred.resolve({"status": 200, "doc": doc});
 							break;
 					}
+
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
+
 				} else {
 					deferred.reject({"status": 500, "error": "Access denied!"});
 				}
@@ -496,6 +520,30 @@ var assessment = {
 				db.get(docid).then(function(data){
 					var doc = [];
 					doc.push(data.body);
+
+					//---Basics Section---//
+					if (doc[0].PrevRatingUpdate != req.body.PeriodRating) {
+						doc[0].RatingChangeWho = curruser;
+						doc[0].RatingChangeWhen = currdate;
+						doc[0].PrevRatingUpdate = doc[0].PeriodRating;
+						doc[0].PeriodRating = req.body.PeriodRating;
+					}
+					if ( doc[0].PeriodRating  ==  "Sat") {
+						doc[0].ReviewComments = "";
+						doc[0].Target2Sat = "";
+					} else {
+						doc[0].ReviewComments = req.body.ReviewComments;
+						doc[0].Target2Sat = req.body.Target2Sat;
+					}
+					if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
+						doc[0].MIRAStatusChangeWho = curruser;
+						doc[0].MIRAStatusChangeWhen = currdate;
+					}
+					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
+					doc[0].MIRAStatus = req.body.MIRAStatus;
+					doc[0].NextQtrRating = req.body.NextQtrRating;
+					doc[0].DecommitExplanation = req.body.DecommitExplanation;
+
 					switch (doc[0].ParentDocSubType) {
 						case "Business Unit":
 							break;
@@ -656,14 +704,14 @@ var assessment = {
 								doc[0].ARALLExplanation = req.body.ARALLExplanation;
 							}
 							//---Operational Metrics Tab Tab---//
-							
+
 							var metricsID = req.body.opMetricIDs.split(",");
 							var tname, topush;
 							doc[0].OpMetric = [];
 							for (var i = 0; i < metricsID.length; ++i) {
 								if(metricsID[i] != undefined && metricsID[i] != "") {
 									topush = {
-										"id": metricsID[i] 
+										"id": metricsID[i]
 									};
 									doc[0].OpMetric.push(topush);
 									fname = metricsID[i]+"Name";
@@ -691,28 +739,6 @@ var assessment = {
 							break;
 					}
 
-					//---Basics Section---//
-					if (doc[0].PrevRatingUpdate != req.body.PeriodRating) {
-						doc[0].RatingChangeWho = curruser;
-						doc[0].RatingChangeWhen = currdate;
-						doc[0].PrevRatingUpdate = doc[0].PeriodRating;
-						doc[0].PeriodRating = req.body.PeriodRating;
-					}
-					if ( doc[0].PeriodRating  ==  "Sat") {
-						doc[0].ReviewComments = "";
-						doc[0].Target2Sat = "";
-					} else {
-						doc[0].ReviewComments = req.body.ReviewComments;
-						doc[0].Target2Sat = req.body.Target2Sat;
-					}
-					if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
-						doc[0].MIRAStatusChangeWho = curruser;
-						doc[0].MIRAStatusChangeWhen = currdate;
-					}
-					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
-					doc[0].MIRAStatus = req.body.MIRAStatus;
-					doc[0].NextQtrRating = req.body.NextQtrRating;
-					doc[0].DecommitExplanation = req.body.DecommitExplanation;
 					//---Miscellaneous---//
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);

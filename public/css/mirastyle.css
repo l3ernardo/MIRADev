@@ -158,11 +158,49 @@
   background-color: #00c1c2;
 	border: #00c1c2;
 }
+.ibm-data-table .curating {
+  background-color: #9f9fe0;
+	border: 20px solid #9f9fe0;
+}
+.ibm-data-table .curating-header {
+  background-color: #9f9fe0;
+	border: #9f9fe0;
+	font-weight: bold;
+}
+.ibm-data-table .curating-label {
+  background-color: #e0e0ff;
+}
+.ibm-data-table .curating-label-ar {
+	text-align: right;
+  background-color: #e0e0ff;
+}
+.ibm-data-table .curating-viewheader {
+	text-align: center;
+	font-size: 11px;
+	background-color: #e0e0ff;
+}
+.ibm-data-table .curating-legend {
+	font-size: 10px;
+	color: black;
+  background-color: #9f9fe0;
+	border: #9f9fe0;
+}
+.ibm-data-table .curating-legend-ar {
+	text-align: right;
+	font-size: 10px;
+	color: black;
+  background-color: #9f9fe0;
+	border: #9f9fe0;
+}
 .ibm-data-table .summaryrollup {
   background-color: #71b2cf;
 	border: 20px solid #71b2cf;
 }
 .ibm-data-table .summaryrollup-label {
+  background-color: #c2efff;
+}
+.ibm-data-table .summaryrollup-label-ar {
+	text-align: right;
   background-color: #c2efff;
 }
 .ibm-data-table .summaryrollup-sublabel {
@@ -175,7 +213,9 @@
 	background-color: #c2efff;
 }
 .ibm-data-table .summaryrollup-legend {
-	font-size: 10px;
+	text-align: right;
+	font-size: 11px;
+	font-weight: bold;
 	color: black;
   background-color: #71b2cf;
 	border: #71b2cf;

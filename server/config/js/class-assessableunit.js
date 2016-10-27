@@ -844,7 +844,11 @@ var assessableunit = {
 					};
 
 					doc.push(tmpdoc);
-					
+					if (doc[0].DocSubType == "Business Unit")
+						doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
+					else
+						doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
+
 					switch (doc[0].DocSubType) {
 						case "Account":
 							if (pdoc[0].IOT != undefined) {
@@ -1199,25 +1203,24 @@ var assessableunit = {
 					//Save document
 					db.save(doc[0]).then(function(data){
 						// Get current quarter Assessment
-						if(doc[0].DocSubType == "Controllable Unit"){
-							fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
-								var asmtdoc = [];
-								asmtdoc.push(asmtdata.doc);
-								// Pass data to current quarter assessment
-								asmtdoc[0].AuditProgram = doc[0].AuditProgram;
-								asmtdoc[0].Portfolio = doc[0].Portfolio;
-								db.save(asmtdoc[0]).then(function(asmtdata){
-									deferred.resolve(data);
-								}).catch(function(err) {
-									deferred.reject({"status": 500, "error": err.error.reason});
-								});
+						fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
+							var asmtdoc = [];
+							asmtdoc.push(asmtdata.doc);
+							// Pass data to current quarter assessment
+							switch (doc[0].DocSubType) {
+								case "Controllable Unit":
+									asmtdoc[0].AuditProgram = doc[0].AuditProgram;
+									asmtdoc[0].Portfolio = doc[0].Portfolio;
+									break;
+							}
+							db.save(asmtdoc[0]).then(function(asmtdata){
+								deferred.resolve(data);
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err.error.reason});
 							});
-						}else{
-							deferred.resolve(data);
-						}
-
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err.error.reason});
+						});
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
