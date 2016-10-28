@@ -82,6 +82,30 @@ var components = {
     }
       return deferred.promise;
   },
+  getCUSummary: function(req, db){
+    var deferred = q.defer();
+    try{
+    var obj = {
+      selector : {
+        "_id": req.query.id,
+          "docType": "CUSummarySample"
+      }
+    };
+      db.find(obj).then(function(data){
+        var tmp = data.body.docs[0];
+        tmp.modified = {};
+        tmp.modified.name =tmp.Log[tmp.Log.length -1].name;
+        tmp.modified.date =tmp.Log[tmp.Log.length -1].date;
+        tmp.modified.time =tmp.Log[tmp.Log.length -1].time;
+        deferred.resolve({"status": 200, "data":tmp})
+      }).catch(function(err) {
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+    }catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+      return deferred.promise;
+  },
 
   /* Save Open Issue number of missed tasks override in cloudant */
 	saveOverride: function(req, db) {

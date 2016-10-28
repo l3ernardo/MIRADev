@@ -42,7 +42,18 @@ asmtComponents.get('/ppr', isAuthenticated, function(req, res) {
 		console.log("[routes][ppr] - " + err.error);
 	});
 });
-
+/* CU Summary Sample */
+asmtComponents.get('/cusummarysample', isAuthenticated, function(req, res) {
+	if(typeof req.query.id === "undefined"){
+	req.query.id = "df91794db326710c753a48ffbb8a70ae";
+}
+	components.getCUSummary(req, db).then(function(data){
+			res.render('cusummarysample', data.data );
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][controlsample] - " + err.error);
+	});
+});
 /* Save Open Issue in cloudant */
 asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
 	components.saveOverride(req, db).then(function(data) {
