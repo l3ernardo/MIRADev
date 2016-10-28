@@ -124,6 +124,22 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
+			var drhtml;
+			if (dr == undefined || dr == "") {
+				drhtml = '<td class="asmt-viewdata-centered"></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
+			} else {
+				if (dr < margThreshold)
+					drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
+				else if (dr >= unsatThreshold)
+					drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
+				else
+					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
+			}
+			return drhtml;
+		},
 		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
@@ -268,28 +284,28 @@ var register = function(Handlebars) {
 		listWithComa: function(list){
 			var newList='';
 
-		if(typeof list != 'undefined'){ 
+		if(typeof list != 'undefined'){
 			for(i=0; i<list.length; i++){
-				
+
 				if(list.charAt(i) != ',')
 				newList += list.charAt(i);
 				else
 				newList += '</br>';
-				
- 
-			} 
+
+
+			}
 		}
-			
+
 		return newList;
 		},
-		
+
 		getSourceColor: function(option){
 
 			if(option == "WWBCIT")
 			return "background-color: #C0E1FF;"
-			else return "background-color: #C2FF91;"		
+			else return "background-color: #C2FF91;"
 
-		} 
+		}
 	};
 
 	if (Handlebars && typeof Handlebars.registerHelper === "function") {
