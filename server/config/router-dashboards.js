@@ -97,7 +97,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "Global Process":
 						res.render('auglobalprocess', data.doc[0] );
 						break;
-					case "Subprocess":
+					case "Sub-process":
 						res.render('ausubprocess', data.doc[0] );
 						break;
 					case "BU IOT":
@@ -540,6 +540,24 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 						break;
 
 					case "Account":
+					    						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','AuditLessonsLearnedFinding','OpMetricRating','UnsatThresholdPercent','MargThresholdPercent'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent'];
+
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtaccount', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][CPassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][CPassessment][getListParams] - " + err.error);
+						})
 						break;
 				}
 			} else {

@@ -217,7 +217,7 @@
 	{{/if}}
 	<tr class="ar-asmt-content">
 		<td>
-			<span class="ar-asmt-header">Country Process Performance Indicators</span><br /><br />
+			<span class="ar-asmt-header">Country Process and CU Performance Indicators</span><br /><br />
 			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 				<thead>
 					<th class="ar-asmt-viewheader" scope="col" width="33%">Assessed Unit</th>
@@ -231,7 +231,7 @@
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Missed Risk Evaluations</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Missed MSAC Commitments</th>
 				</thead>
-				{{#each CPAsmtDataPIview}}
+				{{#each BUCAsmtDataPIview}}
 					<tr class="asmt-viewdata">
 						{{#if_equal name ""}}
 							<td class="asmt-viewdata">&nbsp;</td>
@@ -243,8 +243,8 @@
 						{{{ratingDisplayView ratingPQ2}}}
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
-						{{{defectRateDisplayView kcfrDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						{{{defectRateDisplayView kcoDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
+						{{{defectRateDisplayViewNoDash kcfrDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
+						{{{defectRateDisplayViewNoDash kcoDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="asmt-viewdata">{{msdRisk}}</td>
 						<td class="asmt-viewdata">{{msdMSAC}}</td>
 					</tr>
@@ -252,7 +252,7 @@
 				<tr>
 			</table>
 			<br />
-			<span class="ar-asmt-header">Country Process Operational Indicators</span><br /><br />
+			<span class="ar-asmt-header">Country Process and CU Operational and Indicators</span><br /><br />
 			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 				<thead>
 					<th class="ar-asmt-viewheader" scope="col" width="37%">Assessed Unit</th>
@@ -264,7 +264,7 @@
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Basics of Controls Exceptions</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Other Metrics</th>
 				</thead>
-				{{#each CPAsmtDataOIview}}
+				{{#each BUCAsmtDataOIview}}
 					<tr class="asmt-viewdata">
 						{{#if_equal name ""}}
 							<td class="asmt-viewdata">&nbsp;</td>

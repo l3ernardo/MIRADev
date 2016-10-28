@@ -162,6 +162,134 @@ function addEventsCompCP(){
 	},true);
 }
 
+function addEventsCompAccount(){
+	document.getElementById('summary-li').addEventListener('click',function()
+	{
+		document.getElementById('summary').style.display="";
+		document.getElementById('basiccontrol').style.display="none";
+		document.getElementById('auditreadyasmt').style.display="none";
+		document.getElementById('auditreview').style.display="none";
+		document.getElementById('kctest').style.display="none";
+		document.getElementById('opmetric').style.display="none";
+		document.getElementById('other').style.display="none";
+
+		document.getElementById('summary-li').className="ibm-active";
+		document.getElementById('basiccontrol-li').className="";
+		document.getElementById('auditreadyasmt-li').className="";
+		document.getElementById('auditreview-li').className="";
+		document.getElementById('kctest-li').className="";
+		document.getElementById('opmetric-li').className="";
+		document.getElementById('other-li').className="";
+	},true);
+	document.getElementById('basiccontrol-li').addEventListener('click',function()
+	{
+		document.getElementById('summary').style.display="none";
+		document.getElementById('basiccontrol').style.display="";
+		document.getElementById('auditreadyasmt').style.display="none";
+		document.getElementById('auditreview').style.display="none";
+		document.getElementById('kctest').style.display="none";
+		document.getElementById('opmetric').style.display="none";
+		document.getElementById('other').style.display="none";
+
+		document.getElementById('summary-li').className="";
+		document.getElementById('basiccontrol-li').className="ibm-active";
+		document.getElementById('auditreadyasmt-li').className="";
+		document.getElementById('auditreview-li').className="";
+		document.getElementById('kctest-li').className="";
+		document.getElementById('opmetric-li').className="";
+		document.getElementById('other-li').className="";
+	},true);
+	document.getElementById('auditreadyasmt-li').addEventListener('click',function()
+	{
+		document.getElementById('summary').style.display="none";
+		document.getElementById('basiccontrol').style.display="none";
+		document.getElementById('auditreadyasmt').style.display="";
+		document.getElementById('auditreview').style.display="none";
+		document.getElementById('kctest').style.display="none";
+		document.getElementById('opmetric').style.display="none";
+		document.getElementById('other').style.display="none";
+
+		document.getElementById('summary-li').className="";
+		document.getElementById('basiccontrol-li').className="";
+		document.getElementById('auditreadyasmt-li').className="ibm-active";
+		document.getElementById('auditreview-li').className="";
+		document.getElementById('kctest-li').className="";
+		document.getElementById('opmetric-li').className="";
+		document.getElementById('other-li').className="";
+	},true);
+	document.getElementById('auditreview-li').addEventListener('click',function()
+	{
+		document.getElementById('summary').style.display="none";
+		document.getElementById('basiccontrol').style.display="none";
+		document.getElementById('auditreadyasmt').style.display="none";
+		document.getElementById('auditreview').style.display="";
+		document.getElementById('kctest').style.display="none";
+		document.getElementById('opmetric').style.display="none";
+		document.getElementById('other').style.display="none";
+
+		document.getElementById('summary-li').className="";
+		document.getElementById('basiccontrol-li').className="";
+		document.getElementById('auditreadyasmt-li').className="";
+		document.getElementById('auditreview-li').className="ibm-active";
+		document.getElementById('kctest-li').className="";
+		document.getElementById('opmetric-li').className="";
+		document.getElementById('other-li').className="";
+	},true);
+	document.getElementById('kctest-li').addEventListener('click',function()
+	{
+		document.getElementById('summary').style.display="none";
+		document.getElementById('basiccontrol').style.display="none";
+		document.getElementById('auditreadyasmt').style.display="none";
+		document.getElementById('auditreview').style.display="none";
+		document.getElementById('kctest').style.display="";
+		document.getElementById('opmetric').style.display="none";
+		document.getElementById('other').style.display="none";
+
+		document.getElementById('summary-li').className="";
+		document.getElementById('basiccontrol-li').className="";
+		document.getElementById('auditreadyasmt-li').className="";
+		document.getElementById('auditreview-li').className="";
+		document.getElementById('kctest-li').className="ibm-active";
+		document.getElementById('opmetric-li').className="";
+		document.getElementById('other-li').className="";
+	},true);
+	document.getElementById('opmetric-li').addEventListener('click',function()
+	{
+		document.getElementById('summary').style.display="none";
+		document.getElementById('basiccontrol').style.display="none";
+		document.getElementById('auditreadyasmt').style.display="none";
+		document.getElementById('auditreview').style.display="none";
+		document.getElementById('kctest').style.display="none";
+		document.getElementById('opmetric').style.display="";
+		document.getElementById('other').style.display="none";
+
+		document.getElementById('summary-li').className="";
+		document.getElementById('basiccontrol-li').className="";
+		document.getElementById('auditreadyasmt-li').className="";
+		document.getElementById('auditreview-li').className="";
+		document.getElementById('kctest-li').className="";
+		document.getElementById('opmetric-li').className="ibm-active";
+		document.getElementById('other-li').className="";
+	},true);
+	document.getElementById('other-li').addEventListener('click',function()
+	{
+		document.getElementById('summary').style.display="none";
+		document.getElementById('basiccontrol').style.display="none";
+		document.getElementById('auditreadyasmt').style.display="none";
+		document.getElementById('auditreview').style.display="none";
+		document.getElementById('kctest').style.display="none";
+		document.getElementById('opmetric').style.display="none";
+		document.getElementById('other').style.display="";
+
+		document.getElementById('summary-li').className="";
+		document.getElementById('basiccontrol-li').className="";
+		document.getElementById('auditreadyasmt-li').className="";
+		document.getElementById('auditreview-li').className="";
+		document.getElementById('kctest-li').className="";
+		document.getElementById('opmetric-li').className="";
+		document.getElementById('other-li').className="ibm-active";
+	},true);
+}
 // Display the selected tab
 function displaySelectedCPCompTab(){
   var url = parent.location.href;
@@ -1078,7 +1206,9 @@ $(document).ready(function() {
 			}
 			break;
 		case "Country Process":
-      addEventsCompCP();
+        addEventsCompCP();
+	    case "Account":
+        addEventsCompAccount();
     	window.addEventListener("load", displaySelectedCPCompTab());
       break;
   }

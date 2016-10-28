@@ -45,8 +45,10 @@ var accessrules = {
 			}
 		}
 		var rules = {
-			"editor":editor,
-			"admin":admin,
+			"editor":1,
+			"admin":1,
+			// "editor":editor,
+			// "admin":admin,
 			"grantaccess":grantaccess,
 			"resetstatus":resetstatus,
 			"cuadmin":cuadmin
