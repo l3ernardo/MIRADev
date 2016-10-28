@@ -238,7 +238,6 @@ var assessment = {
 		var deferred = q.defer();
 		try{
 			var pid = req.query.pid
-
 			db.get(pid).then(function(data){
 				var pdoc = [];
 				var doc = [];
@@ -405,8 +404,13 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
+							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
+							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
+							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
 							doc[0].BUCAsmtDataPRview = [];
 							doc[0].BUCAsmtDataCURview = [];
+							doc[0].BUCAsmtDataPIview = [];
+							doc[0].BUCAsmtDataOIview = [];
 							fieldCalc.getAssessments(db, doc).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -421,6 +425,20 @@ var assessment = {
 										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,3);
 									} else {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataPRview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataPIview.length < 3) {
+									if (doc[0].BUCAsmtDataPIview.length == 0) {
+										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(3-doc[0].BUCAsmtDataPIview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataOIview.length < 3) {
+									if (doc[0].BUCAsmtDataOIview.length == 0) {
+										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
 								deferred.resolve({"status": 200, "doc": doc});

@@ -139,12 +139,11 @@ var calculatefield = {
             break;
           case "BU Country":
             if (doc[0].BUWWBCITKey == "BSU300000027")
-              lParams.push('GBSGeoOpMetric');
+              opMetricKey = "GBSGeoOpMetric";
             else if (doc[0].BUWWBCITKey == "BSU300000026")
-              lParams.push('TOGeoOpMetric');
+              opMetricKey = "TOGeoOpMetric";
             else
-              lParams.push('GTSGeoOpMetric');
-            opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+              opMetricKey = "GTSGeoOpMetric";
             break;
           case "Controllable Unit":
             opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
@@ -669,6 +668,32 @@ var calculatefield = {
                 };
                 doc[0].BUCAsmtDataCURview.push(toadd);
               }
+              // PO tab performance indicators view
+              toadd = {
+                "docid":doc[0].asmtsdocs[i]._id,
+                "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
+              };
+              doc[0].BUCAsmtDataPIview.push(toadd);
+              // PO tab other indicators view
+              toadd = {
+                "docid":doc[0].asmtsdocs[i]._id,
+                "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
+              };
+              doc[0].BUCAsmtDataOIview.push(toadd);
+              for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
+                doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+              }
+
               // Basics of Control Exception Counter
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
               break;
