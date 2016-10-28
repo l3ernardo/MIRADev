@@ -124,6 +124,22 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
+			var drhtml;
+			if (dr == undefined || dr == "") {
+				drhtml = '<td class="asmt-viewdata-centered"></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
+			} else {
+				if (dr < margThreshold)
+					drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
+				else if (dr >= unsatThreshold)
+					drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
+				else
+					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
+			}
+			return drhtml;
+		},
 		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
