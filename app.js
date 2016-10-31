@@ -16,7 +16,7 @@ app.use(passport.session());
 app.use(sessions({
 	cookieName: 'session',
 	secret: 'asdfgmirahjklmiraxpto',
-	duration: 1 * 60 * 60 * 1000,
+	duration: 2 * 60 * 60 * 1000,
 	activeDuration: 1000 * 60 * 5
 }));
 app.use(flash());
@@ -72,6 +72,7 @@ app.use(require('./server/config/router-interface.js'));
 app.use(require('./server/config/router-bluegroups.js'));
 app.use(require('./server/config/router-dashboards.js'));
 app.use(require('./server/config/router-reports.js'));
+app.use(require('./server/config/router-asmtComponents.js'));
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {
