@@ -6,6 +6,36 @@ var components = require('./js/class-asmtComponents.js');
 
 
 /* Control Sample */
+asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
+	components.getComponent(req, db).then(function(data){
+		var type= data.data.docType;
+		switch (type) {
+			case "controlsample":
+				res.render('controlsample', data.data );
+				break;
+			case  "cusummarysample":
+				res.render('cusummarysample', data.data );
+				break;
+			case "internalaudit":
+				res.render('internalaudit', data.data );
+				break;
+			case "localaudit":
+				res.render('localaudit', data.data );
+				break;
+			case "ppr":
+				res.render('ppr', data.data );
+				break;
+			case "openissue":
+				res.render('openissue', data.data );
+				break;
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][controlsample] - " + err.error);
+	});
+});
+
+/* Control Sample */
 asmtComponents.get('/controlsample', isAuthenticated, function(req, res) {
 	if(typeof req.query.id === "undefined"){
 		req.query.id = "9d9902492259ecc30230af749b1c2a06";
@@ -84,9 +114,11 @@ asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
 	components.saveOverride(req, db).then(function(data) {
 
 		if(data.status==200 & !data.error) {
-
+			if(req.body.close === "back"){
+				res.redirect("/assessment?id="+req.body.parentid);
+			}else{
 			res.redirect('/openissue?id='+data.data.id);
-
+		}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
@@ -101,9 +133,11 @@ asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
 asmtComponents.post('/saveppr', isAuthenticated, function(req, res) {
 	components.savePPR(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-
+			if(req.body.close === "back"){
+				res.redirect("/assessment?id="+req.body.parentid);
+			}else{
 			res.redirect('/ppr?id='+data.data.id);
-
+}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
@@ -117,9 +151,11 @@ asmtComponents.post('/saveppr', isAuthenticated, function(req, res) {
 asmtComponents.post('/savelocalaudit', isAuthenticated, function(req, res) {
 	components.saveLocalAudit(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			
+			if(req.body.close === "back"){
+				res.redirect("/assessment?id="+req.body.parentid);
+			}else{
 			res.redirect('/localaudit?id='+data.data.id);
-
+}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
@@ -133,9 +169,11 @@ asmtComponents.post('/savelocalaudit', isAuthenticated, function(req, res) {
 asmtComponents.post('/saveinternalaudit', isAuthenticated, function(req, res) {
 	components.saveInternalAudit(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-
+			if(req.body.close === "back"){
+				res.redirect("/assessment?id="+req.body.parentid);
+			}else{
 			res.redirect('/internalaudit?id='+data.data.id);
-
+}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
