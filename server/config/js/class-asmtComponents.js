@@ -11,6 +11,51 @@ var utility = require('./class-utility.js');
 
 var components = {
 
+  getComponent: function(req, db){
+    var deferred = q.defer();
+    try{
+      var obj = {
+        selector : {
+          "_id": req.query.id,
+        },
+        fields:["docType"]
+      };
+
+      db.find(obj).then(function(data){
+
+
+        var tipo = data.body.docs[0].docType;
+
+        switch (tipo) {
+					case "controlsample":
+            deferred.resolve(components.getControl(req,db));
+            break;
+          case  "cusummarysample":
+            deferred.resolve(components.getCUSummary(req,db));
+            break;
+          case "internalaudit":
+          
+            deferred.resolve(components.getInternalAudit(req,db));
+            break;
+          case "localaudit":
+            deferred.resolve(components.getLocalAudit(req,db));
+            break;
+          case "ppr":
+            deferred.resolve(components.getPPR(req,db));
+            break;
+          case "openissue":
+            deferred.resolve(components.getIssue(req,db));
+            break;
+        }
+      }).catch(function(err) {
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+    }catch(e){
+      deferred.reject({"status": 500, "error": e});
+    }
+    return deferred.promise;
+  },
+
   getControl: function(req, db){
     var deferred = q.defer();
     try{

@@ -27,10 +27,12 @@
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
 	</p>
-	<form id="pprform" class="ibm-column-form" name="form" method="POST" action="/saveppr">
+	<form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveppr">
     <input type="hidden" name="_id" value="{{_id}}">
     <input type="hidden" name="docid" id="docid" value="{{_id}}">
     <input type="hidden" name="editmode" value="{{editmode}}">
+		<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+		<input type="hidden" name="docType" id="docType" value="ppr">
 <table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
   <caption class="mira-caption"><em>Basics</em></caption>
 <tr>
@@ -78,51 +80,7 @@
 <!-- NOTES & LINKS SECTION -->
 {{>comments}}
 
-		<div class="ibm-buttons-row">
-      <p>
-        {{#if editmode}}
-          <input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Save"/>
-          <span class="ibm-sep">&nbsp;</span>
-          <input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
-        {{else}}
-        <input class="ibm-btn-arrow-pri" type="button" id="btn_edit" value="Edit"/>
-        <span class="ibm-sep">&nbsp;</span>
-        <input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
-        {{/if}}
-      </p>
-		</div>
+<!-- BUTTONS AREA -->
+{{>buttons}}
 		</form>
 </div>
-<script>
-$(document).ready(function(){
-//Display notes
-$("#NotesReadOnly").html($("input[name='NotesRO']").val());
-//Setup some private variables
-var Dom = YAHOO.util.Dom,
-  Event = YAHOO.util.Event;
-//The SimpleEditor config
-var myConfig = {
-  height: '200px',
-  width: '100%',
-  dompath: true,
-  focusAtStart: true
-};
-//Load the SimpleEditor
-myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
-myEditor.render();
-
-$('#btn_edit').click(function() {
-  window.location.href = "ppr?id="+$("input[name='_id']").val()+"&edit";
-});
-$('#btn_save').click(function(evt) {
-  myEditor.saveHTML();
-  var YmyEditor = myEditor.get('element').value;
-  $('#Notes').val(YmyEditor);
-    $("#pprform").submit();
-});
-$('#btn_cancel').click(function() {
-	window.location.href = "/assessment?id=";
-})
-});
-
-</script>
