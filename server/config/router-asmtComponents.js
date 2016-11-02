@@ -8,10 +8,10 @@ var components = require('./js/class-asmtComponents.js');
 /* Control Sample */
 asmtComponents.get('/controlsample', isAuthenticated, function(req, res) {
 	if(typeof req.query.id === "undefined"){
-	req.query.id = "9d9902492259ecc30230af749b1c2a06";
-}
+		req.query.id = "9d9902492259ecc30230af749b1c2a06";
+	}
 	components.getControl(req, db).then(function(data){
-			res.render('controlsample', data.data );
+		res.render('controlsample', data.data );
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][controlsample] - " + err.error);
@@ -21,10 +21,10 @@ asmtComponents.get('/controlsample', isAuthenticated, function(req, res) {
 /* Open Issue */
 asmtComponents.get('/openissue', isAuthenticated, function(req, res) {
 	if(typeof req.query.id === "undefined"){
-	req.query.id = "1caba93791bd9eeb006a97bd03324f8f";
-}
+		req.query.id = "1caba93791bd9eeb006a97bd03324f8f";
+	}
 	components.getIssue(req, db).then(function(data){
-			res.render('openissue', data.data );
+		res.render('openissue', data.data );
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][openissue] - " + err.error);
@@ -33,22 +33,47 @@ asmtComponents.get('/openissue', isAuthenticated, function(req, res) {
 /* PPR */
 asmtComponents.get('/ppr', isAuthenticated, function(req, res) {
 	if(typeof req.query.id === "undefined"){
-	req.query.id = "a75108a8b64db30c0f47722a78a100b8";
-}
+		req.query.id = "a75108a8b64db30c0f47722a78a100b8";
+	}
 	components.getPPR(req, db).then(function(data){
-			res.render('ppr', data.data );
+		res.render('ppr', data.data );
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][ppr] - " + err.error);
 	});
 });
+/* Local Audit */
+asmtComponents.get('/localaudit', isAuthenticated, function(req, res) {
+		if(typeof req.query.id === "undefined"){
+			req.query.id = "cb71326690d51329c153f5f950eb3c8c";
+		}
+		components.getLocalAudit(req, db).then(function(data){
+			res.render('localaudit', data.data );
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][localaudit] - " + err.error);
+		});
+
+});
+/* Internal Audit */
+asmtComponents.get('/internalaudit', isAuthenticated, function(req, res) {
+		if(typeof req.query.id === "undefined"){
+			req.query.id = "b0b51b526058b829e373769998e771e0";
+		}
+		components.getInternalAudit(req, db).then(function(data){
+			res.render('internalaudit', data.data );
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][ppr] - " + err.error);
+		});
+});
 /* CU Summary Sample */
 asmtComponents.get('/cusummarysample', isAuthenticated, function(req, res) {
 	if(typeof req.query.id === "undefined"){
-	req.query.id = "df91794db326710c753a48ffbb8a70ae";
-}
+		req.query.id = "df91794db326710c753a48ffbb8a70ae";
+	}
 	components.getCUSummary(req, db).then(function(data){
-			res.render('cusummarysample', data.data );
+		res.render('cusummarysample', data.data );
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][controlsample] - " + err.error);
@@ -60,7 +85,7 @@ asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
 
 		if(data.status==200 & !data.error) {
 
-				res.redirect('/openissue?id='+data.data.id);
+			res.redirect('/openissue?id='+data.data.id);
 
 		} else {
 			res.render('error',{errorDescription: data.error});
@@ -77,7 +102,39 @@ asmtComponents.post('/saveppr', isAuthenticated, function(req, res) {
 	components.savePPR(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 
-				res.redirect('/ppr?id='+data.data.id);
+			res.redirect('/ppr?id='+data.data.id);
+
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][openissue] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][openissue] - " + err.error);
+	});
+});
+/* Save Local Audit in cloudant */
+asmtComponents.post('/savelocalaudit', isAuthenticated, function(req, res) {
+	components.saveLocalAudit(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			
+			res.redirect('/localaudit?id='+data.data.id);
+
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][openissue] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][openissue] - " + err.error);
+	});
+});
+/* Save Internal Audit in cloudant */
+asmtComponents.post('/saveinternalaudit', isAuthenticated, function(req, res) {
+	components.saveInternalAudit(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+
+			res.redirect('/internalaudit?id='+data.data.id);
 
 		} else {
 			res.render('error',{errorDescription: data.error});
