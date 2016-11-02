@@ -1,0 +1,183 @@
+<link href='./css/fullcalendar.min.css' rel='stylesheet' />
+<link href="./css/jquery-ui.css" rel="stylesheet">
+<script src='./lib/moment.min.js'></script>
+<script src='./lib/fullcalendar.min.js'></script>
+
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
+
+<script src="./js/attachments.js"></script>
+
+<!-- JS and CSS for rich text edit -->
+<link rel="stylesheet" type="text/css" href="./css/skin.css">
+<!-- Utility Dependencies -->
+<script src="./lib/yahoo-dom-event.js"></script>
+<script src="./lib/element-min.js"></script>
+<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+<script src="./lib/container_core-min.js"></script>
+<!-- Source file for Rich Text Editor-->
+<script src="./lib/simpleeditor-min.js"></script>
+<script src="./lib/yui-min.js"></script>
+<!-- end rich text -->
+
+<input type="hidden" id="docTitle" value="{{reportingQuarter}}">
+<input type="hidden" id="ratingList" value="{{valuesToString ratingList}}">
+
+<script>
+//Load document's name
+$('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</b> Audit / Review");
+</script>
+<div class="ibm-container" style="width:80%">
+  <p style="text-align:right">
+    <span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+  </p>
+  <form id="localauditform" class="ibm-column-form" name="form" method="POST" action="/savelocalaudit">
+    <input type="hidden" name="_id" value="{{_id}}">
+    <input type="hidden" name="docid" id="docid" value="{{_id}}">
+    <input type="hidden" name="editmode" value="{{editmode}}">
+    <table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+      <caption class="mira-caption"><em>Basics</em></caption>
+      {{#if editmode}}
+
+      <tr>
+        <td width="25%">ControllableUnit:</td><td><b><input type="text" id="controllableUnit" name="controllableUnit" value="PENDING" readonly></b></td>
+      </tr>
+      <tr>
+        <td>Audit or Review:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
+      </tr>
+      <tr>
+        <td>Report date:</td><td>
+          <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>Process(es):</td><td><input type="text" name="process" value="{{process}}" ></td>
+      </tr>
+      <tr>
+        <td>Rating:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
+      </tr>
+      <tr>
+        <td># Recommendations:</td><td>Total:<input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>Open:<input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+      </tr>
+      <tr>
+        <td>Target to close:</td><td>Original:
+          {{#if new}}<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+          {{else}}
+          <br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+          {{/if}}
+        </td>
+        </tr>
+        <tr>
+          <td>Comments:</td><td><input type="text" name="comments" value="{{comments}}" ></td>
+        </tr>
+        {{else}}
+
+        <tr>
+          <td width="25%">ControllableUnit:</td><td><b>{{controllableUnit}}</b></td>
+        </tr>
+        <tr>
+          <td>Audit or Review:</td><td>{{auditOrReview}}</td>
+        </tr>
+        <tr>
+          <td>Report date:</td><td>{{reportDate}}</td>
+        </tr>
+        <tr>
+          <td>Process(es):</td><td>{{process}}</td>
+        </tr>
+        <tr>
+          <td>Rating:</td><td>{{rating}}</td>
+        </tr>
+        <tr>
+          <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
+        </tr>
+        <tr>
+          <td>Target to close:</td><td>Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>
+        </tr>
+        <tr>
+          <td>Comments:</td><td>{{comments}}</td>
+        </tr>
+        {{/if}}
+        <!-- NOTES & LINKS SECTION -->
+        {{>comments}}
+      </table>
+
+      <div class="ibm-buttons-row">
+        <p>
+          {{#if editmode}}
+          <input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Save"/>
+          <span class="ibm-sep">&nbsp;</span>
+          <input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
+          {{else}}
+          <input class="ibm-btn-arrow-pri" type="button" id="btn_edit" value="Edit"/>
+          <span class="ibm-sep">&nbsp;</span>
+          <input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
+          {{/if}}
+        </p>
+      </div>
+    </form>
+  </div>
+  <script>
+  $(document).ready(function(){
+    //Display notes
+    $("#NotesReadOnly").html($("input[name='NotesRO']").val());
+    //Setup some private variables
+    var Dom = YAHOO.util.Dom,
+      Event = YAHOO.util.Event;
+    //The SimpleEditor config
+    var myConfig = {
+      height: '200px',
+      width: '100%',
+      dompath: true,
+      focusAtStart: true
+    };
+    //Load the SimpleEditor
+    myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
+    myEditor.render();
+
+
+    $('#reportDate').datepicker({
+      changeMonth: true
+    });
+    $( "#reportDate" ).on( "change", function() {
+      $( "#reportDate" ).datepicker( "option", "dateFormat", "M dd, yy" );
+    });
+    $('#reportDate2').datepicker({
+      changeMonth: true
+    });
+    $( "#reportDate2" ).on( "change", function() {
+      $( "#reportDate2" ).datepicker( "option", "dateFormat", "M dd, yy" );
+    });
+    $('#reportDate3').datepicker({
+      changeMonth: true
+    });
+    $( "#reportDate3" ).on( "change", function() {
+      $( "#reportDate3" ).datepicker( "option", "dateFormat", "M dd, yy" );
+    });
+
+    var val = $("#auditOrReview").val();
+    var tmpList = JSON.parse($("#ratingList").val());
+    $("#rating").html($("#rating").html()+tmpList[val]);
+
+    $("#auditOrReview").change(function () {
+      var val = $(this).val();
+      var tmpList = JSON.parse($("#ratingList").val());
+      $("#rating").html(tmpList[val]);
+    });
+
+    $('#btn_edit').click(function() {
+      window.location.href = "localaudit?id="+$("input[name='_id']").val()+"&edit";
+    });
+    $('#btn_save').click(function(evt) {
+      myEditor.saveHTML();
+      var YmyEditor = myEditor.get('element').value;
+      $('#Notes').val(YmyEditor);
+      $("#localauditform").submit();
+    });
+    $('#btn_cancel').click(function() {
+      window.location.href = "/assessment?id=";
+    })
+  });
+
+  </script>
