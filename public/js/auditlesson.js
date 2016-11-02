@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	//Hide left navigation
-	hide_divs();
+	//hide_divs();
 	//Display notes
 	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	//Setup some private variables
