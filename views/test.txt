@@ -48,7 +48,7 @@
 						<th id="th10" data-orderable="false">Readers</th>
 						<th id="th11" data-orderable="false">BU IOT</th>
 						<th id="th12" data-orderable="false">BU IMT</th>
-						<th id="th13" data-orderable="false">Country</th>
+						<th id="th13" data-orderable="false">Countrys</th>
 						
 					</tr>
 				</thead>
