@@ -384,7 +384,10 @@ var assessableunit = {
 								"DocSubType": "Country Process",
 								"Sub-process": doc[0].Name,
 								"BusinessUnit": doc[0].BusinessUnit,
-								"GlobalProcess": doc[0].GlobalProcess
+								"GlobalProcess": doc[0].GlobalProcess,
+								"$or": [
+									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Sub-process"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].CPData = [];
