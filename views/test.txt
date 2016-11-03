@@ -1,0 +1,109 @@
+<link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+<link href="/public/css/style.css" rel="stylesheet" type="text/css" />
+<script src='./js/accesssummary.js'></script>
+<script src='./js/utility.js'></script>
+<link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<script src="./lib/jquery.dataTables.js"></script>
+<script>
+	//Load document's name
+	$('h1#pageTitle').text("Explicit Access Summary");
+	$("#reports_treeview").treetable({expandable: true });
+	//change color depending on source (mira/WWBCIT)
+	document.getElementById("ccc").style.backgroundColor = "red";
+	
+	
+</script>
+<style>
+  
+        table td {width:100px; word-wrap:break-word;}
+
+   </style>
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<span><br/></span>
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
+			<p>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			</p>
+			<br/>
+		</div>
+		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{{valuesToString List}}}</textarea>
+		<div>
+			<table id="accesssummary_treeview" cellspacing="0" cellpadding="0" border="0" class="display nowrap" >
+				<thead>
+					<tr > 
+					   <th    scope="col" data-orderable="false" ><input  type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
+					    	<th id="th1" data-orderable="false" >User</th>
+						<th id="th2" data-orderable="false">Type</th>
+						<th id="th3" data-orderable="false">Assessable Unit (WWBCIT blue/Mira green)</th>
+						<th id="th4" data-orderable="false">Status</th>
+						<th id="th5" data-orderable="false">Addional Editors</th>
+						<th id="th6" data-orderable="false">Addional Readers</th>
+						<th id="th7" data-orderable="false">Owners</th>
+						<th id="th8" data-orderable="false">Focals</th>
+						<th id="th9" data-orderable="false">Coordinators</th>
+						<th id="th10" data-orderable="false">Readers</th>
+						<th id="th11" data-orderable="false">BU IOT</th>
+						<th id="th12" data-orderable="false">BU IMT</th>
+						<th id="th13" data-orderable="false">Countrys</th>
+						
+					</tr>
+				</thead>
+			<tbody> 
+				
+				
+
+
+
+		{{#each Users}}
+
+						<tr id="ccc" data-tt-id="{{name}}" >
+							<th  style="visibility:hidden" scope="row"><input type="checkbox" id="invidual_checkbox_tree" class="mira_checkbox_tree"/></th>
+							<td>{{name}}</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td> 
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							
+						</tr>
+				
+					
+
+			{{#each data}}
+						<tr id="ccc" data-tt-id="{{_id}}" data-tt-parent-id="{{../name}}" >
+							<th   scope="row"><input type="checkbox" id="invidual_checkbox_tree" class="mira_checkbox_tree"/></th>
+							<td ></td>
+							<td style="{{{getSourceColor Source }}}" >{{Type}}</td>
+							<td style="{{{getSourceColor Source }}}" ><a href="/assessableunit?id={{_id}}">{{AssessableUnit}}</a></td>
+							<td style="{{{getSourceColor Source }}}" >{{Status}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{{listWithComa AddionalEditors}}}</td> 
+							<td style="{{{getSourceColor Source }}}" >{{{listWithComa AddionalReaders}}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Owners}}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Focals}}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Coordinators}}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Readers}}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{IOT}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{IMT}}</td>
+							<td style="{{{getSourceColor Source }}}" >{{Country}}</td>
+							
+						</tr>
+			{{/each}}
+						
+		{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>
