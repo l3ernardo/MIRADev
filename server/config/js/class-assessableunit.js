@@ -336,7 +336,7 @@ var assessableunit = {
 							selector:{
 								"_id": {"$gt":0},
                                 "BusinessUnit": doc[0].BusinessUnit,
-                                "$and": [{"key": "Assessment"},{"ParentDocSubType": "Account"},{"parentid": doc[0]._id}] 
+                                "$and": [{"key": "Assessment"},{"ParentDocSubType": "Account"},{"parentid": doc[0]._id}]
 							}
 						};
 						doc[0].AccountData = [];
@@ -384,7 +384,10 @@ var assessableunit = {
 								"DocSubType": "Country Process",
 								"Sub-process": doc[0].Name,
 								"BusinessUnit": doc[0].BusinessUnit,
-								"GlobalProcess": doc[0].GlobalProcess
+								"GlobalProcess": doc[0].GlobalProcess,
+								"$or": [
+									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Sub-process"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].CPData = [];
@@ -829,20 +832,25 @@ var assessableunit = {
 				if (accessrules.rules.admin) {
 					var tmpdoc = {
 						"key": "Assessable Unit",
-					  "DocType": "Assessable Unit",
+						"DocType": "Assessable Unit",
 						"parentid": pid,
-					  "DocSubType": req.query.docsubtype,
-					  "BusinessUnit": pdoc[0].BusinessUnit,
-					  "CurrentPeriod": pdoc[0].CurrentPeriod,
+						"DocSubType": req.query.docsubtype,
+						"BusinessUnit": pdoc[0].BusinessUnit,
+						"CurrentPeriod": pdoc[0].CurrentPeriod,
 						"Status": "Active",
 						"editmode": 1,
 						"admin": 1,
 						"grantaccess": 1,
 						"MIRAunit": 1,
-						"newunit": 1
+						"newunit": 1,
+						"EnteredBU": req.session.businessunit
 					};
 
 					doc.push(tmpdoc);
+					if (doc[0].DocSubType == "Business Unit")
+						doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
+					else
+						doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 
 					switch (doc[0].DocSubType) {
 						case "Account":
@@ -1119,6 +1127,10 @@ var assessableunit = {
 				db.get(docid).then(function(data){
 					var doc = [];
 					doc.push(data.body);
+					if(req.body.Status !== doc[0].Status){
+						doc[0].StatusChangeWho = curruser;
+						doc[0].StatusChangeWhen = currdate;
+					}
 					switch (doc[0].DocSubType) {
 						case "Business Unit":
 							doc[0].RGRollup = req.body.RGRollup;

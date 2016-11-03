@@ -97,7 +97,7 @@ dashboards.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "Global Process":
 						res.render('auglobalprocess', data.doc[0] );
 						break;
-					case "Subprocess":
+					case "Sub-process":
 						res.render('ausubprocess', data.doc[0] );
 						break;
 					case "BU IOT":
@@ -467,6 +467,23 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 						break;
 
 					case "Sub-process":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtsubprocess', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][GPassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][GPassessment][getListParams] - " + err.error);
+						})
 						break;
 
 					case "BU IOT":
