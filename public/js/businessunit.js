@@ -3,6 +3,7 @@ $(document).ready(function(){
 	
 	$('#btn_submit').click(function() {
 		if ($("#selectedBU option:selected").text() != '')  {
+				sessionStorage.breadcrumb = "";
 				$('#form').submit();
 			
 		}else {
