@@ -235,6 +235,42 @@ var register = function(Handlebars) {
 			}
 			return datehtml;
 		},
+		moneyDisplay: function(money) {
+			var moneyhtml;
+			if (money == undefined) {
+
+			} else {
+				if (money == "") {
+					moneyhtml = '<span style="padding-left:1em; padding-right:1em"><b>$'+money+'</b></span>';
+				} else {
+
+					if(money >= 0)
+						moneyhtml = '<span style="padding-left:1em; padding-right:1em; color:#00ff00;"><b>$'+money+'</b></span>';
+					else
+						moneyhtml = '<span style="padding-left:1em; padding-right:1em; color: #ff0000"><b>$'+money+'</b></span>';
+				}
+			}
+			return moneyhtml;
+		},
+		openRiskDisplay: function(open, date) {
+			var datehtml;
+			if (open == undefined) {
+
+			} else {
+				if (open < 0) {
+					datehtml = '<span style="padding-left:1em; padding-right:1em">$'+date+'</span>';
+				} else {
+					var currdate = new Date();
+					var dateval = new Date(date);
+					currdate.setHours(0,0,0,0);
+					if(dateval >= currdate)
+						datehtml = '<span style="padding-right:1em">'+date+'</span>';
+					else
+						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
+					}
+				}
+			return datehtml;
+		},
 		radioBtnVal: function(fieldName, fieldVal) {
 			var radioBtnHtml;
 			if (fieldVal == "Yes") {
