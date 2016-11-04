@@ -635,61 +635,29 @@ dashboards.post('/saveasmt', isAuthenticated, function(req, res){
 		req.query.id = data.body.id;
 		var close = req.body.close;
 		if(data.status==200 & !data.error) {
-			//New document need to update attachments
-			if(req.body.attachIDs != '' && req.body.docid == ""){
-				utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(dataF) {
-					if(dataF.status==200 & !dataF.error && data.body) {
-						assessment.getAsmtbyID(req, db).then(function(data) {
-							if(data.status==200 & !data.error) {
-								if(data.doc) {
-									if(close=='1') {
-										res.redirect('/processdashboard');
-									} else {
-										res.redirect('/assessment?id=' + data.doc[0]._id);
-									}
-								} else {
-									res.render('error',{errorDescription: data.error});
-								}
+			if(data.body) {
+				assessment.getAsmtbyID(req, db).then(function(data) {
+					if(data.status==200 & !data.error) {
+						if(data.doc) {
+							if(close=='1') {
+								res.redirect('/processdashboard');
 							} else {
-								res.render('error',{errorDescription: data.error});
-								console.log("[routes][getassessmentbyID] - " + data.error);
-							}
-						}).catch(function(err) {
-							res.render('error',{errorDescription: err.error});
-							console.log("[routes][getassessmentbyID] - " + err.error);
-						});
-					} else {
-						res.render('error',{errorDescription: dataF.error});
-						console.log("[routes][saveasmt] - " + dataF.error);
-					}
-				}).catch(function(err) {
-					console.log("[dashboards][saveasmt] - " + err.error);
-				});
-			} else { //Old document doesn't need to update attachments
-				if(data.body) {
-					assessment.getAsmtbyID(req, db).then(function(data) {
-						if(data.status==200 & !data.error) {
-							if(data.doc) {
-								if(close=='1') {
-									res.redirect('/processdashboard');
-								} else {
-									res.redirect('/assessment?id=' + data.doc[0]._id);
-								}
-							} else {
-								res.render('error',{errorDescription: data.error});
+								res.redirect('/assessment?id=' + data.doc[0]._id);
 							}
 						} else {
 							res.render('error',{errorDescription: data.error});
-							console.log("[routes][getassessmentbyID] - " + data.error);
 						}
-					}).catch(function(err) {
-						res.render('error',{errorDescription: err.error});
-						console.log("[routes][getassessmentbyID] - " + err.error);
-					});
-				} else {
-					res.render('error',{errorDescription: dataF.error});
-					console.log("[routes][saveasmt] - " + dataF.error);
-				}
+					} else {
+						res.render('error',{errorDescription: data.error});
+						console.log("[routes][getassessmentbyID] - " + data.error);
+					}
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][getassessmentbyID] - " + err.error);
+				});
+			} else {
+				res.render('error',{errorDescription: dataF.error});
+				console.log("[routes][saveasmt] - " + dataF.error);
 			}
 		} else {
 			res.render('error',{errorDescription: data.error});
