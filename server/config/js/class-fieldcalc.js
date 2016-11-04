@@ -129,8 +129,6 @@ var calculatefield = {
         if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
           lParams.push('GBSRollupProcessesOPS');
           lParams.push('GBSRollupProcessesFIN');
-          lParams.push('GTSRollupProcessesOPS');
-          lParams.push('GTSRollupProcessesFIN');
         }
   		}
       // For Operational Metric setup keys
