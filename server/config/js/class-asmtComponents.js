@@ -23,22 +23,22 @@ var components = {
       db.find(obj).then(function(data){
         var tipo = data.body.docs[0].docType;
         switch (tipo) {
-          case "controlsample":
+          case "controlSample":
           deferred.resolve(components.getControlSample(req,db));
           break;
-          case  "cusummarysample":
+          case  "CUSummarySample":
           deferred.resolve(components.getCUSummary(req,db));
           break;
-          case "internalaudit":
+          case "internalAudit":
           deferred.resolve(components.getInternalAudit(req,db));
           break;
-          case "localaudit":
+          case "localAudit":
           deferred.resolve(components.getLocalAudit(req,db));
           break;
           case "ppr":
           deferred.resolve(components.getPPR(req,db));
           break;
-          case "openissue":
+          case "openIssue":
           deferred.resolve(components.getIssue(req,db));
           break;
           case "sampledCountry":
