@@ -20,32 +20,36 @@ var components = {
         },
         fields:["docType"]
       };
-
       db.find(obj).then(function(data){
-
-
         var tipo = data.body.docs[0].docType;
-
         switch (tipo) {
-					case "controlsample":
-            deferred.resolve(components.getControl(req,db));
-            break;
+          case "controlsample":
+          deferred.resolve(components.getControlSample(req,db));
+          break;
           case  "cusummarysample":
-            deferred.resolve(components.getCUSummary(req,db));
-            break;
+          deferred.resolve(components.getCUSummary(req,db));
+          break;
           case "internalaudit":
-          
-            deferred.resolve(components.getInternalAudit(req,db));
-            break;
+          deferred.resolve(components.getInternalAudit(req,db));
+          break;
           case "localaudit":
-            deferred.resolve(components.getLocalAudit(req,db));
-            break;
+          deferred.resolve(components.getLocalAudit(req,db));
+          break;
           case "ppr":
-            deferred.resolve(components.getPPR(req,db));
-            break;
+          deferred.resolve(components.getPPR(req,db));
+          break;
           case "openissue":
-            deferred.resolve(components.getIssue(req,db));
-            break;
+          deferred.resolve(components.getIssue(req,db));
+          break;
+          case "sampledCountry":
+          deferred.resolve(components.getSampledCountry(req,db));
+          break;
+          case "countryControls":
+          deferred.resolve(components.getCountryControls(req,db));
+          break;
+          default:
+          deferred.reject({"status": 500, "error": "not a valid id"});
+          break;
         }
       }).catch(function(err) {
         deferred.reject({"status": 500, "error": err.error.reason});
@@ -56,7 +60,7 @@ var components = {
     return deferred.promise;
   },
 
-  getControl: function(req, db){
+  getControlSample: function(req, db){
     var deferred = q.defer();
     try{
       var obj = {
@@ -68,6 +72,89 @@ var components = {
       db.find(obj).then(function(data){
         data.body.docs[0].subtitle = data.body.docs[0].controllableUnit +" "+data.body.docs[0].controlShortName +" Sample";
         deferred.resolve({"status": 200, "data":data.body.docs[0]})
+      }).catch(function(err) {
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+    }catch(e){
+      deferred.reject({"status": 500, "error": e});
+    }
+    return deferred.promise;
+  },
+  getSampledCountry: function(req, db){
+    var deferred = q.defer();
+    try{
+      var obj = {
+        selector : {
+          "_id": req.query.id,
+          "docType": "sampledCountry"
+        }
+      };
+      db.find(obj).then(function(data){
+        data.body.docs[0].subtitle = data.body.docs[0].sampledCountry +" - "+data.body.docs[0].controlShortName +" Sample";
+        deferred.resolve({"status": 200, "data":data.body.docs[0]})
+      }).catch(function(err) {
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+    }catch(e){
+      deferred.reject({"status": 500, "error": e});
+    }
+    return deferred.promise;
+  },
+  getCountryControls: function(req, db){
+    var deferred = q.defer();
+    try{
+      var obj = {
+        selector : {
+          "_id": req.query.id,
+          "docType": "countryControls"
+        }
+      };
+      db.find(obj).then(function(data){
+        var output = data.body.docs[0];
+        output.subtitle = output.reportingCountry +" - "+output.controlShortName;
+        if(typeof req.query.edit !== "undefined"){
+          output.editmode = 1;
+        }
+        if(output.samples.length != 0){
+        var promises = output.samples.map(function(id){
+          var obj = {
+            selector : {
+              "_id": id,
+              "docType": "controlSample"
+            },
+            fields:["_id","reportingQuarter","sampleUniqueID","controllableUnit","numTests","numDefects","remediationStatus","defectsAbstract"]
+          };
+          return db.find(obj);
+        });
+        var quarters = {};
+        var list = [];
+        q.all(promises).then(function(data){
+          for(var i=0; i< data.length; i++){
+              var samp = data[i].body.docs[0];
+              if(typeof quarters[samp.reportingQuarter] === "undefined"){
+                quarters[samp.reportingQuarter] = true;
+                list.push({id:samp.reportingQuarter, period:samp.reportingQuarter});
+              }
+              samp.parent = samp.reportingQuarter;
+              samp.id = samp["_id"];
+              list.push(samp);
+          }
+          //console.log(list);
+          output.samples = list;
+
+
+          /*console.log(data[1].body.docs[0]);
+          console.log(data[2].body.docs[0]);*/
+          deferred.resolve({"status": 200, "data":output});
+        });
+      }else{
+        /*
+        var promises = searchList.map(function(word) {
+        return request(url.replace('%word%', word));
+    });
+    return q.all(promises).then(function(data){*/
+        deferred.resolve({"status": 200, "data":output});
+      }
       }).catch(function(err) {
         deferred.reject({"status": 500, "error": err.error.reason});
       });
@@ -280,6 +367,42 @@ var components = {
 
                 obj = data.body.docs[0];
                 obj.numMissedTasksOverride = req.body.numMissedTasksOverride;
+                obj.Log.push(addlog);
+                db.save(obj).then(function(data){
+
+                  deferred.resolve({"status": 200, "data": data.body});
+                }).catch(function(err){
+                  deferred.reject({"status": 500, "error": err.error.reason});
+                });
+
+              }).catch(function(err) {
+                deferred.reject({"status": 500, "error": err.error.reason});
+              });
+            }catch(e){
+              deferred.reject({"status": 500, "error": e});
+            }
+            return deferred.promise;
+          },
+          /* Save country Controls */
+          saveCountryControls: function(req, db) {
+            var deferred = q.defer();
+            try{
+              var addlog = {
+                "name": req.session.user.notesId,
+                "date": utility.getDateTime("","date"),
+                "time": utility.getDateTime("","time")
+              };
+              var obj = {
+                selector : {
+                  "_id": req.body["_id"],
+                  "docType": "countryControls"
+                }
+              };
+              db.find(obj).then(function(data){
+
+                obj = data.body.docs[0];
+                obj.reasonTested = req.body.reasonTested;
+                obj.actionPlan = req.body.actionPlan;
                 obj.Log.push(addlog);
                 db.save(obj).then(function(data){
 
