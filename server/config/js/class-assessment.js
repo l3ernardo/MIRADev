@@ -404,9 +404,19 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
+							doc[0].PrevQtrs = [];
+							doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
 							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
 							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
+							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
+							doc[0].SCTest1Data = doc[0].RCTest1Data;
+							doc[0].SCTest2Data = doc[0].RCTest3Data;
 							doc[0].BUCAsmtDataPRview = [];
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
@@ -499,12 +509,86 @@ var assessment = {
 						"PeriodKey": pdoc[0].CurrentPeriod
 					};
 					doc.push(tmpdoc);
+
+					//---Basics Section---//
+					if (doc[0].PrevRatingUpdate != req.body.PeriodRating) {
+						doc[0].RatingChangeWho = curruser;
+						doc[0].RatingChangeWhen = currdate;
+						doc[0].PrevRatingUpdate = doc[0].PeriodRating;
+						doc[0].PeriodRating = req.body.PeriodRating;
+					}
+					if ( doc[0].PeriodRating  ==  "Sat") {
+						doc[0].ReviewComments = "";
+						doc[0].Target2Sat = "";
+					} else {
+						doc[0].ReviewComments = req.body.ReviewComments;
+						doc[0].Target2Sat = req.body.Target2Sat;
+					}
+					if ( doc[0].MIRAStatus != req.body.MIRAStatus ) {
+						doc[0].MIRAStatusChangeWho = curruser;
+						doc[0].MIRAStatusChangeWhen = currdate;
+					}
+					doc[0].MIRARatingJustification = req.body.MIRARatingJustification;
+					doc[0].MIRAStatus = req.body.MIRAStatus;
+					doc[0].NextQtrRating = req.body.NextQtrRating;
+					doc[0].DecommitExplanation = req.body.DecommitExplanation;
+
 					switch (doc[0].ParentDocSubType) {
 						case "BU IOT":
 							break;
 						case "BU IMT":
 							break;
 						case "BU Country":
+							//---Summary Tab---//
+							doc[0].RatingSummary = req.body.RatingSummary;
+							doc[0].Highlight = req.body.Highlight;
+							doc[0].FocusArea = req.body.FocusArea;
+							//---Performance Overview Tab---//
+							doc[0].OverallAssessmentComments = req.body.OverallAssessmentComments;
+							doc[0].KCFRTestingComments = req.body.KCFRTestingComments;
+							doc[0].KCOTestingComments = req.body.KCOTestingComments;
+							doc[0].CorpIAComments = req.body.CorpIAComments;
+							doc[0].MissedREComments = req.body.MissedREComments;
+							doc[0].MissedMSACComments = req.body.MissedMSACComments;
+							doc[0].BoCComments = req.body.BoCComments;
+							doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
+							doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
+							//---Perfromance Overview Tab operational metrics---//
+							var metricsID = req.body.opMetricIDs.split(",");
+							var tname, topush;
+							doc[0].OpMetric = [];
+							for (var i = 0; i < metricsID.length; ++i) {
+								if(metricsID[i] != undefined && metricsID[i] != "") {
+									topush = {
+										"id": metricsID[i]
+									};
+									doc[0].OpMetric.push(topush);
+									fname = metricsID[i]+"Name";
+									doc[0].OpMetric[i].name = req.body[fname];
+									fname = metricsID[i]+"Rating";
+									doc[0].OpMetric[i].rating = req.body[fname];
+									fname = metricsID[i]+"Comment";
+									doc[0].OpMetric[i].action = req.body[fname];
+								}
+							}
+							//---Audits and Reviews Tab---//
+							doc[0].IAExplanations = req.body.IAExplanations;
+							doc[0].PRExplanations = req.body.PRExplanations;
+							doc[0].ARRExplanations = req.body.ARRExplanations;
+							doc[0].AuditFocusText = req.body.AuditFocusText;
+							//---Reporting Country Testign Tab---//
+							doc[0].SOXProcessTestingExplanations = req.body.SOXProcessTestingExplanations;
+							doc[0].OpsProcessTestingExplanations = req.body.OpsProcessTestingExplanations;
+							doc[0].ProcessTestingFocusItems = req.body.ProcessTestingFocusItems;
+							//---Key Controls Testign 2 Tab---//
+							doc[0].SCSOXProcessTestingExplanations = req.body.SCSOXProcessTestingExplanations;
+							doc[0].SCOpsProcessTestingExplanations = req.body.SCOpsProcessTestingExplanations;
+							doc[0].SCProcessTestingFocusItems = req.body.SCProcessTestingFocusItems;
+							//---Open Risks and Missed Commits Tab---//
+							doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
+							doc[0].GCSFocusItems = req.body.GCSFocusItems;
+							doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
+							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "Account":
 							break;

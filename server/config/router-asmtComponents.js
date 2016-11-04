@@ -10,28 +10,46 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 	components.getComponent(req, db).then(function(data){
 		var type= data.data.docType;
 		switch (type) {
-			case "controlsample":
-				res.render('controlsample', data.data );
+			case "controlSample":
+			//9d9902492259ecc30230af749b1c2a06
+				res.render('controlSample', data.data );
 				break;
-			case  "cusummarysample":
-				res.render('cusummarysample', data.data );
+			case  "CUSummarySample":
+			//df91794db326710c753a48ffbb8a70ae
+				res.render('CUSummarySample', data.data );
 				break;
-			case "internalaudit":
-				res.render('internalaudit', data.data );
+			case "internalAudit":
+			//b0b51b526058b829e373769998e771e0
+				res.render('internalAudit', data.data );
 				break;
-			case "localaudit":
-				res.render('localaudit', data.data );
+			case "localAudit":
+			//cb71326690d51329c153f5f950eb3c8c
+				res.render('localAudit', data.data );
 				break;
 			case "ppr":
+			//a75108a8b64db30c0f47722a78a100b8
 				res.render('ppr', data.data );
 				break;
 			case "openissue":
-				res.render('openissue', data.data );
+			//1caba93791bd9eeb006a97bd03324f8f
+				res.render('openIssue', data.data );
+				break;
+			case "sampledCountry":
+			//8f57b3ea6517064267c1e009046df7b2
+				res.render('sampledCountry', data.data );
+				break;
+			case "countryControls":
+			//ee3ee7b63aebfa7f63575877099d7d65
+				res.render('countryControls', data.data );
+				break;
+			default:
+				res.render('error',{errorDescription: "doc not found"});
+				console.log("[routes][asmtComponents] ");
 				break;
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
-		console.log("[routes][controlsample] - " + err.error);
+		console.log("[routes][asmtComponents] - " + err.error);
 	});
 });
 
@@ -74,28 +92,28 @@ asmtComponents.get('/ppr', isAuthenticated, function(req, res) {
 });
 /* Local Audit */
 asmtComponents.get('/localaudit', isAuthenticated, function(req, res) {
-		if(typeof req.query.id === "undefined"){
-			req.query.id = "cb71326690d51329c153f5f950eb3c8c";
-		}
-		components.getLocalAudit(req, db).then(function(data){
-			res.render('localaudit', data.data );
-		}).catch(function(err) {
-			res.render('error',{errorDescription: err.error});
-			console.log("[routes][localaudit] - " + err.error);
-		});
+	if(typeof req.query.id === "undefined"){
+		req.query.id = "cb71326690d51329c153f5f950eb3c8c";
+	}
+	components.getLocalAudit(req, db).then(function(data){
+		res.render('localaudit', data.data );
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][localaudit] - " + err.error);
+	});
 
 });
 /* Internal Audit */
 asmtComponents.get('/internalaudit', isAuthenticated, function(req, res) {
-		if(typeof req.query.id === "undefined"){
-			req.query.id = "b0b51b526058b829e373769998e771e0";
-		}
-		components.getInternalAudit(req, db).then(function(data){
-			res.render('internalaudit', data.data );
-		}).catch(function(err) {
-			res.render('error',{errorDescription: err.error});
-			console.log("[routes][ppr] - " + err.error);
-		});
+	if(typeof req.query.id === "undefined"){
+		req.query.id = "b0b51b526058b829e373769998e771e0";
+	}
+	components.getInternalAudit(req, db).then(function(data){
+		res.render('internalaudit', data.data );
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][ppr] - " + err.error);
+	});
 });
 /* CU Summary Sample */
 asmtComponents.get('/cusummarysample', isAuthenticated, function(req, res) {
@@ -117,8 +135,8 @@ asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
 			if(req.body.close === "back"){
 				res.redirect("/assessment?id="+req.body.parentid);
 			}else{
-			res.redirect('/openissue?id='+data.data.id);
-		}
+				res.redirect('/asmtcomponents?id='+data.data.id);
+			}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
@@ -136,8 +154,8 @@ asmtComponents.post('/saveppr', isAuthenticated, function(req, res) {
 			if(req.body.close === "back"){
 				res.redirect("/assessment?id="+req.body.parentid);
 			}else{
-			res.redirect('/ppr?id='+data.data.id);
-}
+				res.redirect('/asmtcomponents?id='+data.data.id);
+			}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
@@ -154,8 +172,8 @@ asmtComponents.post('/savelocalaudit', isAuthenticated, function(req, res) {
 			if(req.body.close === "back"){
 				res.redirect("/assessment?id="+req.body.parentid);
 			}else{
-			res.redirect('/localaudit?id='+data.data.id);
-}
+				res.redirect('/asmtcomponents?id='+data.data.id);
+			}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
@@ -172,8 +190,8 @@ asmtComponents.post('/saveinternalaudit', isAuthenticated, function(req, res) {
 			if(req.body.close === "back"){
 				res.redirect("/assessment?id="+req.body.parentid);
 			}else{
-			res.redirect('/internalaudit?id='+data.data.id);
-}
+				res.redirect('/asmtcomponents?id='+data.data.id);
+			}
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
@@ -183,6 +201,23 @@ asmtComponents.post('/saveinternalaudit', isAuthenticated, function(req, res) {
 		console.log("[routes][openissue] - " + err.error);
 	});
 });
-
+/* Save Country Controls in cloudant */
+asmtComponents.post('/savecountrycontrols', isAuthenticated, function(req, res) {
+	components.saveCountryControls(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			if(req.body.close === "back"){
+				res.redirect("/assessment?id="+req.body.parentid);
+			}else{
+				res.redirect('/asmtcomponents?id='+data.data.id);
+			}
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][openissue] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][openissue] - " + err.error);
+	});
+});
 
 module.exports = asmtComponents;
