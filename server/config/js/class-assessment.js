@@ -404,9 +404,14 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
+							doc[0].PrevQtrs = [];
+							doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
 							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
 							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
 							doc[0].BUCAsmtDataPRview = [];
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
