@@ -116,9 +116,24 @@ var assessableunit = {
 								{"Name": { "$ne": null }},
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
+						"fields": [
+							"_id",
+							"Name",
+							"DocSubType",
+							"LevelType",
+							"parentid",
+							"MIRABusinessUnit",
+							"PeriodRatingPrev",
+							"PeriodRating",
+							"AUNextQtrRating",
+							"Target2Sat",
+							"MIRAAssessmentStatus",
+							"WWBCITAssessmentStatus"
+						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
 				}
@@ -131,9 +146,24 @@ var assessableunit = {
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
+						"fields": [
+							"_id",
+							"Name",
+							"DocSubType",
+							"LevelType",
+							"parentid",
+							"MIRABusinessUnit",
+							"PeriodRatingPrev",
+							"PeriodRating",
+							"AUNextQtrRating",
+							"Target2Sat",
+							"MIRAAssessmentStatus",
+							"WWBCITAssessmentStatus"
+						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
 				}
@@ -384,7 +414,10 @@ var assessableunit = {
 								"DocSubType": "Country Process",
 								"Sub-process": doc[0].Name,
 								"BusinessUnit": doc[0].BusinessUnit,
-								"GlobalProcess": doc[0].GlobalProcess
+								"GlobalProcess": doc[0].GlobalProcess,
+								"$or": [
+									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Sub-process"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].CPData = [];

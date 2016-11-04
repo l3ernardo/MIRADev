@@ -1,8 +1,10 @@
 $(document).ready(function(){
-	selectedMenuOption();
+	
 	//Update breadcrumb
 	addEventToMenu();
 	showBreadCrumb();
+	//Mark selected option
+	selectedMenuOption();
 	//Define colors for calendars options
 	defineColorCalendar();
 });
@@ -19,10 +21,14 @@ function selectedMenuOption(){
 		selLink.parent().parent().show() //ul
 		selLink.parent().parent().parent().addClass('ibm-active') //li
 	}else{
-		try {
-			$('#*-options').hide();
-			$('#*-options').parent().removeClass();
-		} catch(e) {}
+		
+		url= $("#ibm-navigation-trail > li#breadcrumb > a").attr("id")
+		if(url!=undefined){
+			selLink = eval("$('a#"+url+"')");
+			selLink.addClass('ibm-active'); //a
+			selLink.parent().parent().show() //ul
+			selLink.parent().parent().parent().addClass('ibm-active') //li
+		}
 	}
 }
 
