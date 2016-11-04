@@ -1,68 +1,68 @@
 /*Function to set color in dashboard views*/
 function paint_td(table_name){
-	var table ='#'+table_name+' tr';
-	for (var r = 1, n = $(table).length; r <= n; r++) {
-		cells_th=table+':nth-child('+r+') th';
-		/*painting checkbox section*/	  
-		for (var c = 0, m = $(cells_th).length; c <= m; c++) 
-		{
-			if(r%2=="0" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
-				$(cells_th).css("background-color", "#f4f4f5");
-			}
-		}
-		rows=table+':nth-child('+r+') td';
-		for (var c = 0, m = $(rows).length; c <= m; c++){
-			cell=table+':eq('+r+') td:eq('+c+')';
-			if(r%2=="1" && $(cell).text()=='Marg'){
-				$(cell).css("background-color", "yellow");
-			}
-			else if(r%2=="1" && $(cell).text()=='Sat'){
-				$(cell).css("background-color", "#01DF01");
-			}
-			 else if(r%2=="1" && $(cell).text()=='unsat'){
-				$(cell).css("background-color", "#FF0000");
-			}
-			else if(r%2=="1" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
-				$(cell).css("background-color", "white"); 
-			}
-			else if(r%2=="0" && $(cell).text()=='Marg'){
-				$(cell).css("background-color", "yellow");
-			}
-			else if(r%2=="0" && $(cell).text()=='Sat'){
-				$(cell).css("background-color", "#01DF01");
-			}
-			 else if(r%2=="0" && $(cell).text()=='unsat'){
-				$(cell).css("background-color", "#FF0000");
-			}
-			else if(r%2=="0" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
-				$(cell).css("background-color", "#f4f4f5");
-			}
-		}
-	}
+	// var table ='#'+table_name+' tr';
+	// for (var r = 1, n = $(table).length; r <= n; r++) {
+		// cells_th=table+':nth-child('+r+') th';
+		// /*painting checkbox section*/	  
+		// for (var c = 0, m = $(cells_th).length; c <= m; c++) 
+		// {
+			// if(r%2=="0" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
+				// $(cells_th).css("background-color", "#f4f4f5");
+			// }
+		// }
+		// rows=table+':nth-child('+r+') td';
+		// for (var c = 0, m = $(rows).length; c <= m; c++){
+			// cell=table+':eq('+r+') td:eq('+c+')';
+			// if(r%2=="1" && $(cell).text()=='Marg'){
+				// $(cell).css("background-color", "yellow");
+			// }
+			// else if(r%2=="1" && $(cell).text()=='Sat'){
+				// $(cell).css("background-color", "#01DF01");
+			// }
+			 // else if(r%2=="1" && $(cell).text()=='unsat'){
+				// $(cell).css("background-color", "#FF0000");
+			// }
+			// else if(r%2=="1" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
+				// $(cell).css("background-color", "white"); 
+			// }
+			// else if(r%2=="0" && $(cell).text()=='Marg'){
+				// $(cell).css("background-color", "yellow");
+			// }
+			// else if(r%2=="0" && $(cell).text()=='Sat'){
+				// $(cell).css("background-color", "#01DF01");
+			// }
+			 // else if(r%2=="0" && $(cell).text()=='unsat'){
+				// $(cell).css("background-color", "#FF0000");
+			// }
+			// else if(r%2=="0" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
+				// $(cell).css("background-color", "#f4f4f5");
+			// }
+		// }
+	// }
 }
 /*Function to add icons in dashboard views*/
 function add_icons(table_name){
-	var table = '#'+table_name+' tr';
-	for (var r = 1, n = $(table).length; r <= n; r++){
-		//index=r-1;
-		rows=table+':nth-child('+r+') td';
-		for (var c = 3, m = $(rows).length; c <m; c++){
-			cell=table+':eq('+r+') td:eq('+c+')';
-			data=$(cell).text();
-			if(data=='Draft'){
-				$(cell).text('');
-				$(cell).addClass('td_icon_edit');
-			}
-			else if(data=='Check'){
-				$(cell).text('');
-				$(cell).addClass('td_icon_check');
-			}
-			else if(data==''){
-				$(cell).text('');
-				$(cell).addClass('td_icon_empty');
-			}
-		}
-	}
+	// var table = '#'+table_name+' tr';
+	// for (var r = 1, n = $(table).length; r <= n; r++){
+		// //index=r-1;
+		// rows=table+':nth-child('+r+') td';
+		// for (var c = 3, m = $(rows).length; c <m; c++){
+			// cell=table+':eq('+r+') td:eq('+c+')';
+			// data=$(cell).text();
+			// if(data=='Draft'){
+				// $(cell).text('');
+				// $(cell).addClass('td_icon_edit');
+			// }
+			// else if(data=='Check'){
+				// $(cell).text('');
+				// $(cell).addClass('td_icon_check');
+			// }
+			// else if(data==''){
+				// $(cell).text('');
+				// $(cell).addClass('td_icon_empty');
+			// }
+		// }
+	// }
 }
 /*Function to generate dashboard table to export*/
 function tableToReport(table){
