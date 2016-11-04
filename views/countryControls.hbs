@@ -91,27 +91,27 @@
 <div>
 <table id="country_controls_treeview"  cellspacing="0" cellpadding="0" border="0"  class="ibm-data-table" >
   <caption class="mira-caption"><em>Samples with Defects (includes all test types)</em></caption>
-  <thead>
+  <thead bgcolor="#ff3300" style="color:#FFFFFF;">
     <tr>
-      <th>Period</th>
-      <th>Sample ID</th>
-      <th>Controllable Unit</th>
-      <th>Tests</th>
-      <th>Defects</th>
-      <th>Remed. Status</th>
-      <th style="width:40%;">Defect Absctract</th>
+      <th style="width:8%;">Period</th>
+      <th style="width:10%;">Sample ID</th>
+      <th style="width:18%;">Controllable Unit</th>
+      <th style="width:3%;">Tests</th>
+      <th style="width:3%;">Defects</th>
+      <th style="width:8%;">Remed. Status</th>
+      <th style="width:50%;">Defect Absctract</th>
     </tr>
-  </thea
+  </thead>
   <tbody>
 {{#each samples}}
 <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
-  <td>{{period}}</td>
-  <td>{{sampleUniqueID}}</td>
-  <td>{{controllableUnit}}</td>
-  <td>{{numTests}}</td>
-  <td>{{numDefects}}</td>
-  <td>{{remediationStatus}}</td>
-  <td style="width:40%;">{{defectsAbstract}}</td>
+  <td style="width:8%;">{{period}}</td>
+  <td style="width:10%;"><a href="/asmtcomponents?id={{id}}">{{sampleUniqueID}}</a></td>
+  <td style="width:18%;">{{controllableUnit}}</td>
+  <td style="width:3%;">{{numTests}}</td>
+  <td style="width:3%;">{{numDefects}}</td>
+  <td style="width:8%;">{{remediationStatus}}</td>
+  <td style="width:50%;">{{defectsAbstract}}</td>
 </tr>
 {{/each}}
 </tbody>

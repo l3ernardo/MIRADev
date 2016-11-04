@@ -10,21 +10,21 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 	components.getComponent(req, db).then(function(data){
 		var type= data.data.docType;
 		switch (type) {
-			case "controlsample":
+			case "controlSample":
 			//9d9902492259ecc30230af749b1c2a06
-				res.render('controlsample', data.data );
+				res.render('controlSample', data.data );
 				break;
-			case  "cusummarysample":
+			case  "CUSummarySample":
 			//df91794db326710c753a48ffbb8a70ae
-				res.render('cusummarysample', data.data );
+				res.render('CUSummarySample', data.data );
 				break;
-			case "internalaudit":
+			case "internalAudit":
 			//b0b51b526058b829e373769998e771e0
-				res.render('internalaudit', data.data );
+				res.render('internalAudit', data.data );
 				break;
-			case "localaudit":
+			case "localAudit":
 			//cb71326690d51329c153f5f950eb3c8c
-				res.render('localaudit', data.data );
+				res.render('localAudit', data.data );
 				break;
 			case "ppr":
 			//a75108a8b64db30c0f47722a78a100b8
@@ -32,7 +32,7 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 				break;
 			case "openissue":
 			//1caba93791bd9eeb006a97bd03324f8f
-				res.render('openissue', data.data );
+				res.render('openIssue', data.data );
 				break;
 			case "sampledCountry":
 			//8f57b3ea6517064267c1e009046df7b2
