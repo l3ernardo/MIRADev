@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	//Hide left navigation
-	hide_divs();
+	//hide_divs();
 	//Display notes
 	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	//Setup some private variables
@@ -60,6 +60,7 @@ $(document).ready(function(){
 		window.location.href = "auditlessonlearned?id="+$("input[name='_id']").val()+"&edit";
 	});
 
+	if($("input[name='editmode']").val()){
 		if ( $("input[name='globalProcess']").val() != "") {
 			var units = $("input[name='globalProcess']").val().split(",");
 			for (var i = 0; i < units.length; ++i) {
@@ -72,6 +73,7 @@ $(document).ready(function(){
 			$("#globalProcessListSel").hide();
 			updateIDlist("globalProcess","processList","globalProcessList");
 		};
+	}
 
 //checar
 $('#globalProcessList input[type="checkbox"]').on('click', function() {
@@ -93,11 +95,12 @@ $('#country').on('change', function() {
 	$('#IOT').val(tmp[this.value].IOT);
 });
 
+
+});
 function getSelectedValue(id) {
 	return $("#" + id).find("dt a span.value").html();
-};
+}
 
 function hide_divs(){
 	$('div#ibm-navigation').hide();
-};
-});
+}

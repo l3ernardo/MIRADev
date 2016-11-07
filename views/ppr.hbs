@@ -1,0 +1,86 @@
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
+<script src="./js/attachments.js"></script>
+
+<!-- JS and CSS for rich text edit -->
+<link rel="stylesheet" type="text/css" href="./css/skin.css">
+<!-- Utility Dependencies -->
+<script src="./lib/yahoo-dom-event.js"></script>
+<script src="./lib/element-min.js"></script>
+<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+<script src="./lib/container_core-min.js"></script>
+<!-- Source file for Rich Text Editor-->
+<script src="./lib/simpleeditor-min.js"></script>
+<script src="./lib/yui-min.js"></script>
+<!-- end rich text -->
+
+<input type="hidden" id="docTitle" value="{{reportingQuarter}}">
+
+<script>
+	//Load document's name
+	$('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</b> Audit / Review");
+
+</script>
+<div class="ibm-container" style="width:80%">
+	<p style="text-align:right">
+		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+	</p>
+	<form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveppr">
+    <input type="hidden" name="_id" value="{{_id}}">
+    <input type="hidden" name="docid" id="docid" value="{{_id}}">
+    <input type="hidden" name="editmode" value="{{editmode}}">
+		<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+		<input type="hidden" name="docType" id="docType" value="ppr">
+<table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+  <caption class="mira-caption"><em>Basics</em></caption>
+<tr>
+  <td width="25%">Country Process:</td><td><b>{{countryProcess}}</b></td>
+</tr>
+<tr>
+  <td>ID:</td><td>{{id}}</td>
+</tr>
+<tr>
+  <td>Audit or Review:</td><td>{{auditOrReview}}</td>
+</tr>
+<tr>
+  <td>URL:</td><td><a href="{{url}}">{{url}}</a><br/><br/><b>Note:</b> The link will not work if you are not authorized in WWBCIT to view the report</td>
+</tr>
+<tr>
+  <td>Status:</td><td>{{status}}</td>
+</tr>
+<tr>
+  <td>Relevant Country Process(es):</td><td>{{relevantCountryProcess}}</td>
+</tr>
+<tr>
+  <td>Report date:</td><td>{{reportDate}}</td>
+</tr>
+<tr>
+  <td>Rating:</td><td>{{rating}}</td>
+</tr>
+<tr>
+  <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}&nbsp;Open:{{numRecommendationsOpen}}</td>
+</tr>
+<tr>
+  <td>Target to close:</td><td>{{{openRiskDisplay numRecommendationsOpen targetClose}}}</td>
+</tr>
+<tr>
+  <td>Comments:</td>
+
+    <td>
+{{#if editmode}}
+  <input type="text" name="comments" value="{{comments}}" >
+{{else}}
+  {{comments}}
+{{/if}}
+</td>
+</tr>
+</table>
+<!-- NOTES & LINKS SECTION -->
+{{>comments}}
+
+<!-- BUTTONS AREA -->
+{{>buttons}}
+		</form>
+</div>
