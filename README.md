@@ -1,6 +1,6 @@
 #ATTENTION!!!
 
-All Quarter information should follow the sintax below:
+All Quarter information should follow the syntax below:
 
 YYYY QX
 
