@@ -118,6 +118,6 @@ $('#btn_save').click(function(evt) {
     $("#openissueform").submit();
 });
 $('#btn_cancel').click(function() {
-	window.location.href = "/assessment?id=";
+	window.location.href = "/assessment?id="+$('#parentid').val();
 });
 </script>

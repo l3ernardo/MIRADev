@@ -6,6 +6,7 @@
 
 <input type="hidden" id="docTitle" value="Country Process Key Control Sample">
 <input type="hidden" id="docSubTitle" value="{{subtitle}}">
+<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
 
 <script>
 	//Load document's name
@@ -131,6 +132,6 @@
 </div>
 <script>
 $('#btn_cancel').click(function() {
-	window.location.href = "/assessment?id=";
+	window.location.href = "/assessment?id="+$('#parentid').val();
 });
 </script>
