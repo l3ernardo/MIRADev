@@ -153,4 +153,23 @@
 			</table>
 		</td>
 	</tr>
+	{{#if editmode}}
+		<tr class="curating">
+			<td colspan="3">
+				<span class="curating-header">Focus items, key changes, open items, comments for current &amp; next quarter</span><br /><br />
+				<input type="text" name="CUFocusItems" id="CUFocusItems" value="{{CUFocusItems}}" size="175">
+			</td>
+		</tr>
+	{{else}}
+		<tr class="curating">
+			<td colspan="3">
+				<span class="curating-header">Focus items, key changes, open items, comments for current &amp; next quarter</span><br /><br />
+				<table width="100%" class="ibm-data-table">
+					<tr class="asmt-viewdata">
+						<td>&nbsp;{{CUFocusItems}}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{/if}}
 </table>

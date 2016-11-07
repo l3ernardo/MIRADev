@@ -269,7 +269,11 @@
 					<tr class="kc-test-viewheader">
 						<td colspan="12" rowspan="2"></td>
 						<td colspan="12" rowspan="2">
-							<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="70">{{SOXProcessTestingExplanations}}</textarea><br />
+							{{#if editmode}}
+								<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="70">{{SOXProcessTestingExplanations}}</textarea><br />
+							{{else}}
+								<textarea rows="2" cols="70" disabled>{{SOXProcessTestingExplanations}}</textarea><br />
+							{{/if}}
 						</td>
 					</tr>
 					<tr class="kc-test-viewheader">
@@ -344,7 +348,11 @@
 					<tr class="kc-test-viewheader">
 						<td colspan="12" rowspan="2"></td>
 						<td colspan="12" rowspan="2">
-							<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="70">{{OpsProcessTestingExplanations}}</textarea><br />
+							{{#if editmode}}
+								<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="70">{{OpsProcessTestingExplanations}}</textarea><br />
+							{{else}}
+								<textarea rows="2" cols="70" disabled>{{OpsProcessTestingExplanations}}</textarea><br />
+							{{/if}}
 						</td>
 					</tr>
 					<tr class="kc-test-viewheader">
@@ -354,133 +362,68 @@
 					</tr>
 				</table>
 			{{/if_equal}}
-			{{#if editmode}}
-				<table width="100%" class="ibm-data-table">
-					<tr class="kc-test-cell">
-						<td class="kc-test-cell" width="65%">
-							<table width="100%" class="ibm-data-table">
-								<tr class="kc-test-cell">
-									<th class="kc-test-label" colspan="4">Focus items, key changes, open items, comments for current &amp; next quarter</th>
-								</tr>
-								<tr class="kc-test-cell">
-									<td class="asmt-viewdata" colspan="4">
+			<table width="100%" class="ibm-data-table">
+				<tr class="kc-test-cell">
+					<td class="kc-test-cell" width="65%">
+						<table width="100%" class="ibm-data-table">
+							<tr class="kc-test-cell">
+								<th class="kc-test-label" colspan="4">Focus items, key changes, open items, comments for current &amp; next quarter</th>
+							</tr>
+							<tr class="kc-test-cell">
+								<td class="asmt-viewdata" colspan="4">
+									{{#if editmode}}
 										<textarea name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" rows="4" cols="100">{{ProcessTestingFocusItems}}</textarea>
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td class="kc-test-cell" width="5%"></td>
-						<td class="kc-test-cell" width="30%">
-							<table width="100%" class="ibm-data-table">
-								<tr class="asmt-viewdata">
-									<td colspan="4"><b>Key:</b></td>
-								</tr>
-								<tr class="asmt-viewdata">
-									<td colspan="2"><span class="mira-subdata2"><u>DR: Defect Rate</u></span></td>
-									<td colspan="2"><span class="mira-subdata2"><u>TR: Testing Ratio</u></span></td>
-								</tr>
-								<tr class="asmt-viewdata">
-									<td width="10%">
-										{{{ratingBGDisplay "Sat" ""}}}<br />
-										{{{ratingBGDisplay "Marg" ""}}}<br />
-										{{{ratingBGDisplay "Unsat" ""}}}<br />
-										"-"
-									</td>
-									<td width="40%">
-										<span class="mira-subdata2">
-											DR &lt; 2%<br />
-											2% &le;  DR &lt; 4%<br />
-											DR &ge; 4%<br />
-											Not Applicable
-										</span>
-									</td>
-									<td width="10%">
-										{{{ratingBGDisplay "Sat" ""}}}<br />
-										{{{ratingBGDisplay "Marg" ""}}}<br />
-										{{{ratingBGDisplay "Unsat" ""}}}<br />
-										"-"
-									</td>
-									<td width="40%">
-										<span class="mira-subdata2">
-											TR &ge; 98%<br />
-											95% &le; TR &lt; 98%<br />
-											TR &lt; 95%<br />
-											Not Applicable
-										</span>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<!-- <tr class="kc-test-cell">
-						<th class="kc-test-label" colspan="4">Focus items, key changes, open items, comments for current &amp; next quarter</th>
-					</tr>
-					<tr class="kc-test-cell">
-						<td class="asmt-viewdata" colspan="4">
-							<input type="text" name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" value="{{ProcessTestingFocusItems}}" size="165">
-						</td>
-					</tr> -->
-				</table>
-			{{else}} <!-- Read Mode -->
-				<table width="100%" class="ibm-data-table">
-					<tr class="kc-test-cell">
-						<td class="kc-test-cell" width="65%">
-							<table width="100%" class="ibm-data-table">
-								<tr class="kc-test-cell">
-									<th class="kc-test-label" colspan="4">Focus items, key changes, open items, comments for current &amp; next quarter</th>
-								</tr>
-								<tr class="kc-test-cell">
-									<td class="asmt-viewdata" colspan="4">
-										<textarea name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" rows="4" cols="100">{{ProcessTestingFocusItems}}</textarea>
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td class="kc-test-cell" width="5%"></td>
-						<td class="kc-test-cell" width="30%">
-							<table width="100%" class="ibm-data-table">
-								<tr class="asmt-viewdata">
-									<td colspan="4"><b>Key:</b></td>
-								</tr>
-								<tr class="asmt-viewdata">
-									<td colspan="2"><span class="mira-subdata2"><u>DR: Defect Rate</u></span></td>
-									<td colspan="2"><span class="mira-subdata2"><u>TR: Testing Ratio</u></span></td>
-								</tr>
-								<tr class="asmt-viewdata">
-									<td width="10%">
-										{{{ratingBGDisplay "Sat" ""}}}<br />
-										{{{ratingBGDisplay "Marg" ""}}}<br />
-										{{{ratingBGDisplay "Unsat" ""}}}<br />
-										"-"
-									</td>
-									<td width="40%">
-										<span class="mira-subdata2">
-											DR &lt; 2%<br />
-											2% &le;  DR &lt; 4%<br />
-											DR &ge; 4%<br />
-											Not Applicable
-										</span>
-									</td>
-									<td width="10%">
-										{{{ratingBGDisplay "Sat" ""}}}<br />
-										{{{ratingBGDisplay "Marg" ""}}}<br />
-										{{{ratingBGDisplay "Unsat" ""}}}<br />
-										"-"
-									</td>
-									<td width="40%">
-										<span class="mira-subdata2">
-											TR &ge; 98%<br />
-											95% &le; TR &lt; 98%<br />
-											TR &lt; 95%<br />
-											Not Applicable
-										</span>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-			{{/if}}
+									{{else}}
+										<textarea rows="4" cols="100" disabled>{{ProcessTestingFocusItems}}</textarea><br />
+									{{/if}}
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td class="kc-test-cell" width="5%"></td>
+					<td class="kc-test-cell" width="30%">
+						<table width="100%" class="ibm-data-table">
+							<tr class="asmt-viewdata">
+								<td colspan="4"><b>Key:</b></td>
+							</tr>
+							<tr class="asmt-viewdata">
+								<td colspan="2"><span class="mira-subdata2"><u>DR: Defect Rate</u></span></td>
+								<td colspan="2"><span class="mira-subdata2"><u>TR: Testing Ratio</u></span></td>
+							</tr>
+							<tr class="asmt-viewdata">
+								<td width="10%">
+									{{{ratingBGDisplay "Sat" ""}}}<br />
+									{{{ratingBGDisplay "Marg" ""}}}<br />
+									{{{ratingBGDisplay "Unsat" ""}}}<br />
+									"-"
+								</td>
+								<td width="40%">
+									<span class="mira-subdata2">
+										DR &lt; 2%<br />
+										2% &le;  DR &lt; 4%<br />
+										DR &ge; 4%<br />
+										Not Applicable
+									</span>
+								</td>
+								<td width="10%">
+									{{{ratingBGDisplay "Sat" ""}}}<br />
+									{{{ratingBGDisplay "Marg" ""}}}<br />
+									{{{ratingBGDisplay "Unsat" ""}}}<br />
+									"-"
+								</td>
+								<td width="40%">
+									<span class="mira-subdata2">
+										TR &ge; 98%<br />
+										95% &le; TR &lt; 98%<br />
+										TR &lt; 95%<br />
+										Not Applicable
+									</span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
 		</td>
 	</tr>
 	<tr class="kc-test-content">

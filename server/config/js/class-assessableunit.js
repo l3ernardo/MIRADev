@@ -539,15 +539,19 @@ var assessableunit = {
 						doc[0].CUData = [];
 						break;
 					case "BU Country":
+
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Controllable Unit","Country Process"]},
 								"BusinessUnit": doc[0].BusinessUnit,
-								"Country": doc[0].Country
+								"Country": doc[0].Country,
+								"$or": [
+									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": {"$or":["Country Process","Controllable Unit"]}}] },
+									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "BU Country"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
+
 						doc[0].CPData = [];
 						doc[0].CUData = [];
 						break;

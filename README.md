@@ -1,3 +1,13 @@
+#ATTENTION!!!
+
+All Quarter information should follow the syntax below:
+
+YYYY QX
+
+Where:
+"YYYY" means the year;
+"X" means the quarter (1 thru 4);
+
 #MIRA Web development
 
 MIRA - MSAC Integrated Reporting Tool
