@@ -5,7 +5,7 @@
 
 
 <input type="hidden" id="docTitle" value="Controllable Unit Process Testing Summary">
-
+<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
 
 <script>
 	//Load document's name
@@ -88,6 +88,6 @@
 </div>
 <script>
 $('#btn_cancel').click(function() {
-	window.location.href = "/assessment?id=";
+	window.location.href = "/assessment?id="+$('#parentid').val();
 });
 </script>
