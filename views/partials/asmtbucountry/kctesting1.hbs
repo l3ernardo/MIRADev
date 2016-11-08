@@ -93,7 +93,11 @@
 					<tr class="kc-test-viewheader">
 						<td colspan="13" rowspan="2"></td>
 						<td colspan="12" rowspan="2">
-							<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="70">{{SOXProcessTestingExplanations}}</textarea><br />
+							{{#if editmode}}
+								<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="85">{{SOXProcessTestingExplanations}}</textarea><br />
+							{{else}}
+								<textarea rows="2" cols="85" disabled>{{SOXProcessTestingExplanations}}</textarea><br />
+							{{/if}}
 						</td>
 					</tr>
 					<tr class="kc-test-viewheader">
@@ -173,7 +177,11 @@
 					<tr class="kc-test-viewheader">
 						<td colspan="13" rowspan="2"></td>
 						<td colspan="12" rowspan="2">
-							<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="70">{{OpsProcessTestingExplanations}}</textarea><br />
+							{{#if editmode}}
+								<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="85">{{OpsProcessTestingExplanations}}</textarea><br />
+							{{else}}
+								<textarea rows="2" cols="85" disabled>{{OpsProcessTestingExplanations}}</textarea><br />
+							{{/if}}
 						</td>
 					</tr>
 					<tr class="kc-test-viewheader">
@@ -270,9 +278,9 @@
 						<td colspan="12" rowspan="2"></td>
 						<td colspan="12" rowspan="2">
 							{{#if editmode}}
-								<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="70">{{SOXProcessTestingExplanations}}</textarea><br />
+								<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="85">{{SOXProcessTestingExplanations}}</textarea><br />
 							{{else}}
-								<textarea rows="2" cols="70" disabled>{{SOXProcessTestingExplanations}}</textarea><br />
+								<textarea rows="2" cols="85" disabled>{{SOXProcessTestingExplanations}}</textarea><br />
 							{{/if}}
 						</td>
 					</tr>
@@ -349,9 +357,9 @@
 						<td colspan="12" rowspan="2"></td>
 						<td colspan="12" rowspan="2">
 							{{#if editmode}}
-								<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="70">{{OpsProcessTestingExplanations}}</textarea><br />
+								<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="85">{{OpsProcessTestingExplanations}}</textarea><br />
 							{{else}}
-								<textarea rows="2" cols="70" disabled>{{OpsProcessTestingExplanations}}</textarea><br />
+								<textarea rows="2" cols="85" disabled>{{OpsProcessTestingExplanations}}</textarea><br />
 							{{/if}}
 						</td>
 					</tr>
@@ -372,9 +380,9 @@
 							<tr class="kc-test-cell">
 								<td class="asmt-viewdata" colspan="4">
 									{{#if editmode}}
-										<textarea name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" rows="4" cols="100">{{ProcessTestingFocusItems}}</textarea>
+										<textarea name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" rows="4" cols="130">{{ProcessTestingFocusItems}}</textarea>
 									{{else}}
-										<textarea rows="4" cols="100" disabled>{{ProcessTestingFocusItems}}</textarea><br />
+										<textarea rows="4" cols="130" disabled>{{ProcessTestingFocusItems}}</textarea><br />
 									{{/if}}
 								</td>
 							</tr>
