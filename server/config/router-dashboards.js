@@ -487,9 +487,43 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 						break;
 
 					case "BU IOT":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbuiot', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][BUIOTassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][BUIOTassessment][getListParams] - " + err.error);
+						})
 						break;
 
 					case "BU IMT":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbuimt', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][BUIMTassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][BUIMTassessment][getListParams] - " + err.error);
+						})
 						break;
 
 					case "BU Country":
@@ -596,6 +630,25 @@ dashboards.get('/newassessment', isAuthenticated, function(req, res) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				switch (data.doc[0].ParentDocSubType) {
+					case "BU IMT":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbuimt', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][BUIMTassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][BUIMTassessment][getListParams] - " + err.error);
+						})
+						break;
 					case "BU Country":
 						var lParams;
 						if (data.doc[0].editmode)

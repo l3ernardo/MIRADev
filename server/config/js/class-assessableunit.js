@@ -30,6 +30,7 @@ function existparentid (parentkey,F){
 	/* return 1;*/
 	return result;
 }
+
 function parentidf (parentkey,G){
 	for (m=0;m<G.length;m++){
 		if(G[m]!= undefined){
@@ -61,7 +62,6 @@ function findtl(level,parentkey,F){
 	return result2;
 }
 
-
 var assessableunit = {
 
 	/* Display all Assessable Units */
@@ -83,6 +83,7 @@ var assessableunit = {
 								{"Name": { "$ne": null }},
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
@@ -98,6 +99,7 @@ var assessableunit = {
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						}	,
@@ -184,6 +186,7 @@ var assessableunit = {
 								{"DocSubType":{"$in":["BU Reporting Group"]}},
 								//{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
 								{"$not": {"Name":"Reporting Group"}},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
@@ -201,6 +204,7 @@ var assessableunit = {
 								//{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
 								{"$not": {"Name":"Reporting Group"}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
@@ -219,6 +223,7 @@ var assessableunit = {
 								{"Name": { "$ne": null }},
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
@@ -234,6 +239,7 @@ var assessableunit = {
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
@@ -260,78 +266,77 @@ var assessableunit = {
 					var level5 = {};
 					var level6 = {};
 
-					//if(F!= undefined){
-						if(req.url!='/reportingdashboard'){
-							for(var i = 0; i < doc.length; i++){
-								if(doc[i].LevelType == 1){
-									level1.push(doc[i]);
-								}else if(doc[i].LevelType == 2){
-									if(typeof level2[doc[i].parentid] === "undefined"){
-										level2[doc[i].parentid] = [doc[i]];
-									}else{
-										level2[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 3){
-									if(typeof level3[doc[i].parentid] === "undefined"){
-										level3[doc[i].parentid] = [doc[i]];
-									}else{
-										level3[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 4){
-									if(typeof level4[doc[i].parentid] === "undefined"){
-										level4[doc[i].parentid] = [doc[i]];
-									}else{
-										level4[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 5){
-									if(typeof level5[doc[i].parentid] === "undefined"){
-										level5[doc[i].parentid] = [doc[i]];
-									}else{
-										level5[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 6){
-									if(typeof level6[doc[i].parentid] === "undefined"){
-										level6[doc[i].parentid] = [doc[i]];
-									}else{
-										level6[doc[i].parentid].push(doc[i]);
-									}
+					
+					if(req.url!='/reportingdashboard'){
+						for(var i = 0; i < doc.length; i++){
+							if(doc[i].LevelType == 1){
+								level1.push(doc[i]);
+							}else if(doc[i].LevelType == 2){
+								if(typeof level2[doc[i].parentid] === "undefined"){
+									level2[doc[i].parentid] = [doc[i]];
+								}else{
+									level2[doc[i].parentid].push(doc[i]);
+								}
+							}else if(doc[i].LevelType == 3){
+								if(typeof level3[doc[i].parentid] === "undefined"){
+									level3[doc[i].parentid] = [doc[i]];
+								}else{
+									level3[doc[i].parentid].push(doc[i]);
+								}
+							}else if(doc[i].LevelType == 4){
+								if(typeof level4[doc[i].parentid] === "undefined"){
+									level4[doc[i].parentid] = [doc[i]];
+								}else{
+									level4[doc[i].parentid].push(doc[i]);
+								}
+							}else if(doc[i].LevelType == 5){
+								if(typeof level5[doc[i].parentid] === "undefined"){
+									level5[doc[i].parentid] = [doc[i]];
+								}else{
+									level5[doc[i].parentid].push(doc[i]);
+								}
+							}else if(doc[i].LevelType == 6){
+								if(typeof level6[doc[i].parentid] === "undefined"){
+									level6[doc[i].parentid] = [doc[i]];
+								}else{
+									level6[doc[i].parentid].push(doc[i]);
 								}
 							}
+						}
 
-							//level1
-							for(var i = 0; i < level1.length; i++){
-								F.push(level1[i]);
+						//level1
+						for(var i = 0; i < level1.length; i++){
+							F.push(level1[i]);
 
-								//level2
-								if(typeof level2[level1[i]["_id"]] !== "undefined"){
-									var tmplvl2 = level2[level1[i]["_id"]];
-									for(var i2 = 0; i2 < tmplvl2.length; i2++){
-										F.push(tmplvl2[i2]);
+							//level2
+							if(typeof level2[level1[i]["_id"]] !== "undefined"){
+								var tmplvl2 = level2[level1[i]["_id"]];
+								for(var i2 = 0; i2 < tmplvl2.length; i2++){
+									F.push(tmplvl2[i2]);
 
-										//level3
-										if(typeof level3[tmplvl2[i2]["_id"]] !== "undefined"){
-											var tmplvl3 =level3[tmplvl2[i2]["_id"]];
-											for(var i3 = 0; i3 < tmplvl3.length; i3++){
-												F.push(tmplvl3[i3]);
+									//level3
+									if(typeof level3[tmplvl2[i2]["_id"]] !== "undefined"){
+										var tmplvl3 =level3[tmplvl2[i2]["_id"]];
+										for(var i3 = 0; i3 < tmplvl3.length; i3++){
+											F.push(tmplvl3[i3]);
 
-												//level4
-												if(typeof level4[tmplvl3[i3]["_id"]] !== "undefined"){
-													var tmplvl4 = level4[tmplvl3[i3]["_id"]];
-													for(var i4 = 0; i4 < tmplvl4.length; i4++){
-														F.push(tmplvl4[i4]);
+											//level4
+											if(typeof level4[tmplvl3[i3]["_id"]] !== "undefined"){
+												var tmplvl4 = level4[tmplvl3[i3]["_id"]];
+												for(var i4 = 0; i4 < tmplvl4.length; i4++){
+													F.push(tmplvl4[i4]);
 
-														//level5
-														if(typeof level5[tmplvl4[i4]["_id"]] !== "undefined"){
-															var tmplvl5 = level5[tmplvl4[i4]["_id"]];
-															for(var i5 = 0; i5 < tmplvl5.length; i5++){
-																F.push(tmplvl5[i5]);
+													//level5
+													if(typeof level5[tmplvl4[i4]["_id"]] !== "undefined"){
+														var tmplvl5 = level5[tmplvl4[i4]["_id"]];
+														for(var i5 = 0; i5 < tmplvl5.length; i5++){
+															F.push(tmplvl5[i5]);
 
-																//level6
-																if(typeof level6[tmplvl5[i5]["_id"]] !== "undefined"){
-																	var tmplvl6 = level6[tmplvl5[i5]["_id"]];
-																	for(var i6 = 0; i6 < tmplvl6.length; i6++){
-																		F.push(tmplvl6[i6]);
-																	}
+															//level6
+															if(typeof level6[tmplvl5[i5]["_id"]] !== "undefined"){
+																var tmplvl6 = level6[tmplvl5[i5]["_id"]];
+																for(var i6 = 0; i6 < tmplvl6.length; i6++){
+																	F.push(tmplvl6[i6]);
 																}
 															}
 														}
@@ -342,41 +347,13 @@ var assessableunit = {
 									}
 								}
 							}
-							/*for (i=0;i<len;i++){
-								lenF=F.length;
-								if(i==0){
-									F[0]=doc[0];
-								}
-								else if (i!=0 && doc[i].LevelType=='1'){
-									F[n]=doc[i];
-								}
-								else{
-									if(existparentid(doc[i].parentid,F)=='1' && findtl(doc[i].LevelType,doc[i].parentid,F)=='1'){
-										for(l=lenF;l>recordindex;l--){
-											F[l]=F[l-1];
-										}
-										F[recordindex+1]=doc[i];
-									}
-									else if(existparentid(doc[i].parentid,F)=='1' && findtl(doc[i].LevelType,doc[i].parentid,F)=='0'){
-										for(l=lenF;l>parentindex;l--){
-											F[l]=F[l-1];
-										}
-										F[parentindex+1]=doc[i];
-									}
-								}
-								n=lenF+1;
-							}*/
-							//F = doc;
-							//console.log(Object.keys(level4));
 						}
-						else{
-							F = doc;
-							/*for (i=0;i<len;i++){
-								F[i]=doc[i];
-							}*/
-						}
-					//}
-
+						
+					}
+					else{
+						F = doc;
+					}
+					
 					for (var i = 0; i < F.length; i++){
 						view_dashboard.push({
 							assessableUnit: F[i].Name,
@@ -389,7 +366,7 @@ var assessableunit = {
 							type:F[i].DocSubType,
 						});
 					}
-				//}
+				
 				view=JSON.stringify(view_dashboard, 'utf8');
 				deferred.resolve({"status": 200, "doc": F,"view":view});
 			}).catch(function(err) {
@@ -493,6 +470,7 @@ var assessableunit = {
 								]
 							}
 						};
+						console.log(constiobj);
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
@@ -500,17 +478,12 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": "Country Process",
-								"Sub-process": doc[0].Name,
-								"BusinessUnit": doc[0].BusinessUnit,
-								"GlobalProcess": doc[0].GlobalProcess,
-								"$or": [
-									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Sub-process"},{"parentid": doc[0]._id}] }
-								]
-							}
-						};
+								"key": "Assessment",
+								"ParentDocSubType": "Sub-process"	
+								}
+							};
 						doc[0].CPData = [];
+						doc[0].SPData = [];
 						break;
 					case "BU IOT":
 						var constiobj = {
@@ -529,10 +502,12 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Controllable Unit","BU Country"]},
 								"BusinessUnit": doc[0].BusinessUnit,
-								"IMT": doc[0].IMT
+								"IMT": doc[0].IMT,
+								"$or": [
+									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": {"$or":["BU Country","Controllable Unit"]}}] },
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].BUCountryData = [];
@@ -542,10 +517,12 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Controllable Unit","Country Process"]},
 								"BusinessUnit": doc[0].BusinessUnit,
-								"Country": doc[0].Country
+								"Country": doc[0].Country,
+								"$or": [
+									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": {"$or":["Country Process","Controllable Unit"]}}] },
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].CPData = [];
@@ -565,6 +542,7 @@ var assessableunit = {
 						doc[0].AccountData = [];
 						break;
 					case "Country Process":
+					console.log("Country P")
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -575,6 +553,8 @@ var assessableunit = {
 								]
 							}
 						};
+						console.log(constiobj)
+						console.log(doc[0]._id)
 						doc[0].ControlData = [];
 						doc[0].CUData = [];
 						break;
@@ -637,7 +617,7 @@ var assessableunit = {
 						}
 					}
 					/* Check if user can create assessment */
-					if ( (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") && doc[0].Status == "Active" && hasCurQAsmt == false && doc[0].editor && doc[0].DocSubType == "BU Country") {
+					if ( (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") && doc[0].Status == "Active" && hasCurQAsmt == false && (doc[0].editor && doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT")) {
 						doc[0].CreateAsmt = true;
 					}
 					/* Calculate for Instance Design Specifics and parameters*/
@@ -1184,6 +1164,7 @@ var assessableunit = {
 							doc[0].BUCountryIOT = req.body.BUCountryIOT;
 							doc[0].IOT = req.body.IOT;
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
+							doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "BU IMT":
 							doc[0].LevelType = "3";
@@ -1191,6 +1172,7 @@ var assessableunit = {
 							doc[0].IOT = req.body.IOT;
 							doc[0].IMT = req.body.IMT;
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
+							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 							break;
 						case "BU Country":
 							doc[0].LevelType = "4";
@@ -1200,6 +1182,7 @@ var assessableunit = {
 							doc[0].Country = req.body.Country;
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 							doc[0].ExcludeGeo = req.body.ExcludeGeo;
+							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 							break;
 						case "Account":
 							var levelT = parseInt(pdoc[0].LevelType) + 1;
