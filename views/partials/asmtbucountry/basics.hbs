@@ -24,7 +24,7 @@
 			{{#if RJandT2SEditable}}
 				<td><label for="MIRARatingJustification">Rating Justification:</label></td>
 				<td>
-					<span><input type="text" name="MIRARatingJustification" id="MIRARatingJustification" value="{{MIRARatingJustification}}" size="135"></span>
+					<span><input type="text" name="MIRARatingJustification" id="MIRARatingJustification" value="{{MIRARatingJustification}}" size="153"></span>
 				</td>
 			{{else}}
 				<td>Rating Justification:</td>
@@ -34,7 +34,7 @@
 		<tr class="reviewComments">
 			<td><label for="ReviewComments">Review Explanation/Comment:</label></td>
 			<td>
-				<span><input type="text" name="ReviewComments" id="ReviewComments" value="{{ReviewComments}}" size="135"></span>
+				<span><input type="text" name="ReviewComments" id="ReviewComments" value="{{ReviewComments}}" size="153"></span>
 			</td>
 		</tr>
 		<tr class="target2Sat">
@@ -60,13 +60,6 @@
 					<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{MIRAStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{MIRAStatusChangeWhen}}</span>
 				</td>
 			{{/if_not_equal}}
-		</tr>
-		<tr>
-			<td>WWBCIT Status:</td>
-			<td>
-				<b class="ibm-important">{{WWBCITStatus}}</b><br />
-				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{WWBCITStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{WWBCITStatusChangeWhen}}</span>
-			</td>
 		</tr>
 		<tr>
 			<td><label for="NextQtrRating">Next Qtr Outlook:</label></td>
@@ -99,13 +92,6 @@
 			<td>
 				<b class="ibm-important">{{MIRAStatus}}</b><br />
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{MIRAStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{MIRAStatusChangeWhen}}</span>
-			</td>
-		</tr>
-		<tr>
-			<td>WWBCIT Status:</td>
-			<td>
-				<b class="ibm-important">{{WWBCITStatus}}</b><br />
-				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{WWBCITStatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{WWBCITStatusChangeWhen}}</span>
 			</td>
 		</tr>
 		<tr class="outlook">

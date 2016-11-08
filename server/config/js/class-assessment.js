@@ -25,86 +25,6 @@ var assessment = {
 			doc[0].EnteredBU = req.session.businessunit;
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
-				switch (doc[0].ParentDocSubType) {
-					case "Country Process":
-						// test view data
-						doc[0].ALLData = fieldCalc.addTestViewData(6,3);
-						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
-						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
-						doc[0].AuditTrustedData = doc[0].RiskData;
-						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
-						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
-						doc[0].DRData = fieldCalc.addTestViewData(5,1);
-						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
-						doc[0].SCTestData = doc[0].RCTestData;
-						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
-						doc[0].SampleData = doc[0].RiskData;
-						doc[0].EAData = doc[0].ARCData;
-						break;
-					case "Global Process":
-						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
-						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-						doc[0].OtherAuditsData = doc[0].InternalAuditData;
-						doc[0].KCTest1Data = fieldCalc.addTestViewData(7,3);
-						doc[0].KCTest2Data = fieldCalc.addTestViewData(9,3);
-						doc[0].KCTest3Data = fieldCalc.addTestViewData(10,3);
-						doc[0].KC2Test1Data = fieldCalc.addTestViewData(4,3);
-						doc[0].KC2Test2Data = fieldCalc.addTestViewData(8,3);
-						doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,3);
-						doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-						doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
-						doc[0].AUData = fieldCalc.addTestViewData(17,10);
-						break;
-					case "Controllable Unit":
-						// test view data
-						doc[0].ALLData = fieldCalc.addTestViewData(6,3);
-						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
-						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
-						doc[0].AuditTrustedData = doc[0].RiskData;
-						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
-						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
-						doc[0].DRData = fieldCalc.addTestViewData(5,1);
-						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
-						doc[0].SCTestData = doc[0].RCTestData;
-						doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
-						doc[0].SampleData = doc[0].RiskData;
-						doc[0].EAData = doc[0].ARCData;
-						doc[0].AccountData = doc[0].RiskData;
-						break;
-					case "Account":
-						// test view data
-						doc[0].ALLData = fieldCalc.addTestViewData(7,3);
-						doc[0].ARCData = fieldCalc.addTestViewData(4,3);
-						doc[0].RiskData = fieldCalc.addTestViewData(11,3);
-						doc[0].AuditTrustedData = doc[0].RiskData;
-						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(9,3);
-						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
-						doc[0].DRData = fieldCalc.addTestViewData(5,1);
-						doc[0].RCTestData = fieldCalc.addTestViewData(9,3);
-						doc[0].SCTestData = doc[0].RCTestData;
-						doc[0].RCTestData = fieldCalc.addTestViewData(9,3);
-						doc[0].SampleData = doc[0].RiskData;
-						doc[0].EAData = doc[0].ARCData;
-						doc[0].AccountData = doc[0].RiskData;
-						break;
-					case "BU Country":
-						doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
-						doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-						doc[0].OtherAuditsData = doc[0].InternalAuditData;
-						doc[0].KCTest1Data = fieldCalc.addTestViewData(7,3);
-						doc[0].KCTest2Data = fieldCalc.addTestViewData(9,3);
-						doc[0].KCTest3Data = fieldCalc.addTestViewData(10,3);
-						doc[0].KC2Test1Data = fieldCalc.addTestViewData(4,3);
-						doc[0].KC2Test2Data = fieldCalc.addTestViewData(8,3);
-						doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,3);
-						doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-						doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
-						doc[0].AUData = fieldCalc.addTestViewData(17,10);
-						break;
-				}
-
-				// doc[0].CatP = "CRM";
-				// doc[0].ShowEA = 1;
 				doc[0].PrevQtrs = [];
 				doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
@@ -126,8 +46,6 @@ var assessment = {
 
 					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
 						doc[0].editmode = 1;
-
-						// --- Start of Basic Section --- //
 						// check if Rating is editable
 						var ratingEditors = parentdoc[0].Owner + parentdoc[0].Focals;
 						if(ratingEditors.indexOf("(" + req.session.user.mail + ")") !== -1) {
@@ -138,13 +56,21 @@ var assessment = {
 									doc[0].RatingEditable = 1;
 							}
 						}
-						// --- End of Basic Section --- //
-
-					} else { // Read mode
-
 					}
 					switch (doc[0].ParentDocSubType) {
 						case "Global Process":
+							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+							doc[0].OtherAuditsData = doc[0].InternalAuditData;
+							doc[0].KCTest1Data = fieldCalc.addTestViewData(7,3);
+							doc[0].KCTest2Data = fieldCalc.addTestViewData(9,3);
+							doc[0].KCTest3Data = fieldCalc.addTestViewData(10,3);
+							doc[0].KC2Test1Data = fieldCalc.addTestViewData(4,3);
+							doc[0].KC2Test2Data = fieldCalc.addTestViewData(8,3);
+							doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,3);
+							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+							doc[0].AUData = fieldCalc.addTestViewData(17,10);
 							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPIview = [];
 							doc[0].CPAsmtDataPR1view = [];
@@ -177,8 +103,21 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
+							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
+							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
+							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
+							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
+							doc[0].SCTest1Data = doc[0].RCTest1Data;
+							doc[0].SCTest2Data = doc[0].RCTest3Data;
 							doc[0].BUCAsmtDataPRview = [];
 							doc[0].BUCAsmtDataCURview = [];
+							doc[0].BUCAsmtDataPIview = [];
+							doc[0].BUCAsmtDataOIview = [];
 							fieldCalc.getAssessments(db, doc).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -195,12 +134,39 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataCURview.length));
 									}
 								}
+								if (doc[0].BUCAsmtDataPIview.length < 3) {
+									if (doc[0].BUCAsmtDataPIview.length == 0) {
+										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(3-doc[0].BUCAsmtDataPIview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataOIview.length < 3) {
+									if (doc[0].BUCAsmtDataOIview.length == 0) {
+										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
+									}
+								}
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
 							break;
 						case "Controllable Unit":
+							doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+							doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+							doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+							doc[0].AuditTrustedData = doc[0].RiskData;
+							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
+							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+							doc[0].DRData = fieldCalc.addTestViewData(5,1);
+							doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+							doc[0].SCTestData = doc[0].RCTestData;
+							doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+							doc[0].SampleData = doc[0].RiskData;
+							doc[0].EAData = doc[0].ARCData;
+							doc[0].AccountData = doc[0].RiskData;
 							doc[0].CUAsmtDataPR1view = [];
 							fieldCalc.getAssessments(db, doc).then(function(data){
 								fieldCalc.getRatingProfile(doc);
@@ -215,6 +181,37 @@ var assessment = {
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
+							break;
+						case "Country Process":
+							doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+							doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+							doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+							doc[0].AuditTrustedData = doc[0].RiskData;
+							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,3);
+							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+							doc[0].DRData = fieldCalc.addTestViewData(5,1);
+							doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+							doc[0].SCTestData = doc[0].RCTestData;
+							doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
+							doc[0].SampleData = doc[0].RiskData;
+							doc[0].EAData = doc[0].ARCData;
+							deferred.resolve({"status": 200, "doc": doc});
+							break;
+						case "Account":
+							doc[0].ALLData = fieldCalc.addTestViewData(7,3);
+							doc[0].ARCData = fieldCalc.addTestViewData(4,3);
+							doc[0].RiskData = fieldCalc.addTestViewData(11,3);
+							doc[0].AuditTrustedData = doc[0].RiskData;
+							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(9,3);
+							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,3);
+							doc[0].DRData = fieldCalc.addTestViewData(5,1);
+							doc[0].RCTestData = fieldCalc.addTestViewData(9,3);
+							doc[0].SCTestData = doc[0].RCTestData;
+							doc[0].RCTestData = fieldCalc.addTestViewData(9,3);
+							doc[0].SampleData = doc[0].RiskData;
+							doc[0].EAData = doc[0].ARCData;
+							doc[0].AccountData = doc[0].RiskData;
+							deferred.resolve({"status": 200, "doc": doc});
 							break;
 						default:
 							deferred.resolve({"status": 200, "doc": doc});
@@ -477,7 +474,6 @@ var assessment = {
 		return deferred.promise;
 	},
 
-
 	/* Save Assessment document */
 	saveAsmt: function(req, db) {
 		var deferred = q.defer();
@@ -506,7 +502,10 @@ var assessment = {
 						"AssessableUnitName": pdoc[0].Name,
 						"BusinessUnit": pdoc[0].BusinessUnit,
 						"CurrentPeriod": pdoc[0].CurrentPeriod,
-						"PeriodKey": pdoc[0].CurrentPeriod
+						"IOT": pdoc[0].IOT,
+						"IMT": pdoc[0].IMT,
+						"Country": pdoc[0].Country,
+						"Owner": pdoc[0].Owner
 					};
 					doc.push(tmpdoc);
 
@@ -576,6 +575,8 @@ var assessment = {
 							doc[0].PRExplanations = req.body.PRExplanations;
 							doc[0].ARRExplanations = req.body.ARRExplanations;
 							doc[0].AuditFocusText = req.body.AuditFocusText;
+							//---CU Ratings Tab---//
+							doc[0].CUFocusItems = req.body.CUFocusItems;
 							//---Reporting Country Testign Tab---//
 							doc[0].SOXProcessTestingExplanations = req.body.SOXProcessTestingExplanations;
 							doc[0].OpsProcessTestingExplanations = req.body.OpsProcessTestingExplanations;
@@ -712,6 +713,59 @@ var assessment = {
 						case "BU IMT":
 							break;
 						case "BU Country":
+							//---Summary Tab---//
+							doc[0].RatingSummary = req.body.RatingSummary;
+							doc[0].Highlight = req.body.Highlight;
+							doc[0].FocusArea = req.body.FocusArea;
+							//---Performance Overview Tab---//
+							doc[0].OverallAssessmentComments = req.body.OverallAssessmentComments;
+							doc[0].KCFRTestingComments = req.body.KCFRTestingComments;
+							doc[0].KCOTestingComments = req.body.KCOTestingComments;
+							doc[0].CorpIAComments = req.body.CorpIAComments;
+							doc[0].MissedREComments = req.body.MissedREComments;
+							doc[0].MissedMSACComments = req.body.MissedMSACComments;
+							doc[0].BoCComments = req.body.BoCComments;
+							doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
+							doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
+							//---Perfromance Overview Tab operational metrics---//
+							console.log("req.body.opMetricIDs: " + req.body.opMetricIDs);
+							var metricsID = req.body.opMetricIDs.split(",");
+							var tname, topush;
+							doc[0].OpMetric = [];
+							for (var i = 0; i < metricsID.length; ++i) {
+								if(metricsID[i] != undefined && metricsID[i] != "") {
+									topush = {
+										"id": metricsID[i]
+									};
+									doc[0].OpMetric.push(topush);
+									fname = metricsID[i]+"Name";
+									doc[0].OpMetric[i].name = req.body[fname];
+									fname = metricsID[i]+"Rating";
+									doc[0].OpMetric[i].rating = req.body[fname];
+									fname = metricsID[i]+"Comment";
+									doc[0].OpMetric[i].action = req.body[fname];
+								}
+							}
+							//---Audits and Reviews Tab---//
+							doc[0].IAExplanations = req.body.IAExplanations;
+							doc[0].PRExplanations = req.body.PRExplanations;
+							doc[0].ARRExplanations = req.body.ARRExplanations;
+							doc[0].AuditFocusText = req.body.AuditFocusText;
+							//---CU Ratings Tab---//
+							doc[0].CUFocusItems = req.body.CUFocusItems;
+							//---Reporting Country Testign Tab---//
+							doc[0].SOXProcessTestingExplanations = req.body.SOXProcessTestingExplanations;
+							doc[0].OpsProcessTestingExplanations = req.body.OpsProcessTestingExplanations;
+							doc[0].ProcessTestingFocusItems = req.body.ProcessTestingFocusItems;
+							//---Key Controls Testign 2 Tab---//
+							doc[0].SCSOXProcessTestingExplanations = req.body.SCSOXProcessTestingExplanations;
+							doc[0].SCOpsProcessTestingExplanations = req.body.SCOpsProcessTestingExplanations;
+							doc[0].SCProcessTestingFocusItems = req.body.SCProcessTestingFocusItems;
+							//---Open Risks and Missed Commits Tab---//
+							doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
+							doc[0].GCSFocusItems = req.body.GCSFocusItems;
+							doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
+							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "Controllable Unit":
 						case "Country Process":
@@ -736,7 +790,6 @@ var assessment = {
 							doc[0].BoCComments4 = req.body.BoCComments4;
 							doc[0].BoCComments5 = req.body.BoCComments5;
 							doc[0].BOCExceptionCount = req.body.BOCExceptionCount;
-
 							//---Audit Readiness Assessment Tab---//
 							if (req.session.businessunit == "GTS") {
 								doc[0].ARALLResponse = req.body.ARALLResponse;
