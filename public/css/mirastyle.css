@@ -68,6 +68,11 @@
   background-repeat:no-repeat;
   background-position:center;
 }
+.td_icon_readyreview {
+  background: url(/public/images/readyreview.png);
+  background-repeat:no-repeat;
+  background-position:center;
+}
 
 .ibm-data-table .mira-basic {
   background-color: #4181c0;
