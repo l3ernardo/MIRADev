@@ -131,7 +131,7 @@ var assessment = {
 									if (doc[0].BUCAsmtDataCURview.length == 0) {
 										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,3);
 									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataPRview.length));
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataCURview.length));
 									}
 								}
 								if (doc[0].BUCAsmtDataPIview.length < 3) {
