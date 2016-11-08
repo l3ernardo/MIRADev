@@ -30,6 +30,7 @@ function existparentid (parentkey,F){
 	/* return 1;*/
 	return result;
 }
+
 function parentidf (parentkey,G){
 	for (m=0;m<G.length;m++){
 		if(G[m]!= undefined){
@@ -60,7 +61,6 @@ function findtl(level,parentkey,F){
 	}
 	return result2;
 }
-
 
 var assessableunit = {
 
@@ -470,6 +470,7 @@ var assessableunit = {
 								]
 							}
 						};
+						console.log(constiobj);
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
@@ -477,17 +478,12 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": "Country Process",
-								"Sub-process": doc[0].Name,
-								"BusinessUnit": doc[0].BusinessUnit,
-								"GlobalProcess": doc[0].GlobalProcess,
-								"$or": [
-									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Sub-process"},{"parentid": doc[0]._id}] }
-								]
-							}
-						};
+								"key": "Assessment",
+								"ParentDocSubType": "Sub-process"	
+								}
+							};
 						doc[0].CPData = [];
+						doc[0].SPData = [];
 						break;
 					case "BU IOT":
 						var constiobj = {
@@ -506,17 +502,18 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Controllable Unit","BU Country"]},
 								"BusinessUnit": doc[0].BusinessUnit,
-								"IMT": doc[0].IMT
+								"IMT": doc[0].IMT,
+								"$or": [
+									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": {"$or":["BU Country","Controllable Unit"]}}] },
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].BUCountryData = [];
 						doc[0].CUData = [];
 						break;
 					case "BU Country":
-
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -524,11 +521,10 @@ var assessableunit = {
 								"Country": doc[0].Country,
 								"$or": [
 									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": {"$or":["Country Process","Controllable Unit"]}}] },
-									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "BU Country"},{"parentid": doc[0]._id}] }
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
 								]
 							}
 						};
-
 						doc[0].CPData = [];
 						doc[0].CUData = [];
 						break;
@@ -546,6 +542,7 @@ var assessableunit = {
 						doc[0].AccountData = [];
 						break;
 					case "Country Process":
+					console.log("Country P")
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -556,6 +553,8 @@ var assessableunit = {
 								]
 							}
 						};
+						console.log(constiobj)
+						console.log(doc[0]._id)
 						doc[0].ControlData = [];
 						doc[0].CUData = [];
 						break;
@@ -618,7 +617,7 @@ var assessableunit = {
 						}
 					}
 					/* Check if user can create assessment */
-					if ( (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") && doc[0].Status == "Active" && hasCurQAsmt == false && doc[0].editor && doc[0].DocSubType == "BU Country") {
+					if ( (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") && doc[0].Status == "Active" && hasCurQAsmt == false && (doc[0].editor && doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT")) {
 						doc[0].CreateAsmt = true;
 					}
 					/* Calculate for Instance Design Specifics and parameters*/
@@ -1165,6 +1164,7 @@ var assessableunit = {
 							doc[0].BUCountryIOT = req.body.BUCountryIOT;
 							doc[0].IOT = req.body.IOT;
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
+							doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "BU IMT":
 							doc[0].LevelType = "3";
@@ -1172,6 +1172,7 @@ var assessableunit = {
 							doc[0].IOT = req.body.IOT;
 							doc[0].IMT = req.body.IMT;
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
+							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 							break;
 						case "BU Country":
 							doc[0].LevelType = "4";
@@ -1181,6 +1182,7 @@ var assessableunit = {
 							doc[0].Country = req.body.Country;
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 							doc[0].ExcludeGeo = req.body.ExcludeGeo;
+							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 							break;
 						case "Account":
 							var levelT = parseInt(pdoc[0].LevelType) + 1;
