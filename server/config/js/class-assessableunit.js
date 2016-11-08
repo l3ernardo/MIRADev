@@ -116,9 +116,24 @@ var assessableunit = {
 								{"Name": { "$ne": null }},
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
+						"fields": [
+							"_id",
+							"Name",
+							"DocSubType",
+							"LevelType",
+							"parentid",
+							"MIRABusinessUnit",
+							"PeriodRatingPrev",
+							"PeriodRating",
+							"AUNextQtrRating",
+							"Target2Sat",
+							"MIRAAssessmentStatus",
+							"WWBCITAssessmentStatus"
+						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
 				}
@@ -131,9 +146,24 @@ var assessableunit = {
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
+								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
 							]
 						},
+						"fields": [
+							"_id",
+							"Name",
+							"DocSubType",
+							"LevelType",
+							"parentid",
+							"MIRABusinessUnit",
+							"PeriodRatingPrev",
+							"PeriodRating",
+							"AUNextQtrRating",
+							"Target2Sat",
+							"MIRAAssessmentStatus",
+							"WWBCITAssessmentStatus"
+						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
 				}
@@ -373,6 +403,7 @@ var assessableunit = {
 								]
 							}
 						};
+						console.log(constiobj);
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
@@ -380,17 +411,12 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": "Country Process",
-								"Sub-process": doc[0].Name,
-								"BusinessUnit": doc[0].BusinessUnit,
-								"GlobalProcess": doc[0].GlobalProcess,
-								"$or": [
-									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Sub-process"},{"parentid": doc[0]._id}] }
-								]
-							}
-						};
+								"key": "Assessment",
+								"ParentDocSubType": "Sub-process"	
+								}
+							};
 						doc[0].CPData = [];
+						doc[0].SPData = [];
 						break;
 					case "BU IOT":
 						var constiobj = {
@@ -445,6 +471,7 @@ var assessableunit = {
 						doc[0].AccountData = [];
 						break;
 					case "Country Process":
+					console.log("Country P")
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -455,6 +482,8 @@ var assessableunit = {
 								]
 							}
 						};
+						console.log(constiobj)
+						console.log(doc[0]._id)
 						doc[0].ControlData = [];
 						doc[0].CUData = [];
 						break;
