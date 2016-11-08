@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	//Hide left navigation
-	hide_divs();
+	//hide_divs();
 	//display notes
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	//Code for Cancel button

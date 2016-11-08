@@ -49,7 +49,24 @@ var businessunit = {
 			};
 			db.find(obj).then(function(data){
 				var doc = data.body.docs[0];
-				deferred.resolve({"status": 200, "bunit": value, "version": doc.value.title + " " + doc.value.version});
+				var version = doc.value.title + " " + doc.value.version;
+				//GET CONFIGURED CURRENT QUARTER
+				var objInt = {
+					selector:{
+						"_id": {"$gt":0},
+						"keyName": "Interfaces"
+					},
+					fields: [
+						"_id",
+						"value.quarter"
+					]
+				};
+				db.find(objInt).then(function(data){
+					var docInt = data.body.docs[0];
+					deferred.resolve({"status": 200, "bunit": value, "version": version, "quarter":docInt.value.quarter});
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});

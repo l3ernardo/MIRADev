@@ -467,12 +467,63 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 						break;
 
 					case "Sub-process":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtsubprocess', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][GPassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][GPassessment][getListParams] - " + err.error);
+						})
 						break;
 
 					case "BU IOT":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbuiot', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][BUIOTassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][BUIOTassessment][getListParams] - " + err.error);
+						})
 						break;
 
 					case "BU IMT":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbuimt', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][BUIMTassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][BUIMTassessment][getListParams] - " + err.error);
+						})
 						break;
 
 					case "BU Country":
@@ -579,6 +630,25 @@ dashboards.get('/newassessment', isAuthenticated, function(req, res) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				switch (data.doc[0].ParentDocSubType) {
+					case "BU IMT":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbuimt', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][BUIMTassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][BUIMTassessment][getListParams] - " + err.error);
+						})
+						break;
 					case "BU Country":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -618,61 +688,29 @@ dashboards.post('/saveasmt', isAuthenticated, function(req, res){
 		req.query.id = data.body.id;
 		var close = req.body.close;
 		if(data.status==200 & !data.error) {
-			//New document need to update attachments
-			if(req.body.attachIDs != '' && req.body.docid == ""){
-				utility.updateFilesParentID(data.body.id, req.body.attachIDs, db).then(function(dataF) {
-					if(dataF.status==200 & !dataF.error && data.body) {
-						assessment.getAsmtbyID(req, db).then(function(data) {
-							if(data.status==200 & !data.error) {
-								if(data.doc) {
-									if(close=='1') {
-										res.redirect('/processdashboard');
-									} else {
-										res.redirect('/assessment?id=' + data.doc[0]._id);
-									}
-								} else {
-									res.render('error',{errorDescription: data.error});
-								}
+			if(data.body) {
+				assessment.getAsmtbyID(req, db).then(function(data) {
+					if(data.status==200 & !data.error) {
+						if(data.doc) {
+							if(close=='1') {
+								res.redirect('/processdashboard');
 							} else {
-								res.render('error',{errorDescription: data.error});
-								console.log("[routes][getassessmentbyID] - " + data.error);
-							}
-						}).catch(function(err) {
-							res.render('error',{errorDescription: err.error});
-							console.log("[routes][getassessmentbyID] - " + err.error);
-						});
-					} else {
-						res.render('error',{errorDescription: dataF.error});
-						console.log("[routes][saveasmt] - " + dataF.error);
-					}
-				}).catch(function(err) {
-					console.log("[dashboards][saveasmt] - " + err.error);
-				});
-			} else { //Old document doesn't need to update attachments
-				if(data.body) {
-					assessment.getAsmtbyID(req, db).then(function(data) {
-						if(data.status==200 & !data.error) {
-							if(data.doc) {
-								if(close=='1') {
-									res.redirect('/processdashboard');
-								} else {
-									res.redirect('/assessment?id=' + data.doc[0]._id);
-								}
-							} else {
-								res.render('error',{errorDescription: data.error});
+								res.redirect('/assessment?id=' + data.doc[0]._id);
 							}
 						} else {
 							res.render('error',{errorDescription: data.error});
-							console.log("[routes][getassessmentbyID] - " + data.error);
 						}
-					}).catch(function(err) {
-						res.render('error',{errorDescription: err.error});
-						console.log("[routes][getassessmentbyID] - " + err.error);
-					});
-				} else {
-					res.render('error',{errorDescription: dataF.error});
-					console.log("[routes][saveasmt] - " + dataF.error);
-				}
+					} else {
+						res.render('error',{errorDescription: data.error});
+						console.log("[routes][getassessmentbyID] - " + data.error);
+					}
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][getassessmentbyID] - " + err.error);
+				});
+			} else {
+				res.render('error',{errorDescription: dataF.error});
+				console.log("[routes][saveasmt] - " + dataF.error);
 			}
 		} else {
 			res.render('error',{errorDescription: data.error});

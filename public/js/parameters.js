@@ -40,7 +40,7 @@ function newParam() {
 	editor.set({});
 }
 function editParam(ractive) {
-				$('div#ibm-navigation').hide();
+				//$('div#ibm-navigation').hide();
 				JSONEdit("fldvalue");
 
 				$('input[name=fldtrue]').each(function() {

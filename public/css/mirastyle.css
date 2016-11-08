@@ -68,6 +68,11 @@
   background-repeat:no-repeat;
   background-position:center;
 }
+.td_icon_readyreview {
+  background: url(/public/images/readyreview.png);
+  background-repeat:no-repeat;
+  background-position:center;
+}
 
 .ibm-data-table .mira-basic {
   background-color: #4181c0;
@@ -419,6 +424,11 @@
 	text-align: center;
 	font-size: 11px;
 	background-color: #ffd1bb;
+}
+.ibm-data-table .kc-test-viewheader-cell {
+  color: #ffffff;
+  background-color: #ffd1bb;
+	border: #ffd1bb;
 }
 .ibm-data-table .kc-test-viewheader-al {
 	text-align: left;

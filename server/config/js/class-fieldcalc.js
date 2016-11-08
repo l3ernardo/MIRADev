@@ -71,37 +71,37 @@ var calculatefield = {
   getPrev4Qtrs: function(currentQtr) {
     var p4Qtrs = [];
     var current = currentQtr.split("Q");
-    var prevYr = current[1]-1;
-    switch (current[0]) {
+    var prevYr = current[0]-1;
+    switch (current[1]) {
       case "1":
-        p4Qtrs.push("1Q"+prevYr1);
-        p4Qtrs.push("2Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
-        p4Qtrs.push("4Q"+prevYr);
+        p4Qtrs.push(prevYr1+"Q1");
+        p4Qtrs.push(prevYr+"Q2");
+        p4Qtrs.push(prevYr+"Q3");
+        p4Qtrs.push(prevYr+"Q4");
         break;
       case "2":
-        p4Qtrs.push("2Q"+prevYr);
-        p4Qtrs.push("3Q"+prevYr);
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("1Q"+current[1]);
+        p4Qtrs.push(prevYr+"Q2");
+        p4Qtrs.push(prevYr+"Q3");
+        p4Qtrs.push(prevYr+"Q4");
+        p4Qtrs.push(current[0]+"Q1");
         break;
       case "3":
-        p4Qtrs.push("3Q"+prevYr);
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("2Q"+current[1]);
+        p4Qtrs.push(prevYr+"Q3");
+        p4Qtrs.push(prevYr+"Q4");
+        p4Qtrs.push(current[0]+"Q1");
+        p4Qtrs.push(current[0]+"Q2");
         break;
       case "4":
-        p4Qtrs.push("4Q"+prevYr);
-        p4Qtrs.push("1Q"+current[1]);
-        p4Qtrs.push("2Q"+current[1]);
-        p4Qtrs.push("3Q"+current[1]);
+        p4Qtrs.push(prevYr+"Q4");
+        p4Qtrs.push(current[0]+"Q1");
+        p4Qtrs.push(current[0]+"Q2");
+        p4Qtrs.push(current[0]+"Q3");
         break;
     }
     return p4Qtrs;
   },
 
-	/* Calculates CatP, CatCU, BusinessUnitOLD, ShowEA */
+	/* Calculates CatP, CatCU, BusinessUnitOLD, ShowEA ... etc */
 	getDocParams: function(req, db, doc) {
     var deferred = q.defer();
 		try{
@@ -119,10 +119,20 @@ var calculatefield = {
   			} else {
   				lParams = ['GTSInstanceDesign'];
   			}
+        // For Testing Dynamic tables
+        if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
+          lParams.push('GTSRollupProcessesOPS');
+          lParams.push('GTSRollupProcessesFIN');
+        }
   		} else {
         lParams.push('GBSInstanceDesign');
+        if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
+          lParams.push('GBSRollupProcessesOPS');
+          lParams.push('GBSRollupProcessesFIN');
+        }
   		}
-      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" || doc[0].ParentDocSubType == "BU Country") {
+      // For Operational Metric setup keys
+      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
         var opMetricKey;
         switch (doc[0].ParentDocSubType) {
           case "Country Process":
@@ -137,6 +147,8 @@ var calculatefield = {
             lParams.push('ProcessCatFIN');
             opMetricKey = "OpMetric" + doc[0].WWBCITKey;
             break;
+          case "BU IOT":
+          case "BU IMT":
           case "BU Country":
             if (doc[0].BUWWBCITKey == "BSU300000027")
               opMetricKey = "GBSGeoOpMetric";
@@ -178,6 +190,18 @@ var calculatefield = {
   					for (var j = 0; j < dataParam.parameters.ProcessCatFIN[0].options.length; ++j) {
   						if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name) doc[0].ProcessCategory = "FIN";
   					}
+  				}
+          if (dataParam.parameters.GBSRollupProcessesOPS) {
+            doc[0].KCProcessOPS = dataParam.parameters.GBSRollupProcessesOPS[0].options;
+  				}
+          if (dataParam.parameters.GBSRollupProcessesFIN) {
+            doc[0].KCProcessFIN = dataParam.parameters.GBSRollupProcessesFIN[0].options;
+  				}
+          if (dataParam.parameters.GTSRollupProcessesOPS) {
+            doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
+  				}
+          if (dataParam.parameters.GTSRollupProcessesFIN) {
+            doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
   				}
           if (dataParam.parameters[opMetricKey]) {
             var TmpOpMetric = [];
@@ -221,7 +245,7 @@ var calculatefield = {
                     }
                   }
                 } else {
-                  // For Global Process and BU Country
+                  // For Global Process, BU Country, BU IMT and BU IOT
                   doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
                   doc[0].OpMetric[j].ratingfield = opID + "Rating";
                   doc[0].OpMetric[j].commentfield = opID + "Comment";
@@ -322,6 +346,30 @@ var calculatefield = {
               "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
               "BusinessUnit": doc[0].BusinessUnit,
               "Country": doc[0].Country
+            }
+          };
+          break;
+        case "BU IMT":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
+              "BusinessUnit": doc[0].BusinessUnit,
+              "IMT": doc[0].IMT
+            }
+          };
+          break;
+        case "BU IOT":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
+              "BusinessUnit": doc[0].BusinessUnit,
+              "IOT": doc[0].IOT
             }
           };
           break;
@@ -635,9 +683,11 @@ var calculatefield = {
 
         for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
           switch (doc[0].ParentDocSubType) {
+            case "BU IOT":
+            case "BU IMT":
             case "BU Country":
               if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
-              // Process Ratings Tab embedded views
+                // Process Ratings Tab embedded views
                 toadd = {
                   "docid":doc[0].asmtsdocs[i]._id,
                   "name":doc[0].asmtsdocs[i].AssessableUnitName,
@@ -772,7 +822,7 @@ var calculatefield = {
 
         }
 
-        if (doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country") {
+        if (doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
           doc[0].BOCExceptionCount = bocEx;
         }
         // Processing Financial processes

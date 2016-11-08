@@ -75,6 +75,7 @@
   <td>Number of missed tasks override:</td>
   <form id="openissueform" class="ibm-column-form" name="form" method="POST" action="/saveopenissue">
     <input type="hidden" name="_id" value="{{_id}}">
+		<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
     <td>
 {{#if editmode}}
   <input type="text" name="numMissedTasksOverride" value="{{numMissedTasksOverride}}" size="3" maxlength="3">
@@ -102,28 +103,21 @@
 </tr>
 </table>
 
-		<div class="ibm-buttons-row">
-      <p>
-        {{#if editmode}}
-          <input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Save"/>
-          <span class="ibm-sep">&nbsp;</span>
-          <input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
-        {{else}}
-        <input class="ibm-btn-arrow-pri" type="button" id="btn_edit" value="Edit"/>
-        <span class="ibm-sep">&nbsp;</span>
-        <input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
-        {{/if}}
-      </p>
-		</div>
+<!-- BUTTONS AREA -->
+{{>buttons}}
 </div>
 <script>
 $('#btn_edit').click(function() {
   window.location.href = "openissue?id="+$("input[name='_id']").val()+"&edit";
 });
+$('#btn_save_close').click(function() {
+	$('#close').val("back");
+	$("#localauditform").submit();
+});
 $('#btn_save').click(function(evt) {
     $("#openissueform").submit();
 });
 $('#btn_cancel').click(function() {
-	window.location.href = "/assessment?id=";
+	window.location.href = "/assessment?id="+$('#parentid').val();
 });
 </script>
