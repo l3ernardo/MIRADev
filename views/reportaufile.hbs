@@ -2,6 +2,8 @@
 <script src='./js/utility.js'></script>
 <link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 <script src="./lib/jquery.dataTables.js"></script>
+<link href="./css/style.css" rel="stylesheet" type="text/css" />
+
 <script>
 	//Load document's name
 	$('h1#pageTitle').text("Assessable Units File");
@@ -19,7 +21,7 @@
 			<br/>
 		</div>
 		<div id='reportaufile' name='reportaufile'>
-			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" class="display nowrap">
+			<table id="reports_table" cellspacing="0" cellpadding="0" border="0" style="width:100%" class="display nowrap" class="mira-dashboard-table">
 				<thead>
 					<tr>
 						<th scope="col">Name</th>
@@ -64,12 +66,12 @@
 						<td>{{CUSize}}</td>
 						<td>{{MetricsValue}}</td>
 						<td>{{ARCFrequency}}</td>
-						<td>{{PeriodRatingPrev4}}</td>
-						<td>{{PeriodRatingPrev3}}</td>
-						<td>{{PeriodRatingPrev2}}</td>
-						<td>{{PeriodRatingPrev}}</td>
-						<td>{{PeriodRating}}</td>
-						<td>{{AUNextQtrRating}}</td>
+						<td>{{{ratingDisplay PeriodRatingPrev4}}}</td>
+						<td>{{{ratingDisplay PeriodRatingPrev3}}}</td>
+						<td>{{{ratingDisplay PeriodRatingPrev2}}}</td>
+						<td>{{{ratingDisplay PeriodRatingPrev}}}</td>
+						<td>{{{ratingDisplay PeriodRating}}}</td>
+						<td>{{{ratingDisplay AUNextQtrRating}}}</td>
 						<td>{{Target2Sat}}</td>
 						<td>{{Owner}}</td>
 						<td>{{Focals}}</td>
