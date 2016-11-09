@@ -102,8 +102,58 @@ var assessment = {
 								deferred.reject({"status": 500, "error": err});
 							});
 							break;
-						case "BU IOT":							
+						case "BU IOT":
 						case "BU IMT":
+							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RiskView2Data = fieldCalc.addTestViewData(12,3);
+							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
+							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
+							doc[0].SCTest1Data = doc[0].RCTest1Data;
+							doc[0].SCTest2Data = doc[0].RCTest3Data;
+							doc[0].BUCAsmtDataPRview = [];
+							doc[0].BUCAsmtDataCURview = [];
+							doc[0].BUCAsmtDataPIview = [];
+							doc[0].BUCAsmtDataOIview = [];
+							fieldCalc.getAssessments(db, doc).then(function(data){
+								fieldCalc.getRatingProfile(doc);
+								if (doc[0].BUCAsmtDataPRview.length < 3) {
+									if (doc[0].BUCAsmtDataPRview.length == 0) {
+										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(3-doc[0].BUCAsmtDataPRview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataCURview.length < 3) {
+									if (doc[0].BUCAsmtDataCURview.length == 0) {
+										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataCURview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataPIview.length < 3) {
+									if (doc[0].BUCAsmtDataPIview.length == 0) {
+										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(3-doc[0].BUCAsmtDataPIview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataOIview.length < 3) {
+									if (doc[0].BUCAsmtDataOIview.length == 0) {
+										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
+									}
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
 						case "BU Country":
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
 							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
@@ -370,8 +420,8 @@ var assessment = {
 						case "BU IMT":
 							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
+							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
 							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
 							doc[0].AUData = fieldCalc.addTestViewData(17,10);
 							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
