@@ -691,6 +691,7 @@ var calculatefield = {
                 toadd = {
                   "docid":doc[0].asmtsdocs[i]._id,
                   "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                  "country":doc[0].asmtsdocs[i].Country,
                   "process":doc[0].asmtsdocs[i].GlobalProcess,
                   "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
                   "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
@@ -705,6 +706,7 @@ var calculatefield = {
                 toadd = {
                   "docid":doc[0].asmtsdocs[i]._id,
                   "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                  "country":doc[0].asmtsdocs[i].Country,
                   "size":doc[0].asmtsdocs[i].CUSize,
                   "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
                   "cqscore":doc[0].asmtsdocs[i].CUScore,
@@ -722,6 +724,7 @@ var calculatefield = {
               toadd = {
                 "docid":doc[0].asmtsdocs[i]._id,
                 "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
                 "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
                 "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
                 "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
@@ -729,6 +732,7 @@ var calculatefield = {
                 "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
                 "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
                 "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+                "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
                 "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
                 "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
               };
@@ -737,6 +741,7 @@ var calculatefield = {
               toadd = {
                 "docid":doc[0].asmtsdocs[i]._id,
                 "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
                 "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
               };
               doc[0].BUCAsmtDataOIview.push(toadd);
