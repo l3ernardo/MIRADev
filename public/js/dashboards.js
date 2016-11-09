@@ -1,69 +1,3 @@
-/*Function to set color in dashboard views*/
-function paint_td(table_name){
-	var table ='#'+table_name+' tr';
-	for (var r = 1, n = $(table).length; r <= n; r++) {
-		cells_th=table+':nth-child('+r+') th';
-		/*painting checkbox section*/	  
-		for (var c = 0, m = $(cells_th).length; c <= m; c++) 
-		{
-			if(r%2=="0" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
-				$(cells_th).css("background-color", "#f4f4f5");
-			}
-		}
-		rows=table+':nth-child('+r+') td';
-		for (var c = 0, m = $(rows).length; c <= m; c++){
-			cell=table+':eq('+r+') td:eq('+c+')';
-			if(r%2=="1" && $(cell).text()=='Marg'){
-				$(cell).css("background-color", "yellow");
-			}
-			else if(r%2=="1" && $(cell).text()=='Sat'){
-				$(cell).css("background-color", "#01DF01");
-			}
-			 else if(r%2=="1" && $(cell).text()=='unsat'){
-				$(cell).css("background-color", "#FF0000");
-			}
-			else if(r%2=="1" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
-				$(cell).css("background-color", "white"); 
-			}
-			else if(r%2=="0" && $(cell).text()=='Marg'){
-				$(cell).css("background-color", "yellow");
-			}
-			else if(r%2=="0" && $(cell).text()=='Sat'){
-				$(cell).css("background-color", "#01DF01");
-			}
-			 else if(r%2=="0" && $(cell).text()=='unsat'){
-				$(cell).css("background-color", "#FF0000");
-			}
-			else if(r%2=="0" && $(cell).text()!='Marg' && $(cell).text()!='Sat' && $(cell).text()!='unsat'){
-				$(cell).css("background-color", "#f4f4f5");
-			}
-		}
-	}
-}
-/*Function to add icons in dashboard views*/
-function add_icons(table_name){
-	var table = '#'+table_name+' tr';
-	for (var r = 1, n = $(table).length; r <= n; r++){
-		//index=r-1;
-		rows=table+':nth-child('+r+') td';
-		for (var c = 3, m = $(rows).length; c <m; c++){
-			cell=table+':eq('+r+') td:eq('+c+')';
-			data=$(cell).text();
-			if(data=='Draft'){
-				$(cell).text('');
-				$(cell).addClass('td_icon_edit');
-			}
-			else if(data=='Check'){
-				$(cell).text('');
-				$(cell).addClass('td_icon_check');
-			}
-			else if(data==''){
-				$(cell).text('');
-				$(cell).addClass('td_icon_empty');
-			}
-		}
-	}
-}
 /*Function to generate dashboard table to export*/
 function tableToReport(table){
 	var field4rows = $.parseJSON($('textarea#dataForExport').val());
@@ -71,7 +5,7 @@ function tableToReport(table){
 	var tab_text="<table border='2px'><thead><tr bgcolor='#87AFC6'>";
 	var line = "";
 	var tab = $(table);
-	var theader=$('#'+table+' tr:eq(0) th'); 
+	var theader=$('#'+table+' tr:eq(0) th');
 	for (c=1;c<theader.length;c++){
 		test='#'+table+' tr:eq(0) th:eq('+c+')';
 		line=line+"<th>"+$(test).text()+"</th>";
@@ -100,10 +34,10 @@ function tableToReport(table){
 		for (j=1;j<=checkboxes.length;j++){
 			if (checkboxes[j] == true){
 				array2[aux]=j;
-				aux++;      
+				aux++;
 			}
 		}
-		
+
 		for(j = 1; j<=array2.length; j++){
 			var index=array2[j-1];
 			var r1= field4rows[index-1];
@@ -112,47 +46,28 @@ function tableToReport(table){
 				var r2 = r1[obj1];
 				line = line+"<td>"+r2+"</td>";
 			} //end for obj1
-			tab_text=tab_text+line+"</tr>"; 
+			tab_text=tab_text+line+"</tr>";
 		}
 	}
 	tab_text=tab_text+"</tbody></table>";
 	return (tab_text);
-} 
+}
 
-$(document).ready(function(){ 
+$(document).ready(function(){
 	r=url.indexOf("processdashboard");
 	s=url.indexOf("geodashboard");
 	t=url.indexOf("reportingdashboard");
 	u=url.indexOf("subprocessdashboard");
-	paint_td('process_dashboard_treeview');
-	add_icons('process_dashboard_treeview');
-	paint_td('process_dashboard_flatview');
-	add_icons('process_dashboard_flatview');
-
-	paint_td('geo_dashboard_treeview');
-	add_icons('geo_dashboard_treeview');
-	paint_td('geo_dashboard_flatview');
-	add_icons('geo_dashboard_flatview');
-
-	paint_td('rg_dashboard_treeview');
-	add_icons('rg_dashboard_treeview');
-	paint_td('rg_dashboard_flatview');
-	add_icons('rg_dashboard_flatview');
-
-	paint_td('subprocess_dashboard_treeview');
-	add_icons('subprocess_dashboard_treeview');
-	paint_td('subprocess_dashboard_flatview');
-	add_icons('subprocess_dashboard_flatview');
 	
 	$("#mira_checkbox_tree").click(function(){
 		$(".mira_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$("#mira_checkbox_flat").click(function(){
 		$(".mira_checkbox_flat").prop('checked', $(this).prop('checked'));
-	});  
+	});
 	$(".mira_checkbox_tree").prop('checked', false);
 		$(".mira_checkbox_flat").prop('checked', false);
-	
+
 	$('#link-view').click(function(){
 		if($(this).text()=='Flat View' &&  r!=-1 && u==-1){
 			$('#process_dashboard_flatview').show();
@@ -183,7 +98,7 @@ $(document).ready(function(){
 			$('#rg_dashboard_treeview').hide();
 			$(this).text('Tree View');
 		}
-		else if($(this).text()=='Tree View' &&  t!=-1){  
+		else if($(this).text()=='Tree View' &&  t!=-1){
 			$('#rg_dashboard_treeview').show();
 			$('#rg_dashboard_flatview').hide();
 			$(".mira_checkbox_tree").prop('checked', false);
@@ -208,19 +123,19 @@ $('#link-export').click(function(){
 	if($('#link-view').text()=='Flat View' &&  r!=-1 &&  u==-1){
 		tableReport = tableToReport('process_dashboard_treeview');
 	}
-	else if($('#link-view').text()=='Tree View' &&  r!=-1 &&  u==-1){  
+	else if($('#link-view').text()=='Tree View' &&  r!=-1 &&  u==-1){
 		tableReport = tableToReport('process_dashboard_flatview');
 	}
 	else if($('#link-view').text()=='Flat View' &&  s!=-1){
 		tableReport = tableToReport('geo_dashboard_treeview');
 	}
-	else if($('#link-view').text()=='Tree View' &&  s!=-1){  
+	else if($('#link-view').text()=='Tree View' &&  s!=-1){
 		tableReport = tableToReport('geo_dashboard_flatview');
 	}
 	else if($('#link-view').text()=='Flat View' &&  t!=-1){
 		tableReport = tableToReport('rg_dashboard_treeview');
 	}
-	else if($('#link-view').text()=='Tree View' &&  t!=-1){  
+	else if($('#link-view').text()=='Tree View' &&  t!=-1){
 		tableReport = tableToReport('rg_dashboard_flatview');
 	}
 	else if($('#link-view').text()=='Flat View' &&  u!=-1 ){
@@ -236,19 +151,19 @@ $('#link-export2').click(function(){
 	if($('#link-view').text()=='Flat View' &&  r!=-1 &&  u==-1){
 		tableReport = tableToReport('process_dashboard_treeview');
 	}
-	else if($('#link-view').text()=='Tree View' &&  r!=-1 &&  u==-1){  
+	else if($('#link-view').text()=='Tree View' &&  r!=-1 &&  u==-1){
 		tableReport = tableToReport('process_dashboard_flatview');
 	}
 	else if($('#link-view').text()=='Flat View' &&  s!=-1){
 		tableReport = tableToReport('geo_dashboard_treeview');
 	}
-	else if($('#link-view').text()=='Tree View' &&  s!=-1){  
+	else if($('#link-view').text()=='Tree View' &&  s!=-1){
 		tableReport = tableToReport('geo_dashboard_flatview');
 	}
 	else if($('#link-view').text()=='Flat View' &&  t!=-1){
 		tableReport = tableToReport('rg_dashboard_treeview');
 	}
-	else if($('#link-view').text()=='Tree View' &&  t!=-1){  
+	else if($('#link-view').text()=='Tree View' &&  t!=-1){
 		tableReport = tableToReport('rg_dashboard_flatview');
 	}
 	else if($('#link-view').text()=='Flat View' &&  u!=-1 ){

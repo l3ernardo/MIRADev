@@ -11,144 +11,221 @@ var q = require("q");
 var parameter = require('./class-parameter.js');
 var util = require('./class-utility.js');
 
-
 var geohierarchy = {
-	getGeoHierarchy: function (req) { 
-		var result = "";
-		//var deferred = q.defer();
-		try  {
+	getGeoHierarchy: function (req, sqlQueryJSON) {
+		var response = [];
+		var deferred = q.defer();
+
+		try {
 			if (req.session.businessunit == "GBS") {
-				result = "GeoHierarchy -- GBS";
-				console.log("GeoHierarchy -- GBS");
-				return result;
+				response = geohierarchy.generateGeoHierarchyList(sqlQueryJSON);
 			}
 			else {
-				result = "GeoHierarchy -- GTS";
-				console.log("GeoHierarchy -- GTS");
-				return result;
+				response = geohierarchy.generateGeoHierarchyList(sqlQueryJSON);
 			}
+			deferred.resolve({"status": 200, "data": response});
+
 		}
 		catch(e){
-			//deferred.reject({"status": 500, "error": e});
-		}
-	},
-	
-	createGEOHierarchy: function(req,db){
-			var deferred = q.defer();
-
-			var IOT = [];
-			var IMT = {};
-			var countries = [];
-			var country = {};
-			var iot = {};
-			var indexIOT = {};
-			var indexIOTIMTs = {};
-			var response = {};
-			var uri = "https://eapim-dev.w3ibm.mybluemix.net/portfoliomgmt/development/mira/hierarchy?QTR=";
-	
-
-			req.query.keyName = "ImportWWBCITData";
-
-			try{
-	
-				parameter.getParam(req,db).then(function(data){
-
-					 uri = uri+"'"+data.doc.value.quarter+"'&format=j";
-					
-
-				try{
-					util.callhttp(uri).then(function(data){
-					
-						var json = data.doc.response.resultset;
-						
-					
-				try{
-					for(var i=0;i<json.length;i++){  //Iterate on all the response by country
-				
-						
-							
-
-								 country["name"] = json[i].row.COUNTRY;
-								 country["IMT"] = json[i].row.SUB_GEO;
-								 country["IOT"] = json[i].row.GEO;
-								 countries.push(country);
-								 
-								 if(typeof IMT[json[i].row.SUB_GEO] !== 'undefined'){ // check if IMT exist and add the addional countries
-										
-								 	
-				
-									IMT[json[i].row.SUB_GEO].push(json[i].row.COUNTRY);
-
-								 }else{  // if not add the new IMT with its country
-							
-									IMT[json[i].row.SUB_GEO] = [json[i].row.COUNTRY];
-									
-
-									imt= {};
-								}
-
-								if(typeof indexIOT[json[i].row.GEO] !== 'undefined' ){ // check if IOT exist and add the addional countries
-									if(typeof indexIOTIMTs[json[i].row.SUB_GEO] === 'undefined' ){
-										IOT[indexIOT[json[i].row.GEO]].IMTs.push(json[i].row.SUB_GEO);
-										indexIOTIMTs[json[i].row.SUB_GEO] = "true";
-									}
-										
-	
-								 }else{  // if not add the new IMT with its country
-									iot["name"] = json[i].row.GEO;
-									iot["IMTs"] = [json[i].row.SUB_GEO];
-									IOT.push(iot);	
-									indexIOT[json[i].row.GEO] = IOT.length-1;
-									indexIOTIMTs[json[i].row.SUB_GEO] = "true";
-									iot= {};
-								}
-					
-								 
-								 country = {};
-
-						
-	
-					}
-					}catch(e){console.log(e);}
-					
-				
-					response["countries"]= countries;
-					response["IMT"] = IMT;
-					response["IOT"] = IOT;
-					
-					deferred.resolve({"status": 200, "response": response});
-
-					}).catch(function(error){ //end getParam
-
-					deferred.reject({"status": 500, "error": err.error.reason});
-					
-					});
-			
-
-				}catch(e){
-					deferred.reject({"status": 500, "error": e});
-				}			
-			
-
-		
-
-			}).catch(function(err) {//end callhttp
-					console.log("[routes][geohierarchy] - " + err);
-					deferred.reject({"status": 500, "error": err.error.reason});
-				});
-
-
-		}catch(e){
+			console.log("error at class-geohierarchy level: "+e);
 			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+	generateGeoHierarchyList: function(sqlQuery) {
+		try{
+			var geoHierarchyList = [];
+			for (var i=0; i<sqlQuery.IOT.length; i++) {
+				geoHierarchyList.push({
+					"type":"GMT/IOT",
+					"name":sqlQuery.IOT[i].name,
+					"id":sqlQuery.IOT[i].name.replace(/ /g,'')
+				});
+				for (var j=0; j<sqlQuery.IOT[i].IMTs.length; j++) {
+					if(sqlQuery.IOT[i].name != sqlQuery.IOT[i].IMTs[j] ){ //validates IOT and IMT are diff to generate parentID
+						geoHierarchyList.push({
+							"type":"GMT/IMT",
+							"name":sqlQuery.IOT[i].IMTs[j],
+							"id":sqlQuery.IOT[i].IMTs[j].replace(/ /g,''),
+							"parentID":sqlQuery.IOT[i].name.replace(/ /g,'')
+						});
+					}
+					else {
+						if(sqlQuery.IOT[i].IMTs[j].indexOf(' ') >= 0){ //if IOT has spaces construct the id replacing empty spaces
+							geoHierarchyList.push({
+								"type":"GMT/IMT",
+								"name":sqlQuery.IOT[i].IMTs[j],
+								"id":sqlQuery.IOT[i].IMTs[j].replace(/ /g,'child'),
+								"parentID":sqlQuery.IOT[i].name.replace(/ /g,'')
+							});
+						}
+						else{//if has no spaces counstruc the ID adding child at the end
+							geoHierarchyList.push({
+								"type":"GMT/IMT",
+								"name":sqlQuery.IOT[i].IMTs[j],
+								"id":sqlQuery.IOT[i].IMTs[j]+"child",
+								"parentID":sqlQuery.IOT[i].name.replace(/ /g,'')
+							});
+						}
+					}
+					for (var n=0; n<sqlQuery.IMT[sqlQuery.IOT[i].IMTs[j]].length; n++) {
+
+						if(sqlQuery.IOT[i].name != sqlQuery.IOT[i].IMTs[j] ){ //validates IOT and IMT are diff to generate parentID
+							geoHierarchyList.push({
+								"type":"Country",
+								"name":sqlQuery.IMT[sqlQuery.IOT[i].IMTs[j]][n],
+								"id":sqlQuery.IMT[sqlQuery.IOT[i].IMTs[j]][n].replace(/ /g,''),
+								"parentID":sqlQuery.IOT[i].IMTs[j].replace(/ /g,'')
+							});
+						}
+						else{
+							if(sqlQuery.IOT[i].IMTs[j].indexOf(' ') >= 0){//if IOT has spaces construct the id replacing empty spaces
+								geoHierarchyList.push({
+									"type":"Country",
+									"name":sqlQuery.IMT[sqlQuery.IOT[i].IMTs[j]][n],
+									"id":sqlQuery.IMT[sqlQuery.IOT[i].IMTs[j]][n].replace(/ /g,'-'),
+									"parentID":sqlQuery.IOT[i].IMTs[j].replace(/ /g,'child')
+								});
+							}
+							else{//if has no spaces counstruc the ID adding child at the end
+								geoHierarchyList.push({
+									"type":"Country",
+									"name":sqlQuery.IMT[sqlQuery.IOT[i].IMTs[j]][n],
+									"id":sqlQuery.IMT[sqlQuery.IOT[i].IMTs[j]][n].replace(/ /g,'-'),
+									"parentID":sqlQuery.IOT[i].IMTs[j]+"child"
+								});
+							}							
+						}
+					}
+				}
 			}
+		}catch(e){console.log("error:"+e);}
+		return geoHierarchyList;
+	},
+	/*checkIDIsNotSameAsParentID: function(currentID, parentID) {
+	var correctID = "";
+	if (currentID == parentID) {
+	correctID = currentID+"Child";
+}
+else {
+correctID = currentID;
+}
+return correctID;
+},*/
+createGEOHierarchy: function(req){
+	var deferred = q.defer();
+
+	var IOT = [];
+	var BU_IMT = {};
+	var BU_IOT = {};
+	var IMT = {};
+	var key = {};
+	var countries = {};
+	var country = {};
+	var iot = {};
+	var indexIOT = {};
+	var indexIOTIMTs = {};
+	var response = {};
+	var uri = "http://mira-connector-dev.w3ibm.mybluemix.net/showAlldata?designdoc=wwbcitdocs&viewname=hierarchy";
+	try{
+		util.callhttp(uri).then(function(data){
+
+			var json = data.doc;
+				
+			try{
+				
+				
+				for(var i=0;i<json.length;i++){  //Iterate on all the response by country
+				
+					if(json[i].doc.COUNTRY != ""){
+					
+					
+					country["id"] = json[i].doc.ID;
+					country["IMT"] = json[i].doc.SUB_GEO;
+					country["IOT"] = json[i].doc.GEO;
+					countries[json[i].doc.COUNTRY]= country;
+
+					if(typeof IMT[json[i].doc.SUB_GEO] !== 'undefined'){ // check if IMT exist and add the addional countries
+						IMT[json[i].doc.SUB_GEO].push(json[i].doc.COUNTRY);
+
+					}else{  // if not add the new IMT with its country
+
+						IMT[json[i].doc.SUB_GEO] = [json[i].doc.COUNTRY];
+
+						imt= {};
+					}
+
+					if(typeof indexIOT[json[i].doc.GEO] !== 'undefined' ){ // check if IOT exist and add the addional countries
+						if(typeof indexIOTIMTs[json[i].doc.SUB_GEO] === 'undefined' ){
+							IOT[indexIOT[json[i].doc.GEO]].IMTs.push(json[i].doc.SUB_GEO);
+							indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
+						}
+
+					}else{  // if not add the new IMT with its country
+						iot["name"] = json[i].doc.GEO;
+						iot["IMTs"] = [json[i].doc.SUB_GEO];
+						IOT.push(iot);
+						indexIOT[json[i].doc.GEO] = IOT.length-1;
+						indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
+						iot= {};
+					}
+
+					country = {};
+					}
+					else{
+						if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO != ""){//IMT record process
+								var tempIMT = {};
+								
+								tempIMT["IMT"] = json[i].doc.SUB_GEO;
+								tempIMT["IOT"] = json[i].doc.GEO;
+								
+								BU_IMT[json[i].doc.ID] = tempIMT;
+								tempIMT = {};
+							
+						}
+						if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO == "" && json[i].doc.GEO != ""){// IOT record
+								var tempIOT = {};
+														
+								tempIOT["IOT"] = json[i].doc.GEO;
+							
+								BU_IOT[json[i].doc.ID] = tempIOT;
+								tempIOT = {};
+							
+						}
+						
+						
+						
+					}
+				}
+					
+			}catch(e){console.log(e);}
 
 
-
-			return deferred.promise;
-
+			response["countries"]= countries;
+			response["IMT"] = IMT;
+			response["IOT"] = IOT;
+			response["BU_IMT"] = BU_IMT;
+			response["BU_IOT"] = BU_IOT;
 		
-		},
+		
+			
+			deferred.resolve({"status": 200, "response": response});
 
+		}).catch(function(error){ //end getParam
+
+			deferred.reject({"status": 500, "error": err.error.reason});
+
+		});
+
+
+	}catch(e){
+		deferred.reject({"status": 500, "error": e});
+	}
+
+	return deferred.promise;
+
+
+},
 
 }
 

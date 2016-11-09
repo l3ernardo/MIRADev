@@ -1,0 +1,137 @@
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
+
+
+<input type="hidden" id="docTitle" value="Country Process Key Control Sample">
+<input type="hidden" id="docSubTitle" value="{{subtitle}}">
+<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').text($('input#docSubTitle').val());
+	$('input#docTitle').remove();
+	$('input#docSubTitle').remove();
+</script>
+<div class="ibm-container" style="width:80%">
+	<p style="text-align:right">
+		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+	</p>
+
+
+<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+  <caption class="mira-caption"><em>Sample information</em></caption>
+<tr>
+  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
+</tr>
+<tr>
+  <td>Original reporing quarter:</td><td><b class="ibm-important">{{originalReportingQuarter}}</b></td>
+</tr>
+<tr>
+  <td>Sample unique ID:</td><td>{{sampleUniqueID}}</td>
+</tr>
+<tr>
+  <td>URL:</td><td><a href="{{url}}">{{url}}</a></td>
+</tr>
+<tr>
+  <td>Controllable Unit:</td><td>{{controllableUnit}}</td>
+</tr>
+<tr>
+  <td>Reporting Country:</td><td>{{reportingCountry}}</td>
+</tr>
+<tr>
+  <td>Sampled Country:</td><td>{{sampledCountry}}</td>
+</tr>
+<tr>
+  <td>Process sampled:</td><td>{{processSampled}}</td>
+</tr>
+<tr>
+  <td>CU Category:</td><td>{{CUCategory}}</td>
+</tr>
+<tr>
+  <td>CU Sub Categoru:</td><td>{{CUSubCategory}}</td>
+</tr>
+<tr>
+  <td>Control Type:</td><td>{{controlType}}</td>
+</tr>
+<tr>
+  <td>Control reference number:</td><td>{{controlReferenceNumber}}</td>
+</tr>
+<tr>
+  <td>Control short name:</td><td>{{controlShortName}}</td>
+</tr>
+<tr>
+  <td>Owning business unit:</td><td>{{owningBusinessUnit}}</td>
+</tr>
+<tr>
+  <td>BU IMT:</td><td>{{IMT}}</td>
+</tr>
+<tr>
+  <td>BU IOT:</td><td>{{IOT}}</td>
+</tr>
+<tr>
+  <td>Original Target Date:</td><td>{{{dateDisplay originalTargetDate}}}</td>
+</tr>
+<tr>
+  <td>Action Plan Owner:</td><td>{{actionPlanOwner}}</td>
+</tr>
+<tr>
+  <td>Root Cause of Defects:</td><td>{{rootCauseDefects}}</td>
+</tr>
+
+</table>
+
+<table id="details_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+  <caption class="mira-caption"><em>Details</em></caption>
+  <thead bgcolor="#FF0000" style="color:#FFFFFF;">
+    <tr>
+      <th >Test Type</th>
+      <th ># Tests</th>
+      <th >Defect Type</th>
+      <th ># Defects</th>
+      <th >RAG Status</th>
+      <th >Remediation Status</th>
+      <th style="width:10%;">Target to Close</th>
+      <th >Defects Abstract</th>
+      <th >Remaining Financial Impact</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td >{{testType}}</td>
+      <td >{{numTests}}</td>
+      <td >{{defectType}}</td>
+      <td >{{numDefects}}</td>
+      <td >{{{ratingDisplay RAGStatus}}}</td>
+      <td >{{remediationStatus}}</td>
+      <td style="width:10%;">{{{dateDisplay targetClose}}}</td>
+      <td >{{defectsAbstract}}</td>
+      <td >{{{moneyDisplay remainingFinancialImpact}}}</td>
+    </tr>
+    </tbody>
+    <thead>
+    <tr>
+      <th bgcolor="#FF0000" colspan="9"  align="center" style="width:100%;color:#FFFFFF;text-align:center;">Description of Defects</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+      <td colspan="9" style="width:100%;">{{defectsDescription}}</td>
+    </tr>
+  </tbody>
+</table>
+
+		<div class="ibm-buttons-row">
+			<p>
+				<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
+			</p>
+		</div>
+</div>
+<script>
+$('#btn_cancel').click(function() {
+	window.location.href = "/assessment?id="+$('#parentid').val();
+});
+</script>

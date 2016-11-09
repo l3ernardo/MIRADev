@@ -2,7 +2,7 @@ var register = function(Handlebars) {
 	var helpers = {
 		// put all of your helpers inside this object
 		valuesToString: function(context) {
-	    return JSON.stringify(context);
+			return JSON.stringify(context);
 		},
 		foo: function(){
 			return "FOO";
@@ -46,6 +46,21 @@ var register = function(Handlebars) {
 				'</select>';
 
 			return selElem;
+		},
+		//Display icon on Dashboards for each document based on the status field
+		statusIcon:function(statusValue){
+			if(statusValue == "Draft"){
+				return "td_icon_edit";
+			}
+			else if(statusValue == "Final"){
+				return "td_icon_check";
+			}
+			else if(statusValue == "Ready for Review"){
+				return "td_icon_readyreview";
+			}
+			else if(statusValue == ""){
+				return "td_icon_empty";
+			}
 		},
 		ratingDisplay: function(rating, field) {
 			var ratinghtml;
@@ -112,6 +127,22 @@ var register = function(Handlebars) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
 				drhtml = '<td class="asmt-viewdata-centered">-</td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
+			} else {
+				if (dr < margThreshold)
+					drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
+				else if (dr >= unsatThreshold)
+					drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
+				else
+					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
+			}
+			return drhtml;
+		},
+		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
+			var drhtml;
+			if (dr == undefined || dr == "") {
+				drhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
 				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
 			} else {
@@ -219,6 +250,42 @@ var register = function(Handlebars) {
 			}
 			return datehtml;
 		},
+		moneyDisplay: function(money) {
+			var moneyhtml;
+			if (money == undefined) {
+
+			} else {
+				if (money == "") {
+					moneyhtml = '<span style="padding-left:1em; padding-right:1em"><b>$'+money+'</b></span>';
+				} else {
+
+					if(money >= 0)
+						moneyhtml = '<span style="padding-left:1em; padding-right:1em; color:#00ff00;"><b>$'+money+'</b></span>';
+					else
+						moneyhtml = '<span style="padding-left:1em; padding-right:1em; color: #ff0000"><b>$'+money+'</b></span>';
+				}
+			}
+			return moneyhtml;
+		},
+		openRiskDisplay: function(open, date) {
+			var datehtml;
+			if (open == undefined) {
+
+			} else {
+				if (open < 0) {
+					datehtml = '<span style="padding-left:1em; padding-right:1em">$'+date+'</span>';
+				} else {
+					var currdate = new Date();
+					var dateval = new Date(date);
+					currdate.setHours(0,0,0,0);
+					if(dateval >= currdate)
+						datehtml = '<span style="padding-right:1em">'+date+'</span>';
+					else
+						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
+					}
+				}
+			return datehtml;
+		},
 		radioBtnVal: function(fieldName, fieldVal) {
 			var radioBtnHtml;
 			if (fieldVal == "Yes") {
@@ -268,28 +335,28 @@ var register = function(Handlebars) {
 		listWithComa: function(list){
 			var newList='';
 
-		if(typeof list != 'undefined'){ 
+		if(typeof list != 'undefined'){
 			for(i=0; i<list.length; i++){
-				
+
 				if(list.charAt(i) != ',')
 				newList += list.charAt(i);
 				else
 				newList += '</br>';
-				
- 
-			} 
+
+
+			}
 		}
-			
+
 		return newList;
 		},
-		
+
 		getSourceColor: function(option){
 
 			if(option == "WWBCIT")
 			return "background-color: #C0E1FF;"
-			else return "background-color: #C2FF91;"		
+			else return "background-color: #C2FF91;"
 
-		} 
+		}
 	};
 
 	if (Handlebars && typeof Handlebars.registerHelper === "function") {

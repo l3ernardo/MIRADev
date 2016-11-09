@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	//Hide left navigation
-	hide_divs();
+	//hide_divs();
 	//display as htmls
 	$("#ratingcategoryDisplay").html($("input[name='ratingcategory']").val());
 	$("#ratingcategoryDisplayByIOT").html($("input[name='ratingcategory']").val());
@@ -14,6 +14,9 @@ $(document).ready(function(){
 		case "Country Process":
 			$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
 			break;
+		case "BU IOT":
+		case "BU IMT":
+		case "BU Country":
 		case "Global Process":
 			$("#OverallAssessmentCommentsReadOnly").html($("input[name='OverallAssessmentCommentsRO']").val());
 			$("#KCFRTestingCommentsReadOnly").html($("input[name='KCFRTestingCommentsRO']").val());
@@ -67,6 +70,9 @@ $(document).ready(function(){
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
+			case "BU IOT":
+			case "BU IMT":
+			case "BU Country":
 			case "Global Process":
 				myEditorOverallAssessmentComments.saveHTML();
 				YmyEditor = myEditorOverallAssessmentComments.get('element').value;
@@ -132,6 +138,9 @@ $(document).ready(function(){
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
+			case "BU IOT":
+			case "BU IMT":
+			case "BU Country":
 			case "Global Process":
 				myEditorOverallAssessmentComments.saveHTML();
 				YmyEditor = myEditorOverallAssessmentComments.get('element').value;
@@ -204,6 +213,9 @@ $(document).ready(function(){
 			myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
 			myEditorAsmtOtherConsiderations.render();
 			break;
+		case "BU IOT":
+		case "BU IMT":
+		case "BU Country":
 		case "Global Process":
 			myEditorOverallAssessmentComments = new YAHOO.widget.SimpleEditor('OverallAssessmentComments', myConfig);
 			myEditorOverallAssessmentComments.render();

@@ -84,61 +84,56 @@ router.get('/businessunit', isAuthenticated, function(req, res){
 	});
 
 
-
-//Create GEO Hierarchy
-
-	geohierarchy.createGEOHierarchy(req,db).then(function (data){
-
-			if(data.status==200 & !data.error) { 
-		
-				req.session["hierarchy"] = data.response; //hierarchy saved on session var with the structure of req.session.hierarchy.IMT / req.session.hierarchy.IOT / req.session.hierarchy.countries
-		
-						
-			}else{
-				
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][createGeoHierarchy] - " + data.error);
-			
-			
-			}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][createGeoHierarchy] - " + err.error);
-
-		});
-
-
-
 });
 
 
 
 /* Save Business Unit */
 router.post('/savebunit', isAuthenticated, function(req, res){
-	businessunit.saveBU(req, db).then(function(data) {
-		if(data.status==200 & !data.error) {
-			req.session.businessunit = data.bunit;
-			req.session.user.version = data.version;
-			businessunit.getMenu(req,db).then(function(data) {
-			if(data.status==200 & !data.error) {
-				req.app.locals.submenu = data.submenu;
-				// Control the bulletin message to be displayed
-				dialog.displayBulletin(req, db).then(function(data) {
+	geohierarchy.createGEOHierarchy(req,db).then(function(response){	
+		businessunit.saveBU(req, db).then(function(data) {
+			if(data.status==200 & !data.error) { 
+				req.app.locals.hierarchy = response.response;//save in locals due to session 1 K limit
+				req.session.businessunit = data.bunit;
+				req.session.user.version = data.version;
+				req.session.quarter = data.quarter;
+				businessunit.getMenu(req,db).then(function(data) {
 					if(data.status==200 & !data.error) {
-							if(data.doc) {
-								//Redirect to original URL, if available
-								console.log('URL requested: ' + req.session.returnTo);
-								if(typeof req.session.returnTo!='undefined') {
-									if(req.session.returnTo!='' && req.session.returnTo!='/' && req.session.returnTo!='-') {
-										var rtn = req.session.returnTo;
-										req.session.returnTo = '-';
-										req.flash('url', '-');
-										res.redirect(rtn);
+						req.app.locals.submenu = data.submenu;
+						// Control the bulletin message to be displayed
+						dialog.displayBulletin(req, db).then(function(data) {
+							if(data.status==200 & !data.error) {
+								if(data.doc) {
+									//Redirect to original URL, if available
+									console.log('URL requested: ' + req.session.returnTo);
+									if(typeof req.session.returnTo!='undefined') {
+										if(req.session.returnTo!='' && req.session.returnTo!='/' && req.session.returnTo!='-') {
+											var rtn = req.session.returnTo;
+											req.session.returnTo = '-';
+											req.flash('url', '-');
+											res.redirect(rtn);
+										} else {
+											
+											res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+										}
 									} else {
 										res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
 									}
 								} else {
-									res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
+									//Redirect to original URL, if available
+									console.log('URL requested: ' + req.session.returnTo);
+									if(typeof req.session.returnTo!='undefined') {
+										if(req.session.returnTo!='' && req.session.returnTo!='/') {
+											var rtn = req.session.returnTo;
+											req.session.returnTo = '-';
+											req.flash('url', '-');
+											res.redirect(rtn);
+										} else {
+											res.redirect('index');
+										}
+									} else {
+										res.redirect('index');
+									}
 								}
 							} else {
 								//Redirect to original URL, if available
@@ -156,35 +151,29 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 									res.redirect('index');
 								}
 							}
-						} else {
-							//Redirect to original URL, if available
-							console.log('URL requested: ' + req.session.returnTo);
-							if(typeof req.session.returnTo!='undefined') {
-								if(req.session.returnTo!='' && req.session.returnTo!='/') {
-										var rtn = req.session.returnTo;
-										req.session.returnTo = '-';
-										req.flash('url', '-');
-										res.redirect(rtn);
-								} else {
-									res.redirect('index');
-								}
-							} else {
-								res.redirect('index');
-							}
-						}
-					}).catch(function(err) {
-						res.redirect('index');
-					})
-				}
-			})
-		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][savebunit] - " + data.error);
-		}
-	}).catch(function(err) {
+						}).catch(function(err) {
+							res.redirect('index');
+						});
+					} else {
+						res.render('error',{errorDescription: data.error});
+						console.log("[routes][getMenu] - " + data.error);
+					}//end if getMenu
+				}).catch(function(err) {//end getMenu
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][getMenu] - " + err.error);
+				});
+			} else {
+				res.render('error',{errorDescription: data.error});
+				console.log("[routes][savebunit] - " + data.error);
+			}//end if saveBU
+		}).catch(function(err) {//end saveBU
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][savebunit] - " + err.error);
+		});
+	}).catch(function(err) {//end GEO Hierarchy
 		res.render('error',{errorDescription: err.error});
-		console.log("[routes][savebunit] - " + err.error);
-	})
+		console.log("[routes][Hierarchy] - " + err.error);
+	});
 });
 /**************************************************************
 BULLETIN FUNCTIONALITY
