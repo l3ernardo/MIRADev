@@ -116,6 +116,8 @@ createGEOHierarchy: function(req){
 	var deferred = q.defer();
 
 	var IOT = [];
+	var BU_IMT = {};
+	var BU_IOT = {};
 	var IMT = {};
 	var key = {};
 	var countries = {};
@@ -129,49 +131,84 @@ createGEOHierarchy: function(req){
 		util.callhttp(uri).then(function(data){
 
 			var json = data.doc;
-
+				
 			try{
+				
+				
 				for(var i=0;i<json.length;i++){  //Iterate on all the response by country
-					country["id"] = json[i].ID;
-					country["IMT"] = json[i].SUB_GEO;
-					country["IOT"] = json[i].GEO;
-					countries[json[i].COUNTRY]= country;
+				
+					if(json[i].doc.COUNTRY != ""){
+					
+					
+					country["id"] = json[i].doc.ID;
+					country["IMT"] = json[i].doc.SUB_GEO;
+					country["IOT"] = json[i].doc.GEO;
+					countries[json[i].doc.COUNTRY]= country;
 
-					if(typeof IMT[json[i].SUB_GEO] !== 'undefined'){ // check if IMT exist and add the addional countries
-						IMT[json[i].SUB_GEO].push(json[i].COUNTRY);
+					if(typeof IMT[json[i].doc.SUB_GEO] !== 'undefined'){ // check if IMT exist and add the addional countries
+						IMT[json[i].doc.SUB_GEO].push(json[i].doc.COUNTRY);
 
 					}else{  // if not add the new IMT with its country
 
-						IMT[json[i].SUB_GEO] = [json[i].COUNTRY];
+						IMT[json[i].doc.SUB_GEO] = [json[i].doc.COUNTRY];
 
 						imt= {};
 					}
 
-					if(typeof indexIOT[json[i].GEO] !== 'undefined' ){ // check if IOT exist and add the addional countries
-						if(typeof indexIOTIMTs[json[i].SUB_GEO] === 'undefined' ){
-							IOT[indexIOT[json[i].GEO]].IMTs.push(json[i].SUB_GEO);
-							indexIOTIMTs[json[i].SUB_GEO] = "true";
+					if(typeof indexIOT[json[i].doc.GEO] !== 'undefined' ){ // check if IOT exist and add the addional countries
+						if(typeof indexIOTIMTs[json[i].doc.SUB_GEO] === 'undefined' ){
+							IOT[indexIOT[json[i].doc.GEO]].IMTs.push(json[i].doc.SUB_GEO);
+							indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
 						}
 
 					}else{  // if not add the new IMT with its country
-						iot["name"] = json[i].GEO;
-						iot["IMTs"] = [json[i].SUB_GEO];
+						iot["name"] = json[i].doc.GEO;
+						iot["IMTs"] = [json[i].doc.SUB_GEO];
 						IOT.push(iot);
-						indexIOT[json[i].GEO] = IOT.length-1;
-						indexIOTIMTs[json[i].SUB_GEO] = "true";
+						indexIOT[json[i].doc.GEO] = IOT.length-1;
+						indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
 						iot= {};
 					}
 
 					country = {};
-
+					}
+					else{
+						if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO != ""){//IMT record process
+								var tempIMT = {};
+								
+								tempIMT["IMT"] = json[i].doc.SUB_GEO;
+								tempIMT["IOT"] = json[i].doc.GEO;
+								
+								BU_IMT[json[i].doc.ID] = tempIMT;
+								tempIMT = {};
+							
+						}
+						if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO == "" && json[i].doc.GEO != ""){// IOT record
+								var tempIOT = {};
+														
+								tempIOT["IOT"] = json[i].doc.GEO;
+							
+								BU_IOT[json[i].doc.ID] = tempIOT;
+								tempIOT = {};
+							
+						}
+						
+						
+						
+					}
 				}
+					
 			}catch(e){console.log(e);}
 
 
 			response["countries"]= countries;
 			response["IMT"] = IMT;
 			response["IOT"] = IOT;
-
+			response["BU_IMT"] = BU_IMT;
+			response["BU_IOT"] = BU_IOT;
+		
+		
+			
 			deferred.resolve({"status": 200, "response": response});
 
 		}).catch(function(error){ //end getParam
