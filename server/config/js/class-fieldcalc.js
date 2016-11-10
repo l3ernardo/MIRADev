@@ -375,6 +375,16 @@ var calculatefield = {
             }
           };
           break;
+        case "BU Reporting Group":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "BRGMembership":{"$in":[doc[0]._id]}
+            }
+          };
+          break;
         case "Controllable Unit":
           var asmts = {
             selector:{
