@@ -26,12 +26,13 @@
 <script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
 
-<div class="ibm-container" style="width:85%">
+<div class="ibm-container" style="width:95%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 	</p>
 	<form id="assessment" class="ibm-column-form" name="form" method="POST" action="/saveasmt">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
+		<input type="hidden" name="parentid" id="docid" value="{{parentid}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="close" id="close" value="0">

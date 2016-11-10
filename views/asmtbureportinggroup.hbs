@@ -1,0 +1,52 @@
+<script src="/js/asmtbasic_section.js" type="text/javascript"></script>
+<script src="/js/asmt_componentsrollup.js" type="text/javascript"></script>
+<script src="/js/assessment.js" type="text/javascript"></script>
+<script src="./js/attachments.js"/></script>
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="./css/jquery-ui.css">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
+
+<input type="hidden" id="docTitle" value="{{CurrentPeriod}} Holistic Rollup Assessment">
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').hide();
+</script>
+
+<!-- JS and CSS for rich text edit -->
+<link rel="stylesheet" type="text/css" href="./css/skin.css">
+<!-- Utility Dependencies -->
+<script src="./lib/yahoo-dom-event.js"></script>
+<script src="./lib/element-min.js"></script>
+<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+<script src="./lib/container_core-min.js"></script>
+<!-- Source file for Rich Text Editor-->
+<script src="./lib/simpleeditor-min.js"></script>
+<script src="./lib/yui-min.js"></script>
+<!-- end rich text -->
+
+<div class="ibm-container" style="width:95%">
+	<p style="text-align:right">
+		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
+	</p>
+	<form id="assessment" class="ibm-column-form" name="form" method="POST" action="/saveasmt">
+		<input type="hidden" name="docid" id="docid" value="{{_id}}">
+		<input type="hidden" name="parentid" id="docid" value="{{parentid}}">
+		<input type="hidden" name="editmode" value="{{editmode}}">
+		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
+		<input type="hidden" name="close" id="close" value="0">
+		<!-- Basic Details -->
+		{{>asmtbureportinggroup/basics}}
+		<!-- Exception Details -->
+		{{>asmtexception}}
+		<!-- Contact -->
+		{{>asmtcontact}}<br /><br />
+		<!-- Assessment tabs -->
+		{{>asmtbureportinggroup/managementreport}}<br /><br />
+		<!-- NOTES & LINKS SECTION -->
+		{{>comments}}
+		<!-- BUTTONS AREA -->
+		{{>buttons}}
+	</form>
+</div>

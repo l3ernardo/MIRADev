@@ -2,7 +2,7 @@ var register = function(Handlebars) {
 	var helpers = {
 		// put all of your helpers inside this object
 		valuesToString: function(context) {
-	    return JSON.stringify(context);
+			return JSON.stringify(context);
 		},
 		foo: function(){
 			return "FOO";
@@ -46,6 +46,21 @@ var register = function(Handlebars) {
 				'</select>';
 
 			return selElem;
+		},
+		//Display icon on Dashboards for each document based on the status field
+		statusIcon:function(statusValue){
+			if(statusValue == "Draft"){
+				return "td_icon_edit";
+			}
+			else if(statusValue == "Final"){
+				return "td_icon_check";
+			}
+			else if(statusValue == "Ready for Review"){
+				return "td_icon_readyreview";
+			}
+			else if(statusValue == ""){
+				return "td_icon_empty";
+			}
 		},
 		ratingDisplay: function(rating, field) {
 			var ratinghtml;

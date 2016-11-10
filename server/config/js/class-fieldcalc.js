@@ -132,7 +132,7 @@ var calculatefield = {
         }
   		}
       // For Operational Metric setup keys
-      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" || doc[0].ParentDocSubType == "BU Country") {
+      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
         var opMetricKey;
         switch (doc[0].ParentDocSubType) {
           case "Country Process":
@@ -147,6 +147,8 @@ var calculatefield = {
             lParams.push('ProcessCatFIN');
             opMetricKey = "OpMetric" + doc[0].WWBCITKey;
             break;
+          case "BU IOT":
+          case "BU IMT":
           case "BU Country":
             if (doc[0].BUWWBCITKey == "BSU300000027")
               opMetricKey = "GBSGeoOpMetric";
@@ -243,7 +245,7 @@ var calculatefield = {
                     }
                   }
                 } else {
-                  // For Global Process and BU Country
+                  // For Global Process, BU Country, BU IMT and BU IOT
                   doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
                   doc[0].OpMetric[j].ratingfield = opID + "Rating";
                   doc[0].OpMetric[j].commentfield = opID + "Comment";
@@ -344,6 +346,42 @@ var calculatefield = {
               "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
               "BusinessUnit": doc[0].BusinessUnit,
               "Country": doc[0].Country
+            }
+          };
+          break;
+        case "BU IMT":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU Country","BU IMT"]},
+              "BusinessUnit": doc[0].BusinessUnit,
+              "IMT": doc[0].IMT
+            }
+          };
+          break;
+        case "BU IOT":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "$or": [
+                { "$and": [{"BusinessUnit": doc[0].BusinessUnit},{"IOT": doc[0].IOT},{"ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU IMT","BU IOT"]}}] },
+                { "$and": [{"ParentDocSubType": "BU Country"},{"_id": doc[0].BUCountryIOT}] },
+                { "$and": [{"ParentDocSubType": "BU Reporting Group"},{"_id": doc[0].RGRollup}] },
+              ]
+            }
+          };
+          break;
+        case "BU Reporting Group":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "BRGMembership":{"$in":[doc[0]._id]}
             }
           };
           break;
@@ -653,105 +691,28 @@ var calculatefield = {
         else
           doc[0].CPTotalPct = "100%";
 
-      } else { // For BU Country, BU IOT, BU IMT and Business Unit which needs to process ratings profile for both CU and CP
+      }
+      else { // For BU Country, BU IOT, BU IMT and Business Unit which needs to process ratings profile for both CU and CP
 
+        var podatactr = 0;
         for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-          switch (doc[0].ParentDocSubType) {
-            case "BU Country":
-              if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
-                // Process Ratings Tab embedded views
-                toadd = {
-                  "docid":doc[0].asmtsdocs[i]._id,
-                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                  "process":doc[0].asmtsdocs[i].GlobalProcess,
-                  "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
-                  "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                  "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                  "targettosat":doc[0].asmtsdocs[i].Target2Sat,
-                  "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
-                  "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
-                };
-                doc[0].BUCAsmtDataPRview.push(toadd);
-              } else {
-              // CU Ratings Tab embedded views
-                toadd = {
-                  "docid":doc[0].asmtsdocs[i]._id,
-                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                  "size":doc[0].asmtsdocs[i].CUSize,
-                  "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
-                  "cqscore":doc[0].asmtsdocs[i].CUScore,
-                  "pqscore":doc[0].asmtsdocs[i].CUScorePrev,
-                  "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
-                  "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                  "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                  "targettosat":doc[0].asmtsdocs[i].Target2Sat,
-                  "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
-                  "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
-                };
-                doc[0].BUCAsmtDataCURview.push(toadd);
-              }
-              // PO tab performance indicators view
-              toadd = {
-                "docid":doc[0].asmtsdocs[i]._id,
-                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
-              };
-              doc[0].BUCAsmtDataPIview.push(toadd);
-              // PO tab other indicators view
-              toadd = {
-                "docid":doc[0].asmtsdocs[i]._id,
-                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
-              };
-              doc[0].BUCAsmtDataOIview.push(toadd);
-              for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
-                doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
-              }
 
-              // Basics of Control Exception Counter
-              if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
-              break;
-          }
-          // Rating Category Counters
-          if (doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit") {
-            // Rating Category Counters for CU
-            switch (doc[0].asmtsdocs[i].RatingCategory) {
-              case "Sat &#9650;":
-                satUpCU = satUpCU + 1;
-                break;
-              case "Sat &#61;":
-                satEqCU = satEqCU + 1;
-                break;
-              case "Marg &#9650;":
-                margUpCU = margUpCU + 1;
-                break;
-              case "Marg &#9660;":
-                margDwnCU = margDwnCU + 1;
-                break;
-              case "Marg &#61;":
-                margEqCU = margEqCU + 1;
-                break;
-              case "Unsat &#9660;":
-                unsatDwnCU = unsatDwnCU + 1;
-                break;
-              case "Unsat &#61;":
-                unsatEqCU = unsatEqCU + 1;
-                break;
-              case "Exempt":
-                exemptCU = exemptCU + 1;
-                break;
-              default:
-                nrCU = nrCU + 1;
-            }
-          } else {
+          if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+            // Process Ratings Tab embedded views
+            toadd = {
+              "docid":doc[0].asmtsdocs[i]._id,
+              "name":doc[0].asmtsdocs[i].AssessableUnitName,
+              "country":doc[0].asmtsdocs[i].Country,
+              "imt":doc[0].asmtsdocs[i].IMT,
+              "process":doc[0].asmtsdocs[i].GlobalProcess,
+              "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+              "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+              "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+              "targettosat":doc[0].asmtsdocs[i].Target2Sat,
+              "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+              "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+            };
+            doc[0].BUCAsmtDataPRview.push(toadd);
             // Rating Category Counters for CP
             switch (doc[0].asmtsdocs[i].RatingCategory) {
               case "Sat &#9650;":
@@ -791,10 +752,134 @@ var calculatefield = {
                 else nrOps = nrOps + 1;
             }
           }
+          if (doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit") {
+            // CU Ratings Tab embedded views
+            toadd = {
+              "docid":doc[0].asmtsdocs[i]._id,
+              "name":doc[0].asmtsdocs[i].AssessableUnitName,
+              "country":doc[0].asmtsdocs[i].Country,
+              "imt":doc[0].asmtsdocs[i].IMT,
+              "size":doc[0].asmtsdocs[i].CUSize,
+              "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
+              "cqscore":doc[0].asmtsdocs[i].CUScore,
+              "pqscore":doc[0].asmtsdocs[i].CUScorePrev,
+              "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+              "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+              "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+              "targettosat":doc[0].asmtsdocs[i].Target2Sat,
+              "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+              "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+            };
+            doc[0].BUCAsmtDataCURview.push(toadd);
 
+            // Rating Category Counters for CU
+            switch (doc[0].asmtsdocs[i].RatingCategory) {
+              case "Sat &#9650;":
+                satUpCU = satUpCU + 1;
+                break;
+              case "Sat &#61;":
+                satEqCU = satEqCU + 1;
+                break;
+              case "Marg &#9650;":
+                margUpCU = margUpCU + 1;
+                break;
+              case "Marg &#9660;":
+                margDwnCU = margDwnCU + 1;
+                break;
+              case "Marg &#61;":
+                margEqCU = margEqCU + 1;
+                break;
+              case "Unsat &#9660;":
+                unsatDwnCU = unsatDwnCU + 1;
+                break;
+              case "Unsat &#61;":
+                unsatEqCU = unsatEqCU + 1;
+                break;
+              case "Exempt":
+                exemptCU = exemptCU + 1;
+                break;
+              default:
+                nrCU = nrCU + 1;
+            }
+          }
+
+          switch (doc[0].ParentDocSubType) {
+            case "BU IOT":
+              if ( doc[0].asmtsdocs[i].ParentDocSubType == "BU IMT" || doc[0].asmtsdocs[i].ParentDocSubType == "BU IOT" || doc[0].asmtsdocs[i].ParentDocSubType == "BU Country" || doc[0].asmtsdocs[i].ParentDocSubType == "BU Reporting Group" ) {
+                // PO tab performance indicators view
+                toadd = {
+                  "docid":doc[0].asmtsdocs[i]._id,
+                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                  "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                  "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+                  "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+                  "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+                  "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+                  "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+                  "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+                  "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+                  "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
+                  "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+                  "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
+                };
+                doc[0].BUCAsmtDataPIview.push(toadd);
+                // PO tab other indicators view
+                toadd = {
+                  "docid":doc[0].asmtsdocs[i]._id,
+                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                  "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                  "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
+                };
+                doc[0].BUCAsmtDataOIview.push(toadd);
+                for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
+                  doc[0].BUCAsmtDataOIview[podatactr][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+                }
+                podatactr = podatactr + 1;
+              }
+              // Basics of Control Exception Counter
+              if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
+              break;
+            case "BU IMT":
+            case "BU Country":
+              // PO tab performance indicators view
+              toadd = {
+                "docid":doc[0].asmtsdocs[i]._id,
+                "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+                "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
+                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
+              };
+              doc[0].BUCAsmtDataPIview.push(toadd);
+              // PO tab other indicators view
+              toadd = {
+                "docid":doc[0].asmtsdocs[i]._id,
+                "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
+              };
+              doc[0].BUCAsmtDataOIview.push(toadd);
+              for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
+                doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+              }
+
+              // Basics of Control Exception Counter
+              if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
+                bocEx = bocEx + 1;
+              }
+              break;
+          // }
+          }
         }
 
-        if (doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country") {
+        if (doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
           doc[0].BOCExceptionCount = bocEx;
         }
         // Processing Financial processes
