@@ -266,7 +266,7 @@ var assessableunit = {
 					var level5 = {};
 					var level6 = {};
 
-					
+
 					if(req.url!='/reportingdashboard'){
 						for(var i = 0; i < doc.length; i++){
 							if(doc[i].LevelType == 1){
@@ -348,12 +348,12 @@ var assessableunit = {
 								}
 							}
 						}
-						
+
 					}
 					else{
 						F = doc;
 					}
-					
+
 					for (var i = 0; i < F.length; i++){
 						view_dashboard.push({
 							assessableUnit: F[i].Name,
@@ -366,7 +366,7 @@ var assessableunit = {
 							type:F[i].DocSubType,
 						});
 					}
-				
+
 				view=JSON.stringify(view_dashboard, 'utf8');
 				deferred.resolve({"status": 200, "doc": F,"view":view});
 			}).catch(function(err) {
@@ -472,7 +472,7 @@ var assessableunit = {
 							selector:{
 								"_id": {"$gt":0},
 								"key": "Assessment",
-								"ParentDocSubType": "Sub-process"	
+								"ParentDocSubType": "Sub-process"
 								}
 							};
 						doc[0].CPData = [];
@@ -482,10 +482,13 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Controllable Unit","BU IMT"]},
 								"BusinessUnit": doc[0].BusinessUnit,
-								"IOT": doc[0].IOT
+								"IOT": doc[0].IOT,
+								"$or": [
+									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": {"$or":["BU IMT","Controllable Unit"]}}] },
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+								]
+
 							}
 						};
 						doc[0].BUIMTData = [];
@@ -609,7 +612,7 @@ var assessableunit = {
 						}
 					}
 					/* Check if user can create assessment */
-					if ( (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") && doc[0].Status == "Active" && hasCurQAsmt == false && (doc[0].editor && doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT")) {
+					if ( (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") && doc[0].Status == "Active" && hasCurQAsmt == false && (doc[0].editor && doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group")) {
 						doc[0].CreateAsmt = true;
 					}
 					/* Calculate for Instance Design Specifics and parameters*/
