@@ -442,17 +442,10 @@ var assessableunit = {
 						constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"$or":
-									[
-										{ "DocSubType":"Global Process" },
-										{ "DocSubType":"BU Reporting Group" },
-										{ "DocSubType":"BU IOT" },
-										{ "$and": [{"DocSubType":"Controllable Unit"},{"ParentDocSubType": "Business Unit"}] }
-									],
-								"BusinessUnit": doc[0].BusinessUnit
-							}
-						};
+								"key": "Assessment",
+								"ParentDocSubType": "Business Unit"	
+								}
+							};
 						doc[0].GPData = [];
 						doc[0].BUIOTData = [];
 						doc[0].RGData = [];
