@@ -851,7 +851,7 @@ var assessableunit = {
 									/* start: get names of admin section IDs for display and IMT name for BU IMT unit*/
 									var $or = [];
 									var brgmIDs = "";
-									if (doc[0].BRGMembership != "") {
+									if (doc[0].BRGMembership != "" && doc[0].BRGMembership != null) {
 										brgmIDs = doc[0].BRGMembership.split(',');
 										for (var i = 0; i < brgmIDs.length; i++) {
 											$or.push({"_id":brgmIDs[i]});
