@@ -2,12 +2,12 @@
 <table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
 	<tr>
-		<td width="25%">Sub-process::</td><td><b>{{AssessableUnitName}}</b></td>
+		<td width="25%">Global Process:</td><td><b>{{AssessableUnitName}}</b></td>
 	</tr>
 	{{#if editmode}}
 		<tr>
 			{{#if RatingEditable}}
-				<td><label for="PeriodRating">Holistic Ratings:<span class="ibm-required">*</span></label></td>
+				<td><label for="PeriodRating">Holistic Rating:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>{{{uniqueSelect "PeriodRating" parameters.PeriodRating.0.options "name" "name" PeriodRating}}}</span><br />
 					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
@@ -15,7 +15,6 @@
 			{{else}}
 				<td>Holistic Rating:</td>
 				<td>
-					<input type="hidden" name="PeriodRating" id="PeriodRating" value="{{PeriodRating}}">
 					{{PeriodRating}}<br />
 					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 				</td>

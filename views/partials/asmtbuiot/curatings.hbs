@@ -155,11 +155,11 @@
 	</tr>
 	<tr class="curating">
 		<td colspan="3">
-			<span class="curating-header">CUs by Country</span><br /><br />
+			<span class="curating-header">CUs by IMT</span><br /><br />
 			<table width="100%">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
-					<th class="curating-viewheader" scope="col" width="10%">Country</th>
+					<th class="curating-viewheader" scope="col" width="10%">IMT</th>
 					<th class="curating-viewheader" scope="col" width="5%">Rating</th>
 					<th class="curating-viewheader" scope="col" width="20%">Controllable Unit</th>
 					<th class="curating-viewheader" scope="col" width="5%">Count</th>
@@ -176,7 +176,7 @@
 				{{#each BUCAsmtDataCURview}}
 					<tr class="asmt-viewdata">
 						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata">{{country}}</td>
+						<td class="asmt-viewdata">{{imt}}</td>
 						<td class="asmt-viewdata">
 							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
 							<div id="ratingcategoryDisplay"></div>

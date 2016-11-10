@@ -24,7 +24,7 @@ $(document).ready(function(){
     $('#Notes').val(YmyEditor);
     $('#close').val("back");
 
-    $("#internalauditform").submit();
+    $("#asmtcomponentform").submit();
   });
   $('#btn_save').click(function(evt) {
     myEditor.saveHTML();
@@ -34,5 +34,5 @@ $(document).ready(function(){
   });
   $('#btn_cancel').click(function() {
     window.location.href = "/assessment?id="+$('#parentid').val();
-  })
+  });
 });

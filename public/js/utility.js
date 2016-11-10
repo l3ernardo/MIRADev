@@ -1,4 +1,7 @@
 function fnReport(element, table, typefile, filename){
+	var now = new Date();
+	var header = "<div>" + filename + ", from: " + $("#ibm-primary-links > #ibm-overview > #ibm-overview-1").html() + ", Extracted on: " + now.toLocaleString() + " </div>";
+	table = header + table;
 	var data = encodeURIComponent(table);
 	var result = "";
 	if(typefile == "xls"){

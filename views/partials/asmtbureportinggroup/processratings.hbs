@@ -220,10 +220,10 @@
 	</tr>
 	<tr class="processrating">
 		<td colspan="3">
-			<span class="processrating-header">Processes by Country</span><br /><br />
+			<span class="processrating-header">Processes by IMT</span><br /><br />
 			<table width="100%">
 				<thead>
-					<th class="processrating-viewheader" scope="col" width="20%">Country</th>
+					<th class="processrating-viewheader" scope="col" width="20%"></th>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
 					<th class="processrating-viewheader" scope="col" width="25%">Process</th>
 					<th class="processrating-viewheader" scope="col" width="5%">Count</th>
@@ -235,7 +235,7 @@
 				</thead>
 				{{#each BUCAsmtDataPRview}}
 					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">{{country}}</td>
+						<td class="asmt-viewdata">{{imt}}</td>
 						<td class="asmt-viewdata">
 							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
 							<div id="ratingcategoryDisplay"></div>

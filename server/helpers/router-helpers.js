@@ -86,6 +86,25 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+		auditsRatingDisplay: function(rating) {
+			var ratinghtml;
+			if (rating == undefined) {
+					ratinghtml = "";
+			} else {
+				if (rating == "Satisfactory") {
+					ratinghtml = '<span style="background-color:#00ff00; padding-left:2em; padding-right:2em">&nbsp;'+rating+'&nbsp;</span>';
+				} else {
+					if (rating == "Marginal") {
+						ratinghtml = '<span style="background-color: #ffff00; padding-left:2em; padding-right:2em">'+rating+'</span>';
+					} else {
+						if (rating == "Unsatisfactory") {
+							ratinghtml = '<span style="background-color: #ff0000; padding-left:2em; padding-right:2em; color: #ffffff">'+rating+'</span>';
+						}
+					}
+				}
+			}
+			return ratinghtml;
+		},
 		ratingBGDisplay: function(rating, field) {
 			var ratinghtml;
 			if (rating == undefined) {
