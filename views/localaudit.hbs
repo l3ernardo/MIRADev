@@ -7,9 +7,9 @@
 
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.min.css">
+<script src='/js/asmtComponentsAudits.js'></script>
 
 <script src="./js/attachments.js"></script>
-
 <!-- JS and CSS for rich text edit -->
 <link rel="stylesheet" type="text/css" href="./css/skin.css">
 <!-- Utility Dependencies -->
@@ -49,14 +49,21 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       <tr>
         <td>Audit or Review:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
       </tr>
+
+      <tr id="auditIDTD2">
+        <div ><td >ID:</td><td ><input type="text" name="auditID" value="{{auditID}}" ></td></div>
+      </tr>
+
       <tr>
-        <td>Report date:</td><td>
+        <td><span  id="reportDateSpan"></span>:</td><td>
           <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
         </td>
       </tr>
+      {{#if procesDisplay}}
       <tr>
         <td>Process(es):</td><td><input type="text" name="process" value="{{process}}" ></td>
       </tr>
+      {{/if}}
       <tr>
         <td>Rating:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
       </tr>
@@ -66,80 +73,97 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       <tr>
         <td>Target to close:</td><td>Original:
           {{#if new}}<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
-          {{else}}
+          {{else}}<input type="hidden" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">
           <br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
           {{/if}}
         </td>
-        </tr>
-        <tr>
-          <td>Comments:</td><td><input type="text" name="comments" value="{{comments}}" ></td>
-        </tr>
-        {{else}}
+      </tr>
+      <tr>
+        <td>Comments:</td><td><input type="text" name="comments" value="{{comments}}" ></td>
+      </tr>
+      {{else}}
 
-        <tr>
-          <td width="25%">ControllableUnit:</td><td><b>{{controllableUnit}}</b></td>
-        </tr>
-        <tr>
-          <td>Audit or Review:</td><td>{{auditOrReview}}</td>
-        </tr>
-        <tr>
-          <td>Report date:</td><td>{{reportDate}}</td>
-        </tr>
-        <tr>
-          <td>Process(es):</td><td>{{process}}</td>
-        </tr>
-        <tr>
-          <td>Rating:</td><td>{{rating}}</td>
-        </tr>
-        <tr>
-          <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
-        </tr>
-        <tr>
-          <td>Target to close:</td><td>Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>
-        </tr>
-        <tr>
-          <td>Comments:</td><td>{{comments}}</td>
-        </tr>
-        {{/if}}
-        <!-- NOTES & LINKS SECTION -->
-        {{>comments}}
-      </table>
+      <tr>
+        <td width="25%">ControllableUnit:</td><td><b>{{controllableUnit}}</b></td>
+      </tr>
+      <tr>
+        <td>Audit or Review:</td><td>{{auditOrReview}}</td>
+      </tr>
+      <tr>
+        <td>Report date:</td><td>{{reportDate}}</td>
+      </tr>
+      {{#if procesDisplay}}
+      <tr>
+        <td>Process(es):</td><td>{{process}}</td>
+      </tr>
+      {{/if}}
+      <tr>
+        <td>Rating:</td><td>{{rating}}</td>
+      </tr>
+      <tr>
+        <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
+      </tr>
+      <tr>
+        <td>Target to close:</td><td>Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>
+      </tr>
+      <tr>
+        <td>Comments:</td><td>{{comments}}</td>
+      </tr>
+      {{/if}}
+      <!-- NOTES & LINKS SECTION -->
+      {{>comments}}
+    </table>
 
-      <!-- BUTTONS AREA -->
-  		{{>buttons}}
-    </form>
-  </div>
-  <script>
-  $(document).ready(function(){
-      $('#reportDate').datepicker({
-      changeMonth: true
-    });
-    $( "#reportDate" ).on( "change", function() {
-      $( "#reportDate" ).datepicker( "option", "dateFormat", "M dd, yy" );
-    });
-    $('#reportDate2').datepicker({
-      changeMonth: true
-    });
-    $( "#reportDate2" ).on( "change", function() {
-      $( "#reportDate2" ).datepicker( "option", "dateFormat", "M dd, yy" );
-    });
-    $('#reportDate3').datepicker({
-      changeMonth: true
-    });
-    $( "#reportDate3" ).on( "change", function() {
-      $( "#reportDate3" ).datepicker( "option", "dateFormat", "M dd, yy" );
-    });
-
-    var val = $("#auditOrReview").val();
-    var tmpList = JSON.parse($("#ratingList").val());
-    $("#rating").html($("#rating").html()+tmpList[val]);
-
-    $("#auditOrReview").change(function () {
-      var val = $(this).val();
-      var tmpList = JSON.parse($("#ratingList").val());
-      $("#rating").html(tmpList[val]);
-    });
-
+    <!-- BUTTONS AREA -->
+    {{>buttons}}
+  </form>
+</div>
+<script>
+$(document).ready(function(){
+  $('#reportDate').datepicker({
+    changeMonth: true
+  });
+  $( "#reportDate" ).on( "change", function() {
+    $( "#reportDate" ).datepicker( "option", "dateFormat", "M dd, yy" );
+  });
+  $('#reportDate2').datepicker({
+    changeMonth: true
+  });
+  $( "#reportDate2" ).on( "change", function() {
+    $( "#reportDate2" ).datepicker( "option", "dateFormat", "M dd, yy" );
+  });
+  $('#reportDate3').datepicker({
+    changeMonth: true
+  });
+  $( "#reportDate3" ).on( "change", function() {
+    $( "#reportDate3" ).datepicker( "option", "dateFormat", "M dd, yy" );
   });
 
-  </script>
+  var val = $("#auditOrReview").val();
+  var tmpList = JSON.parse($("#ratingList").val());
+  $("#rating").html($("#rating").html()+tmpList[val]);
+  if(val == "CHQ Internal Audit"){
+    $("#auditIDTD2").show();
+
+    $("#reportDateSpan").text("Added to AQ DB");
+  }else{
+    $("#auditIDTD2").hide();
+    $("#reportDateSpan").text("Report date");
+  }
+
+  $("#auditOrReview").change(function () {
+    var val = $(this).val();
+    var tmpList = JSON.parse($("#ratingList").val());
+    $("#rating").html(tmpList[val]);
+    if(val == "CHQ Internal Audit"){
+      $("#auditIDTD2").show();;
+      $("#reportDateSpan").text("Added to AQ DB");
+    }else{
+      $("#auditIDTD2").hide();
+      $("#reportDateSpan").text("Report date");
+    }
+  });
+
+});
+
+</script>
