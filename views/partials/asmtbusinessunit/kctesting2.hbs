@@ -1,0 +1,299 @@
+<table id="kctest_table" class="ibm-data-table" width="100%">
+	<tr class="kc-test-content">
+		<td class="kc-test-cell" colspan="4">
+			<table width="100%" class="ibm-data-table">
+				<thead class="kc-test-viewheader">
+					<th class="kc-test-viewheader"></th>
+					<th colspan="10" class="kc-test-viewheader">Defect Rates &amp; Testing Ratios (%) for Prior and Current Quarters</th>
+					<th class="kc-test-viewheader"></th>
+					<th colspan="12" class="kc-test-viewheader"># Unremed. Defects @ QE for Prior and Current Quarters</th>
+				</thead>
+				<thead class="kc-test-viewheader">
+					<th class="kc-test-viewheader"></th>
+					{{#each PrevQtrs}}
+						<th colspan="2" class="kc-test-viewsubheader">{{this}}</th>
+					{{/each}}
+					<th colspan="2" class="asmt-viewdata-centered">{{CurrentPeriod}}</th>
+					<th class="kc-test-viewheader"></th>
+					{{#each PrevQtrs}}
+						<th colspan="2" class="kc-test-viewsubheader">{{this}}</th>
+					{{/each}}
+					<th colspan="4" class="asmt-viewdata-centered">{{CurrentPeriod}}</th>
+				</thead>
+				<tr class="kc-test-viewheader">
+					<td class="kc-test-viewheader" width="10%">Process</td>
+					<td class="kc-test-viewsubheader" width="4%">DR</td>
+					<td class="kc-test-viewsubheader" width="4%">TR</td>
+					<td class="kc-test-viewsubheader" width="4%">DR</td>
+					<td class="kc-test-viewsubheader" width="4%">TR</td>
+					<td class="kc-test-viewsubheader" width="4%">DR</td>
+					<td class="kc-test-viewsubheader" width="4%">TR</td>
+					<td class="kc-test-viewsubheader" width="4%">DR</td>
+					<td class="kc-test-viewsubheader" width="4%">TR</td>
+					<td class="kc-test-viewsubheader" width="4%">DR</td>
+					<td class="kc-test-viewsubheader" width="4%">TR</td>
+					<td class="kc-test-viewheader" width="2%"></td>
+					<td class="kc-test-viewsubheader" width="4%">PQ</td>
+					<td class="kc-test-viewsubheader" width="4%">CQ</td>
+					<td class="kc-test-viewsubheader" width="4%">PQ</td>
+					<td class="kc-test-viewsubheader" width="4%">CQ</td>
+					<td class="kc-test-viewsubheader" width="4%">PQ</td>
+					<td class="kc-test-viewsubheader" width="4%">CQ</td>
+					<td class="kc-test-viewsubheader" width="4%">PQ</td>
+					<td class="kc-test-viewsubheader" width="4%">CQ</td>
+					<td class="kc-test-viewsubheader" width="4%">PQF</td>
+					<td class="kc-test-viewsubheader" width="4%">PQO</td>
+					<td class="kc-test-viewsubheader" width="4%">CQF</td>
+					<td class="kc-test-viewsubheader" width="4%">CQO</td>
+				</tr>
+				<tr class="asmt-viewdata">
+					<td>{{GlobalProcess}}</td>
+					{{{defectRateDisplayView DR1FCurrQ_4 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{TestingRatioDisplay TR1FCurrQ_4 parameters.MargThresholdPercentTR.0.options.0.name parameters.UnsatThresholdPercentTR.0.options.0.name}}}
+					{{{defectRateDisplayView DR1FCurrQ_3 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{TestingRatioDisplay TR1FCurrQ_3 parameters.MargThresholdPercentTR.0.options.0.name parameters.UnsatThresholdPercentTR.0.options.0.name}}}
+					{{{defectRateDisplayView DR1FCurrQ_2 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{TestingRatioDisplay TR1FCurrQ_2 parameters.MargThresholdPercentTR.0.options.0.name parameters.UnsatThresholdPercentTR.0.options.0.name}}}
+					{{{defectRateDisplayView DR1FCurrQ_1 parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{TestingRatioDisplay TR1FCurrQ_1 parameters.MargThresholdPercentTR.0.options.0.name parameters.UnsatThresholdPercentTR.0.options.0.name}}}
+					{{{defectRateDisplayView AUDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+					{{{TestingRatioDisplay AUTestingRatio parameters.MargThresholdPercentTR.0.options.0.name parameters.UnsatThresholdPercentTR.0.options.0.name}}}
+					<td></td>
+					{{{UnremedDefectDisplay PQ1FCurrQ_4}}}
+					{{{UnremedDefectDisplay CQ1FCurrQ_4}}}
+					{{{UnremedDefectDisplay PQ1FCurrQ_3}}}
+					{{{UnremedDefectDisplay CQ1FCurrQ_3}}}
+					{{{UnremedDefectDisplay PQ1FCurrQ_2}}}
+					{{{UnremedDefectDisplay CQ1FCurrQ_2}}}
+					{{{UnremedDefectDisplay PQ1FCurrQ_1}}}
+					{{{UnremedDefectDisplay CQ1FCurrQ_1}}}
+					{{{UnremedDefectDisplay PQ1FCurrQ_F}}}
+					{{{UnremedDefectDisplay PQ1FCurrQ_O}}}
+					{{{UnremedDefectDisplay CQ1FCurrQ_F}}}
+					{{{UnremedDefectDisplay CQ1FCurrQ_O}}}
+				</tr>
+			</table>
+			{{#if editmode}}
+				<table width="100%" class="ibm-data-table">
+					<tr class="kc-test-cell">
+						<td class="kc-test-cell" width="60%">
+							<table width="100%" class="ibm-data-table">
+								<tr class="kc-test-cell">
+									<td class="kc-test-viewsubheader-al" width="80%">Total Country Processes with Defect Rate &ge; 2% / 4%</td>
+									<td class="marg-bg" width="10%"></td>
+									<td class="unsat-bg" width="10%"></td>
+								</tr>
+								<tr><td class="kc-test-cell" colspan="3"></td></tr>
+								<tr>
+									<td class="kc-test-viewheader-al" colspan="3"><b>Explanations for current quarter entries</b></td>
+								</tr>
+								<tr>
+									<td class="asmt-viewdata" colspan="3"><input type="text" name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" value="{{SOXProcessTestingExplanations}}" size="100"></td>
+								</tr>
+								<tr>
+									<td class="kc-test-cell" colspan="3">
+										<span class="mira-subdata2"><b>Back-up information (if needed)</b> attach updated material from Global Scorecard Pre-review (respective information on additional deficiencies in the same format)</span>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td class="kc-test-cell" width="10%"></td>
+						<td class="kc-test-cell" width="30%">
+							<table width="100%" class="ibm-data-table">
+								<tr class="asmt-viewdata">
+									<td colspan="4"><b>Key:</b></td>
+								</tr>
+								<tr class="asmt-viewdata">
+									<td colspan="2"><span class="mira-subdata2"><u>DR: Defect Rate</u></span></td>
+									<td colspan="2"><span class="mira-subdata2"><u>TR: Testing Ratio</u></span></td>
+								</tr>
+								<tr class="asmt-viewdata">
+									<td width="10%">
+										{{{ratingBGDisplay "Sat" ""}}}<br />
+										{{{ratingBGDisplay "Marg" ""}}}<br />
+										{{{ratingBGDisplay "Unsat" ""}}}<br />
+										"-"
+									</td>
+									<td width="40%">
+										<span class="mira-subdata2">
+											DR &lt; 2%<br />
+											2% &le;  DR &lt; 4%<br />
+											DR &ge; 4%<br />
+											Not Applicable
+										</span>
+									</td>
+									<td width="10%">
+										{{{ratingBGDisplay "Sat" ""}}}<br />
+										{{{ratingBGDisplay "Marg" ""}}}<br />
+										{{{ratingBGDisplay "Unsat" ""}}}<br />
+										"-"
+									</td>
+									<td width="40%">
+										<span class="mira-subdata2">
+											TR &ge; 98%<br />
+											95% &le; TR &lt; 98%<br />
+											TR &lt; 95%<br />
+											Not Applicable
+										</span>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr class="kc-test-cell">
+						<th class="kc-test-label" colspan="4">Focus items, key changes, open items, comments for current &amp; next quarter</th>
+					</tr>
+					<tr class="kc-test-cell">
+						<td class="asmt-viewdata" colspan="4">
+							<input type="text" name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" value="{{ProcessTestingFocusItems}}" size="165">
+						</td>
+					</tr>
+				</table>
+			{{else}} <!-- Read Mode -->
+				<table width="100%" class="ibm-data-table">
+					<tr class="kc-test-cell">
+						<td class="kc-test-cell" width="60%">
+							<table width="100%" class="ibm-data-table">
+								<tr class="kc-test-cell">
+									<td class="kc-test-viewsubheader-al" width="80%">Total Country Processes with Defect Rate &ge; 2% / 4%</td>
+									<td class="marg-bg" width="10%"></td>
+									<td class="unsat-bg" width="10%"></td>
+								</tr>
+								<tr><td class="kc-test-cell" colspan="3"></td></tr>
+								<tr>
+									<td class="kc-test-viewheader-al" colspan="3"><b>Explanations for current quarter entries</b></td>
+								</tr>
+								<tr>
+									<td class="asmt-viewdata" colspan="3">&nbsp;{{SOXProcessTestingExplanations}}</td>
+								</tr>
+								<tr>
+									<td class="kc-test-cell" colspan="3">
+										<span class="mira-subdata2"><b>Back-up information (if needed)</b> attach updated material from Global Scorecard Pre-review (respective information on additional deficiencies in the same format)</span>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td class="kc-test-cell" width="10%"></td>
+						<td class="kc-test-cell" width="30%">
+							<table width="100%" class="ibm-data-table">
+								<tr class="asmt-viewdata">
+									<td colspan="4"><b>Key:</b></td>
+								</tr>
+								<tr class="asmt-viewdata">
+									<td colspan="2"><span class="mira-subdata2"><u>DR: Defect Rate</u></span></td>
+									<td colspan="2"><span class="mira-subdata2"><u>TR: Testing Ratio</u></span></td>
+								</tr>
+								<tr class="asmt-viewdata">
+									<td width="10%">
+										{{{ratingBGDisplay "Sat" ""}}}<br />
+										{{{ratingBGDisplay "Marg" ""}}}<br />
+										{{{ratingBGDisplay "Unsat" ""}}}<br />
+										"-"
+									</td>
+									<td width="40%">
+										<span class="mira-subdata2">
+											DR &lt; 2%<br />
+											2% &le;  DR &lt; 4%<br />
+											DR &ge; 4%<br />
+											Not Applicable
+										</span>
+									</td>
+									<td width="10%">
+										{{{ratingBGDisplay "Sat" ""}}}<br />
+										{{{ratingBGDisplay "Marg" ""}}}<br />
+										{{{ratingBGDisplay "Unsat" ""}}}<br />
+										"-"
+									</td>
+									<td width="40%">
+										<span class="mira-subdata2">
+											TR &ge; 98%<br />
+											95% &le; TR &lt; 98%<br />
+											TR &lt; 95%<br />
+											Not Applicable
+										</span>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr class="kc-test-cell">
+						<th class="kc-test-label" colspan="4">Focus items, key changes, open items, comments for current &amp; next quarter</th>
+					</tr>
+					<tr class="kc-test-cell">
+						<td class="asmt-viewdata" colspan="4">&nbsp;{{ProcessTestingFocusItems}}</td>
+					</tr>
+				</table>
+			{{/if}}
+		</td>
+	</tr>
+	<tr class="kc-test-content">
+		<td colspan="4">
+			<span class="kc-test-header"><b>Current Quarter Defect Rate Exceptions</b></span><br /><br />
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="kc-test-viewheader" scope="col" width="50%">Country</th>
+					<th class="kc-test-viewheader" scope="col" width="15%"># Tests</th>
+					<th class="kc-test-viewheader" scope="col" width="15%"># Defects</th>
+					<th class="kc-test-viewheader" scope="col" width="20%">DR %</th>
+				</thead>
+				{{#each KC2Test1Data}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+	<tr class="kc-test-content">
+		<td colspan="4">
+			<span class="kc-test-header"><b>Current Quarter Testing Ratio Exceptions</b></span><br /><br />
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="kc-test-viewheader" scope="col" width="5%"></th>
+					<th class="kc-test-viewheader" scope="col" width="5%"></th>
+					<th class="kc-test-viewheader" scope="col" width="15%">Control</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Req'd Samples</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Samples Tested</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">TR %</th>
+					<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
+					<th class="kc-test-viewheader" scope="col" width="25%">Action plan to meet full year req'd samples</th>
+				</thead>
+				{{#each KC2Test2Data}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+	<tr class="kc-test-content">
+		<td colspan="4">
+			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
+			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="kc-test-viewheader" scope="col" width="5%"></th>
+					<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Country</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Control</th>
+					<th class="kc-test-viewheader" scope="col" width="15%">Controllable Unit</th>
+					<th class="kc-test-viewheader" scope="col" width="15%">Sample</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Original Target to Close</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Current Target to Close</th>
+					<th class="kc-test-viewheader" scope="col" width="10%"># Defects</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
+				</thead>
+				{{#each KC2Test3Data}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+</table>
