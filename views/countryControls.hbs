@@ -98,20 +98,22 @@
       <th style="width:18%;">Controllable Unit</th>
       <th style="width:3%;">Tests</th>
       <th style="width:3%;">Defects</th>
+			<th style="width:5%;">Defect Rate</th>
       <th style="width:8%;">Remed. Status</th>
-      <th style="width:50%;">Defect Absctract</th>
+      <th style="width:45%;">Defect Absctract</th>
     </tr>
   </thead>
   <tbody>
 {{#each samples}}
 <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
-  <td style="width:8%;">{{period}}</td>
+  <td style="width:8%;"><b class="ibm-important">{{period}}</b></td>
   <td style="width:10%;"><a href="/asmtcomponents?id={{id}}">{{sampleUniqueID}}</a></td>
   <td style="width:18%;">{{controllableUnit}}</td>
   <td style="width:3%;">{{numTests}}</td>
   <td style="width:3%;">{{numDefects}}</td>
+	<td {{#if defectRate}} bgcolor="#ff0000" style="color:#FFFFFF;width:5%;"{{/if}}>{{defectRate}}</td>
   <td style="width:8%;">{{remediationStatus}}</td>
-  <td style="width:50%;">{{defectsAbstract}}</td>
+  <td style="width:45%;">{{defectsAbstract}}</td>
 </tr>
 {{/each}}
 </tbody>
