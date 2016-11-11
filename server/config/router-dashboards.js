@@ -444,6 +444,23 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 			if(data.doc) {
 				switch (data.doc[0].ParentDocSubType) {
 					case "Business Unit":
+						var lParams;
+						if (data.doc[0].editmode)
+							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','UnsatThresholdPercent','MargThresholdPercent','OpMetricRating','UnsatThresholdPercentTR','MargThresholdPercentTR','MissedIssueColor'];
+						else
+							lParams = ['UnsatThresholdPercent','MargThresholdPercent','UnsatThresholdPercentTR','MargThresholdPercentTR'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtbusinessunit', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[routes][GPassessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[routes][GPassessment][getListParams] - " + err.error);
+						})
 						break;
 
 					case "Global Process":

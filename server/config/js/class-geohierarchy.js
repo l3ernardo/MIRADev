@@ -176,8 +176,11 @@ createGEOHierarchy: function(req){
 						if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO != ""){//IMT record process
 								var tempIMT = {};
 								
+												
+								
 								tempIMT["IMT"] = json[i].doc.SUB_GEO;
 								tempIMT["IOT"] = json[i].doc.GEO;
+								tempIMT["ID"] = json[i].doc.ID;
 								
 								BU_IMT[json[i].doc.ID] = tempIMT;
 								tempIMT = {};
@@ -187,6 +190,7 @@ createGEOHierarchy: function(req){
 								var tempIOT = {};
 														
 								tempIOT["IOT"] = json[i].doc.GEO;
+								tempIOT["ID"] = json[i].doc.ID;
 							
 								BU_IOT[json[i].doc.ID] = tempIOT;
 								tempIOT = {};

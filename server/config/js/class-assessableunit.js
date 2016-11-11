@@ -442,17 +442,10 @@ var assessableunit = {
 						constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"$or":
-									[
-										{ "DocSubType":"Global Process" },
-										{ "DocSubType":"BU Reporting Group" },
-										{ "DocSubType":"BU IOT" },
-										{ "$and": [{"DocSubType":"Controllable Unit"},{"ParentDocSubType": "Business Unit"}] }
-									],
-								"BusinessUnit": doc[0].BusinessUnit
-							}
-						};
+								"key": "Assessment",
+								"ParentDocSubType": "Business Unit"	
+								}
+							};
 						doc[0].GPData = [];
 						doc[0].BUIOTData = [];
 						doc[0].RGData = [];
@@ -470,7 +463,7 @@ var assessableunit = {
 								]
 							}
 						};
-						console.log(constiobj);
+						
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
@@ -545,7 +538,7 @@ var assessableunit = {
 						doc[0].AccountData = [];
 						break;
 					case "Country Process":
-					console.log("Country P")
+					
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -556,8 +549,7 @@ var assessableunit = {
 								]
 							}
 						};
-						console.log(constiobj)
-						console.log(doc[0]._id)
+						
 						doc[0].ControlData = [];
 						doc[0].CUData = [];
 						break;
@@ -854,7 +846,7 @@ var assessableunit = {
 									/* start: get names of admin section IDs for display and IMT name for BU IMT unit*/
 									var $or = [];
 									var brgmIDs = "";
-									if (doc[0].BRGMembership != "") {
+									if (doc[0].BRGMembership != "" && doc[0].BRGMembership != null) {
 										brgmIDs = doc[0].BRGMembership.split(',');
 										for (var i = 0; i < brgmIDs.length; i++) {
 											$or.push({"_id":brgmIDs[i]});
@@ -1314,19 +1306,24 @@ var assessableunit = {
 						// Get current quarter Assessment
 						fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
 							var asmtdoc = [];
-							asmtdoc.push(asmtdata.doc);
-							// Pass data to current quarter assessment
-							switch (doc[0].DocSubType) {
-								case "Controllable Unit":
-									asmtdoc[0].AuditProgram = doc[0].AuditProgram;
-									asmtdoc[0].Portfolio = doc[0].Portfolio;
-									break;
+							if(asmtdata.doc != undefined){
+								asmtdoc.push(asmtdata.doc);
+								// Pass data to current quarter assessment
+								switch (doc[0].DocSubType) {
+									case "Controllable Unit":
+										asmtdoc[0].AuditProgram = doc[0].AuditProgram;
+										asmtdoc[0].Portfolio = doc[0].Portfolio;
+										break;
+								}
+								db.save(asmtdoc[0]).then(function(asmtdata){
+									deferred.resolve(data);
+								}).catch(function(err) {
+									deferred.reject({"status": 500, "error": err.error.reason});
+								});
 							}
-							db.save(asmtdoc[0]).then(function(asmtdata){
+							else{
 								deferred.resolve(data);
-							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err.error.reason});
-							});
+							}
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});
