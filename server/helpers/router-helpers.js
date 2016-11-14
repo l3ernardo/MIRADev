@@ -2,7 +2,7 @@ var register = function(Handlebars) {
 	var helpers = {
 		// put all of your helpers inside this object
 		valuesToString: function(context) {
-	    return JSON.stringify(context);
+			return JSON.stringify(context);
 		},
 		foo: function(){
 			return "FOO";
@@ -47,6 +47,21 @@ var register = function(Handlebars) {
 
 			return selElem;
 		},
+		//Display icon on Dashboards for each document based on the status field
+		statusIcon:function(statusValue){
+			if(statusValue == "Draft"){
+				return "td_icon_edit";
+			}
+			else if(statusValue == "Final"){
+				return "td_icon_check";
+			}
+			else if(statusValue == "Ready for Review"){
+				return "td_icon_readyreview";
+			}
+			else if(statusValue == ""){
+				return "td_icon_empty";
+			}
+		},
 		ratingDisplay: function(rating, field) {
 			var ratinghtml;
 			if (rating == undefined) {
@@ -65,6 +80,25 @@ var register = function(Handlebars) {
 								ratinghtml = "NA";
 							else
 								ratinghtml = rating;
+						}
+					}
+				}
+			}
+			return ratinghtml;
+		},
+		auditsRatingDisplay: function(rating) {
+			var ratinghtml;
+			if (rating == undefined) {
+					ratinghtml = "";
+			} else {
+				if (rating == "Satisfactory") {
+					ratinghtml = '<span style="background-color:#00ff00; padding-left:2em; padding-right:2em">&nbsp;'+rating+'&nbsp;</span>';
+				} else {
+					if (rating == "Marginal") {
+						ratinghtml = '<span style="background-color: #ffff00; padding-left:2em; padding-right:2em">'+rating+'</span>';
+					} else {
+						if (rating == "Unsatisfactory") {
+							ratinghtml = '<span style="background-color: #ff0000; padding-left:2em; padding-right:2em; color: #ffffff">'+rating+'</span>';
 						}
 					}
 				}
