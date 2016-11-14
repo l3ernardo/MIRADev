@@ -629,7 +629,60 @@ var util = {
 				return {"Log": olddoc["Log"], "fldlist": ""}
 			}
 		}
+	},
+	
+	getIOTChildren: function (id,type,req){
+	
+		var iterator;
+		var entityName;
+		
+		switch(type){
+		
+			case "IOT":
+				entityName = req.app.locals.hierarchy.BU_IOT[id].IOT;
+				iterator = req.app.locals.hierarchy.IOT;
+				
+			break;
+			
+			default:
+				return "in correct type for function";
+			break;
+		}
+			try{
+				
+				for (var key in iterator){
+    	   			if(iterator.hasOwnProperty(key)){
+    	   				if(iterator[key].name==entityName){
+    	   					return util.getIMTIDs(req,iterator[key].IMTs);
+    	   				}
+    	   			}
+				}
+		
+			}catch(e){console.log(e);}
+	
+	},
+	
+	getIMTIDs: function (req,IMTs){
+		var result = [];
+		var temp = {};
+		var reqIMT = req.app.locals.hierarchy.BU_IMT;
+		
+		for(i=0;i<IMTs.length;i++){
+		//IMTs.foreach(function(IMT){
+			for (var key in reqIMT){
+	   			if(reqIMT.hasOwnProperty(key)){
+	   				if(reqIMT[key].IMT == IMTs[i]){
+					temp[IMTs[i]] = reqIMT[key].ID;
+					result.push(temp);
+					temp = {};
+	   				}
+	   			}
+			}
+			
 	}
+		
+		return result;
+},
 
 }
 module.exports = util;

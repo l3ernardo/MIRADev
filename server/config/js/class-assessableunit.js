@@ -442,15 +442,26 @@ var assessableunit = {
 						constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessment",
-								"ParentDocSubType": "Business Unit"	
-								}
-							};
+								"BusinessUnit": doc[0].BusinessUnit,
+								"$or": [
+									{ "$and": [
+												{"key": "Assessable Unit"},
+												{"$or": [
+														 {"DocSubType":{"$or": ["Global Process","BU Reporting Group","BU IOT"] }},
+														{"$and": [{"DocSubType":"Controllable Unit"},{"ParentDocSubType": "Business Unit"}]}
+														]
+											    }
+									          ]
+									},
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+								]
+							}
+						};
+						console.log("Minnie code");
 						doc[0].GPData = [];
 						doc[0].BUIOTData = [];
 						doc[0].RGData = [];
 						doc[0].CUData = [];
-						break;
 					case "Global Process":
 						var constiobj = {
 							selector:{
@@ -463,7 +474,7 @@ var assessableunit = {
 								]
 							}
 						};
-						
+
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
@@ -538,7 +549,7 @@ var assessableunit = {
 						doc[0].AccountData = [];
 						break;
 					case "Country Process":
-					
+
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -549,7 +560,7 @@ var assessableunit = {
 								]
 							}
 						};
-						
+
 						doc[0].ControlData = [];
 						doc[0].CUData = [];
 						break;

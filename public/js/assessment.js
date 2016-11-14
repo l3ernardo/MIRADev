@@ -14,6 +14,7 @@ $(document).ready(function(){
 		case "Country Process":
 			$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
 			break;
+		case "BU Reporting Group":
 		case "BU IOT":
 		case "BU IMT":
 		case "BU Country":
@@ -70,6 +71,7 @@ $(document).ready(function(){
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
+			case "BU Reporting Group":
 			case "BU IOT":
 			case "BU IMT":
 			case "BU Country":
@@ -138,6 +140,7 @@ $(document).ready(function(){
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
+			case "BU Reporting Group":
 			case "BU IOT":
 			case "BU IMT":
 			case "BU Country":
@@ -213,6 +216,7 @@ $(document).ready(function(){
 			myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
 			myEditorAsmtOtherConsiderations.render();
 			break;
+		case "BU Reporting Group":
 		case "BU IOT":
 		case "BU IMT":
 		case "BU Country":
