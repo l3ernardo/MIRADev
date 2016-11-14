@@ -375,7 +375,7 @@
 	{{/if}}
 	<tr class="risk-msdcommit-content">
 		<td>
-			<span class="risk-msdcommit"><b>Open Issues</b></span><br /><br />
+			<span class="risk-msdcommit"><b>Current Quarter Open Issues</b></span><br /><br />
 			<table cellspacing="0" cellpadding="0" border="0" width="100%">
 				<thead>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Type</th>
@@ -391,6 +391,39 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Open Issues</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="4%">Missed</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Risk Abstract</th>
+				</thead>
+				{{#each RiskView2Data}}
+					<tr class="asmt-viewdata">
+						{{#each col}}
+							{{#if @first}}
+								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
+							{{else}}
+								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
+							{{/if}}
+						{{/each}}
+					</tr>
+				{{/each}}
+			</table>
+		</td>
+	</tr>
+	<tr class="risk-msdcommit-content">
+		<td>
+			<span class="risk-msdcommit"><b>Current Quarter Open Issues By Process</b></span><br /><br />
+			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+				<thead>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Type</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Global Process</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Country</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Status</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Target Date (Orig)</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Target Date (Current)</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Tasks</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Open Tasks</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Missed Tasks</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Open Issues</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Missed</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="20%">Risk Abstract</th>
 				</thead>
 				{{#each RiskView2Data}}
 					<tr class="asmt-viewdata">

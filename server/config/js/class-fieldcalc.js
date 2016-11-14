@@ -74,28 +74,28 @@ var calculatefield = {
     var prevYr = current[0]-1;
     switch (current[1]) {
       case "1":
-        p4Qtrs.push(prevYr1+"Q1");
-        p4Qtrs.push(prevYr+"Q2");
-        p4Qtrs.push(prevYr+"Q3");
-        p4Qtrs.push(prevYr+"Q4");
+        p4Qtrs.push(prevYr1+" Q1");
+        p4Qtrs.push(prevYr+" Q2");
+        p4Qtrs.push(prevYr+" Q3");
+        p4Qtrs.push(prevYr+" Q4");
         break;
       case "2":
-        p4Qtrs.push(prevYr+"Q2");
-        p4Qtrs.push(prevYr+"Q3");
-        p4Qtrs.push(prevYr+"Q4");
-        p4Qtrs.push(current[0]+"Q1");
+        p4Qtrs.push(prevYr+" Q2");
+        p4Qtrs.push(prevYr+" Q3");
+        p4Qtrs.push(prevYr+" Q4");
+        p4Qtrs.push(current[0]+" Q1");
         break;
       case "3":
-        p4Qtrs.push(prevYr+"Q3");
-        p4Qtrs.push(prevYr+"Q4");
-        p4Qtrs.push(current[0]+"Q1");
-        p4Qtrs.push(current[0]+"Q2");
+        p4Qtrs.push(prevYr+" Q3");
+        p4Qtrs.push(prevYr+" Q4");
+        p4Qtrs.push(current[0]+" Q1");
+        p4Qtrs.push(current[0]+" Q2");
         break;
       case "4":
-        p4Qtrs.push(prevYr+"Q4");
-        p4Qtrs.push(current[0]+"Q1");
-        p4Qtrs.push(current[0]+"Q2");
-        p4Qtrs.push(current[0]+"Q3");
+        p4Qtrs.push(prevYr+" Q4");
+        p4Qtrs.push(current[0]+" Q1");
+        p4Qtrs.push(current[0]+" Q2");
+        p4Qtrs.push(current[0]+" Q3");
         break;
     }
     return p4Qtrs;
@@ -132,37 +132,37 @@ var calculatefield = {
         }
   		}
       // For Operational Metric setup keys
-      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
-        var opMetricKey;
-        switch (doc[0].ParentDocSubType) {
-          case "Country Process":
-            lParams.push('ProcessCatFIN');
-            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-            break;
-		      case "Account":
-            lParams.push('ProcessCatFIN');
-            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-            break;
-          case "Global Process":
-            lParams.push('ProcessCatFIN');
-            opMetricKey = "OpMetric" + doc[0].WWBCITKey;
-            break;
-          case "BU IOT":
-          case "BU IMT":
-          case "BU Country":
-            if (doc[0].BUWWBCITKey == "BSU300000027")
-              opMetricKey = "GBSGeoOpMetric";
-            else if (doc[0].BUWWBCITKey == "BSU300000026")
-              opMetricKey = "TOGeoOpMetric";
-            else
-              opMetricKey = "GTSGeoOpMetric";
-            break;
-          case "Controllable Unit":
-            opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
-            break;
-        }
-        lParams.push(opMetricKey);
+      var opMetricKey;
+      switch (doc[0].ParentDocSubType) {
+        case "Country Process":
+          lParams.push('ProcessCatFIN');
+          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+          break;
+	      case "Account":
+          lParams.push('ProcessCatFIN');
+          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+          break;
+        case "Global Process":
+          lParams.push('ProcessCatFIN');
+          opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+          break;
+        case "BU Reporting Group":
+        case "BU IOT":
+        case "BU IMT":
+        case "BU Country":
+          if (doc[0].BUWWBCITKey == "BSU300000027")
+            opMetricKey = "GBSGeoOpMetric";
+          else if (doc[0].BUWWBCITKey == "BSU300000026")
+            opMetricKey = "TOGeoOpMetric";
+          else
+            opMetricKey = "GTSGeoOpMetric";
+          break;
+        case "Controllable Unit":
+          opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
+          break;
       }
+      lParams.push(opMetricKey);
+
   		param.getListParams(db, lParams).then(function(dataParam) {
   			if(dataParam.status==200 & !dataParam.error) {
   				if (dataParam.parameters.CRMProcess) {
@@ -381,7 +381,7 @@ var calculatefield = {
               "_id": {"$gt":0},
               "key": "Assessment",
               "AUStatus": "Active",
-              "BRGMembership":{"$in":[doc[0]._id]}
+              "BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}
             }
           };
           break;
@@ -692,7 +692,7 @@ var calculatefield = {
           doc[0].CPTotalPct = "100%";
 
       }
-      else { // For BU Country, BU IOT, BU IMT and Business Unit which needs to process ratings profile for both CU and CP
+      else { // For BU Country, BU IOT, BU IMT, BU Reporting Group and Business Unit which needs to process ratings profile for both CU and CP
 
         var podatactr = 0;
         for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
@@ -705,6 +705,7 @@ var calculatefield = {
               "country":doc[0].asmtsdocs[i].Country,
               "imt":doc[0].asmtsdocs[i].IMT,
               "process":doc[0].asmtsdocs[i].GlobalProcess,
+              "auditprogram":doc[0].asmtsdocs[i].AuditProgram,
               "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
               "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
               "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
