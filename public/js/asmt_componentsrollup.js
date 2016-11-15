@@ -489,6 +489,7 @@ $(document).ready(function() {
       addEventsCompGP();
     	window.addEventListener("load", displaySelectedGPCompTab());
       break;
+		case "BU Reporting Group":
 		case "BU IOT":
 		case "BU IMT":
 		case "BU Country":
