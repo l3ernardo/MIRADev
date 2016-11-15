@@ -102,6 +102,58 @@ var assessment = {
 								deferred.reject({"status": 500, "error": err});
 							});
 							break;
+						case "BU Reporting Group":
+							doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
+							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							doc[0].AUData = fieldCalc.addTestViewData(17,5);
+							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
+							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
+							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
+							doc[0].SCTest1Data = doc[0].RCTest1Data;
+							doc[0].SCTest2Data = doc[0].RCTest3Data;
+							doc[0].BUCAsmtDataPRview = [];
+							doc[0].BUCAsmtDataCURview = [];
+							doc[0].BUCAsmtDataPIview = [];
+							doc[0].BUCAsmtDataOIview = [];
+							fieldCalc.getAssessments(db, doc).then(function(data){
+								fieldCalc.getRatingProfile(doc);
+								if (doc[0].BUCAsmtDataPRview.length < 3) {
+									if (doc[0].BUCAsmtDataPRview.length == 0) {
+										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(3-doc[0].BUCAsmtDataPRview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataCURview.length < 3) {
+									if (doc[0].BUCAsmtDataCURview.length == 0) {
+										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataCURview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataPIview.length < 3) {
+									if (doc[0].BUCAsmtDataPIview.length == 0) {
+										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(3-doc[0].BUCAsmtDataPIview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataOIview.length < 3) {
+									if (doc[0].BUCAsmtDataOIview.length == 0) {
+										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
+									}
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
 						case "BU IOT":
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
 							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
@@ -434,10 +486,11 @@ var assessment = {
 							});
 							break;
 						case "BU Reporting Group":
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+							doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
 							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
 							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
-							doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							doc[0].AUData = fieldCalc.addTestViewData(17,5);
+							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
 							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
@@ -729,6 +782,7 @@ var assessment = {
 					doc[0].DecommitExplanation = req.body.DecommitExplanation;
 
 					switch (doc[0].ParentDocSubType) {
+						case "BU Reporting Group":
 						case "BU IOT":
 						case "BU IMT":
 						case "BU Country":
@@ -744,8 +798,14 @@ var assessment = {
 								doc[0].Insight3 = req.body.Insight3;
 								doc[0].Insight4 = req.body.Insight4;
 								doc[0].Insight5 = req.body.Insight5;
-							} else {
+							} else if (doc[0].ParentDocSubType == "BU IOT") {
 								doc[0].IOT = pdoc[0].IOT;
+								doc[0].Insight1 = req.body.Insight1;
+								doc[0].Insight2 = req.body.Insight2;
+								doc[0].Insight3 = req.body.Insight3;
+								doc[0].Insight4 = req.body.Insight4;
+								doc[0].Insight5 = req.body.Insight5;
+							} else {
 								doc[0].Insight1 = req.body.Insight1;
 								doc[0].Insight2 = req.body.Insight2;
 								doc[0].Insight3 = req.body.Insight3;
@@ -806,8 +866,6 @@ var assessment = {
 							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "Account":
-							break;
-						case "BU Reporting Group":
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
@@ -922,6 +980,7 @@ var assessment = {
 							doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
 							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
+						case "BU Reporting Group":
 						case "BU IOT":
 						case "BU IMT":
 						case "BU Country":
@@ -929,7 +988,7 @@ var assessment = {
 							doc[0].RatingSummary = req.body.RatingSummary;
 							doc[0].Highlight = req.body.Highlight;
 							doc[0].FocusArea = req.body.FocusArea;
-							if (doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
+							if (doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU Reporting Group") {
 								doc[0].Insight1 = req.body.Insight1;
 								doc[0].Insight2 = req.body.Insight2;
 								doc[0].Insight3 = req.body.Insight3;
