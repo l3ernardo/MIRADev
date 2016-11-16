@@ -18,6 +18,7 @@ var auditlesson = {
     if(typeof req.query.new !== "undefined"){
       var doc = {};
       var tmpcountries = [];
+      console.log(req.app.locals.hierarchy.countries);
       for(var key in req.app.locals.hierarchy.countries){
         tmpcountries.push({"name": key});
       }
