@@ -74,28 +74,28 @@ var calculatefield = {
     var prevYr = current[0]-1;
     switch (current[1]) {
       case "1":
-        p4Qtrs.push(prevYr1+"Q1");
-        p4Qtrs.push(prevYr+"Q2");
-        p4Qtrs.push(prevYr+"Q3");
-        p4Qtrs.push(prevYr+"Q4");
+        p4Qtrs.push(prevYr1+" Q1");
+        p4Qtrs.push(prevYr+" Q2");
+        p4Qtrs.push(prevYr+" Q3");
+        p4Qtrs.push(prevYr+" Q4");
         break;
       case "2":
-        p4Qtrs.push(prevYr+"Q2");
-        p4Qtrs.push(prevYr+"Q3");
-        p4Qtrs.push(prevYr+"Q4");
-        p4Qtrs.push(current[0]+"Q1");
+        p4Qtrs.push(prevYr+" Q2");
+        p4Qtrs.push(prevYr+" Q3");
+        p4Qtrs.push(prevYr+" Q4");
+        p4Qtrs.push(current[0]+" Q1");
         break;
       case "3":
-        p4Qtrs.push(prevYr+"Q3");
-        p4Qtrs.push(prevYr+"Q4");
-        p4Qtrs.push(current[0]+"Q1");
-        p4Qtrs.push(current[0]+"Q2");
+        p4Qtrs.push(prevYr+" Q3");
+        p4Qtrs.push(prevYr+" Q4");
+        p4Qtrs.push(current[0]+" Q1");
+        p4Qtrs.push(current[0]+" Q2");
         break;
       case "4":
-        p4Qtrs.push(prevYr+"Q4");
-        p4Qtrs.push(current[0]+"Q1");
-        p4Qtrs.push(current[0]+"Q2");
-        p4Qtrs.push(current[0]+"Q3");
+        p4Qtrs.push(prevYr+" Q4");
+        p4Qtrs.push(current[0]+" Q1");
+        p4Qtrs.push(current[0]+" Q2");
+        p4Qtrs.push(current[0]+" Q3");
         break;
     }
     return p4Qtrs;
@@ -132,37 +132,37 @@ var calculatefield = {
         }
   		}
       // For Operational Metric setup keys
-      if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
-        var opMetricKey;
-        switch (doc[0].ParentDocSubType) {
-          case "Country Process":
-            lParams.push('ProcessCatFIN');
-            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-            break;
-		      case "Account":
-            lParams.push('ProcessCatFIN');
-            opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-            break;
-          case "Global Process":
-            lParams.push('ProcessCatFIN');
-            opMetricKey = "OpMetric" + doc[0].WWBCITKey;
-            break;
-          case "BU IOT":
-          case "BU IMT":
-          case "BU Country":
-            if (doc[0].BUWWBCITKey == "BSU300000027")
-              opMetricKey = "GBSGeoOpMetric";
-            else if (doc[0].BUWWBCITKey == "BSU300000026")
-              opMetricKey = "TOGeoOpMetric";
-            else
-              opMetricKey = "GTSGeoOpMetric";
-            break;
-          case "Controllable Unit":
-            opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
-            break;
-        }
-        lParams.push(opMetricKey);
+      var opMetricKey;
+      switch (doc[0].ParentDocSubType) {
+        case "Country Process":
+          lParams.push('ProcessCatFIN');
+          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+          break;
+	      case "Account":
+          lParams.push('ProcessCatFIN');
+          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
+          break;
+        case "Global Process":
+          lParams.push('ProcessCatFIN');
+          opMetricKey = "OpMetric" + doc[0].WWBCITKey;
+          break;
+        case "BU Reporting Group":
+        case "BU IOT":
+        case "BU IMT":
+        case "BU Country":
+          if (doc[0].BUWWBCITKey == "BSU300000027")
+            opMetricKey = "GBSGeoOpMetric";
+          else if (doc[0].BUWWBCITKey == "BSU300000026")
+            opMetricKey = "TOGeoOpMetric";
+          else
+            opMetricKey = "GTSGeoOpMetric";
+          break;
+        case "Controllable Unit":
+          opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
+          break;
       }
+      lParams.push(opMetricKey);
+
   		param.getListParams(db, lParams).then(function(dataParam) {
   			if(dataParam.status==200 & !dataParam.error) {
   				if (dataParam.parameters.CRMProcess) {
@@ -355,7 +355,7 @@ var calculatefield = {
               "_id": {"$gt":0},
               "key": "Assessment",
               "AUStatus": "Active",
-              "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
+              "ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU Country","BU IMT"]},
               "BusinessUnit": doc[0].BusinessUnit,
               "IMT": doc[0].IMT
             }
@@ -367,9 +367,21 @@ var calculatefield = {
               "_id": {"$gt":0},
               "key": "Assessment",
               "AUStatus": "Active",
-              "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
-              "BusinessUnit": doc[0].BusinessUnit,
-              "IOT": doc[0].IOT
+              "$or": [
+                { "$and": [{"BusinessUnit": doc[0].BusinessUnit},{"IOT": doc[0].IOT},{"ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU IMT","BU IOT"]}}] },
+                { "$and": [{"ParentDocSubType": "BU Country"},{"_id": doc[0].BUCountryIOT}] },
+                { "$and": [{"ParentDocSubType": "BU Reporting Group"},{"_id": doc[0].RGRollup}] },
+              ]
+            }
+          };
+          break;
+        case "BU Reporting Group":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}
             }
           };
           break;
@@ -679,107 +691,29 @@ var calculatefield = {
         else
           doc[0].CPTotalPct = "100%";
 
-      } else { // For BU Country, BU IOT, BU IMT and Business Unit which needs to process ratings profile for both CU and CP
+      }
+      else { // For BU Country, BU IOT, BU IMT, BU Reporting Group and Business Unit which needs to process ratings profile for both CU and CP
 
+        var podatactr = 0;
         for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-          switch (doc[0].ParentDocSubType) {
-            case "BU IOT":
-            case "BU IMT":
-            case "BU Country":
-              if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
-                // Process Ratings Tab embedded views
-                toadd = {
-                  "docid":doc[0].asmtsdocs[i]._id,
-                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                  "process":doc[0].asmtsdocs[i].GlobalProcess,
-                  "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
-                  "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                  "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                  "targettosat":doc[0].asmtsdocs[i].Target2Sat,
-                  "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
-                  "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
-                };
-                doc[0].BUCAsmtDataPRview.push(toadd);
-              } else {
-              // CU Ratings Tab embedded views
-                toadd = {
-                  "docid":doc[0].asmtsdocs[i]._id,
-                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                  "size":doc[0].asmtsdocs[i].CUSize,
-                  "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
-                  "cqscore":doc[0].asmtsdocs[i].CUScore,
-                  "pqscore":doc[0].asmtsdocs[i].CUScorePrev,
-                  "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
-                  "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                  "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                  "targettosat":doc[0].asmtsdocs[i].Target2Sat,
-                  "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
-                  "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
-                };
-                doc[0].BUCAsmtDataCURview.push(toadd);
-              }
-              // PO tab performance indicators view
-              toadd = {
-                "docid":doc[0].asmtsdocs[i]._id,
-                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
-              };
-              doc[0].BUCAsmtDataPIview.push(toadd);
-              // PO tab other indicators view
-              toadd = {
-                "docid":doc[0].asmtsdocs[i]._id,
-                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
-              };
-              doc[0].BUCAsmtDataOIview.push(toadd);
-              for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
-                doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
-              }
 
-              // Basics of Control Exception Counter
-              if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
-              break;
-          }
-          // Rating Category Counters
-          if (doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit") {
-            // Rating Category Counters for CU
-            switch (doc[0].asmtsdocs[i].RatingCategory) {
-              case "Sat &#9650;":
-                satUpCU = satUpCU + 1;
-                break;
-              case "Sat &#61;":
-                satEqCU = satEqCU + 1;
-                break;
-              case "Marg &#9650;":
-                margUpCU = margUpCU + 1;
-                break;
-              case "Marg &#9660;":
-                margDwnCU = margDwnCU + 1;
-                break;
-              case "Marg &#61;":
-                margEqCU = margEqCU + 1;
-                break;
-              case "Unsat &#9660;":
-                unsatDwnCU = unsatDwnCU + 1;
-                break;
-              case "Unsat &#61;":
-                unsatEqCU = unsatEqCU + 1;
-                break;
-              case "Exempt":
-                exemptCU = exemptCU + 1;
-                break;
-              default:
-                nrCU = nrCU + 1;
-            }
-          } else {
+          if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+            // Process Ratings Tab embedded views
+            toadd = {
+              "docid":doc[0].asmtsdocs[i]._id,
+              "name":doc[0].asmtsdocs[i].AssessableUnitName,
+              "country":doc[0].asmtsdocs[i].Country,
+              "imt":doc[0].asmtsdocs[i].IMT,
+              "process":doc[0].asmtsdocs[i].GlobalProcess,
+              "auditprogram":doc[0].asmtsdocs[i].AuditProgram,
+              "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+              "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+              "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+              "targettosat":doc[0].asmtsdocs[i].Target2Sat,
+              "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+              "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+            };
+            doc[0].BUCAsmtDataPRview.push(toadd);
             // Rating Category Counters for CP
             switch (doc[0].asmtsdocs[i].RatingCategory) {
               case "Sat &#9650;":
@@ -819,7 +753,131 @@ var calculatefield = {
                 else nrOps = nrOps + 1;
             }
           }
+          if (doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit") {
+            // CU Ratings Tab embedded views
+            toadd = {
+              "docid":doc[0].asmtsdocs[i]._id,
+              "name":doc[0].asmtsdocs[i].AssessableUnitName,
+              "country":doc[0].asmtsdocs[i].Country,
+              "imt":doc[0].asmtsdocs[i].IMT,
+              "size":doc[0].asmtsdocs[i].CUSize,
+              "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
+              "cqscore":doc[0].asmtsdocs[i].CUScore,
+              "pqscore":doc[0].asmtsdocs[i].CUScorePrev,
+              "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+              "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+              "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+              "targettosat":doc[0].asmtsdocs[i].Target2Sat,
+              "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+              "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+            };
+            doc[0].BUCAsmtDataCURview.push(toadd);
 
+            // Rating Category Counters for CU
+            switch (doc[0].asmtsdocs[i].RatingCategory) {
+              case "Sat &#9650;":
+                satUpCU = satUpCU + 1;
+                break;
+              case "Sat &#61;":
+                satEqCU = satEqCU + 1;
+                break;
+              case "Marg &#9650;":
+                margUpCU = margUpCU + 1;
+                break;
+              case "Marg &#9660;":
+                margDwnCU = margDwnCU + 1;
+                break;
+              case "Marg &#61;":
+                margEqCU = margEqCU + 1;
+                break;
+              case "Unsat &#9660;":
+                unsatDwnCU = unsatDwnCU + 1;
+                break;
+              case "Unsat &#61;":
+                unsatEqCU = unsatEqCU + 1;
+                break;
+              case "Exempt":
+                exemptCU = exemptCU + 1;
+                break;
+              default:
+                nrCU = nrCU + 1;
+            }
+          }
+
+          switch (doc[0].ParentDocSubType) {
+            case "BU IOT":
+              if ( doc[0].asmtsdocs[i].ParentDocSubType == "BU IMT" || doc[0].asmtsdocs[i].ParentDocSubType == "BU IOT" || doc[0].asmtsdocs[i].ParentDocSubType == "BU Country" || doc[0].asmtsdocs[i].ParentDocSubType == "BU Reporting Group" ) {
+                // PO tab performance indicators view
+                toadd = {
+                  "docid":doc[0].asmtsdocs[i]._id,
+                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                  "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                  "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+                  "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+                  "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+                  "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+                  "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+                  "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+                  "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+                  "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
+                  "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+                  "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
+                };
+                doc[0].BUCAsmtDataPIview.push(toadd);
+                // PO tab other indicators view
+                toadd = {
+                  "docid":doc[0].asmtsdocs[i]._id,
+                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                  "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                  "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
+                };
+                doc[0].BUCAsmtDataOIview.push(toadd);
+                for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
+                  doc[0].BUCAsmtDataOIview[podatactr][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+                }
+                podatactr = podatactr + 1;
+              }
+              // Basics of Control Exception Counter
+              if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
+              break;
+            case "BU IMT":
+            case "BU Country":
+              // PO tab performance indicators view
+              toadd = {
+                "docid":doc[0].asmtsdocs[i]._id,
+                "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+                "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
+                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
+              };
+              doc[0].BUCAsmtDataPIview.push(toadd);
+              // PO tab other indicators view
+              toadd = {
+                "docid":doc[0].asmtsdocs[i]._id,
+                "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+                "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
+              };
+              doc[0].BUCAsmtDataOIview.push(toadd);
+              for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
+                doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+              }
+
+              // Basics of Control Exception Counter
+              if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
+                bocEx = bocEx + 1;
+              }
+              break;
+          // }
+          }
         }
 
         if (doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {

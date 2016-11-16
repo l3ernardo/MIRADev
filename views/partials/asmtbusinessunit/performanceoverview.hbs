@@ -217,25 +217,22 @@
 	{{/if}}
 	<tr class="ar-asmt-content">
 		<td>
-			<span class="ar-asmt-header">Country, Country Process, and CU Performance Indicators</span><br /><br />
-			<table width="100%">
+			<span class="ar-asmt-header">Country Process Performance Indicators</span><br /><br />
+			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 				<thead>
-					<th class="ar-asmt-viewheader" scope="col" width="10%"></th>
-					<th class="ar-asmt-viewheader" scope="col" width="30%">Assessed Unit</th>
-					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-4</th>
-					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-3</th>
-					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-2</th>
-					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-1</th>
-					<th class="ar-asmt-viewheader" scope="col" width="6%">Current Quarter (CQ)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="33%">Assessed Unit</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-4</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-3</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-2</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-1</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">Current Quarter (CQ)</th>
 					<th class="ar-asmt-viewheader" scope="col" width="7%">KCFR Defect Rate</th>
 					<th class="ar-asmt-viewheader" scope="col" width="7%">KCO Defect Rate</th>
-					<th class="ar-asmt-viewheader" scope="col" width="6%">Corporate Internal Audit Score</th>
-					<th class="ar-asmt-viewheader" scope="col" width="7%">Missed Risk Evaluations</th>
-					<th class="ar-asmt-viewheader" scope="col" width="7%">Missed MSAC Commitments</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Missed Risk Evaluations</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Missed MSAC Commitments</th>
 				</thead>
-				{{#each BUCAsmtDataPIview}}
+				{{#each CPAsmtDataPIview}}
 					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">{{ParentDocSubType}}</td>
 						{{#if_equal name ""}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{else}}
@@ -248,7 +245,6 @@
 						{{{ratingDisplayView ratingCQ}}}
 						{{{defectRateDisplayViewNoDash kcfrDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 						{{{defectRateDisplayViewNoDash kcoDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td class="asmt-viewdata">{{auditScore}}</td>
 						<td class="asmt-viewdata">{{msdRisk}}</td>
 						<td class="asmt-viewdata">{{msdMSAC}}</td>
 					</tr>
@@ -256,22 +252,20 @@
 				<tr>
 			</table>
 			<br />
-			<span class="ar-asmt-header">Country, Country Process, and CU Operational and Other Indicators</span><br /><br />
-			<table width="100%">
+			<span class="ar-asmt-header">Country Process Operational Indicators</span><br /><br />
+			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 				<thead>
-					<th class="ar-asmt-viewheader" scope="col" width="10%"></th>
-					<th class="ar-asmt-viewheader" scope="col" width="30%">Assessed Unit</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Proactive Reviews</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Procurement Bypass (YTD)</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Labour Claiming</th>
+					<th class="ar-asmt-viewheader" scope="col" width="37%">Assessed Unit</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Proactive Reviews</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Procurement Bypass (YTD)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Labour Claiming</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">DS&amp;P Overall Rating</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Unauthorized Pricing Commitments (UPC)</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Basics of Controls Exceptions</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Other Metrics</th>
 				</thead>
-				{{#each BUCAsmtDataOIview}}
+				{{#each CPAsmtDataOIview}}
 					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">{{ParentDocSubType}}</td>
 						{{#if_equal name ""}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{else}}
