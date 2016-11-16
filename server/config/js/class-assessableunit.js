@@ -457,11 +457,11 @@ var assessableunit = {
 								]
 							}
 						};
-						console.log("Minnie code");
 						doc[0].GPData = [];
 						doc[0].BUIOTData = [];
 						doc[0].RGData = [];
 						doc[0].CUData = [];
+						break;
 					case "Global Process":
 						var constiobj = {
 							selector:{
