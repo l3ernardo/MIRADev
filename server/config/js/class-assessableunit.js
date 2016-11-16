@@ -568,10 +568,11 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Controllable Unit","Country Process","BU Country","BU IMT","BU IOT","GlobalProcess"]},
 								"BusinessUnit": doc[0].BusinessUnit,
-								"GroupName": doc[0].GroupName
+								"$or": [
+									{ "$and": [ {"key": "Assessable Unit"},{"DocSubType": {"$or":["Controllable Unit","Country Process","BU Country","BU IMT","BU IOT","GlobalProcess"]}},{"BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}} ] },
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].GPData = [];
