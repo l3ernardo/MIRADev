@@ -457,7 +457,6 @@ var assessableunit = {
 								]
 							}
 						};
-						console.log("Minnie code2");
 						doc[0].GPData = [];
 						doc[0].BUIOTData = [];
 						doc[0].RGData = [];
