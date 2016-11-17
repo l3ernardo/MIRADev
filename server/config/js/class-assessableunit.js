@@ -448,7 +448,7 @@ var assessableunit = {
 												{"key": "Assessable Unit"},
 												{"$or": [
 														 {"DocSubType":{"$or": ["Global Process","BU Reporting Group","BU IOT"] }},
-														{"$and": [{"DocSubType":"Controllable Unit"},{"ParentDocSubType": "Business Unit"}]} 
+														{"$and": [{"DocSubType":"Controllable Unit"},{"ParentDocSubType": "Business Unit"}]}
 														]
 											    }
 									          ]
@@ -457,7 +457,11 @@ var assessableunit = {
 								]
 							}
 						};
-						console.log("Minnie code");
+						doc[0].GPData = [];
+						doc[0].BUIOTData = [];
+						doc[0].RGData = [];
+						doc[0].CUData = [];
+						break;
 					case "Global Process":
 						var constiobj = {
 							selector:{
@@ -470,7 +474,7 @@ var assessableunit = {
 								]
 							}
 						};
-						
+
 						doc[0].CPData = [];
 						doc[0].SPData = [];
 						break;
@@ -545,7 +549,7 @@ var assessableunit = {
 						doc[0].AccountData = [];
 						break;
 					case "Country Process":
-					
+
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -556,7 +560,7 @@ var assessableunit = {
 								]
 							}
 						};
-						
+
 						doc[0].ControlData = [];
 						doc[0].CUData = [];
 						break;
@@ -564,10 +568,11 @@ var assessableunit = {
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
-								"key": "Assessable Unit",
-								"DocSubType": {"$or":["Controllable Unit","Country Process","BU Country","BU IMT","BU IOT","GlobalProcess"]},
 								"BusinessUnit": doc[0].BusinessUnit,
-								"GroupName": doc[0].GroupName
+								"$or": [
+									{ "$and": [ {"key": "Assessable Unit"},{"DocSubType": {"$or":["Controllable Unit","Country Process","BU Country","BU IMT","BU IOT","GlobalProcess"]}},{"BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}} ] },
+									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+								]
 							}
 						};
 						doc[0].GPData = [];

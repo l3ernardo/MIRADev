@@ -5,11 +5,12 @@
         <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
   			<table cellspacing="0" cellpadding="0" border="0" width="100%">
   				<thead>
+            <th class="audit-review-viewheader" scope="col" width="5%">Period</th>
   					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
             <th class="audit-review-viewheader" scope="col" width="10%">IMT</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Engagement</th>
   					<th class="audit-review-viewheader" scope="col" width="30%">Audited Unit</th>
-  					<th class="audit-review-viewheader" scope="col" width="16%">Type</th>
+  					<th class="audit-review-viewheader" scope="col" width="11%">Type</th>
   					<th class="audit-review-viewheader" scope="col" width="7%">Last MSAC</th>
   					<th class="audit-review-viewheader" scope="col" width="7%">Rating</th>
   					<th class="audit-review-viewheader" scope="col" width="7%">Size</th>
@@ -27,7 +28,7 @@
   					</tr>
   				{{/each}}
           <tr class="audit-review-viewheader-ar">
-            <td class="audit-review-viewheader-ar" colspan="9"><b>Weighted Score: {{WeightedAuditScore}}</b></td>
+            <td class="audit-review-viewheader-ar" colspan="10"><b>Weighted Score: {{WeightedAuditScore}}</b></td>
           </tr>
   			</table>
         <table width="100%" class="ibm-data-table">
@@ -127,16 +128,17 @@
         <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
         <table cellspacing="0" cellpadding="0" border="0" width="100%">
           <thead>
-            <th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
+            <th class="audit-review-viewheader" scope="col" width="5%">Period</th>
+  					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
             <th class="audit-review-viewheader" scope="col" width="10%">IMT</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Engagement</th>
   					<th class="audit-review-viewheader" scope="col" width="30%">Audited Unit</th>
-  					<th class="audit-review-viewheader" scope="col" width="16%">Type</th>
+  					<th class="audit-review-viewheader" scope="col" width="11%">Type</th>
   					<th class="audit-review-viewheader" scope="col" width="7%">Last MSAC</th>
   					<th class="audit-review-viewheader" scope="col" width="7%">Rating</th>
   					<th class="audit-review-viewheader" scope="col" width="7%">Size</th>
   					<th class="audit-review-viewheader" scope="col" width="5%">Score</th>
-          </thead>
+  				</thead>
           {{#each InternalAuditData}}
             <tr class="asmt-viewdata">
               {{#each col}}
@@ -149,7 +151,7 @@
             </tr>
           {{/each}}
           <tr class="audit-review-viewheader-ar">
-            <td class="audit-review-viewheader-ar" colspan="9"><b>Weighted Score: {{WeightedAuditScore}}</b></td>
+            <td class="audit-review-viewheader-ar" colspan="10"><b>Weighted Score: {{WeightedAuditScore}}</b></td>
           </tr>
         </table>
         <table width="100%" class="ibm-data-table">
