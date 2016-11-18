@@ -1,0 +1,52 @@
+<script src='./js/report.js'></script>
+<script src='./js/utility.js'></script>
+<link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<script src="./lib/jquery.dataTables.js"></script>
+<script>
+	//Load document's name
+	$('h1#pageTitle').text("Controllable Units Audit Lessons Learned File");
+</script>
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<span><br/></span>
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
+			<p>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			</p>
+			<br/>
+		</div>
+		<div id='reportcuallfile'>
+			<table id="reports_table2" cellspacing="0" cellpadding="0" border="0" class="display nowrap" >
+				<thead>
+					<tr>
+					    <th scope="col" style="width:25%">BU IOT</th>
+						<th scope="col" style="width:25%">BU IMT</th>		
+						<th scope="col" style="width:50%">Controllable Unit</th>										
+						<th scope="col">Quarter</th>
+						<th scope="col">Response</th>
+						<th scope="col" style="width:25%">Findings</th>
+						<th scope="col">Target to Sat Date</th>
+						<th scope="col" style="width:25%">Explanation</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{#each doc}}
+					<tr>
+					    <td>{{IOT}}</td>
+						<td>{{IMT}}</td>
+						<td><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>						
+						<td>{{Quarter}}</td>
+						<td>{{Response}}</td>
+						<td>{{Findings}}</td>
+						<td>{{Target2Sat}}</td>
+						<td>{{Explanation}}</td>
+					</tr>
+				{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

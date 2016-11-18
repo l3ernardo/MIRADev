@@ -69,4 +69,19 @@ reports.get('/reportaudunifile', isAuthenticated, function(req, res) {
 	})
 	
 });
+/* Load report CU audit lessons learned file page*/
+reports.get('/reportcuauditlessons', isAuthenticated, function(req, res) {
+	report.cuauditlessonslearned(req, db).then(function(data){
+		if(data.status=="200" & !data.error){
+			res.render('reportcuauditlessons',data);
+		}
+		else{
+			res.render('error',{errorDescription: data.error});
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][reportcuauditlessons] - " + err.error);
+	})
+	
+});
 module.exports = reports;
