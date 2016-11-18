@@ -6,6 +6,9 @@ function generateReport(element, typeFile){
 	else if(v!=-1){
 		table += $("table#reports_treeview2").html();
 	}
+	else if(y!=-1){
+		table += $("table#reports_table2").html();
+	}
 	else{
 		table += "<thead>";
 		var header = $("table#reports_table > thead").html();
@@ -23,6 +26,7 @@ function generateReport(element, typeFile){
 $(document).ready(function() {
 	t=url.indexOf("reportstaexc");
 	v=url.indexOf("reportaudunifile");
+	y=url.indexOf("reportcuauditlessons");
 	$("#reports_treeview1").treetable({expandable: true });
 	$("#reports_treeview2").treetable({expandable: true });
 	
@@ -50,6 +54,17 @@ $(document).ready(function() {
 		"scrollX": true,
 		"scrollY": 250,
 		"ordering":false
+	});
+	$('#reports_table2').DataTable({
+		select: true,
+		"paginate": false,
+		"scrollX": true,
+		"scrollY": 250,
+		order: [],
+		 columnDefs: [ {
+			targets: [2,3,4,5,6,7],
+			orderable: false
+		} ]
 	});
 	$('#lnk_exportxls').click(function(){
 		generateReport($(this), "xls");
