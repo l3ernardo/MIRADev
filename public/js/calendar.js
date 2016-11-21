@@ -19,7 +19,10 @@ $(document).ready(function() {
 	$('#startDate').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 
 	$('#startDate').change(function() {
@@ -138,7 +141,7 @@ $(document).ready(function() {
 				for (var i in data) {
 					var objLink = eval("$('ul#calendar-options > li > a#" + data[i].ownerId + "')");
 					var style = objLink.parent().attr("style");
-					
+
 					if(style!=undefined){
 						style = style.split(": ")[1];
 						style = style.split(" none")[0];
