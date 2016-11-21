@@ -461,6 +461,7 @@ var assessableunit = {
 						doc[0].BUIOTData = [];
 						doc[0].RGData = [];
 						doc[0].CUData = [];
+						break;
 					case "Global Process":
 						var constiobj = {
 							selector:{
@@ -1331,7 +1332,9 @@ var assessableunit = {
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
 					doc[0].Log.push(addlog);
+					console.log("Pre Access update: "+doc[0].Name);
 					doc = accessupdates.updateAccessExistDoc(req,doc);
+					console.log("Post Access update: "+doc[0].Name);
 					//Save document
 					db.save(doc[0]).then(function(data){
 						// Get current quarter Assessment

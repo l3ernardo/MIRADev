@@ -4,7 +4,7 @@
 <script src="./js/attachments.js"/></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/jquery-ui.css">
-<link rel="stylesheet" href="./css/jquery-ui.min.css">
+<!--<link rel="stylesheet" href="./css/jquery-ui.min.css">-->
 
 <input type="hidden" id="docTitle" value="{{CurrentPeriod}} Holistic Rollup Assessment">
 <script>
@@ -36,13 +36,13 @@
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="close" id="close" value="0">
 		<!-- Basic Details -->
-		{{>asmtglobalprocess/basics}}
+		{{>asmtbusinessunit/basics}}
 		<!-- Exception Details -->
 		{{>asmtexception}}
 		<!-- Contact -->
 		{{>asmtcontact}}<br /><br />
 		<!-- Assessment tabs -->
-		{{>asmtglobalprocess/gpmanagementreport}}<br /><br />
+		{{>asmtbusinessunit/gpmanagementreport}}<br /><br />
 		<!-- NOTES & LINKS SECTION -->
 		{{>comments}}
 		<!-- BUTTONS AREA -->
