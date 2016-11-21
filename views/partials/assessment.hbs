@@ -18,13 +18,10 @@
 		</thead>
 		{{#each AssessmentData}}
 		<tr>
-			{{#each col}}
-				{{#if @first}}
-					<td><a href="/assessment?id={{../docid}}">{{this}}</a></td>
-				{{else}}
-					<td>{{this}}</td>
-				{{/if}}
-			{{/each}}
+			<td><a href="/assessment?id={{docid}}">{{CurrentPeriod}}</a></td>
+			{{{ratingDisplayView PeriodRating}}}
+			<td>{{Owner}}</td>
+			<td>{{Target2Sat}}</td>
 		</tr>
 		{{/each}}
 	</table>

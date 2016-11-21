@@ -48,7 +48,7 @@ var assessment = {
 						doc[0].editmode = 1;
 						// check if Rating is editable
 						var ratingEditors = parentdoc[0].Owner + parentdoc[0].Focals;
-						if(ratingEditors.indexOf("(" + req.session.user.mail + ")") !== -1) {
+						if(ratingEditors.indexOf("(" + req.session.user.mail + ")") !== -1 || accessrules.rules.admin) {
 							if (doc[0].ParentDocSubType == "Country Process" && doc[0].WWBCITStatus != "Reviewed" && doc[0].MIRAStatus != "Final") {
 								doc[0].RatingEditable = 1;
 							} else {
@@ -427,6 +427,7 @@ var assessment = {
 					doc.push(tmpdoc);
 					doc[0].PrevQtrs = [];
 					doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
+					doc[0].EnteredBU = req.session.businessunit;
 
 					fieldCalc.getDocParams(req, db, doc).then(function(data){
 
@@ -486,6 +487,10 @@ var assessment = {
 							});
 							break;
 						case "BU Reporting Group":
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].PeriodRatingSOD = "NR";
+								doc[0].PeriodRatingCRM = "NR";
+							}
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
 							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
 							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
