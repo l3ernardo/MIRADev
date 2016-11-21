@@ -25,7 +25,10 @@ $(document).ready(function() {
 	$('#Target2Sat').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 
 });

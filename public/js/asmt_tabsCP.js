@@ -1,30 +1,46 @@
 $(document).ready(function() {
 
 	//---Start of Basics of Control Tab---//
+
 	$('#BoCTargetCloseDate1').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate2').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate3').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate4').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate5').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 
 	$("input[name='BOCExceptionCount']").val(0);
@@ -138,7 +154,10 @@ $(document).ready(function() {
 	$('#ARALLTarget2Sat').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	if( $('#ARALLResponseYes').is(':checked')) {
 		$("#ARALLQtrRating").show();
@@ -178,7 +197,10 @@ $(document).ready(function() {
 		$("#"+metrics[i]+"TargetSatDate").datepicker({
 			defaultDate: "+1w",
 			changeMonth: true,
-			numberOfMonths: 1
+			numberOfMonths: 1,
+			onClose: function () {
+	     $(this).focus();
+	    }
 		});
 		if($("#"+metrics[i]+"Rating").val() == "Marg" || $("#"+metrics[i]+"Rating").val() == "Unsat") {
 			$("#colDate"+metrics[i]).show();
@@ -207,7 +229,10 @@ $(document).ready(function() {
 			$("#"+metrics[i]+"TargetSatDate").datepicker({
 				defaultDate: "+1w",
 				changeMonth: true,
-				numberOfMonths: 1
+				numberOfMonths: 1,
+				onClose: function () {
+		     $(this).focus();
+		    }
 			});
 			if($("#"+metrics[i]+"Rating").val()=="Marg" || $("#"+metrics[i]+"Rating").val()=="Unsat") {
 				$("#colDate"+metrics[i]).show();

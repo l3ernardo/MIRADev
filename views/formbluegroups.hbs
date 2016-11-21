@@ -2,7 +2,7 @@
 <script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
-<link rel="stylesheet" href="./css/jquery-ui.min.css">
+<!--<link rel="stylesheet" href="./css/jquery-ui.min.css">-->
 <script src="/lib/jquery.dataTables.js"></script>
 <script src="./js/bluegroups.js" type="text/javascript" charset="utf-8"></script>
 <script>
@@ -45,8 +45,8 @@ $('form input').on('keypress', function(e) {
 						<input type="hidden" id="group" name="group" value="{{bgname}}">
 						<p style="text-align:left" class="ui-widget">
 							<label for="bpname">Lookup:<span class="ibm-required">&nbsp;</span></label>
-							<span><input id="bpname" class="ui-autocomplete-input" autocomplete="off" size=40></span>								
-							<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>		
+							<span><input id="bpname" class="ui-autocomplete-input" autocomplete="off" size=40></span>
+							<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>
 						</p>
 						<p style="text-align:left">
 							<label for="bpname">Name:<span class="ibm-required">&nbsp;</span><a class="ibm-add1-link" href="#" onclick="add($('#bplist'));return false;">Add</a></label><span>
@@ -58,21 +58,19 @@ $('form input').on('keypress', function(e) {
 							{{#each alldata}}
 								<option value="{{uid}}">{{member}}</option>
 							{{/each }}
-							</select>							
+							</select>
 							</span>
-						</p>					
+						</p>
 						<div class="ibm-buttons-row">
 							<p>
 								<input class="ibm-btn-arrow-pri" type="button" id="btn_submit" value="Submit" onclick="submitForm($('#form'));" />
 								<span class="ibm-sep">&nbsp;</span>
 								<input class="ibm-btn-cancel-sec" onclick="location.href = '/bluegroups';"  type="button" id="btn_cancel" value="Cancel" />
 							</p>
-						</div>							
+						</div>
 					</form>
 				</div>
 			</div>
-		</div> 
+		</div>
 	</div>
 </div>
-
-
