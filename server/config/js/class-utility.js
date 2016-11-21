@@ -11,6 +11,36 @@ var moment = require('moment');
 var mtz = require('moment-timezone');
 var xml2js = require('xml2js');
 
+Array.prototype.unique = function() {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
+};
+
+var deleteUsers = function(deletes, list){
+	try{	
+
+	for(var i=0;i<deletes.length; i++){
+		var index = list.indexOf(deletes[i]);
+		
+		if(index > -1){
+			
+			list.splice(index,1);
+			
+		}
+	}
+	}catch(e){console.log(e);}
+	
+	return list;
+		
+}
+
 var util = {
 	/* Get data from faces & bluepages */
 	getPersonOrg: function(req) {
@@ -712,6 +742,110 @@ getCountryIDs: function (req,Countries){
 }
 	
 	return result;
+},
+
+addUserAccessList: function(db,docid,list,accessLevel){
+	
+	var deferred = q.defer();
+		try{
+
+			var selector = {
+				selector : {
+					"_id": {"$gt":0},
+					key: "AccessList",
+					doc_id : docid
+				}};
+			
+	
+			db.find(selector).then(function(data){
+				var doc = data.body.docs[0];
+				try{
+				if(accessLevel == "readers"){
+					doc.AllReaders = doc.AllReaders.concat(list).unique();
+								
+				}else{
+					if(accessLevel == "editors"){
+						doc.AllEditors = doc.AllEditors.concat(list).unique();
+					}
+				}
+				}catch(e){deferred.reject({"status": 500, "error": e});}
+			
+			   
+				
+				db.save(doc).then(function(data){
+					
+					deferred.resolve({"status": 200, "result": "Successful Users Added"});
+					
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
+				
+				
+			}).catch(function(error){
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+	
+	
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+},
+
+
+
+
+delUserAccessList: function (db,docid,list,accessLevel){
+	var deferred = q.defer();
+	try{
+
+		var selector = {
+			selector : {
+				"_id": {"$gt":0},
+				key: "AccessList",
+				doc_id : docid
+			}};
+		
+
+		db.find(selector).then(function(data){
+			var doc = data.body.docs[0];
+			try{
+			if(accessLevel == "readers"){
+				doc.AllReaders = doc.AllReaders.concat(list).unique();
+				doc.AllReaders = deleteUsers(list, doc.AllReaders);
+				doc.deletes.AllReaders = doc.deletes.AllReaders.concat(list).unique();
+							
+			}else{
+				if(accessLevel == "editors"){
+					doc.AllEditors = doc.AllEditors.concat(list).unique();
+					doc.AllEditors  = deleteUsers(list, doc.AllEditors);
+					doc.deletes.AllEditors = doc.deletes.AllEditors.concat(list).unique();
+				}
+			}
+			}catch(e){deferred.reject({"status": 500, "error": e});}
+		
+			console.log(doc);
+			
+			db.save(doc).then(function(data){
+				
+				deferred.resolve({"status": 200, "result": "Successful Users Deleted"});
+				
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+			
+			
+		}).catch(function(error){
+			deferred.reject({"status": 500, "error": err.error.reason});
+		});
+
+
+	}catch(e){
+		deferred.reject({"status": 500, "error": e});
+	}
+	return deferred.promise;
+	
+	
 },
 
 }
