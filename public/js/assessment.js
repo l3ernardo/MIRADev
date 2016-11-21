@@ -34,6 +34,23 @@ $(document).ready(function(){
 			for (i = 0; i < metrics.length; ++i) {
 				$("#"+metrics[i]+"commentfieldReadOnly").html($("input[name='"+metrics[i]+"commentfieldRO']").val());
 			}
+			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+				$("#OverallAssessmentCommentsReadOnlySOD").html($("input[name='OverallAssessmentCommentsROSOD']").val());
+				$("#KCFRTestingCommentsReadOnlySOD").html($("input[name='KCFRTestingCommentsROSOD']").val());
+				$("#KCOTestingCommentsReadOnlySOD").html($("input[name='KCOTestingCommentsROSOD']").val());
+				$("#CorpIACommentsReadOnlySOD").html($("input[name='CorpIACommentsROSOD']").val());
+				$("#MissedRECommentsReadOnlySOD").html($("input[name='MissedRECommentsROSOD']").val());
+				$("#MissedMSACCommentsReadOnlySOD").html($("input[name='MissedMSACCommentsROSOD']").val());
+				$("#BoCCommentsReadOnlySOD").html($("input[name='BoCCommentsROSOD']").val());
+				$("#PerfOverviewOtherExplanationReadOnlySOD").html($("input[name='PerfOverviewOtherExplanationROSOD']").val());
+				$("#PerfOverviewCriticaExplanationReadOnlySOD").html($("input[name='PerfOverviewCriticaExplanationROSOD']").val());
+				// Rich text fields for metrics
+				var metricsSOD = $("#opMetricIDsSOD").val().split(',');
+				var i;
+				for (i = 0; i < metricsSOD.length; ++i) {
+					$("#"+metricsSOD[i]+"commentfieldReadOnlySOD").html($("input[name='"+metricsSOD[i]+"commentfieldROSOD']").val());
+				}
+			}
 			break;
 	}
 
@@ -247,6 +264,36 @@ $(document).ready(function(){
 				vars['myEditor'+metrics[i]+'Comment'] = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
 				vars['myEditor'+metrics[i]+'Comment'].render();
 			}
+
+			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+				myEditorOverallAssessmentCommentsSOD = new YAHOO.widget.SimpleEditor('OverallAssessmentCommentsSOD', myConfig);
+				myEditorOverallAssessmentCommentsSOD.render();
+				myEditorKCFRTestingCommentsSOD = new YAHOO.widget.SimpleEditor('KCFRTestingCommentsSOD', myConfig);
+				myEditorKCFRTestingCommentsSOD.render();
+				myEditorKCOTestingCommentsSOD = new YAHOO.widget.SimpleEditor('KCOTestingCommentsSOD', myConfig);
+				myEditorKCOTestingCommentsSOD.render();
+				myEditorCorpIACommentsSOD = new YAHOO.widget.SimpleEditor('CorpIACommentsSOD', myConfig);
+				myEditorCorpIACommentsSOD.render();
+				myEditorMissedRECommentsSOD = new YAHOO.widget.SimpleEditor('MissedRECommentsSOD', myConfig);
+				myEditorMissedRECommentsSOD.render();
+				myEditorMissedMSACCommentsSOD = new YAHOO.widget.SimpleEditor('MissedMSACCommentsSOD', myConfig);
+				myEditorMissedMSACCommentsSOD.render();
+				myEditorBoCCommentsSOD = new YAHOO.widget.SimpleEditor('BoCCommentsSOD', myConfig);
+				myEditorBoCCommentsSOD.render();
+				myEditorPerfOverviewOtherExplanationSOD = new YAHOO.widget.SimpleEditor('PerfOverviewOtherExplanationSOD', myConfig);
+				myEditorPerfOverviewOtherExplanationSOD.render();
+				myEditorPerfOverviewCriticaExplanationSOD = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanationSOD', myConfig);
+				myEditorPerfOverviewCriticaExplanationSOD.render();
+				// Rich text fields for metrics
+				var metrics = $("#opMetricIDsSOD").val().split(',');
+				var i;
+				var vars = {};
+				for (i = 0; i < metrics.length; ++i) {
+					vars['myEditor'+metrics[i]+'CommentSOD'] = new YAHOO.widget.SimpleEditor(metrics[i]+'CommentSOD', myConfig);
+					vars['myEditor'+metrics[i]+'CommentSOD'].render();
+				}
+			}
+
 			break;
 	}
 	// --- end of rich text section --- //

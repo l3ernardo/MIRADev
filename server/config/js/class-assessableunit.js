@@ -457,11 +457,11 @@ var assessableunit = {
 								]
 							}
 						};
-						console.log("Minnie code");
 						doc[0].GPData = [];
 						doc[0].BUIOTData = [];
 						doc[0].RGData = [];
 						doc[0].CUData = [];
+						break;
 					case "Global Process":
 						var constiobj = {
 							selector:{
@@ -540,12 +540,23 @@ var assessableunit = {
 							selector:{
 								"_id": {"$gt":0},
 								"BusinessUnit": doc[0].BusinessUnit,
+								"parentid": doc[0]._id,
 								"$or": [
-									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": "Account"},{"ControllableUnit": doc[0].ControllableUnit}] },
-									{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Controllable Unit"},{"parentid": doc[0]._id}] }
+									{ "$and": [{"key": "Assessable Unit"},{"DocSubType": "Account"}] },
+									{ "$and": [{"key": "Assessment"}] }
 								]
 							}
 						};
+						// var constiobj = {
+						// 	selector:{
+						// 		"_id": {"$gt":0},
+						// 		"BusinessUnit": doc[0].BusinessUnit,
+						// 		"$or": [
+						// 			{ "$and": [{"key": "Assessable Unit"},{"DocSubType": "Account"},{"ControllableUnit": doc[0].ControllableUnit}] },
+						// 			{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Controllable Unit"},{"parentid": doc[0]._id}] }
+						// 		]
+						// 	}
+						// };
 						doc[0].AccountData = [];
 						break;
 					case "Country Process":
@@ -591,15 +602,24 @@ var assessableunit = {
 						if (constidocs[i].DocType == "Assessment") {
 							toadd = {
 								"docid": constidocs[i]._id,
-								"col": [
-									constidocs[i].CurrentPeriod,
-									constidocs[i].PeriodRating,
-									constidocs[i].Owner,
-									constidocs[i].Target2Sat
-								]
+								"CurrentPeriod": constidocs[i].CurrentPeriod,
+								"PeriodRating": constidocs[i].PeriodRating,
+								"Owner": constidocs[i].Owner,
+								"Target2Sat": constidocs[i].Target2Sat
 							};
 							doc[0].AssessmentData.push(toadd);
-							if (constidocs[i].CurrentPeriod ==  doc[0].CurrentPeriod) hasCurQAsmt = true;
+							if (constidocs[i].CurrentPeriod ==  doc[0].CurrentPeriod) {
+								hasCurQAsmt = true;
+								if (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") {
+									doc[0].RatingJustification = constidocs[i].MIRARatingJustification;
+								} else {
+									if (constidocs[i].WWBCITStatus != "Draft") {
+										doc[0].RatingJustification = constidocs[i].WWBCITRatingJustification;
+									} else {
+										doc[0].RatingJustification = constidocs[i].MIRARatingJustification;
+									}
+								}
+							}
 						} else {
 							toadd = {
 								"docid": constidocs[i]._id,
@@ -1312,7 +1332,9 @@ var assessableunit = {
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
 					doc[0].Log.push(addlog);
+					console.log("Pre Access update: "+doc[0].Name);
 					doc = accessupdates.updateAccessExistDoc(req,doc);
+					console.log("Post Access update: "+doc[0].Name);
 					//Save document
 					db.save(doc[0]).then(function(data){
 						// Get current quarter Assessment

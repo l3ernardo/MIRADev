@@ -578,6 +578,83 @@ for (i=0;i<len;i++)
 			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
+	},
+	cuauditlessonslearned: function(req, db) {
+		var deferred = q.defer(); var BU;
+		if(req.session.businessunit=='GBS')
+		{
+			BU="IBM GBS";
+		} 
+		else if(req.session.businessunit=='GTS')
+		{
+			BU="IBM GTS";
+		}
+		else
+		{
+			BU="IBM GTS Transformation";
+		}
+		try{			
+			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){		
+				var objCUALL = {
+					"selector": {
+						    "AssessableUnitName": { "$gt": null },
+					        "CurrentPeriod": { "$gt": null },
+							"key": "Assessment",
+							"ParentDocSubType":"Controllable Unit",
+							"$not":{"AUStatus":"Retired"},
+							"BusinessUnit": BU
+							//"BusinessUnit": req.session.businessunit
+					},
+					"sort": [{"AssessableUnitName":"asc"},{"CurrentPeriod":"asc"}]
+				};
+			}
+			else{
+				var objCUALL = {
+					"selector": {
+						    "AssessableUnitName": { "$gt": null },
+					        "CurrentPeriod": { "$gt": null },
+							"key": "Assessment",
+							"ParentDocSubType":"Controllable Unit",
+							"$not":{"AUStatus":"Retired"},
+							"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}], 
+							"BusinessUnit": BU
+							//"BusinessUnit": req.session.businessunit
+					},
+					"sort": [{"AssessableUnitName":"asc"},{"CurrentPeriod":"asc"}]
+				};		
+			}
+			
+			db.find(objCUALL).then(function(data){
+				var doc = data.body.docs;
+				var len= doc.length;
+				var view_cuALLReport = [];
+				if(len > 0){
+					for (var i = 0; i < len; i++){
+						var a=doc[i]._id; var b=doc[i].AssessableUnitName;var c=doc[i].IOT;
+						view_cuALLReport.push(
+						{						    
+							IOT: doc[i].IOT,
+							IMT: doc[i].IMT,
+							AssessableUnitName: doc[i].AssessableUnitName,
+							Quarter: doc[i].CurrentPeriod,
+							Response:doc[i].ARALLResponse,
+							Findings:doc[i].ARALLQtrRating,
+							Target2Sat:doc[i].ARALLTarget2Sat,
+							Explanation: doc[i].ARALLExplanation,
+							_id: doc[i]._id
+						})												
+					}
+				}
+				view=JSON.stringify(view_cuALLReport, 'utf8');
+				deferred.resolve({"status": 200, "doc":view_cuALLReport});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}
+		catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
 	}
 	};
 module.exports = report;
