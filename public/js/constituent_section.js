@@ -243,24 +243,27 @@ function displaySelectedConstituentCP(){
 /* Start of Global Process Functions */
 // Add listeners to the constinuents tabs for BU IOT
 function addEventsConstituentGP(){
-  document.getElementById('CPs-li').addEventListener('click',function()
-	{
-	  document.getElementById('CPs').style.display="";
-	  document.getElementById('SPs').style.display="none";
+	if($('#CPs-li').length >0){
+		document.getElementById('CPs-li').addEventListener('click',function()
+		{
+		  document.getElementById('CPs').style.display="";
+		  document.getElementById('SPs').style.display="none";
 
-	  document.getElementById('CPs-li').className="ibm-active";
-	  document.getElementById('SPs-li').className="";
-	},true);
-  document.getElementById('SPs-li').addEventListener('click',function()
-	{
-	  document.getElementById('CPs').style.display="none";
-	  document.getElementById('SPs').style.display="";
+		  document.getElementById('CPs-li').className="ibm-active";
+		  document.getElementById('SPs-li').className="";
+		},true);
+	}
+	if($('#SPs-li').length >0){
+		document.getElementById('SPs-li').addEventListener('click',function()
+		{
+		  document.getElementById('CPs').style.display="none";
+		  document.getElementById('SPs').style.display="";
 
-	  document.getElementById('CPs-li').className="";
-	  document.getElementById('SPs-li').className="ibm-active";
-	},true);
-}
-
+		  document.getElementById('CPs-li').className="";
+		  document.getElementById('SPs-li').className="ibm-active";
+		},true);
+	}
+} 
 // Display the selected tab
 function displaySelectedConstituentGP(){
   var url = parent.location.href;
