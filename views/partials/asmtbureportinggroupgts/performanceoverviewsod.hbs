@@ -261,15 +261,11 @@
 			<span class="ar-asmt-header">Operational and Other Indicators</span><br /><br />
 			<table width="100%">
 				<thead>
-					<th class="ar-asmt-viewheader" scope="col" width="10%"></th>
-					<th class="ar-asmt-viewheader" scope="col" width="30%">Assessed Unit</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Proactive Reviews</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Procurement Bypass (YTD)</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Labour Claiming</th>
-					<th class="ar-asmt-viewheader" scope="col" width="9%">DS&amp;P Overall Rating</th>
-					<th class="ar-asmt-viewheader" scope="col" width="9%">Unauthorized Pricing Commitments (UPC)</th>
-					<th class="ar-asmt-viewheader" scope="col" width="9%">Basics of Controls Exceptions</th>
-					<th class="ar-asmt-viewheader" scope="col" width="9%">Other Metrics</th>
+					<th class="ar-asmt-viewheader" scope="col" width="15%"></th>
+					<th class="ar-asmt-viewheader" scope="col" width="40%">Assessed Unit</th>
+					<th class="ar-asmt-viewheader" scope="col" width="15%">Proactive Reviews</th>
+					<th class="ar-asmt-viewheader" scope="col" width="15%">Basics of Controls Exceptions</th>
+					<th class="ar-asmt-viewheader" scope="col" width="15%">Other Metrics</th>
 				</thead>
 				{{#each BUCAsmtDataOIview}}
 					<tr class="asmt-viewdata">
@@ -280,10 +276,6 @@
 							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{/if_equal}}
 						{{{ratingDisplayView opmetric12Rating}}}
-						{{{ratingDisplayView opmetric13Rating}}}
-						{{{ratingDisplayView opmetric9Rating}}}
-						{{{ratingDisplayView opmetric8Rating}}}
-						{{{ratingDisplayView opmetric16Rating}}}
 						<td class="asmt-viewdata-centered">{{bocExCount}}</td>
 						{{{ratingDisplayView opmetric11Rating}}}
 					</tr>
