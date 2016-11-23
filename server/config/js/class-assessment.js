@@ -21,7 +21,8 @@ var assessment = {
 		db.get(docid).then(function(data){
 			var doc = [];
 			doc.push(data.body);
-			doc[0].Links = JSON.stringify(doc[0].Links)
+			/* Format Links */
+			doc[0].Links = JSON.stringify(doc[0].Links);
 			doc[0].EnteredBU = req.session.businessunit;
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
 
@@ -880,7 +881,7 @@ var assessment = {
 					doc[0].Status = req.body.Status;
 
 					db.save(doc[0]).then(function(data){
-						deferred.resolve(data);
+						deferred.resolve({"status": 200, "id": data.body.id, "parentid": doc[0].parentid});
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
@@ -1182,7 +1183,7 @@ var assessment = {
 					doc[0].Log.push(addlog);
 
 					db.save(doc[0]).then(function(data){
-						deferred.resolve(data);
+						deferred.resolve({"status": 200, "id": data.body.id, "parentid": doc[0].parentid});
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
