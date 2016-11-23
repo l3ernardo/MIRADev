@@ -84,7 +84,7 @@ var assessableunit = {
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						},
 						"sort": [{"LevelType":"asc"},{"Name":"asc"}]
@@ -100,7 +100,7 @@ var assessableunit = {
 								{"DocSubType":{"$in":["Business Unit","Global Process","Country Process"]}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						}	,
 						"sort": [{"LevelType":"asc"},{"Name":"asc"}]
@@ -119,7 +119,7 @@ var assessableunit = {
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						},
 						"fields": [
@@ -153,7 +153,7 @@ var assessableunit = {
 								{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country","Controllable Unit","Account"]}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						},
 						"fields": [
@@ -191,7 +191,7 @@ var assessableunit = {
 								//{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
 								{"$not": {"Name":"Reporting Group"}},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						},
 						"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]
@@ -209,7 +209,7 @@ var assessableunit = {
 								{"$not": {"Name":"Reporting Group"}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit":  {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						},
 						"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]
@@ -228,7 +228,7 @@ var assessableunit = {
 								{"key": "Assessable Unit"},
 								{"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						},
 						"sort": [{"LevelType":"asc"},{"Name":"asc"}]
@@ -244,7 +244,7 @@ var assessableunit = {
 								{"DocSubType":{"$in":["Business Unit","Global Process","Sub-process"]}},
 								{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 								{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
-								{"MIRABusinessUnit": {"$regex": "(?i)"+req.session.businessunit+"(?i)"}}
+								{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 							]
 						},
 						"sort": [{"LevelType":"asc"},{"Name":"asc"}]
