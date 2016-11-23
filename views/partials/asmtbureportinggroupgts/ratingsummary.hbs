@@ -3,6 +3,71 @@
 		<tr class="summaryrollup">
 			<td>
 				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col" width="25%">Performance Indicators</th>
+						<th scope="col" width="10%"></th>
+						<th scope="col" width="65%">Summary/Comments</th>
+					</thead>
+					<tr>
+						<td class="summaryrollup-label"><label for="OverallAssessmentComments">Overall Assessment</label></td>
+						{{{ratingDisplayView PeriodRating}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="OverallAssessmentComments" type="text" name="OverallAssessmentComments">{{OverallAssessmentComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="KCFRTestingComments">KCFR Defect Rate</label></td>
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="KCFRTestingComments" type="text" name="KCFRTestingComments">{{KCFRTestingComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="KCOTestingComments">KCO Defect Rate</label></td>
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="KCOTestingComments" type="text" name="KCOTestingComments">{{KCOTestingComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="CorpIAComments">CHQ Internal Audit Score</label></td>
+						<td class="content-data">{{WeightedAuditScore}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="CorpIAComments" type="text" name="CorpIAComments">{{CorpIAComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="MissedREComments">Missed Risk Evaluations</label></td>
+						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="MissedREComments" type="text" name="MissedREComments">{{MissedREComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="MissedMSACComments">Missed MSAC Commitments</label></td>
+						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="MissedMSACComments" type="text" name="MissedMSACComments">{{MissedMSACComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
 					<thead class="summaryrollup-label"><th scope="col"><label for="RatingSummary">Rating Summary</label></th></thead>
 					<tr class="content-data">
 						<td>
@@ -14,18 +79,36 @@
 				</table>
         <table width="100%">
 					<thead class="summaryrollup-label">
-						<th scope="col"><label for="Highlight">Highlights</label></th>
-						<th scope="col"><label for="FocusArea">Focus Areas</label></th>
+						<th scope="col"><label for="Highlight">Highlights - CRM/Other</label></th>
+						<th scope="col"><label for="FocusArea">Focus Areas - CRM/Other</label></th>
 					</thead>
 					<tr class="content-data">
 						<td>
 							<div class='yui-skin-sam'>
-								<span><textarea id="Highlight" type="text" name="Highlight" cols="78" rows="3">{{Highlight}}</textarea></span>
+								<span><textarea id="HighlightCRM" type="text" name="HighlightCRM" cols="78" rows="3">{{HighlightCRM}}</textarea></span>
 							</div>
 						</td>
 						<td>
 							<div class='yui-skin-sam'>
-								<span><textarea id="FocusArea" type="text" name="FocusArea" cols="78" rows="3">{{FocusArea}}</textarea></span>
+								<span><textarea id="FocusAreaCRM" type="text" name="FocusAreaCRM" cols="78" rows="3">{{FocusAreaCRM}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col"><label for="Highlight">Highlights - Delivery</label></th>
+						<th scope="col"><label for="FocusArea">Focus Areas - Delivery</label></th>
+					</thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="HighlightSOD" type="text" name="HighlightSOD" cols="78" rows="3">{{HighlightSOD}}</textarea></span>
+							</div>
+						</td>
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="FocusAreaSOD" type="text" name="FocusAreaSOD" cols="78" rows="3">{{FocusAreaSOD}}</textarea></span>
 							</div>
 						</td>
 					</tr>
@@ -104,6 +187,65 @@
 		<tr class="summaryrollup">
 			<td>
 				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col" width="25%">Performance Indicators</th>
+						<th scope="col" width="10%"></th>
+						<th scope="col" width="65%">Summary/Comments</th>
+					</thead>
+					<tr>
+						<td class="summaryrollup-label">Overall Assessment</td>
+						{{{ratingDisplayView PeriodRating}}}
+						<td class="content-data">
+							<input type="hidden" name="OverallAssessmentCommentsRO" value="{{OverallAssessmentComments}}">
+							<div id="OverallAssessmentCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">KCFR Defect Rate</td>
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}">
+							<div id="KCFRTestingCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">KCO Defect Rate</td>
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<input type="hidden" name="KCOTestingCommentsRO" value="{{KCOTestingComments}}">
+							<div id="KCOTestingCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">CHQ Internal Audit Score</td>
+						<td class="content-data">{{WeightedAuditScore}}</td>
+						<td class="content-data">
+							<input type="hidden" name="CorpIACommentsRO" value="{{CorpIAComments}}">
+							<div id="CorpIACommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">Missed Risk Evaluations</td>
+						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data">
+							<input type="hidden" name="MissedRECommentsRO" value="{{MissedREComments}}">
+							<div id="MissedRECommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">Missed MSAC Commitments</td>
+						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data">
+							<input type="hidden" name="MissedMSACCommentsRO" value="{{MissedMSACComments}}">
+							<div id="MissedMSACCommentsReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
 					<thead class="summaryrollup-label"><th scope="col">Rating Summary</th></thead>
 					<tr class="content-data">
 						<td>&nbsp;
@@ -114,17 +256,33 @@
 				</table>
         <table width="100%">
 					<thead class="summaryrollup-label">
-						<th scope="col">Highlights</th>
-						<th scope="col">Focus Areas</th>
+						<th scope="col">Highlights - CRM/Other</th>
+						<th scope="col">Focus Areas - CRM/Other</th>
 					</thead>
 					<tr class="content-data">
 						<td>&nbsp;
-							<input type="hidden" name="HighlightRO" value="{{Highlight}}">
-							<div id="HighlightReadOnly"></div>
+							<input type="hidden" name="HighlightROCRM" value="{{HighlightCRM}}">
+							<div id="HighlightReadOnlyCRM"></div>
 						</td>
 						<td>&nbsp;
-							<input type="hidden" name="FocusAreaRO" value="{{FocusArea}}">
-							<div id="FocusAreaReadOnly"></div>
+							<input type="hidden" name="FocusAreaROCRM" value="{{FocusAreaCRM}}">
+							<div id="FocusAreaReadOnlyCRM"></div>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col">Highlights - Delivery</th>
+						<th scope="col">Focus Areas - Delivery</th>
+					</thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="HighlightROSOD" value="{{HighlightSOD}}">
+							<div id="HighlightReadOnlySOD"></div>
+						</td>
+						<td>&nbsp;
+							<input type="hidden" name="FocusAreaROSOD" value="{{FocusAreaSOD}}">
+							<div id="FocusAreaReadOnlySOD"></div>
 						</td>
 					</tr>
 				</table>
