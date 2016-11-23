@@ -10,6 +10,7 @@ $(document).ready(function() {
 
 	// on change events
 	$("#PeriodRating").change(function(){
+		// $("#PeriodRating").val($("#PeriodRating").val());
 		if ($("#PeriodRating").val() == "Sat") {
 			$(".reviewComments").hide();
 			$(".target2Sat").hide();
@@ -25,7 +26,10 @@ $(document).ready(function() {
 	$('#Target2Sat').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 
 });
