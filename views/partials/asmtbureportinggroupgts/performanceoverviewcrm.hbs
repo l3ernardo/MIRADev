@@ -10,58 +10,58 @@
 						<th class="ar-asmt-label" width="65%">Summary/Comments</th>
 					</tr>
 					<tr>
-						<td class="ar-asmt-label"><label for="OverallAssessmentComments">Overall Assessment</label></td>
+						<td class="ar-asmt-label"><label for="OverallAssessmentCommentsCRM">Overall Assessment</label></td>
 						<td class="content-data">
 							<span>{{{uniqueSelect "PeriodRatingCRM" parameters.PeriodRating.0.options "name" "name" PeriodRatingCRM}}}</span><br />
 						</td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="OverallAssessmentComments" type="text" name="OverallAssessmentComments">{{OverallAssessmentComments}}</textarea></span>
+								<span><textarea id="OverallAssessmentCommentsCRM" type="text" name="OverallAssessmentCommentsCRM">{{OverallAssessmentCommentsCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="ar-asmt-label"><label for="KCFRTestingComments">KCFR Defect Rate</label></td>
+						<td class="ar-asmt-label"><label for="KCFRTestingCommentsCRM">KCFR Defect Rate</label></td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="KCFRTestingComments" type="text" name="KCFRTestingComments">{{KCFRTestingComments}}</textarea></span>
+								<span><textarea id="KCFRTestingCommentsCRM" type="text" name="KCFRTestingCommentsCRM">{{KCFRTestingCommentsCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="ar-asmt-label"><label for="KCOTestingComments">KCO Defect Rate</label></td>
+						<td class="ar-asmt-label"><label for="KCOTestingCommentsCRM">KCO Defect Rate</label></td>
 						{{{defectRateDisplayViewWpercent KCODefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="KCOTestingComments" type="text" name="KCOTestingComments">{{KCOTestingComments}}</textarea></span>
+								<span><textarea id="KCOTestingCommentsCRM" type="text" name="KCOTestingCommentsCRM">{{KCOTestingCommentsCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="ar-asmt-label"><label for="CorpIAComments">CHQ Internal Audit Score</label></td>
+						<td class="ar-asmt-label"><label for="CorpIACommentsCRM">CHQ Internal Audit Score</label></td>
 						<td class="content-data">{{WeightedAuditScoreCRM}}</td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="CorpIAComments" type="text" name="CorpIAComments">{{CorpIAComments}}</textarea></span>
+								<span><textarea id="CorpIACommentsCRM" type="text" name="CorpIACommentsCRM">{{CorpIACommentsCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="ar-asmt-label"><label for="MissedREComments">Missed Risk Evaluations</label></td>
+						<td class="ar-asmt-label"><label for="MissedRECommentsCRM">Missed Risk Evaluations</label></td>
 						<td class="content-data">{{MissedOpenIssueCountCRM}}</td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="MissedREComments" type="text" name="MissedREComments">{{MissedREComments}}</textarea></span>
+								<span><textarea id="MissedRECommentsCRM" type="text" name="MissedRECommentsCRM">{{MissedRECommentsCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="ar-asmt-label"><label for="MissedMSACComments">Missed MSAC Commitments</label></td>
+						<td class="ar-asmt-label"><label for="MissedMSACCommentsCRM">Missed MSAC Commitments</label></td>
 						<td class="content-data">{{MissedMSACSatCountCRM}}</td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="MissedMSACComments" type="text" name="MissedMSACComments">{{MissedMSACComments}}</textarea></span>
+								<span><textarea id="MissedMSACCommentsCRM" type="text" name="MissedMSACCommentsCRM">{{MissedMSACCommentsCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
@@ -88,29 +88,29 @@
 						</tr>
 					{{/each}}
 					<tr>
-						<td class="ar-asmt-label"><label for="BoCComments">Basics of Control Exceptions</label></td>
-						<td class="asmt-viewdata-centered">{{BOCExceptionCount}}</td>
+						<td class="ar-asmt-label"><label for="BoCCommentsCRM">Basics of Control Exceptions</label></td>
+						<td class="asmt-viewdata-centered">{{BOCExceptionCountCRM}}</td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="BoCComments" type="text" name="BoCComments">{{BoCComments}}</textarea></span>
+								<span><textarea id="BoCCommentsCRM" type="text" name="BoCCommentsCRM">{{BoCCommentsCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
 				</table>
 				<table width="100%">
 					<tr>
-						<td class="ar-asmt-label" width="25%"><label for="PerfOverviewOtherExplanation">Other Explanation</label></td>
+						<td class="ar-asmt-label" width="25%"><label for="PerfOverviewOtherExplanationCRM">Other Explanation</label></td>
 						<td class="content-data" width="75%">
 							<div class='yui-skin-sam'>
-								<span><textarea id="PerfOverviewOtherExplanation" type="text" name="PerfOverviewOtherExplanation">{{PerfOverviewOtherExplanation}}</textarea></span>
+								<span><textarea id="PerfOverviewOtherExplanationCRM" type="text" name="PerfOverviewOtherExplanationCRM">{{PerfOverviewOtherExplanationCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td class="ar-asmt-label"><label for="PerfOverviewCriticaExplanation">Critical Issues</label></td>
+						<td class="ar-asmt-label"><label for="PerfOverviewCriticaExplanationCRM">Critical Issues</label></td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
-								<span><textarea id="PerfOverviewCriticaExplanation" type="text" name="PerfOverviewCriticaExplanation">{{PerfOverviewCriticaExplanation}}</textarea></span>
+								<span><textarea id="PerfOverviewCriticaExplanationCRM" type="text" name="PerfOverviewCriticaExplanationCRM">{{PerfOverviewCriticaExplanationCRM}}</textarea></span>
 							</div>
 						</td>
 					</tr>
@@ -130,48 +130,48 @@
 						<td class="ar-asmt-label">Overall Assessment</td>
 						{{{ratingDisplayView PeriodRatingCRM}}}
 						<td class="content-data">
-							<input type="hidden" name="OverallAssessmentCommentsRO" value="{{OverallAssessmentComments}}">
-							<div id="OverallAssessmentCommentsReadOnly"></div>
+							<input type="hidden" name="OverallAssessmentCommentsROCRM" value="{{OverallAssessmentCommentsCRM}}">
+							<div id="OverallAssessmentCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}">
-							<div id="KCFRTestingCommentsReadOnly"></div>
+							<input type="hidden" name="KCFRTestingCommentsROCRM" value="{{KCFRTestingCommentsCRM}}">
+							<div id="KCFRTestingCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">KCO Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCODefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCOTestingCommentsRO" value="{{KCOTestingComments}}">
-							<div id="KCOTestingCommentsReadOnly"></div>
+							<input type="hidden" name="KCOTestingCommentsROCRM" value="{{KCOTestingCommentsCRM}}">
+							<div id="KCOTestingCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">CHQ Internal Audit Score</td>
 						<td class="content-data">{{WeightedAuditScoreCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="CorpIACommentsRO" value="{{CorpIAComments}}">
-							<div id="CorpIACommentsReadOnly"></div>
+							<input type="hidden" name="CorpIACommentsROCRM" value="{{CorpIACommentsCRM}}">
+							<div id="CorpIACommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Missed Risk Evaluations</td>
 						<td class="content-data">{{MissedOpenIssueCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedRECommentsRO" value="{{MissedREComments}}">
-							<div id="MissedRECommentsReadOnly"></div>
+							<input type="hidden" name="MissedRECommentsROCRM" value="{{MissedRECommentsCRM}}">
+							<div id="MissedRECommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Missed MSAC Commitments</td>
 						<td class="content-data">{{MissedMSACSatCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedMSACCommentsRO" value="{{MissedMSACComments}}">
-							<div id="MissedMSACCommentsReadOnly"></div>
+							<input type="hidden" name="MissedMSACCommentsROCRM" value="{{MissedMSACCommentsCRM}}">
+							<div id="MissedMSACCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
@@ -191,10 +191,10 @@
 					{{/each}}
 					<tr>
 						<td class="ar-asmt-label">Basics of Control Exceptions</td>
-						<td class="asmt-viewdata-centered">{{BOCExceptionCount}}</td>
+						<td class="asmt-viewdata-centered">{{BOCExceptionCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="BoCCommentsRO" value="{{BoCComments}}">
-							<div id="BoCCommentsReadOnly"></div>
+							<input type="hidden" name="BoCCommentsROCRM" value="{{BoCCommentsCRM}}">
+							<div id="BoCCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 				</table>
@@ -202,15 +202,15 @@
 					<tr>
 						<td class="ar-asmt-label" width="25%">Other Explanation</td>
 						<td class="content-data" width="75%">
-							<input type="hidden" name="PerfOverviewOtherExplanationRO" value="{{PerfOverviewOtherExplanation}}">
-							<div id="PerfOverviewOtherExplanationReadOnly"></div>
+							<input type="hidden" name="PerfOverviewOtherExplanationROCRM" value="{{PerfOverviewOtherExplanationCRM}}">
+							<div id="PerfOverviewOtherExplanationReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Critical Issues</td>
 						<td class="content-data">
-							<input type="hidden" name="PerfOverviewCriticaExplanationRO" value="{{PerfOverviewCriticaExplanation}}">
-							<div id="PerfOverviewCriticaExplanationReadOnly"></div>
+							<input type="hidden" name="PerfOverviewCriticaExplanationROCRM" value="{{PerfOverviewCriticaExplanationCRM}}">
+							<div id="PerfOverviewCriticaExplanationReadOnlyCRM"></div>
 						</td>
 					</tr>
 				</table>
@@ -261,13 +261,14 @@
 			<span class="ar-asmt-header">Operational and Other Indicators</span><br /><br />
 			<table width="100%">
 				<thead>
-					<th class="ar-asmt-viewheader" scope="col" width="10%"></th>
-					<th class="ar-asmt-viewheader" scope="col" width="30%">Assessed Unit</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Proactive Reviews</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Procurement Bypass (YTD)</th>
-					<th class="ar-asmt-viewheader" scope="col" width="8%">Labour Claiming</th>
-					<th class="ar-asmt-viewheader" scope="col" width="9%">DS&amp;P Overall Rating</th>
-					<th class="ar-asmt-viewheader" scope="col" width="9%">Unauthorized Pricing Commitments (UPC)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="5%"></th>
+					<th class="ar-asmt-viewheader" scope="col" width="23%">Assessed Unit</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Proactive Reviews</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Procurement Bypass (YTD)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Labour Claiming</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Work @ Risk</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Unauthorized Pricing</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">STS (NSSO/SCF) Errors</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Basics of Controls Exceptions</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Other Metrics</th>
 				</thead>
@@ -282,8 +283,9 @@
 						{{{ratingDisplayView opmetric12Rating}}}
 						{{{ratingDisplayView opmetric13Rating}}}
 						{{{ratingDisplayView opmetric9Rating}}}
-						{{{ratingDisplayView opmetric8Rating}}}
+						{{{ratingDisplayView opmetric17Rating}}}
 						{{{ratingDisplayView opmetric16Rating}}}
+						{{{ratingDisplayView opmetric15Rating}}}
 						<td class="asmt-viewdata-centered">{{bocExCount}}</td>
 						{{{ratingDisplayView opmetric11Rating}}}
 					</tr>

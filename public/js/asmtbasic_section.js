@@ -10,6 +10,7 @@ $(document).ready(function() {
 
 	// on change events
 	$("#PeriodRating").change(function(){
+		// $("#PeriodRating").val($("#PeriodRating").val());
 		if ($("#PeriodRating").val() == "Sat") {
 			$(".reviewComments").hide();
 			$(".target2Sat").hide();

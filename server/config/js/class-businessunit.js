@@ -1,10 +1,10 @@
 /**************************************************************************************************
- * 
- * Business Unit code for MIRA Web
- * Developed by : Gabriel Fuentes
- * Date: 25 May 2016
- * 
- */
+*
+* Business Unit code for MIRA Web
+* Developed by : Gabriel Fuentes
+* Date: 25 May 2016
+*
+*/
 
 var q  = require("q");
 
@@ -63,77 +63,92 @@ var businessunit = {
 				};
 				db.find(objInt).then(function(data){
 					var docInt = data.body.docs[0];
-					deferred.resolve({"status": 200, "bunit": value, "version": version, "quarter":docInt.value.quarter});
+					//GET CONFIGURED CURRENT QUARTER
+					var objmirabu = {
+						"selector":{
+							"key": "Assessable Unit",
+							"MIRABusinessUnit": value,
+							"DocSubType": "Business Unit"
+						},
+						"fields": ["Name"]
+
+						};
+						db.find(objmirabu).then(function(data){
+							var mirabu = data.body.docs[0].Name;
+							deferred.resolve({"status": 200, "bunit": value, "version": version, "quarter":docInt.value.quarter,"mirabu":mirabu});
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err.error.reason});
+						});
+					}).catch(function(err) {
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
 				}).catch(function(err) {
 					deferred.reject({"status": 500, "error": err.error.reason});
 				});
-			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": err.error.reason});
-			});
-		}catch(e){
-			deferred.reject({"status": 500, "error": e});
-		}
-		return deferred.promise;
-	},
-	getMenu: function(req,db) {
-		var deferred = q.defer();
-		try{
-			var bunit = req.session.businessunit;
-			var obj = {
-				selector : {
-					"_id": {"$gt":0},
-					keyName: "MIRAMenu" //MIRAMenu
-				}};
-			var groups = req.session.user.groupName;
-			db.find(obj).then(function(data){
-				var doc = data.body.docs[0].value;
-				var submenu = [];
-				doc.forEach(function(bu) { 
-					if (bu.businessUnit==bunit){
-						submenu = bu;
-						//console.log('Menu Title:' + bu.menutitle);
-						var menuEntryIndex = 0;
-						bu.menu.forEach(function(menuEntry) {
-							var subEntryIndex = 0;
-							var invalidEntry = 0;
-							menuEntry.entries.forEach(function(subEntry) {
-								if(submenu.menu[menuEntryIndex].entries[subEntryIndex]) {
-									//console.log("Checking entry: " + submenu.menu[menuEntryIndex].entries[subEntryIndex].name);
-								}
-								var flag = false;
-								subEntry.role.forEach(function(rl) {
-									if(groups.indexOf(rl)!=-1 && !flag) {
-										flag = true;
-										//console.log("Role authorized: " + rl);
+			}catch(e){
+				deferred.reject({"status": 500, "error": e});
+			}
+			return deferred.promise;
+		},
+		getMenu: function(req,db) {
+			var deferred = q.defer();
+			try{
+				var bunit = req.session.businessunit;
+				var obj = {
+					selector : {
+						"_id": {"$gt":0},
+						keyName: "MIRAMenu" //MIRAMenu
+					}};
+					var groups = req.session.user.groupName;
+					db.find(obj).then(function(data){
+						var doc = data.body.docs[0].value;
+						var submenu = [];
+						doc.forEach(function(bu) {
+							if (bu.businessUnit==bunit){
+								submenu = bu;
+								//console.log('Menu Title:' + bu.menutitle);
+								var menuEntryIndex = 0;
+								bu.menu.forEach(function(menuEntry) {
+									var subEntryIndex = 0;
+									var invalidEntry = 0;
+									menuEntry.entries.forEach(function(subEntry) {
+										if(submenu.menu[menuEntryIndex].entries[subEntryIndex]) {
+											//console.log("Checking entry: " + submenu.menu[menuEntryIndex].entries[subEntryIndex].name);
+										}
+										var flag = false;
+										subEntry.role.forEach(function(rl) {
+											if(groups.indexOf(rl)!=-1 && !flag) {
+												flag = true;
+												//console.log("Role authorized: " + rl);
+											}
+										})
+										if(!flag) {
+											invalidEntry++;
+											if(submenu.menu[menuEntryIndex].entries[subEntryIndex]) {
+												//console.log("Deleting entry: " + submenu.menu[menuEntryIndex].entries[subEntryIndex].name);
+												delete submenu.menu[menuEntryIndex].entries[subEntryIndex];
+											}
+										}
+										subEntryIndex++;
+									})
+									if(invalidEntry==subEntryIndex) {
+										if(submenu.menu[menuEntryIndex]) {
+											//console.log("Deleting menu: " + submenu.menu[menuEntryIndex].title);
+											delete submenu.menu[menuEntryIndex];
+										}
 									}
-								})
-								if(!flag) {
-									invalidEntry++;
-									if(submenu.menu[menuEntryIndex].entries[subEntryIndex]) {
-										//console.log("Deleting entry: " + submenu.menu[menuEntryIndex].entries[subEntryIndex].name);
-										delete submenu.menu[menuEntryIndex].entries[subEntryIndex];
-									}
-								}
-								subEntryIndex++;
-							})
-							if(invalidEntry==subEntryIndex) {
-								if(submenu.menu[menuEntryIndex]) {
-									//console.log("Deleting menu: " + submenu.menu[menuEntryIndex].title);
-									delete submenu.menu[menuEntryIndex];
-								}
+									menuEntryIndex++;
+								});
 							}
-							menuEntryIndex++;
 						});
-					}
-				});
-				deferred.resolve({"status": 200,"submenu":submenu})	
-			}).catch(function(err){
-				deferred.reject({"status": 500, "error": err.error.reason});
-			});
-		}catch(e){
-			deferred.reject({"status": 500, "error": e});
-		}
-		return deferred.promise;
-	}
-};
-module.exports = businessunit;
+						deferred.resolve({"status": 200,"submenu":submenu})
+					}).catch(function(err){
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+				}catch(e){
+					deferred.reject({"status": 500, "error": e});
+				}
+				return deferred.promise;
+			}
+		};
+		module.exports = businessunit;

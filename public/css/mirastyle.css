@@ -140,6 +140,10 @@
   color: #0060A0;
   font-size:11px
 }
+.ibm-data-table .country-processrating {
+	color: #ffffff;
+  background-color: #00c1c2;
+}
 .ibm-data-table .processrating {
   background-color: #00c1c2;
 	border: 20px solid #00c1c2;
@@ -227,23 +231,23 @@
 }
 .ibm-data-table .sat-bg {
 	text-align: center;
-	font-size: 11px;
+	font-size: 10px;
 	background-color: #00ff00;
 }
 .ibm-data-table .unsat-bg {
 	text-align: center;
-	font-size: 11px;
+	font-size: 10px;
 	color: #ffffff;
 	background-color: #ff0000;
 }
 .ibm-data-table .marg-bg {
 	text-align: center;
-	font-size: 11px;
+	font-size: 10px;
 	background-color: #ffff00;
 }
 .ibm-data-table .unrated-bg {
 	text-align: center;
-	font-size: 11px;
+	font-size: 10px;
 	background-color: #ffffff;
 }
 .ibm-data-table .content-data-centered {
