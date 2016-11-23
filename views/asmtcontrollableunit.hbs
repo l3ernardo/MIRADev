@@ -45,7 +45,11 @@
 		<!-- Contact -->
 		{{>asmtcontact}}<br /><br />
 		<!-- Assessment components guide -->
-		{{>asmtbaselevel/compguide}}<br /><br />
+		{{#if Country}}
+			{{>asmtbaselevel/compguide}}<br /><br />
+		{{else}}
+			{{>asmtbaselevel/compguidehybrid}}<br /><br />
+		{{/if}}
 		<!-- Assessment components tabs -->
 		{{#if_equal Portfolio "Yes"}}
 			{{#if Country}}

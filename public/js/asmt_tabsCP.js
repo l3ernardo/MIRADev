@@ -1,69 +1,87 @@
 $(document).ready(function() {
 
 	//---Start of Basics of Control Tab---//
+
 	$('#BoCTargetCloseDate1').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate2').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate3').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate4').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	$('#BoCTargetCloseDate5').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 
-	$("input[name='BOCExceptionCount']").val(0);
-	if( $('#BoCResponse1Yes').is(':checked') ) {
-		$("#colBoCTargetCloseDate1").hide();
-		$("#BoCTargetCloseDate1").val("");
-	} else {
-		if ($('#BoCResponse1No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
-		$("#colBoCTargetCloseDate1").show();
+	if ($("input[name='editmode']").val() == "1") {
+		$("input[name='BOCExceptionCount']").val(0);
+		if( $('#BoCResponse1Yes').is(':checked') ) {
+			$("#colBoCTargetCloseDate1").hide();
+			$("#BoCTargetCloseDate1").val("");
+		} else {
+			if ($('#BoCResponse1No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
+			$("#colBoCTargetCloseDate1").show();
+		}
+		if( $('#BoCResponse2Yes').is(':checked')) {
+			$("#colBoCTargetCloseDate2").hide();
+			$("#BoCTargetCloseDate2").val("");
+		} else {
+			if ($('#BoCResponse2No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
+			$("#colBoCTargetCloseDate2").show();
+		}
+		if( $('#BoCResponse3Yes').is(':checked')) {
+			$("#colBoCTargetCloseDate3").hide();
+			$("#BoCTargetCloseDate3").val("");
+		} else {
+			if ($('#BoCResponse3No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
+			$("#colBoCTargetCloseDate3").show();
+		}
+		if( $('#BoCResponse4Yes').is(':checked')) {
+			$("#colBoCTargetCloseDate4").hide();
+			$("#BoCTargetCloseDate4").val("");
+		} else {
+			if ($('#BoCResponse4No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
+			$("#colBoCTargetCloseDate4").show();
+		}
+		if( $('#BoCResponse5Yes').is(':checked')) {
+			$("#colBoCTargetCloseDate5").hide();
+			$("#BoCTargetCloseDate5").val("");
+		} else {
+			if ($('#BoCResponse5No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
+			$("#colBoCTargetCloseDate5").show();
+		}
 	}
-	if( $('#BoCResponse2Yes').is(':checked')) {
-		$("#colBoCTargetCloseDate2").hide();
-		$("#BoCTargetCloseDate2").val("");
-	} else {
-		if ($('#BoCResponse2No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
-		$("#colBoCTargetCloseDate2").show();
-	}
-	if( $('#BoCResponse3Yes').is(':checked')) {
-		$("#colBoCTargetCloseDate3").hide();
-		$("#BoCTargetCloseDate3").val("");
-	} else {
-		if ($('#BoCResponse3No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
-		$("#colBoCTargetCloseDate3").show();
-	}
-	if( $('#BoCResponse4Yes').is(':checked')) {
-		$("#colBoCTargetCloseDate4").hide();
-		$("#BoCTargetCloseDate4").val("");
-	} else {
-		if ($('#BoCResponse4No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
-		$("#colBoCTargetCloseDate4").show();
-	}
-	if( $('#BoCResponse5Yes').is(':checked')) {
-		$("#colBoCTargetCloseDate5").hide();
-		$("#BoCTargetCloseDate5").val("");
-	} else {
-		if ($('#BoCResponse5No').is(':checked')) $("input[name='BOCExceptionCount']").val(1);
-		$("#colBoCTargetCloseDate5").show();
-	}
-	if ($("input[name='BOCExceptionCount']").val() == 1) $("#compguideboc").html('<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>');
+	if ($("input[name='BOCExceptionCount']").val() == "1") $("#compguideboc").html('<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>');
 	else $("#compguideboc").html('<p>&nbsp;</p>');
 
 	//---on change events--//
@@ -138,7 +156,10 @@ $(document).ready(function() {
 	$('#ARALLTarget2Sat').datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
-		numberOfMonths: 1
+		numberOfMonths: 1,
+		onClose: function () {
+     $(this).focus();
+    }
 	});
 	if( $('#ARALLResponseYes').is(':checked')) {
 		$("#ARALLQtrRating").show();
@@ -178,7 +199,10 @@ $(document).ready(function() {
 		$("#"+metrics[i]+"TargetSatDate").datepicker({
 			defaultDate: "+1w",
 			changeMonth: true,
-			numberOfMonths: 1
+			numberOfMonths: 1,
+			onClose: function () {
+	     $(this).focus();
+	    }
 		});
 		if($("#"+metrics[i]+"Rating").val() == "Marg" || $("#"+metrics[i]+"Rating").val() == "Unsat") {
 			$("#colDate"+metrics[i]).show();
@@ -207,7 +231,10 @@ $(document).ready(function() {
 			$("#"+metrics[i]+"TargetSatDate").datepicker({
 				defaultDate: "+1w",
 				changeMonth: true,
-				numberOfMonths: 1
+				numberOfMonths: 1,
+				onClose: function () {
+		     $(this).focus();
+		    }
 			});
 			if($("#"+metrics[i]+"Rating").val()=="Marg" || $("#"+metrics[i]+"Rating").val()=="Unsat") {
 				$("#colDate"+metrics[i]).show();

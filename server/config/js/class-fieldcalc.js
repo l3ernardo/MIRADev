@@ -36,8 +36,6 @@ var calculatefield = {
           }
         }
       }
-    } else {
-
     }
   },
   // adding empty Test View Data Only
@@ -133,6 +131,7 @@ var calculatefield = {
   		}
       // For Operational Metric setup keys
       var opMetricKey;
+      var opMetricKeySOD = "";
       switch (doc[0].ParentDocSubType) {
         case "Country Process":
           lParams.push('ProcessCatFIN');
@@ -150,12 +149,15 @@ var calculatefield = {
         case "BU IOT":
         case "BU IMT":
         case "BU Country":
-          if (doc[0].BUWWBCITKey == "BSU300000027")
+          if (doc[0].BUWWBCITKey == "BSU300000027") {
             opMetricKey = "GBSGeoOpMetric";
-          else if (doc[0].BUWWBCITKey == "BSU300000026")
+          } else if (doc[0].BUWWBCITKey == "BSU300000026") {
             opMetricKey = "TOGeoOpMetric";
-          else
+          } else {
             opMetricKey = "GTSGeoOpMetric";
+            opMetricKeySOD = "GTSGeoOpMetricSOD";
+            lParams.push(opMetricKeySOD);
+          }
           break;
         case "Controllable Unit":
           opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
@@ -164,7 +166,8 @@ var calculatefield = {
       lParams.push(opMetricKey);
 
   		param.getListParams(db, lParams).then(function(dataParam) {
-  			if(dataParam.status==200 & !dataParam.error) {
+
+        if(dataParam.status==200 & !dataParam.error) {
   				if (dataParam.parameters.CRMProcess) {
   					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
   						if (doc[0].GlobalProcess == dataParam.parameters.CRMProcess[0].options[j].name) doc[0].CatP = "CRM";
@@ -264,6 +267,40 @@ var calculatefield = {
             }
             doc[0].opMetricIDs = opMetricIDs;
           }
+          if (dataParam.parameters[opMetricKeySOD]) {
+            var TmpOpMetricSOD = [];
+            var opMetricIDsSOD = "";
+            var opIDSOD;
+            if (doc[0].OpMetricSOD) {
+              doc[0].OpMetricCurrSOD = doc[0].OpMetricSOD;
+            }
+            doc[0].OpMetricSOD = [];
+            var omIndexSOD;
+            for (var j = 0; j < dataParam.parameters[opMetricKeySOD][0].options.length; ++j) {
+              opIDSOD = dataParam.parameters[opMetricKeySOD][0].options[j].id;
+              if (opMetricIDsSOD == "")
+                opMetricIDsSOD = opIDSOD;
+              else
+                opMetricIDsSOD = opMetricIDsSOD + "," + opIDSOD;
+
+              doc[0].OpMetricSOD.push(dataParam.parameters[opMetricKeySOD][0].options[j]);
+              doc[0].OpMetricSOD[j].ratingfield = opIDSOD + "RatingSOD";
+              doc[0].OpMetricSOD[j].commentfield = opIDSOD + "CommentSOD";
+              doc[0].OpMetricSOD[j].commentfieldRO = opIDSOD + "commentfieldROSOD";
+              doc[0].OpMetricSOD[j].commentfieldReadOnly = opIDSOD + "commentfieldReadOnlySOD";
+              doc[0].OpMetricSOD[j].rating = "";
+              doc[0].OpMetricSOD[j].action = "";
+              if (doc[0].OpMetricCurrSOD) {
+                omIndexSOD = util.getIndex(doc[0].OpMetricCurrSOD,"id",opIDSOD);
+                if (omIndexSOD != -1) {
+                  doc[0].OpMetricSOD[j].rating = doc[0].OpMetricCurrSOD[omIndexSOD].rating;
+                  doc[0].OpMetricSOD[j].action = doc[0].OpMetricCurrSOD[omIndexSOD].action;
+                }
+              }
+            }
+            doc[0].opMetricIDsSOD = opMetricIDsSOD;
+          }
+
           if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
             doc[0].ShowEA = 1;
   				// evaluate BusinessUnitOLD formula
@@ -693,7 +730,6 @@ var calculatefield = {
 
       }
       else { // For BU Country, BU IOT, BU IMT, BU Reporting Group and Business Unit which needs to process ratings profile for both CU and CP
-
         var podatactr = 0;
         for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
 
