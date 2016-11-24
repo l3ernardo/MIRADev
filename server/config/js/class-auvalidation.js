@@ -20,13 +20,13 @@ var auvalidation = {
 				if (req.body.AuditableFlag == "Yes" && req.body.AuditProgram == "") msg.push("Audit program is required");
 				break;
 			case "BU IOT":
-				if (req.body.IOT == "") msg.push("BU IOT is required");
+				if (req.body.iotname == "") msg.push("BU IOT is required");
 				break;
 			case "BU IMT":
-				if (req.body.IMT == "") msg.push("BU IMT is required");
+				if (req.body.imtname == "") msg.push("BU IMT is required");
 				break;
 			case "BU Country":
-				if (req.body.Country == "") msg.push("Country is required");
+				if (req.body.countryname == "") msg.push("Country is required");
 				break;
 			case "Controllable Unit":
 				if (req.body.Portfolio == "") msg.push("Portfolio is required");
