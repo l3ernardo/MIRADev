@@ -874,5 +874,31 @@ delUserAccessList: function (db,docid,list,accessLevel){
 
 },
 
+getAccessDoc : function(db,docid){
+	var deferred = q.defer();
+	try{
+		
+		var selector = {
+				selector : {
+					"_id": {"$gt":0},
+					key: "AccessList",
+					doc_id : docid
+				}};
+		
+	db.find(selector).then(function(data){
+			var doc = data.body.docs[0];
+			deferred.resolve({"status": 200, "result": doc});
+		
+	}).catch(function(error){
+		deferred.reject({"status": 500, "error": err.error.reason});
+	});
+	}catch(e){
+		deferred.reject({"status": 500, "error": e});
+	}
+	
+	
+	return deferred.promise;
+}
+
 }
 module.exports = util;
