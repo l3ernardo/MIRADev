@@ -70,19 +70,19 @@ function valid_au() {
 			}
 			break;
 		case "BU IOT":
-			if ($("input[name='IOT']").val() == "") {
+			if ($("input[name='iotname']").val() == "") {
 				req_flds = req_flds + "  - BU IOT\n";
 				valid = false;
 			}
 			break;
 		case "BU IMT":
-			if ($("input[name='IMT']").val() == "") {
+			if ($("input[name='imtname']").val() == "") {
 				req_flds = req_flds + "  - BU IMT\n";
 				valid = false;
 			}
 			break;
 		case "BU Country":
-			if ($("input[name='Country']").val() == "") {
+			if ($("input[name='countryname']").val() == "") {
 				req_flds = req_flds + "  - Country\n";
 				valid = false;
 			}

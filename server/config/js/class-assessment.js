@@ -11,6 +11,7 @@ var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
+var util = require('./class-utility.js');
 
 var assessment = {
 
@@ -18,6 +19,7 @@ var assessment = {
 	getAsmtbyID: function(req, db) {
 		var deferred = q.defer();
 		var docid = req.query.id
+
 		db.get(docid).then(function(data){
 			var doc = [];
 			doc.push(data.body);
@@ -25,7 +27,6 @@ var assessment = {
 			doc[0].Links = JSON.stringify(doc[0].Links);
 			doc[0].EnteredBU = req.session.businessunit;
 			fieldCalc.getDocParams(req, db, doc).then(function(data){
-
 				doc[0].PrevQtrs = [];
 				doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
@@ -33,7 +34,6 @@ var assessment = {
 				db.get(doc[0].parentid).then(function(pdata){
 					var parentdoc = [];
 					parentdoc.push(pdata.body);
-
 					/* Get access and roles */
 					var editors = parentdoc[0].AdditionalEditors + parentdoc[0].Owner + parentdoc[0].Focals;
 					accessrules.getRules(req,editors);
@@ -44,7 +44,6 @@ var assessment = {
 					// Check if Rating Justification and Target to Sat is editable. This is part of the basic section but conditions apply in both read and edit mode
 					if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) )
 						doc[0].RJandT2SEditable = 1;
-
 					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
 						doc[0].editmode = 1;
 						// check if Rating is editable
@@ -104,13 +103,21 @@ var assessment = {
 							});
 							break;
 						case "BU Reporting Group":
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].PPRData = fieldCalc.addTestViewData(13,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(16,3);
+								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,3);
+							} else {
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+							}
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
 							doc[0].AUData = fieldCalc.addTestViewData(17,5);
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -171,6 +178,8 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
+							doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
+							doc[0].Name = req.session.buname + " - " + doc[0].IOT;
 							fieldCalc.getAssessments(db, doc).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -222,6 +231,8 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
+							doc[0].IMT = util.resolveGeo(pdoc[0].IMT,"IMT",req);
+							doc[0].Name = req.session.buname + " - " + doc[0].IMT;
 							fieldCalc.getAssessments(db, doc).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -258,12 +269,21 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
-							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,3);
+							} else {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(11,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							}
+							doc[0].AUData = fieldCalc.addTestViewData(17,5);
+							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -273,6 +293,8 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
+							doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+							doc[0].Name = req.session.buname + " - " + doc[0].Country;
 							fieldCalc.getAssessments(db, doc).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -491,14 +513,20 @@ var assessment = {
 							if (doc[0].EnteredBU == "GTS") {
 								doc[0].PeriodRatingSOD = "NR";
 								doc[0].PeriodRatingCRM = "NR";
+								doc[0].PPRData = fieldCalc.addTestViewData(13,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(16,3);
+								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,3);
+							} else {
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
 							}
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
 							doc[0].AUData = fieldCalc.addTestViewData(17,5);
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -653,12 +681,24 @@ var assessment = {
 							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
 							doc[0].Country = pdoc[0].Country;
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(11,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
-							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].PeriodRatingSOD = "NR";
+								doc[0].PeriodRatingCRM = "NR";
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,3);
+								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,3);
+							} else {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(11,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							}
+							doc[0].AUData = fieldCalc.addTestViewData(17,5);
+							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -668,6 +708,24 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
+							// doc[0].IOT = pdoc[0].IOT;
+							// doc[0].IMT = pdoc[0].IMT;
+							// doc[0].Country = pdoc[0].Country;
+							// doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
+							// doc[0].PPRData = fieldCalc.addTestViewData(11,3);
+							// doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							// doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							// doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+							// doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							// doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
+							// doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
+							// doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
+							// doc[0].SCTest1Data = doc[0].RCTest1Data;
+							// doc[0].SCTest2Data = doc[0].RCTest3Data;
+							// doc[0].BUCAsmtDataPRview = [];
+							// doc[0].BUCAsmtDataCURview = [];
+							// doc[0].BUCAsmtDataPIview = [];
+							// doc[0].BUCAsmtDataOIview = [];
 							fieldCalc.getAssessments(db, doc).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -820,8 +878,13 @@ var assessment = {
 							}
 							//---Summary Tab---//
 							doc[0].RatingSummary = req.body.RatingSummary;
-							doc[0].Highlight = req.body.Highlight;
-							doc[0].FocusArea = req.body.FocusArea;
+							if (doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU Reporting Group") {
+								doc[0].Insight1 = req.body.Insight1;
+								doc[0].Insight2 = req.body.Insight2;
+								doc[0].Insight3 = req.body.Insight3;
+								doc[0].Insight4 = req.body.Insight4;
+								doc[0].Insight5 = req.body.Insight5;
+							}
 							//---Performance Overview Tab---//
 							doc[0].OverallAssessmentComments = req.body.OverallAssessmentComments;
 							doc[0].KCFRTestingComments = req.body.KCFRTestingComments;
@@ -829,9 +892,6 @@ var assessment = {
 							doc[0].CorpIAComments = req.body.CorpIAComments;
 							doc[0].MissedREComments = req.body.MissedREComments;
 							doc[0].MissedMSACComments = req.body.MissedMSACComments;
-							doc[0].BoCComments = req.body.BoCComments;
-							doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
-							doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
 							//---Perfromance Overview Tab operational metrics---//
 							var metricsID = req.body.opMetricIDs.split(",");
 							var tname, topush;
@@ -850,6 +910,74 @@ var assessment = {
 									doc[0].OpMetric[i].action = req.body[fname];
 								}
 							}
+							if (req.session.businessunit == "GTS") {
+								//---Summary Tab---//
+								doc[0].HighlightCRM = req.body.HighlightCRM;
+								doc[0].FocusAreaCRM = req.body.FocusAreaCRM;
+								doc[0].HighlightSOD = req.body.HighlightSOD;
+								doc[0].FocusAreaSOD = req.body.FocusAreaSOD;
+								//---Perfromance Overview Tab operational metrics CRM---//
+								doc[0].PeriodRatingCRM = req.body.PeriodRatingCRM;
+								// CRM rich text fields
+								doc[0].OverallAssessmentCommentsCRM = req.body.OverallAssessmentCommentsCRM;
+								doc[0].KCFRTestingCommentsCRM = req.body.KCFRTestingCommentsCRM;
+								doc[0].KCOTestingCommentsCRM = req.body.KCOTestingCommentsCRM;
+								doc[0].CorpIACommentsCRM = req.body.CorpIACommentsCRM;
+								doc[0].MissedRECommentsCRM = req.body.MissedRECommentsCRM;
+								doc[0].MissedMSACCommentsCRM = req.body.MissedMSACCommentsCRM;
+								doc[0].BoCCommentsCRM = req.body.BoCCommentsCRM;
+								doc[0].PerfOverviewOtherExplanationCRM = req.body.PerfOverviewOtherExplanationCRM;
+								doc[0].PerfOverviewCriticaExplanationCRM = req.body.PerfOverviewCriticaExplanationCRM;
+								//---Perfromance Overview Tab operational metrics SOD---//
+								doc[0].PeriodRatingSOD = req.body.PeriodRatingSOD;
+								// SOD rich text fields
+								doc[0].OverallAssessmentCommentsSOD = req.body.OverallAssessmentCommentsSOD;
+								doc[0].KCFRTestingCommentsSOD = req.body.KCFRTestingCommentsSOD;
+								doc[0].KCOTestingCommentsSOD = req.body.KCOTestingCommentsSOD;
+								doc[0].CorpIACommentsSOD = req.body.CorpIACommentsSOD;
+								doc[0].MissedRECommentsSOD = req.body.MissedRECommentsSOD;
+								doc[0].MissedMSACCommentsSOD = req.body.MissedMSACCommentsSOD;
+								doc[0].BoCCommentsSOD = req.body.BoCCommentsSOD;
+								doc[0].PerfOverviewOtherExplanationSOD = req.body.PerfOverviewOtherExplanationSOD;
+								doc[0].PerfOverviewCriticaExplanationSOD = req.body.PerfOverviewCriticaExplanationSOD;
+								//---Perfromance Overview Tab operational metrics---//
+								var metricsID = req.body.opMetricIDsSOD.split(",");
+								var tname, topush;
+								doc[0].OpMetricSOD = [];
+								for (var i = 0; i < metricsID.length; ++i) {
+									if(metricsID[i] != undefined && metricsID[i] != "") {
+										topush = {
+											"id": metricsID[i]
+										};
+										doc[0].OpMetricSOD.push(topush);
+										fname = metricsID[i]+"NameSOD";
+										doc[0].OpMetricSOD[i].name = req.body[fname];
+										fname = metricsID[i]+"RatingSOD";
+										doc[0].OpMetricSOD[i].rating = req.body[fname];
+										fname = metricsID[i]+"CommentSOD";
+										doc[0].OpMetricSOD[i].action = req.body[fname];
+									}
+								}
+								//---Open Risks and Missed Commits Tab---//
+								doc[0].GCSFocusItems = req.body.GCSFocusItems;
+								doc[0].MissedMSACsRptColorCRM = req.body.MissedMSACsRptColorCRM;
+								doc[0].MissedIssueRptColorCRM = req.body.MissedIssueRptColorCRM;
+								doc[0].MissedMSACsRptColorSOD = req.body.MissedMSACsRptColorSOD;
+								doc[0].MissedIssueRptColorSOD = req.body.MissedIssueRptColorSOD;
+							} else {
+								//---Summary Tab---//
+								doc[0].Highlight = req.body.Highlight;
+								doc[0].FocusArea = req.body.FocusArea;
+								//---Perfromance Overview Tab---//
+								doc[0].BoCComments = req.body.BoCComments;
+								doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
+								doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
+								//---Open Risks and Missed Commits Tab---//
+								doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
+								doc[0].GCSFocusItems = req.body.GCSFocusItems;
+								doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
+								doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
+							}
 							//---Audits and Reviews Tab---//
 							doc[0].IAExplanations = req.body.IAExplanations;
 							doc[0].PRExplanations = req.body.PRExplanations;
@@ -865,11 +993,6 @@ var assessment = {
 							doc[0].SCSOXProcessTestingExplanations = req.body.SCSOXProcessTestingExplanations;
 							doc[0].SCOpsProcessTestingExplanations = req.body.SCOpsProcessTestingExplanations;
 							doc[0].SCProcessTestingFocusItems = req.body.SCProcessTestingFocusItems;
-							//---Open Risks and Missed Commits Tab---//
-							doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
-							doc[0].GCSFocusItems = req.body.GCSFocusItems;
-							doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
-							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "Account":
 							break;
@@ -890,18 +1013,16 @@ var assessment = {
 					deferred.reject({"status": 500, "error": err.error.reason});
 				});
 
-			} else { // existing assessment document
-
+			}
+			else { // existing assessment document
 				var obj = {
 					selector:{
 						"_id": docid,
 					}
 				};
-
 				db.get(docid).then(function(data){
 					var doc = [];
 					doc.push(data.body);
-
 					//---Basics Section---//
 					if (doc[0].PrevRatingUpdate != req.body.PeriodRating) {
 						doc[0].RatingChangeWho = curruser;
@@ -992,8 +1113,6 @@ var assessment = {
 						case "BU Country":
 							//---Summary Tab---//
 							doc[0].RatingSummary = req.body.RatingSummary;
-							doc[0].Highlight = req.body.Highlight;
-							doc[0].FocusArea = req.body.FocusArea;
 							if (doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU Reporting Group") {
 								doc[0].Insight1 = req.body.Insight1;
 								doc[0].Insight2 = req.body.Insight2;
@@ -1008,9 +1127,6 @@ var assessment = {
 							doc[0].CorpIAComments = req.body.CorpIAComments;
 							doc[0].MissedREComments = req.body.MissedREComments;
 							doc[0].MissedMSACComments = req.body.MissedMSACComments;
-							doc[0].BoCComments = req.body.BoCComments;
-							doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
-							doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
 							//---Perfromance Overview Tab operational metrics---//
 							var metricsID = req.body.opMetricIDs.split(",");
 							var tname, topush;
@@ -1029,6 +1145,74 @@ var assessment = {
 									doc[0].OpMetric[i].action = req.body[fname];
 								}
 							}
+							if (req.session.businessunit == "GTS") {
+								//---Summary Tab---//
+								doc[0].HighlightCRM = req.body.HighlightCRM;
+								doc[0].FocusAreaCRM = req.body.FocusAreaCRM;
+								doc[0].HighlightSOD = req.body.HighlightSOD;
+								doc[0].FocusAreaSOD = req.body.FocusAreaSOD;
+								//---Perfromance Overview Tab operational metrics CRM---//
+								doc[0].PeriodRatingCRM = req.body.PeriodRatingCRM;
+								// CRM rich text fields
+								doc[0].OverallAssessmentCommentsCRM = req.body.OverallAssessmentCommentsCRM;
+								doc[0].KCFRTestingCommentsCRM = req.body.KCFRTestingCommentsCRM;
+								doc[0].KCOTestingCommentsCRM = req.body.KCOTestingCommentsCRM;
+								doc[0].CorpIACommentsCRM = req.body.CorpIACommentsCRM;
+								doc[0].MissedRECommentsCRM = req.body.MissedRECommentsCRM;
+								doc[0].MissedMSACCommentsCRM = req.body.MissedMSACCommentsCRM;
+								doc[0].BoCCommentsCRM = req.body.BoCCommentsCRM;
+								doc[0].PerfOverviewOtherExplanationCRM = req.body.PerfOverviewOtherExplanationCRM;
+								doc[0].PerfOverviewCriticaExplanationCRM = req.body.PerfOverviewCriticaExplanationCRM;
+								//---Perfromance Overview Tab operational metrics SOD---//
+								doc[0].PeriodRatingSOD = req.body.PeriodRatingSOD;
+								// SOD rich text fields
+								doc[0].OverallAssessmentCommentsSOD = req.body.OverallAssessmentCommentsSOD;
+								doc[0].KCFRTestingCommentsSOD = req.body.KCFRTestingCommentsSOD;
+								doc[0].KCOTestingCommentsSOD = req.body.KCOTestingCommentsSOD;
+								doc[0].CorpIACommentsSOD = req.body.CorpIACommentsSOD;
+								doc[0].MissedRECommentsSOD = req.body.MissedRECommentsSOD;
+								doc[0].MissedMSACCommentsSOD = req.body.MissedMSACCommentsSOD;
+								doc[0].BoCCommentsSOD = req.body.BoCCommentsSOD;
+								doc[0].PerfOverviewOtherExplanationSOD = req.body.PerfOverviewOtherExplanationSOD;
+								doc[0].PerfOverviewCriticaExplanationSOD = req.body.PerfOverviewCriticaExplanationSOD;
+								//---Perfromance Overview Tab operational metrics---//
+								var metricsID = req.body.opMetricIDsSOD.split(",");
+								var tname, topush;
+								doc[0].OpMetricSOD = [];
+								for (var i = 0; i < metricsID.length; ++i) {
+									if(metricsID[i] != undefined && metricsID[i] != "") {
+										topush = {
+											"id": metricsID[i]
+										};
+										doc[0].OpMetricSOD.push(topush);
+										fname = metricsID[i]+"NameSOD";
+										doc[0].OpMetricSOD[i].name = req.body[fname];
+										fname = metricsID[i]+"RatingSOD";
+										doc[0].OpMetricSOD[i].rating = req.body[fname];
+										fname = metricsID[i]+"CommentSOD";
+										doc[0].OpMetricSOD[i].action = req.body[fname];
+									}
+								}
+								//---Open Risks and Missed Commits Tab---//
+								doc[0].GCSFocusItems = req.body.GCSFocusItems;
+								doc[0].MissedMSACsRptColorCRM = req.body.MissedMSACsRptColorCRM;
+								doc[0].MissedIssueRptColorCRM = req.body.MissedIssueRptColorCRM;
+								doc[0].MissedMSACsRptColorSOD = req.body.MissedMSACsRptColorSOD;
+								doc[0].MissedIssueRptColorSOD = req.body.MissedIssueRptColorSOD;
+							} else {
+								//---Summary Tab---//
+								doc[0].Highlight = req.body.Highlight;
+								doc[0].FocusArea = req.body.FocusArea;
+								//---Perfromance Overview Tab---//
+								doc[0].BoCComments = req.body.BoCComments;
+								doc[0].PerfOverviewOtherExplanation = req.body.PerfOverviewOtherExplanation;
+								doc[0].PerfOverviewCriticaExplanation = req.body.PerfOverviewCriticaExplanation;
+								//---Open Risks and Missed Commits Tab---//
+								doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
+								doc[0].GCSFocusItems = req.body.GCSFocusItems;
+								doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
+								doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
+							}
 							//---Audits and Reviews Tab---//
 							doc[0].IAExplanations = req.body.IAExplanations;
 							doc[0].PRExplanations = req.body.PRExplanations;
@@ -1036,19 +1220,14 @@ var assessment = {
 							doc[0].AuditFocusText = req.body.AuditFocusText;
 							//---CU Ratings Tab---//
 							doc[0].CUFocusItems = req.body.CUFocusItems;
-							//---Reporting Country Testign Tab---//
+							//---Reporting Country Testing Tab---//
 							doc[0].SOXProcessTestingExplanations = req.body.SOXProcessTestingExplanations;
 							doc[0].OpsProcessTestingExplanations = req.body.OpsProcessTestingExplanations;
 							doc[0].ProcessTestingFocusItems = req.body.ProcessTestingFocusItems;
-							//---Key Controls Testign 2 Tab---//
+							//---Sampled Country Testing Tab---//
 							doc[0].SCSOXProcessTestingExplanations = req.body.SCSOXProcessTestingExplanations;
 							doc[0].SCOpsProcessTestingExplanations = req.body.SCOpsProcessTestingExplanations;
 							doc[0].SCProcessTestingFocusItems = req.body.SCProcessTestingFocusItems;
-							//---Open Risks and Missed Commits Tab---//
-							doc[0].GCSSection1Explanations = req.body.GCSSection1Explanations;
-							doc[0].GCSFocusItems = req.body.GCSFocusItems;
-							doc[0].MissedMSACsRptColor = req.body.MissedMSACsRptColor;
-							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "Controllable Unit":
 						case "Country Process":
@@ -1176,12 +1355,10 @@ var assessment = {
 						case "BU Reporting Group":
 							break;
 					}
-
 					//---Miscellaneous---//
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
 					doc[0].Log.push(addlog);
-
 					db.save(doc[0]).then(function(data){
 						deferred.resolve({"status": 200, "id": data.body.id, "parentid": doc[0].parentid});
 					}).catch(function(err) {
