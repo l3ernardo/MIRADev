@@ -422,7 +422,7 @@ var assessableunit = {
 				/* Get access and roles */
 				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
-				doc[0].admin = accessrules.rules.admin;
+				doc[0].admin = accessrules.rules.admin;console.log('admin:'+accessrules.rules.admin);
 				doc[0].grantaccess = accessrules.rules.grantaccess;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
 				doc[0].cuadmin = accessrules.rules.cuadmin;
@@ -692,8 +692,50 @@ var assessableunit = {
 							switch (doc[0].DocSubType) {
 								case "Business Unit":
 								case "Global Process":
+					            doc[0].ReportingGroupList = [];
+								var searchobj = {
+									selector:{
+												"_id": {"$gt":0},
+												"key": "Assessable Unit",
+												"Status": "Active",
+												"BusinessUnit": doc[0].BusinessUnit,
+												"DocSubType": "BU Reporting Group"
+										}
+								};
+								db.find(searchobj).then(function(resdata) {
+									var resdocs = resdata.body.docs;
+									for (var i = 0; i < resdocs.length; ++i) {
+											doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+										}
+										deferred.resolve({"status": 200, "doc": doc});
+								}).catch(function(err) {
+								console.log("[assessableunit][ReportingGroupList]" + resdata.error);
+								deferred.reject({"status": 500, "error": err.error.reason});
+								});
+								break;
 								case "Sub-process":
 								case "Country Process":
+								doc[0].ReportingGroupList = [];
+								var searchobj = {
+									selector:{
+												"_id": {"$gt":0},
+												"key": "Assessable Unit",
+												"Status": "Active",
+												"BusinessUnit": doc[0].BusinessUnit,
+												"DocSubType": "BU Reporting Group"
+										}
+								};
+								db.find(searchobj).then(function(resdata) {
+									var resdocs = resdata.body.docs;
+									for (var i = 0; i < resdocs.length; ++i) {
+											doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+										}
+										deferred.resolve({"status": 200, "doc": doc});
+								}).catch(function(err) {
+								console.log("[assessableunit][ReportingGroupList]" + resdata.error);
+								deferred.reject({"status": 500, "error": err.error.reason});
+								});
+								break;
 								case "Account":
 									var CUSearch = {
 												selector:{

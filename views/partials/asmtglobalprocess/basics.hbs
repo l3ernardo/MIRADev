@@ -14,8 +14,8 @@
 				</td>
 			{{else}}
 				<td>Holistic Rating:</td>
-				<td>
-					{{PeriodRating}}<br />
+				<td><input type="hidden" name="PeriodRating" id="PeriodRating" value="{{PeriodRating}}">
+				    {{PeriodRating}}<br>
 					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 				</td>
 			{{/if}}
@@ -77,8 +77,8 @@
 	{{else}} <!-- read mode -->
 		<tr>
 			<td>Holistic Rating:</td>
-			<td>
-				{{{ratingDisplay PeriodRating "PeriodRating"}}}<br />
+			<td><input type="hidden" name="PeriodRating" id="PeriodRating" value="{{PeriodRating}}">
+				{{{ratingDisplay PeriodRating "PeriodRating"}}}<br>
 				<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 			</td>
 		</tr>
