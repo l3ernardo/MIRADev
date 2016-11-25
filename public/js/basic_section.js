@@ -20,6 +20,12 @@ $(document).ready(function() {
 			$("#Country").val($("#countryname option:selected").text());
 		});
 
+		// Country name change
+		$("#cuparentname").change(function(){
+			$("#parentid").val($(this).val());
+			$("#ControllableUnit").val($("#cuparentname option:selected").text());
+		});
+
 	}
 
 });

@@ -24,21 +24,21 @@ Array.prototype.unique = function() {
 };
 
 var deleteUsers = function(deletes, list){
-	try{	
+	try{
 
 	for(var i=0;i<deletes.length; i++){
 		var index = list.indexOf(deletes[i]);
-		
+
 		if(index > -1){
-			
+
 			list.splice(index,1);
-			
+
 		}
 	}
 	}catch(e){console.log(e);}
-	
+
 	return list;
-		
+
 }
 
 var util = {
@@ -237,6 +237,32 @@ var util = {
 			deferred.resolve({"status": 500, "error": e});
 		}
 	},
+  resolveGeo: function(id,type,req) {
+			var returnValue = id;
+				if(type=="IOT") {
+          if(typeof req.app.locals.hierarchy.BU_IOT[id] !== "undefined"){
+						returnValue = req.app.locals.hierarchy.BU_IOT[id].IOT;
+          }else {
+          }
+				}
+				if(type=="IMT") {
+          if(typeof req.app.locals.hierarchy.BU_IMT[id] !== "undefined"){
+						returnValue = req.app.locals.hierarchy.BU_IMT[id].IMT;
+					}else {
+					}
+        }
+				if(type=="Country") {
+						for(country in req.app.locals.hierarchy.countries){
+							if(req.app.locals.hierarchy.countries[country].id == id ){
+								returnValue = country;
+								break;
+							}
+						}
+					}
+
+
+			return returnValue;
+		},
 	delMember: function(group,uid) {
 		var deferred = q.defer();
 		try {
@@ -509,7 +535,7 @@ var util = {
 	//load the groups to be display
 	loadBlueGroupPage: function(db,req){
 
-	
+
 		var deferred = q.defer();
 		try{
 
@@ -521,7 +547,7 @@ var util = {
 		}};
 
 		db.find(obj).then(function(data){
-		var doc = JSON.stringify(data.body.docs[0].value);	
+		var doc = JSON.stringify(data.body.docs[0].value);
 		deferred.resolve(doc);
 		}).catch(function(err) {
 			console.log("[routes][bluegroups] - " + err);
@@ -532,7 +558,7 @@ var util = {
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
-	
+
 		return deferred.promise;
 	},//en load blue group page
 
@@ -546,11 +572,11 @@ var util = {
                 db.view("bluegroups","view-bluegroups", {include_docs: true}).then(function(data){ //download the group information
                         var response = data.body.rows[0].doc;
                         response.area[req.session.businessunit][req.body.group] = members;
-                                
+
                          db.save(response).then(function (data){
                                      deferred.resolve({"status": 200});
                          }).catch(function(err) {
-                                      
+
                                      deferred.reject({"status": 500, "error": err.error.reason});
                          });
                                 deferred.resolve(response);
@@ -565,7 +591,7 @@ var util = {
                         deferred.reject({"status": 500, "error": e});
                 }
                 return deferred.promise;
-        }, 
+        },
 
 
 
@@ -594,7 +620,7 @@ var util = {
 		}
 		return deferred.promise;
 	},
-	
+
 	getDateTime: function(dt, format) {
 		var now;
 		if(dt==undefined || dt=="") {
@@ -637,7 +663,7 @@ var util = {
 				"date": module.exports.getDateTime("","date"),
 				"time": module.exports.getDateTime("","time")
 			};
-			return {"Log": addlog, "fldlist": fldlist}			
+			return {"Log": addlog, "fldlist": fldlist}
 		} else {
 			for (fld in newdoc) {
 				var cp1 = JSON.stringify(olddoc[fld]);
@@ -660,20 +686,20 @@ var util = {
 			}
 		}
 	},
-	
+
 	getIOTChildren: function (id,type,req){
-	
+
 		var iterator;
 		var entityName;
-		
+
 		switch(type){
-		
+
 			case "IOT":
 				try{
 				entityName = req.app.locals.hierarchy.BU_IOT[id].IOT;
 				iterator = req.app.locals.hierarchy.IOT;
-				
-					
+
+
 					for (var key in iterator){
 	    	   			if(iterator.hasOwnProperty(key)){
 	    	   				if(iterator[key].name==entityName){
@@ -681,32 +707,32 @@ var util = {
 	    	   				}
 	    	   			}
 					}
-			
+
 				}catch(e){console.log(e);}
-				
-				
+
+
 			break;
 			case "IMT":
 				try{
-					
+
 				entityName = req.app.locals.hierarchy.BU_IMT[id].IMT;
 				iterator = req.app.locals.hierarchy.IMT;
 				return util.getCountryIDs(req,iterator[entityName]);
 				}catch(e){console.log(e);}
-				break; 
-			
+				break;
+
 			default:
 				return "in correct type for function";
 			break;
 		}
-			
-	
+
+
 	},
 	getIMTIDs: function (req,IMTs){
 		var result = [];
 		var temp = {};
 		var reqIMT = req.app.locals.hierarchy.BU_IMT;
-		
+
 		for(i=0;i<IMTs.length;i++){
 			for (var key in reqIMT){
 	   			if(reqIMT.hasOwnProperty(key)){
@@ -719,33 +745,33 @@ var util = {
 	   				}
 	   			}
 			}
-			
+
 	}
-		
+
 		return result;
 },
 
 getCountryIDs: function (req,Countries){
 	var result = [];
-	
+
 	var temp = {};
 	var reqCountry = req.app.locals.hierarchy.countries;
-	
+
 	for(i=0;i<Countries.length;i++){
-		 			
+
    				temp.docid = reqCountry[Countries[i]].id
    				temp.name = Countries[i]
 				result.push(temp);
 				temp = {};
-   				
-   				
+
+
 }
-	
+
 	return result;
 },
 
 addUserAccessList: function(db,docid,list,accessLevel){
-	
+
 	var deferred = q.defer();
 		try{
 
@@ -755,37 +781,37 @@ addUserAccessList: function(db,docid,list,accessLevel){
 					key: "AccessList",
 					doc_id : docid
 				}};
-			
-	
+
+
 			db.find(selector).then(function(data){
 				var doc = data.body.docs[0];
 				try{
 				if(accessLevel == "readers"){
 					doc.AllReaders = doc.AllReaders.concat(list).unique();
-								
+
 				}else{
 					if(accessLevel == "editors"){
 						doc.AllEditors = doc.AllEditors.concat(list).unique();
 					}
 				}
 				}catch(e){deferred.reject({"status": 500, "error": e});}
-			
-			   
-				
+
+
+
 				db.save(doc).then(function(data){
-					
+
 					deferred.resolve({"status": 200, "result": "Successful Users Added"});
-					
+
 				}).catch(function(err) {
 					deferred.reject({"status": 500, "error": err.error.reason});
 				});
-				
-				
+
+
 			}).catch(function(error){
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
-	
-	
+
+
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
@@ -805,7 +831,7 @@ delUserAccessList: function (db,docid,list,accessLevel){
 				key: "AccessList",
 				doc_id : docid
 			}};
-		
+
 
 		db.find(selector).then(function(data){
 			var doc = data.body.docs[0];
@@ -814,7 +840,7 @@ delUserAccessList: function (db,docid,list,accessLevel){
 				doc.AllReaders = doc.AllReaders.concat(list).unique();
 				doc.AllReaders = deleteUsers(list, doc.AllReaders);
 				doc.deletes.AllReaders = doc.deletes.AllReaders.concat(list).unique();
-							
+
 			}else{
 				if(accessLevel == "editors"){
 					doc.AllEditors = doc.AllEditors.concat(list).unique();
@@ -823,18 +849,18 @@ delUserAccessList: function (db,docid,list,accessLevel){
 				}
 			}
 			}catch(e){deferred.reject({"status": 500, "error": e});}
-		
+
 			console.log(doc);
-			
+
 			db.save(doc).then(function(data){
-				
+
 				deferred.resolve({"status": 200, "result": "Successful Users Deleted"});
-				
+
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
-			
-			
+
+
 		}).catch(function(error){
 			deferred.reject({"status": 500, "error": err.error.reason});
 		});
@@ -844,9 +870,35 @@ delUserAccessList: function (db,docid,list,accessLevel){
 		deferred.reject({"status": 500, "error": e});
 	}
 	return deferred.promise;
-	
-	
+
+
 },
+
+getAccessDoc : function(db,docid){
+	var deferred = q.defer();
+	try{
+		
+		var selector = {
+				selector : {
+					"_id": {"$gt":0},
+					key: "AccessList",
+					doc_id : docid
+				}};
+		
+	db.find(selector).then(function(data){
+			var doc = data.body.docs[0];
+			deferred.resolve({"status": 200, "result": doc});
+		
+	}).catch(function(error){
+		deferred.reject({"status": 500, "error": err.error.reason});
+	});
+	}catch(e){
+		deferred.reject({"status": 500, "error": e});
+	}
+	
+	
+	return deferred.promise;
+}
 
 }
 module.exports = util;

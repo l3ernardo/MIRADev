@@ -2,7 +2,12 @@
 	{{!-- AU Account assesable unit form - Basic section - Edit Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 		<caption class="mira-caption"><em>Basics</em></caption>
-		<tr><td width="25%">Parent Controllable Unit:</td><td>{{ControllableUnit}}</td></tr>
+		<tr><td width="25%">Parent Controllable Unit:</td><td>
+			<input type="hidden" name="ControllableUnit" id="ControllableUnit" value="{{ControllableUnit}}">
+			<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+			{{{uniqueSelect "cuparentname" CUPList "_id" "Name" ControllableUnit}}}
+			<!--{{ControllableUnit}}-->
+		</td></tr>
 		<tr>
 			<td><label for="Name">Account name:<span class="ibm-required">*</span></label></td>
 			<td>

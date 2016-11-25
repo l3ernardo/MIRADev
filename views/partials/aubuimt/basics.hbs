@@ -2,16 +2,15 @@
 	{{!-- AU BU IOT assesable unit form - Basic section - Edit Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 		<caption class="mira-caption"><em>Basics</em></caption>
-		<tr><td width="25%">Parent BU IOT:</td><td>{{IOT}}</td></tr>
+		<tr><td width="25%">Parent BU IOT:</td><td>{{BUIOT}}</td></tr>
 		<tr>
 			{{#if newunit}}
 				<td><label for="IMT">BU IMT:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-						<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-						<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
-						<input type="hidden" name="IMTid" id="IMTid" value="{{IMTid}}">
-						{{{uniqueSelect "imtname" IMTList "docid" "name" IMT}}}
+						<!-- <input type="hidden" name="IMT" id="IMT" value="{{IMT}}"> -->
+						<!-- <input type="hidden" name="IMTid" id="IMTid" value="{{IMTid}}"> -->
+						{{{uniqueSelect "IMT" IMTList "docid" "name" IMT}}}
 					</span>
 				</td>
 			{{else}}
@@ -35,7 +34,7 @@
 	{{!-- AU BU IOT assesable unit form - Basic section - Read Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
-		<tr><td width="25%">Parent BU IOT:</td><td>{{IOT}}</td></tr>
+		<tr><td width="25%">Parent BU IOT:</td><td>{{Name}}</td></tr>
 		<tr><td>BU IMT:</td><td>{{IMT}}</td></tr>
 		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>

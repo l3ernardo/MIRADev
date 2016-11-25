@@ -10,10 +10,7 @@
 				<td><label for="IOT">BU IOT:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-						<input type="hidden" name="IOTid" id="IOTid" value="{{IOTid}}">
-						<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-						{{{uniqueSelect "iotname" IOTList "docid" "name" IOT}}}
-						</select>
+						{{{uniqueSelect "IOT" IOTList "docid" "name" IOT}}}
 					</span>
 				</td>
 			{{else}}

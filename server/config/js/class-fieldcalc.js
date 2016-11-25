@@ -36,8 +36,6 @@ var calculatefield = {
           }
         }
       }
-    } else {
-
     }
   },
   // adding empty Test View Data Only
@@ -168,7 +166,8 @@ var calculatefield = {
       lParams.push(opMetricKey);
 
   		param.getListParams(db, lParams).then(function(dataParam) {
-  			if(dataParam.status==200 & !dataParam.error) {
+
+        if(dataParam.status==200 & !dataParam.error) {
   				if (dataParam.parameters.CRMProcess) {
   					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
   						if (doc[0].GlobalProcess == dataParam.parameters.CRMProcess[0].options[j].name) doc[0].CatP = "CRM";
@@ -268,12 +267,10 @@ var calculatefield = {
             }
             doc[0].opMetricIDs = opMetricIDs;
           }
-
           if (dataParam.parameters[opMetricKeySOD]) {
             var TmpOpMetricSOD = [];
             var opMetricIDsSOD = "";
             var opIDSOD;
-
             if (doc[0].OpMetricSOD) {
               doc[0].OpMetricCurrSOD = doc[0].OpMetricSOD;
             }
@@ -296,11 +293,10 @@ var calculatefield = {
               if (doc[0].OpMetricCurrSOD) {
                 omIndexSOD = util.getIndex(doc[0].OpMetricCurrSOD,"id",opIDSOD);
                 if (omIndexSOD != -1) {
-                  doc[0].OpMetricSOD[j].rating = doc[0].OpMetricCurrSOD[omIndex].rating;
-                  doc[0].OpMetricSOD[j].action = doc[0].OpMetricCurrSOD[omIndex].action;
+                  doc[0].OpMetricSOD[j].rating = doc[0].OpMetricCurrSOD[omIndexSOD].rating;
+                  doc[0].OpMetricSOD[j].action = doc[0].OpMetricCurrSOD[omIndexSOD].action;
                 }
               }
-
             }
             doc[0].opMetricIDsSOD = opMetricIDsSOD;
           }
@@ -734,7 +730,6 @@ var calculatefield = {
 
       }
       else { // For BU Country, BU IOT, BU IMT, BU Reporting Group and Business Unit which needs to process ratings profile for both CU and CP
-
         var podatactr = 0;
         for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
 
