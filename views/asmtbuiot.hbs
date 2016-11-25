@@ -1,5 +1,4 @@
 <script src="/js/asmtbasic_section.js" type="text/javascript"></script>
-<script src="/js/asmt_componentsrollup.js" type="text/javascript"></script>
 <script src="/js/assessment.js" type="text/javascript"></script>
 <script src="./js/attachments.js"/></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
@@ -33,17 +32,29 @@
 	<form id="assessment" class="ibm-column-form" name="form" method="POST" action="/saveasmt">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="parentid" id="docid" value="{{parentid}}">
+		<input type="hidden" name="enteredbu" id="docid" value="{{EnteredBU}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="close" id="close" value="0">
-		<!-- Basic Details -->
-		{{>asmtbuiot/basics}}
-		<!-- Exception Details -->
-		{{>asmtexception}}
-		<!-- Contact -->
-		{{>asmtcontact}}<br /><br />
-		<!-- Assessment tabs -->
-		{{>asmtbuiot/managementreport}}<br /><br />
+		{{#if_equal EnteredBU "GTS"}}
+			<!-- Basic Details -->
+			{{>asmtbuiotgts/basics}}
+			<!-- Exception Details -->
+			{{>asmtexception}}
+			<!-- Contact -->
+			{{>asmtcontact}}<br /><br />
+			<!-- Assessment tabs -->
+			{{>asmtbuiotgts/managementreport}}<br /><br />
+		{{else}}
+			<!-- Basic Details -->
+			{{>asmtbuiotgbs/basics}}
+			<!-- Exception Details -->
+			{{>asmtexception}}
+			<!-- Contact -->
+			{{>asmtcontact}}<br /><br />
+			<!-- Assessment tabs -->
+			{{>asmtbuiotgbs/managementreport}}<br /><br />
+		{{/if_equal}}
 		<!-- NOTES & LINKS SECTION -->
 		{{>comments}}
 		<!-- BUTTONS AREA -->
