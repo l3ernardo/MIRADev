@@ -74,7 +74,7 @@ var assessment = {
 							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPIview = [];
 							doc[0].CPAsmtDataPR1view = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].CPAsmtDataPIview.length < 3) {
 									if (doc[0].CPAsmtDataPIview.length == 0) {
@@ -127,7 +127,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -163,12 +163,20 @@ var assessment = {
 							});
 							break;
 						case "BU IOT":
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(13,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(15,3);
+							} else {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+							}
 							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -178,9 +186,9 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
+							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].IOT;
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -216,12 +224,20 @@ var assessment = {
 							});
 							break;
 						case "BU IMT":
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,3);
+							} else {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(12,3);
+							}
 							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(12,3);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -231,9 +247,9 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].IMT = util.resolveGeo(pdoc[0].IMT,"IMT",req);
+							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].IMT;
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -295,7 +311,7 @@ var assessment = {
 							doc[0].BUCAsmtDataOIview = [];
 							doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].Country;
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -345,7 +361,7 @@ var assessment = {
 							doc[0].EAData = doc[0].ARCData;
 							doc[0].AccountData = doc[0].RiskData;
 							doc[0].CUAsmtDataPR1view = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].CUAsmtDataPR1view.length < 3) {
 									if (doc[0].CUAsmtDataPR1view.length == 0) {
@@ -433,7 +449,6 @@ var assessment = {
 						"MIRAStatus": "Draft",
 						"AUStatus": "Active",
 						"BusinessUnit": pdoc[0].BusinessUnit,
-						"CurrentPeriod": pdoc[0].CurrentPeriod,
 						"AllEditors": pdoc[0].AllEditors,
 						"AllReaders": pdoc[0].AllReaders,
 						"Owner": pdoc[0].Owner,
@@ -448,6 +463,7 @@ var assessment = {
 						"resetstatus": accessrules.rules.resetstatus,
 					};
 					doc.push(tmpdoc);
+					doc[0].CurrentPeriod = req.session.quarter;
 					doc[0].PrevQtrs = [];
 					doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 					doc[0].EnteredBU = req.session.businessunit;
@@ -536,7 +552,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -573,13 +589,23 @@ var assessment = {
 							break;
 						case "BU IOT":
 							doc[0].IOT = pdoc[0].IOT;
-							doc[0].IMT = pdoc[0].IMT;
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].PeriodRatingSOD = "NR";
+								doc[0].PeriodRatingCRM = "NR";
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,3);
+								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,3);
+							} else {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+							}
 							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -589,7 +615,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -627,12 +653,23 @@ var assessment = {
 						case "BU IMT":
 							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
-							doc[0].PPRData = fieldCalc.addTestViewData(12,3);
-							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].PeriodRatingSOD = "NR";
+								doc[0].PeriodRatingCRM = "NR";
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,3);
+								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,3);
+							} else {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
+							}
 							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
@@ -642,7 +679,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -708,25 +745,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							// doc[0].IOT = pdoc[0].IOT;
-							// doc[0].IMT = pdoc[0].IMT;
-							// doc[0].Country = pdoc[0].Country;
-							// doc[0].InternalAuditData = fieldCalc.addTestViewData(8,3);
-							// doc[0].PPRData = fieldCalc.addTestViewData(11,3);
-							// doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
-							// doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							// doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
-							// doc[0].RiskView2Data = fieldCalc.addTestViewData(11,3);
-							// doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
-							// doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
-							// doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
-							// doc[0].SCTest1Data = doc[0].RCTest1Data;
-							// doc[0].SCTest2Data = doc[0].RCTest3Data;
-							// doc[0].BUCAsmtDataPRview = [];
-							// doc[0].BUCAsmtDataCURview = [];
-							// doc[0].BUCAsmtDataPIview = [];
-							// doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -809,7 +828,6 @@ var assessment = {
 						"AUStatus": pdoc[0].Status,
 						"AssessableUnitName": pdoc[0].Name,
 						"BusinessUnit": pdoc[0].BusinessUnit,
-						"CurrentPeriod": pdoc[0].CurrentPeriod,
 						"AllEditors": pdoc[0].AllEditors,
 						"AllReaders": pdoc[0].AllReaders,
 						"ExcludeGeo": pdoc[0].ExcludeGeo,
@@ -823,6 +841,7 @@ var assessment = {
 					doc.push(tmpdoc);
 
 					//---Basics Section---//
+					doc[0].CurrentPeriod = req.session.quarter;
 					if (doc[0].PrevRatingUpdate != req.body.PeriodRating) {
 						doc[0].RatingChangeWho = curruser;
 						doc[0].RatingChangeWhen = currdate;
@@ -857,6 +876,7 @@ var assessment = {
 							} else if (doc[0].ParentDocSubType == "BU IMT") {
 								doc[0].IOT = pdoc[0].IOT;
 								doc[0].IMT = pdoc[0].IMT;
+								//---Summary Tab---//
 								doc[0].Insight1 = req.body.Insight1;
 								doc[0].Insight2 = req.body.Insight2;
 								doc[0].Insight3 = req.body.Insight3;
@@ -864,12 +884,14 @@ var assessment = {
 								doc[0].Insight5 = req.body.Insight5;
 							} else if (doc[0].ParentDocSubType == "BU IOT") {
 								doc[0].IOT = pdoc[0].IOT;
+								//---Summary Tab---//
 								doc[0].Insight1 = req.body.Insight1;
 								doc[0].Insight2 = req.body.Insight2;
 								doc[0].Insight3 = req.body.Insight3;
 								doc[0].Insight4 = req.body.Insight4;
 								doc[0].Insight5 = req.body.Insight5;
 							} else {
+								//---Summary Tab---//
 								doc[0].Insight1 = req.body.Insight1;
 								doc[0].Insight2 = req.body.Insight2;
 								doc[0].Insight3 = req.body.Insight3;
@@ -878,13 +900,6 @@ var assessment = {
 							}
 							//---Summary Tab---//
 							doc[0].RatingSummary = req.body.RatingSummary;
-							if (doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU Reporting Group") {
-								doc[0].Insight1 = req.body.Insight1;
-								doc[0].Insight2 = req.body.Insight2;
-								doc[0].Insight3 = req.body.Insight3;
-								doc[0].Insight4 = req.body.Insight4;
-								doc[0].Insight5 = req.body.Insight5;
-							}
 							//---Performance Overview Tab---//
 							doc[0].OverallAssessmentComments = req.body.OverallAssessmentComments;
 							doc[0].KCFRTestingComments = req.body.KCFRTestingComments;

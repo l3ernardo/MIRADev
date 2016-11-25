@@ -14,53 +14,6 @@ var param = require('./class-parameter.js');
 var util = require('./class-utility.js');
 var accessupdates = require('./class-accessupdates.js');
 var fieldCalc = require('./class-fieldcalc.js');
-var recordindex;
-var parentindex;
-var indexp;
-
-function existparentid (parentkey,F){
-	for (j=0;j<F.length;j++){
-		if(F[j]!= undefined){
-			if(F[j]._id==parentkey){
-				result=1;
-				parentindex=j;
-			}
-		}
-	}
-	/* return 1;*/
-	return result;
-}
-
-function parentidf (parentkey,G){
-	for (m=0;m<G.length;m++){
-		if(G[m]!= undefined){
-			if(G[m]._id==parentkey){
-				indexp=m;
-			}
-			else{
-				indexp=G.length;
-			}
-		}
-	}
-	return indexp;
-}
-
-function findtl(level,parentkey,F){
-	for(k=F.length-1;k>=parentindex;k--){
-		if(F[k]!= undefined){
-			if(F[k].LevelType==level && F[k].parentid==parentkey){
-				result2=1;
-				recordindex=k;
-				k=parentindex-1;
-			}
-			else{
-				recordindex=parentidf(parentkey,F);
-				result2=0;
-			}
-		}
-	}
-	return result2;
-}
 
 var assessableunit = {
 
@@ -274,16 +227,16 @@ var assessableunit = {
 				if(req.url!='/reportingdashboard'){
 					for(var i = 0; i < doc.length; i++){
 						if(req.session.quarter == doc[i].CurrentPeriod){
-						if(doc[i].DocSubType == "BU IOT"){
-								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
+							if(doc[i].DocSubType == "BU IOT"){
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
 
-						}else if(doc[i].DocSubType == "BU IMT"){
-								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
+							}else if(doc[i].DocSubType == "BU IMT"){
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
 
-						}else if(doc[i].DocSubType == "BU Country"){
-								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
+							}else if(doc[i].DocSubType == "BU Country"){
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
+							}
 						}
-					}
 						if(doc[i].LevelType == 1){
 							level1.push(doc[i]);
 						}else if(doc[i].LevelType == 2){
@@ -422,7 +375,7 @@ var assessableunit = {
 				/* Get access and roles */
 				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
-				doc[0].admin = accessrules.rules.admin;console.log('admin:'+accessrules.rules.admin);
+				doc[0].admin = accessrules.rules.admin;
 				doc[0].grantaccess = accessrules.rules.grantaccess;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
 				doc[0].cuadmin = accessrules.rules.cuadmin;
@@ -772,7 +725,25 @@ var assessableunit = {
 										for (var i = 0; i < resdocs.length; ++i) {
 											doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 										}
-										deferred.resolve({"status": 200, "doc": doc});
+										//Get CU Parent Documents if admin
+										if(doc[0].admin){
+											assessableunit.getCUParents(req, db).then(function(dataCP) {
+												if(dataCP.status==200 && !dataCP.error){
+													doc[0].CUParents = [];
+													doc[0].CUParents = dataCP.doc;
+													deferred.resolve({"status": 200, "doc": doc});
+												}
+												else{
+													deferred.reject({"status": 500, "error": dataCP.error});
+												}
+											}).catch(function(err) {
+												console.log("[assessableunit][CUParentList]" + dataCP.error);
+												deferred.reject({"status": 500, "error": err});
+											});
+										}
+										else{
+											deferred.resolve({"status": 200, "doc": doc});
+										}
 									}).catch(function(err) {
 										console.log("[assessableunit][ReportingGroupList]" + resdata.error);
 										deferred.reject({"status": 500, "error": err.error.reason});
@@ -825,8 +796,10 @@ var assessableunit = {
 										doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 										if (doc[0].DocSubType == "BU IMT") {
 											doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+											doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 										} else {
 											doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+											doc[0].BUIMT = req.session.buname + " - " + doc[0].IMT;
 											doc[0].Name = req.session.buname + " - " + doc[0].Country;
 										}
 										deferred.resolve({"status": 200, "doc": doc});
@@ -981,6 +954,7 @@ var assessableunit = {
 									if (doc[0].DocSubType == "BU IMT") {
 										doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 										doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+										doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 									} else {
 										doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 										doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
@@ -1077,7 +1051,6 @@ var assessableunit = {
 						"parentid": pid,
 						"DocSubType": req.query.docsubtype,
 						"BusinessUnit": pdoc[0].BusinessUnit,
-						"CurrentPeriod": req.session.quarter,
 						"Status": "Active",
 						"editmode": 1,
 						"admin": 1,
@@ -1088,6 +1061,8 @@ var assessableunit = {
 					};
 
 					doc.push(tmpdoc);
+					/* CurrentPeriod of Assessable Units will always have the current period of the app */
+					doc[0].CurrentPeriod = req.session.quarter;
 					if (doc[0].DocSubType == "Business Unit")
 						doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
 					else
@@ -1135,7 +1110,6 @@ var assessableunit = {
 							doc[0].ReportingGroupList = [];
 							doc[0].IOTList = [];
 							doc[0].IOTAUList = [];
-
 							var searchobj = {
 								selector:{
 									"_id": {"$gt":0},
@@ -1147,24 +1121,22 @@ var assessableunit = {
 									]
 								}
 							};
-							doc[0].IOTList.push({"docid":"","name":""});
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
 								for (var i = 0; i < resdocs.length; ++i) {
 									if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-									if (resdocs[i].DocSubType == "IOT") doc[0].IOTList.push({"docid":resdocs[i]._id,"name":resdocs[i].IOT});
-									if (resdocs[i].DocSubType == "BU IOT") doc[0].IOTAUList.push({"name":resdocs[i].IOT});
-								}
-								for (var i = 0; i < doc[0].IOTAUList.length; ++i) {
-									util.findAndRemove(doc[0].IOTList,'name',doc[0].IOTAUList[i].IOT)
+									if (resdocs[i].DocSubType == "BU IOT") doc[0].IOTAUList.push({"iotid":resdocs[i].IOT});
 								}
 								var tmpIOT = [];
 								for(var tmp in req.app.locals.hierarchy.BU_IOT){
 									tmpIOT.push({docid:tmp, name:req.app.locals.hierarchy.BU_IOT[tmp].IOT});
 								}
 								doc[0].IOTList = tmpIOT;
-								doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
+								for (var i = 0; i < doc[0].IOTAUList.length; ++i) {
+									util.findAndRemove(doc[0].IOTList,'docid',doc[0].IOTAUList[i].iotid)
+								}
+								doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								console.log("[assessableunit][IOTLists][NewIOT]" + resdata.error);
@@ -1186,21 +1158,19 @@ var assessableunit = {
 									]
 								}
 							};
-							doc[0].IMTList.push({"docid":"","name":""});
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
 								for (var i = 0; i < resdocs.length; ++i) {
 									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-									if (resdocs[i].DocSubType == "IMT") doc[0].IMTList.push({"docid":resdocs[i]._id,"name":resdocs[i].IMT});
-									if (resdocs[i].DocSubType == "BU IMT") doc[0].IMTAUList.push({"name":resdocs[i].IMT});
+									if (resdocs[i].DocSubType == "BU IMT") doc[0].IMTAUList.push({"imtid":resdocs[i].IMT});
 								}
+								doc[0].IMTList = util.getIOTChildren(pdoc[0].IOT,"IOT",req);
 								for (var i = 0; i < doc[0].IMTAUList.length; ++i) {
-									util.findAndRemove(doc[0].IMTList,'name',doc[0].IMTAUList[i].IMT)
+									util.findAndRemove(doc[0].IMTList,'docid',doc[0].IMTAUList[i].imtid)
 								}
-								doc[0].IMTList = util.getIOTChildren(doc[0].IOT,"IOT",req);
-								doc[0].IOTDisplay = req.app.locals.hierarchy.BU_IOT[doc[0].IOT].IOT;
-								doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
-								doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
+								doc[0].IOTDisplay = req.app.locals.hierarchy.BU_IOT[pdoc[0].IOT].IOT;
+								doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
+								doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								console.log("[assessableunit][IMTLists][NewIMT]" + resdata.error);
@@ -1224,12 +1194,11 @@ var assessableunit = {
 								var resdocs = resdata.body.docs;
 								for (var i = 0; i < resdocs.length; ++i) {
 									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-									if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"name":resdocs[i].Country});
+									if (resdocs[i].DocSubType == "BU Country") doc[0].CountryAUList.push({"countryid":resdocs[i].Country});
 								}
-								doc[0].CountryList.push({"docid":"","name":""});
 								doc[0].CountryList = util.getIOTChildren(pdoc[0].IMT,"IMT",req);
 								for (var i = 0; i < doc[0].CountryAUList.length; ++i) {
-									util.findAndRemove(doc[0].CountryList,'docid',doc[0].CountryAUList[i].Country)
+									util.findAndRemove(doc[0].CountryList,'docid',doc[0].CountryAUList[i].countryid)
 								}
 								doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
 								doc[0].IMT = util.resolveGeo(pdoc[0].IMT,"IMT",req);
@@ -1284,7 +1253,6 @@ var assessableunit = {
 						"DocSubType": req.body.docsubtype,
 						"BusinessUnit": pdoc[0].BusinessUnit,
 						"MIRABusinessUnit": pdoc[0].MIRABusinessUnit,
-						"CurrentPeriod": pdoc[0].CurrentPeriod,
 						"StatusChangeWho": curruser,
 						"StatusChangeWhen": currdate,
 						"WWBCITAssessmentStatus": "",
@@ -1300,49 +1268,49 @@ var assessableunit = {
 					doc.push(tmpdoc);
 					switch (doc[0].DocSubType) {
 						case "BU IOT":
-						doc[0].LevelType = "2";
-						doc[0].RGRollup = req.body.RGRollup;
-						doc[0].BRGMembership = req.body.BRGMembership;
-						doc[0].BUCountryIOT = req.body.BUCountryIOT;
-						doc[0].IOT = req.body.IOTid;
-						doc[0].Name =  req.session.buname +" - "+req.body.IOTid;
-						doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
-						break;
+							doc[0].LevelType = "2";
+							doc[0].RGRollup = req.body.RGRollup;
+							doc[0].BRGMembership = req.body.BRGMembership;
+							doc[0].BUCountryIOT = req.body.BUCountryIOT;
+							doc[0].IOT = req.body.IOT;
+							doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].IOT, "IOT",req);
+							doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
+							break;
 						case "BU IMT":
-						doc[0].LevelType = "3";
-						doc[0].BRGMembership = req.body.BRGMembership;
-						doc[0].IOT = req.body.IOT;
-						doc[0].IMT = req.body.IMTid;
-						doc[0].Name = req.session.buname +" - " +req.body.IMTid;
-						doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
-						break;
+							doc[0].LevelType = "3";
+							doc[0].BRGMembership = req.body.BRGMembership;
+							doc[0].IOT = pdoc[0].IOT;
+							doc[0].IMT = req.body.IMT;
+							doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].IMT, "IMT",req);
+							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
+							break;
 						case "BU Country":
-						doc[0].LevelType = "4";
-						doc[0].BRGMembership = req.body.BRGMembership;
-						doc[0].IOT = req.body.IOT;
-						doc[0].IMT = req.body.IMT;
-						doc[0].Country = req.body.countryname;
-						// doc[0].Name = req.session.buname +" - "+req.body.Countryid;
-						doc[0].ExcludeGeo = req.body.ExcludeGeo;
-						doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
-						break;
+							doc[0].LevelType = "4";
+							doc[0].BRGMembership = req.body.BRGMembership;
+							doc[0].IOT = pdoc[0].IOT;
+							doc[0].IMT = pdoc[0].IMT;
+							doc[0].Country = req.body.Country;
+							doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].Country, "Country",req);
+							doc[0].ExcludeGeo = req.body.ExcludeGeo;
+							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
+							break;
 						case "Account":
-						var levelT = parseInt(pdoc[0].LevelType) + 1;
-						doc[0].LevelType = levelT.toString();
-						doc[0].ControllableUnit = pdoc[0].ControllableUnit;
-						doc[0].Category = pdoc[0].Category;
-						doc[0].AuditProgram = pdoc[0].AuditProgram;
-						doc[0].Name = req.body.Name;
-						doc[0].MetricsCriteria = req.body.MetricsCriteria;
-						doc[0].MetricsValue = req.body.MetricsValue;
-						doc[0].ControllableUnit = req.body.ControllableUnit;
-						doc[0].parentid = req.body.parentid;
-						break;
+							var levelT = parseInt(pdoc[0].LevelType) + 1;
+							doc[0].LevelType = levelT.toString();
+							doc[0].ControllableUnit = pdoc[0].ControllableUnit;
+							doc[0].Category = pdoc[0].Category;
+							doc[0].AuditProgram = pdoc[0].AuditProgram;
+							doc[0].Name = req.body.Name;
+							doc[0].MetricsCriteria = req.body.MetricsCriteria;
+							doc[0].MetricsValue = req.body.MetricsValue;
+							doc[0].ControllableUnit = req.body.ControllableUnit;
+							doc[0].parentid = req.body.parentid;
+							break;
 						case "BU Reporting Group":
-						doc[0].LevelTypeG = "1";
-						doc[0].AuditProgram = req.body.AuditProgram;
-						doc[0].Name = req.body.Name;
-						break;
+							doc[0].LevelTypeG = "1";
+							doc[0].AuditProgram = req.body.AuditProgram;
+							doc[0].Name = req.body.Name;
+							break;
 					}
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
@@ -1378,7 +1346,6 @@ var assessableunit = {
 						doc[0].StatusChangeWho = curruser;
 						doc[0].StatusChangeWhen = currdate;
 					}
-					doc[0].CurrentPeriod = req.session.quarter;
 					switch (doc[0].DocSubType) {
 						case "Business Unit":
 							doc[0].RGRollup = req.body.RGRollup;
@@ -1396,16 +1363,10 @@ var assessableunit = {
 							doc[0].RGRollup = req.body.RGRollup;
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].BUCountryIOT = req.body.BUCountryIOT;
-							if(req.session.quarter == doc[0].CurrentPeriod){
-								doc[0].Name = req.session.buname + " - " + req.body.IOTid;
-							}
 							doc[0].Status = req.body.Status
 							break;
 						case "BU IMT":
 							doc[0].BRGMembership = req.body.BRGMembership;
-							if(req.session.quarter == doc[0].CurrentPeriod){
-								doc[0].Name = req.session.buname + " - " + req.body.IMTid;
-							}
 							doc[0].Status = req.body.Status
 							break;
 						case "BU Country":
@@ -1487,6 +1448,114 @@ var assessableunit = {
 					deferred.reject({"status": 500, "error": err.error.reason});
 				});
 			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+	
+	/* Get Parents for Controllable Units */
+	getCUParents: function(req, db){
+		var deferred = q.defer();
+		try{
+			var geo = {
+				"selector":{
+					"$and": [
+						{ "LevelType": { "$gt": null }},
+						{"Name": { "$ne": null }},
+						{"key": "Assessable Unit"},
+						{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country"]}},
+						{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
+						{"MIRABusinessUnit":  {"$eq": req.session.businessunit}}
+					]
+				},
+				"fields": [
+					"_id",
+					"Name",
+					"DocSubType",
+					"LevelType",
+					"parentid",
+					"MIRABusinessUnit",
+					"IOT",
+					"IMT",
+					"Country",
+					"CurrentPeriod"
+				],
+				"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
+			};
+			db.find(geo).then(function(data){
+				var doc = data.body.docs;
+				var len = doc.length;
+				var level1 = [];
+				var level2 = {};
+				var level3 = {};
+				var level4 = {};
+
+				for(var i = 0; i < doc.length; i++){
+					if(req.session.quarter == doc[i].CurrentPeriod){
+						if(doc[i].DocSubType == "BU IOT"){
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
+						}else if(doc[i].DocSubType == "BU IMT"){
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
+						}else if(doc[i].DocSubType == "BU Country"){
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
+						}
+					}
+					if(doc[i].LevelType == 1){
+						level1.push(doc[i]);
+					}else if(doc[i].LevelType == 2){
+						if(typeof level2[doc[i].parentid] === "undefined"){
+							level2[doc[i].parentid] = [doc[i]];
+						}else{
+							level2[doc[i].parentid].push(doc[i]);
+						}
+					}else if(doc[i].LevelType == 3){
+						if(typeof level3[doc[i].parentid] === "undefined"){
+							level3[doc[i].parentid] = [doc[i]];
+						}else{
+							level3[doc[i].parentid].push(doc[i]);
+						}
+					}else if(doc[i].LevelType == 4){
+						if(typeof level4[doc[i].parentid] === "undefined"){
+							level4[doc[i].parentid] = [doc[i]];
+						}else{
+							level4[doc[i].parentid].push(doc[i]);
+						}
+					}
+				}
+				var F = [];
+				//level1
+				for(var i = 0; i < level1.length; i++){
+					F.push(level1[i]);
+
+					//level2
+					if(typeof level2[level1[i]["_id"]] !== "undefined"){
+						var tmplvl2 = level2[level1[i]["_id"]];
+						for(var i2 = 0; i2 < tmplvl2.length; i2++){
+							F.push(tmplvl2[i2]);
+
+							//level3
+							if(typeof level3[tmplvl2[i2]["_id"]] !== "undefined"){
+								var tmplvl3 =level3[tmplvl2[i2]["_id"]];
+								for(var i3 = 0; i3 < tmplvl3.length; i3++){
+									F.push(tmplvl3[i3]);
+
+									//level4
+									if(typeof level4[tmplvl3[i3]["_id"]] !== "undefined"){
+										var tmplvl4 = level4[tmplvl3[i3]["_id"]];
+										for(var i4 = 0; i4 < tmplvl4.length; i4++){
+											F.push(tmplvl4[i4]);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				deferred.resolve({"status": 200, "doc": F});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
