@@ -58,7 +58,7 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 	//init database
 	console.log("[app] init database");
 	var cloudant = require('./server/config/js/class-conn');
-	cloudant.connect('miradb-full-test');
+	cloudant.connect('miradb');
 });
 
 //Site variables
