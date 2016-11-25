@@ -12,7 +12,9 @@
 </script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
+		{{#unless newunit}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+		{{/unless}}
 	</p>
 
 <table id="imported_summary" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
