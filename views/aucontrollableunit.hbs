@@ -15,12 +15,7 @@
 
 <input type="hidden" id="docTitle" value="{{DocType}} ({{DocSubType}})">
 <input type="hidden" id="docSubTitle" value="{{Name}}">
-<script>
-	//Load document's name
-	$('h1#pageTitle').text($('input#docTitle').val());
-	//Load document's business unit
-	$('h3#pageSubTitle').text($('input#docSubTitle').val());
-</script>
+
 
 <!-- JS and CSS for rich text edit -->
 <link rel="stylesheet" type="text/css" href="./css/skin.css">
@@ -33,7 +28,19 @@
 <script src="./lib/simpleeditor-min.js"></script>
 <script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
-
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').text($('input#docSubTitle').val());
+	$(document).ready(function() {
+		if($("#btn_changeparent").length > 0){
+			$('#btn_changeparent').click(function() {
+				ibmweb.overlay.show('Overlay_Event');
+			});
+		}
+	});
+</script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
