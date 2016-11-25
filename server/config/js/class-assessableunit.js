@@ -371,7 +371,7 @@ var assessableunit = {
 				var toadd = {};
 				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
-				doc[0].CurrentPeriod = req.session.quarter;
+				//doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
 				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
