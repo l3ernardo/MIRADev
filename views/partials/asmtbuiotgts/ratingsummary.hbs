@@ -1,0 +1,327 @@
+<table id="summary_table" class="ibm-data-table">
+	{{#if editmode}}
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col" width="25%">Performance Indicators</th>
+						<th scope="col" width="10%"></th>
+						<th scope="col" width="65%">Summary/Comments</th>
+					</thead>
+					<tr>
+						<td class="summaryrollup-label"><label for="OverallAssessmentComments">Overall Assessment</label></td>
+						{{{ratingDisplayView PeriodRating}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="OverallAssessmentComments" type="text" name="OverallAssessmentComments">{{OverallAssessmentComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="KCFRTestingComments">KCFR Defect Rate</label></td>
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="KCFRTestingComments" type="text" name="KCFRTestingComments">{{KCFRTestingComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="KCOTestingComments">KCO Defect Rate</label></td>
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="KCOTestingComments" type="text" name="KCOTestingComments">{{KCOTestingComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="CorpIAComments">CHQ Internal Audit Score</label></td>
+						<td class="content-data">{{WeightedAuditScore}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="CorpIAComments" type="text" name="CorpIAComments">{{CorpIAComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="MissedREComments">Missed Risk Evaluations</label></td>
+						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="MissedREComments" type="text" name="MissedREComments">{{MissedREComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label"><label for="MissedMSACComments">Missed MSAC Commitments</label></td>
+						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="MissedMSACComments" type="text" name="MissedMSACComments">{{MissedMSACComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label"><th scope="col"><label for="RatingSummary">Rating Summary</label></th></thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="RatingSummary" type="text" name="RatingSummary" cols="168" rows="3">{{RatingSummary}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+        <table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col"><label for="Highlight">Highlights - CRM/Other</label></th>
+						<th scope="col"><label for="FocusArea">Focus Areas - CRM/Other</label></th>
+					</thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="HighlightCRM" type="text" name="HighlightCRM" cols="78" rows="3">{{HighlightCRM}}</textarea></span>
+							</div>
+						</td>
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="FocusAreaCRM" type="text" name="FocusAreaCRM" cols="78" rows="3">{{FocusAreaCRM}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col"><label for="Highlight">Highlights - Delivery</label></th>
+						<th scope="col"><label for="FocusArea">Focus Areas - Delivery</label></th>
+					</thead>
+					<tr class="content-data">
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="HighlightSOD" type="text" name="HighlightSOD" cols="78" rows="3">{{HighlightSOD}}</textarea></span>
+							</div>
+						</td>
+						<td>
+							<div class='yui-skin-sam'>
+								<span><textarea id="FocusAreaSOD" type="text" name="FocusAreaSOD" cols="78" rows="3">{{FocusAreaSOD}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{else}} <!-- Read Mode -->
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col" width="25%">Performance Indicators</th>
+						<th scope="col" width="10%"></th>
+						<th scope="col" width="65%">Summary/Comments</th>
+					</thead>
+					<tr>
+						<td class="summaryrollup-label">Overall Assessment</td>
+						{{{ratingDisplayView PeriodRating}}}
+						<td class="content-data">
+							<input type="hidden" name="OverallAssessmentCommentsRO" value="{{OverallAssessmentComments}}">
+							<div id="OverallAssessmentCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">KCFR Defect Rate</td>
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}">
+							<div id="KCFRTestingCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">KCO Defect Rate</td>
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<input type="hidden" name="KCOTestingCommentsRO" value="{{KCOTestingComments}}">
+							<div id="KCOTestingCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">CHQ Internal Audit Score</td>
+						<td class="content-data">{{WeightedAuditScore}}</td>
+						<td class="content-data">
+							<input type="hidden" name="CorpIACommentsRO" value="{{CorpIAComments}}">
+							<div id="CorpIACommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">Missed Risk Evaluations</td>
+						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data">
+							<input type="hidden" name="MissedRECommentsRO" value="{{MissedREComments}}">
+							<div id="MissedRECommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="summaryrollup-label">Missed MSAC Commitments</td>
+						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data">
+							<input type="hidden" name="MissedMSACCommentsRO" value="{{MissedMSACComments}}">
+							<div id="MissedMSACCommentsReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="summaryrollup">
+			<td>
+				<table width="100%">
+					<thead class="summaryrollup-label"><th scope="col">Rating Summary</th></thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="RatingSummaryRO" value="{{RatingSummary}}">
+							<div id="RatingSummaryReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+        <table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col">Highlights - CRM/Other</th>
+						<th scope="col">Focus Areas - CRM/Other</th>
+					</thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="HighlightROCRM" value="{{HighlightCRM}}">
+							<div id="HighlightReadOnlyCRM"></div>
+						</td>
+						<td>&nbsp;
+							<input type="hidden" name="FocusAreaROCRM" value="{{FocusAreaCRM}}">
+							<div id="FocusAreaReadOnlyCRM"></div>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<thead class="summaryrollup-label">
+						<th scope="col">Highlights - Delivery</th>
+						<th scope="col">Focus Areas - Delivery</th>
+					</thead>
+					<tr class="content-data">
+						<td>&nbsp;
+							<input type="hidden" name="HighlightROSOD" value="{{HighlightSOD}}">
+							<div id="HighlightReadOnlySOD"></div>
+						</td>
+						<td>&nbsp;
+							<input type="hidden" name="FocusAreaROSOD" value="{{FocusAreaSOD}}">
+							<div id="FocusAreaReadOnlySOD"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{/if}}
+	<tr class="summaryrollup">
+		<td>
+			<table width="100%">
+				<thead class="summaryrollup-label"><th scope="col" colspan="11">Country Process Ratings Profile</th></thead>
+				<tr>
+					<td width="16%" class="summaryrollup-label"></td>
+					<td width="8%" class="sat-bg">Sat &#61;</td>
+					<td width="8%" class="sat-bg">Sat &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#61;</td>
+					<td width="8%" class="marg-bg">Marg &#9660;</td>
+					<td width="8%" class="unsat-bg">Unsat &#61;</td>
+					<td width="8%" class="unsat-bg">Unsat &#9660;</td>
+					<td width="8%" class="unrated-bg">Exempt</td>
+					<td width="8%" class="unrated-bg">NR</td>
+					<td width="12%" class="summaryrollup-viewheader">Total</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Counts</td>
+					<td class="content-data-centered">{{CPSatEqualCnt}}</td>
+					<td class="content-data-centered">{{CPSatPlusCnt}}</td>
+					<td class="content-data-centered">{{CPMargPlusCnt}}</td>
+					<td class="content-data-centered">{{CPMargEqualCnt}}</td>
+					<td class="content-data-centered">{{CPMargMinusCnt}}</td>
+					<td class="content-data-centered">{{CPUnsatEqualCnt}}</td>
+					<td class="content-data-centered">{{CPUnsatMinusCnt}}</td>
+					<td class="content-data-centered">{{CPEXEMPTCnt}}</td>
+					<td class="content-data-centered">{{CPNRCnt}}</td>
+					<td class="content-data-centered">{{CPTotalCnt}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Percentages</td>
+					<td class="content-data-centered">{{CPSatEqualPct}}</td>
+					<td class="content-data-centered">{{CPSatPlusPct}}</td>
+					<td class="content-data-centered">{{CPMargPlusPct}}</td>
+					<td class="content-data-centered">{{CPMargEqualPct}}</td>
+					<td class="content-data-centered">{{CPMargMinusPct}}</td>
+					<td class="content-data-centered">{{CPUnsatEqualPct}}</td>
+					<td class="content-data-centered">{{CPUnsatMinusPct}}</td>
+					<td class="content-data-centered">{{CPEXEMPTPct}}</td>
+					<td class="content-data-centered">{{CPNRPct}}</td>
+					<td class="content-data-centered">{{CPTotalPct}}</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="summaryrollup">
+		<td>
+			<table width="100%">
+				<thead class="summaryrollup-label"><th scope="col" colspan="11">Controllable Unit (CU) Ratings Profile</th></thead>
+				<tr>
+					<td width="16%" class="summaryrollup-label"></td>
+					<td width="8%" class="sat-bg">Sat &#61;</td>
+					<td width="8%" class="sat-bg">Sat &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#9650;</td>
+					<td width="8%" class="marg-bg">Marg &#61;</td>
+					<td width="8%" class="marg-bg">Marg &#9660;</td>
+					<td width="8%" class="unsat-bg">Unsat &#61;</td>
+					<td width="8%" class="unsat-bg">Unsat &#9660;</td>
+					<td width="8%" class="unrated-bg">Exempt</td>
+					<td width="8%" class="unrated-bg">NR</td>
+					<td width="12%" class="summaryrollup-viewheader">Total</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Counts</td>
+					<td class="content-data-centered">{{CUSatEqualCnt}}</td>
+					<td class="content-data-centered">{{CUSatPlusCnt}}</td>
+					<td class="content-data-centered">{{CUMargPlusCnt}}</td>
+					<td class="content-data-centered">{{CUMargEqualCnt}}</td>
+					<td class="content-data-centered">{{CUMargMinusCnt}}</td>
+					<td class="content-data-centered">{{CUUnsatEqualCnt}}</td>
+					<td class="content-data-centered">{{CUUnsatMinusCnt}}</td>
+					<td class="content-data-centered">{{CUEXEMPTCnt}}</td>
+					<td class="content-data-centered">{{CUNRCnt}}</td>
+					<td class="content-data-centered">{{CUTotalCnt}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label">Percentages</td>
+					<td class="content-data-centered">{{CUSatEqualPct}}</td>
+					<td class="content-data-centered">{{CUSatPlusPct}}</td>
+					<td class="content-data-centered">{{CUMargPlusPct}}</td>
+					<td class="content-data-centered">{{CUMargEqualPct}}</td>
+					<td class="content-data-centered">{{CUMargMinusPct}}</td>
+					<td class="content-data-centered">{{CUUnsatEqualPct}}</td>
+					<td class="content-data-centered">{{CUUnsatMinusPct}}</td>
+					<td class="content-data-centered">{{CUEXEMPTPct}}</td>
+					<td class="content-data-centered">{{CUNRPct}}</td>
+					<td class="content-data-centered">{{CUTotalPct}}</td>
+				</tr>
+				<tr class="content-data">
+					<td class="summaryrollup-label-ar" colspan="10"><strong>Weighted Score</strong></td>
+					<td class="content-data-centered">{{WeightedCUScore}}</td>
+				</tr>
+				<tr class="summaryrollup-legend"><td colspan="11">&nbsp;</td></tr>
+				<tr class="summaryrollup-legend">
+					<td class="summaryrollup-legend" colspan="8">Weighted Score Key</td>
+					<td class="asmt-viewdata-red">Unsat<br />&lt; 75%</td>
+					<td class="asmt-viewdata-yellow">Marg<br />75 - 89%</td>
+					<td class="asmt-viewdata-green">Sat<br />90% +</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
