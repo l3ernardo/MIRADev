@@ -359,7 +359,7 @@ var calculatefield = {
 	},
 
   /* Gets Constituent assesments of assessable unit */
-	getAssessments: function(db, doc) {
+	getAssessments: function(db, doc, req) {
     var deferred = q.defer();
 		try {
       switch (doc[0].ParentDocSubType) {
@@ -370,6 +370,7 @@ var calculatefield = {
               "key": "Assessment",
               "AUStatus": "Active",
               "ParentDocSubType": "Country Process",
+              "CurrentPeriod": req.session.quarter,
               "GPWWBCITKey": doc[0].WWBCITKey
             }
           };
@@ -382,6 +383,7 @@ var calculatefield = {
               "AUStatus": "Active",
               "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
               "BusinessUnit": doc[0].BusinessUnit,
+              "CurrentPeriod": req.session.quarter,
               "Country": doc[0].Country
             }
           };
@@ -394,6 +396,7 @@ var calculatefield = {
               "AUStatus": "Active",
               "ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU Country","BU IMT"]},
               "BusinessUnit": doc[0].BusinessUnit,
+              "CurrentPeriod": req.session.quarter,
               "IMT": doc[0].IMT
             }
           };
@@ -404,6 +407,7 @@ var calculatefield = {
               "_id": {"$gt":0},
               "key": "Assessment",
               "AUStatus": "Active",
+              "CurrentPeriod": req.session.quarter,
               "$or": [
                 { "$and": [{"BusinessUnit": doc[0].BusinessUnit},{"IOT": doc[0].IOT},{"ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU IMT","BU IOT"]}}] },
                 { "$and": [{"ParentDocSubType": "BU Country"},{"_id": doc[0].BUCountryIOT}] },
@@ -418,6 +422,7 @@ var calculatefield = {
               "_id": {"$gt":0},
               "key": "Assessment",
               "AUStatus": "Active",
+              "CurrentPeriod": req.session.quarter,
               "BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}
             }
           };
@@ -428,6 +433,7 @@ var calculatefield = {
               "_id": {"$gt":0},
               "key": "Assessment",
               "AUStatus": "Active",
+              "CurrentPeriod": req.session.quarter,
               "ParentDocSubType": "Country Process",
               "AssessableUnitName":{"$in":doc[0].RelevantCountryProcesses}
             }

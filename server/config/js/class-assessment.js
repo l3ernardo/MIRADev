@@ -74,7 +74,7 @@ var assessment = {
 							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPIview = [];
 							doc[0].CPAsmtDataPR1view = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].CPAsmtDataPIview.length < 3) {
 									if (doc[0].CPAsmtDataPIview.length == 0) {
@@ -127,7 +127,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -164,11 +164,11 @@ var assessment = {
 							break;
 						case "BU IOT":
 							if (doc[0].EnteredBU == "GTS") {
-								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
-								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(13,3);
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
 								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(15,3);
 							} else {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
@@ -186,9 +186,9 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
+							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].IOT;
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -247,9 +247,9 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].IMT = util.resolveGeo(pdoc[0].IMT,"IMT",req);
+							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].IMT;
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -311,7 +311,7 @@ var assessment = {
 							doc[0].BUCAsmtDataOIview = [];
 							doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].Country;
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -361,7 +361,7 @@ var assessment = {
 							doc[0].EAData = doc[0].ARCData;
 							doc[0].AccountData = doc[0].RiskData;
 							doc[0].CUAsmtDataPR1view = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].CUAsmtDataPR1view.length < 3) {
 									if (doc[0].CUAsmtDataPR1view.length == 0) {
@@ -552,7 +552,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -615,7 +615,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -679,7 +679,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -745,7 +745,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc).then(function(data){
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
