@@ -757,32 +757,12 @@ dashboards.get('/newassessment', isAuthenticated, function(req, res) {
 /* Save Assessment document */
 dashboards.post('/saveasmt', isAuthenticated, function(req, res){
 	assessment.saveAsmt(req, db).then(function(data) {
-		req.query.id = data.body.id;
 		var close = req.body.close;
 		if(data.status==200 & !data.error) {
-			if(data.body) {
-				assessment.getAsmtbyID(req, db).then(function(data) {
-					if(data.status==200 & !data.error) {
-						if(data.doc) {
-							if(close=='1') {
-								res.redirect('/processdashboard');
-							} else {
-								res.redirect('/assessment?id=' + data.doc[0]._id);
-							}
-						} else {
-							res.render('error',{errorDescription: data.error});
-						}
-					} else {
-						res.render('error',{errorDescription: data.error});
-						console.log("[routes][getassessmentbyID] - " + data.error);
-					}
-				}).catch(function(err) {
-					res.render('error',{errorDescription: err.error});
-					console.log("[routes][getassessmentbyID] - " + err.error);
-				});
+			if(close=='1') {
+				res.redirect('/assessableunit?id='+ data.parentid);
 			} else {
-				res.render('error',{errorDescription: dataF.error});
-				console.log("[routes][saveasmt] - " + dataF.error);
+				res.redirect('/assessment?id=' + data.id);
 			}
 		} else {
 			res.render('error',{errorDescription: data.error});

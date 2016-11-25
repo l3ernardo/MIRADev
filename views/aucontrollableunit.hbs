@@ -1,8 +1,8 @@
-<script src="/js/assessableunit.js" type="text/javascript"></script>
-<script src="/js/constituent_section.js" type="text/javascript"></script>
-<script src="/js/admin_section.js" type="text/javascript"></script>
-<script src="/js/multiselect.js" type="text/javascript"></script>
-<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+<script src="./js/assessableunit.js" type="text/javascript"></script>
+<script src="./js/constituent_section.js" type="text/javascript"></script>
+<script src="./js/admin_section.js" type="text/javascript"></script>
+<script src="./js/multiselect.js" type="text/javascript"></script>
+<link href="./css/mirastyle.css" rel="stylesheet" type="text/css" />
 <!-- JS for attachments widget -->
 <script src="./js/attachments.js"/></script>
 <!-- JS and CSS for owner, editors and readers / bluepages widget -->
@@ -11,16 +11,10 @@
 <link rel="stylesheet" href="./css/multiselect.css" />
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
-<!--<link rel="stylesheet" href="./css/jquery-ui.min.css">-->
 
 <input type="hidden" id="docTitle" value="{{DocType}} ({{DocSubType}})">
 <input type="hidden" id="docSubTitle" value="{{Name}}">
-<script>
-	//Load document's name
-	$('h1#pageTitle').text($('input#docTitle').val());
-	//Load document's business unit
-	$('h3#pageSubTitle').text($('input#docSubTitle').val());
-</script>
+
 
 <!-- JS and CSS for rich text edit -->
 <link rel="stylesheet" type="text/css" href="./css/skin.css">
@@ -33,7 +27,12 @@
 <script src="./lib/simpleeditor-min.js"></script>
 <script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
-
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').text($('input#docSubTitle').val());
+</script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
