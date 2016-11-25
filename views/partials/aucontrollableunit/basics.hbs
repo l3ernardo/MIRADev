@@ -6,9 +6,16 @@
 		{{#if admin}}
 			{{!-- CU Change parent is only available for Admin --}}
 			<tr>
-				<td width="25%"><label for="ParentSubject">Parent {{ParentDocSubType}}:</label></td>
+				<td width="25%"><label for="ParentSubject">Parent {{ParentDocSubType}} {{parentid}}:</label></td>
 				<td>
-					<span><input type="text" name="ParentSubject" value="{{ParentSubject}}" size="100" maxlength="300"></span>
+					<span><input type="text" name="ParentSubject" value="{{ParentSubject}}" size="100" maxlength="300">
+					<input type="hidden" id="parentid" name="parentid" value="{{parentid}}">
+					<input class="ibm-btn-arrow-pri" type="button" id="btn_changeparent" value="Change Parent"/>
+					</span>
+					<div id="Overlay_Event" title="CU Parent Selection" class="ibm-common-overlay ibm-overlay-alt-two" style=" overflow:scroll; box-sizing: border-box; height:400px">
+						{{>aucontrollableunit/changeparent}}
+					</div>
+					<div id="divSavingImg" class="ibm-common-overlay"><center><p class="ibm-spinner-large"></p><strong>Saving...</strong><p>&nbsp;</p></center></div>
 				</td>
 			</tr>
 		{{else}}
