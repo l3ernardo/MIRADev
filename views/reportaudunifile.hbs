@@ -17,13 +17,15 @@
 				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
 				<span class="ibm-sep"> </span>
 				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+				<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{valuesToString exportInfo}}</textarea>
 			</p>
 			<br/>
 		</div>
 		<div>
 			<table id="reports_treeview2" cellspacing="0" cellpadding="0" border="0" style="width:100%"  class="display nowrap" class="mira-dashboard-table">
 				<thead>
-					<tr> 
+					<tr>
+						<th style="width:1%;" scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
 					    <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 						<th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					    <th >Auditable Unit Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -47,24 +49,25 @@
 				<tbody>
 				{{#each doc}}
 					    <tr data-tt-id={{_id}} data-tt-parent-id={{parentidauf}}>
-					    <th><font COLOR="red">{{Total}}</font></th>
+								<td><input type="checkbox" class="mira_checkbox_tree"/></td>
+							<th><font COLOR="red">{{Total}}</font></th>
 						<th><font COLOR="red">{{CategoryName}}</font></th>
 						<td>{{{in_Count Name _id Name}}}</td>
-						<td>{{Count}}</td>							
+						<td>{{Count}}</td>
 						<td>{{{in_Type DocSubType DocSubType}}}</td>
-					    <td>{{AuditableProcess}}</td>	
+					    <td>{{AuditableProcess}}</td>
                         <td>{{AuditReadiness}}</td>
                         <td>{{CQ4}}</td>
 						<td>{{CQ3}}</td>
-                        <td>{{CQ2}}</td>	
+                        <td>{{CQ2}}</td>
                         <td>{{CQ1}}</td>
 						<td>{{AUNextQtrRating}}</td>
 						<td>{{Target2Sat}}</td>
-                        <td></td>						
+                        <td></td>
 						<td>{{MIRAAssessmentStatus}}</td>
 						<td>{{WWBCITAssessmentStatus}}</td>
 						<td>{{PeriodRatingPrev}}</td>
-						<td>{{PeriodRating}}</td>						
+						<td>{{PeriodRating}}</td>
 					</tr>
 				{{/each}}
 				</tbody>
