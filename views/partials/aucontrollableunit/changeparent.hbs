@@ -1,0 +1,32 @@
+<!-- <link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" /> -->
+<!-- <link href="/public/css/mirastyle.css" rel="stylesheet" type="text/css" /> -->
+<script src="./js/dashboards.js"/></script>
+<script src='./js/utility.js'></script>
+
+<link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<script src="./lib/jquery.dataTables.js"></script>
+
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+		<table id="CUParents_treeview" style="box-sizing: border-box; width:90%" cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
+			<tbody>
+			{{#each CUParents}}
+			  <tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
+				<td><a href="javascript:void(0)" onclick="updateParent({{_id}},{{Name}})">{{Name}}</a></td>
+			  </tr>
+			{{/each}}
+		  </tbody>
+		</table>
+		<div class="ibm-buttons-row" style="box-sizing: border-box; width:95%" >
+		<p>
+			<input class="ibm-btn-pri" type="button" id="btn_okCUParent" value="Ok"/>
+			<span class="ibm-sep">&nbsp;</span>
+			<input class="ibm-btn-sec" type="button" id="btn_cancelCUParent" value="Close" />
+		</p>
+	</div>
+  </div>
+</div>
+<script>
+	//Load document's name
+	$("#CUParents_treeview").treetable({expandable: true });
+</script> 
