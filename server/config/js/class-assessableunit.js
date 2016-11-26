@@ -14,53 +14,6 @@ var param = require('./class-parameter.js');
 var util = require('./class-utility.js');
 var accessupdates = require('./class-accessupdates.js');
 var fieldCalc = require('./class-fieldcalc.js');
-var recordindex;
-var parentindex;
-var indexp;
-
-function existparentid (parentkey,F){
-	for (j=0;j<F.length;j++){
-		if(F[j]!= undefined){
-			if(F[j]._id==parentkey){
-				result=1;
-				parentindex=j;
-			}
-		}
-	}
-	/* return 1;*/
-	return result;
-}
-
-function parentidf (parentkey,G){
-	for (m=0;m<G.length;m++){
-		if(G[m]!= undefined){
-			if(G[m]._id==parentkey){
-				indexp=m;
-			}
-			else{
-				indexp=G.length;
-			}
-		}
-	}
-	return indexp;
-}
-
-function findtl(level,parentkey,F){
-	for(k=F.length-1;k>=parentindex;k--){
-		if(F[k]!= undefined){
-			if(F[k].LevelType==level && F[k].parentid==parentkey){
-				result2=1;
-				recordindex=k;
-				k=parentindex-1;
-			}
-			else{
-				recordindex=parentidf(parentkey,F);
-				result2=0;
-			}
-		}
-	}
-	return result2;
-}
 
 var assessableunit = {
 
@@ -274,16 +227,16 @@ var assessableunit = {
 				if(req.url!='/reportingdashboard'){
 					for(var i = 0; i < doc.length; i++){
 						if(req.session.quarter == doc[i].CurrentPeriod){
-						if(doc[i].DocSubType == "BU IOT"){
-								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
+							if(doc[i].DocSubType == "BU IOT"){
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
 
-						}else if(doc[i].DocSubType == "BU IMT"){
-								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
+							}else if(doc[i].DocSubType == "BU IMT"){
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
 
-						}else if(doc[i].DocSubType == "BU Country"){
-								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
+							}else if(doc[i].DocSubType == "BU Country"){
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
+							}
 						}
-					}
 						if(doc[i].LevelType == 1){
 							level1.push(doc[i]);
 						}else if(doc[i].LevelType == 2){
@@ -418,11 +371,11 @@ var assessableunit = {
 				var toadd = {};
 				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
-				doc[0].CurrentPeriod = req.session.quarter;
+				//doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
 				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
-				doc[0].admin = accessrules.rules.admin;console.log('admin:'+accessrules.rules.admin);
+				doc[0].admin = accessrules.rules.admin;
 				doc[0].grantaccess = accessrules.rules.grantaccess;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
 				doc[0].cuadmin = accessrules.rules.cuadmin;
@@ -648,6 +601,15 @@ var assessableunit = {
 							}
 						}
 						else {
+							if(constidocs[i].DocSubType == "BU IOT"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
+
+							}else if(constidocs[i].DocSubType == "BU IMT"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IMT, "IMT",req);
+
+							}else if(constidocs[i].DocSubType == "BU Country"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].Country, "Country",req);
+							}
 							toadd = {
 								"docid": constidocs[i]._id,
 								"col": [
@@ -772,7 +734,25 @@ var assessableunit = {
 										for (var i = 0; i < resdocs.length; ++i) {
 											doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 										}
-										deferred.resolve({"status": 200, "doc": doc});
+										//Get CU Parent Documents if admin
+										if(doc[0].admin){
+											assessableunit.getCUParents(req, db).then(function(dataCP) {
+												if(dataCP.status==200 && !dataCP.error){
+													doc[0].CUParents = [];
+													doc[0].CUParents = dataCP.doc;
+													deferred.resolve({"status": 200, "doc": doc});
+												}
+												else{
+													deferred.reject({"status": 500, "error": dataCP.error});
+												}
+											}).catch(function(err) {
+												console.log("[assessableunit][CUParentList]" + dataCP.error);
+												deferred.reject({"status": 500, "error": err});
+											});
+										}
+										else{
+											deferred.resolve({"status": 200, "doc": doc});
+										}
 									}).catch(function(err) {
 										console.log("[assessableunit][ReportingGroupList]" + resdata.error);
 										deferred.reject({"status": 500, "error": err.error.reason});
@@ -1477,6 +1457,114 @@ var assessableunit = {
 					deferred.reject({"status": 500, "error": err.error.reason});
 				});
 			}
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+
+	/* Get Parents for Controllable Units */
+	getCUParents: function(req, db){
+		var deferred = q.defer();
+		try{
+			var geo = {
+				"selector":{
+					"$and": [
+						{ "LevelType": { "$gt": null }},
+						{"Name": { "$ne": null }},
+						{"key": "Assessable Unit"},
+						{"DocSubType":{"$in":["Business Unit","BU IOT","BU IMT","BU Country"]}},
+						{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
+						{"MIRABusinessUnit":  {"$eq": req.session.businessunit}}
+					]
+				},
+				"fields": [
+					"_id",
+					"Name",
+					"DocSubType",
+					"LevelType",
+					"parentid",
+					"MIRABusinessUnit",
+					"IOT",
+					"IMT",
+					"Country",
+					"CurrentPeriod"
+				],
+				"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
+			};
+			db.find(geo).then(function(data){
+				var doc = data.body.docs;
+				var len = doc.length;
+				var level1 = [];
+				var level2 = {};
+				var level3 = {};
+				var level4 = {};
+
+				for(var i = 0; i < doc.length; i++){
+					if(req.session.quarter == doc[i].CurrentPeriod){
+						if(doc[i].DocSubType == "BU IOT"){
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
+						}else if(doc[i].DocSubType == "BU IMT"){
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
+						}else if(doc[i].DocSubType == "BU Country"){
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
+						}
+					}
+					if(doc[i].LevelType == 1){
+						level1.push(doc[i]);
+					}else if(doc[i].LevelType == 2){
+						if(typeof level2[doc[i].parentid] === "undefined"){
+							level2[doc[i].parentid] = [doc[i]];
+						}else{
+							level2[doc[i].parentid].push(doc[i]);
+						}
+					}else if(doc[i].LevelType == 3){
+						if(typeof level3[doc[i].parentid] === "undefined"){
+							level3[doc[i].parentid] = [doc[i]];
+						}else{
+							level3[doc[i].parentid].push(doc[i]);
+						}
+					}else if(doc[i].LevelType == 4){
+						if(typeof level4[doc[i].parentid] === "undefined"){
+							level4[doc[i].parentid] = [doc[i]];
+						}else{
+							level4[doc[i].parentid].push(doc[i]);
+						}
+					}
+				}
+				var F = [];
+				//level1
+				for(var i = 0; i < level1.length; i++){
+					F.push(level1[i]);
+
+					//level2
+					if(typeof level2[level1[i]["_id"]] !== "undefined"){
+						var tmplvl2 = level2[level1[i]["_id"]];
+						for(var i2 = 0; i2 < tmplvl2.length; i2++){
+							F.push(tmplvl2[i2]);
+
+							//level3
+							if(typeof level3[tmplvl2[i2]["_id"]] !== "undefined"){
+								var tmplvl3 =level3[tmplvl2[i2]["_id"]];
+								for(var i3 = 0; i3 < tmplvl3.length; i3++){
+									F.push(tmplvl3[i3]);
+
+									//level4
+									if(typeof level4[tmplvl3[i3]["_id"]] !== "undefined"){
+										var tmplvl4 = level4[tmplvl3[i3]["_id"]];
+										for(var i4 = 0; i4 < tmplvl4.length; i4++){
+											F.push(tmplvl4[i4]);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				deferred.resolve({"status": 200, "doc": F});
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}

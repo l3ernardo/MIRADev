@@ -228,12 +228,11 @@
 					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-3</th>
 					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-2</th>
 					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-1</th>
-					<th class="ar-asmt-viewheader" scope="col" width="6%">Current Quarter (CQ)</th>
-					<th class="ar-asmt-viewheader" scope="col" width="7%">KCFR Defect Rate</th>
-					<th class="ar-asmt-viewheader" scope="col" width="7%">KCO Defect Rate</th>
-					<th class="ar-asmt-viewheader" scope="col" width="6%">Corporate Internal Audit Score</th>
-					<th class="ar-asmt-viewheader" scope="col" width="7%">Missed Risk Evaluations</th>
-					<th class="ar-asmt-viewheader" scope="col" width="7%">Missed MSAC Commitments</th>
+					<th class="ar-asmt-viewheader" scope="col" width="8%">Current Quarter (CQ)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="8%">KCFR Defect Rate</th>
+					<th class="ar-asmt-viewheader" scope="col" width="8%">KCO Defect Rate</th>
+					<th class="ar-asmt-viewheader" scope="col" width="8%">Missed Risk Evaluations</th>
+					<th class="ar-asmt-viewheader" scope="col" width="8%">Missed MSAC Commitments</th>
 				</thead>
 				{{#each BUCAsmtDataPIview}}
 					<tr class="asmt-viewdata">
@@ -250,7 +249,6 @@
 						{{{ratingDisplayView ratingCQ}}}
 						{{{defectRateDisplayViewNoDash kcfrDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 						{{{defectRateDisplayViewNoDash kcoDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td class="asmt-viewdata">{{auditScore}}</td>
 						<td class="asmt-viewdata">{{msdRisk}}</td>
 						<td class="asmt-viewdata">{{msdMSAC}}</td>
 					</tr>

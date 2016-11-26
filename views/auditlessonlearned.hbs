@@ -33,8 +33,10 @@
 <div class="ibm-container" style="width:80%">
 {{#unless editmode}}
 	<p style="text-align:right">
+		{{#unless newunit}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
 		<span style="color: #5C87C4">Last modified by</span> {{Log.1.name}} <span style="color: #5C87C4">on</span> {{Log.1.date}} <span style="color: #5C87C4">at</span> {{Log.1.time}}
+		{{/unless}}
 	</p>
 	{{/unless}}
 	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/saveaulesson">
