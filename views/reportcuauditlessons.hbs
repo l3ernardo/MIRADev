@@ -15,6 +15,7 @@
 				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
 				<span class="ibm-sep"> </span>
 				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+				<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{valuesToString exportInfo}}</textarea>
 			</p>
 			<br/>
 		</div>
@@ -22,9 +23,10 @@
 			<table id="reports_table2" cellspacing="0" cellpadding="0" border="0" class="display nowrap" >
 				<thead>
 					<tr>
+						<th style="width:1%;" scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
 					    <th scope="col" style="width:25%">BU IOT</th>
-						<th scope="col" style="width:25%">BU IMT</th>		
-						<th scope="col" style="width:50%">Controllable Unit</th>										
+						<th scope="col" style="width:25%">BU IMT</th>
+						<th scope="col" style="width:50%">Controllable Unit</th>
 						<th scope="col">Quarter</th>
 						<th scope="col">Response</th>
 						<th scope="col" style="width:25%">Findings</th>
@@ -35,9 +37,10 @@
 				<tbody>
 				{{#each doc}}
 					<tr>
+						<td><input type="checkbox" class="mira_checkbox_tree"/></td>
 					    <td>{{IOT}}</td>
 						<td>{{IMT}}</td>
-						<td><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>						
+						<td><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td>{{Quarter}}</td>
 						<td>{{Response}}</td>
 						<td>{{Findings}}</td>

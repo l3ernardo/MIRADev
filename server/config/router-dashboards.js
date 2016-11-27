@@ -590,7 +590,7 @@ dashboards.get('/assessment', isAuthenticated, function(req, res) {
 							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','AuditLessonsLearnedFinding','OpMetricRating','UnsatThresholdPercent','MargThresholdPercent'];
 						else
 							lParams = ['UnsatThresholdPercent','MargThresholdPercent'];
-							parameter.getListParams(db, lParams).then(function(dataParam) {
+						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
 								res.render('asmtcontrollableunit', data.doc[0] );

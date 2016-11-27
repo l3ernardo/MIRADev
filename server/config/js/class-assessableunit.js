@@ -371,7 +371,7 @@ var assessableunit = {
 				var toadd = {};
 				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
-				//doc[0].CurrentPeriod = req.session.quarter;
+				doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
 				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
@@ -601,6 +601,15 @@ var assessableunit = {
 							}
 						}
 						else {
+							if(constidocs[i].DocSubType == "BU IOT"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
+
+							}else if(constidocs[i].DocSubType == "BU IMT"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IMT, "IMT",req);
+
+							}else if(constidocs[i].DocSubType == "BU Country"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].Country, "Country",req);
+							}
 							toadd = {
 								"docid": constidocs[i]._id,
 								"col": [
@@ -1453,7 +1462,7 @@ var assessableunit = {
 		}
 		return deferred.promise;
 	},
-	
+
 	/* Get Parents for Controllable Units */
 	getCUParents: function(req, db){
 		var deferred = q.defer();

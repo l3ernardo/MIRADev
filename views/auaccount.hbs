@@ -34,7 +34,9 @@
 
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
+		{{#unless newunit}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
+		{{/unless}}
 	</p>
 	<form id="assessableunit" class="ibm-column-form" name="form" method="POST" action="/savebuau">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
