@@ -1,7 +1,6 @@
 {{!-- AU BU IOT form - Constituent section - Edit/Read Mode --}}
 <h3>{{AssessableUnitName}}</h3><br/><br/>
 <div class="ibm-columns ibm-graphic-tabs">
-
 	<div class="ibm-tab-section">
 		<ul class="ibm-tabs">
 			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
@@ -32,9 +31,21 @@
 	<div id="kctest" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/kctesting}}
 	</div>
-	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-		{{>asmtcontrollableunit/operationalmetrics}}
-	</div>
+	{{#if_equal EnteredBU "GTS"}}
+		{{#if_equal CatCU "Delivery"}}
+			<div id="opmetric" class="ibm-tabs-content" style='display : none'>
+				{{>asmtcontrollableunit/operationalmetricssod}}
+			</div>
+		{{else}}
+			<div id="opmetric" class="ibm-tabs-content" style='display : none'>
+				{{>asmtcontrollableunit/operationalmetricscrm}}
+			</div>
+		{{/if_equal}}
+	{{else}}
+		<div id="opmetric" class="ibm-tabs-content" style='display : none'>
+			{{>asmtcontrollableunit/operationalmetricsgbs}}
+		</div>
+	{{/if_equal}}
 	<div id="other" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/others}}
 	</div>
