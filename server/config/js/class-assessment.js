@@ -463,6 +463,7 @@ var assessment = {
 						"editor": accessrules.rules.editor,
 						"admin": accessrules.rules.admin,
 						"resetstatus": accessrules.rules.resetstatus,
+						"newunit": 1
 					};
 					doc.push(tmpdoc);
 					doc[0].CurrentPeriod = req.session.quarter;
