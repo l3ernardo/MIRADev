@@ -1,0 +1,328 @@
+<table id="opmetric_table" class="ibm-data-table">
+	{{#if editmode}}
+		<tr class="op-metric-content">
+			<td>
+				<table width="100%"  id="opmetric_content">
+					<thead class="op-metric-label">
+						<th scope="col" width="15%">Category</th>
+						<th scope="col" width="15%">Metric</th>
+						<th scope="col" width="15%">Rating</th>
+						<th scope="col" width="15%">Target to Sat</th>
+						<th scope="col" width="40%">Elements to be considered when determining holistic assessment and impacting your rating</th>
+					</thead>
+					<tr>
+						<td class="op-metric-label"><strong>Other</strong></td>
+						<td class="op-metric-label">Other Metrics</td>
+						<td class="content-data">
+							<span>{{{uniqueSelect "OtherMetricRating" parameters.OpMetricRating.0.options "name" "name" OtherMetricRating}}}</span>
+						</td>
+						<td class="content-data">
+							<span id="colOtherMetricDate">
+								<input type="date" name="OtherMetricDate" id="OtherMetricDate" value="{{OtherMetricDate}}" size="12">
+								<span for="OtherMetricDate" class="ibm-calendar-link"></span>
+							</span>
+						</td>
+						<td class="content-data">
+							<span class="content-data" id="OtherMetricCommentCol"><input type="text" name="OtherMetricComment" id="OtherMetricComment" value="{{OtherMetricComment}}" size="60"></span>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="op-metric-content">
+			<td>
+				<table width="100%">
+					<tr class="op-metric-label">
+						<td class="op-metric-label">
+							<ul class="ibm-twisty">
+								<li>
+									<a class="ibm-twisty-trigger" href="#toggle"><img alt="-" src="//www.ibm.com/i/c.gif" /></a>
+									<span class="ibm-twisty-head">If you'd like to provide your input at a category level, you can also use the table below.</span>
+									<div class="ibm-twisty-body">
+										<table width="100%">
+											<thead class="op-metric-label">
+												<th scope="col" width="15%">Category</th>
+												<th scope="col" width="25%">Metric</th>
+												<th scope="col" width="10%">Target</th>
+												<th scope="col" width="10%">Rating</th>
+												<th scope="col" width="40%">Elements to be considered when determining holistic assessment and impacting your rating</th>
+											</thead>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>Health Check</strong></td>
+												<td class="op-metric-label">% HC Control</td>
+												<td class="op-metric-label">98%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat1" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat1}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat1" id="OtherMetricCommentCat1" value="{{OtherMetricCommentCat1}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">Average # of Deviation / System</td>
+												<td class="op-metric-label">&lt; 1</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat2" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat2}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat2" id="OtherMetricCommentCat2" value="{{OtherMetricCommentCat2}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="4"><strong>UID Revalidation</strong></td>
+												<td class="op-metric-label">% QEV Control</td>
+												<td class="op-metric-label">98%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat3" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat3}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat3" id="OtherMetricCommentCat3" value="{{OtherMetricCommentCat3}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% CBN Control</td>
+												<td class="op-metric-label">98%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat4" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat4}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat4" id="OtherMetricCommentCat4" value="{{OtherMetricCommentCat4}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% Privilege Control</td>
+												<td class="op-metric-label">98%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat5" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat5}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat5" id="OtherMetricCommentCat5" value="{{OtherMetricCommentCat5}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% of UID Labelling</td>
+												<td class="op-metric-label">99.5%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat6" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat6}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat6" id="OtherMetricCommentCat6" value="{{OtherMetricCommentCat6}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>Patch</strong></td>
+												<td class="op-metric-label">% Overdue Patch Records</td>
+												<td class="op-metric-label">2%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat7" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat7}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat7" id="OtherMetricCommentCat7" value="{{OtherMetricCommentCat7}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% High Sev Overdue Patch Records</td>
+												<td class="op-metric-label">2%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat8" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat8}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat8" id="OtherMetricCommentCat8" value="{{OtherMetricCommentCat8}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>PSM</strong></td>
+												<td class="op-metric-label"># Libraries without a Baseline</td>
+												<td class="op-metric-label">0%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat9" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat9}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat9" id="OtherMetricCommentCat9" value="{{OtherMetricCommentCat9}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% inventories completed on time</td>
+												<td class="op-metric-label">98%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat10" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat10}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat10" id="OtherMetricCommentCat10" value="{{OtherMetricCommentCat10}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>Issue Management</strong></td>
+												<td class="op-metric-label">% of Overdue Control Issues</td>
+												<td class="op-metric-label">2%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat11" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat11}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat11" id="OtherMetricCommentCat11" value="{{OtherMetricCommentCat11}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% of Overdue Operational Issues</td>
+												<td class="op-metric-label">2%</td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat12" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat12}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat12" id="OtherMetricCommentCat12" value="{{OtherMetricCommentCat12}}" size="60"></span>
+												</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label"><strong>CWP</strong></td>
+												<td class="op-metric-label"><strong>DPE's CWP Assessment</strong></td>
+												<td class="op-metric-label"><strong>RAG</strong></td>
+												<td class="content-data">
+													<span>{{{uniqueSelect "OtherMetricRatingCat13" parameters.OpMetricRating.0.options "name" "name" OtherMetricRatingCat13}}}</span>
+												</td>
+												<td class="content-data">
+													<span class="content-data"><input type="text" name="OtherMetricCommentCat13" id="OtherMetricCommentCat13" value="{{OtherMetricCommentCat13}}" size="60"></span>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{else}}
+		<tr class="op-metric-content">
+			<td>
+				<table width="100%">
+					<thead class="op-metric-label">
+						<th scope="col" width="15%">Category</th>
+						<th scope="col" width="15%">Metric</th>
+						<th scope="col" width="15%">Rating</th>
+						<th scope="col" width="15%">Target to Sat</th>
+						<th scope="col" width="40%">Elements to be considered when determining holistic assessment and impacting your rating</th>
+					</thead>
+					<tr>
+						<td class="op-metric-label"><strong>Other</strong></td>
+						<td class="op-metric-label">Other Metrics</td>
+						{{{ratingDisplayView OtherMetricRating}}}
+						<td class="content-data">{{{dateDisplay OtherMetricDate}}}</td>
+						<td class="content-data">{{OtherMetricComment}}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr class="op-metric-content">
+			<td>
+				<table width="100%">
+					<tr class="op-metric-label">
+						<td class="op-metric-label">
+							<ul class="ibm-twisty">
+								<li>
+									<a class="ibm-twisty-trigger" href="#toggle"><img alt="-" src="//www.ibm.com/i/c.gif" /></a>
+									<span class="ibm-twisty-head">If you'd like to provide your input at a category level, you can also use the table below.</span>
+									<div class="ibm-twisty-body">
+										<table width="100%">
+											<thead class="op-metric-label">
+												<th scope="col" width="15%">Category</th>
+												<th scope="col" width="25%">Metric</th>
+												<th scope="col" width="10%">Target</th>
+												<th scope="col" width="10%">Rating</th>
+												<th scope="col" width="40%">Elements to be considered when determining holistic assessment and impacting your rating</th>
+											</thead>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>Health Check</strong></td>
+												<td class="op-metric-label">% HC Control</td>
+												<td class="op-metric-label">98%</td>
+												{{{ratingDisplayView OtherMetricRatingCat1}}}
+												<td class="content-data">{{OtherMetricCommentCat1}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">Average # of Deviation / System</td>
+												<td class="op-metric-label">&lt; 1</td>
+												{{{ratingDisplayView OtherMetricRatingCat2}}}
+												<td class="content-data">{{OtherMetricCommentCat2}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="4"><strong>UID Revalidation</strong></td>
+												<td class="op-metric-label">% QEV Control</td>
+												<td class="op-metric-label">98%</td>
+												{{{ratingDisplayView OtherMetricRatingCat3}}}
+												<td class="content-data">{{OtherMetricCommentCat3}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% CBN Control</td>
+												<td class="op-metric-label">98%</td>
+												{{{ratingDisplayView OtherMetricRatingCat4}}}
+												<td class="content-data">{{OtherMetricCommentCat4}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% Privilege Control</td>
+												<td class="op-metric-label">98%</td>
+												{{{ratingDisplayView OtherMetricRatingCat5}}}
+												<td class="content-data">{{OtherMetricCommentCat5}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% of UID Labelling</td>
+												<td class="op-metric-label">99.5%</td>
+												{{{ratingDisplayView OtherMetricRatingCat6}}}
+												<td class="content-data">{{OtherMetricCommentCat6}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>Patch</strong></td>
+												<td class="op-metric-label">% Overdue Patch Records</td>
+												<td class="op-metric-label">2%</td>
+												{{{ratingDisplayView OtherMetricRatingCat7}}}
+												<td class="content-data">{{OtherMetricCommentCat7}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% High Sev Overdue Patch Records</td>
+												<td class="op-metric-label">2%</td>
+												{{{ratingDisplayView OtherMetricRatingCat8}}}
+												<td class="content-data">{{OtherMetricCommentCat8}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>PSM</strong></td>
+												<td class="op-metric-label"># Libraries without a Baseline</td>
+												<td class="op-metric-label">0%</td>
+												{{{ratingDisplayView OtherMetricRatingCat9}}}
+												<td class="content-data">{{OtherMetricCommentCat9}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% inventories completed on time</td>
+												<td class="op-metric-label">98%</td>
+												{{{ratingDisplayView OtherMetricRatingCat10}}}
+												<td class="content-data">{{OtherMetricCommentCat10}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label" rowspan="2"><strong>Issue Management</strong></td>
+												<td class="op-metric-label">% of Overdue Control Issues</td>
+												<td class="op-metric-label">2%</td>
+												{{{ratingDisplayView OtherMetricRatingCat11}}}
+												<td class="content-data">{{OtherMetricCommentCat11}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label">% of Overdue Operational Issues</td>
+												<td class="op-metric-label">2%</td>
+												{{{ratingDisplayView OtherMetricRatingCat12}}}
+												<td class="content-data">{{OtherMetricCommentCat12}}</td>
+											</tr>
+											<tr>
+												<td class="op-metric-label"><strong>CWP</strong></td>
+												<td class="op-metric-label"><strong>DPE's CWP Assessment</strong></td>
+												<td class="op-metric-label"><strong>RAG</strong></td>
+												{{{ratingDisplayView OtherMetricRatingCat13}}}
+												<td class="content-data">{{OtherMetricCommentCat13}}</td>
+											</tr>
+										</table>
+									</div>
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{/if}}
+</table>
