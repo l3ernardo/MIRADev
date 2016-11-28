@@ -486,8 +486,10 @@ var calculatefield = {
                 "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
               };
               doc[0].CPAsmtDataOIview.push(toadd);
-              for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
-                doc[0].CPAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+              if (doc[0].asmtsdocs[i].OpMetric != undefined) {
+                for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
+                  doc[0].CPAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+                }
               }
               // Process Ratings tab first embedded view
               toadd = {
