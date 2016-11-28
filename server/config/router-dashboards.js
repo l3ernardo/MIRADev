@@ -2,7 +2,7 @@ var express = require("express");
 var dashboards = express.Router();
 var db = require('./js/class-conn.js');
 // Add functionalities from other JS files
-var assessableunit = require('./js/class-assessableunit.js');
+var dashboard = require('./js/class-dashboards.js');
 var isAuthenticated = require('./router-authentication.js');
 
 /**************************************************************
@@ -11,7 +11,7 @@ ASSESSABLE UNITS - Business Unit type
 
 /* View assessable unit documents */
 dashboards.get('/processdashboard', isAuthenticated, function(req, res) {
-	assessableunit.listAU(req, db).then(function(data) {
+	dashboard.listAU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('processdashboard', data );
@@ -28,7 +28,7 @@ dashboards.get('/processdashboard', isAuthenticated, function(req, res) {
 	})
 });
 dashboards.get('/geodashboard', isAuthenticated, function(req, res) {
-	assessableunit.listAU(req, db).then(function(data) {
+	dashboard.listAU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('geodashboard', data );
@@ -46,7 +46,7 @@ dashboards.get('/geodashboard', isAuthenticated, function(req, res) {
 });
 
 dashboards.get('/reportingdashboard', isAuthenticated, function(req, res) {
-	assessableunit.listAU(req, db).then(function(data) {
+	dashboard.listAU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('reportingdashboard', data );
@@ -64,7 +64,7 @@ dashboards.get('/reportingdashboard', isAuthenticated, function(req, res) {
 });
 
 dashboards.get('/subprocessdashboard', isAuthenticated, function(req, res) {
-	assessableunit.listAU(req, db).then(function(data) {
+	dashboard.listAU(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
 				res.render('subprocessdashboard', data );
