@@ -1,4 +1,5 @@
 <table id="opmetric_table" class="ibm-data-table">
+	<input type="hidden" name="opMetricException" id="opMetricException" value="{{opMetricException}}">
 	<tr class="op-metric-content">
 		<td>
 			<table width="100%" id="opmetric_content">
@@ -36,7 +37,7 @@
 								<span class="content-data" id={{colAction}}><input type="text" name="{{actionfield}}" id="{{actionfield}}" value="{{action}}" size="27"></span>
 							</td>
 						{{else}}
-							<td class="content-data">{{{ratingDisplay rating}}}</td>
+							{{{ratingDisplayView rating}}}
 							<td class="content-data">{{{dateDisplay targetsatdate}}}</td>
 							<td class="content-data">{{finding}}</td>
 							<td class="content-data">{{action}}</td>
