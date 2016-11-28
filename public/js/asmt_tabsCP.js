@@ -82,9 +82,6 @@ $(document).ready(function() {
 	if ($("input[name='BOCExceptionCount']").val() == "1") $("#compguideboc").html('<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>');
 	else $("#compguideboc").html('<p>&nbsp;</p>');
 
-	if ($("#PeriodRating").val() == "Unsat") $("#compguideboc").html('<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>');
-	else $("#compguideboc").html('<p>&nbsp;</p>');
-	
 	//---on change events--//
 	$("input[name='BoCResponse1']").click(function(){
 		if( $('#BoCResponse1Yes').is(':checked')) {
@@ -195,7 +192,6 @@ $(document).ready(function() {
 
 	//---Start of Operational Metrics---//
 	if ( $("input[name='enteredbu']").val() == "GBS" ) {
-		console.log("GBS metric");
 		var metrics = $("#opMetricIDs").val().split(',');
 		var i;
 		for (i = 0; i < metrics.length; ++i) {
