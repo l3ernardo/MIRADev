@@ -639,7 +639,7 @@ var assessableunit = {
 							doc[0].Status == "Active" &&
 							hasCurQAsmt == false &&
 							(doc[0].editor || doc[0].admin) &&
-							(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group")
+							(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group" || doc[0].DocSubType == "Account")
 						 ) {
 						doc[0].CreateAsmt = true;
 					}
