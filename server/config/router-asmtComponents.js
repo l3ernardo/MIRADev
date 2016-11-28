@@ -8,7 +8,7 @@ var components = require('./js/class-asmtComponents.js');
 /* Control Sample */
 asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 	components.getComponent(req, db).then(function(data){
-		var type= data.data.docType;
+		var type= data.data.compntType;
 		switch (type) {
 			case "controlSample":
 			//9d9902492259ecc30230af749b1c2a06
@@ -34,7 +34,7 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 			//a75108a8b64db30c0f47722a78a100b8
 				res.render('ppr', data.data );
 				break;
-			case "openissue":
+			case "openIssue":
 			//1caba93791bd9eeb006a97bd03324f8f
 				res.render('openIssue', data.data );
 				break;

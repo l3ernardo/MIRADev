@@ -18,10 +18,10 @@ var components = {
         selector : {
           "_id": req.query.id,
         },
-        fields:["docType"]
+        fields:["compntType"]
       };
       db.find(obj).then(function(data){
-        var tipo = data.body.docs[0].docType;
+        var tipo = data.body.docs[0].compntType;
         switch (tipo) {
           case "controlSample":
           deferred.resolve(components.getControlSample(req,db));
@@ -72,7 +72,7 @@ var components = {
       var obj = {
         selector : {
           "_id": req.query.id,
-          "docType": "controlSample"
+          "compntType": "controlSample"
         }
       };
       db.find(obj).then(function(data){
@@ -92,7 +92,7 @@ var components = {
       var obj = {
         selector : {
           "_id": req.query.id,
-          "docType": "sampledCountry"
+          "compntType": "sampledCountry"
         }
       };
       db.find(obj).then(function(data){
@@ -112,7 +112,7 @@ var components = {
       var obj = {
         selector : {
           "_id": req.query.id,
-          "docType": "countryControls"
+          "compntType": "countryControls"
         }
       };
       db.find(obj).then(function(data){
@@ -126,7 +126,7 @@ var components = {
             var obj = {
               selector : {
                 "_id": id,
-                "docType": "controlSample"
+                "compntType": "controlSample"
               },
               fields:["_id","reportingQuarter","sampleUniqueID","controllableUnit","numTests","numDefects","remediationStatus","defectsAbstract"]
             };
@@ -175,7 +175,7 @@ getIssue: function(req, db){
     var obj = {
       selector : {
         "_id": req.query.id,
-        "docType": "openIssue"
+        "compntType": "openIssue"
       }
     };
 
@@ -200,7 +200,7 @@ getPPR: function(req, db){
     var obj = {
       selector : {
         "_id": req.query.id,
-        "docType": "PPR"
+        "compntType": "PPR"
       }
     };
 
@@ -273,7 +273,7 @@ getLocalAudit: function(req, db){
         var obj = {
           selector : {
             "_id": req.query.id,
-            "docType": "localAudit"
+            "compntType": "localAudit"
           }
         };
 
@@ -383,7 +383,7 @@ getLocalAudit: function(req, db){
               var obj = {
                 selector : {
                   "_id": req.query.id,
-                  "docType": "accountAudit"
+                  "compntType": "accountAudit"
                 }
               };
 
@@ -440,7 +440,7 @@ getLocalAudit: function(req, db){
               var obj = {
                 selector : {
                   "_id": req.query.id,
-                  "docType": "internalAudit"
+                  "compntType": "internalAudit"
                 }
               };
 
@@ -483,7 +483,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.query.id,
-                      "docType": "CUSummarySample"
+                      "compntType": "CUSummarySample"
                     }
                   };
                   db.find(obj).then(function(data){
@@ -522,7 +522,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.query.id,
-                      "docType": "accountControls"
+                      "compntType": "accountControls"
                     }
                   };
 
@@ -545,7 +545,7 @@ getLocalAudit: function(req, db){
                           }};
                           Thresholds.push(db.find(keyN));
                           q.all(Thresholds).then(function(thres){
-                            
+
                             data.body.docs[0].Marg = thres[0].body.docs[0].value.option;
                             data.body.docs[0].Unsat = thres[1].body.docs[0].value.option;
                               deferred.resolve({"status": 200, "data":data.body.docs[0]});
@@ -575,7 +575,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
-                      "docType": "openIssue"
+                      "compntType": "openIssue"
                     }
                   };
                   db.find(obj).then(function(data){
@@ -610,7 +610,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
-                      "docType": "countryControls"
+                      "compntType": "countryControls"
                     }
                   };
                   db.find(obj).then(function(data){
@@ -646,7 +646,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
-                      "docType": "PPR"
+                      "compntType": "PPR"
                     }
                   };
                   db.find(obj).then(function(data){
@@ -685,7 +685,7 @@ getLocalAudit: function(req, db){
                   if(req.body.docid === ""){
 
                     var obj={};
-                    obj.docType = "localAudit";
+                    obj.compntType = "localAudit";
                     obj.controllableUnit = req.body.controllableUnit;
                     obj.auditOrReview = req.body.auditOrReview;
                     obj.Log = [addlog];
@@ -714,7 +714,7 @@ getLocalAudit: function(req, db){
                     var obj = {
                       selector : {
                         "_id": req.body["_id"],
-                        "docType": "localAudit"
+                        "compntType": "localAudit"
                       }
                     };
                     db.find(obj).then(function(data){
@@ -766,7 +766,7 @@ getLocalAudit: function(req, db){
                   if(req.body.docid === ""){
 
                     var obj={};
-                    obj.docType = "accountControls";
+                    obj.compntType = "accountControls";
                     obj.account = req.body.account;
                     obj.process = req.body.process;
                     obj.Log = [addlog];
@@ -794,7 +794,7 @@ getLocalAudit: function(req, db){
                     var obj = {
                       selector : {
                         "_id": req.body.docid,
-                        "docType": "accountControls"
+                        "compntType": "accountControls"
                       }
                     };
 
@@ -841,7 +841,7 @@ getLocalAudit: function(req, db){
                   if(req.body.docid === ""){
 
                     var obj={};
-                    obj.docType = "accountAudit";
+                    obj.compntType = "accountAudit";
                     obj.controllableUnit = req.body.controllableUnit;
                     obj.auditOrReview = req.body.auditOrReview;
                     obj.Log = [addlog];
@@ -868,7 +868,7 @@ getLocalAudit: function(req, db){
                     var obj = {
                       selector : {
                         "_id": req.body["docid"],
-                        "docType": "accountAudit"
+                        "compntType": "accountAudit"
                       }
                     };
 
@@ -915,7 +915,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
-                      "docType": "internalAudit"
+                      "compntType": "internalAudit"
                     }
                   };
                   db.find(obj).then(function(data){
