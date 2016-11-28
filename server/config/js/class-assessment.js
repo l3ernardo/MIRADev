@@ -186,8 +186,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].IOT;
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -218,6 +217,8 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
+								doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
+								doc[0].Name = req.session.buname + " - " + doc[0].IOT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
@@ -247,9 +248,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
-							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -280,6 +279,9 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
+								doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
+								doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
+								doc[0].Name = req.session.buname + " - " + doc[0].IMT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
@@ -310,9 +312,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
-							doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].Country;
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -343,6 +343,9 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
+								doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+								doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+								doc[0].Name = req.session.buname + " - " + doc[0].Country;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
