@@ -8,7 +8,7 @@
 var q = require("q");
 
 //imports
-var parameter = require('./class-parameter.js');
+var varConf = require('../../../configuration');
 var util = require('./class-utility.js');
 
 var geohierarchy = {
@@ -126,7 +126,7 @@ createGEOHierarchy: function(req){
 	var indexIOT = {};
 	var indexIOTIMTs = {};
 	var response = {};
-	var uri = "http://mira-connector-dev.w3ibm.mybluemix.net/showAlldata?designdoc=wwbcitdocs&viewname=hierarchy";
+	var uri = varConf.mirainterfaces + "/showAlldata?designdoc=wwbcitdocs&viewname=hierarchy";
 	try{
 		util.callhttp(uri).then(function(data){
 
