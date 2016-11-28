@@ -108,10 +108,10 @@ var calculatefield = {
   		var lParams = [];
   		// Get required paramaters
   		if (req.session.businessunit == "GTS") {
-  			if (doc[0].DocSubType == "Controllable Unit") {
+  			if (doc[0].DocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Controllable Unit") {
   				doc[0].CatCU = "";
   				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-  			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
+  			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process" || doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
   				doc[0].CatP = "";
   				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
   			} else {
@@ -180,12 +180,12 @@ var calculatefield = {
   				}
   				if (dataParam.parameters.CRMCU) {
   					for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
+  						if (doc[0].CULvl1Category == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
   					}
   				}
   				if (dataParam.parameters.DeliveryCU) {
   					for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
+  						if (doc[0].CULvl1Category == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
   					}
   				}
           if (dataParam.parameters.ProcessCatFIN) {
@@ -311,11 +311,9 @@ var calculatefield = {
 
   			} else {
           deferred.reject({"status": 500, "error": err.error.reason});
-				  // console.log("[routes][class-assessableunit][getListParams] - " + dataParam.error);
   			}
   		}).catch(function(err) {
         deferred.reject({"status": 500, "error": err.error.reason});
-  			// console.log("[routes][class-assessableunit][getListParams] - " + err.error);
   		});
 
     }catch(e){

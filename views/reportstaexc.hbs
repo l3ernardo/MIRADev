@@ -13,13 +13,15 @@
 				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
 				<span class="ibm-sep"> </span>
 				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+				<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{valuesToString exportInfo}}</textarea>
 			</p>
 			<br/>
 		</div>
 		<div>
 			<table id="reports_treeview1" cellspacing="0" cellpadding="0" border="0" style="width:100%"  class="display nowrap" class="mira-dashboard-table">
 				<thead>
-					<tr> 
+					<tr>
+						<th style="width:1%;" scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
 					<th scope="col"></th>
 					<th scope="col">BU IOT</th>
 					<th scope="col">Type</th>
@@ -35,14 +37,15 @@
 				<tbody>
 				{{#each doc}}
 					<tr data-tt-id={{_id}} data-tt-parent-id={{parentidrse}}>
-					    <td>{{GroupingName}}</td>	
-						<td>{{IOT}}</td>	
+						<td><input type="checkbox" class="mira_checkbox_tree"/></td>
+					    <td>{{GroupingName}}</td>
+						<td>{{IOT}}</td>
 						{{#if_equal  DocSubType "GroupName"}}
 						<td></td>
 						{{else}}
 						<td>{{DocSubType}}</td>
 						{{/if_equal}}
-						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>	
+						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
 						<td>{{MIRAAssessmentStatus}}</td>
 						<td>{{WWBCITAssessmentStatus}}</td>
 						<td>{{PeriodRatingPrev}}</td>
@@ -60,5 +63,3 @@
 	//Load document's name
 	$('h1#pageTitle').text("Status Exceptions");
 </script>
-
-

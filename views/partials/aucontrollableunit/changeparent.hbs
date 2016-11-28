@@ -1,19 +1,22 @@
-<!-- <link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" /> -->
-<!-- <link href="/public/css/mirastyle.css" rel="stylesheet" type="text/css" /> -->
-<script src="./js/dashboards.js"/></script>
-<script src='./js/utility.js'></script>
-
-<link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
-<script src="./lib/jquery.dataTables.js"></script>
+<link href="./css/jquery.treetable.css" rel="stylesheet" type="text/css" />
 
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
-		<table id="CUParents_treeview" style="box-sizing: border-box; width:90%" cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
+		<table id="CUParents_treeview" cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
+			<thead>
+					<tr>
+						<th scope="col">Assessable Unit</th>
+						<th scope="col">Type</th>
+						<th scope="col">&nbsp;</th>
+					</tr>
+			</thead>
 			<tbody>
 			{{#each CUParents}}
-			  <tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
-				<td><a href="javascript:void(0)" onclick="updateParent({{_id}},{{Name}})">{{Name}}</a></td>
-			  </tr>
+				<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
+					<td>{{Name}}</td>
+					<td>{{DocSubType}}</td>
+					<td><input type="radio" name="CUParents" id="CUP_{{_id}}" value="{{Name}}" dtype="{{DocSubType}}" {{#if (eq _id ../parentid)}}checked {{/if}}/></td>
+				</tr>
 			{{/each}}
 		  </tbody>
 		</table>
@@ -27,6 +30,25 @@
   </div>
 </div>
 <script>
+	$(document).ready(function() {
+		if($("#btn_changeparent").length > 0){
+			$('#btn_changeparent').click(function() {
+				ibmweb.overlay.show('Overlay_Event');
+			});
+		}
+		if($("#btn_okCUParent").length > 0){
+			$("#btn_okCUParent").click(function() {
+				//Save new data
+				//console.log($("input[name='CUParents']:checked").attr("dtype"))
+				
+			});
+		}
+		if($("#btn_cancelCUParent").length > 0){
+			$('#btn_cancelCUParent').click(function() {
+				ibmweb.overlay.hide('Overlay_Event');
+			});
+		}
+	});
 	//Load document's name
 	$("#CUParents_treeview").treetable({expandable: true });
 </script> 
