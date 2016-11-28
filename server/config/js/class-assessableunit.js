@@ -91,7 +91,8 @@ var assessableunit = {
 							"IOT",
 							"IMT",
 							"Country",
-							"CurrentPeriod"
+							"CurrentPeriod",
+							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
@@ -121,7 +122,8 @@ var assessableunit = {
 							"AUNextQtrRating",
 							"Target2Sat",
 							"MIRAAssessmentStatus",
-							"WWBCITAssessmentStatus"
+							"WWBCITAssessmentStatus",
+							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};

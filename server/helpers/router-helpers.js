@@ -48,18 +48,23 @@ var register = function(Handlebars) {
 			return selElem;
 		},
 		//Display icon on Dashboards for each document based on the status field
-		statusIcon:function(statusValue){
-			if(statusValue == "Draft"){
-				return "td_icon_edit";
-			}
-			else if(statusValue == "Final"){
-				return "td_icon_check";
-			}
-			else if(statusValue == "Ready for Review"){
-				return "td_icon_readyreview";
-			}
-			else if(statusValue == ""){
+		statusIcon:function(amstValue, statusValue){
+			if(statusValue == "Retired"){
 				return "td_icon_empty";
+			}
+			else{
+				if(amstValue == "Draft"){
+					return "td_icon_edit";
+				}
+				else if(amstValue == "Final"){
+					return "td_icon_check";
+				}
+				else if(amstValue == "Ready for Review"){
+					return "td_icon_readyreview";
+				}
+				else if(amstValue == ""){
+					return "";
+				}
 			}
 		},
 		ratingDisplay: function(rating, field) {
