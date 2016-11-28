@@ -370,7 +370,9 @@ var assessableunit = {
 				var constiobj = {};
 				var toadd = {};
 				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
-				
+
+				/* CurrentPeriod of Assessable Units will always have the current period of the app */
+				doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
 				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
@@ -1152,11 +1154,11 @@ var assessableunit = {
 							});
 							break;
 						case "BU IMT":
-						
+
 							doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
 							//Documents are without IOT ids
 							if(doc[0].IOT == "") doc[0].IOT= pdoc[0].IOT
-							
+
 							doc[0].ReportingGroupList = [];
 							doc[0].IMTList = [];
 							doc[0].IMTAUList = [];
@@ -1171,7 +1173,7 @@ var assessableunit = {
 									]
 								}
 							};
-							
+
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
 								for (var i = 0; i < resdocs.length; ++i) {
@@ -1179,14 +1181,14 @@ var assessableunit = {
 									if (resdocs[i].DocSubType == "BU IMT") doc[0].IMTAUList.push({"imtid":resdocs[i].IMT});
 								}
 								doc[0].IMTList = util.getIOTChildren(pdoc[0].IOT,"IOT",req);
-								
+
 								for (var i = 0; i < doc[0].IMTAUList.length; ++i) {
 									util.findAndRemove(doc[0].IMTList,'docid',doc[0].IMTAUList[i].imtid)
 								}
-								
+
 								//Documents are without IOT ids
 								doc[0].IOTDisplay = util.resolveGeo(pdoc[0].IOT, "IOT",req);
-								
+
 								doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
