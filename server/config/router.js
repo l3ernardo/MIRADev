@@ -85,9 +85,6 @@ router.get('/businessunit', isAuthenticated, function(req, res){
 
 
 });
-
-
-
 /* Save Business Unit */
 router.post('/savebunit', isAuthenticated, function(req, res){
 	geohierarchy.createGEOHierarchy(req,db).then(function(response){
@@ -113,8 +110,8 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 											req.session.returnTo = '-';
 											req.flash('url', '-');
 											res.redirect(rtn);
-										} else {
-
+										} 
+										else {
 											res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
 										}
 									} else {
@@ -244,24 +241,6 @@ router.get('/bplist', function(req, res) {
 });
 router.get('/bluepages', function(req, res) {
 	res.render('bluepages');
-});
-
-
-/**************************************************************
-DYNAMIC SECTIONS FUNCTIONALITY
-***************************************************************/
-router.get('/testsectionv1', isAuthenticated, function(req, res) {
-	if (req.session.BG != undefined)
-		res.render('testsectionv1', {bg: req.session.BG});
-	else
-		res.render('testsectionv1', {bg: ''});
-});
-
-router.get('/sectionwidget', isAuthenticated, function(req, res) {
-	if (req.session.BG != undefined)
-		res.render('sectionwidget', {bg: req.session.BG});
-	else
-		res.render('sectionwidget', {bg: ''});
 });
 
 /**************************************************************

@@ -4,7 +4,6 @@
 <script src="./js/attachments.js"/></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/jquery-ui.css">
-<!--<link rel="stylesheet" href="./css/jquery-ui.min.css">-->
 
 <input type="hidden" id="docTitle" value="{{CurrentPeriod}} Holistic Rollup Assessment">
 <script>
@@ -37,14 +36,25 @@
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="close" id="close" value="0">
-		<!-- Basic Details -->
-		{{>asmtbusinessunit/basics}}
-		<!-- Exception Details -->
-		{{>asmtexception}}
-		<!-- Contact -->
-		{{>asmtcontact}}<br /><br />
-		<!-- Assessment tabs -->
-		{{>asmtbusinessunit/gpmanagementreport}}<br /><br />
+		{{#if_equal EnteredBU "GTS"}}
+			<!-- Basic Details -->
+			{{>asmtbusinessunitgts/basics}}
+			<!-- Exception Details -->
+			{{>asmtexception}}
+			<!-- Contact -->
+			{{>asmtcontact}}<br /><br />
+			<!-- Assessment tabs -->
+			{{>asmtbusinessunitgts/managementreport}}<br /><br />
+		{{else}}
+			<!-- Basic Details -->
+			{{>asmtbusinessunitgbs/basics}}
+			<!-- Exception Details -->
+			{{>asmtexception}}
+			<!-- Contact -->
+			{{>asmtcontact}}<br /><br />
+			<!-- Assessment tabs -->
+			{{>asmtbusinessunitgbs/managementreport}}<br /><br />
+		{{/if_equal}}
 		<!-- NOTES & LINKS SECTION -->
 		{{>comments}}
 		<!-- BUTTONS AREA -->

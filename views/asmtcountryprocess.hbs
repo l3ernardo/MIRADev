@@ -5,7 +5,6 @@
 <script src="./js/attachments.js"/></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/jquery-ui.css">
-<!--<link rel="stylesheet" href="./css/jquery-ui.min.css">-->
 
 <input type="hidden" id="docTitle" value="{{CurrentPeriod}} Holistic Base Level Assessment">
 <script>
@@ -37,6 +36,7 @@
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
+		<input type="hidden" name="enteredbu" id="docid" value="{{EnteredBU}}">
 		<input type="hidden" name="close" id="close" value="0">
 		<!-- Basic Details -->
 		{{>asmtcountryprocess/basics}}

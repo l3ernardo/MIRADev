@@ -186,8 +186,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].IOT;
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -218,6 +217,8 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
+								doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
+								doc[0].Name = req.session.buname + " - " + doc[0].IOT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
@@ -247,8 +248,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -279,6 +279,9 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
+								doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
+								doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
+								doc[0].Name = req.session.buname + " - " + doc[0].IMT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
@@ -309,8 +312,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].Country;
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -341,6 +343,9 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
+								doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+								doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+								doc[0].Name = req.session.buname + " - " + doc[0].Country;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
@@ -461,6 +466,7 @@ var assessment = {
 						"editor": accessrules.rules.editor,
 						"admin": accessrules.rules.admin,
 						"resetstatus": accessrules.rules.resetstatus,
+						"newunit": 1
 					};
 					doc.push(tmpdoc);
 					doc[0].CurrentPeriod = req.session.quarter;
@@ -653,6 +659,7 @@ var assessment = {
 						case "BU IMT":
 							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
+							doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
 							if (doc[0].EnteredBU == "GTS") {
 								doc[0].PeriodRatingSOD = "NR";
 								doc[0].PeriodRatingCRM = "NR";
@@ -718,6 +725,7 @@ var assessment = {
 							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
 							doc[0].Country = pdoc[0].Country;
+							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							if (doc[0].EnteredBU == "GTS") {
 								doc[0].PeriodRatingSOD = "NR";
 								doc[0].PeriodRatingCRM = "NR";
@@ -1245,6 +1253,37 @@ var assessment = {
 							doc[0].SCProcessTestingFocusItems = req.body.SCProcessTestingFocusItems;
 							break;
 						case "Controllable Unit":
+							if (req.body.CatCU == "Delivery") {
+								doc[0].OtherMetricRating = req.body.OtherMetricRating;
+								doc[0].OtherMetricDate = req.body.OtherMetricDate;
+								doc[0].OtherMetricComment = req.body.OtherMetricComment;
+								doc[0].OtherMetricRatingCat1 = req.body.OtherMetricRatingCat1;
+								doc[0].OtherMetricCommentCat1 = req.body.OtherMetricCommentCat1;
+								doc[0].OtherMetricRatingCat2 = req.body.OtherMetricRatingCat2;
+								doc[0].OtherMetricCommentCat2 = req.body.OtherMetricCommentCat2;
+								doc[0].OtherMetricRatingCat3 = req.body.OtherMetricRatingCat3;
+								doc[0].OtherMetricCommentCat3 = req.body.OtherMetricCommentCat3;
+								doc[0].OtherMetricRatingCat4 = req.body.OtherMetricRatingCat4;
+								doc[0].OtherMetricCommentCat4 = req.body.OtherMetricCommentCat4;
+								doc[0].OtherMetricRatingCat5 = req.body.OtherMetricRatingCat5;
+								doc[0].OtherMetricCommentCat5 = req.body.OtherMetricCommentCat5;
+								doc[0].OtherMetricRatingCat6 = req.body.OtherMetricRatingCat6;
+								doc[0].OtherMetricCommentCat6 = req.body.OtherMetricCommentCat6;
+								doc[0].OtherMetricRatingCat7 = req.body.OtherMetricRatingCat7;
+								doc[0].OtherMetricCommentCat7 = req.body.OtherMetricCommentCat7;
+								doc[0].OtherMetricRatingCat8 = req.body.OtherMetricRatingCat8;
+								doc[0].OtherMetricCommentCat8 = req.body.OtherMetricCommentCat8;
+								doc[0].OtherMetricRatingCat9 = req.body.OtherMetricRatingCat9;
+								doc[0].OtherMetricCommentCat9 = req.body.OtherMetricCommentCat9;
+								doc[0].OtherMetricRatingCat10 = req.body.OtherMetricRatingCat10;
+								doc[0].OtherMetricCommentCat10 = req.body.OtherMetricCommentCat10;
+								doc[0].OtherMetricRatingCat11 = req.body.OtherMetricRatingCat11;
+								doc[0].OtherMetricCommentCat11 = req.body.OtherMetricCommentCat11;
+								doc[0].OtherMetricRatingCat12 = req.body.OtherMetricRatingCat12;
+								doc[0].OtherMetricCommentCat12 = req.body.OtherMetricCommentCat12;
+								doc[0].OtherMetricRatingCat13 = req.body.OtherMetricRatingCat13;
+								doc[0].OtherMetricCommentCat13 = req.body.OtherMetricCommentCat13;
+							}
 						case "Country Process":
 							//---Rating Summary Tab---//
 							doc[0].RatingSummary = req.body.RatingSummary;
@@ -1273,27 +1312,28 @@ var assessment = {
 								doc[0].ARALLQtrRating = req.body.ARALLQtrRating;
 								doc[0].ARALLTarget2Sat = req.body.ARALLTarget2Sat;
 								doc[0].ARALLExplanation = req.body.ARALLExplanation;
-							}
-							//---Operational Metrics Tab Tab---//
-							var metricsID = req.body.opMetricIDs.split(",");
-							var tname, topush;
-							doc[0].OpMetric = [];
-							for (var i = 0; i < metricsID.length; ++i) {
-								if(metricsID[i] != undefined && metricsID[i] != "") {
-									topush = {
-										"id": metricsID[i]
-									};
-									doc[0].OpMetric.push(topush);
-									fname = metricsID[i]+"Name";
-									doc[0].OpMetric[i].name = req.body[fname];
-									fname = metricsID[i]+"Rating";
-									doc[0].OpMetric[i].rating = req.body[fname];
-									fname = metricsID[i]+"TargetSatDate";
-									doc[0].OpMetric[i].targetsatdate = req.body[fname];
-									fname = metricsID[i]+"Finding";
-									doc[0].OpMetric[i].finding = req.body[fname];
-									fname = metricsID[i]+"Action";
-									doc[0].OpMetric[i].action = req.body[fname];
+							} else {
+								//---Operational Metrics Tab Tab---//
+								var metricsID = req.body.opMetricIDs.split(",");
+								var tname, topush;
+								doc[0].OpMetric = [];
+								for (var i = 0; i < metricsID.length; ++i) {
+									if(metricsID[i] != undefined && metricsID[i] != "") {
+										topush = {
+											"id": metricsID[i]
+										};
+										doc[0].OpMetric.push(topush);
+										fname = metricsID[i]+"Name";
+										doc[0].OpMetric[i].name = req.body[fname];
+										fname = metricsID[i]+"Rating";
+										doc[0].OpMetric[i].rating = req.body[fname];
+										fname = metricsID[i]+"TargetSatDate";
+										doc[0].OpMetric[i].targetsatdate = req.body[fname];
+										fname = metricsID[i]+"Finding";
+										doc[0].OpMetric[i].finding = req.body[fname];
+										fname = metricsID[i]+"Action";
+										doc[0].OpMetric[i].action = req.body[fname];
+									}
 								}
 							}
 							//---Others Tab Tab---//
@@ -1373,7 +1413,11 @@ var assessment = {
 					//---Miscellaneous---//
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
+					if (doc[0].Log == undefined || doc[0].Log == "") {
+						doc[0].Log = [];
+					}
 					doc[0].Log.push(addlog);
+
 					db.save(doc[0]).then(function(data){
 						deferred.resolve({"status": 200, "id": data.body.id, "parentid": doc[0].parentid});
 					}).catch(function(err) {
