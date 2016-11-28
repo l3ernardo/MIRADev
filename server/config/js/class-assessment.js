@@ -42,8 +42,8 @@ var assessment = {
 					doc[0].resetstatus = accessrules.rules.resetstatus;
 
 					// Check if Rating Justification and Target to Sat is editable. This is part of the basic section but conditions apply in both read and edit mode
-					if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) )
-						doc[0].RJandT2SEditable = 1;
+					if (doc[0].MIRAStatus != "Final" && ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") )&& doc[0].PeriodRating != "Sat" ){
+						doc[0].RJandT2SEditable = 1;}
 					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
 						doc[0].editmode = 1;
 						// check if Rating is editable
