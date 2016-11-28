@@ -22,13 +22,12 @@
 			</thead>
 			{{#each GPData}}
 			<tr>
-				{{#each col}}
-					{{#if @first}}
-						<td><a href="/assessableunit?id={{../docid}}">{{this}}</a></td>
-					{{else}}
-						<td>{{this}}</td>
-					{{/if}}
-				{{/each}}
+				<td><a href="/assessableunit?id={{../docid}}">{{Name}}</a></td>
+				<td>{{Status}}</td>
+				{{{ratingDisplayView PeriodRatingPrev "PeriodRatingPrev"}}}
+				{{{ratingDisplayView PeriodRating "PeriodRating"}}}
+				{{{ratingDisplayView AUNextQtrRating "AUNextQtrRating"}}}
+				<td>{{Target2Sat}}</td>
 			</tr>
 			{{/each}}
 		</table>

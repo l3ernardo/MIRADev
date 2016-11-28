@@ -91,7 +91,8 @@ var assessableunit = {
 							"IOT",
 							"IMT",
 							"Country",
-							"CurrentPeriod"
+							"CurrentPeriod",
+							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
@@ -121,7 +122,8 @@ var assessableunit = {
 							"AUNextQtrRating",
 							"Target2Sat",
 							"MIRAAssessmentStatus",
-							"WWBCITAssessmentStatus"
+							"WWBCITAssessmentStatus",
+							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
@@ -613,14 +615,12 @@ var assessableunit = {
 							}
 							toadd = {
 								"docid": constidocs[i]._id,
-								"col": [
-									constidocs[i].Name,
-									constidocs[i].Status,
-									constidocs[i].PeriodRatingPrev,
-									constidocs[i].PeriodRating,
-									constidocs[i].AUNextQtrRating,
-									constidocs[i].Target2Sat
-								]
+								"Name": constidocs[i].Name,
+								"Status": constidocs[i].Status,
+								"PeriodRatingPrev": constidocs[i].PeriodRatingPrev,
+								"PeriodRating": constidocs[i].PeriodRating,
+								"AUNextQtrRating": constidocs[i].AUNextQtrRating,
+								"Target2Sat": constidocs[i].Target2Sat
 							};
 							if(constidocs[i].DocSubType == "Global Process") doc[0].GPData.push(toadd);
 							else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
@@ -639,7 +639,7 @@ var assessableunit = {
 							doc[0].Status == "Active" &&
 							hasCurQAsmt == false &&
 							(doc[0].editor || doc[0].admin) &&
-							(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group")
+							(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group" || doc[0].DocSubType == "Account")
 						 ) {
 						doc[0].CreateAsmt = true;
 					}
