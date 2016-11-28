@@ -91,7 +91,8 @@ var assessableunit = {
 							"IOT",
 							"IMT",
 							"Country",
-							"CurrentPeriod"
+							"CurrentPeriod",
+							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
@@ -121,7 +122,8 @@ var assessableunit = {
 							"AUNextQtrRating",
 							"Target2Sat",
 							"MIRAAssessmentStatus",
-							"WWBCITAssessmentStatus"
+							"WWBCITAssessmentStatus",
+							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
 					};
@@ -370,8 +372,9 @@ var assessableunit = {
 				var constiobj = {};
 				var toadd = {};
 				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
+
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
-				//doc[0].CurrentPeriod = req.session.quarter;
+				doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
 				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
@@ -601,16 +604,23 @@ var assessableunit = {
 							}
 						}
 						else {
+							if(constidocs[i].DocSubType == "BU IOT"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
+
+							}else if(constidocs[i].DocSubType == "BU IMT"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IMT, "IMT",req);
+
+							}else if(constidocs[i].DocSubType == "BU Country"){
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].Country, "Country",req);
+							}
 							toadd = {
 								"docid": constidocs[i]._id,
-								"col": [
-									constidocs[i].Name,
-									constidocs[i].Status,
-									constidocs[i].PeriodRatingPrev,
-									constidocs[i].PeriodRating,
-									constidocs[i].AUNextQtrRating,
-									constidocs[i].Target2Sat
-								]
+								"Name": constidocs[i].Name,
+								"Status": constidocs[i].Status,
+								"PeriodRatingPrev": constidocs[i].PeriodRatingPrev,
+								"PeriodRating": constidocs[i].PeriodRating,
+								"AUNextQtrRating": constidocs[i].AUNextQtrRating,
+								"Target2Sat": constidocs[i].Target2Sat
 							};
 							if(constidocs[i].DocSubType == "Global Process") doc[0].GPData.push(toadd);
 							else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
@@ -629,7 +639,7 @@ var assessableunit = {
 							doc[0].Status == "Active" &&
 							hasCurQAsmt == false &&
 							(doc[0].editor || doc[0].admin) &&
-							(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group")
+							(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group" || doc[0].DocSubType == "Account")
 						 ) {
 						doc[0].CreateAsmt = true;
 					}
@@ -1144,6 +1154,11 @@ var assessableunit = {
 							});
 							break;
 						case "BU IMT":
+
+							doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
+							//Documents are without IOT ids
+							if(doc[0].IOT == "") doc[0].IOT= pdoc[0].IOT
+
 							doc[0].ReportingGroupList = [];
 							doc[0].IMTList = [];
 							doc[0].IMTAUList = [];
@@ -1158,6 +1173,7 @@ var assessableunit = {
 									]
 								}
 							};
+
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
 								for (var i = 0; i < resdocs.length; ++i) {
@@ -1165,11 +1181,14 @@ var assessableunit = {
 									if (resdocs[i].DocSubType == "BU IMT") doc[0].IMTAUList.push({"imtid":resdocs[i].IMT});
 								}
 								doc[0].IMTList = util.getIOTChildren(pdoc[0].IOT,"IOT",req);
+
 								for (var i = 0; i < doc[0].IMTAUList.length; ++i) {
 									util.findAndRemove(doc[0].IMTList,'docid',doc[0].IMTAUList[i].imtid)
 								}
-								doc[0].IOTDisplay = req.app.locals.hierarchy.BU_IOT[pdoc[0].IOT].IOT;
-								doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
+
+								//Documents are without IOT ids
+								doc[0].IOTDisplay = util.resolveGeo(pdoc[0].IOT, "IOT",req);
+
 								doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
@@ -1453,7 +1472,7 @@ var assessableunit = {
 		}
 		return deferred.promise;
 	},
-	
+
 	/* Get Parents for Controllable Units */
 	getCUParents: function(req, db){
 		var deferred = q.defer();

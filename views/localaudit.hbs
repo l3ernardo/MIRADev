@@ -4,9 +4,7 @@
 <script src='./lib/fullcalendar.min.js'></script>
 
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
-
 <link rel="stylesheet" href="./css/style.css">
-<!--<link rel="stylesheet" href="./css/jquery-ui.min.css">-->
 <script src='/js/asmtComponentsAudits.js'></script>
 
 <script src="./js/attachments.js"></script>
@@ -31,7 +29,9 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 </script>
 <div class="ibm-container" style="width:80%">
   <p style="text-align:right">
+    {{#unless newunit}}
     <span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+    {{/unless}}
   </p>
   <form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/savelocalaudit">
     <input type="hidden" name="_id" value="{{_id}}">
