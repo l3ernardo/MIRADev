@@ -1410,7 +1410,11 @@ var assessment = {
 					//---Miscellaneous---//
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
+					if (doc[0].Log == undefined || doc[0].Log == "") {
+						doc[0].Log = [];
+					}
 					doc[0].Log.push(addlog);
+
 					db.save(doc[0]).then(function(data){
 						deferred.resolve({"status": 200, "id": data.body.id, "parentid": doc[0].parentid});
 					}).catch(function(err) {
