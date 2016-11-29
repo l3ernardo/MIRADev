@@ -42,8 +42,8 @@ var assessment = {
 					doc[0].resetstatus = accessrules.rules.resetstatus;
 
 					// Check if Rating Justification and Target to Sat is editable. This is part of the basic section but conditions apply in both read and edit mode
-					if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) )
-						doc[0].RJandT2SEditable = 1;
+					if (doc[0].MIRAStatus != "Final" && ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") )&& doc[0].PeriodRating != "Sat" ){
+						doc[0].RJandT2SEditable = 1;}
 					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
 						doc[0].editmode = 1;
 						// check if Rating is editable
@@ -186,7 +186,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -248,7 +248,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -312,7 +312,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -352,6 +352,12 @@ var assessment = {
 							});
 							break;
 						case "Controllable Unit":
+							if (parentdoc[0].ParentDocSubType == "BU Country") {
+								doc[0].hybrid = "No";
+							} else {
+								doc[0].hybrid = "Yes";
+							}
+							doc[0].Portfolio =  parentdoc[0].Portfolio;
 							doc[0].ALLData = fieldCalc.addTestViewData(6,3);
 							doc[0].ARCData = fieldCalc.addTestViewData(4,3);
 							doc[0].RiskData = fieldCalc.addTestViewData(11,3);
