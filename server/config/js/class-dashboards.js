@@ -88,6 +88,7 @@ var dashboard = {
 							"IMT",
 							"Country",
 							"CurrentPeriod",
+							"Portfolio",
 							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]
@@ -119,6 +120,7 @@ var dashboard = {
 							"Target2Sat",
 							"MIRAAssessmentStatus",
 							"WWBCITAssessmentStatus",
+							"Portfolio",
 							"Status"
 						],
 						"sort": [{"LevelType":"asc"},{"DocSubType":"asc"},{"Name":"asc"}]

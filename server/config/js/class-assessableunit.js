@@ -134,7 +134,6 @@ var assessableunit = {
 							selector:{
 								"_id": {"$gt":0},
 								"BusinessUnit": doc[0].BusinessUnit,
-								//"IOT": doc[0].IOT,
 								"$or": [
 									{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["BU IMT","Controllable Unit"]}}] },
 									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
@@ -149,7 +148,6 @@ var assessableunit = {
 							selector:{
 								"_id": {"$gt":0},
 								"BusinessUnit": doc[0].BusinessUnit,
-								//"IMT": doc[0].IMT,
 								"$or": [
 									{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["BU Country","Controllable Unit"]}}] },
 									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
@@ -164,9 +162,9 @@ var assessableunit = {
 							selector:{
 								"_id": {"$gt":0},
 								"BusinessUnit": doc[0].BusinessUnit,
-								//"Country": doc[0].Country,
 								"$or": [
-									{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["Country Process","Controllable Unit"]}}] },
+									{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": "Controllable Unit"}] },
+									{ "$and": [{"key": "Assessable Unit"},{"Country": util.resolveGeo(doc[0].Country, "Country",req)},{"DocSubType": "Country Process"}] },
 									{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
 								]
 							}

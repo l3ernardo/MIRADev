@@ -186,7 +186,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -248,7 +248,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -312,7 +312,7 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -352,6 +352,12 @@ var assessment = {
 							});
 							break;
 						case "Controllable Unit":
+							if (parentdoc[0].ParentDocSubType == "BU Country") {
+								doc[0].hybrid = "No";
+							} else {
+								doc[0].hybrid = "Yes";
+							}
+							doc[0].Portfolio =  parentdoc[0].Portfolio;
 							doc[0].ALLData = fieldCalc.addTestViewData(6,3);
 							doc[0].ARCData = fieldCalc.addTestViewData(4,3);
 							doc[0].RiskData = fieldCalc.addTestViewData(11,3);
