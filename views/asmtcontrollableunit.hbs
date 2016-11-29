@@ -48,24 +48,32 @@
 		{{>asmtexception}}
 		<!-- Contact -->
 		{{>asmtcontact}}<br /><br />
-		<!-- Assessment components guide -->
-		{{#if_equal hybrid "Yes"}}
-			{{>asmtbaselevel/compguidehybrid}}<br /><br />
+
+		{{#if_equal EnteredBU "GTS Transformation"}}
+			<!-- Assessment components guide -->
+			{{>asmtbaselevel/compguidegtstrans}}<br /><br />
+			<!-- Assessment components tabs -->
+			{{>asmtcontrollableunit/blacomponentgtstrans}}<br /><br />
 		{{else}}
-			{{>asmtbaselevel/compguide}}<br /><br />
-		{{/if_equal}}
-		<!-- Assessment components tabs -->
-		{{#if_equal Portfolio "Yes"}}
+			<!-- Assessment components guide -->
 			{{#if_equal hybrid "Yes"}}
-				{{>asmtcontrollableunit/blacomponenthybridportfolio}}<br /><br />
+				{{>asmtbaselevel/compguidehybrid}}<br /><br />
 			{{else}}
-				{{>asmtcontrollableunit/blacomponentportfolio}}<br /><br />
+				{{>asmtbaselevel/compguide}}<br /><br />
 			{{/if_equal}}
-		{{else}}
-			{{#if_equal hybrid "Yes"}}
-				{{>asmtcontrollableunit/blacomponenthybrid}}<br /><br />
+			<!-- Assessment components tabs -->
+			{{#if_equal Portfolio "Yes"}}
+				{{#if_equal hybrid "Yes"}}
+					{{>asmtcontrollableunit/blacomponenthybridportfolio}}<br /><br />
+				{{else}}
+					{{>asmtcontrollableunit/blacomponentportfolio}}<br /><br />
+				{{/if_equal}}
 			{{else}}
-				{{>asmtcontrollableunit/blacomponent}}<br /><br />
+				{{#if_equal hybrid "Yes"}}
+					{{>asmtcontrollableunit/blacomponenthybrid}}<br /><br />
+				{{else}}
+					{{>asmtcontrollableunit/blacomponent}}<br /><br />
+				{{/if_equal}}
 			{{/if_equal}}
 		{{/if_equal}}
 		<!-- NOTES & LINKS SECTION -->

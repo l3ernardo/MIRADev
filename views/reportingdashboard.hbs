@@ -45,9 +45,9 @@
 						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
 						<td>{{DocSubType}}</td>
 						{{/if_equal}}
-						<td>{{{ratingDisplay PeriodRatingPrev}}}</td>
-						<td>{{{ratingDisplay PeriodRating}}}</td>
-						<td>{{{ratingDisplay AUNextQtrRating}}}</td>
+						{{{ratingDisplayView PeriodRatingPrev}}}
+						{{{ratingDisplayView PeriodRating}}}
+						{{{ratingDisplayView AUNextQtrRating}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
@@ -83,9 +83,9 @@
 						{{else}}
 						<td>{{DocSubType}}</td>
 						{{/if_equal}}
-						<td>{{{ratingDisplay PeriodRatingPrev}}}</td>
-						<td>{{{ratingDisplay PeriodRating}}}</td>
-						<td>{{{ratingDisplay AUNextQtrRating}}}</td>
+						{{{ratingDisplayView PeriodRatingPrev}}}
+						{{{ratingDisplayView PeriodRating}}}
+						{{{ratingDisplayView AUNextQtrRating}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
