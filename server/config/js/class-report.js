@@ -1,9 +1,9 @@
 /**************************************************************************************************
- * 
+ *
  * Calendar code for MIRA Web
  * Developed by :   Gabriela S. Pailiacho G.
  * Date: 07 Sep 2016
- * 
+ *
  */
 
 var q  = require("q");
@@ -69,11 +69,11 @@ var report = {
 	assessableunitfile: function(req, db) {
 		var deferred = q.defer();
 		try{
-			
+
 			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
 				var objAUFR = {
 					"selector": {
-						
+
 							//"_id": { "$gt": 0 },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
@@ -90,7 +90,7 @@ var report = {
 						"Name": { "$gt": null },
 						"key": "Assessable Unit",
 						"Status": "Active",
-						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}], 
+						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 						"MIRABusinessUnit": req.session.businessunit
 					},
 					"sort": [{"Name":"asc"}]
@@ -99,13 +99,44 @@ var report = {
 			db.find(objAUFR).then(function(data){
 				var doc = data.body.docs;
 				var len = doc.length;
-				var view_auFileReport = [];
+        var exportInfo = [];
+        var view_auFileReport = [];
 				if(len > 0){
 					for (var i = 0; i < len; i++){
+            var tmp={
+              Name: ""+doc[i].Name,
+              DocSubType: ""+doc[i].DocSubType,
+              Status: ""+doc[i].Status,
+              Portfolio: ""+doc[i].Portfolio,
+              AuditableFlag: ""+doc[i].AuditableFlag,
+              AuditProgram: ""+doc[i].AuditProgram,
+              IOT: ""+doc[i].IOT,
+              IMT: ""+doc[i].IMT,
+              Country: ""+doc[i].Country,
+              CUSize: ""+doc[i].CUSize,
+              MetricsValue: ""+doc[i].MetricsValue,
+              ARCFrequency: ""+doc[i].ARCFrequency,
+              PeriodRatingPrev4: ""+doc[i].PeriodRatingPrev4,
+              PeriodRatingPrev3: ""+doc[i].PeriodRatingPrev3,
+              PeriodRatingPrev2: ""+doc[i].PeriodRatingPrev2,
+              PeriodRatingPrev: ""+doc[i].PeriodRatingPrev,
+              PeriodRating: ""+doc[i].PeriodRating,
+              AUNextQtrRating: ""+doc[i].AUNextQtrRating,
+              Target2Sat: ""+doc[i].Target2Sat,
+              Owner: ""+doc[i].Owner,
+              Focals: ""+doc[i].Focals,
+              Coordinators: ""+doc[i].Coordinators,
+              Readers: ""+doc[i].Readers,
+              AdditionalEditors: ""+doc[i].AdditionalEditors,
+              AdditionalReaders: ""+doc[i].AdditionalReaders
+            }
+            exportInfo.push(tmp);
 						view_auFileReport.push(doc[i]);
 					}
 				}
-				deferred.resolve({"status": 200, "doc":view_auFileReport});
+        //console.log(view_auFileReport.doc);
+        //view_auFileReport.exportInfo = exportInfo;
+				deferred.resolve({"status": 200, "doc":view_auFileReport,"exportInfo": exportInfo});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -118,11 +149,11 @@ var report = {
 	controllableunitfile: function(req, db) {
 		var deferred = q.defer();
 		try{
-			
+
 			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
 				var objAUFR = {
 					"selector": {
-						
+
 							//"_id": { "$gt": 0 },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
@@ -141,7 +172,7 @@ var report = {
 						"key": "Assessable Unit",
 						"Status": "Active",
 						"$or": [{"DocSubType":"Controllable Unit"},{"DocSubType":"Country Process", "CUFlag": "Yes"}],
-						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}], 
+						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 						"MIRABusinessUnit": req.session.businessunit
 					},
 					"sort": [{"Name":"asc"}]
@@ -151,13 +182,43 @@ var report = {
 				var doc = data.body.docs;
 				var len= doc.length;
 				var view_cuFileReport = [];
+        var exportInfo = [];
 				if(len > 0){
 					for (var i = 0; i < len; i++){
+            var tmp={
+              Name: ""+doc[i].Name,
+              IOT: ""+doc[i].IOT,
+              IMT: ""+doc[i].IMT,
+              Country: ""+doc[i].Country,
+              Status: ""+doc[i].Status,
+              Portfolio: ""+doc[i].Portfolio,
+              DocSubType: ""+doc[i].DocSubType,
+              AuditableFlag: ""+doc[i].AuditableFlag,
+              Category: ""+doc[i].Category,
+              Subcategory: ""+doc[i].Subategory,
+              AuditProgram: ""+doc[i].AuditProgram,
+              CUSize: ""+doc[i].CUSize,
+              MetricsCriteria: ""+doc[i].MetricsCriteria,
+              MetricsValue: ""+doc[i].MetricsValue,
+              ARCFrequency: ""+doc[i].ARCFrequency,
+              PeriodRatingPrev: ""+doc[i].PeriodRatingPrev,
+              PeriodRating: ""+doc[i].PeriodRating,
+              AUNextQtrRating: ""+doc[i].AUNextQtrRating,
+              Target2SatPrev: ""+doc[i].Target2SatPrev,
+              Target2Sat: ""+doc[i].Target2Sat,
+              Owner: ""+doc[i].Owner,
+              Focals: ""+doc[i].Focals,
+              Coordinators: ""+doc[i].Coordinators,
+              Readers: ""+doc[i].Readers,
+              AdditionalEditors: ""+doc[i].AdditionalEditors,
+              AdditionalReaders: ""+doc[i].AdditionalReaders
+            }
+            exportInfo.push(tmp);
 						view_cuFileReport.push(doc[i]);
 					}
 				}
 				view=JSON.stringify(view_cuFileReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_cuFileReport});
+				deferred.resolve({"status": 200, "doc":view_cuFileReport,"exportInfo":exportInfo});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -171,7 +232,7 @@ var report = {
 		var deferred = q.defer();
 		var F=[];
 		try{
-			
+
 			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
 				var objSE = {
 					"selector": {
@@ -191,9 +252,9 @@ var report = {
 					"selector": {
 						"LevelTypeSE": { "$gt": null },
 						"Name": { "$gt": null },
-						"key": "Assessable Unit",						
+						"key": "Assessable Unit",
 					    "$or":[{"$not": {"MIRAAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Reviewed"}}],
-						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}], 
+						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 						"MIRABusinessUnit": req.session.businessunit
 					},
 					//"sort": [{"LevelTypeSE":"asc"}]
@@ -205,7 +266,7 @@ var report = {
 				var len= doc.length;
 				var view_statExcReport = [];
 				if(len > 0){
-					
+
 				   //sorting
             var n ;
             var result;
@@ -248,7 +309,21 @@ for (i=0;i<len;i++)
 
 	}
 }
+          var exportInfo = [];
 					for (var i = 0; i < F.length; i++){
+            var tmp = {
+              GroupingName: F[i].GroupingName,
+              IOT: F[i].IOT,
+              DocSubType:F[i].DocSubType,
+              Name: F[i].Name,
+              MIRAAssessmentStatus: F[i].MIRAAssessmentStatus,
+              WWBCITAssessmentStatus: F[i].WWBCITAssessmentStatus,
+              PeriodRatingPrev: F[i].PeriodRatingPrev,
+							PeriodRating: F[i].PeriodRating,
+							AUNextQtrRating: F[i].AUNextQtrRating,
+							Target2Sat:F[i].Target2Sat
+						}
+            exportInfo.push(tmp);
 						view_statExcReport.push({
 							_id: F[i]._id,
 							//LevelTypeSE:doc[i].LevelTypeSE,
@@ -261,7 +336,7 @@ for (i=0;i<len;i++)
 							MIRAAssessmentStatus: F[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: F[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: F[i].PeriodRatingPrev,
-							PeriodRating: F[i].PeriodRating,							
+							PeriodRating: F[i].PeriodRating,
 							AUNextQtrRating: F[i].AUNextQtrRating,
 							Target2Sat:F[i].Target2Sat,
 							Owner:F[i].Owner,
@@ -272,7 +347,7 @@ for (i=0;i<len;i++)
 					}
 				}
 				view=JSON.stringify(view_statExcReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_statExcReport});
+				deferred.resolve({"status": 200, "doc":view_statExcReport, "exportInfo": exportInfo});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -286,17 +361,17 @@ for (i=0;i<len;i++)
 		var deferred = q.defer();
 		var G=[];
 		try{
-			
+
 			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
 				var objAUF = {
 					"selector": {
 						    "LevelTypeAUF": { "$gt": null },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
-							"Status": "Active",							
+							"Status": "Active",
 							"$or": [{"DocSubType":"Controllable Unit"},{"DocSubType":"Country Process"},{"DocSubType":"BU Country"},{"DocSubType":"Total"}],
 					        "AuditableFlag": "Yes",
-							"MIRABusinessUnit": req.session.businessunit 
+							"MIRABusinessUnit": req.session.businessunit
 					},
 					"sort": [{"LevelTypeAUF":"asc"},{"Name":"asc"}]
 				};
@@ -310,7 +385,7 @@ for (i=0;i<len;i++)
 						"Status": "Active",
 						"$or": [{"DocSubType":"Controllable Unit"},{"DocSubType":"Country Process"},{"DocSubType":"BU Country"},{"DocSubType":"Total"}],
 					    "AuditableFlag": "Yes",
-						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}], 
+						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 						"MIRABusinessUnit": req.session.businessunit
 					},
 					"sort": [{"LevelTypeAUF":"asc"},{"Name":"asc"}]
@@ -388,8 +463,31 @@ for (i=0;i<len;i++)
 
 	}
 }
+          var exportInfo = [];
 					for (var i = 0; i <  G.length; i++){
+            var tmp = {
+            Total: G[i].Total,
+            CategoryName: G[i].CategoryName,
+            Name: G[i].Name,
+            Count:total,
+            DocSubType:G[i].DocSubType,
+            AuditableProcess: "",
+            AuditReadiness: "",
+            CQ4: "",
+            CQ3: "",
+            CQ2: "",
+            CQ1: "",
+            AUNextQtrRating: G[i].AUNextQtrRating,
+            Target2Sat:G[i].Target2Sat,
+            NoIdea: "",
+            MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
+            WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
+            PeriodRatingPrev: G[i].PeriodRatingPrev,
+            PeriodRating: G[i].PeriodRating
+          };
+          exportInfo.push(tmp);
 						if(G[i].Name=='Total'){
+
 							view_auFileReport.push({
 							_id: G[i]._id,
 							parentidauf:G[i].parentidauf,
@@ -397,11 +495,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -409,7 +507,7 @@ for (i=0;i<len;i++)
 							AuditableFlag: G[i].AuditableFlag,
 							AuditProgram: G[i].AuditProgram,
 							Count:total
-						});							
+						});
 						}
 						else if(G[i].Name=='Sat'){
 							view_auFileReport.push({
@@ -419,11 +517,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -432,7 +530,7 @@ for (i=0;i<len;i++)
 							AuditProgram: G[i].AuditProgram,
 							Count:sat
 						});
-							
+
 						}
 						else if(G[i].Name=='Unsat'){
 							view_auFileReport.push({
@@ -442,11 +540,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -454,7 +552,7 @@ for (i=0;i<len;i++)
 							AuditableFlag: G[i].AuditableFlag,
 							AuditProgram: G[i].AuditProgram,
 							Count:unsat
-						});							
+						});
 						}
 						else if(G[i].Name=='Pending'){
 							view_auFileReport.push({
@@ -464,11 +562,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -476,7 +574,7 @@ for (i=0;i<len;i++)
 							AuditableFlag: G[i].AuditableFlag,
 							AuditProgram: G[i].AuditProgram,
 							Count:pending
-						});							
+						});
 						}
 						else if(G[i].Name=='Marg'){
 							view_auFileReport.push({
@@ -486,11 +584,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -498,7 +596,7 @@ for (i=0;i<len;i++)
 							AuditableFlag: G[i].AuditableFlag,
 							AuditProgram: G[i].AuditProgram,
 							Count:marg
-						});							
+						});
 						}
 						else if(G[i].Name=='Exempt'){
 							view_auFileReport.push({
@@ -508,11 +606,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -520,7 +618,7 @@ for (i=0;i<len;i++)
 							AuditableFlag: G[i].AuditableFlag,
 							AuditProgram: G[i].AuditProgram,
 							Count:exempt
-						});							
+						});
 						}
 						else if(G[i].Name=='NR'){
 							view_auFileReport.push({
@@ -530,11 +628,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -542,7 +640,7 @@ for (i=0;i<len;i++)
 							AuditableFlag: G[i].AuditableFlag,
 							AuditProgram: G[i].AuditProgram,
 							Count:nr
-						});							
+						});
 						}
 						else
 						{
@@ -553,11 +651,11 @@ for (i=0;i<len;i++)
 							CategoryName: G[i].CategoryName,
 							Name: G[i].Name,
 							DocSubType:G[i].DocSubType,
-							Status: G[i].Status,			
+							Status: G[i].Status,
 							MIRAAssessmentStatus: G[i].MIRAAssessmentStatus,
 							WWBCITAssessmentStatus: G[i].WWBCITAssessmentStatus,
 							PeriodRatingPrev: G[i].PeriodRatingPrev,
-							PeriodRating: G[i].PeriodRating,							
+							PeriodRating: G[i].PeriodRating,
 							AUNextQtrRating: G[i].AUNextQtrRating,
 							Target2Sat:G[i].Target2Sat,
 							Owner:G[i].Owner,
@@ -569,7 +667,7 @@ for (i=0;i<len;i++)
 					}
 				}
 				view=JSON.stringify(view_auFileReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_auFileReport});
+				deferred.resolve({"status": 200, "doc":view_auFileReport, "exportInfo": exportInfo});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -584,7 +682,7 @@ for (i=0;i<len;i++)
 		if(req.session.businessunit=='GBS')
 		{
 			BU="IBM GBS";
-		} 
+		}
 		else if(req.session.businessunit=='GTS')
 		{
 			BU="IBM GTS";
@@ -593,8 +691,8 @@ for (i=0;i<len;i++)
 		{
 			BU="IBM GTS Transformation";
 		}
-		try{			
-			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){		
+		try{
+			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
 				var objCUALL = {
 					"selector": {
 						    "AssessableUnitName": { "$gt": null },
@@ -616,23 +714,35 @@ for (i=0;i<len;i++)
 							"key": "Assessment",
 							"ParentDocSubType":"Controllable Unit",
 							"$not":{"AUStatus":"Retired"},
-							"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}], 
+							"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 							"BusinessUnit": BU
 							//"BusinessUnit": req.session.businessunit
 					},
 					"sort": [{"AssessableUnitName":"asc"},{"CurrentPeriod":"asc"}]
-				};		
+				};
 			}
-			
+
 			db.find(objCUALL).then(function(data){
 				var doc = data.body.docs;
 				var len= doc.length;
 				var view_cuALLReport = [];
+        var exportInfo = [];
 				if(len > 0){
 					for (var i = 0; i < len; i++){
 						var a=doc[i]._id; var b=doc[i].AssessableUnitName;var c=doc[i].IOT;
+            var tmp = {
+							IOT: doc[i].IOT,
+							IMT: doc[i].IMT,
+							AssessableUnitName: doc[i].AssessableUnitName,
+							Quarter: doc[i].CurrentPeriod,
+							Response:doc[i].ARALLResponse,
+							Findings:doc[i].ARALLQtrRating,
+							Target2Sat:doc[i].ARALLTarget2Sat,
+							Explanation: doc[i].ARALLExplanation
+            };
+            exportInfo.push(tmp);
 						view_cuALLReport.push(
-						{						    
+						{
 							IOT: doc[i].IOT,
 							IMT: doc[i].IMT,
 							AssessableUnitName: doc[i].AssessableUnitName,
@@ -642,7 +752,7 @@ for (i=0;i<len;i++)
 							Target2Sat:doc[i].ARALLTarget2Sat,
 							Explanation: doc[i].ARALLExplanation,
 							_id: doc[i]._id
-						})												
+						})
 					}
 				}
 				view=JSON.stringify(view_cuALLReport, 'utf8');

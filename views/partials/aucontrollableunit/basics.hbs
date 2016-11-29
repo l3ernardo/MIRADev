@@ -8,13 +8,7 @@
 			<tr>
 				<td width="25%"><label for="ParentSubject">Parent {{ParentDocSubType}}:</label></td>
 				<td>
-					<span><input type="text" name="ParentSubject" value="{{ParentSubject}}" size="100" maxlength="300">
-						<input class="ibm-btn-arrow-pri" type="button" id="btn_changeparent" value="Change Parent"/>
-					</span>
-					<div id="Overlay_Event" title="CU Parent Selection" class="ibm-common-overlay ibm-overlay-alt-two" style="box-sizing: border-box;">
-						{{>aucontrollableunit/changeparent}}
-					</div>
-					<div id="divSavingImg" class="ibm-common-overlay"><center><p class="ibm-spinner-large"></p><strong>Saving...</strong><p>&nbsp;</p></center></div>
+					<span><input type="text" name="ParentSubject" value="{{ParentSubject}}" size="100" maxlength="300"></span>
 				</td>
 			</tr>
 		{{else}}

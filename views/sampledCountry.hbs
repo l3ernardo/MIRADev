@@ -1,8 +1,6 @@
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
-<!--<link rel="stylesheet" href="./css/jquery-ui.min.css">-->
-
 
 <input type="hidden" id="docTitle" value="Sampled Country Process Key Control">
 <input type="hidden" id="docSubTitle" value="{{subtitle}}">
@@ -18,7 +16,9 @@
 </script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
+		{{#unless newunit}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+		{{/unless}}
 	</p>
 
 

@@ -83,7 +83,7 @@ $(document).ready(function(){
 	});
 	//Code for Cancel button
 	$('#btn_cancel').click(function() {
-		window.location.href = "/processdashboard";
+		window.location.href = $("li#breadcrumb > a").attr("href");
 	});
 	//Code for Save button
 	$('#btn_save').click(function(evt) {
