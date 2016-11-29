@@ -232,13 +232,13 @@ var dashboard = {
 					for(var i = 0; i < doc.length; i++){
 						if(req.session.quarter == doc[i].CurrentPeriod){
 							if(doc[i].DocSubType == "BU IOT"){
-									doc[i].Name = util.resolveGeo(doc[i].IOT, "IOT",req);
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
 
 							}else if(doc[i].DocSubType == "BU IMT"){
-									doc[i].Name = util.resolveGeo(doc[i].IMT, "IMT",req);
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
 
 							}else if(doc[i].DocSubType == "BU Country"){
-									doc[i].Name = util.resolveGeo(doc[i].Country, "Country",req);
+									doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
 							}
 						}
 						if(doc[i].LevelType == 1){
@@ -326,13 +326,13 @@ var dashboard = {
 					for(var i = 0; i < doc.length; i++){
 						if(req.session.quarter == doc[i].CurrentPeriod){
 						if(doc[i].DocSubType == "BU IOT"){
-								doc[i].Name = util.resolveGeo(doc[i].IOT, "IOT",req);
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
 
 						}else if(doc[i].DocSubType == "BU IMT"){
-								doc[i].Name = util.resolveGeo(doc[i].IMT, "IMT",req);
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
 
 						}else if(doc[i].DocSubType == "BU Country"){
-								doc[i].Name = util.resolveGeo(doc[i].Country, "Country",req);
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
 						}
 					}
 					}

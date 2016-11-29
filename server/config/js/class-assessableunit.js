@@ -259,13 +259,13 @@ var assessableunit = {
 						}
 						else {
 							if(constidocs[i].DocSubType == "BU IOT"){
-									constidocs[i].Name = util.resolveGeo(constidocs[i].IOT, "IOT",req);
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
 
 							}else if(constidocs[i].DocSubType == "BU IMT"){
-									constidocs[i].Name = util.resolveGeo(constidocs[i].IMT, "IMT",req);
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IMT, "IMT",req);
 
 							}else if(constidocs[i].DocSubType == "BU Country"){
-									constidocs[i].Name = util.resolveGeo(constidocs[i].Country, "Country",req);
+									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].Country, "Country",req);
 							}
 							toadd = {
 								"docid": constidocs[i]._id,
@@ -432,7 +432,7 @@ var assessableunit = {
 											if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 										}
 										doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
-										doc[0].Name = doc[0].IOT;
+										doc[0].Name = req.session.buname + " - " + doc[0].IOT;
 										deferred.resolve({"status": 200, "doc": doc});
 									}).catch(function(err) {
 										console.log("[assessableunit][iotlists]" + resdata.error);
@@ -459,12 +459,12 @@ var assessableunit = {
 										doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 										doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 										if (doc[0].DocSubType == "BU IMT") {
-											doc[0].Name = doc[0].IMT;
-											doc[0].BUIOT = doc[0].IOT;
+											doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+											doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 										} else {
 											doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-											doc[0].BUIMT = doc[0].IMT;
-											doc[0].Name = doc[0].Country;
+											doc[0].BUIMT = req.session.buname + " - " + doc[0].IMT;
+											doc[0].Name = req.session.buname + " - " + doc[0].Country;
 										}
 										deferred.resolve({"status": 200, "doc": doc});
 									}).catch(function(err) {
@@ -604,7 +604,7 @@ var assessableunit = {
 										doc[0].BRGMembershipDisp = brgmNames;
 										doc[0].RGRollupDisp = rgrNames;
 										doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
-										doc[0].Name = doc[0].IOT;
+										doc[0].Name = req.session.buname + " - " + doc[0].IOT;
 										deferred.resolve({"status": 200, "doc": doc});
 									}).catch(function(err) {
 										console.log("[assessableunit][countrylistIncluded]" + err);
@@ -617,13 +617,13 @@ var assessableunit = {
 									doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 									if (doc[0].DocSubType == "BU IMT") {
 										doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
-										doc[0].Name = doc[0].IMT;
-										doc[0].BUIOT = doc[0].IOT;
+										doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+										doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 									} else {
 										doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 										doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-										doc[0].Name = doc[0].Country;
-										doc[0].BUIMT = doc[0].IMT;
+										doc[0].Name = req.session.buname + " - " + doc[0].Country;
+										doc[0].BUIMT = req.session.buname + " - " + doc[0].IMT;
 									}
 								case "Country Process":
 								case "Account":
@@ -843,7 +843,7 @@ var assessableunit = {
 								//Documents are without IOT ids
 								doc[0].IOTDisplay = util.resolveGeo(pdoc[0].IOT, "IOT",req);
 
-								doc[0].BUIOT = doc[0].IOT;
+								doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								console.log("[assessableunit][IMTLists][NewIMT]" + resdata.error);
@@ -875,7 +875,7 @@ var assessableunit = {
 								}
 								doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
 								doc[0].IMT = util.resolveGeo(pdoc[0].IMT,"IMT",req);
-								doc[0].BUIMT = doc[0].IMT;
+								doc[0].BUIMT = req.session.buname + " - " + doc[0].IMT;
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								console.log("[assessableunit][BUCountryLists][NewBUCountry]" + resdata.error);
@@ -946,7 +946,7 @@ var assessableunit = {
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].BUCountryIOT = req.body.BUCountryIOT;
 							doc[0].IOT = req.body.IOT;
-							doc[0].Name = util.resolveGeo(doc[0].IOT, "IOT",req);
+							doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].BUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "BU IMT":
@@ -954,7 +954,7 @@ var assessableunit = {
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = req.body.IMT;
-							doc[0].Name = util.resolveGeo(doc[0].IMT, "IMT",req);
+							doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].IMT, "IMT",req);
 							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 							break;
 						case "BU Country":
@@ -963,7 +963,7 @@ var assessableunit = {
 							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
 							doc[0].Country = req.body.Country;
-							doc[0].Name = util.resolveGeo(doc[0].Country, "Country",req);
+							doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].Country, "Country",req);
 							doc[0].ExcludeGeo = req.body.ExcludeGeo;
 							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 							break;
@@ -1167,11 +1167,11 @@ var assessableunit = {
 				for(var i = 0; i < doc.length; i++){
 					if(req.session.quarter == doc[i].CurrentPeriod){
 						if(doc[i].DocSubType == "BU IOT"){
-								doc[i].Name = util.resolveGeo(doc[i].IOT, "IOT",req);
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
 						}else if(doc[i].DocSubType == "BU IMT"){
-								doc[i].Name = util.resolveGeo(doc[i].IMT, "IMT",req);
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
 						}else if(doc[i].DocSubType == "BU Country"){
-								doc[i].Name = util.resolveGeo(doc[i].Country, "Country",req);
+								doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
 						}
 					}
 					if(doc[i].LevelType == 1){
