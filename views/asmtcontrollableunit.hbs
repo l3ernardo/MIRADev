@@ -36,7 +36,7 @@
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
 		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
-		<input type="hidden" name="country" value="{{Country}}">
+		<input type="hidden" name="hybrid" value="{{hybrid}}">
 		<input type="hidden" name="CatCU" value="{{CatCU}}">
 		<input type="hidden" name="portfolio" value="{{Portfolio}}">
 		<input type="hidden" name="enteredbu" id="docid" value="{{EnteredBU}}">
@@ -49,24 +49,24 @@
 		<!-- Contact -->
 		{{>asmtcontact}}<br /><br />
 		<!-- Assessment components guide -->
-		{{#if Country}}
-			{{>asmtbaselevel/compguide}}<br /><br />
-		{{else}}
+		{{#if_equal hybrid "Yes"}}
 			{{>asmtbaselevel/compguidehybrid}}<br /><br />
-		{{/if}}
+		{{else}}
+			{{>asmtbaselevel/compguide}}<br /><br />
+		{{/if_equal}}
 		<!-- Assessment components tabs -->
 		{{#if_equal Portfolio "Yes"}}
-			{{#if Country}}
-				{{>asmtcontrollableunit/blacomponentportfolio}}<br /><br />
-			{{else}}
+			{{#if_equal hybrid "Yes"}}
 				{{>asmtcontrollableunit/blacomponenthybridportfolio}}<br /><br />
-			{{/if}}
-		{{else}}
-			{{#if Country}}
-				{{>asmtcontrollableunit/blacomponent}}<br /><br />
 			{{else}}
+				{{>asmtcontrollableunit/blacomponentportfolio}}<br /><br />
+			{{/if_equal}}
+		{{else}}
+			{{#if_equal hybrid "Yes"}}
 				{{>asmtcontrollableunit/blacomponenthybrid}}<br /><br />
-			{{/if}}
+			{{else}}
+				{{>asmtcontrollableunit/blacomponent}}<br /><br />
+			{{/if_equal}}
 		{{/if_equal}}
 		<!-- NOTES & LINKS SECTION -->
 		{{>comments}}
