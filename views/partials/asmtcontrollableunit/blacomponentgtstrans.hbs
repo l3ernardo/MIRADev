@@ -1,17 +1,15 @@
 <h3>{{AssessableUnitName}}</h3><br/><br/>
 <div class="ibm-columns ibm-graphic-tabs">
-
 	<div class="ibm-tab-section">
 		<ul class="ibm-tabs">
 			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
 			<li id="basiccontrol-li"><a href="javascript:void(0)" class="mira-subdata">Basics of Control</a></li>
-			<li id="cprating-li"><a href="javascript:void(0)" class="mira-subdata">Process Ratings</a></li>
 			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Assessment</a></li>
 			<li id="riskmsdcommit-li"><a href="javascript:void(0)" class="mira-subdata">Open Risks &amp; Missed Commits</a></li>
 			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
 			<li id="kctest-li"><a href="javascript:void(0)" class="mira-subdata">Key Controls Testing</a></li>
 			<li id="opmetric-li"><a href="javascript:void(0)" class="mira-subdata">Operational Metrics</a></li>
-			<li id="other-li"><a href="javascript:void(0)" class="mira-subdata">Other Considerations</a></li>
+			<li id="other-li"><a href="javascript:void(0)" class="mira-subdata">CTRT Metrics</a></li>
 		</ul>
 	</div>
 	<div id="summary" class="ibm-tabs-content">
@@ -19,9 +17,6 @@
 	</div>
 	<div id="basiccontrol" class="ibm-tabs-content" style='display : none'>
 		{{>asmtbaselevel/basicsofcontrol}}
-	</div>
-	<div id="cprating" class="ibm-tabs-content" style='display : none'>
-		{{>asmtcontrollableunit/processratings}}
 	</div>
 	<div id="auditreadyasmt" class="ibm-tabs-content" style='display : none'>
 		{{>asmtbaselevel/auditreadinessasmt}}
@@ -35,23 +30,11 @@
 	<div id="kctest" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/kctesting}}
 	</div>
-	{{#if_equal EnteredBU "GTS"}}
-		{{#if_equal CatCU "Delivery"}}
-			<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-				{{>asmtcontrollableunit/operationalmetricssod}}
-			</div>
-		{{else}}
-			<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-				{{>asmtcontrollableunit/operationalmetricscrm}}
-			</div>
-		{{/if_equal}}
-	{{else}}
-		<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-			{{>asmtcontrollableunit/operationalmetricsgbs}}
-		</div>
-	{{/if_equal}}
+	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
+		{{>asmtcontrollableunit/operationalmetricssod}}
+	</div>
 	<div id="other" class="ibm-tabs-content" style='display : none'>
-		{{>asmtcontrollableunit/others}}
+		{{>asmtcontrollableunit/ctrt}}
 	</div>
 
 </div>
