@@ -42,9 +42,17 @@
 						<td>{{{ratingDisplay PeriodRating}}}</td>
 						<td>{{{ratingDisplay AUNextQtrRating}}}</td>
 						<td>{{Target2Sat}}</td>
-						<td class="{{{statusIcon MIRAAssessmentStatus}}}" title="{{MIRAAssessmentStatus}}"></td>
-						<td class="{{{statusIcon WWBCITAssessmentStatus}}}" title="{{WWBCITAssessmentStatus}}"></td>
-						<td>{{DocSubType}}</td>
+						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
+						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
+						{{#if_equal DocSubType "Controllable Unit"}}
+							{{#if_equal Portfolio "Yes"}}
+								<td>Portfolio CU</td>
+							{{else}}
+								<td>Standalone CU</td>
+							{{/if_equal}}
+						{{else}}
+							<td>{{DocSubType}}</td>
+						{{/if_equal}}
 					</tr>
 				{{/each}}
 				</tbody>
@@ -74,8 +82,8 @@
 						<td>{{{ratingDisplay PeriodRating}}}</td>
 						<td>{{{ratingDisplay AUNextQtrRating}}}</td>
 						<td>{{Target2Sat}}</td>
-						<td class="{{{statusIcon MIRAAssessmentStatus}}}" title="{{MIRAAssessmentStatus}}"></td>
-						<td class="{{{statusIcon WWBCITAssessmentStatus}}}" title="{{WWBCITAssessmentStatus}}"></td>
+						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
+						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
 						<td>{{DocSubType}}</td>
 					</tr>
 				{{/each}}

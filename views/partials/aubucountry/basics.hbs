@@ -2,17 +2,13 @@
 	{{!-- Basic section - Edit Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 		<caption class="mira-caption"><em>Basics</em></caption>
-		<tr><td width="25%">Parent BU IMT:</td><td>{{Name}}</td></tr>
+		<tr><td width="25%">Parent BU IMT:</td><td>{{BUIMT}}</td></tr>
 		<tr>
 			{{#if newunit}}
 				<td><label for="Country">Country:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-						<input type="hidden" name="IOT" id="IOT" value="{{IOT}}">
-						<input type="hidden" name="IMT" id="IMT" value="{{IMT}}">
-						<input type="hidden" name="Country" id="Country" value="{{Country}}">
-						<input type="hidden" name="Countryid" id="Countryid" value="{{Countryid}}">
-						{{{uniqueSelect "countryname" CountryList "docid" "name" Country}}}
+						{{{uniqueSelect "Country" CountryList "docid" "name" Country}}}
 					</span>
 				</td>
 			{{else}}
@@ -36,7 +32,7 @@
 	{{!-- Basic section - Read Mode --}}
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
-		<tr><td width="25%">Parent BU IMT:</td><td>{{Name}}</td></tr>
+		<tr><td width="25%">Parent BU IMT:</td><td>{{BUIMT}}</td></tr>
 		<tr><td>Country:</td><td>{{Country}}</td></tr>
 		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>

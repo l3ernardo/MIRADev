@@ -90,8 +90,11 @@ var accessupdates = {
 	},
 	validateEntryIsNotEmpty: function(entry, listOfEntries) {
 		if(entry != undefined && entry != "") {
+			//error
+			if(entry.indexOf("@") != -1){
 			entry = entry.split("(")[1].split(")")[0];
 			listOfEntries.push(entry);
+		}
 		}
 	}
 

@@ -1,8 +1,10 @@
 <table id="assessment_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Holistic Assessment</em></caption>
+	{{#if_not_equal RatingJustification ""}}
 	<tr>
 		<td width="25%"><b class="ibm-important">{{CurrentPeriod}}</b> Rating justification:</td><td>{{RatingJustification}}</td>
 	</tr>
+	{{/if_not_equal}}
 </table>
 <div class="ibm-columns ibm-graphic-tabs">
 	{{#if CreateAsmt}}
@@ -19,7 +21,7 @@
 		{{#each AssessmentData}}
 		<tr>
 			<td><a href="/assessment?id={{docid}}">{{CurrentPeriod}}</a></td>
-			{{{ratingDisplayView PeriodRating}}}
+			{{{ratingDisplayView PeriodRating "PeriodRating"}}}
 			<td>{{Owner}}</td>
 			<td>{{Target2Sat}}</td>
 		</tr>

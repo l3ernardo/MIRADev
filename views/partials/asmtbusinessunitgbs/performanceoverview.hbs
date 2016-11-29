@@ -1,0 +1,287 @@
+<table id="po_table" class="ibm-data-table">
+	<input type="hidden" name="opMetricIDs" id="opMetricIDs" value="{{opMetricIDs}}">
+	{{#if editmode}}
+		<tr class="ar-asmt-content">
+			<td>
+				<table width="100%" class="ibm-data-table">
+					<tr>
+						<th class="ar-asmt-label" width="25%">Performance Indicators</th>
+						<th class="ar-asmt-label" width="10%"></th>
+						<th class="ar-asmt-label" width="65%">Summary/Comments</th>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label"><label for="OverallAssessmentComments">Overall Assessment</label></td>
+						{{{ratingDisplayView PeriodRating}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="OverallAssessmentComments" type="text" name="OverallAssessmentComments">{{OverallAssessmentComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label"><label for="KCFRTestingComments">KCFR Defect Rate</label></td>
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="KCFRTestingComments" type="text" name="KCFRTestingComments">{{KCFRTestingComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label"><label for="KCOTestingComments">KCO Defect Rate</label></td>
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="KCOTestingComments" type="text" name="KCOTestingComments">{{KCOTestingComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label"><label for="CorpIAComments">CHQ Internal Audit Score</label></td>
+						<td class="content-data">{{WeightedAuditScore}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="CorpIAComments" type="text" name="CorpIAComments">{{CorpIAComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label"><label for="MissedREComments">Missed Risk Evaluations</label></td>
+						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="MissedREComments" type="text" name="MissedREComments">{{MissedREComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label"><label for="MissedMSACComments">Missed MSAC Commitments</label></td>
+						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="MissedMSACComments" type="text" name="MissedMSACComments">{{MissedMSACComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th class="ar-asmt-label">Operational and Other Indicators</th>
+						<th class="ar-asmt-label"></th>
+						<th class="ar-asmt-label">Summary/Comments</th>
+					</tr>
+					{{#each OpMetric}}
+						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
+						<tr>
+							<td class="ar-asmt-label">{{name}}</td>
+							<td class="content-data">
+									<span>{{{uniqueSelect ratingfield ../parameters.OpMetricRating.0.options "name" "name" rating}}}</span>
+							</td>
+							<td class="content-data">
+								<!-- {{commentfield}} -->
+								<div class='yui-skin-sam'>
+									<span>
+										<textarea id="{{commentfield}}" type="text" name="{{commentfield}}">{{action}}</textarea>
+									</span>
+								</div>
+							</td>
+						</tr>
+					{{/each}}
+					<tr>
+						<td class="ar-asmt-label"><label for="BoCComments">Basics of Control Exceptions</label></td>
+						<td class="asmt-viewdata-centered">{{BOCExceptionCount}}</td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="BoCComments" type="text" name="BoCComments">{{BoCComments}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<tr>
+						<td class="ar-asmt-label" width="25%"><label for="PerfOverviewOtherExplanation">Other Explanation</label></td>
+						<td class="content-data" width="75%">
+							<div class='yui-skin-sam'>
+								<span><textarea id="PerfOverviewOtherExplanation" type="text" name="PerfOverviewOtherExplanation">{{PerfOverviewOtherExplanation}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label"><label for="PerfOverviewCriticaExplanation">Critical Issues</label></td>
+						<td class="content-data">
+							<div class='yui-skin-sam'>
+								<span><textarea id="PerfOverviewCriticaExplanation" type="text" name="PerfOverviewCriticaExplanation">{{PerfOverviewCriticaExplanation}}</textarea></span>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{else}} <!-- Read Mode  -->
+		<tr class="ar-asmt-content">
+			<td>
+				<table width="100%" class="ibm-data-table">
+					<tr>
+						<th class="ar-asmt-label" width="25%">Performance Indicators</th>
+						<th class="ar-asmt-label" width="10%"></th>
+						<th class="ar-asmt-label" width="65%">Summary/Comments</th>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label">Overall Assessment</td>
+						{{{ratingDisplayView PeriodRating}}}
+						<td class="content-data">
+							<input type="hidden" name="OverallAssessmentCommentsRO" value="{{OverallAssessmentComments}}">
+							<div id="OverallAssessmentCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label">KCFR Defect Rate</td>
+						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}">
+							<div id="KCFRTestingCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label">KCO Defect Rate</td>
+						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="content-data">
+							<input type="hidden" name="KCOTestingCommentsRO" value="{{KCOTestingComments}}">
+							<div id="KCOTestingCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label">CHQ Internal Audit Score</td>
+						<td class="content-data">{{WeightedAuditScore}}</td>
+						<td class="content-data">
+							<input type="hidden" name="CorpIACommentsRO" value="{{CorpIAComments}}">
+							<div id="CorpIACommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label">Missed Risk Evaluations</td>
+						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data">
+							<input type="hidden" name="MissedRECommentsRO" value="{{MissedREComments}}">
+							<div id="MissedRECommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label">Missed MSAC Commitments</td>
+						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data">
+							<input type="hidden" name="MissedMSACCommentsRO" value="{{MissedMSACComments}}">
+							<div id="MissedMSACCommentsReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<th class="ar-asmt-label">Operational and Other Indicators</th>
+						<th class="ar-asmt-label"></th>
+						<th class="ar-asmt-label">Summary/Comments</th>
+					</tr>
+					{{#each OpMetric}}
+						<tr>
+							<td class="ar-asmt-label">{{name}}</td>
+							{{{ratingDisplayView rating}}}
+							<td class="content-data">
+								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}">
+								<div id="{{commentfieldReadOnly}}"></div>
+							</td>
+						</tr>
+					{{/each}}
+					<tr>
+						<td class="ar-asmt-label">Basics of Control Exceptions</td>
+						<td class="asmt-viewdata-centered">{{BOCExceptionCount}}</td>
+						<td class="content-data">
+							<input type="hidden" name="BoCCommentsRO" value="{{BoCComments}}">
+							<div id="BoCCommentsReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+				<table width="100%">
+					<tr>
+						<td class="ar-asmt-label" width="25%">Other Explanation</td>
+						<td class="content-data" width="75%">
+							<input type="hidden" name="PerfOverviewOtherExplanationRO" value="{{PerfOverviewOtherExplanation}}">
+							<div id="PerfOverviewOtherExplanationReadOnly"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="ar-asmt-label">Critical Issues</td>
+						<td class="content-data">
+							<input type="hidden" name="PerfOverviewCriticaExplanationRO" value="{{PerfOverviewCriticaExplanation}}">
+							<div id="PerfOverviewCriticaExplanationReadOnly"></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	{{/if}}
+	<tr class="ar-asmt-content">
+		<td>
+			<span class="ar-asmt-header">BU IOT and Global Process Performance Indicators</span><br /><br />
+			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="ar-asmt-viewheader" scope="col" width="33%">Assessed Unit</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-4</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-3</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-2</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-1</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">Current Quarter (CQ)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">KCFR Defect Rate</th>
+					<th class="ar-asmt-viewheader" scope="col" width="7%">KCO Defect Rate</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Missed Risk Evaluations</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Missed MSAC Commitments</th>
+				</thead>
+				{{#each CPAsmtDataPIview}}
+					<tr class="asmt-viewdata">
+						{{#if_equal name ""}}
+							<td class="asmt-viewdata">&nbsp;</td>
+						{{else}}
+							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+						{{/if_equal}}
+						{{{ratingDisplayView ratingPQ4}}}
+						{{{ratingDisplayView ratingPQ3}}}
+						{{{ratingDisplayView ratingPQ2}}}
+						{{{ratingDisplayView ratingPQ1}}}
+						{{{ratingDisplayView ratingCQ}}}
+						{{{defectRateDisplayViewNoDash kcfrDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
+						{{{defectRateDisplayViewNoDash kcoDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td class="asmt-viewdata">{{msdRisk}}</td>
+						<td class="asmt-viewdata">{{msdMSAC}}</td>
+					</tr>
+				{{/each}}
+				<tr>
+			</table>
+			<br />
+			<span class="ar-asmt-header">BU IOT and Global Process Operational and Other Indicators</span><br /><br />
+			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<thead>
+					<th class="ar-asmt-viewheader" scope="col" width="37%">Assessed Unit</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Proactive Reviews</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Procurement Bypass (YTD)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Labour Claiming</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">DS&amp;P Overall Rating</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Unauthorized Pricing Commitments (UPC)</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Basics of Controls Exceptions</th>
+					<th class="ar-asmt-viewheader" scope="col" width="9%">Other Metrics</th>
+				</thead>
+				{{#each CPAsmtDataOIview}}
+					<tr class="asmt-viewdata">
+						{{#if_equal name ""}}
+							<td class="asmt-viewdata">&nbsp;</td>
+						{{else}}
+							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+						{{/if_equal}}
+						{{{ratingDisplayView opmetric12Rating}}}
+						{{{ratingDisplayView opmetric13Rating}}}
+						{{{ratingDisplayView opmetric9Rating}}}
+						{{{ratingDisplayView opmetric8Rating}}}
+						{{{ratingDisplayView opmetric16Rating}}}
+						<td class="asmt-viewdata-centered">{{bocExCount}}</td>
+						{{{ratingDisplayView opmetric11Rating}}}
+					</tr>
+				{{/each}}
+				<tr>
+			</table>
+		</td>
+	</tr>
+</table>

@@ -7,7 +7,7 @@ $(document).ready(function(){
 	$("#ratingcategoryDisplayByCountry").html($("input[name='ratingcategory']").val());
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
-	if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+	if ( $("input[name='enteredbu']").val() == "GTS" && ( $("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT" ) ) {
 		$("#HighlightReadOnlyCRM").html($("input[name='HighlightROCRM']").val());
 		$("#FocusAreaReadOnlyCRM").html($("input[name='FocusAreaROCRM']").val());
 		$("#HighlightReadOnlySOD").html($("input[name='HighlightROSOD']").val());
@@ -38,7 +38,7 @@ $(document).ready(function(){
 			for (i = 0; i < metrics.length; ++i) {
 				$("#"+metrics[i]+"commentfieldReadOnly").html($("input[name='"+metrics[i]+"commentfieldRO']").val());
 			}
-			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() !== "Global Process")) {
 				// CRM rich text fields
 				$("#OverallAssessmentCommentsReadOnlyCRM").html($("input[name='OverallAssessmentCommentsROCRM']").val());
 				$("#KCFRTestingCommentsReadOnlyCRM").html($("input[name='KCFRTestingCommentsROCRM']").val());
@@ -83,7 +83,7 @@ $(document).ready(function(){
 	});
 	//Code for Cancel button
 	$('#btn_cancel').click(function() {
-		window.location.href = "/processdashboard";
+		window.location.href = $("li#breadcrumb > a").attr("href");
 	});
 	//Code for Save button
 	$('#btn_save').click(function(evt) {
@@ -94,7 +94,7 @@ $(document).ready(function(){
 		$('#Notes').val(YmyEditor);
 		YmyEditor = myEditorRatingSummary.get('element').value;
 		$('#RatingSummary').val(YmyEditor);
-		if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+		if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
 			myEditorHighlightCRM.saveHTML();
 			YmyEditor = myEditorHighlightCRM.get('element').value;
 			$('#HighlightCRM').val(YmyEditor);
@@ -157,7 +157,7 @@ $(document).ready(function(){
 					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
 					$('#'+metrics[i]+'Comment').val(YmyEditor);
 				}
-				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
 					// CRM rich text fields
 					myEditorOverallAssessmentCommentsCRM.saveHTML();
 					YmyEditor = myEditorOverallAssessmentCommentsCRM.get('element').value;
@@ -252,7 +252,7 @@ $(document).ready(function(){
 		$('#Notes').val(YmyEditor);
 		YmyEditor = myEditorRatingSummary.get('element').value;
 		$('#RatingSummary').val(YmyEditor);
-		if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+		if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
 			myEditorHighlightCRM.saveHTML();
 			myEditorFocusAreaCRM.saveHTML();
 			YmyEditor = myEditorHighlightCRM.get('element').value;
@@ -314,7 +314,7 @@ $(document).ready(function(){
 					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
 					$('#'+metrics[i]+'Comment').val(YmyEditor);
 				}
-				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
 					// CRM rich text fields
 					myEditorOverallAssessmentCommentsCRM.saveHTML();
 					YmyEditor = myEditorOverallAssessmentCommentsCRM.get('element').value;
@@ -418,7 +418,7 @@ $(document).ready(function(){
 	myEditor.render();
 	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
 	myEditorRatingSummary.render();
-	if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+	if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
 		myEditorHighlightCRM = new YAHOO.widget.SimpleEditor('HighlightCRM', myConfig);
 		myEditorHighlightCRM.render();
 		myEditorFocusAreaCRM = new YAHOO.widget.SimpleEditor('FocusAreaCRM', myConfig);
@@ -465,7 +465,7 @@ $(document).ready(function(){
 				vars['myEditor'+metrics[i]+'Comment'].render();
 			}
 
-			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group")) {
+			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
 				// CRM rich text fields
 				myEditorOverallAssessmentCommentsCRM = new YAHOO.widget.SimpleEditor('OverallAssessmentCommentsCRM', myConfig);
 				myEditorOverallAssessmentCommentsCRM.render();
