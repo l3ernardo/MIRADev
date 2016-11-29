@@ -1188,7 +1188,7 @@ $(document).ready(function() {
   switch ($("input[name='parentdocsubtype']").val()) {
 		case "Controllable Unit":
 			if ($("input[name='portfolio']").val() == "Yes") {
-				if ($("input[name='country']").val() == undefined || $("input[name='country']").val() == "") {
+				if ($("input[name='hybrid']").val() == "Yes") {
 					addEventsCompCUHybridPortfolio();
 					window.addEventListener("load", displaySelectedCUHybridPortfolioCompTab());
 				} else {
@@ -1196,7 +1196,7 @@ $(document).ready(function() {
 					window.addEventListener("load", displaySelectedCUPortfolioCompTab());
 				}
 			} else {
-				if ($("input[name='country']").val() == undefined || $("input[name='country']").val() == "") {
+				if ($("input[name='hybrid']").val() == "Yes") {
 					addEventsCompCUHybrid();
 					window.addEventListener("load", displaySelectedCUHybridCompTab());
 				} else {
