@@ -10,6 +10,7 @@ var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
 var util = require('./class-utility.js');
+var geohierarchy = require('./class-geohierarchy.js');
 
 var dashboard = {
 
@@ -17,6 +18,9 @@ var dashboard = {
 	listAU: function(req, db) {
 		var deferred = q.defer();
 		try{
+			geohierarchy.createGEOHierarchy(req,db).then(function(response){
+				req.app.locals.hierarchy = response.response;//save in locals due to session 1 K limit
+			
 			var view_dashboard=[];
 			var temporal=[];
 			var A=[];
@@ -353,6 +357,16 @@ var dashboard = {
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
+			
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+			
+			//aqui
+			
+			
+			
+			
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
