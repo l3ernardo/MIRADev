@@ -48,18 +48,23 @@ var register = function(Handlebars) {
 			return selElem;
 		},
 		//Display icon on Dashboards for each document based on the status field
-		statusIcon:function(statusValue){
-			if(statusValue == "Draft"){
-				return "td_icon_edit";
-			}
-			else if(statusValue == "Final"){
-				return "td_icon_check";
-			}
-			else if(statusValue == "Ready for Review"){
-				return "td_icon_readyreview";
-			}
-			else if(statusValue == ""){
+		statusIcon:function(amstValue, statusValue){
+			if(statusValue == "Retired"){
 				return "td_icon_empty";
+			}
+			else{
+				if(amstValue == "Draft"){
+					return "td_icon_edit";
+				}
+				else if(amstValue == "Final"){
+					return "td_icon_check";
+				}
+				else if(amstValue == "Ready for Review"){
+					return "td_icon_readyreview";
+				}
+				else if(amstValue == ""){
+					return "";
+				}
 			}
 		},
 		ratingDisplay: function(rating, field) {
@@ -132,11 +137,11 @@ var register = function(Handlebars) {
 					ratinghtml = '<td class="asmt-viewdata"></td>';
 			} else {
 				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+rating+'</td>';
 				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+rating+'</td>';
 				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+rating+'</td>';
 				else
 					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
 			}
