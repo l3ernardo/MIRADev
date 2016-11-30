@@ -1187,21 +1187,26 @@ function displaySelectedCUHybridPortfolioCompTab(){
 $(document).ready(function() {
   switch ($("input[name='parentdocsubtype']").val()) {
 		case "Controllable Unit":
-			if ($("input[name='portfolio']").val() == "Yes") {
-				if ($("input[name='country']").val() == undefined || $("input[name='country']").val() == "") {
-					addEventsCompCUHybridPortfolio();
-					window.addEventListener("load", displaySelectedCUHybridPortfolioCompTab());
-				} else {
-					addEventsCompCUPortfolio();
-					window.addEventListener("load", displaySelectedCUPortfolioCompTab());
-				}
+			if ($("input[name='enteredbu']").val() == "GTS Transformation") {
+				addEventsCompCP();
+				window.addEventListener("load", displaySelectedCPCompTab());
 			} else {
-				if ($("input[name='country']").val() == undefined || $("input[name='country']").val() == "") {
-					addEventsCompCUHybrid();
-					window.addEventListener("load", displaySelectedCUHybridCompTab());
+				if ($("input[name='portfolio']").val() == "Yes") {
+					if ($("input[name='hybrid']").val() == "Yes") {
+						addEventsCompCUHybridPortfolio();
+						window.addEventListener("load", displaySelectedCUHybridPortfolioCompTab());
+					} else {
+						addEventsCompCUPortfolio();
+						window.addEventListener("load", displaySelectedCUPortfolioCompTab());
+					}
 				} else {
-					addEventsCompCP();
-					window.addEventListener("load", displaySelectedCPCompTab());
+					if ($("input[name='hybrid']").val() == "Yes") {
+						addEventsCompCUHybrid();
+						window.addEventListener("load", displaySelectedCUHybridCompTab());
+					} else {
+						addEventsCompCP();
+						window.addEventListener("load", displaySelectedCPCompTab());
+					}
 				}
 			}
 			break;

@@ -38,13 +38,21 @@
 					<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
 						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_tree"/></th>
 						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-						<td>{{{ratingDisplay PeriodRatingPrev}}}</td>
-						<td>{{{ratingDisplay PeriodRating}}}</td>
-						<td>{{{ratingDisplay AUNextQtrRating}}}</td>
+						{{{ratingDisplayView PeriodRatingPrev}}}
+						{{{ratingDisplayView PeriodRating}}}
+						{{{ratingDisplayView AUNextQtrRating}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
-						<td>{{DocSubType}}</td>
+						{{#if_equal DocSubType "Controllable Unit"}}
+							{{#if_equal Portfolio "Yes"}}
+								<td>Portfolio CU</td>
+							{{else}}
+								<td>Standalone CU</td>
+							{{/if_equal}}
+						{{else}}
+							<td>{{DocSubType}}</td>
+						{{/if_equal}}
 					</tr>
 				{{/each}}
 				</tbody>
@@ -70,9 +78,9 @@
 					<tr>
 						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>
 						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-						<td>{{{ratingDisplay PeriodRatingPrev}}}</td>
-						<td>{{{ratingDisplay PeriodRating}}}</td>
-						<td>{{{ratingDisplay AUNextQtrRating}}}</td>
+						{{{ratingDisplayView PeriodRatingPrev}}}
+						{{{ratingDisplayView PeriodRating}}}
+						{{{ratingDisplayView AUNextQtrRating}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>

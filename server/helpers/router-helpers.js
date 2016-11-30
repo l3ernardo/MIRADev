@@ -137,11 +137,11 @@ var register = function(Handlebars) {
 					ratinghtml = '<td class="asmt-viewdata"></td>';
 			} else {
 				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+rating+'</td>';
 				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+rating+'</td>';
 				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red">'+rating+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+rating+'</td>';
 				else
 					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
 			}

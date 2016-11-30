@@ -643,18 +643,18 @@ var util = {
 		var returnValue = id;
 		try{
 			if(type=="IOT") {
-				if(typeof req.app.locals.hierarchy.BU_IOT[id] !== "undefined"){
-						returnValue = req.app.locals.hierarchy.BU_IOT[id].IOT;
+				if(typeof global.hierarchy.BU_IOT[id] !== "undefined"){
+						returnValue = global.hierarchy.BU_IOT[id].IOT;
 				}
 			}
 			if(type=="IMT") {
-				if(typeof req.app.locals.hierarchy.BU_IMT[id] !== "undefined"){
-					returnValue = req.app.locals.hierarchy.BU_IMT[id].IMT;
+				if(typeof global.hierarchy.BU_IMT[id] !== "undefined"){
+					returnValue = global.hierarchy.BU_IMT[id].IMT;
 				}
 			}
 			if(type=="Country") {
-				for(country in req.app.locals.hierarchy.countries){
-					if(req.app.locals.hierarchy.countries[country].id == id ){
+				for(country in global.hierarchy.countries){
+					if(global.hierarchy.countries[country].id == id ){
 						returnValue = country;
 						break;
 					}
@@ -673,9 +673,9 @@ var util = {
 		try{
 			switch(type){
 				case "IOT":
-					if(typeof req.app.locals.hierarchy.BU_IOT[id] !== "undefined"){
-						entityName = req.app.locals.hierarchy.BU_IOT[id].IOT;
-						iterator = req.app.locals.hierarchy.IOT;
+					if(typeof global.hierarchy.BU_IOT[id] !== "undefined"){
+						entityName = global.hierarchy.BU_IOT[id].IOT;
+						iterator = global.hierarchy.IOT;
 						for (var key in iterator){
 							if(iterator.hasOwnProperty(key)){
 								if(iterator[key].name==entityName){ console.log("getimtids")
@@ -689,9 +689,9 @@ var util = {
 					}
 					break;
 				case "IMT":
-					if(typeof req.app.locals.hierarchy.BU_IMT[id] !== "undefined"){
-						entityName = req.app.locals.hierarchy.BU_IMT[id].IMT;
-						iterator = req.app.locals.hierarchy.IMT;
+					if(typeof global.hierarchy.BU_IMT[id] !== "undefined"){
+						entityName = global.hierarchy.BU_IMT[id].IMT;
+						iterator = global.hierarchy.IMT;
 						return util.getCountryIDs(req,iterator[entityName]);
 					}
 					else{
@@ -712,7 +712,7 @@ var util = {
 	getIMTIDs: function (req,IMTs){
 		var result = [];
 		var temp = {};
-		var reqIMT = req.app.locals.hierarchy.BU_IMT;
+		var reqIMT = global.hierarchy.BU_IMT;
 		for(i=0;i<IMTs.length;i++){
 			for (var key in reqIMT){
 				if(reqIMT.hasOwnProperty(key)){
@@ -732,7 +732,7 @@ var util = {
 	getCountryIDs: function (req,Countries){
 		var result = [];
 		var temp = {};
-		var reqCountry = req.app.locals.hierarchy.countries;
+		var reqCountry = global.hierarchy.countries;
 		for(i=0;i<Countries.length;i++){
 			temp.docid = reqCountry[Countries[i]].id
 			temp.name = Countries[i]

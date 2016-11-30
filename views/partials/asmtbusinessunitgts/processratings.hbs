@@ -183,14 +183,13 @@
 			<table width="100%">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="5%">Rating</th>
-					<th class="processrating-viewheader" scope="col" width="5%">IMT</th>
 					<th class="processrating-viewheader" scope="col" width="25%">Process</th>
 					<th class="processrating-viewheader" scope="col" width="5%">Count</th>
 					<th class="processrating-viewheader" scope="col" width="5%">Percent</th>
 					<th class="processrating-viewheader" scope="col" width="10%">Prior Q</th>
 					<th class="processrating-viewheader" scope="col" width="10%">Curr Q</th>
-					<th class="processrating-viewheader" scope="col" width="10%">Prior Target to Sat</th>
-					<th class="processrating-viewheader" scope="col" width="10%">Target to Sat</th>
+					<th class="processrating-viewheader" scope="col" width="12.5%">Prior Target to Sat</th>
+					<th class="processrating-viewheader" scope="col" width="12.5%">Target to Sat</th>
 					<th class="processrating-viewheader" scope="col" width="15%">Explanations</th>
 				</thead>
 				{{#each BUCAsmtDataPRview}}
@@ -199,7 +198,6 @@
 							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
 							<div id="ratingcategoryDisplay"></div>
 						</td>
-						<td class="asmt-viewdata">{{imt}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
