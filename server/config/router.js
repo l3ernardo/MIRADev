@@ -90,7 +90,8 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 	geohierarchy.createGEOHierarchy(req,db).then(function(response){
 		businessunit.saveBU(req, db).then(function(data) {
 			if(data.status==200 & !data.error) {
-				req.app.locals.hierarchy = response.response;//save in locals due to session 1 K limit
+
+				global.hierarchy = response.response;//save in locals due to session 1 K limit
 				req.session.businessunit = data.bunit;
 				req.session.user.version = data.version;
 				req.session.quarter = data.quarter;
@@ -110,7 +111,7 @@ router.post('/savebunit', isAuthenticated, function(req, res){
 											req.session.returnTo = '-';
 											req.flash('url', '-');
 											res.redirect(rtn);
-										} 
+										}
 										else {
 											res.render('bulletin', {bulletin: JSON.stringify(data.doc[0].value.Message,null,'\\')});
 										}
