@@ -1,17 +1,20 @@
 $(document).ready(function(){
-	//Hide left navigation
-	//hide_divs();
 	//display as htmls
 	$("#ratingcategoryDisplay").html($("input[name='ratingcategory']").val());
 	$("#ratingcategoryDisplayByIOT").html($("input[name='ratingcategory']").val());
 	$("#ratingcategoryDisplayByCountry").html($("input[name='ratingcategory']").val());
  	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	$("#RatingSummaryReadOnly").html($("input[name='RatingSummaryRO']").val());
-	if ( $("input[name='enteredbu']").val() == "GTS" && ( $("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT" ) ) {
-		$("#HighlightReadOnlyCRM").html($("input[name='HighlightROCRM']").val());
-		$("#FocusAreaReadOnlyCRM").html($("input[name='FocusAreaROCRM']").val());
-		$("#HighlightReadOnlySOD").html($("input[name='HighlightROSOD']").val());
-		$("#FocusAreaReadOnlySOD").html($("input[name='FocusAreaROSOD']").val());
+	if ( $("input[name='enteredbu']").val() == "GTS" ) {
+		if ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT" || $("input[name='parentdocsubtype']").val() == "Business Unit") {
+			$("#HighlightReadOnlyCRM").html($("input[name='HighlightROCRM']").val());
+			$("#FocusAreaReadOnlyCRM").html($("input[name='FocusAreaROCRM']").val());
+			$("#HighlightReadOnlySOD").html($("input[name='HighlightROSOD']").val());
+			$("#FocusAreaReadOnlySOD").html($("input[name='FocusAreaROSOD']").val());
+		} else {
+			$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());
+			$("#FocusAreaReadOnly").html($("input[name='FocusAreaRO']").val());
+		}
 	} else {
 		$("#HighlightReadOnly").html($("input[name='HighlightRO']").val());
 		$("#FocusAreaReadOnly").html($("input[name='FocusAreaRO']").val());
@@ -21,6 +24,7 @@ $(document).ready(function(){
 		case "Country Process":
 			$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
 			break;
+		case "Business Unit":
 		case "BU Reporting Group":
 		case "BU IOT":
 		case "BU IMT":
@@ -94,20 +98,29 @@ $(document).ready(function(){
 		$('#Notes').val(YmyEditor);
 		YmyEditor = myEditorRatingSummary.get('element').value;
 		$('#RatingSummary').val(YmyEditor);
-		if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
-			myEditorHighlightCRM.saveHTML();
-			YmyEditor = myEditorHighlightCRM.get('element').value;
-			$('#HighlightCRM').val(YmyEditor);
-			myEditorFocusAreaCRM.saveHTML();
-			YmyEditor = myEditorFocusAreaCRM.get('element').value;
-			$('#FocusAreaCRM').val(YmyEditor);
+		if ( $("input[name='enteredbu']").val() == "GTS" ) {
+			if ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT" || $("input[name='parentdocsubtype']").val() == "Business Unit") {
+				myEditorHighlightCRM.saveHTML();
+				YmyEditor = myEditorHighlightCRM.get('element').value;
+				$('#HighlightCRM').val(YmyEditor);
+				myEditorFocusAreaCRM.saveHTML();
+				YmyEditor = myEditorFocusAreaCRM.get('element').value;
+				$('#FocusAreaCRM').val(YmyEditor);
 
-			myEditorHighlightSOD.saveHTML();
-			YmyEditor = myEditorHighlightSOD.get('element').value;
-			$('#HighlightSOD').val(YmyEditor);
-			myEditorFocusAreaSOD.saveHTML();
-			YmyEditor = myEditorFocusAreaSOD.get('element').value;
-			$('#FocusAreaSOD').val(YmyEditor);
+				myEditorHighlightSOD.saveHTML();
+				YmyEditor = myEditorHighlightSOD.get('element').value;
+				$('#HighlightSOD').val(YmyEditor);
+				myEditorFocusAreaSOD.saveHTML();
+				YmyEditor = myEditorFocusAreaSOD.get('element').value;
+				$('#FocusAreaSOD').val(YmyEditor);
+			} else {
+				myEditorHighlight.saveHTML();
+				YmyEditor = myEditorHighlight.get('element').value;
+				$('#Highlight').val(YmyEditor);
+				myEditorFocusArea.saveHTML();
+				YmyEditor = myEditorFocusArea.get('element').value;
+				$('#FocusArea').val(YmyEditor);
+			}
 		} else {
 			myEditorHighlight.saveHTML();
 			YmyEditor = myEditorHighlight.get('element').value;
@@ -123,6 +136,7 @@ $(document).ready(function(){
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
+			case "Business Unit":
 			case "BU Reporting Group":
 			case "BU IOT":
 			case "BU IMT":
@@ -157,7 +171,7 @@ $(document).ready(function(){
 					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
 					$('#'+metrics[i]+'Comment').val(YmyEditor);
 				}
-				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
+				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() !== "Global Process")) {
 					// CRM rich text fields
 					myEditorOverallAssessmentCommentsCRM.saveHTML();
 					YmyEditor = myEditorOverallAssessmentCommentsCRM.get('element').value;
@@ -252,19 +266,28 @@ $(document).ready(function(){
 		$('#Notes').val(YmyEditor);
 		YmyEditor = myEditorRatingSummary.get('element').value;
 		$('#RatingSummary').val(YmyEditor);
-		if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
-			myEditorHighlightCRM.saveHTML();
-			myEditorFocusAreaCRM.saveHTML();
-			YmyEditor = myEditorHighlightCRM.get('element').value;
-			$('#HighlightCRM').val(YmyEditor);
-			YmyEditor = myEditorFocusAreaCRM.get('element').value;
-			$('#FocusAreaCRM').val(YmyEditor);
-			myEditorHighlightSOD.saveHTML();
-			myEditorFocusAreaSOD.saveHTML();
-			YmyEditor = myEditorHighlightSOD.get('element').value;
-			$('#HighlightSOD').val(YmyEditor);
-			YmyEditor = myEditorFocusAreaSOD.get('element').value;
-			$('#FocusAreaSOD').val(YmyEditor);
+		if ( $("input[name='enteredbu']").val() == "GTS" ) {
+			if ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT" || $("input[name='parentdocsubtype']").val() == "Business Unit") {
+				myEditorHighlightCRM.saveHTML();
+				myEditorFocusAreaCRM.saveHTML();
+				YmyEditor = myEditorHighlightCRM.get('element').value;
+				$('#HighlightCRM').val(YmyEditor);
+				YmyEditor = myEditorFocusAreaCRM.get('element').value;
+				$('#FocusAreaCRM').val(YmyEditor);
+				myEditorHighlightSOD.saveHTML();
+				myEditorFocusAreaSOD.saveHTML();
+				YmyEditor = myEditorHighlightSOD.get('element').value;
+				$('#HighlightSOD').val(YmyEditor);
+				YmyEditor = myEditorFocusAreaSOD.get('element').value;
+				$('#FocusAreaSOD').val(YmyEditor);
+			} else {
+				myEditorHighlight.saveHTML();
+				myEditorFocusArea.saveHTML();
+				YmyEditor = myEditorHighlight.get('element').value;
+				$('#Highlight').val(YmyEditor);
+				YmyEditor = myEditorFocusArea.get('element').value;
+				$('#FocusArea').val(YmyEditor);
+			}
 		} else {
 			myEditorHighlight.saveHTML();
 			myEditorFocusArea.saveHTML();
@@ -280,6 +303,7 @@ $(document).ready(function(){
 				YmyEditor = myEditorAsmtOtherConsiderations.get('element').value;
 				$('#AsmtOtherConsiderations').val(YmyEditor);
 				break;
+			case "Business Unit":
 			case "BU Reporting Group":
 			case "BU IOT":
 			case "BU IMT":
@@ -314,7 +338,7 @@ $(document).ready(function(){
 					YmyEditor = vars['myEditor'+metrics[i]+'Comment'].get('element').value;
 					$('#'+metrics[i]+'Comment').val(YmyEditor);
 				}
-				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
+				if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() !== "Global Process")) {
 					// CRM rich text fields
 					myEditorOverallAssessmentCommentsCRM.saveHTML();
 					YmyEditor = myEditorOverallAssessmentCommentsCRM.get('element').value;
@@ -418,15 +442,22 @@ $(document).ready(function(){
 	myEditor.render();
 	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
 	myEditorRatingSummary.render();
-	if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
-		myEditorHighlightCRM = new YAHOO.widget.SimpleEditor('HighlightCRM', myConfig);
-		myEditorHighlightCRM.render();
-		myEditorFocusAreaCRM = new YAHOO.widget.SimpleEditor('FocusAreaCRM', myConfig);
-		myEditorFocusAreaCRM.render();
-		myEditorHighlightSOD = new YAHOO.widget.SimpleEditor('HighlightSOD', myConfig);
-		myEditorHighlightSOD.render();
-		myEditorFocusAreaSOD = new YAHOO.widget.SimpleEditor('FocusAreaSOD', myConfig);
-		myEditorFocusAreaSOD.render();
+	if ( $("input[name='enteredbu']").val() == "GTS" ) {
+		if ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT" || $("input[name='parentdocsubtype']").val() == "Business Unit") {
+			myEditorHighlightCRM = new YAHOO.widget.SimpleEditor('HighlightCRM', myConfig);
+			myEditorHighlightCRM.render();
+			myEditorFocusAreaCRM = new YAHOO.widget.SimpleEditor('FocusAreaCRM', myConfig);
+			myEditorFocusAreaCRM.render();
+			myEditorHighlightSOD = new YAHOO.widget.SimpleEditor('HighlightSOD', myConfig);
+			myEditorHighlightSOD.render();
+			myEditorFocusAreaSOD = new YAHOO.widget.SimpleEditor('FocusAreaSOD', myConfig);
+			myEditorFocusAreaSOD.render();
+		} else {
+			myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
+			myEditorHighlight.render();
+			myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
+			myEditorFocusArea.render();
+		}
 	} else {
 		myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
 		myEditorHighlight.render();
@@ -439,6 +470,7 @@ $(document).ready(function(){
 			myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
 			myEditorAsmtOtherConsiderations.render();
 			break;
+		case "Business Unit":
 		case "BU Reporting Group":
 		case "BU IOT":
 		case "BU IMT":
@@ -465,7 +497,7 @@ $(document).ready(function(){
 				vars['myEditor'+metrics[i]+'Comment'].render();
 			}
 
-			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT")) {
+			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() !== "Global Process")) {
 				// CRM rich text fields
 				myEditorOverallAssessmentCommentsCRM = new YAHOO.widget.SimpleEditor('OverallAssessmentCommentsCRM', myConfig);
 				myEditorOverallAssessmentCommentsCRM.render();
