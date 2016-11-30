@@ -27,11 +27,11 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 								res.render('asmtbusinessunit', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
-								console.log("[router][GPassessment][getListParams] - " + dataParam.error);
+								console.log("[router][BUassessment][getListParams] - " + dataParam.error);
 							}
 						}).catch(function(err) {
 							res.render('error',{errorDescription: err.error});
-							console.log("[router][GPassessment][getListParams] - " + err.error);
+							console.log("[router][BUassessment][getListParams] - " + err.error);
 						})
 						break;
 
@@ -67,11 +67,11 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 								res.render('asmtsubprocess', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
-								console.log("[router][GPassessment][getListParams] - " + dataParam.error);
+								console.log("[router][SPassessment][getListParams] - " + dataParam.error);
 							}
 						}).catch(function(err) {
 							res.render('error',{errorDescription: err.error});
-							console.log("[router][GPassessment][getListParams] - " + err.error);
+							console.log("[router][SPassessment][getListParams] - " + err.error);
 						})
 						break;
 
@@ -168,11 +168,11 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 								res.render('asmtcontrollableunit', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
-								console.log("[router][CPassessment][getListParams] - " + dataParam.error);
+								console.log("[router][CUassessment][getListParams] - " + dataParam.error);
 							}
 						}).catch(function(err) {
 							res.render('error',{errorDescription: err.error});
-							console.log("[router][CPassessment][getListParams] - " + err.error);
+							console.log("[router][CUassessment][getListParams] - " + err.error);
 						})
 						break;
 
@@ -197,23 +197,22 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						break;
 
 					case "Account":
-					    						var lParams;
+					  var lParams;
 						if (data.doc[0].editmode)
 							lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','AuditLessonsLearnedFinding','OpMetricRating','UnsatThresholdPercent','MargThresholdPercent'];
 						else
 							lParams = ['UnsatThresholdPercent','MargThresholdPercent'];
-
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
 								res.render('asmtaccount', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
-								console.log("[router][CPassessment][getListParams] - " + dataParam.error);
+								console.log("[router][AccountAssessment][getListParams] - " + dataParam.error);
 							}
 						}).catch(function(err) {
 							res.render('error',{errorDescription: err.error});
-							console.log("[router][CPassessment][getListParams] - " + err.error);
+							console.log("[router][AccountAssessment][getListParams] - " + err.error);
 						})
 						break;
 				}
@@ -310,6 +309,21 @@ assessments.get('/newassessment', isAuthenticated, function(req, res) {
 						}).catch(function(err) {
 							res.render('error',{errorDescription: err.error});
 							console.log("[router][BUCountryassessment][getListParams] - " + err.error);
+						})
+						break;
+					case "Account":
+						var	lParams = ['PeriodRating','AssessmentStatus','NextQtrRating','AuditLessonsLearnedFinding','OpMetricRating','UnsatThresholdPercent','MargThresholdPercent'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('asmtaccount', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[router][NewAccountAssessment][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[router][NewAccountAssessment][getListParams] - " + err.error);
 						})
 						break;
 				}

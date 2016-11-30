@@ -29,9 +29,7 @@
 						<td class="asmt-viewdata"></td>
 						<td class="risk-msdcommit-viewheader"></td>
 						<td class="asmt-viewdata" rowspan="10">
-							<!-- <div class='yui-skin-sam'> -->
-								<span><textarea id="GCSSection1Explanations" type="text" name="GCSSection1Explanations" rows="18" cols="47">{{GCSSection1Explanations}}</textarea></span>
-							<!-- </div> -->
+							<span><textarea id="GCSSection1Explanations" type="text" name="GCSSection1Explanations" rows="18" cols="53">{{GCSSection1Explanations}}</textarea></span>
 						</td>
 					</tr>
 					<tr>
@@ -152,7 +150,7 @@
 				<table width="100%" class="ibm-data-table">
 					<thead><th class="risk-msdcommit-label">Focus items, key changes, open items, comments for current &amp; next quarter</th></thead>
 					<tr>
-						<td class="asmt-viewdata"><input type="text" name="GCSFocusItems" id="GCSFocusItems" value="{{GCSFocusItems}}" size="165"></td>
+						<td class="asmt-viewdata"><input type="text" name="GCSFocusItems" id="GCSFocusItems" value="{{GCSFocusItems}}" size="186"></td>
 					</tr>
 				</table>
 			</td>
@@ -169,7 +167,7 @@
 						<td width="35%" class="risk-msdcommit-label"></td>
 					</tr>
 				</table>
-				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<table cellspacing="0" cellpadding="0" border="0" width="100%">
 					<thead>
 						<th class="risk-msdcommit-viewheader" scope="col" width="50%%">Assessable Unit</th>
 						<th class="risk-msdcommit-viewheader" scope="col" width="10%">Prior Q</th>
@@ -352,7 +350,7 @@
 						<td width="35%" class="risk-msdcommit-label"></td>
 					</tr>
 				</table>
-				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<table cellspacing="0" cellpadding="0" border="0" width="100%">
 					<thead>
 						<th class="risk-msdcommit-viewheader" scope="col" width="50%%">Assessable Unit</th>
 						<th class="risk-msdcommit-viewheader" scope="col" width="10%">Prior Q</th>
@@ -377,14 +375,14 @@
 	{{/if}}
 	<tr class="risk-msdcommit-content">
 		<td>
-			<span class="risk-msdcommit"><b>Current Quarter Open Issues</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<span class="risk-msdcommit"><b>Open Issues</b></span><br /><br />
+			<table cellspacing="0" cellpadding="0" border="0" width="100%">
 				<thead>
-					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Type</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Type</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%">IMT</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Country</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Country</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Status</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Status</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">Target Date (Orig)</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">Target Date (Current)</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Tasks</th>
@@ -392,7 +390,7 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Missed Tasks</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Open Issues</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="4%">Missed</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="20%">Risk Abstract</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Risk Abstract</th>
 				</thead>
 				{{#each RiskView2Data}}
 					<tr class="asmt-viewdata">
