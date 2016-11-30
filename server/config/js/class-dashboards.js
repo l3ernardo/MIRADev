@@ -19,7 +19,7 @@ var dashboard = {
 		var deferred = q.defer();
 		try{
 			geohierarchy.createGEOHierarchy(req,db).then(function(response){
-				req.app.locals.hierarchy = response.response;//save in locals due to session 1 K limit
+				global.hierarchy = response.response;//save in locals due to session 1 K limit
 
 			var view_dashboard=[];
 			var temporal=[];
