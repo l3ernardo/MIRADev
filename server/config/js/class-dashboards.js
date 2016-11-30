@@ -19,8 +19,8 @@ var dashboard = {
 		var deferred = q.defer();
 		try{
 			geohierarchy.createGEOHierarchy(req,db).then(function(response){
-				req.app.locals.hierarchy = response.response;//save in locals due to session 1 K limit
-			
+				global.hierarchy = response.response;//save in locals due to session 1 K limit
+
 			var view_dashboard=[];
 			var temporal=[];
 			var A=[];
@@ -357,16 +357,16 @@ var dashboard = {
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
-			
+
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
-			
+
 			//aqui
-			
-			
-			
-			
+
+
+
+
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}

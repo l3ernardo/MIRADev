@@ -47,7 +47,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/public',express.static(__dirname + '/public'));
 
 //global variables
-
+global.hierarchy = "";
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
