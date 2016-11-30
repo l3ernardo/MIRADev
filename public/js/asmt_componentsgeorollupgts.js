@@ -775,27 +775,21 @@ function displaySelectedSPCompTab(){
     }
   }
 }
-/* main
-$(document).ready(function() {
-	addEventsComp();
-	window.addEventListener("load", displaySelectedCompTab());
-});
-*/
 
 /* main */
 $(document).ready(function() {
   switch ($("input[name='parentdocsubtype']").val()) {
-		case "":
-      addEventsComp();
-    	window.addEventListener("load", displaySelectedCompTab());
-      break;
 		case "Business Unit":
-	  addEventsCompBU();
-		window.addEventListener("load", displaySelectedBUCompTab());
-	 break;
-	   case "Sub-process":
-	  addEventsCompSP();
-		window.addEventListener("load", displaySelectedSPCompTab());
-	 break;
+	  	addEventsCompBU();
+			window.addEventListener("load", displaySelectedBUCompTab());
+	 		break;
+	  case "Sub-process":
+		  addEventsCompSP();
+			window.addEventListener("load", displaySelectedSPCompTab());
+	 		break;
+		default:
+			addEventsComp();
+			window.addEventListener("load", displaySelectedCompTab());
+			break;
   }
 });

@@ -146,6 +146,7 @@ var calculatefield = {
           opMetricKey = "OpMetric" + doc[0].WWBCITKey;
           break;
         case "BU Reporting Group":
+        case "Business Unit":
         case "BU IOT":
         case "BU IMT":
         case "BU Country":
@@ -322,7 +323,6 @@ var calculatefield = {
 		return deferred.promise;
 	},
 
-  /* Pass data from Assessable Unit to Current Quarter Assessment */
 	getCurrentAsmt: function(db, doc) {
     var deferred = q.defer();
 
@@ -422,6 +422,19 @@ var calculatefield = {
               "AUStatus": "Active",
               "CurrentPeriod": req.session.quarter,
               "BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}
+            }
+          };
+          break;
+        case "Business Unit":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "CurrentPeriod": req.session.quarter,
+              // "BusinessUnit": doc[0].BusinessUnit,
+              "BusinessUnit": "testing only, replace this with the commented line above in IT8",
+              "ParentDocSubType":{"$in":["Controllable Unit","Country Process","Global Process","BU IOT"]}
             }
           };
           break;
