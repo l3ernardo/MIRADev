@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-	if ($("input[name='PeriodRating']").val() == "Sat") {
+	if ($("#PeriodRating").val() == "Sat") {
 		$(".reviewComments").hide();
 		$(".target2Sat").hide();
 	} else {

@@ -3,9 +3,15 @@
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 		<caption class="mira-caption"><em>Basics</em></caption>
 		<tr><td width="25%">Parent Controllable Unit:</td><td>
+			{{#if newunit}}
+			{{ControllableUnit}}
 			<input type="hidden" name="ControllableUnit" id="ControllableUnit" value="{{ControllableUnit}}">
-			<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+			<!--<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">-->
+			{{else}}
+			<input type="hidden" name="ControllableUnit" id="ControllableUnit" value="{{ControllableUnit}}">
+			<!--<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">-->
 			{{{uniqueSelect "cuparentname" CUPList "_id" "Name" ControllableUnit}}}
+			{{/if}}
 			<!--{{ControllableUnit}}-->
 		</td></tr>
 		<tr>
