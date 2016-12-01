@@ -231,7 +231,7 @@ GEOHIERARCHY FUNCTIONALITY
 ***************************************************************/
 //GET method to create the GeoHierarchy view
 administration.get('/admingeohie',isAuthenticated, function(req,res) {
-	var geoJSON = req.app.locals.hierarchy;
+	var geoJSON = global.hierarchy;
 	/*{
 	"country":[
     {"name":"Korea","IMT":"Korean IMT","IOT":"AP IOT"},
