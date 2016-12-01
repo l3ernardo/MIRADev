@@ -126,7 +126,7 @@ return correctID;
 		var indexIOT = {};
 		var indexIOTIMTs = {};
 		var response = {};
-		var uri = varConf.mirainterfaces + "/showAlldata?designdoc=wwbcitdocs&viewname=hierarchy";
+		var uri = varConf.mirainterfaces + "/showdata?designdoc=wwbcitdocs&viewname=hierarchy";
 		try{
 			util.callhttp(uri).then(function(data){
 				if(data.status==200 & !data.error) {
