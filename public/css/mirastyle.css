@@ -206,6 +206,7 @@
 	border: 20px solid #71b2cf;
 }
 .ibm-data-table .summaryrollup-label {
+	font-size: 11px;
   background-color: #c2efff;
 }
 .ibm-data-table .summaryrollup-label-ar {
@@ -453,6 +454,10 @@
   color: #ffffff;
   background-color: #c0a1e0;
 }
+.ibm-data-table .ctrt {
+  color: #ffffff;
+  background-color: #808080;
+}
 .ibm-data-table .op-metric-content {
   color: #ffffff;
   background-color: #c0a1e0;
@@ -469,6 +474,10 @@
 }
 .ibm-data-table .other-viewheader {
 	text-align: center;
+	font-size: 11px;
+	background-color: #dadada;
+}
+.ibm-data-table .other-viewheader-al {
 	font-size: 11px;
 	background-color: #dadada;
 }

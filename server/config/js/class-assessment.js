@@ -42,8 +42,10 @@ var assessment = {
 					doc[0].resetstatus = accessrules.rules.resetstatus;
 
 					// Check if Rating Justification and Target to Sat is editable. This is part of the basic section but conditions apply in both read and edit mode
-					if (doc[0].MIRAStatus != "Final" && ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") )&& doc[0].PeriodRating != "Sat" ){
-						doc[0].RJandT2SEditable = 1;}
+					if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) ) {
+						doc[0].RJandT2SEditable = 1;
+					}
+
 					if(req.query.edit != undefined && doc[0].editor) { // Edit mode
 						doc[0].editmode = 1;
 						// check if Rating is editable
@@ -127,6 +129,67 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
+								fieldCalc.getRatingProfile(doc);
+								if (doc[0].BUCAsmtDataPRview.length < 3) {
+									if (doc[0].BUCAsmtDataPRview.length == 0) {
+										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(3-doc[0].BUCAsmtDataPRview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataCURview.length < 3) {
+									if (doc[0].BUCAsmtDataCURview.length == 0) {
+										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(3-doc[0].BUCAsmtDataCURview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataPIview.length < 3) {
+									if (doc[0].BUCAsmtDataPIview.length == 0) {
+										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(3-doc[0].BUCAsmtDataPIview.length));
+									}
+								}
+								if (doc[0].BUCAsmtDataOIview.length < 3) {
+									if (doc[0].BUCAsmtDataOIview.length == 0) {
+										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,3);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(3-doc[0].BUCAsmtDataOIview.length));
+									}
+								}
+								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							break;
+						case "Business Unit":
+							if (doc[0].EnteredBU == "GTS") {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(10,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(13,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(16,3);
+								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,3);
+								doc[0].AUData2 = fieldCalc.addTestViewData(18,10);
+								doc[0].AUData3 = fieldCalc.addTestViewData(19,10);
+							} else {
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,3);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,3);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,3);
+								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,3);
+								doc[0].RiskView2Data = fieldCalc.addTestViewData(13,3);
+							}
+							doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,3);
+							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,3);
+							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,3);
+							doc[0].BUCAsmtDataPRview = [];
+							doc[0].BUCAsmtDataCURview = [];
+							doc[0].BUCAsmtDataPIview = [];
+							doc[0].BUCAsmtDataOIview = [];
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < 3) {
@@ -1076,8 +1139,6 @@ var assessment = {
 					doc[0].DecommitExplanation = req.body.DecommitExplanation;
 
 					switch (doc[0].ParentDocSubType) {
-						case "Business Unit":
-							break;
 						case "Subprocess":
 							break;
 						case "Global Process":
@@ -1137,12 +1198,13 @@ var assessment = {
 							doc[0].MissedIssueRptColor = req.body.MissedIssueRptColor;
 							break;
 						case "BU Reporting Group":
+						case "Business Unit":
 						case "BU IOT":
 						case "BU IMT":
 						case "BU Country":
 							//---Summary Tab---//
 							doc[0].RatingSummary = req.body.RatingSummary;
-							if (doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU Reporting Group") {
+							if (doc[0].ParentDocSubType != "BU Country") {
 								doc[0].Insight1 = req.body.Insight1;
 								doc[0].Insight2 = req.body.Insight2;
 								doc[0].Insight3 = req.body.Insight3;
@@ -1253,10 +1315,13 @@ var assessment = {
 							doc[0].SOXProcessTestingExplanations = req.body.SOXProcessTestingExplanations;
 							doc[0].OpsProcessTestingExplanations = req.body.OpsProcessTestingExplanations;
 							doc[0].ProcessTestingFocusItems = req.body.ProcessTestingFocusItems;
+
 							//---Sampled Country Testing Tab---//
-							doc[0].SCSOXProcessTestingExplanations = req.body.SCSOXProcessTestingExplanations;
-							doc[0].SCOpsProcessTestingExplanations = req.body.SCOpsProcessTestingExplanations;
-							doc[0].SCProcessTestingFocusItems = req.body.SCProcessTestingFocusItems;
+							if (doc[0].ParentDocSubType != "Business Unit") {
+								doc[0].SCSOXProcessTestingExplanations = req.body.SCSOXProcessTestingExplanations;
+								doc[0].SCOpsProcessTestingExplanations = req.body.SCOpsProcessTestingExplanations;
+								doc[0].SCProcessTestingFocusItems = req.body.SCProcessTestingFocusItems;
+							}
 							break;
 						case "Controllable Unit":
 							if (req.body.CatCU == "Delivery") {
