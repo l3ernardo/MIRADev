@@ -1,19 +1,6 @@
 $(document).ready(function() {
 	t=url.indexOf("reportstaexc");
-	$("#accesssummary_treeview").treetable({expandable: true });
-	$('#accesssummary_treeview').DataTable({
-		select: true,
-		"paginate": false,
-		"scrollX": true,
-		"scrollY": 280,
-	});
-	$('#reports_table').DataTable({
-		select: true,
-		"paginate": false,
-		"scrollX": true,
-		"scrollY": 250,
-	});
-
+	
 	$('input:checkbox').removeAttr('checked');
 
 	$('#lnk_exportxls').click(function(){
