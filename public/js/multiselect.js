@@ -46,6 +46,20 @@ $(document).ready(function() {
         $("#scopeRGRSel").hide();
       }
     }
+
+    //Irvinglist Audit Lessons Learned Key - for CU-not GBS only
+    if ($("input[name='docsubtype']").val() == "Controllable Unit") {
+      if ( $("input[name='AuditLessonsKey']").val() != "") {
+        var units = $("input[name='AuditLessonsKey']").val().split(",");
+        for (var i = 0; i < units.length; ++i) {
+          var title = $("#lessonsList" + units[i]).prop('name') + ",";
+          var html = '<span id="scopeLessonsList'+units[i]+'" title="' + title + '">' + title + '</span>';
+          $('#lessonsList').append(html);
+          $("#lessonsList" + units[i]).prop('checked', true);
+        }
+        $("#scopeLessonListSel").hide();
+      }
+    }
   }
 
   function updateIDlist(id, scope, selID) {
@@ -76,6 +90,20 @@ $(document).ready(function() {
   $(document).bind('click', function(e) {
     var $clicked = $(e.target);
     if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
+  });
+
+  // On click events for CU- Audit Lesson KeyList
+  $('#scopeLessonsList input[type="checkbox"]').on('click', function() {
+    var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
+    title = $(this).attr('name') + ",";
+    if ($(this).is(':checked')) {
+      var html = '<span id="scopeLessonsList'+$(this).val()+'" title="' + title + '">' + title + '</span>';
+      $('#lessonsList').append(html);
+      $("#scopeLessonsListSel").hide();
+    } else {
+      $("#scopeLessonsList"+$(this).val()).remove();
+    }
+    updateIDlist("AuditLessonsKey","lessonsList","scopeLessonsList");
   });
 
   // On click events for BU Country Field List
