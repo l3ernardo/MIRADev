@@ -149,12 +149,15 @@ Explicit user summary
 ***************************************************************/
 
 administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
+	res.render('accesssummary');
 
+	/*
 		accesssumary.getUserAccessSummary(req,db).then(function (data){
 
 			if(data.status==200 & !data.error) {
-
+					
 				res.render('accesssummary',data.data);
+				//res.render('accesssummary',data.data.Users);
 
 			}else{
 
@@ -168,10 +171,42 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 		console.log("[routes][explicitAccessSummary] - " + err.error);
 
 		});
+*/
+
+
+});
+
+//data feed for Explicit access summary
+administration.get('/dataFeedAccessSummary',isAuthenticated, function(req,res){
+
+	accesssumary.getUserAccessSummary(req,db).then(function (data){
+
+		if(data.status==200 & !data.error) {
+			//console.log(data.data);
+			
+			//res.render('accesssummary',data.data);
+			//res.render('accesssummary',data.data.Users);
+			
+			res.json(data.data);
+
+		}else{
+
+		res.render('error',{errorDescription: data.error});
+		console.log("[routes][explicitAccessSummary] - " + data.error);
+
+
+		}
+}).catch(function(err) {
+	res.render('error',{errorDescription: err.error});
+	console.log("[routes][explicitAccessSummary] - " + err.error);
+
+	});
 
 
 
 });
+
+
 
 
 /**************************************************************
