@@ -22,7 +22,7 @@
 			{{/if}}
 		</tr>
 		<tr>
-			{{#if RJandT2SEditable}}
+			{{#if RJandT2SEditable}} 
 				<td><label for="MIRARatingJustification">Rating Justification:</label></td>
 				<td>
 					<span><input type="text" name="MIRARatingJustification" id="MIRARatingJustification" value="{{MIRARatingJustification}}" size="135"></span>
@@ -83,6 +83,7 @@
 				<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 			</td>
 		</tr>
+	     <!--	
 		<tr>
 			<td>Rating Justification:</td>
 			<td>
@@ -93,8 +94,17 @@
 				{{/if}}
 			</td>
 		</tr>
-		<tr class="reviewComments"><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
-		<tr class="target2Sat"><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+            -->
+		<tr>
+			{{#if_not_equal PeriodRating "Sat"}}
+				<tr class="MIRARatingJustification"><td>Rating Justification:</td><td>{{MIRARatingJustification}}</td></tr>
+				<tr class="reviewComments"><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
+				<tr class="target2Sat"><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+			{{else}}
+			<tr class="WWBCITRatingJustification"><td>Rating Justification:</td><td>{{WWBCITRatingJustification}}</td></tr>
+			{{/if_not_equal}}
+		</tr>
+
 		<tr>
 			<td>MIRA Status:</td>
 			<td>
