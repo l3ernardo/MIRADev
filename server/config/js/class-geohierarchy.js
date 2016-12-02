@@ -112,124 +112,98 @@ correctID = currentID;
 }
 return correctID;
 },*/
-createGEOHierarchy: function(req){
-	var deferred = q.defer();
+	createGEOHierarchy: function(req){
+		var deferred = q.defer();
 
-	var IOT = [];
-	var BU_IMT = {};
-	var BU_IOT = {};
-	var IMT = {};
-	var key = {};
-	var countries = {};
-	var country = {};
-	var iot = {};
-	var indexIOT = {};
-	var indexIOTIMTs = {};
-	var response = {};
-	var uri = varConf.mirainterfaces + "/showAlldata?designdoc=wwbcitdocs&viewname=hierarchy";
-	try{
-		util.callhttp(uri).then(function(data){
+		var IOT = [];
+		var BU_IMT = {};
+		var BU_IOT = {};
+		var IMT = {};
+		var key = {};
+		var countries = {};
+		var country = {};
+		var iot = {};
+		var indexIOT = {};
+		var indexIOTIMTs = {};
+		var response = {};
+		var uri = varConf.mirainterfaces + "/showAlldata2?designdoc=wwbcitdocs&viewname=hierarchy";
+		try{
+			util.callhttp(uri).then(function(data){
+				if(data.status==200 & !data.error) {
+					var json = data.doc;
+					if(json != undefined || json != ""){
+						for(var i=0;i<json.length;i++){  //Iterate on all the response by country
+							if(json[i].doc.COUNTRY != ""){
+								country["id"] = json[i].doc.ID;
+								country["IMT"] = json[i].doc.SUB_GEO;
+								country["IOT"] = json[i].doc.GEO;
+								countries[json[i].doc.COUNTRY]= country;
 
-			var json = data.doc;
-				
-			try{
-				
-				
-				for(var i=0;i<json.length;i++){  //Iterate on all the response by country
-				
-					if(json[i].doc.COUNTRY != ""){
-					
-					
-					country["id"] = json[i].doc.ID;
-					country["IMT"] = json[i].doc.SUB_GEO;
-					country["IOT"] = json[i].doc.GEO;
-					countries[json[i].doc.COUNTRY]= country;
-
-					if(typeof IMT[json[i].doc.SUB_GEO] !== 'undefined'){ // check if IMT exist and add the addional countries
-						IMT[json[i].doc.SUB_GEO].push(json[i].doc.COUNTRY);
-
-					}else{  // if not add the new IMT with its country
-
-						IMT[json[i].doc.SUB_GEO] = [json[i].doc.COUNTRY];
-
-						imt= {};
-					}
-
-					if(typeof indexIOT[json[i].doc.GEO] !== 'undefined' ){ // check if IOT exist and add the addional countries
-						if(typeof indexIOTIMTs[json[i].doc.SUB_GEO] === 'undefined' ){
-							IOT[indexIOT[json[i].doc.GEO]].IMTs.push(json[i].doc.SUB_GEO);
-							indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
+								if(typeof IMT[json[i].doc.SUB_GEO] !== 'undefined'){ // check if IMT exist and add the additional countries
+									IMT[json[i].doc.SUB_GEO].push(json[i].doc.COUNTRY);
+								}else{  // if not add the new IMT with its country
+									IMT[json[i].doc.SUB_GEO] = [json[i].doc.COUNTRY];
+									imt= {};
+								}
+								if(typeof indexIOT[json[i].doc.GEO] !== 'undefined' ){ // check if IOT exist and add the additional countries
+									if(typeof indexIOTIMTs[json[i].doc.SUB_GEO] === 'undefined' ){
+										IOT[indexIOT[json[i].doc.GEO]].IMTs.push(json[i].doc.SUB_GEO);
+										indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
+									}
+								}else{  // if not add the new IMT with its country
+									iot["name"] = json[i].doc.GEO;
+									iot["IMTs"] = [json[i].doc.SUB_GEO];
+									IOT.push(iot);
+									indexIOT[json[i].doc.GEO] = IOT.length-1;
+									indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
+									iot= {};
+								}
+								country = {};
+							}
+							else{
+								if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO != ""){//IMT record process
+									var tempIMT = {};
+									tempIMT["IMT"] = json[i].doc.SUB_GEO;
+									tempIMT["IOT"] = json[i].doc.GEO;
+									tempIMT["ID"] = json[i].doc.ID;
+									
+									BU_IMT[json[i].doc.ID] = tempIMT;
+									tempIMT = {};
+								}
+								if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO == "" && json[i].doc.GEO != ""){// IOT record
+									var tempIOT = {};
+									tempIOT["IOT"] = json[i].doc.GEO;
+									tempIOT["ID"] = json[i].doc.ID;
+								
+									BU_IOT[json[i].doc.ID] = tempIOT;
+									tempIOT = {};
+								}
+							}
 						}
+						response["countries"]= countries;
+						response["IMT"] = IMT;
+						response["IOT"] = IOT;
+						response["BU_IMT"] = BU_IMT;
+						response["BU_IOT"] = BU_IOT;
 
-					}else{  // if not add the new IMT with its country
-						iot["name"] = json[i].doc.GEO;
-						iot["IMTs"] = [json[i].doc.SUB_GEO];
-						IOT.push(iot);
-						indexIOT[json[i].doc.GEO] = IOT.length-1;
-						indexIOTIMTs[json[i].doc.SUB_GEO] = "true";
-						iot= {};
-					}
-
-					country = {};
+						deferred.resolve({"status": 200, "response": response});
 					}
 					else{
-						if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO != ""){//IMT record process
-								var tempIMT = {};
-								
-												
-								
-								tempIMT["IMT"] = json[i].doc.SUB_GEO;
-								tempIMT["IOT"] = json[i].doc.GEO;
-								tempIMT["ID"] = json[i].doc.ID;
-								
-								BU_IMT[json[i].doc.ID] = tempIMT;
-								tempIMT = {};
-							
-						}
-						if(json[i].doc.COUNTRY == "" && json[i].doc.SUB_GEO == "" && json[i].doc.GEO != ""){// IOT record
-								var tempIOT = {};
-														
-								tempIOT["IOT"] = json[i].doc.GEO;
-								tempIOT["ID"] = json[i].doc.ID;
-							
-								BU_IOT[json[i].doc.ID] = tempIOT;
-								tempIOT = {};
-							
-						}
-						
-						
-						
+						console.log(e);
+						deferred.reject({"status": 500, "error": "Geo Hierarchy is empty"});
 					}
 				}
-					
-			}catch(e){console.log(e);}
-
-
-			response["countries"]= countries;
-			response["IMT"] = IMT;
-			response["IOT"] = IOT;
-			response["BU_IMT"] = BU_IMT;
-			response["BU_IOT"] = BU_IOT;
-		
-		
-			
-			deferred.resolve({"status": 200, "response": response});
-
-		}).catch(function(error){ //end getParam
-
-			deferred.reject({"status": 500, "error": err.error.reason});
-
-		});
-
-
-	}catch(e){
-		deferred.reject({"status": 500, "error": e});
-	}
-
-	return deferred.promise;
-
-
-},
+				else{
+					deferred.reject({"status": 500, "error": data.error});
+				}
+			}).catch(function(err){ //end util.callhttp
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
 
 }
 
