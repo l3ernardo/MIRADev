@@ -1,0 +1,56 @@
+<table id="other_table" class="ibm-data-table">
+	<tr class="other">
+		<td class="other">Compliance Test Reporting Tool (CTRT) Input</td>
+	</tr>
+	<tr class="other">
+		<td>
+			<table width="100%">
+				<tr>
+					<td class="other-viewheader-al" width="20%">Current Qtr :</td>
+					<td class="asmt-viewdata" width="80%"></td>
+				</tr>
+				<tr>
+					<td class="other-viewheader-al">Geo :</td>
+					<td class="asmt-viewdata"></td>
+				</tr>
+				<tr>
+					<td class="other-viewheader-al">Process :</td>
+					<td class="asmt-viewdata"></td>
+				</tr>
+				<tr>
+					<td class="other-viewheader-al">Total Tests :</td>
+					<td class="asmt-viewdata"></td>
+				</tr>
+				<tr>
+					<td class="other-viewheader-al">Defects :</td>
+					<td class="asmt-viewdata"></td>
+				</tr>
+				<tr>
+					<td class="other-viewheader-al">Defects % :</td>
+					<td class="asmt-viewdata"></td>
+				</tr>
+				<tr>
+					<td class="other-viewheader-al">Rating :</td>
+					<td class="asmt-viewdata"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="other">
+		<td class="other">Other Considerations</td>
+	</tr>
+	<tr class="other">
+		{{#if editmode}}
+			<td class="content-data">
+				<div class='yui-skin-sam'>
+					<span><textarea id="AsmtOtherConsiderations" type="text" name="AsmtOtherConsiderations" cols="168" rows="3">{{AsmtOtherConsiderations}}</textarea></span>
+				</div>
+			</td>
+		{{else}}
+			<td class="content-data">&nbsp;
+				<input type="hidden" name="AsmtOtherConsiderationsRO" value="{{AsmtOtherConsiderations}}">
+				<div id="AsmtOtherConsiderationsReadOnly"></div>
+			</td>
+		{{/if}}
+	</tr>
+</table>

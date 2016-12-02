@@ -47,7 +47,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/public',express.static(__dirname + '/public'));
 
 //global variables
-
+global.hierarchy = "";
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
@@ -58,7 +58,7 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 	//init database
 	console.log("[app] init database");
 	var cloudant = require('./server/config/js/class-conn');
-	cloudant.connect('miradb-full-test');
+	cloudant.connect('miradb');
 });
 
 //Site variables

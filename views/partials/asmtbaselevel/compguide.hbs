@@ -1,76 +1,140 @@
 <table id="guide_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<input type="hidden" name="BOCExceptionCount" id="BOCExceptionCount" value="{{BOCExceptionCount}}">
-	<tr>
-		<td width="12%"><div id="compguideboc"></div></td>
-		<td width="2.5%"></td>
-		<td width="12%"><div id="compguideara"></td>
-		<td width="2.5%"></td>
-		<td width="14%"><div id="compguideormc"></td>
-		<td width="2.5%"></td>
-		<td width="10%"><div id="compguideaar"></td>
-		<td width="2.5%"></td>
-		<td width="12%"><div id="compguidekct"></td>
-		<td width="2.5%"></td>
-		<td width="12%"><div id="compguideom"></td>
-		<td width="2.5%"></td>
-		<td width="13%"></td>
-	</tr>
-	<tr class="mira-td-exceptions">
-		<td>
-			<table>
-				<tr><th scope="col" class="basic-ctrl">Basics of Control</th></tr>
-				<tr><td>Verify that basic elements exist to ensure IBM is operating in a well controlled environment</td></tr>
-			</table>
-		</td>
-		<td><h1 class="mira-plus-sign">+</h1></td>
-		<td>
-			<table>
-				<tr><th scope="col" class="ar-asmt">Audit Readiness Assessment</th></tr>
-				<tr><td>
-					<ul>
-						<li>Analysis to Lessons Learned</li>
-						<li>Audit Readiness Checklist</li>
-					</ul>
-				</td></tr>
-			</table>
-		</td>
-		{{#if_equal  ParentDocSubType "Account"}}
-		{{else}}
-		<td><h1 class="mira-plus-sign">+</h1></td>
-		<td>
-			<table>
-				<tr><th scope="col" class="risk-msdcommit">Open Risk Evals including Missed Commits</th></tr>
-				<tr><td>Do you have Open Risk Evaluations in the current and/or prior quarters?<br /><br />Do any have missed Commitment dates?</td></tr>
-			</table>
-		</td>
-		{{/if_equal}}
-		<td><h1 class="mira-plus-sign">+</h1></td>
-		<td>
-			<table>
-				<tr><th scope="col" class="audit-review">Audits and Reviews</th></tr>
-				<tr><td>Have there been any audits or reviews in the past quarter/  what was the rating?</td></tr>
-			</table>
-		</td>
-		<td><h1 class="mira-plus-sign">+</h1></td>
-		<td>
-			<table>
-				<tr><th scope="col" class="kc-test">Key Controls Testing</th></tr>
-				<tr><td>What Key Controls were tested and what was the result?<br /><br />Do you have unremediated defects?</td></tr>
-			</table>
-		</td>
-		<td><h1 class="mira-plus-sign">+</h1></td>
-		<td>
-			<table>
-				<tr><th scope="col" class="op-metric">Operational Metrics</th></tr>
-				<tr><td>Are Operational metrics within the defined target range?</td></tr>
-			</table>
-		</td>
-		<td><h1 class="mira-plus-sign">=</h1></td>
-		<td>
-			<table>
-				<tr><th scope="col">Aggregate Basis for Control Assessment</th></tr>
-				<tr><td><strong>The final “Holistic” Management Self Assessment of Controls (MSAC) should be a combination of all quantitative and qualitative inputs using professional judgment.</strong></td></tr>
-			</table>
-		</td>
-	</tr>
+	{{#if_equal  ParentDocSubType "Account"}}
+		<tr>
+			<td width="14%"><div id="compguideboc"></div></td>
+			<td width="3%"></td>
+			<td width="14%"><div id="compguideara"></td>
+			<td width="3%"></td>
+			<td width="14%"><div id="compguideaar"></td>
+			<td width="3%"></td>
+			<td width="14%"><div id="compguidekct"></td>
+			<td width="3%"></td>
+			<td width="14%"><div id="compguideom"></td>
+			<td width="3%"></td>
+			<td width="15%"></td>
+		</tr>
+		<tr class="mira-td-exceptions">
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="basic-ctrl">Basics of Control</th></tr>
+					<tr><td>Verify that basic elements exist to ensure IBM is operating in a well controlled environment</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="ar-asmt">Audit Readiness Assessment</th></tr>
+					<tr><td>
+						<ul>
+							<li>Analysis to Lessons Learned</li>
+							<li>Audit Readiness Checklist</li>
+						</ul>
+					</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="audit-review">Audits and Reviews</th></tr>
+					<tr><td>Have there been any audits or reviews in the past quarter/  what was the rating?</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="kc-test">Key Controls Testing</th></tr>
+					<tr><td>What Key Controls were tested and what was the result?<br /><br />Do you have unremediated defects?</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="op-metric">Operational Metrics</th></tr>
+					<tr><td>Are Operational metrics within the defined target range?</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">=</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col">Aggregate Basis for Control Assessment</th></tr>
+					<tr><td><strong>The final “Holistic” Management Self Assessment of Controls (MSAC) should be a combination of all quantitative and qualitative inputs using professional judgment.</strong></td></tr>
+				</table>
+			</td>
+		</tr>
+
+	{{else}}
+
+		<tr>
+			<td width="12%"><div id="compguideboc"></div></td>
+			<td width="2.5%"></td>
+			<td width="12%"><div id="compguideara"></td>
+			<td width="2.5%"></td>
+			<td width="14%"><div id="compguideormc"></td>
+			<td width="2.5%"></td>
+			<td width="10%"><div id="compguideaar"></td>
+			<td width="2.5%"></td>
+			<td width="12%"><div id="compguidekct"></td>
+			<td width="2.5%"></td>
+			<td width="12%"><div id="compguideom"></td>
+			<td width="2.5%"></td>
+			<td width="13%"></td>
+		</tr>
+		<tr class="mira-td-exceptions">
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="basic-ctrl">Basics of Control</th></tr>
+					<tr><td>Verify that basic elements exist to ensure IBM is operating in a well controlled environment</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="ar-asmt">Audit Readiness Assessment</th></tr>
+					<tr><td>
+						<ul>
+							<li>Analysis to Lessons Learned</li>
+							<li>Audit Readiness Checklist</li>
+						</ul>
+					</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="risk-msdcommit">Open Risk Evals including Missed Commits</th></tr>
+					<tr><td>Do you have Open Risk Evaluations in the current and/or prior quarters?<br /><br />Do any have missed Commitment dates?</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="audit-review">Audits and Reviews</th></tr>
+					<tr><td>Have there been any audits or reviews in the past quarter/  what was the rating?</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="kc-test">Key Controls Testing</th></tr>
+					<tr><td>What Key Controls were tested and what was the result?<br /><br />Do you have unremediated defects?</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">+</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col" class="op-metric">Operational Metrics</th></tr>
+					<tr><td>Are Operational metrics within the defined target range?</td></tr>
+				</table>
+			</td>
+			<td><h1 class="mira-plus-sign">=</h1></td>
+			<td>
+				<table width="100%">
+					<tr><th scope="col">Aggregate Basis for Control Assessment</th></tr>
+					<tr><td><strong>The final “Holistic” Management Self Assessment of Controls (MSAC) should be a combination of all quantitative and qualitative inputs using professional judgment.</strong></td></tr>
+				</table>
+			</td>
+		</tr>
+	{{/if_equal}}
+
 </table>
