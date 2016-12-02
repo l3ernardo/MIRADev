@@ -173,6 +173,10 @@ var assessableunit = {
 						doc[0].CUData = [];
 						break;
 					case "Controllable Unit":
+					//irvingGet
+					if(req.session.businessunit.split(" ")[0] == "GTS"){
+						doc[0].gts_gtsTransFlag = true;
+					}
 						var constiobj = {
 							selector:{
 								"_id": {"$gt":0},
@@ -395,7 +399,26 @@ var assessableunit = {
 												if(dataCP.status==200 && !dataCP.error){
 													doc[0].CUParents = [];
 													doc[0].CUParents = dataCP.doc;
+													//irvingEditmode
+													if(req.session.businessunit.split(" ")[0] == "GTS"){
+														doc[0].gts_gtsTransFlag = true;
+													var obj = {
+														selector : {
+															"_id": {"$gt":0},
+															"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+													}};
+													db.find(obj).then(function(dataLL){
+														doc[0].lessonsList = dataLL.body.docs[0].value;
 													deferred.resolve({"status": 200, "doc": doc});
+												}).catch(function(err) {
+													console.log("[assessableunit][LessonsList]" + dataLL.error);
+													deferred.reject({"status": 500, "error": err});
+												});
+											}
+											else {
+												deferred.resolve({"status": 200, "doc": doc});
+											}
+											//endIRving
 												}
 												else{
 													deferred.reject({"status": 500, "error": dataCP.error});
@@ -882,6 +905,28 @@ var assessableunit = {
 								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
+							//irvingNew
+						case "Controllable Unit":
+						if(req.session.businessunit.split(" ")[0] == "GTS"){
+							doc[0].gts_gtsTransFlag = true;
+						var obj = {
+							selector : {
+								"_id": {"$gt":0},
+								"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+						}};
+						db.find(obj).then(function(dataLL){
+							//console.log(req.session.businessunit.split(" ")[0]);
+							doc[0].lessonsList = dataLL.body.docs[0].value;
+						deferred.resolve({"status": 200, "doc": doc});
+					}).catch(function(err) {
+						console.log("[assessableunit][LessonsList]" + dataLL.error);
+						deferred.reject({"status": 500, "error": err});
+					});
+				}
+				else {
+					deferred.resolve({"status": 200, "doc": doc});
+				}
+						break;
 						default:
 							deferred.resolve({"status": 200, "doc": doc});
 							break;
@@ -984,6 +1029,10 @@ var assessableunit = {
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							break;
+						//irvingSaveNew
+						case "Controllable Unit":
+						doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
+						break;
 					}
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
@@ -1077,6 +1126,8 @@ var assessableunit = {
 							doc[0].IOT = req.body.IOT;
 							doc[0].IMT = req.body.IMT;
 							doc[0].Country = req.body.Country;
+							//irvingSaveExisting
+							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].AuditProgram = req.body.AuditProgram;

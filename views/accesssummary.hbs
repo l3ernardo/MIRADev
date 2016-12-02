@@ -1,23 +1,11 @@
 <link href="/public/css/jquery.treetable.css" rel="stylesheet" type="text/css" />
-<link href="/public/css/style.css" rel="stylesheet" type="text/css" />
-<script src='./js/accesssummary.js'></script>
-<script src='./js/utility.js'></script>
+<link href="./css/style.css" rel="stylesheet" type="text/css" />
 <link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 <script src="./lib/jquery.dataTables.js"></script>
-<script>
-	//Load document's name
-	$('h1#pageTitle').text("Explicit Access Summary");
-	$("#reports_treeview").treetable({expandable: true });
-	//change color depending on source (mira/WWBCIT)
-	document.getElementById("ccc").style.backgroundColor = "red";
-	
-	
-</script>
-<style>
-  
-        table td {width:100px; word-wrap:break-word;}
+<script src="./js/accesssummary.js"></script>
+<script src="./js/utility.js"></script>
 
-   </style>
+
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
 		<span><br/></span>
@@ -30,80 +18,118 @@
 			</p>
 			<br/>
 		</div>
-		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{{valuesToString List}}}</textarea>
-		<div>
-			<table id="accesssummary_treeview" cellspacing="0" cellpadding="0" border="0" class="display nowrap" >
+		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">valuesToString List</textarea>
+		<div >
+		
+			<table id="accesssummary_treeview"  cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
 				<thead>
-					<tr > 
-					   <th    scope="col" data-orderable="false" ><input  type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
-					    	<th id="th1" data-orderable="false" >User</th>
-						<th id="th2" data-orderable="false">Type</th>
-						<th id="th3" data-orderable="false">Assessable Unit (WWBCIT blue/Mira green)</th>
-						<th id="th4" data-orderable="false">Status</th>
-						<th id="th5" data-orderable="false">Addional Editors</th>
-						<th id="th6" data-orderable="false">Addional Readers</th>
-						<th id="th7" data-orderable="false">Owners</th>
-						<th id="th8" data-orderable="false">Focals</th>
-						<th id="th9" data-orderable="false">Coordinators</th>
-						<th id="th10" data-orderable="false">Readers</th>
-						<th id="th11" data-orderable="false">BU IOT</th>
-						<th id="th12" data-orderable="false">BU IMT</th>
-						<th id="th13" data-orderable="false">Country</th>
+					<tr> 
+					    <th  scope="col"  >Select<input  type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
+					    <th  id="th1"  >User</th>
+						<th id="th2" >Type</th>
+						<th id="th3" >Assessable Unit (WWBCIT blue/Mira green)</th>
+						<th id="th4" >Status</th>
+						<th id="th5" >Addional Editors</th>
+						<th id="th6" >Addional Readers</th>
+						<th id="th7" >Owners</th>
+						<th id="th8" >Focals</th>
+						<th id="th9" >Coordinators</th>
+						<th id="th10" >Readers</th>
+						<th id="th11" >BU IOT</th>
+						<th id="th12" >BU IMT</th>
+						<th id="th13" >Country</th>
+						<th >ID</th>
+						<th >Parent</th>
 						
 					</tr>
 				</thead>
-			<tbody> 
-				
-				
-
-
-
-		{{#each Users}}
-
-						<tr id="ccc" data-tt-id="{{name}}" >
-							<th  style="visibility:hidden" scope="row"><input type="checkbox" id="invidual_checkbox_tree" class="mira_checkbox_tree"/></th>
-							<td>{{name}}</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td> 
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							
-						</tr>
-				
-					
-
-			{{#each data}}
-						<tr id="ccc" data-tt-id="{{_id}}" data-tt-parent-id="{{../name}}" >
-							<th   scope="row"><input type="checkbox" id="invidual_checkbox_tree" class="mira_checkbox_tree"/></th>
-							<td ></td>
-							<td style="{{{getSourceColor Source }}}" >{{Type}}</td>
-							<td style="{{{getSourceColor Source }}}" ><a href="/assessableunit?id={{_id}}">{{AssessableUnit}}</a></td>
-							<td style="{{{getSourceColor Source }}}" >{{Status}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{{listWithComa AddionalEditors}}}</td> 
-							<td style="{{{getSourceColor Source }}}" >{{{listWithComa AddionalReaders}}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Owners}}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Focals}}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Coordinators}}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{{listWithComa Readers}}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{IOT}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{IMT}}</td>
-							<td style="{{{getSourceColor Source }}}" >{{Country}}</td>
-							
-						</tr>
-			{{/each}}
-						
-		{{/each}}
-				</tbody>
+		
 			</table>
 		</div>
 	</div>
 
 </div>
+
+
+<script>
+	//Load document's name
+	$(document).ready(function() {
+	
+	$('h1#pageTitle').text("Explicit Access Summary");
+	
+		$('#accesssummary_treeview').DataTable({
+			select: true,
+			"paginate": false,
+			"processing": true,
+			"serverSide": true,
+			"ajax": "../dataFeedAccessSummary",
+			"scrollX": true,
+			"searching": false,
+			"ordering": false,
+			  "columnDefs": [
+            {
+                "targets": [ 15 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 14 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 16 ],
+                "visible": false
+            }
+        ],
+			"scrollY": 280,
+			"fnInitComplete": function(oSettings, json) {
+      	
+      		$("#accesssummary_treeview").treetable({expandable: true });
+    		},
+			
+			
+			"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+			        $(nRow).attr('data-tt-id', aData[15]);//added tree id and parents for tree view
+			        $(nRow).attr('data-tt-parent-id', aData[16]);//added tree id and parents for tree view
+			        $('td:eq(0)', nRow).html('<input type="checkbox" id="invidual_checkbox_tree" class="mira_checkbox_tree"/>');
+			        $('td:eq(0)', nRow).attr('scope', 'row');
+			        /*
+			        if(aData[14] == "WWBCIT"){ //adding colors
+			        	$('td:eq(1)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(2)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(3)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(4)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(5)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(6)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(7)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(8)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(9)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(10)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(11)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(12)', nRow).attr('style', "background-color: #C0E1FF");
+			        	} 
+			        if(aData[14] == "Mira"){
+			        	$('td:eq(1)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(2)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(3)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(4)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(5)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(6)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(7)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(8)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(9)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(10)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(11)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(12)', nRow).attr('style', "background-color: #C2FF91");
+			        	}
+			     */
+				
+			    }
+			
+		});
+		
+
+	});
+	
+</script>
