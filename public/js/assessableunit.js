@@ -49,6 +49,8 @@ $(document).ready(function(){
 	//Load the SimpleEditor
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
+	//using character counter function
+	myEditor.on('editorKeyPress',function(){counter(myEditor)},myEditor,true);
 });
 
 function hide_divs(){
@@ -118,4 +120,23 @@ function valid_au() {
 	}
 	if (!valid) alert("Fields with (*) are required!\n" + req_flds)
 	return valid;
+};
+
+//character counter
+function counter(name) { 
+var string1=name.toString(),
+i=string1.indexOf("#")+1,
+f=string1.indexOf('_');
+use=string1.substring(i,f),
+html = name.saveHTML();
+//data = html.toString(),
+data2= html.replace(/<\S[^><]*>/g, ''),
+data3= data2.replace(/&nbsp;/g,' '); 
+charCount = ((data3.length) ? data3.length : 0),
+ndiv= "<div id='"+use+"'><span title='"+use+"'>Chars:"+charCount+"</span></div>",
+$newdiv1 =ndiv,
+rdiv="#"+use,
+$(rdiv).remove(),
+rdiv2="#"+use+"_container";
+$(rdiv2).append($newdiv1);
 };

@@ -440,35 +440,47 @@ $(document).ready(function(){
 	//Load the SimpleEditors
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
+	//myEditor.on('editorKeyUp',function(){counter(myEditor)},myEditor,true);
 	myEditorRatingSummary = new YAHOO.widget.SimpleEditor('RatingSummary', myConfig);
 	myEditorRatingSummary.render();
+	myEditorRatingSummary.on('editorKeyPress',function(){counter(myEditorRatingSummary)},myEditorRatingSummary,true);
 	if ( $("input[name='enteredbu']").val() == "GTS" ) {
 		if ($("input[name='parentdocsubtype']").val() == "BU Reporting Group" || $("input[name='parentdocsubtype']").val() == "BU Country" || $("input[name='parentdocsubtype']").val() == "BU IMT" || $("input[name='parentdocsubtype']").val() == "BU IOT" || $("input[name='parentdocsubtype']").val() == "Business Unit") {
 			myEditorHighlightCRM = new YAHOO.widget.SimpleEditor('HighlightCRM', myConfig);
 			myEditorHighlightCRM.render();
+			myEditorHighlightCRM.on('editorKeyPress',function(){counter(myEditorHighlightCRM)},myEditorHighlightCRM,true);
+			myEditor.on('editorKeyPress',function(){counter(myEditor)},myEditor,true);
 			myEditorFocusAreaCRM = new YAHOO.widget.SimpleEditor('FocusAreaCRM', myConfig);
 			myEditorFocusAreaCRM.render();
+			myEditorFocusAreaCRM.on('editorKeyPress',function(){counter(myEditorFocusAreaCRM)},myEditorFocusAreaCRM,true);
 			myEditorHighlightSOD = new YAHOO.widget.SimpleEditor('HighlightSOD', myConfig);
 			myEditorHighlightSOD.render();
+			myEditorHighlightSOD.on('editorKeyPress',function(){counter(myEditorHighlightSOD)},myEditorHighlightSOD,true);
 			myEditorFocusAreaSOD = new YAHOO.widget.SimpleEditor('FocusAreaSOD', myConfig);
 			myEditorFocusAreaSOD.render();
+			myEditorFocusAreaSOD.on('editorKeyPress',function(){counter(myEditorFocusAreaSOD)},myEditorFocusAreaSOD,true);
 		} else {
 			myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
 			myEditorHighlight.render();
+			myEditorHighlight.on('editorKeyPress',function(){counter(myEditorHighlight)},myEditorHighlight,true);
 			myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
 			myEditorFocusArea.render();
+			myEditorFocusArea.on('editorKeyPress',function(){counter(myEditorFocusArea)},myEditorFocusArea,true);
 		}
 	} else {
 		myEditorHighlight = new YAHOO.widget.SimpleEditor('Highlight', myConfig);
 		myEditorHighlight.render();
+		myEditorHighlight.on('editorKeyPress',function(){counter(myEditorHighlight)},myEditorHighlight,true);
 		myEditorFocusArea = new YAHOO.widget.SimpleEditor('FocusArea', myConfig);
 		myEditorFocusArea.render();
+		myEditorFocusArea.on('editorKeyPress',function(){counter(myEditorFocusArea)},myEditorFocusArea,true);
 	}
 	switch ($("input[name='parentdocsubtype']").val()) {
 		case "Controllable Unit":
 		case "Country Process":
 			myEditorAsmtOtherConsiderations = new YAHOO.widget.SimpleEditor('AsmtOtherConsiderations', myConfig);
 			myEditorAsmtOtherConsiderations.render();
+			myEditorAsmtOtherConsiderations.on('editorKeyPress',function(){counter(myEditorAsmtOtherConsiderations)},myEditorAsmtOtherConsiderations,true);
 			break;
 		case "Business Unit":
 		case "BU Reporting Group":
@@ -478,16 +490,22 @@ $(document).ready(function(){
 		case "Global Process":
 			myEditorOverallAssessmentComments = new YAHOO.widget.SimpleEditor('OverallAssessmentComments', myConfig);
 			myEditorOverallAssessmentComments.render();
+			myEditorOverallAssessmentComments.on('editorKeyPress',function(){counter(myEditorOverallAssessmentComments)},myEditorOverallAssessmentComments,true);
 			myEditorKCFRTestingComments = new YAHOO.widget.SimpleEditor('KCFRTestingComments', myConfig);
 			myEditorKCFRTestingComments.render();
+			myEditorKCFRTestingComments.on('editorKeyPress',function(){counter(myEditorKCFRTestingComments)},myEditorKCFRTestingComments,true);
 			myEditorKCOTestingComments = new YAHOO.widget.SimpleEditor('KCOTestingComments', myConfig);
 			myEditorKCOTestingComments.render();
+			myEditorKCOTestingComments.on('editorKeyPress',function(){counter(myEditorKCOTestingComments)},myEditorKCOTestingComments,true);
 			myEditorCorpIAComments = new YAHOO.widget.SimpleEditor('CorpIAComments', myConfig);
 			myEditorCorpIAComments.render();
+			myEditorCorpIAComments.on('editorKeyPress',function(){counter(myEditorCorpIAComments)},myEditorCorpIAComments,true);
 			myEditorMissedREComments = new YAHOO.widget.SimpleEditor('MissedREComments', myConfig);
 			myEditorMissedREComments.render();
+			myEditorMissedREComments.on('editorKeyPress',function(){counter(myEditorMissedREComments)},myEditorMissedREComments,true);
 			myEditorMissedMSACComments = new YAHOO.widget.SimpleEditor('MissedMSACComments', myConfig);
 			myEditorMissedMSACComments.render();
+			myEditorMissedMSACComments.on('editorKeyPress',function(){counter(myEditorMissedMSACComments)},myEditorMissedMSACComments,true);
 			// Rich text fields for metrics
 			var metrics = $("#opMetricIDs").val().split(',');
 			var i;
@@ -495,47 +513,66 @@ $(document).ready(function(){
 			for (i = 0; i < metrics.length; ++i) {
 				vars['myEditor'+metrics[i]+'Comment'] = new YAHOO.widget.SimpleEditor(metrics[i]+'Comment', myConfig);
 				vars['myEditor'+metrics[i]+'Comment'].render();
+				vars['myEditor'+metrics[i]+'Comment'].on('editorKeyPress',function(){counter(vars['myEditor'+metrics[i]+'Comment'])},vars['myEditor'+metrics[i]+'Comment'],true);
 			}
 
 			if ($("input[name='enteredbu']").val() == "GTS" && ($("input[name='parentdocsubtype']").val() !== "Global Process")) {
 				// CRM rich text fields
 				myEditorOverallAssessmentCommentsCRM = new YAHOO.widget.SimpleEditor('OverallAssessmentCommentsCRM', myConfig);
 				myEditorOverallAssessmentCommentsCRM.render();
+				myEditorOverallAssessmentCommentsCRM.on('editorKeyPress',function(){counter(myEditorOverallAssessmentCommentsCRM)},myEditorOverallAssessmentCommentsCRM,true);
 				myEditorKCFRTestingCommentsCRM = new YAHOO.widget.SimpleEditor('KCFRTestingCommentsCRM', myConfig);
 				myEditorKCFRTestingCommentsCRM.render();
+				myEditorKCFRTestingCommentsCRM.on('editorKeyPress',function(){counter(myEditorKCFRTestingCommentsCRM)},myEditorKCFRTestingCommentsCRM,true);
 				myEditorKCOTestingCommentsCRM = new YAHOO.widget.SimpleEditor('KCOTestingCommentsCRM', myConfig);
 				myEditorKCOTestingCommentsCRM.render();
+				myEditorKCOTestingCommentsCRM.on('editorKeyPress',function(){counter(myEditorKCOTestingCommentsCRM)},myEditorKCOTestingCommentsCRM,true);
 				myEditorCorpIACommentsCRM = new YAHOO.widget.SimpleEditor('CorpIACommentsCRM', myConfig);
 				myEditorCorpIACommentsCRM.render();
+				myEditorCorpIACommentsCRM.on('editorKeyPress',function(){counter(myEditorCorpIACommentsCRM)},myEditorCorpIACommentsCRM,true);
 				myEditorMissedRECommentsCRM = new YAHOO.widget.SimpleEditor('MissedRECommentsCRM', myConfig);
 				myEditorMissedRECommentsCRM.render();
+				myEditorMissedRECommentsCRM.on('editorKeyPress',function(){counter(myEditorMissedRECommentsCRM)},myEditorMissedRECommentsCRM,true);
 				myEditorMissedMSACCommentsCRM = new YAHOO.widget.SimpleEditor('MissedMSACCommentsCRM', myConfig);
 				myEditorMissedMSACCommentsCRM.render();
+				myEditorMissedMSACCommentsCRM.on('editorKeyPress',function(){counter(myEditorMissedMSACCommentsCRM)},myEditorMissedMSACCommentsCRM,true);
 				myEditorBoCCommentsCRM = new YAHOO.widget.SimpleEditor('BoCCommentsCRM', myConfig);
 				myEditorBoCCommentsCRM.render();
+				myEditorBoCCommentsCRM.on('editorKeyPress',function(){counter(myEditorBoCCommentsCRM)},myEditorBoCCommentsCRM,true);
 				myEditorPerfOverviewOtherExplanationCRM = new YAHOO.widget.SimpleEditor('PerfOverviewOtherExplanationCRM', myConfig);
 				myEditorPerfOverviewOtherExplanationCRM.render();
+				myEditorPerfOverviewOtherExplanationCRM.on('editorKeyPress',function(){counter(myEditorPerfOverviewOtherExplanationCRM)},myEditorPerfOverviewOtherExplanationCRM,true);
 				myEditorPerfOverviewCriticaExplanationCRM = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanationCRM', myConfig);
 				myEditorPerfOverviewCriticaExplanationCRM.render();
+				myEditorPerfOverviewCriticaExplanationCRM.on('editorKeyPress',function(){counter(myEditorPerfOverviewCriticaExplanationCRM)},myEditorPerfOverviewCriticaExplanationCRM,true);
 				// SOD rich text fields
 				myEditorOverallAssessmentCommentsSOD = new YAHOO.widget.SimpleEditor('OverallAssessmentCommentsSOD', myConfig);
 				myEditorOverallAssessmentCommentsSOD.render();
+				myEditorOverallAssessmentCommentsSOD.on('editorKeyPress',function(){counter(myEditorOverallAssessmentCommentsSOD)},myEditorOverallAssessmentCommentsSOD,true);
 				myEditorKCFRTestingCommentsSOD = new YAHOO.widget.SimpleEditor('KCFRTestingCommentsSOD', myConfig);
 				myEditorKCFRTestingCommentsSOD.render();
+				myEditorKCFRTestingCommentsSOD.on('editorKeyPress',function(){counter(myEditorKCFRTestingCommentsSOD)},myEditorKCFRTestingCommentsSOD,true);
 				myEditorKCOTestingCommentsSOD = new YAHOO.widget.SimpleEditor('KCOTestingCommentsSOD', myConfig);
 				myEditorKCOTestingCommentsSOD.render();
+				myEditorKCOTestingCommentsSOD.on('editorKeyPress',function(){counter(myEditorKCOTestingCommentsSOD)},myEditorKCOTestingCommentsSOD,true);
 				myEditorCorpIACommentsSOD = new YAHOO.widget.SimpleEditor('CorpIACommentsSOD', myConfig);
 				myEditorCorpIACommentsSOD.render();
+				myEditorCorpIACommentsSOD.on('editorKeyPress',function(){counter(myEditorCorpIACommentsSOD)},myEditorCorpIACommentsSOD,true);
 				myEditorMissedRECommentsSOD = new YAHOO.widget.SimpleEditor('MissedRECommentsSOD', myConfig);
 				myEditorMissedRECommentsSOD.render();
+				myEditorMissedRECommentsSOD.on('editorKeyPress',function(){counter(myEditorMissedRECommentsSOD)},myEditorMissedRECommentsSOD,true);
 				myEditorMissedMSACCommentsSOD = new YAHOO.widget.SimpleEditor('MissedMSACCommentsSOD', myConfig);
 				myEditorMissedMSACCommentsSOD.render();
+				myEditorMissedMSACCommentsSOD.on('editorKeyPress',function(){counter(myEditorMissedMSACCommentsSOD)},myEditorMissedMSACCommentsSOD,true);
 				myEditorBoCCommentsSOD = new YAHOO.widget.SimpleEditor('BoCCommentsSOD', myConfig);
 				myEditorBoCCommentsSOD.render();
+				myEditorBoCCommentsSOD.on('editorKeyPress',function(){counter(myEditorBoCCommentsSOD)},myEditorBoCCommentsSOD,true);
 				myEditorPerfOverviewOtherExplanationSOD = new YAHOO.widget.SimpleEditor('PerfOverviewOtherExplanationSOD', myConfig);
 				myEditorPerfOverviewOtherExplanationSOD.render();
+				myEditorPerfOverviewOtherExplanationSOD.on('editorKeyPress',function(){counter(myEditorPerfOverviewOtherExplanationSOD)},myEditorPerfOverviewOtherExplanationSOD,true);
 				myEditorPerfOverviewCriticaExplanationSOD = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanationSOD', myConfig);
 				myEditorPerfOverviewCriticaExplanationSOD.render();
+				myEditorPerfOverviewCriticaExplanationSOD.on('editorKeyPress',function(){counter(myEditorPerfOverviewCriticaExplanationSOD)},myEditorPerfOverviewCriticaExplanationSOD,true);
 				// Rich text fields for metrics
 				var metrics = $("#opMetricIDsSOD").val().split(',');
 				var i;
@@ -543,14 +580,18 @@ $(document).ready(function(){
 				for (i = 0; i < metrics.length; ++i) {
 					varsSOD['myEditor'+metrics[i]+'CommentSOD'] = new YAHOO.widget.SimpleEditor(metrics[i]+'CommentSOD', myConfig);
 					varsSOD['myEditor'+metrics[i]+'CommentSOD'].render();
+					varsSOD['myEditor'+metrics[i]+'CommentSOD'].on('editorKeyPress',function(){counter(varsSOD['myEditor'+metrics[i]+'CommentSOD'])},varsSOD['myEditor'+metrics[i]+'CommentSOD'],true);
 				}
 			} else {
 				myEditorBoCComments = new YAHOO.widget.SimpleEditor('BoCComments', myConfig);
 				myEditorBoCComments.render();
+				myEditorBoCComments.on('editorKeyPress',function(){counter(myEditorBoCComments)},myEditorBoCComments,true);
 				myEditorPerfOverviewOtherExplanation = new YAHOO.widget.SimpleEditor('PerfOverviewOtherExplanation', myConfig);
 				myEditorPerfOverviewOtherExplanation.render();
+				myEditorPerfOverviewOtherExplanation.on('editorKeyPress',function(){counter(myEditorPerfOverviewOtherExplanation)},myEditorPerfOverviewOtherExplanation,true);
 				myEditorPerfOverviewCriticaExplanation = new YAHOO.widget.SimpleEditor('PerfOverviewCriticaExplanation', myConfig);
 				myEditorPerfOverviewCriticaExplanation.render();
+				myEditorPerfOverviewCriticaExplanation.on('editorKeyPress',function(){counter(myEditorPerfOverviewCriticaExplanation)},myEditorPerfOverviewCriticaExplanation,true);
 			}
 			break;
 	}
@@ -560,4 +601,23 @@ $(document).ready(function(){
 
 function hide_divs(){
 	$('div#ibm-navigation').hide();
+};
+
+//character counter
+function counter(name) { 
+var string1=name.toString(),
+i=string1.indexOf("#")+1,
+f=string1.indexOf('_');
+use=string1.substring(i,f),
+html = name.saveHTML();//alert('es string:'+html.toString()+"+"),
+//data = html.toString(),
+data2= html.replace(/<\S[^><]*>/g, ''),
+data3= data2.replace(/&nbsp;/g,' '); 
+charCount = ((data3.length) ? data3.length : 0),
+ndiv= "<div id='"+use+"'><span title='"+use+"'>Chars:"+charCount+"</span></div>",
+$newdiv1 =ndiv,
+rdiv="#"+use,
+$(rdiv).remove(),
+rdiv2="#"+use+"_container";
+$(rdiv2).append($newdiv1);
 };
