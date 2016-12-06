@@ -60,6 +60,14 @@
 						</span>
 					</td>
 				</tr>
+				<tr>
+					<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
+					<td>
+						<span>
+							{{{uniqueSelect "OpMetricKey" parameters.GBSOpMetricKeysCU.0.options "id" "name" OpMetricKey}}}
+						</span>
+					</td>
+				</tr>
 			{{/if_equal}}
 			<tr>
 				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
@@ -116,6 +124,16 @@
 			{{/if}}
 			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			<tr>
+				<td>Operational Metric Key:</td>
+				<td>
+					{{#each parameters.GBSOpMetricKeysCU.0.options}}
+						{{#if_equal id ../../../OpMetricKey}}
+							{{name}}
+						{{/if_equal}}
+					{{/each}}
+				</td>
+			</tr>
 			{{#if_equal showARCFreq 1}}
 				<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 			{{/if_equal}}
@@ -153,6 +171,16 @@
 		{{/if}}
 		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		<tr>
+			<td>Operational Metric Key:</td>
+			<td>
+				{{#each parameters.GBSOpMetricKeysCU.0.options}}
+					{{#if_equal id ../../../OpMetricKey}}
+						{{name}}
+					{{/if_equal}}
+				{{/each}}
+			</td>
+		</tr>
 		{{#if_equal showARCFreq 1}}
 			<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 		{{/if_equal}}

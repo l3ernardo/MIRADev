@@ -78,14 +78,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Rating Justification:</td>
-			<td>
-				{{#if RJandT2SEditable}}
-					{{MIRARatingJustification}}
-				{{else}}
-					{{WWBCITRatingJustification}}
-				{{/if}}
-			</td>
+			{{#if_not_equal PeriodRating "Sat"}}
+				<tr class="MIRARatingJustification"><td>Rating Justification:</td><td>{{MIRARatingJustification}}</td></tr>
+				<tr class="reviewComments"><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
+				<tr class="target2Sat"><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+			{{else}}
+				<tr class="WWBCITRatingJustification"><td>Rating Justification:</td><td>{{WWBCITRatingJustification}}</td></tr>
+			{{/if_not_equal}}
 		</tr>
 		<tr class="reviewComments"><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
 		<tr class="target2Sat"><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
