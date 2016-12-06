@@ -108,7 +108,7 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						if (data.doc[0].editmode) {
 							var lParams;
 							if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'UnitSizes','ARCFrequencies','GTSAuditPrograms'];
-							else lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms'];
+							else lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms','GBSOpMetricKeysCU'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;

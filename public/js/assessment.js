@@ -255,7 +255,13 @@ $(document).ready(function(){
 				}
 				break;
 		}
-		$("#assessment").submit();
+		// call field validation for assessments
+		if(valid_asmt()) {
+       //submit the form
+       		$("#assessment").submit();
+    	} else {
+       		evt.preventDefault();
+   		 }
 	});
 	//Code for Save & Close button
 	$('#btn_save_close').click(function(evt) {
@@ -601,6 +607,70 @@ $(document).ready(function(){
 
 function hide_divs(){
 	$('div#ibm-navigation').hide();
+};
+
+//Field validation for assessment.
+function valid_asmt() {
+	var req_flds = "";
+	switch ($("input[name='parentdocsubtype']").val()) {
+		case "Business Unit":
+			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			req_flds = req_flds + "  - Target to Sat\n";
+				alert("Fields with (*) are required!\n" + req_flds);
+				$('#Target2Sat').focus();
+				return false;
+			}
+			break;
+		case "BU IOT":
+			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			req_flds = req_flds + "  - Target to Sat\n";
+				alert("Fields with (*) are required!\n" + req_flds);
+				$('#Target2Sat').focus();
+				return false;
+			}
+			break;
+		case "BU IMT":
+			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			req_flds = req_flds + "  - Target to Sat\n";
+				alert("Fields with (*) are required!\n" + req_flds);
+				$('#Target2Sat').focus();
+				return false;
+			}
+			break;
+		case "BU Country":
+			if (($("input[name='Target2Sat']").val() == "") && $("#PeriodRating").val() != "Sat") {
+			req_flds = req_flds + "  - Target to Sat\n";
+				alert("Fields with (*) are required!\n" + req_flds);
+				$('#Target2Sat').focus();
+				return false;
+			}
+			break;
+		case "Controllable Unit":
+			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			req_flds = req_flds + "  - Target to Sat\n";
+				alert("Fields with (*) are required!\n" + req_flds);
+				$('#Target2Sat').focus();
+				return false;
+			}
+			break;
+		case "BU Reporting Group":
+			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			req_flds = req_flds + "  - Target to Sat\n";
+				alert("Fields with (*) are required!\n" + req_flds);
+				$('#Target2Sat').focus();
+				return false;
+			}
+			break;
+		case "Account":
+			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			req_flds = req_flds + "  - Target to Sat\n";
+				alert("Fields with (*) are required!\n" + req_flds);
+				$('#Target2Sat').focus();
+				return false;
+			}
+			break;
+	}
+	return true;
 };
 
 //character counter
