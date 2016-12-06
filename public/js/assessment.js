@@ -411,8 +411,8 @@ $(document).ready(function(){
 					var metricsSOD = $("#opMetricIDsSOD").val().split(',');
 					var i;
 					for (i = 0; i < metricsSOD.length; ++i) {
-						vars['myEditor'+metricsSOD[i]+'CommentSOD'].saveHTML();
-						YmyEditor = vars['myEditor'+metricsSOD[i]+'CommentSOD'].get('element').value;
+						varsSOD['myEditor'+metricsSOD[i]+'CommentSOD'].saveHTML();
+						YmyEditor = varsSOD['myEditor'+metricsSOD[i]+'CommentSOD'].get('element').value;
 						$('#'+metricsSOD[i]+'CommentSOD').val(YmyEditor);
 					}
 				} else {
@@ -685,20 +685,20 @@ function valid_asmt() {
 };
 
 //character counter
-function counter(name) { 
-var string1=name.toString(),
-i=string1.indexOf("#")+1,
-f=string1.indexOf('_');
-use=string1.substring(i,f),
-html = name.saveHTML();//alert('es string:'+html.toString()+"+"),
-//data = html.toString(),
-data2= html.replace(/<\S[^><]*>/g, ''),
-data3= data2.replace(/&nbsp;/g,' '); 
-charCount = ((data3.length) ? data3.length : 0),
-ndiv= "<div id='"+use+"'><span title='"+use+"'>Chars:"+charCount+"</span></div>",
-$newdiv1 =ndiv,
-rdiv="#"+use,
-$(rdiv).remove(),
-rdiv2="#"+use+"_container";
-$(rdiv2).append($newdiv1);
+function counter(name) {
+	var string1=name.toString(),
+	i=string1.indexOf("#")+1,
+	f=string1.indexOf('_');
+	use=string1.substring(i,f),
+	html = name.saveHTML();//alert('es string:'+html.toString()+"+"),
+	//data = html.toString(),
+	data2= html.replace(/<\S[^><]*>/g, ''),
+	data3= data2.replace(/&nbsp;/g,' ');
+	charCount = ((data3.length) ? data3.length : 0),
+	ndiv= "<div id='"+use+"'><span title='"+use+"'>Chars:"+charCount+"</span></div>",
+	$newdiv1 =ndiv,
+	rdiv="#"+use,
+	$(rdiv).remove(),
+	rdiv2="#"+use+"_container";
+	$(rdiv2).append($newdiv1);
 };
