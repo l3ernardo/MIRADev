@@ -47,7 +47,7 @@ $(document).ready(function() {
       }
     }
 
-    //Irvinglist Audit Lessons Learned Key - for CU-not GBS only
+    //list Audit Lessons Learned Key - for CU-not GBS only
     if ($("input[name='docsubtype']").val() == "Controllable Unit") {
       if ( $("input[name='AuditLessonsKey']").val() != "") {
         var units = $("input[name='AuditLessonsKey']").val().split(",");
@@ -66,7 +66,8 @@ $(document).ready(function() {
     var listItems = $("#"+selID+" input");
     var newlist = "";
     listItems.each(function(idx, cbx) {
-      if ($("#"+ scope + $(this).val()).is(':checked')) {
+      //if ($("#"+ scope + $(this).val()).is(':checked')) {
+      if ($("[id='"+scope+""+$(this).val()+"']").is(':checked')) {
         if (newlist == "") newlist = $(this).val();
         else newlist = newlist + "," + $(this).val();
       }
@@ -92,7 +93,7 @@ $(document).ready(function() {
     if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
   });
 
-  // On click events for CU- Audit Lesson KeyList
+  //On click events for CU- Audit Lesson KeyList
   $('#scopeLessonsList input[type="checkbox"]').on('click', function() {
     var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
     title = $(this).attr('name') + ",";
@@ -101,7 +102,8 @@ $(document).ready(function() {
       $('#lessonsList').append(html);
       $("#scopeLessonsListSel").hide();
     } else {
-      $("#scopeLessonsList"+$(this).val()).remove();
+      //$("#scopeLessonsList"+$(this).val()).remove();
+      $("[id='scopeLessonsList"+$(this).val()+"']").remove();
     }
     updateIDlist("AuditLessonsKey","lessonsList","scopeLessonsList");
   });

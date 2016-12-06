@@ -909,7 +909,6 @@ var assessableunit = {
 						case "Controllable Unit":
 						if(req.session.businessunit.split(" ")[0] == "GTS"){
 							doc[0].gts_gtsTransFlag = true;
-							console.log("huehue");
 						var obj = {
 							selector : {
 								"_id": {"$gt":0},
@@ -1033,7 +1032,6 @@ var assessableunit = {
 						//irvingSaveNew
 						case "Controllable Unit":
 						doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
-						//doc[0].auditLessonKey
 						break;
 					}
 					doc[0].Notes = req.body.Notes;
@@ -1129,6 +1127,8 @@ var assessableunit = {
 							doc[0].IMT = req.body.IMT;
 							doc[0].Country = req.body.Country;
 							//irvingSaveExisting
+							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
+							doc[0].OpMetricKey = re.body.OpMetricKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].AuditProgram = req.body.AuditProgram;
