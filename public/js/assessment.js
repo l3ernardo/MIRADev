@@ -429,7 +429,12 @@ $(document).ready(function(){
 				break;
 		}
 		$('#close').val('1');
-		$("#assessment").submit();
+		if(valid_asmt()) {
+       //submit the form
+       		$("#assessment").submit();
+    	} else {
+       		evt.preventDefault();
+   		 }
 	});
 
 	// --- start of rich text section --- //
@@ -612,9 +617,15 @@ function hide_divs(){
 //Field validation for assessment.
 function valid_asmt() {
 	var req_flds = "";
+	if ($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "NR" || $("#PeriodRating").val() == "Pending")) {
+			alert("Holistic Rating is require.");
+			$('#PeriodRating').focus();
+			return false;
+		}
+
 	switch ($("input[name='parentdocsubtype']").val()) {
 		case "Business Unit":
-			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
 			req_flds = req_flds + "  - Target to Sat\n";
 				alert("Fields with (*) are required!\n" + req_flds);
 				$('#Target2Sat').focus();
@@ -622,7 +633,7 @@ function valid_asmt() {
 			}
 			break;
 		case "BU IOT":
-			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
 			req_flds = req_flds + "  - Target to Sat\n";
 				alert("Fields with (*) are required!\n" + req_flds);
 				$('#Target2Sat').focus();
@@ -630,7 +641,7 @@ function valid_asmt() {
 			}
 			break;
 		case "BU IMT":
-			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
 			req_flds = req_flds + "  - Target to Sat\n";
 				alert("Fields with (*) are required!\n" + req_flds);
 				$('#Target2Sat').focus();
@@ -638,7 +649,7 @@ function valid_asmt() {
 			}
 			break;
 		case "BU Country":
-			if (($("input[name='Target2Sat']").val() == "") && $("#PeriodRating").val() != "Sat") {
+			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
 			req_flds = req_flds + "  - Target to Sat\n";
 				alert("Fields with (*) are required!\n" + req_flds);
 				$('#Target2Sat').focus();
@@ -646,7 +657,7 @@ function valid_asmt() {
 			}
 			break;
 		case "Controllable Unit":
-			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
 			req_flds = req_flds + "  - Target to Sat\n";
 				alert("Fields with (*) are required!\n" + req_flds);
 				$('#Target2Sat').focus();
@@ -654,7 +665,7 @@ function valid_asmt() {
 			}
 			break;
 		case "BU Reporting Group":
-			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
 			req_flds = req_flds + "  - Target to Sat\n";
 				alert("Fields with (*) are required!\n" + req_flds);
 				$('#Target2Sat').focus();
@@ -662,7 +673,7 @@ function valid_asmt() {
 			}
 			break;
 		case "Account":
-			if (($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat") && $("input[name='Target2Sat']").val() == "") {
+			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
 			req_flds = req_flds + "  - Target to Sat\n";
 				alert("Fields with (*) are required!\n" + req_flds);
 				$('#Target2Sat').focus();
