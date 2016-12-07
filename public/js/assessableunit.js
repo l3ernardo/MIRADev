@@ -49,8 +49,11 @@ $(document).ready(function(){
 	//Load the SimpleEditor
 	myEditor = new YAHOO.widget.SimpleEditor('Notes', myConfig);
 	myEditor.render();
-	//using character counter function
+	//using character counter function	
+	myEditor.on('editorKeyUp',function(){counter(myEditor)},myEditor,true);
 	myEditor.on('editorKeyPress',function(){counter(myEditor)},myEditor,true);
+	myEditor.on('editorMouseUp',function(){counter(myEditor)},myEditor,true);
+	myEditor.on('editorContentLoaded', function () {counter(myEditor)},myEditor,true);
 });
 
 function hide_divs(){
@@ -124,19 +127,18 @@ function valid_au() {
 
 //character counter
 function counter(name) { 
-var string1=name.toString(),
-i=string1.indexOf("#")+1,
-f=string1.indexOf('_');
-use=string1.substring(i,f),
-html = name.saveHTML();
-//data = html.toString(),
-data2= html.replace(/<\S[^><]*>/g, ''),
-data3= data2.replace(/&nbsp;/g,' '); 
-charCount = ((data3.length) ? data3.length : 0),
-ndiv= "<div id='"+use+"'><span title='"+use+"'>Chars:"+charCount+"</span></div>",
-$newdiv1 =ndiv,
-rdiv="#"+use,
-$(rdiv).remove(),
-rdiv2="#"+use+"_container";
-$(rdiv2).append($newdiv1);
+  var string1=name.toString(),
+  i=string1.indexOf("#")+1,
+  f=string1.indexOf('_');
+  use=string1.substring(i,f),
+  html = name.saveHTML();
+  data2= html.replace(/<\S[^><]*>/g, ''),
+  data3= data2.replace(/&nbsp;/g,' ');
+  charCount = ((data3.length) ? data3.length : 0),
+  ndiv= "<div id='"+use+"_Char"+"'><span title='"+use+"_Char"+"'>Chars:"+charCount+"</span></div>",
+  $newdiv1 =ndiv,
+  rdiv="#"+use+"_Char",
+  $(rdiv).remove(),
+  rdiv2="#"+use+"_container";
+  $(rdiv2).append($newdiv1);
 };
