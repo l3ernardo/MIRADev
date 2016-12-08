@@ -16,7 +16,7 @@ var accessupdates = {
 		doc[0].AdditionalEditors = req.body.editorlist;
 
 		//AllReaders = AdditionalReaders
-		if (pdoc[0].AllReaders == undefined) pdoc[0].AllReaders = [];
+		if (pdoc[0].AllReaders == undefined || pdoc[0].AllReaders == "") pdoc[0].AllReaders = [];
 		doc[0].AllReaders = pdoc[0].AllReaders; //inherited reader access
 		if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
 			doc[0].AdditionalReaders.split(',').forEach(function(entry) {
@@ -27,7 +27,7 @@ var accessupdates = {
 		doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
 
 		//AllEditors = Owner + AdditionalEditors
-		if (pdoc[0].AllEditors == undefined) pdoc[0].AllEditors = [];
+		if (pdoc[0].AllEditors == undefined || pdoc[0].AllEditors == "") pdoc[0].AllEditors = [];
 		doc[0].AllEditors = pdoc[0].AllEditors; //inherited reader access
 		if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner.split("(")[1].split(")")[0]);
 		if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
@@ -48,7 +48,7 @@ var accessupdates = {
 		doc[0].AdditionalReaders = req.body.readerlist;
 		doc[0].AdditionalEditors = req.body.editorlist;
 		//AllReaders = Coordinators + Readers + AdditionalReaders
-		if (doc[0].AllReaders == undefined) doc[0].AllReaders = [];
+		if (doc[0].AllReaders == undefined  || doc[0].AllReaders == "") doc[0].AllReaders = [];
 		if (doc[0].AdditionalReaders != undefined && doc[0].AdditionalReaders != "") {
 			doc[0].AdditionalReaders.split(',').forEach(function(entry) {
 				accessupdates.validateEntryIsNotEmpty(entry, doc[0].AllReaders);
@@ -70,7 +70,7 @@ var accessupdates = {
 		doc[0].AllReaders = util.sort_unique(doc[0].AllReaders);
 
 		//AllEditors = Owner + Focals + AdditionalEditors
-		if (doc[0].AllEditors == undefined) doc[0].AllEditors = [];
+		if (doc[0].AllEditors == undefined || doc[0].AllEditors == "") doc[0].AllEditors = [];
 		if (doc[0].Owner != undefined && doc[0].Owner != "") doc[0].AllEditors.push(doc[0].Owner.split("(")[1].split(")")[0]);
 		if (doc[0].AdditionalEditors != undefined && doc[0].AdditionalEditors != "") {
 			doc[0].AdditionalEditors.split(',').forEach(function(entry) {
