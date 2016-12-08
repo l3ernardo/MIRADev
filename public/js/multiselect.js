@@ -48,8 +48,9 @@ $(document).ready(function() {
     }
 
     //list Audit Lessons Learned Key - for CU-not GBS only
-    if ($("input[name='docsubtype']").val() == "Controllable Unit") {
+    if ($("input[name='docsubtype']").val() == "Controllable Unit" || $("input[name='docsubtype']").val() == "Account") {
       if ( $("input[name='AuditLessonsKey']").val() != "") {
+
         var units = $("input[name='AuditLessonsKey']").val().split(",");
         for (var i = 0; i < units.length; ++i) {
           var title = $("#lessonsList" + units[i]).prop('name') + ",";
@@ -57,7 +58,7 @@ $(document).ready(function() {
           $('#lessonsList').append(html);
           $("#lessonsList" + units[i]).prop('checked', true);
         }
-        $("#scopeLessonListSel").hide();
+        $("#scopeLessonsListSel").hide();
       }
     }
   }
