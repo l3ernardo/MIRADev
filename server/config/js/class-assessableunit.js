@@ -1128,7 +1128,7 @@ var assessableunit = {
 							doc[0].Country = req.body.Country;
 							//irvingSaveExisting
 							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
-							doc[0].OpMetricKey = re.body.OpMetricKey;
+							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].AuditProgram = req.body.AuditProgram;
