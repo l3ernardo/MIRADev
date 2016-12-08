@@ -78,7 +78,7 @@ $(document).ready(function(){
 			$("#globalProcessListSel").hide();
 			updateIDlist("globalProcess","processList","globalProcessList");
 		};
-	}
+	
 	//list Audit Lessons Learned Key - for CU-not GBS only
 		if ( $("input[name='AuditLessonsKey']").val() != "") {
 			var units = $("input[name='AuditLessonsKey']").val().split(",");
