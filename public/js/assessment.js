@@ -745,68 +745,83 @@ function valid_asmt() {
 			alert("Holistic Rating is require.");
 			$('#PeriodRating').focus();
 			return false;
-		}
-
-	switch ($("input[name='parentdocsubtype']").val()) {
-		case "Business Unit":
-			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-			req_flds = req_flds + "  - Target to Sat\n";
-				alert("Fields with (*) are required!\n" + req_flds);
-				$('#Target2Sat').focus();
-				return false;
-			}
-			break;
-		case "BU IOT":
-			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-			req_flds = req_flds + "  - Target to Sat\n";
-				alert("Fields with (*) are required!\n" + req_flds);
-				$('#Target2Sat').focus();
-				return false;
-			}
-			break;
-		case "BU IMT":
-			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-			req_flds = req_flds + "  - Target to Sat\n";
-				alert("Fields with (*) are required!\n" + req_flds);
-				$('#Target2Sat').focus();
-				return false;
-			}
-			break;
-		case "BU Country":
-			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-			req_flds = req_flds + "  - Target to Sat\n";
-				alert("Fields with (*) are required!\n" + req_flds);
-				$('#Target2Sat').focus();
-				return false;
-			}
-			break;
-		case "Controllable Unit":
-			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-			req_flds = req_flds + "  - Target to Sat\n";
-				alert("Fields with (*) are required!\n" + req_flds);
-				$('#Target2Sat').focus();
-				return false;
-			}
-			break;
-		case "BU Reporting Group":
-			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-			req_flds = req_flds + "  - Target to Sat\n";
-				alert("Fields with (*) are required!\n" + req_flds);
-				$('#Target2Sat').focus();
-				return false;
-			}
-			break;
-		case "Account":
-			if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-			req_flds = req_flds + "  - Target to Sat\n";
-				alert("Fields with (*) are required!\n" + req_flds);
-				$('#Target2Sat').focus();
-				return false;
-			}
-			break;
 	}
-	return true;
-};
+		switch ($("input[name='parentdocsubtype']").val()) {
+			case "Business Unit":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "BU IOT":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "BU IMT":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "BU Country":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "Controllable Unit":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "BU Reporting Group":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "Account":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "Global Process":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+			case "Country Process":
+				if (($("#MIRAStatus").val() == "Final" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
+				req_flds = req_flds + "  - Target to Sat\n";
+					alert("Fields with (*) are required!\n" + req_flds);
+					$('#Target2Sat').focus();
+					return false;
+				}
+				break;
+		}
+		return true;
+}
 
 //character counter
 function counter(name) {
