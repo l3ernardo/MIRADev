@@ -8,6 +8,7 @@
 
  var param = require('./class-parameter.js');
  var util = require('./class-utility.js');
+ var opMetric = require('./class-opmetric.js');
  var q  = require("q");
 
 var calculatefield = {
@@ -106,65 +107,65 @@ var calculatefield = {
 
       /* Calculate for Instance Design Specifics and parameters*/
   		var lParams = [];
-  		// Get required paramaters
-  		if (req.session.businessunit == "GTS") {
-  			if (doc[0].DocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Controllable Unit") {
-  				doc[0].CatCU = "";
-  				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-  			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process" || doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
-  				doc[0].CatP = "";
-  				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-  			} else {
-  				lParams = ['GTSInstanceDesign'];
-  			}
-        // For Testing Dynamic tables
-        if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
-          lParams.push('GTSRollupProcessesOPS');
-          lParams.push('GTSRollupProcessesFIN');
+
+      // Get Parameters for Assessable Units
+      if (doc[0].DocType == "Assessable Unit") {
+        if (req.session.businessunit == "GTS") {
+          // GTS Assessable Unit Doc Parameters
+    			if (doc[0].DocSubType == "Controllable Unit") {
+    				doc[0].CatCU = "";
+    				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+    			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
+    				doc[0].CatP = "";
+    				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
+    			} else {
+    				lParams = ['GTSInstanceDesign'];
+    			}
         }
-  		} else {
-        lParams.push('GBSInstanceDesign');
-        if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
-          lParams.push('GBSRollupProcessesOPS');
-          lParams.push('GBSRollupProcessesFIN');
-        }
-  		}
-      // For Operational Metric setup keys
-      var opMetricKey;
-      var opMetricKeySOD = "";
-      switch (doc[0].ParentDocSubType) {
-        case "Country Process":
-          lParams.push('ProcessCatFIN');
-          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-          break;
-	      case "Account":
-          lParams.push('ProcessCatFIN');
-          opMetricKey = "OpMetric" + doc[0].GPWWBCITKey;
-          break;
-        case "Global Process":
-          lParams.push('ProcessCatFIN');
-          opMetricKey = "OpMetric" + doc[0].WWBCITKey;
-          break;
-        case "BU Reporting Group":
-        case "Business Unit":
-        case "BU IOT":
-        case "BU IMT":
-        case "BU Country":
-          if (doc[0].BUWWBCITKey == "BSU300000027") {
-            opMetricKey = "GBSGeoOpMetric";
-          } else if (doc[0].BUWWBCITKey == "BSU300000026") {
-            opMetricKey = "TOGeoOpMetric";
-          } else {
-            opMetricKey = "GTSGeoOpMetric";
-            opMetricKeySOD = "GTSGeoOpMetricSOD";
-            lParams.push(opMetricKeySOD);
-          }
-          break;
-        case "Controllable Unit":
-          opMetricKey = "GBSCUOpMetric" + doc[0].AuditProgram.split(" ").join("").split("-").join("");
-          break;
+        else if (req.session.businessunit == "GBS") {
+          // GBS Assessable Unit Doc Parameters
+          lParams.push('GBSInstanceDesign');
+    		}
+        else {
+          // GTS Transformation Assessable Unit Doc Parameters
+    		}
       }
-      lParams.push(opMetricKey);
+      // Get Parameters for Assessments
+      else {
+        if (req.session.businessunit == "GTS") {
+          // GTS Assessment Doc Parameters
+    			if (doc[0].ParentDocSubType == "Controllable Unit") {
+    				doc[0].CatCU = "";
+    				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+    			} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
+    				doc[0].CatP = "";
+    				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
+    			} else {
+    				lParams = ['GTSInstanceDesign'];
+    			}
+          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
+            // For Testing Tab Dynamic tables in the Rollup Assessments
+            lParams.push('GTSRollupProcessesOPS');
+            lParams.push('GTSRollupProcessesFIN');
+          }
+        }
+        else if (req.session.businessunit == "GBS") {
+          // GBS Assessment Doc Parameters
+          lParams.push('GBSInstanceDesign');
+          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
+            // For Testing Tab Dynamic tables in the Rollup Assessments
+            lParams.push('GBSRollupProcessesOPS');
+            lParams.push('GBSRollupProcessesFIN');
+          }
+    		}
+        else {
+          // GTS Transformation Assessment Doc Parameters
+    		}
+
+        // For Operational Metric Parameters of Assessments
+        var opMetricKey = opMetric.getOpMetricKeys(doc,lParams);
+
+      }
 
   		param.getListParams(db, lParams).then(function(dataParam) {
 
@@ -207,99 +208,10 @@ var calculatefield = {
           if (dataParam.parameters.GTSRollupProcessesFIN) {
             doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
   				}
+
+          // Get Operational Metrics
           if (dataParam.parameters[opMetricKey]) {
-            var TmpOpMetric = [];
-            var opMetricIDs = "";
-            var opID;
-
-            if (doc[0].OpMetric) {
-              doc[0].OpMetricCurr = doc[0].OpMetric;
-            }
-            doc[0].OpMetric = [];
-            var omIndex;
-            for (var j = 0; j < dataParam.parameters[opMetricKey][0].options.length; ++j) {
-                opID = dataParam.parameters[opMetricKey][0].options[j].id;
-                if (opMetricIDs == "")
-                  opMetricIDs = opID;
-                else
-                  opMetricIDs = opMetricIDs + "," + opID;
-                if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" ) {
-                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
-                  doc[0].OpMetric[j].desc = dataParam.parameters[opMetricKey][0].options[j].desc;
-                  doc[0].OpMetric[j].namefield = opID + "Name";
-                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
-                  doc[0].OpMetric[j].targetsatdatefield = opID + "TargetSatDate";
-                  doc[0].OpMetric[j].colDate = "colDate"+ opID;
-                  doc[0].OpMetric[j].findingfield = opID + "Finding";
-                  doc[0].OpMetric[j].colFinding = "colFinding"+ opID;
-                  doc[0].OpMetric[j].actionfield = opID + "Action";
-                  doc[0].OpMetric[j].colFinding = "colAction"+ opID;
-                  doc[0].OpMetric[j].rating = "";
-                  doc[0].OpMetric[j].targetsatdate = "";
-                  doc[0].OpMetric[j].finding = "";
-                  doc[0].OpMetric[j].action = "";
-                  if (doc[0].OpMetricCurr) {
-                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
-                    if (omIndex != -1) {
-                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
-                      doc[0].OpMetric[j].targetsatdate = doc[0].OpMetricCurr[omIndex].targetsatdate;
-                      doc[0].OpMetric[j].finding = doc[0].OpMetricCurr[omIndex].finding;
-                      doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
-                      if (doc[0].OpMetric[j].rating == "Marg" || doc[0].OpMetric[j].rating == "Unsat") doc[0].opMetricException = 1;
-                    }
-                  }
-                } else {
-                  // For Global Process, BU Country, BU IMT and BU IOT
-                  doc[0].OpMetric.push(dataParam.parameters[opMetricKey][0].options[j]);
-                  doc[0].OpMetric[j].ratingfield = opID + "Rating";
-                  doc[0].OpMetric[j].commentfield = opID + "Comment";
-                  doc[0].OpMetric[j].commentfieldRO = opID + "commentfieldRO";
-                  doc[0].OpMetric[j].commentfieldReadOnly = opID + "commentfieldReadOnly";
-                  doc[0].OpMetric[j].rating = "";
-                  doc[0].OpMetric[j].action = "";
-                  if (doc[0].OpMetricCurr) {
-                    omIndex = util.getIndex(doc[0].OpMetricCurr,"id",opID);
-                    if (omIndex != -1) {
-                      doc[0].OpMetric[j].rating = doc[0].OpMetricCurr[omIndex].rating;
-                      doc[0].OpMetric[j].action = doc[0].OpMetricCurr[omIndex].action;
-                    }
-                  }
-                }
-            }
-            doc[0].opMetricIDs = opMetricIDs;
-          }
-          if (dataParam.parameters[opMetricKeySOD]) {
-            var TmpOpMetricSOD = [];
-            var opMetricIDsSOD = "";
-            var opIDSOD;
-            if (doc[0].OpMetricSOD) {
-              doc[0].OpMetricCurrSOD = doc[0].OpMetricSOD;
-            }
-            doc[0].OpMetricSOD = [];
-            var omIndexSOD;
-            for (var j = 0; j < dataParam.parameters[opMetricKeySOD][0].options.length; ++j) {
-              opIDSOD = dataParam.parameters[opMetricKeySOD][0].options[j].id;
-              if (opMetricIDsSOD == "")
-                opMetricIDsSOD = opIDSOD;
-              else
-                opMetricIDsSOD = opMetricIDsSOD + "," + opIDSOD;
-
-              doc[0].OpMetricSOD.push(dataParam.parameters[opMetricKeySOD][0].options[j]);
-              doc[0].OpMetricSOD[j].ratingfield = opIDSOD + "RatingSOD";
-              doc[0].OpMetricSOD[j].commentfield = opIDSOD + "CommentSOD";
-              doc[0].OpMetricSOD[j].commentfieldRO = opIDSOD + "commentfieldROSOD";
-              doc[0].OpMetricSOD[j].commentfieldReadOnly = opIDSOD + "commentfieldReadOnlySOD";
-              doc[0].OpMetricSOD[j].rating = "";
-              doc[0].OpMetricSOD[j].action = "";
-              if (doc[0].OpMetricCurrSOD) {
-                omIndexSOD = util.getIndex(doc[0].OpMetricCurrSOD,"id",opIDSOD);
-                if (omIndexSOD != -1) {
-                  doc[0].OpMetricSOD[j].rating = doc[0].OpMetricCurrSOD[omIndexSOD].rating;
-                  doc[0].OpMetricSOD[j].action = doc[0].OpMetricCurrSOD[omIndexSOD].action;
-                }
-              }
-            }
-            doc[0].opMetricIDsSOD = opMetricIDsSOD;
+            opMetric.getOpMetrics(doc,dataParam,opMetricKey);
           }
 
           if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
@@ -307,7 +219,6 @@ var calculatefield = {
   				// evaluate BusinessUnitOLD formula
   				if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
   				if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
-
           deferred.resolve(doc);
 
   			} else {

@@ -26,20 +26,27 @@ var assessment = {
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
 			doc[0].EnteredBU = req.session.businessunit;
-			fieldCalc.getDocParams(req, db, doc).then(function(data){
-				doc[0].PrevQtrs = [];
-				doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
-
+			// fieldCalc.getDocParams(req, db, doc).then(function(data){
+			// 	doc[0].PrevQtrs = [];
+			// 	doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
+			// 	console.log("after get doc params");
 				// get parent assessable unit document
-				db.get(doc[0].parentid).then(function(pdata){
-					var parentdoc = [];
-					parentdoc.push(pdata.body);
-					/* Get access and roles */
-					var editors = parentdoc[0].AdditionalEditors + parentdoc[0].Owner + parentdoc[0].Focals;
-					accessrules.getRules(req,editors);
-					doc[0].editor = accessrules.rules.editor;
-					doc[0].admin = accessrules.rules.admin;
-					doc[0].resetstatus = accessrules.rules.resetstatus;
+			db.get(doc[0].parentid).then(function(pdata){
+				var parentdoc = [];
+				parentdoc.push(pdata.body);
+				/* Get access and roles */
+				var editors = parentdoc[0].AdditionalEditors + parentdoc[0].Owner + parentdoc[0].Focals;
+				accessrules.getRules(req,editors);
+				doc[0].editor = accessrules.rules.editor;
+				doc[0].admin = accessrules.rules.admin;
+				doc[0].resetstatus = accessrules.rules.resetstatus;
+
+				// Get inherited fields from parent assessable unit
+				doc[0].OpMetricKey = parentdoc[0].OpMetricKey;
+
+				fieldCalc.getDocParams(req, db, doc).then(function(data){
+					doc[0].PrevQtrs = [];
+					doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
 					// Check if Rating Justification and Target to Sat is editable. This is part of the basic section but conditions apply in both read and edit mode
 					if (doc[0].MIRAStatus != "Final" || ( (doc[0].WWBCITKey != undefined || doc[0].WWBCITKey != "") && (doc[0].WWBCITStatus == "Pending" || doc[0].WWBCITStatus == "Draft") ) ) {
