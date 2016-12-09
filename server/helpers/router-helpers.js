@@ -34,7 +34,7 @@ var register = function(Handlebars) {
 			for(i=0;i<dataSel.length;i++){
 				listvalue = eval('dataSel[i].' + optvalue);
 				listname = eval('dataSel[i].' + optname);
-				if(listname==optsel){
+				if(listname==optsel || listvalue==optsel){
 					arr += '<option value="' + listvalue + '" selected>' + listname + '</option>';
 				}else{
 					arr += '<option value="' + listvalue + '">' + listname + '</option>';
