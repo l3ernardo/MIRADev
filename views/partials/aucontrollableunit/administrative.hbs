@@ -24,10 +24,10 @@
 					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
 				</tr>
 				<tr>
-					<td><label for="AuditLessonsKey">Audit Lesson Key:</label></td>
+					<td><label for="AuditLessonsKey">Audit Lessons Key:</label></td>
 					<td>
-						<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonskey}}">
-						{{{multiSelect "lessonsList" lessonsList "option" "option" "scopeLessonList"}}}
+						<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonsKey}}">
+						{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
 					</td>
 				</tr>
 				<tr>
@@ -45,10 +45,10 @@
 				</tr>
 				{{#if_equal EnteredBU "GTS Transformation"}}
 				<tr>
-					<td><label for="AuditLessonKey">Audit Lesson Key:</label></td>
+					<td><label for="AuditLessonsKey">Audit Lesson Key:</label></td>
 					<td>
-						<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonskey}}">
-						{{{multiSelect "lessonsList" lessonsList "option" "option" "scopeLessonsList"}}}
+						<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonsKey}}">
+						{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
 					</td>
 				</tr>
 				{{/if_equal}}

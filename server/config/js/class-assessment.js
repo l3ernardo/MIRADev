@@ -428,7 +428,7 @@ var assessment = {
 								doc[0].hybrid = "Yes";
 							}
 							doc[0].Portfolio =  parentdoc[0].Portfolio;
-							doc[0].ALLData = fieldCalc.addTestViewData(6,3);
+							//doc[0].ALLData = fieldCalc.addTestViewData(6,3);
 							doc[0].ARCData = fieldCalc.addTestViewData(4,3);
 							doc[0].RiskData = fieldCalc.addTestViewData(11,3);
 							doc[0].AuditTrustedData = doc[0].RiskData;
@@ -451,7 +451,103 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(3-doc[0].CUAsmtDataPR1view.length));
 									}
 								}
+								//AuditKey
+								if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
+									//(?!(^bar$|^foo$|^chupala$|^caca$)).*
+									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
+										var obj = {
+											selector : {
+												"_id": {"$gt":0},
+												"docType": "auditLesson",
+												"reportingPeriod": {"$gt":0},
+												"AuditType": {"$gt":0},
+												"businessUnit": req.session.buname,
+												"AuditLessonsKey": {
+													"$regex":".*"+id+".*"}
+											},
+											sort:[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
+										};
+										return db.find(obj);
+									});
+										q.all(promises).then(function(dataLL){
+
+											var ALLs = {};
+											var uniques = {};
+											var periods = {};
+											//docs[i].AuditType.replace(/ /g,'')+""+docs[i].reportingPeriod.replace(/ /g,'')
+											for (var i = 0; i < dataLL.length; i++) {
+												for (var j = 0; j < dataLL[i].body.docs.length; j++){
+													//var current = dataLL[i].body.docs[j].AuditType.replace(/ /g,'')+" "+dataLL[i].body.docs[j].reportingPeriod.replace(/ /g,'');
+													var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
+													if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
+														uniques[dataLL[i].body.docs[j]["_id"]] = true;
+														if(typeof uniques[current] === "undefined"){
+															uniques[current] = true;
+														if(typeof periods[dataLL[i].body.docs[j].reportingPeriod] === "undefined" ){
+															periods[dataLL[i].body.docs[j].reportingPeriod] = [current];
+															uniques[current] = true;
+														}else{
+															periods[dataLL[i].body.docs[j].reportingPeriod].push(current);
+														}
+													}
+														if(typeof ALLs[current] === "undefined"){
+															ALLs[current] = [dataLL[i].body.docs[j]];
+														}else{
+															ALLs[current].push(dataLL[i].body.docs[j]);
+														}
+
+													}
+												}
+											}
+											//console.log(ALLs);
+											var keys = Object.keys(periods);
+											keys.sort(function(a, b){
+												if(a > b) return -1;
+    										if(a < b) return 1;
+    										return 0;
+												//return b.split(" ")[0]-a.split(" ")[0]
+											});
+
+											for(var i = 0; i < keys.length; i++){
+
+												periods[keys[i]].sort(function(a, b){
+													if(a < b) return -1;
+    											if(a > b) return 1;
+    											return 0;
+												//return a.split("@")[0]-b.split("@")[0]
+												});
+										};
+											var list = [];
+											//console.log(periods);
+											for(var i = 0; i < keys.length; i++){
+												list.push({id: keys[i].replace(/ /g,''), name: keys[i]});
+												for(var j =0; j < periods[keys[i]].length; j++){
+													//console.log(periods[keys[i]]);
+													//console.log(periods[keys[i]][j]);
+													list.push({id: periods[keys[i]][j].replace(/ /g,''), name: periods[keys[i]][j].split("@")[0], parent:keys[i].replace(/ /g,'')});
+													var current = ALLs[periods[keys[i]][j]];
+													for (var l = 0; l < current.length; l++) {
+														//console.log(current.length);
+														//console.log(current);
+														current[l].engagementID = current[l].engagementIDone +"-"+current[l].engagementIDtwo+"-"+current[l].engagementIDthree+" "+current[l].recommendationNum,
+														current[l].parent = periods[keys[i]][j].replace(/ /g,'');
+														current[l].id = current[l]["_id"];
+														list.push(current[l]);
+														//console.log(current[l]);
+													}
+												}
+											}
+											//console.log(list);
+											 doc[0].list = list;
+											deferred.resolve({"status": 200, "doc": doc});
+										}).catch(function(err) {
+											console.log("[assessableunit][LessonsList]" + dataLL.error);
+											deferred.reject({"status": 500, "error": err});
+										});
+									}
+									else {
 								deferred.resolve({"status": 200, "doc": doc});
+							}
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
@@ -485,7 +581,103 @@ var assessment = {
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
 							doc[0].AccountData = doc[0].RiskData;
+							//AuditKey
+							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
+								//(?!(^bar$|^foo$|^chupala$|^caca$)).*
+								var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
+									var obj = {
+										selector : {
+											"_id": {"$gt":0},
+											"docType": "auditLesson",
+											"reportingPeriod": {"$gt":0},
+											"AuditType": {"$gt":0},
+											"businessUnit": req.session.buname,
+											"AuditLessonsKey": {
+												"$regex":".*"+id+".*"}
+										},
+										sort:[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
+									};
+									return db.find(obj);
+								});
+									q.all(promises).then(function(dataLL){
+
+										var ALLs = {};
+										var uniques = {};
+										var periods = {};
+										//docs[i].AuditType.replace(/ /g,'')+""+docs[i].reportingPeriod.replace(/ /g,'')
+										for (var i = 0; i < dataLL.length; i++) {
+											for (var j = 0; j < dataLL[i].body.docs.length; j++){
+												//var current = dataLL[i].body.docs[j].AuditType.replace(/ /g,'')+" "+dataLL[i].body.docs[j].reportingPeriod.replace(/ /g,'');
+												var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
+												if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
+													uniques[dataLL[i].body.docs[j]["_id"]] = true;
+													if(typeof uniques[current] === "undefined"){
+														uniques[current] = true;
+													if(typeof periods[dataLL[i].body.docs[j].reportingPeriod] === "undefined" ){
+														periods[dataLL[i].body.docs[j].reportingPeriod] = [current];
+														uniques[current] = true;
+													}else{
+														periods[dataLL[i].body.docs[j].reportingPeriod].push(current);
+													}
+												}
+													if(typeof ALLs[current] === "undefined"){
+														ALLs[current] = [dataLL[i].body.docs[j]];
+													}else{
+														ALLs[current].push(dataLL[i].body.docs[j]);
+													}
+
+												}
+											}
+										}
+										//console.log(ALLs);
+										var keys = Object.keys(periods);
+										keys.sort(function(a, b){
+											if(a > b) return -1;
+											if(a < b) return 1;
+											return 0;
+											//return b.split(" ")[0]-a.split(" ")[0]
+										});
+
+										for(var i = 0; i < keys.length; i++){
+
+											periods[keys[i]].sort(function(a, b){
+												if(a < b) return -1;
+												if(a > b) return 1;
+												return 0;
+											//return a.split("@")[0]-b.split("@")[0]
+											});
+									};
+										var list = [];
+										//console.log(periods);
+										for(var i = 0; i < keys.length; i++){
+											list.push({id: keys[i].replace(/ /g,''), name: keys[i]});
+											for(var j =0; j < periods[keys[i]].length; j++){
+												//console.log(periods[keys[i]]);
+												//console.log(periods[keys[i]][j]);
+												list.push({id: periods[keys[i]][j].replace(/ /g,''), name: periods[keys[i]][j].split("@")[0], parent:keys[i].replace(/ /g,'')});
+												var current = ALLs[periods[keys[i]][j]];
+												for (var l = 0; l < current.length; l++) {
+													//console.log(current.length);
+													//console.log(current);
+													current[l].engagementID = current[l].engagementIDone +"-"+current[l].engagementIDtwo+"-"+current[l].engagementIDthree+" "+current[l].recommendationNum,
+													current[l].parent = periods[keys[i]][j].replace(/ /g,'');
+													current[l].id = current[l]["_id"];
+													list.push(current[l]);
+													//console.log(current[l]);
+												}
+											}
+										}
+										//console.log(list);
+										 doc[0].list = list;
+										deferred.resolve({"status": 200, "doc": doc});
+									}).catch(function(err) {
+										console.log("[assessableunit][LessonsList]" + dataLL.error);
+										deferred.reject({"status": 500, "error": err});
+									});
+								}
+								else {
 							deferred.resolve({"status": 200, "doc": doc});
+						}
 							break;
 						default:
 							deferred.resolve({"status": 200, "doc": doc});
