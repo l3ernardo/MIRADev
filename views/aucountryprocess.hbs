@@ -45,7 +45,15 @@
 		<!-- BASICS SECTION -->
 		{{>aucountryprocess/basics}}
 		<!-- ADMIN TABLE -->
-		{{>aucountryprocess/administrative}}
+		{{#if_equal EnteredBU "GTS"}}
+			{{>aucountryprocess/administrativegts}}
+		{{else}}
+			{{#if_equal EnteredBU "GBS"}}
+			{{>aucountryprocess/administrativegbs}}
+			{{else}}
+			{{>aucountryprocess/administrativegtstrans}}
+			{{/if_equal}}
+		{{/if_equal}}
 		<!-- ASSESSMENT SECTION -->
 		{{>assessment}}
 		<!-- CONSTITUENT SECTION -->
