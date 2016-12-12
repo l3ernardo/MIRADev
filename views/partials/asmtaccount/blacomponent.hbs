@@ -29,7 +29,11 @@
 		{{>asmtaccount/kctesting}}
 	</div>
 	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-		{{>asmtaccount/operationalmetrics}}
+		{{#if_equal EnteredBU "GTS"}}
+			{{>asmtaccount/operationalmetricsgts}}
+		{{else}}
+			{{>asmtaccount/operationalmetricsgbs}}
+		{{/if_equal}}
 	</div>
 	<div id="other" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcountryprocess/others}}

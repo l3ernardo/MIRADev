@@ -19,6 +19,10 @@ var calculatefield = {
         case "Country Process":
           break;
         case "Account":
+          if (doc[0].EnteredBU == "GBS") {
+            lParams.push("GBSOpMetrics");
+            opMetricKey = "GBSOpMetricKeysCU";
+          }
           break;
         case "Global Process":
           break;
@@ -67,13 +71,14 @@ var calculatefield = {
           for (var k = 0; k < dataParam.parameters[opMetricKey][0].options[j].metrics.length; ++k) {
             // doc[0].OpMetric.push({"id:" + dataParam.parameters[opMetricKey][0].options[j].metrics[k]});
             opID = dataParam.parameters[opMetricKey][0].options[j].metrics[k];
+            if (opMetricIDs == "") opMetricIDs = opID;
+            else opMetricIDs = opMetricIDs + "," + opID;
             omIndex = util.getIndex(dataParam.parameters["GBSOpMetrics"][0].options,"id",opID)
             doc[0].OpMetric.push({"id": opID});
             doc[0].OpMetric[k].name = dataParam.parameters["GBSOpMetrics"][0].options[omIndex].name;
             // For Base Level Assessments
             if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" ) {
               doc[0].OpMetric[k].desc = dataParam.parameters["GBSOpMetrics"][0].options[omIndex].desc.split("<br />");
-              console.log("desc: " + JSON.stringify(doc[0].OpMetric[k].desc));
               doc[0].OpMetric[k].namefield = opID + "Name";
               doc[0].OpMetric[k].ratingfield = opID + "Rating";
               doc[0].OpMetric[k].targetsatdatefield = opID + "TargetSatDate";
@@ -117,6 +122,7 @@ var calculatefield = {
           break;
         }
       }
+      doc[0].opMetricIDs = opMetricIDs;
     }catch(e){
       console.log("[class-opmetric][getOpMetrics] - " + err.error);
 		}
