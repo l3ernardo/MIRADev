@@ -1020,7 +1020,7 @@ var assessableunit = {
 			};
 
 			if (docid == "") {
-				// new document
+				// new document - for NIRA only units only
 				var pid = req.body.parentid;
 				db.get(pid).then(function(pdata){
 					var pdoc = [];
@@ -1086,16 +1086,13 @@ var assessableunit = {
 							doc[0].ControllableUnit = req.body.ControllableUnit;
 							doc[0].parentid = req.body.parentid;
 							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
+							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].LevelTypeG = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							break;
-						//irvingSaveNew
-						case "Controllable Unit":
-						doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
-						break;
 					}
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
@@ -1165,12 +1162,14 @@ var assessableunit = {
 							doc[0].CUFlag = req.body.CUFlag;
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].CUSize = req.body.CUSize;
+							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "Account":
 							doc[0].Name = req.body.Name;
 							doc[0].MetricsCriteria = req.body.MetricsCriteria;
 							doc[0].MetricsValue = req.body.MetricsValue
 							doc[0].Status = req.body.Status;
+							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "Controllable Unit":
 							/* --------------------------------------------------------------------------- */
