@@ -65,7 +65,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       </tr>
       {{/if}}
       <tr>
-        <td>Rating:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
+        <td>Rating<span class="ibm-required">*</span>:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
       </tr>
       <tr>
         <td># Recommendations:</td><td>Total:<input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>Open:<input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
