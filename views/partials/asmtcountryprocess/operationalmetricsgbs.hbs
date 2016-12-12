@@ -1,38 +1,44 @@
 <table id="opmetric_table" class="ibm-data-table">
-	<input type="hidden" name="opMetricException" id="opMetricException" value="{{opMetricException}}">
 	<input type="hidden" name="opMetricIDs" id="opMetricIDs" value="{{opMetricIDs}}">
+	<input type="hidden" name="opMetricException" id="opMetricException" value="{{opMetricException}}">
 	<tr class="op-metric-content">
 		<td>
 			<table width="100%" id="opmetric_content">
 				<thead class="op-metric-label">
-					<th scope="col" width="20%">Metric</th>
-					<th scope="col" width="15%">Rating</th>
-					<th scope="col" width="15%">Target to Sat</th>
-					<th scope="col" width="25%">Findings</th>
-					<th scope="col" width="25%">Actions</th>
+					<th scope="col">Metric</th>
+					<th scope="col">Defined Target</th>
+					<th scope="col">Rating</th>
+					<th scope="col">Target to Sat</th>
+					<th scope="col">Findings</th>
+					<th scope="col">Actions</th>
 				</thead>
 				{{#each OpMetric}}
 					<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
 					<tr>
 						<td class="op-metric-label">{{name}}</td>
+						<td class="op-metric-label">
+							{{#each desc}}
+								<span class="mira-subdata2">{{this}}</span><br />
+							{{/each}}
+						</td>
 						{{#if ../editmode}}
 							<td class="content-data">
 								<span>{{{uniqueSelect ratingfield ../parameters.OpMetricRating.0.options "name" "name" rating}}}</span>
 							</td>
 							<td class="content-data">
 								<span id={{colDate}}>
-									<input type="date" name="{{targetsatdatefield}}" id="{{targetsatdatefield}}" class="ibm-calendar-link" value="{{targetsatdate}}" size="12">
+									<input type="date" name="{{targetsatdatefield}}" id="{{targetsatdatefield}}" class="ibm-calendar-link" value="{{targetsatdate}}">
 									<span for="{{targetsatdatefield}}"></span>
 								</span>
 							</td>
 							<td class="content-data">
-								<span class="content-data" id={{colFinding}}><input type="text" name="{{findingfield}}" id="{{findingfield}}" value="{{finding}}" size="40"></span>
+								<span class="content-data" id={{colFinding}}><input type="text" name="{{findingfield}}" id="{{findingfield}}" value="{{finding}}"></span>
 							</td>
 							<td class="content-data">
-								<span class="content-data" id={{colAction}}><input type="text" name="{{actionfield}}" id="{{actionfield}}" value="{{action}}" size="40"></span>
+								<span class="content-data" id={{colAction}}><input type="text" name="{{actionfield}}" id="{{actionfield}}" value="{{action}}"></span>
 							</td>
 						{{else}}
-							{{{ratingDisplayView rating}}}
+							<td class="content-data">{{{ratingDisplay rating}}}</td>
 							<td class="content-data">{{{dateDisplay targetsatdate}}}</td>
 							<td class="content-data">{{finding}}</td>
 							<td class="content-data">{{action}}</td>

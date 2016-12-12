@@ -34,7 +34,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][BUassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "Global Process":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -54,7 +53,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][GPassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "Sub-process":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -74,7 +72,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][SPassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "BU IOT":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -94,7 +91,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][BUIOTassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "BU IMT":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -114,7 +110,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][BUIMTassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "BU Country":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -134,7 +129,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][BUCountryassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "Country Process":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -155,7 +149,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][CPassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "Controllable Unit":
 						var lParams;
 						if (data.doc[0].editmode)
