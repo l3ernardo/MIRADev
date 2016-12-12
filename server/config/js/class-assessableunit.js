@@ -370,7 +370,24 @@ var assessableunit = {
 											};
 									db.find(CUSearch).then(function(CUPData){
 										doc[0].CUPList = CUPData.body.docs;
+										//irvingAccountEditmode
+										if(req.session.businessunit.split(" ")[0] == "GTS"){
+										var obj = {
+											selector : {
+												"_id": {"$gt":0},
+												"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+										}};
+										db.find(obj).then(function(dataLL){
+											doc[0].lessonsList = dataLL.body.docs[0].value;
 										deferred.resolve({"status": 200, "doc": doc});
+									}).catch(function(err) {
+										console.log("[assessableunit][LessonsList]" + dataLL.error);
+										deferred.reject({"status": 500, "error": err});
+									});
+								}
+								else {
+									deferred.resolve({"status": 200, "doc": doc});
+								}
 									}).catch(function(err) {
 										console.log("[assessableunit][AccountParentsList]" + err.error.reason);
 										deferred.reject({"status": 500, "error": err.error.reason});
@@ -689,7 +706,33 @@ var assessableunit = {
 											}
 										}
 										doc[0].BRGMembershipDisp = brgmNames;
-										deferred.resolve({"status": 200, "doc": doc});
+										//Display Audit Key//AuditKey
+										if(req.session.businessunit.split(" ")[0] == "GTS" && (doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Account")&&(doc[0].AuditLessonsKey != null)){
+											var obj = {
+												selector : {
+													"_id": {"$gt":0},
+													"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+												}};
+												db.find(obj).then(function(dataLL){
+													var ALLList = dataLL.body.docs[0].value;
+													var ALLKey = doc[0].AuditLessonsKey.split(",");
+													for(var i = 0; i < ALLKey.length; i++ ){
+														for(var j = 0; j < ALLList.length;j++){
+															if(ALLKey[i] == ALLList[j].id){
+																ALLKey[i] = ALLList[j].option;
+																break;
+															}
+														}
+													}
+													doc[0].AuditLessonsKey = ALLKey;
+													deferred.resolve({"status": 200, "doc": doc});
+												}).catch(function(err) {
+													console.log("[assessableunit][countrylistIncluded]" + err.error.reason);
+													deferred.reject({"status": 500, "error": err.error.reason});
+												});
+											}else{
+												deferred.resolve({"status": 200, "doc": doc});
+											}
 									}).catch(function(err) {
 										console.log("[assessableunit][countrylistIncluded]" + err.error.reason);
 										deferred.reject({"status": 500, "error": err.error.reason});
@@ -786,7 +829,26 @@ var assessableunit = {
 								for (var i = 0; i < resdocs.length; ++i) {
 									doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 								}
+								//irvingAccountNew
+								if(req.session.businessunit.split(" ")[0] == "GTS"){
+									doc[0].gts_gtsTransFlag = true;
+								var obj = {
+									selector : {
+										"_id": {"$gt":0},
+										"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+								}};
+								db.find(obj).then(function(dataLL){
+									//console.log(req.session.businessunit.split(" ")[0]);
+									doc[0].lessonsList = dataLL.body.docs[0].value;
 								deferred.resolve({"status": 200, "doc": doc});
+							}).catch(function(err) {
+								console.log("[assessableunit][LessonsList]" + dataLL.error);
+								deferred.reject({"status": 500, "error": err});
+							});
+						}
+						else {
+							deferred.resolve({"status": 200, "doc": doc});
+						}
 							}).catch(function(err) {
 								console.log("[assessableunit][AccountLists][NewAccount]" + resdata.error);
 								deferred.reject({"status": 500, "error": err.error.reason});
@@ -958,7 +1020,7 @@ var assessableunit = {
 			};
 
 			if (docid == "") {
-				// new document
+				// new document - for NIRA only units only
 				var pid = req.body.parentid;
 				db.get(pid).then(function(pdata){
 					var pdoc = [];
@@ -1023,16 +1085,14 @@ var assessableunit = {
 							doc[0].MetricsValue = req.body.MetricsValue;
 							doc[0].ControllableUnit = req.body.ControllableUnit;
 							doc[0].parentid = req.body.parentid;
+							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
+							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].LevelTypeG = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							break;
-						//irvingSaveNew
-						case "Controllable Unit":
-						doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
-						break;
 					}
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
@@ -1102,12 +1162,14 @@ var assessableunit = {
 							doc[0].CUFlag = req.body.CUFlag;
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].CUSize = req.body.CUSize;
+							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "Account":
 							doc[0].Name = req.body.Name;
 							doc[0].MetricsCriteria = req.body.MetricsCriteria;
 							doc[0].MetricsValue = req.body.MetricsValue
 							doc[0].Status = req.body.Status;
+							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "Controllable Unit":
 							/* --------------------------------------------------------------------------- */
