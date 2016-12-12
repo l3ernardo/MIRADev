@@ -26,11 +26,6 @@ var assessment = {
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
 			doc[0].EnteredBU = req.session.businessunit;
-			// fieldCalc.getDocParams(req, db, doc).then(function(data){
-			// 	doc[0].PrevQtrs = [];
-			// 	doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
-			// 	console.log("after get doc params");
-				// get parent assessable unit document
 			db.get(doc[0].parentid).then(function(pdata){
 				var parentdoc = [];
 				parentdoc.push(pdata.body);
@@ -43,6 +38,7 @@ var assessment = {
 
 				// Get inherited fields from parent assessable unit
 				doc[0].OpMetricKey = parentdoc[0].OpMetricKey;
+				doc[0].Category = parentdoc[0].Category;
 
 				fieldCalc.getDocParams(req, db, doc).then(function(data){
 					doc[0].PrevQtrs = [];
@@ -453,7 +449,6 @@ var assessment = {
 								}
 								//AuditKey
 								if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
-									//(?!(^bar$|^foo$|^chupala$|^caca$)).*
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 										var obj = {
 											selector : {
@@ -474,10 +469,8 @@ var assessment = {
 											var ALLs = {};
 											var uniques = {};
 											var periods = {};
-											//docs[i].AuditType.replace(/ /g,'')+""+docs[i].reportingPeriod.replace(/ /g,'')
 											for (var i = 0; i < dataLL.length; i++) {
 												for (var j = 0; j < dataLL[i].body.docs.length; j++){
-													//var current = dataLL[i].body.docs[j].AuditType.replace(/ /g,'')+" "+dataLL[i].body.docs[j].reportingPeriod.replace(/ /g,'');
 													var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
 													if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
 														uniques[dataLL[i].body.docs[j]["_id"]] = true;
@@ -499,13 +492,11 @@ var assessment = {
 													}
 												}
 											}
-											//console.log(ALLs);
 											var keys = Object.keys(periods);
 											keys.sort(function(a, b){
 												if(a > b) return -1;
     										if(a < b) return 1;
     										return 0;
-												//return b.split(" ")[0]-a.split(" ")[0]
 											});
 
 											for(var i = 0; i < keys.length; i++){
@@ -514,30 +505,22 @@ var assessment = {
 													if(a < b) return -1;
     											if(a > b) return 1;
     											return 0;
-												//return a.split("@")[0]-b.split("@")[0]
 												});
 										};
 											var list = [];
-											//console.log(periods);
 											for(var i = 0; i < keys.length; i++){
 												list.push({id: keys[i].replace(/ /g,''), name: keys[i]});
 												for(var j =0; j < periods[keys[i]].length; j++){
-													//console.log(periods[keys[i]]);
-													//console.log(periods[keys[i]][j]);
 													list.push({id: periods[keys[i]][j].replace(/ /g,''), name: periods[keys[i]][j].split("@")[0], parent:keys[i].replace(/ /g,'')});
 													var current = ALLs[periods[keys[i]][j]];
 													for (var l = 0; l < current.length; l++) {
-														//console.log(current.length);
-														//console.log(current);
 														current[l].engagementID = current[l].engagementIDone +"-"+current[l].engagementIDtwo+"-"+current[l].engagementIDthree+" "+current[l].recommendationNum,
 														current[l].parent = periods[keys[i]][j].replace(/ /g,'');
 														current[l].id = current[l]["_id"];
 														list.push(current[l]);
-														//console.log(current[l]);
 													}
 												}
 											}
-											//console.log(list);
 											 doc[0].list = list;
 											deferred.resolve({"status": 200, "doc": doc});
 										}).catch(function(err) {
@@ -565,7 +548,87 @@ var assessment = {
 							doc[0].RCTestData = fieldCalc.addTestViewData(7,3);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
+							//AuditKey
+
+							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].GPPARENT != null)){
+									var obj = {
+										selector : {
+											"_id": {"$gt":0},
+											"docType": "auditLesson",
+											"reportingPeriod": {"$gt":0},
+											"AuditType": {"$gt":0},
+											"businessUnit": req.session.buname,
+											"globalProcess": {
+												"$regex":".*"+parentdoc[0].GPPARENT+".*"}
+										},
+										sort:[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
+									};
+									db.find(obj).then(function(dataLL){
+										var ALLs = {};
+										var uniques = {};
+										var periods = {};
+										//for (var i = 0; i < dataLL.length; i++) {
+											for (var j = 0; j < dataLL.body.docs.length; j++){
+												var current = dataLL.body.docs[j].AuditType+" - "+dataLL.body.docs[j].AuditCAR+"@"+dataLL.body.docs[j].reportingPeriod;
+												if(typeof uniques[dataLL.body.docs[j]["_id"]] === "undefined"){
+													uniques[dataLL.body.docs[j]["_id"]] = true;
+													if(typeof uniques[current] === "undefined"){
+														uniques[current] = true;
+													if(typeof periods[dataLL.body.docs[j].reportingPeriod] === "undefined" ){
+														periods[dataLL.body.docs[j].reportingPeriod] = [current];
+														uniques[current] = true;
+													}else{
+														periods[dataLL.body.docs[j].reportingPeriod].push(current);
+													}
+												}
+													if(typeof ALLs[current] === "undefined"){
+														ALLs[current] = [dataLL.body.docs[j]];
+													}else{
+														ALLs[current].push(dataLL.body.docs[j]);
+													}
+
+												}
+											}
+										//}
+										var keys = Object.keys(periods);
+										keys.sort(function(a, b){
+											if(a > b) return -1;
+											if(a < b) return 1;
+											return 0;
+										});
+
+										for(var i = 0; i < keys.length; i++){
+
+											periods[keys[i]].sort(function(a, b){
+												if(a < b) return -1;
+												if(a > b) return 1;
+												return 0;
+											});
+									};
+										var list = [];
+										for(var i = 0; i < keys.length; i++){
+											list.push({id: keys[i].replace(/ /g,''), name: keys[i]});
+											for(var j =0; j < periods[keys[i]].length; j++){
+												list.push({id: periods[keys[i]][j].replace(/ /g,''), name: periods[keys[i]][j].split("@")[0], parent:keys[i].replace(/ /g,'')});
+												var current = ALLs[periods[keys[i]][j]];
+												for (var l = 0; l < current.length; l++) {
+													current[l].engagementID = current[l].engagementIDone +"-"+current[l].engagementIDtwo+"-"+current[l].engagementIDthree+" "+current[l].recommendationNum,
+													current[l].parent = periods[keys[i]][j].replace(/ /g,'');
+													current[l].id = current[l]["_id"];
+													list.push(current[l]);
+												}
+											}
+										}
+										 doc[0].list = list;
+										deferred.resolve({"status": 200, "doc": doc});
+									}).catch(function(err) {
+										console.log("[assessableunit][LessonsList]" + dataLL.error);
+										deferred.reject({"status": 500, "error": err});
+									});
+								}
+								else {
 							deferred.resolve({"status": 200, "doc": doc});
+						}
 							break;
 						case "Account":
 							doc[0].ALLData = fieldCalc.addTestViewData(7,3);
@@ -583,7 +646,6 @@ var assessment = {
 							doc[0].AccountData = doc[0].RiskData;
 							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
-								//(?!(^bar$|^foo$|^chupala$|^caca$)).*
 								var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 									var obj = {
 										selector : {
@@ -604,10 +666,8 @@ var assessment = {
 										var ALLs = {};
 										var uniques = {};
 										var periods = {};
-										//docs[i].AuditType.replace(/ /g,'')+""+docs[i].reportingPeriod.replace(/ /g,'')
 										for (var i = 0; i < dataLL.length; i++) {
 											for (var j = 0; j < dataLL[i].body.docs.length; j++){
-												//var current = dataLL[i].body.docs[j].AuditType.replace(/ /g,'')+" "+dataLL[i].body.docs[j].reportingPeriod.replace(/ /g,'');
 												var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
 												if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
 													uniques[dataLL[i].body.docs[j]["_id"]] = true;
@@ -629,13 +689,11 @@ var assessment = {
 												}
 											}
 										}
-										//console.log(ALLs);
 										var keys = Object.keys(periods);
 										keys.sort(function(a, b){
 											if(a > b) return -1;
 											if(a < b) return 1;
 											return 0;
-											//return b.split(" ")[0]-a.split(" ")[0]
 										});
 
 										for(var i = 0; i < keys.length; i++){
@@ -644,30 +702,22 @@ var assessment = {
 												if(a < b) return -1;
 												if(a > b) return 1;
 												return 0;
-											//return a.split("@")[0]-b.split("@")[0]
 											});
 									};
 										var list = [];
-										//console.log(periods);
 										for(var i = 0; i < keys.length; i++){
 											list.push({id: keys[i].replace(/ /g,''), name: keys[i]});
 											for(var j =0; j < periods[keys[i]].length; j++){
-												//console.log(periods[keys[i]]);
-												//console.log(periods[keys[i]][j]);
 												list.push({id: periods[keys[i]][j].replace(/ /g,''), name: periods[keys[i]][j].split("@")[0], parent:keys[i].replace(/ /g,'')});
 												var current = ALLs[periods[keys[i]][j]];
 												for (var l = 0; l < current.length; l++) {
-													//console.log(current.length);
-													//console.log(current);
 													current[l].engagementID = current[l].engagementIDone +"-"+current[l].engagementIDtwo+"-"+current[l].engagementIDthree+" "+current[l].recommendationNum,
 													current[l].parent = periods[keys[i]][j].replace(/ /g,'');
 													current[l].id = current[l]["_id"];
 													list.push(current[l]);
-													//console.log(current[l]);
 												}
 											}
 										}
-										//console.log(list);
 										 doc[0].list = list;
 										deferred.resolve({"status": 200, "doc": doc});
 									}).catch(function(err) {
@@ -1582,7 +1632,8 @@ var assessment = {
 								doc[0].ARALLQtrRating = req.body.ARALLQtrRating;
 								doc[0].ARALLTarget2Sat = req.body.ARALLTarget2Sat;
 								doc[0].ARALLExplanation = req.body.ARALLExplanation;
-							} else {
+							}
+							if (req.session.businessunit == "GBS" || (req.body.CatCU != undefined && req.body.CatCU == "CRM") || (req.body.CatP != undefined && req.body.CatP == "CRM")) {
 								//---Operational Metrics Tab Tab---//
 								var metricsID = req.body.opMetricIDs.split(",");
 								var tname, topush;
@@ -1646,28 +1697,60 @@ var assessment = {
 								doc[0].ARALLExplanation = req.body.ARALLExplanation;
 							}
 							//---Operational Metrics Tab Tab---//
-
-							var metricsID = req.body.opMetricIDs.split(",");
-							var tname, topush;
-							doc[0].OpMetric = [];
-							for (var i = 0; i < metricsID.length; ++i) {
-								if(metricsID[i] != undefined && metricsID[i] != "") {
-									topush = {
-										"id": metricsID[i]
-									};
-									doc[0].OpMetric.push(topush);
-									fname = metricsID[i]+"Name";
-									doc[0].OpMetric[i].name = req.body[fname];
-									fname = metricsID[i]+"Rating";
-									doc[0].OpMetric[i].rating = req.body[fname];
-									fname = metricsID[i]+"TargetSatDate";
-									doc[0].OpMetric[i].targetsatdate = req.body[fname];
-									fname = metricsID[i]+"Finding";
-									doc[0].OpMetric[i].finding = req.body[fname];
-									fname = metricsID[i]+"Action";
-									doc[0].OpMetric[i].action = req.body[fname];
+							if (req.body.CatCU == "Delivery") {
+								doc[0].OtherMetricRating = req.body.OtherMetricRating;
+								doc[0].OtherMetricDate = req.body.OtherMetricDate;
+								doc[0].OtherMetricComment = req.body.OtherMetricComment;
+								doc[0].OtherMetricRatingCat1 = req.body.OtherMetricRatingCat1;
+								doc[0].OtherMetricCommentCat1 = req.body.OtherMetricCommentCat1;
+								doc[0].OtherMetricRatingCat2 = req.body.OtherMetricRatingCat2;
+								doc[0].OtherMetricCommentCat2 = req.body.OtherMetricCommentCat2;
+								doc[0].OtherMetricRatingCat3 = req.body.OtherMetricRatingCat3;
+								doc[0].OtherMetricCommentCat3 = req.body.OtherMetricCommentCat3;
+								doc[0].OtherMetricRatingCat4 = req.body.OtherMetricRatingCat4;
+								doc[0].OtherMetricCommentCat4 = req.body.OtherMetricCommentCat4;
+								doc[0].OtherMetricRatingCat5 = req.body.OtherMetricRatingCat5;
+								doc[0].OtherMetricCommentCat5 = req.body.OtherMetricCommentCat5;
+								doc[0].OtherMetricRatingCat6 = req.body.OtherMetricRatingCat6;
+								doc[0].OtherMetricCommentCat6 = req.body.OtherMetricCommentCat6;
+								doc[0].OtherMetricRatingCat7 = req.body.OtherMetricRatingCat7;
+								doc[0].OtherMetricCommentCat7 = req.body.OtherMetricCommentCat7;
+								doc[0].OtherMetricRatingCat8 = req.body.OtherMetricRatingCat8;
+								doc[0].OtherMetricCommentCat8 = req.body.OtherMetricCommentCat8;
+								doc[0].OtherMetricRatingCat9 = req.body.OtherMetricRatingCat9;
+								doc[0].OtherMetricCommentCat9 = req.body.OtherMetricCommentCat9;
+								doc[0].OtherMetricRatingCat10 = req.body.OtherMetricRatingCat10;
+								doc[0].OtherMetricCommentCat10 = req.body.OtherMetricCommentCat10;
+								doc[0].OtherMetricRatingCat11 = req.body.OtherMetricRatingCat11;
+								doc[0].OtherMetricCommentCat11 = req.body.OtherMetricCommentCat11;
+								doc[0].OtherMetricRatingCat12 = req.body.OtherMetricRatingCat12;
+								doc[0].OtherMetricCommentCat12 = req.body.OtherMetricCommentCat12;
+								doc[0].OtherMetricRatingCat13 = req.body.OtherMetricRatingCat13;
+								doc[0].OtherMetricCommentCat13 = req.body.OtherMetricCommentCat13;
+							} else {
+								var metricsID = req.body.opMetricIDs.split(",");
+								var tname, topush;
+								doc[0].OpMetric = [];
+								for (var i = 0; i < metricsID.length; ++i) {
+									if(metricsID[i] != undefined && metricsID[i] != "") {
+										topush = {
+											"id": metricsID[i]
+										};
+										doc[0].OpMetric.push(topush);
+										fname = metricsID[i]+"Name";
+										doc[0].OpMetric[i].name = req.body[fname];
+										fname = metricsID[i]+"Rating";
+										doc[0].OpMetric[i].rating = req.body[fname];
+										fname = metricsID[i]+"TargetSatDate";
+										doc[0].OpMetric[i].targetsatdate = req.body[fname];
+										fname = metricsID[i]+"Finding";
+										doc[0].OpMetric[i].finding = req.body[fname];
+										fname = metricsID[i]+"Action";
+										doc[0].OpMetric[i].action = req.body[fname];
+									}
 								}
 							}
+
 							//---Others Tab Tab---//
 							doc[0].AsmtOtherConsiderations = req.body.AsmtOtherConsiderations;
 							//---Account Ratings Tab (For Portfolio CU only)---//
