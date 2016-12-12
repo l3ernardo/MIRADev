@@ -134,42 +134,70 @@ var dashboard = {
 						obj = geo;
 					}
 					//Reporting Group Dashboard
-					/*-----------------------------------------------------*/
-					// Change reporting groups to list all documents by id of reporting group(All AU but not BU neither Account). Look id in BRGMembership
-					/*-----------------------------------------------------*/
 					else if(req.url=='/reportingdashboard'){
-						//{"DocSubType":{"$in":["BU Reporting Group","Country Process","GroupName"]}},
 						if(req.session.BG.indexOf("MIRA-ADMIN")> '-1'){
 							var rg = {
 								"selector": {
 									"$and": [
-										{ "LevelTypeG": { "$gt": null }},
+										{"LevelType": { "$gt": null }},
 										{"Name": { "$ne": null }},
 										{"key": "Assessable Unit"},
-										{"DocSubType":{"$in":["BU Reporting Group"]}},
-										{"$not": {"Name":"Reporting Group"}},
+										{"$or": [{"DocSubType":{"$in":["BU Reporting Group"]}},{"BRGMembership":{ "$exists": true, "$ne":"" }}]},
 										{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 										{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 									]
 								},
-								"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]
+								"fields": [
+									"_id",
+									"Name",
+									"DocSubType",
+									"LevelType",
+									"parentid",
+									"MIRABusinessUnit",
+									"PeriodRatingPrev",
+									"PeriodRating",
+									"AUNextQtrRating",
+									"Target2Sat",
+									"MIRAAssessmentStatus",
+									"WWBCITAssessmentStatus",
+									"Portfolio",
+									"Status",
+									"BRGMembership"
+								],
+								"sort": [{"LevelType":"asc"},{"Name":"asc"}]
 							};
 						}
 						else{
 							var rg = {
 								"selector": {
 									"$and": [
-										{ "LevelTypeG": { "$gt": null }},
+										{"LevelType": { "$gt": null }},
 										{"Name": { "$ne": null }},
 										{"key": "Assessable Unit"},
-										{"DocSubType":{"$in":["BU Reporting Group"]}},
-										{"$not": {"Name":"Reporting Group"}},
+										{"$or": [{"DocSubType":{"$in":["BU Reporting Group"]}},{"BRGMembership":{ "$exists": true, "$ne":"" }}]},
 										{"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}]},
 										{"$or": [{"parentid":{ "$exists": false }},{"parentid":{ "$exists":true, "$regex": "([^A-Z0-9])+" }}]},
 										{"MIRABusinessUnit": {"$eq": req.session.businessunit}}
 									]
 								},
-								"sort": [{"LevelTypeG":"asc"},{"Name":"asc"}]
+								"fields": [
+									"_id",
+									"Name",
+									"DocSubType",
+									"LevelType",
+									"parentid",
+									"MIRABusinessUnit",
+									"PeriodRatingPrev",
+									"PeriodRating",
+									"AUNextQtrRating",
+									"Target2Sat",
+									"MIRAAssessmentStatus",
+									"WWBCITAssessmentStatus",
+									"Portfolio",
+									"Status",
+									"BRGMembership"
+								],
+								"sort": [{"LevelType":"asc"},{"Name":"asc"}]
 							};
 						}
 						obj = rg;
@@ -314,18 +342,69 @@ var dashboard = {
 							}
 						}
 						else{ //For Reporting Dashboard
+							var levelrp = []
 							for(var i = 0; i < doc.length; i++){
-								if(req.session.quarter == doc[i].CurrentPeriod){
-									if(doc[i].DocSubType == "BU IOT"){
-											doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IOT, "IOT",req);
-									}else if(doc[i].DocSubType == "BU IMT"){
-											doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].IMT, "IMT",req);
-									}else if(doc[i].DocSubType == "BU Country"){
-											doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
-									}
+								if(doc[i].DocSubType == "BU Reporting Group"){
+									level1.push(doc[i]);
+								}
+								else{ // All other documents
+									levelrp.push(doc[i]);
 								}
 							}
-							F = doc;
+							
+							for(var i = 0; i < level1.length; i++){
+								//Group Name
+								var groupName = level1[i]["Name"];
+								groupName = groupName.replace(req.session.buname + " - ","");
+								//ParentID
+								var parentidg = i;//groupName.replace(/ /g,'');
+								//ID to compare
+								var idRGroup = level1[i]["_id"];
+								
+								//Group Name (parent level)
+								F.push({"id": parentidg, "GroupName": groupName});
+								//Reporting Group
+								level1[i]["id"] = level1[i]["_id"];
+								level1[i]["parentidg"] = parentidg;
+								F.push(level1[i]);
+								
+								//All other documents
+								for(var j = 0; j < levelrp.length; j++){
+									var brglist = levelrp[j]["BRGMembership"];
+									var tmplevel2 = levelrp[j];
+									var addDoc = false;
+									tmplevel2["id"] = tmplevel2["_id"] + parentidg;
+									if(brglist.indexOf(",") > -1){
+										brglist = brglist.split(",");
+										for(k = 0; k < brglist.length; k++){
+											if(brglist[k] === idRGroup){ // ==groupName
+												addDoc = true;
+												break;
+											}
+										}
+									}
+									else if(brglist === idRGroup){ // ==groupName
+										addDoc = true;
+									}
+									if(addDoc){
+										F.push({"id": tmplevel2["id"], 
+												"_id":tmplevel2["_id"], 
+												"Name":tmplevel2["Name"], 
+												"parentidg": parentidg,
+												"DocSubType":tmplevel2["DocSubType"],
+												"MIRABusinessUnit":tmplevel2["MIRABusinessUnit"],
+												"PeriodRatingPrev":tmplevel2["PeriodRatingPrev"],
+												"PeriodRating":tmplevel2["PeriodRating"],
+												"AUNextQtrRating":tmplevel2["AUNextQtrRating"],
+												"Target2Sat":tmplevel2["Target2Sat"],
+												"MIRAAssessmentStatus":tmplevel2["MIRAAssessmentStatus"],
+												"WWBCITAssessmentStatus":tmplevel2["WWBCITAssessmentStatus"],
+												"Portfolio":tmplevel2["Portfolio"]
+											});
+									}
+									tmplevel2 = "";
+								}
+							}
 						}
 
 						for (var i = 0; i < F.length; i++){
