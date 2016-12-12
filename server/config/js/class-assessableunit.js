@@ -1200,6 +1200,10 @@ var assessableunit = {
 					}
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
+					if(doc[0].Log == undefined){
+						doc[0].Log = [];
+						console.log("This document: "+docid+" must have a Log[0]. Requires a review.")
+					}
 					doc[0].Log.push(addlog);
 					doc = accessupdates.updateAccessExistDoc(req,doc);
 					//Save document
