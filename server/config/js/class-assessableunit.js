@@ -1092,6 +1092,7 @@ var assessableunit = {
 							doc[0].LevelTypeG = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
+							doc[0].DocRPType = "BU Mixed-Level Group";
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
@@ -1196,6 +1197,7 @@ var assessableunit = {
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							doc[0].Status = req.body.Status;
+							doc[0].DocRPType = "BU Mixed-Level Group";
 							break;
 					}
 					doc[0].Notes = req.body.Notes;

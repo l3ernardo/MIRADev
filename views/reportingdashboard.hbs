@@ -23,35 +23,30 @@
 				<thead>
 					<tr>
 						<th scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
-						<th>Assessable Unit</th>
+						<th>Group</th>
 						<th>Type</th>
+						<th>Assessable Unit</th>
 						<th>Prior Q</th>
 						<th>Curr Q</th>
 						<th>Next Qtr</th>
 						<th>Target to Sat</th>
 						<th>MIRA</th>
 						<th>WWBCIT</th>
-						<th>Group</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{#each doc}}
-					<tr data-tt-id={{_id}} data-tt-parent-id={{parentidg}}>
+					<tr data-tt-id={{id}} data-tt-parent-id={{parentidg}}>
 						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_tree"/></th>
-						{{#if_equal  DocSubType "GroupName"}}
-						<td>{{Name}}</td>
-						<td></td>
-						{{else}}
-						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
+						<td>{{GroupName}}</td>
 						<td>{{DocSubType}}</td>
-						{{/if_equal}}
+						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
 						{{{ratingDisplayView PeriodRatingPrev}}}
 						{{{ratingDisplayView PeriodRating}}}
 						{{{ratingDisplayView AUNextQtrRating}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
-						<td>{{GroupName}}</td>
 					</tr>
 				{{/each}}
 				</tbody>
@@ -61,35 +56,31 @@
 			<table id="rg_dashboard_flatview"  cellspacing="0" cellpadding="0" border="0"  class="mira-dashboard-table" style='display : none'>
 				<thead>
 					<tr>
-						<th scope="col"><input type="checkbox" class="mira_checkbox_flat" id="mira_checkbox_flat" name="mira_checkbox "/></th>
-						<th>Assessable Unit</th>
+						<th scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
+						<th>Group</th>
 						<th>Type</th>
+						<th>Assessable Unit</th>
 						<th>Prior Q</th>
 						<th>Curr Q</th>
 						<th>Next Qtr</th>
 						<th>Target to Sat</th>
 						<th>MIRA</th>
 						<th>WWBCIT</th>
-						<th>Group</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{#each doc}}
 					<tr>
-						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>
-						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-						{{#if_equal  DocSubType "GroupName"}}
-						<td></td>
-						{{else}}
+						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_tree"/></th>
+						<td>{{GroupName}}</td>
 						<td>{{DocSubType}}</td>
-						{{/if_equal}}
+						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
 						{{{ratingDisplayView PeriodRatingPrev}}}
 						{{{ratingDisplayView PeriodRating}}}
 						{{{ratingDisplayView AUNextQtrRating}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
-						<td>{{GroupName}}</td>
 					</tr>
 				{{/each}}
 				</tbody>
