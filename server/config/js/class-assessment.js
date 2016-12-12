@@ -26,11 +26,6 @@ var assessment = {
 			/* Format Links */
 			doc[0].Links = JSON.stringify(doc[0].Links);
 			doc[0].EnteredBU = req.session.businessunit;
-			// fieldCalc.getDocParams(req, db, doc).then(function(data){
-			// 	doc[0].PrevQtrs = [];
-			// 	doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
-			// 	console.log("after get doc params");
-				// get parent assessable unit document
 			db.get(doc[0].parentid).then(function(pdata){
 				var parentdoc = [];
 				parentdoc.push(pdata.body);
@@ -43,6 +38,7 @@ var assessment = {
 
 				// Get inherited fields from parent assessable unit
 				doc[0].OpMetricKey = parentdoc[0].OpMetricKey;
+				doc[0].Category = parentdoc[0].Category;
 
 				fieldCalc.getDocParams(req, db, doc).then(function(data){
 					doc[0].PrevQtrs = [];
@@ -1582,7 +1578,8 @@ var assessment = {
 								doc[0].ARALLQtrRating = req.body.ARALLQtrRating;
 								doc[0].ARALLTarget2Sat = req.body.ARALLTarget2Sat;
 								doc[0].ARALLExplanation = req.body.ARALLExplanation;
-							} else {
+							}
+							if (req.session.businessunit == "GBS" || (req.body.CatCU != undefined && req.body.CatCU == "CRM") || (req.body.CatP != undefined && req.body.CatP == "CRM")) {
 								//---Operational Metrics Tab Tab---//
 								var metricsID = req.body.opMetricIDs.split(",");
 								var tname, topush;
@@ -1646,28 +1643,60 @@ var assessment = {
 								doc[0].ARALLExplanation = req.body.ARALLExplanation;
 							}
 							//---Operational Metrics Tab Tab---//
-
-							var metricsID = req.body.opMetricIDs.split(",");
-							var tname, topush;
-							doc[0].OpMetric = [];
-							for (var i = 0; i < metricsID.length; ++i) {
-								if(metricsID[i] != undefined && metricsID[i] != "") {
-									topush = {
-										"id": metricsID[i]
-									};
-									doc[0].OpMetric.push(topush);
-									fname = metricsID[i]+"Name";
-									doc[0].OpMetric[i].name = req.body[fname];
-									fname = metricsID[i]+"Rating";
-									doc[0].OpMetric[i].rating = req.body[fname];
-									fname = metricsID[i]+"TargetSatDate";
-									doc[0].OpMetric[i].targetsatdate = req.body[fname];
-									fname = metricsID[i]+"Finding";
-									doc[0].OpMetric[i].finding = req.body[fname];
-									fname = metricsID[i]+"Action";
-									doc[0].OpMetric[i].action = req.body[fname];
+							if (req.body.CatCU == "Delivery") {
+								doc[0].OtherMetricRating = req.body.OtherMetricRating;
+								doc[0].OtherMetricDate = req.body.OtherMetricDate;
+								doc[0].OtherMetricComment = req.body.OtherMetricComment;
+								doc[0].OtherMetricRatingCat1 = req.body.OtherMetricRatingCat1;
+								doc[0].OtherMetricCommentCat1 = req.body.OtherMetricCommentCat1;
+								doc[0].OtherMetricRatingCat2 = req.body.OtherMetricRatingCat2;
+								doc[0].OtherMetricCommentCat2 = req.body.OtherMetricCommentCat2;
+								doc[0].OtherMetricRatingCat3 = req.body.OtherMetricRatingCat3;
+								doc[0].OtherMetricCommentCat3 = req.body.OtherMetricCommentCat3;
+								doc[0].OtherMetricRatingCat4 = req.body.OtherMetricRatingCat4;
+								doc[0].OtherMetricCommentCat4 = req.body.OtherMetricCommentCat4;
+								doc[0].OtherMetricRatingCat5 = req.body.OtherMetricRatingCat5;
+								doc[0].OtherMetricCommentCat5 = req.body.OtherMetricCommentCat5;
+								doc[0].OtherMetricRatingCat6 = req.body.OtherMetricRatingCat6;
+								doc[0].OtherMetricCommentCat6 = req.body.OtherMetricCommentCat6;
+								doc[0].OtherMetricRatingCat7 = req.body.OtherMetricRatingCat7;
+								doc[0].OtherMetricCommentCat7 = req.body.OtherMetricCommentCat7;
+								doc[0].OtherMetricRatingCat8 = req.body.OtherMetricRatingCat8;
+								doc[0].OtherMetricCommentCat8 = req.body.OtherMetricCommentCat8;
+								doc[0].OtherMetricRatingCat9 = req.body.OtherMetricRatingCat9;
+								doc[0].OtherMetricCommentCat9 = req.body.OtherMetricCommentCat9;
+								doc[0].OtherMetricRatingCat10 = req.body.OtherMetricRatingCat10;
+								doc[0].OtherMetricCommentCat10 = req.body.OtherMetricCommentCat10;
+								doc[0].OtherMetricRatingCat11 = req.body.OtherMetricRatingCat11;
+								doc[0].OtherMetricCommentCat11 = req.body.OtherMetricCommentCat11;
+								doc[0].OtherMetricRatingCat12 = req.body.OtherMetricRatingCat12;
+								doc[0].OtherMetricCommentCat12 = req.body.OtherMetricCommentCat12;
+								doc[0].OtherMetricRatingCat13 = req.body.OtherMetricRatingCat13;
+								doc[0].OtherMetricCommentCat13 = req.body.OtherMetricCommentCat13;
+							} else {
+								var metricsID = req.body.opMetricIDs.split(",");
+								var tname, topush;
+								doc[0].OpMetric = [];
+								for (var i = 0; i < metricsID.length; ++i) {
+									if(metricsID[i] != undefined && metricsID[i] != "") {
+										topush = {
+											"id": metricsID[i]
+										};
+										doc[0].OpMetric.push(topush);
+										fname = metricsID[i]+"Name";
+										doc[0].OpMetric[i].name = req.body[fname];
+										fname = metricsID[i]+"Rating";
+										doc[0].OpMetric[i].rating = req.body[fname];
+										fname = metricsID[i]+"TargetSatDate";
+										doc[0].OpMetric[i].targetsatdate = req.body[fname];
+										fname = metricsID[i]+"Finding";
+										doc[0].OpMetric[i].finding = req.body[fname];
+										fname = metricsID[i]+"Action";
+										doc[0].OpMetric[i].action = req.body[fname];
+									}
 								}
 							}
+
 							//---Others Tab Tab---//
 							doc[0].AsmtOtherConsiderations = req.body.AsmtOtherConsiderations;
 							//---Account Ratings Tab (For Portfolio CU only)---//

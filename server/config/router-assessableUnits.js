@@ -85,9 +85,8 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Country Process":
 						var lParams;
-						if (req.session.businessunit == "GTS") lParams = ['UnitSizes','GTSAuditPrograms'];
-						else if (req.session.businessunit == "GBS") lParams = ['UnitSizes','GBSAuditPrograms','GBSOpMetricKeysProcess'];
-						else lParams = ['UnitSizes','GTSAuditPrograms'];
+						if (req.session.businessunit == "GBS") lParams = ['UnitSizes','GBSAuditPrograms','GBSOpMetricKeysProcess'];
+						else lParams = ['UnitSizes','GTSAuditPrograms','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
@@ -103,9 +102,8 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Controllable Unit":
 						var lParams;
-						if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'UnitSizes','ARCFrequencies','GTSAuditPrograms'];
-						else if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms','GBSOpMetricKeysCU'];
-						else lParams = ['UnitSizes','ARCFrequencies','GTSAuditPrograms'];
+						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms','GBSOpMetricKeysCU'];
+						else lParams = ['GTSMetrics', 'UnitSizes','ARCFrequencies','GTSAuditPrograms','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
@@ -142,9 +140,8 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Account":
 						var lParams;
-						if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'AssessableUnitStatus'];
-						else if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
-						else lParams = ['AssessableUnitStatus'];
+						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
+						else lParams = ['GTSMetrics', 'AssessableUnitStatus','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
