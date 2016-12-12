@@ -14,13 +14,13 @@
 	</tr>
 	<tr>
 		<td>Audit program:</td><td>
-	{{{uniqueSelect "auditProgram" programs "name" "name" auditProgram}}}<br>
+	{{{uniqueSelect "AuditType" programs "name" "name" AuditType}}}<br>
 		{{#if auditSelectYes}}
-			<input class="showsize" type="radio" id="auditSelect" name="auditProgramSelect" value="Audit" checked>Audit
-			<input type="radio" name="auditProgramSelect" id="AuditSelect" value="Car">Car
+			<input class="showsize" type="radio" id="auditSelect" name="AuditCAR" value="Audit" checked>Audit
+			<input type="radio" name="AuditCAR" id="AuditSelect" value="CAR">CAR
 		{{else}}
-		<input class="showsize" type="radio" id="auditSelect" name="auditProgramSelect" value="Audit">Audit
-			<input type="radio" name="auditProgramSelect" id="AuditSelect" value="Car" checked>Car
+		<input class="showsize" type="radio" id="auditSelect" name="AuditCAR" value="Audit">Audit
+			<input type="radio" name="AuditCAR" id="AuditSelect" value="Car" checked>Car
 		{{/if}}
 	</tr><tr>
 		<td>Observation category (as <br> stated in the audit report):</td>
@@ -46,12 +46,12 @@
 	</tr>
 	<tr>
 		<td>Audit program:</td><td>
-				{{auditProgram}}
+				{{AuditType}}
 			<br>
 			{{#if auditSelectYes}}
 			<input class="showsize" type="radio" id="auditSelect" name="AuditableFlag" value="Audit" checked>Audit
 			{{else}}
-			<input type="radio" name="AuditableFlag" id="AuditSelect" value="Car" checked>Car
+			<input type="radio" name="AuditableFlag" id="AuditSelect" value="CAR" checked>CAR
 			{{/if}}
 		</td>
 	</tr><tr>

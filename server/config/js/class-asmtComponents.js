@@ -306,7 +306,7 @@ getLocalAudit: function(req, db){
               output.ratingList = data2.body.docs[0].value;
               var pkey = {
                 selector : {
-                  "_id": output.parentID
+                  "_id": output.parentid
                 }};
                 db.find(pkey).then(function(parentData){
                   var parent = parentData.body.docs[0]
@@ -416,7 +416,7 @@ getLocalAudit: function(req, db){
                     }
                     output.auditList = tmp;
                     output.ratingList = data2.body.docs[0].value;
-
+                    //terminar
                     if(!( parent.reportingQuarter != req.session.quarter || parent.MIRAStatus == "Final")){
                       output.procesDisplay = true;
                     }

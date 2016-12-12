@@ -6,7 +6,7 @@
 		<ul class="ibm-tabs">
 			<li id="summary-li" class="ibm-active"><a href="javascript:void(0)" class="mira-subdata">Summary</a></li>
 			<li id="basiccontrol-li"><a href="javascript:void(0)" class="mira-subdata">Basics of Control</a></li>
-			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness Assessment</a></li>
+			<li id="auditreadyasmt-li"><a href="javascript:void(0)" class="mira-subdata">Audit Readiness</a></li>
 			<li id="auditreview-li"><a href="javascript:void(0)" class="mira-subdata">Audits &amp; Reviews</a></li>
 			<li id="kctest-li"><a href="javascript:void(0)" class="mira-subdata">Key Controls Testing</a></li>
 			<li id="opmetric-li"><a href="javascript:void(0)" class="mira-subdata">Operational Metrics</a></li>
@@ -29,7 +29,11 @@
 		{{>asmtaccount/kctesting}}
 	</div>
 	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-		{{>asmtaccount/operationalmetrics}}
+		{{#if_equal EnteredBU "GTS"}}
+			{{>asmtaccount/operationalmetricsgts}}
+		{{else}}
+			{{>asmtaccount/operationalmetricsgbs}}
+		{{/if_equal}}
 	</div>
 	<div id="other" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcountryprocess/others}}
