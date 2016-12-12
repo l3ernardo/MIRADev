@@ -191,7 +191,7 @@ $(document).ready(function() {
 	//---End of Audit Readiness Assessment---//
 
 	//---Start of Operational Metrics---//
-	if ( $("input[name='enteredbu']").val() == "GBS" ) {
+	if ( $("input[name='enteredbu']").val() == "GBS" || ( $("input[name='enteredbu']").val() == "GTS" && ( $("input[name='CatCU']").val() == "CRM" || $("input[name='CatCP']").val() == "CRM") ) ) {
 		var metrics = $("#opMetricIDs").val().split(',');
 		var i;
 		for (i = 0; i < metrics.length; ++i) {
@@ -244,7 +244,7 @@ $(document).ready(function() {
 	//---on change events--//
 	$('#opmetric_content').click(function(){
 		$("#opMetricException").val(0);
-		if ( $("input[name='enteredbu']").val() == "GBS" ) {
+		if ( $("input[name='enteredbu']").val() == "GBS" || ( $("input[name='enteredbu']").val() == "GTS" && ( $("input[name='CatCU']").val() == "CRM" || $("input[name='CatCP']").val() == "CRM") ) ) {
 			metrics = $("#opMetricIDs").val().split(',');
 			for (i = 0; i < metrics.length; ++i) {
 				$("#"+metrics[i]+"TargetSatDate").datepicker({
