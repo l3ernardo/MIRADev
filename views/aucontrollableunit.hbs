@@ -48,7 +48,15 @@
 		<!-- BASICS SECTION -->
 		{{>aucontrollableunit/basics}}
 		<!-- ADMIN TABLE -->
-		{{>aucontrollableunit/administrative}}
+		{{#if_equal EnteredBU "GTS"}}
+			{{>aucontrollableunit/administrativegts}}
+		{{else}}
+			{{#if_equal EnteredBU "GBS"}}
+				{{>aucontrollableunit/administrativegbs}}
+			{{else}}
+				{{>aucontrollableunit/administrativegtstrans}}
+			{{/if_equal}}
+		{{/if_equal}}
 		<!-- ASSESSMENT SECTION -->
 		{{>assessment}}
 		<!-- CONSTITUENT SECTION is only available if a CU is a Portfolio-->
