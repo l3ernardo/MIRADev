@@ -1092,6 +1092,7 @@ var assessableunit = {
 							doc[0].LevelTypeG = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
+							doc[0].DocRPType = "BU Mixed-Level Group";
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
@@ -1196,10 +1197,15 @@ var assessableunit = {
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							doc[0].Status = req.body.Status;
+							doc[0].DocRPType = "BU Mixed-Level Group";
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
+					if(doc[0].Log == undefined){
+						doc[0].Log = [];
+						console.log("This document: "+docid+" must have a Log[0]. Requires a review.")
+					}
 					doc[0].Log.push(addlog);
 					doc = accessupdates.updateAccessExistDoc(req,doc);
 					//Save document
