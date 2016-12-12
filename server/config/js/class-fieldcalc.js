@@ -182,12 +182,12 @@ var calculatefield = {
   				}
   				if (dataParam.parameters.CRMCU) {
   					for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
-  						if (doc[0].CULvl1Category == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
+  						if (doc[0].Category == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
   					}
   				}
   				if (dataParam.parameters.DeliveryCU) {
   					for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
-  						if (doc[0].CULvl1Category == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
+  						if (doc[0].Category == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
   					}
   				}
           if (dataParam.parameters.ProcessCatFIN) {
@@ -211,7 +211,7 @@ var calculatefield = {
 
           // Get Operational Metrics
           if (dataParam.parameters[opMetricKey]) {
-            opMetric.getOpMetrics(doc,dataParam,opMetricKey);
+            opMetric.getOpMetrics(doc,dataParam,opMetricKey,req);
           }
 
           if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
