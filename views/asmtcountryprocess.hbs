@@ -7,12 +7,6 @@
 <link rel="stylesheet" href="./css/jquery-ui.css">
 
 <input type="hidden" id="docTitle" value="{{CurrentPeriod}} Holistic Base Level Assessment">
-<script>
-	//Load document's name
-	$('h1#pageTitle').text($('input#docTitle').val());
-	//Load document's business unit
-	$('h3#pageSubTitle').hide();
-</script>
 
 <!-- JS and CSS for rich text edit -->
 <link rel="stylesheet" type="text/css" href="./css/skin.css">
@@ -38,6 +32,7 @@
 		<input type="hidden" name="parentdocsubtype" id="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="enteredbu" id="docid" value="{{EnteredBU}}">
 		<input type="hidden" name="close" id="close" value="0">
+		<input type="hidden" name="opmetrickey" id="opmetrickey" value="{{OpMetricKey}}">
 		<!-- Basic Details -->
 		{{>asmtcountryprocess/basics}}
 		<!-- Exception Details -->
@@ -54,3 +49,10 @@
 		{{>buttons}}
 	</form>
 </div>
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').hide();
+	$("#audit_readiness_treeview").treetable({expandable: true });
+</script>

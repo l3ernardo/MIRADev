@@ -333,6 +333,20 @@ var auditlesson = {
 												sort:[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
 											};
 											db.find(obj).then(function(data){
+												var objGP = {
+													selector: {
+														Name: { "$gt": null },
+														key: "Assessable Unit",
+														DocSubType:"Global Process",
+														Status: "Active",
+														MIRABusinessUnit: req.session.businessunit
+													},
+													fields: [
+														"Name","WWBCITKey"
+													]
+												};
+												db.find(objGP).then(function(datagp){
+												var gpList = datagp.body.docs;
 												var uniqueBUs = {};
 												var uniquePeriods = {};
 												var uniquePrograms = {};
@@ -340,6 +354,17 @@ var auditlesson = {
 												var list = [];
 												var dataExport = [];
 												for(var i = 0; i < docs.length; i++){
+
+													var gpKey = docs[i].globalProcess.split(",");
+													for(var x = 0; x < gpKey.length; x++ ){
+														for(var y = 0; y < gpList.length;y++){
+															if(gpKey[x] == gpList[y].WWBCITKey){
+																gpKey[x] = gpList[y].Name;
+																break;
+															}
+														}
+													}
+													docs[0].globalProcess = gpKey;
 													if(typeof uniqueBUs[docs[i].businessUnit] === "undefined"){
 														uniqueBUs[docs[i].businessUnit] = true;
 														list.push({id: docs[i].businessUnit.replace(/ /g,''), name: docs[i].businessUnit});
@@ -383,6 +408,10 @@ var auditlesson = {
 													});
 												}
 												deferred.resolve({"status": 200, "dataExport": dataExport,"doc": list});
+												//cierra
+											}).catch(function(err){
+												deferred.reject({"status": 500, "error": err.error.reason});
+											});
 											}).catch(function(err){
 												deferred.reject({"status": 500, "error": err.error.reason});
 											});

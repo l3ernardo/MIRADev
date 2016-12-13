@@ -173,7 +173,6 @@ var assessableunit = {
 						doc[0].CUData = [];
 						break;
 					case "Controllable Unit":
-					//irvingGet
 					if(req.session.businessunit.split(" ")[0] == "GTS"){
 						doc[0].gts_gtsTransFlag = true;
 					}
@@ -370,7 +369,7 @@ var assessableunit = {
 											};
 									db.find(CUSearch).then(function(CUPData){
 										doc[0].CUPList = CUPData.body.docs;
-										//irvingAccountEditmode
+										//ALL Key AccountEditmode
 										if(req.session.businessunit.split(" ")[0] == "GTS"){
 										var obj = {
 											selector : {
@@ -416,7 +415,7 @@ var assessableunit = {
 												if(dataCP.status==200 && !dataCP.error){
 													doc[0].CUParents = [];
 													doc[0].CUParents = dataCP.doc;
-													//irvingEditmode
+													//ALL Key fEditmode
 													if(req.session.businessunit.split(" ")[0] == "GTS"){
 														doc[0].gts_gtsTransFlag = true;
 													var obj = {
@@ -435,7 +434,6 @@ var assessableunit = {
 											else {
 												deferred.resolve({"status": 200, "doc": doc});
 											}
-											//endIRving
 												}
 												else{
 													deferred.reject({"status": 500, "error": dataCP.error});
@@ -829,7 +827,7 @@ var assessableunit = {
 								for (var i = 0; i < resdocs.length; ++i) {
 									doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 								}
-								//irvingAccountNew
+								//ALL Key for AccountNew
 								if(req.session.businessunit.split(" ")[0] == "GTS"){
 									doc[0].gts_gtsTransFlag = true;
 								var obj = {
@@ -967,28 +965,7 @@ var assessableunit = {
 								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
-							//irvingNew
 						case "Controllable Unit":
-						if(req.session.businessunit.split(" ")[0] == "GTS"){
-							doc[0].gts_gtsTransFlag = true;
-						var obj = {
-							selector : {
-								"_id": {"$gt":0},
-								"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
-						}};
-						db.find(obj).then(function(dataLL){
-							//console.log(req.session.businessunit.split(" ")[0]);
-							doc[0].lessonsList = dataLL.body.docs[0].value;
-						deferred.resolve({"status": 200, "doc": doc});
-					}).catch(function(err) {
-						console.log("[assessableunit][LessonsList]" + dataLL.error);
-						deferred.reject({"status": 500, "error": err});
-					});
-				}
-				else {
-					deferred.resolve({"status": 200, "doc": doc});
-				}
-						break;
 						default:
 							deferred.resolve({"status": 200, "doc": doc});
 							break;
@@ -1089,9 +1066,10 @@ var assessableunit = {
 							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "BU Reporting Group":
-							doc[0].LevelTypeG = "1";
+							doc[0].LevelType = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
+							doc[0].DocRPType = "BU Mixed-Level Group";
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
@@ -1188,7 +1166,6 @@ var assessableunit = {
 							doc[0].IOT = req.body.IOT;
 							doc[0].IMT = req.body.IMT;
 							doc[0].Country = req.body.Country;
-							//irvingSaveExisting
 							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
 							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
@@ -1196,10 +1173,15 @@ var assessableunit = {
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							doc[0].Status = req.body.Status;
+							doc[0].DocRPType = "BU Mixed-Level Group";
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
 					doc[0].Links = eval(req.body.attachIDs);
+					if(doc[0].Log == undefined){
+						doc[0].Log = [];
+						console.log("This document: "+docid+" must have a Log[0]. Requires a review.")
+					}
 					doc[0].Log.push(addlog);
 					doc = accessupdates.updateAccessExistDoc(req,doc);
 					//Save document

@@ -191,7 +191,8 @@ $(document).ready(function() {
 	//---End of Audit Readiness Assessment---//
 
 	//---Start of Operational Metrics---//
-	if ( $("input[name='enteredbu']").val() == "GBS" ) {
+	// OMKID4 - metric key ID for Delivery
+	if ( $("input[name='enteredbu']").val() == "GBS" || ( $("input[name='enteredbu']").val() == "GTS" && $("input[name='opmetrickey']").val() != "OMKID4" ) ) {
 		var metrics = $("#opMetricIDs").val().split(',');
 		var i;
 		for (i = 0; i < metrics.length; ++i) {
@@ -219,32 +220,30 @@ $(document).ready(function() {
 				}
 			}
 		}
-		if ($("#opMetricException").val() == 1) $("#compguideom").html('<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>');
-		else $("#compguideom").html('<p>&nbsp;</p>');
 	} else {
-		if ( $("input[name='parentdocsubtype']").val() == "Controllable Unit" ) {
-			if ( $("input[name='CatCU']").val() == "Delivery" ) {
-				$('#OtherMetricDate').datepicker({
-					defaultDate: "+1w",
-					changeMonth: true,
-					numberOfMonths: 1,
-					onClose: function () {
-			     $(this).focus();
-			    }
-				});
-				if ( $("input[name='OtherMetricRating']").val() == "Marg" || $("input[name='OtherMetricRating']").val() == "Unsat" ) {
-					$("#colOtherMetricDate").show();
-				} else {
-					$("#colOtherMetricDate").hide();
-				}
+		if ( $("input[name='enteredbu']").val() == "GTS" && $("input[name='opmetrickey']").val() == "OMKID4" ) {
+			$('#OtherMetricDate').datepicker({
+				defaultDate: "+1w",
+				changeMonth: true,
+				numberOfMonths: 1,
+				onClose: function () {
+		     $(this).focus();
+		    }
+			});
+			if ( $("input[name='OtherMetricRating']").val() == "Marg" || $("input[name='OtherMetricRating']").val() == "Unsat" ) {
+				$("#colOtherMetricDate").show();
+			} else {
+				$("#colOtherMetricDate").hide();
 			}
 		}
 	}
+	if ($("#opMetricException").val() == 1) $("#compguideom").html('<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>');
+	else $("#compguideom").html('<p>&nbsp;</p>');
 
 	//---on change events--//
 	$('#opmetric_content').click(function(){
 		$("#opMetricException").val(0);
-		if ( $("input[name='enteredbu']").val() == "GBS" ) {
+		if ( $("input[name='enteredbu']").val() == "GBS" || ( $("input[name='enteredbu']").val() == "GTS" && $("input[name='opmetrickey']").val() != "OMKID4" ) ) {
 			metrics = $("#opMetricIDs").val().split(',');
 			for (i = 0; i < metrics.length; ++i) {
 				$("#"+metrics[i]+"TargetSatDate").datepicker({
@@ -273,7 +272,7 @@ $(document).ready(function() {
 				}
 			}
 		} else {
-			if ( $("input[name='CatCU']").val() == "Delivery" ) {
+			if ( $("input[name='enteredbu']").val() == "GTS" && $("input[name='opmetrickey']").val() == "OMKID4" ) {
 				if($("#OtherMetricRating").val() == "Marg" || $("#OtherMetricRating").val() == "Unsat") {
 					$("#colOtherMetricDate").show();
 					$("#opMetricException").val(1);
