@@ -274,6 +274,25 @@ var register = function(Handlebars) {
 			}
 			return datehtml;
 		},
+		dateDisplayView: function(date) {
+			var datehtml;
+			if (date != undefined) {
+				if (date == "") {
+					datehtml = '<td class="asmt-viewdata">'+date+'</td>';
+				} else {
+					var currdate = new Date();
+					var dateval = new Date(date);
+					currdate.setHours(0,0,0,0);
+					if(dateval >= currdate)
+						datehtml = '<td class="asmt-viewdata">'+date+'</td>';
+					else
+						datehtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+date+'</td>';
+				}
+			} else {
+				datehtml = '<td class="asmt-viewdata"></td>';
+			}
+			return datehtml;
+		},
 		moneyDisplay: function(money) {
 			var moneyhtml;
 			if (money == undefined) {
