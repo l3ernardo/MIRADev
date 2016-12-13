@@ -31,6 +31,14 @@
 				</td>
 			</tr>
 			<tr>
+				<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "OpMetricKey" parameters.GTSOpMetricKeys.0.options "id" "name" OpMetricKey}}}
+					</span>
+				</td>
+			</tr>
+			<tr>
 				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
@@ -92,7 +100,7 @@
 			<tr>
 				<td>Operational Metric Key:</td>
 				<td>
-					{{#each parameters.GBSOpMetricKeysCU.0.options}}
+					{{#each parameters.GTSOpMetricKeys.0.options}}
 						{{#if_equal id ../OpMetricKey}}
 							{{name}}
 						{{/if_equal}}
@@ -137,7 +145,7 @@
 		<tr>
 			<td>Operational Metric Key:</td>
 			<td>
-				{{#each parameters.GBSOpMetricKeysCU.0.options}}
+				{{#each parameters.GTSOpMetricKeys.0.options}}
 					{{#if_equal id ../OpMetricKey}}
 						{{name}}
 					{{/if_equal}}
