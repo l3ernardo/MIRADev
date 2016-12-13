@@ -36,21 +36,18 @@
 	<div id="kctest" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/kctesting}}
 	</div>
-	{{#if_equal EnteredBU "GTS"}}
-		{{#if_equal CatCU "Delivery"}}
-			<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-				{{>asmtcontrollableunit/operationalmetricssod}}
-			</div>
+	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
+		{{#if_equal EnteredBU "GTS"}}
+			<!-- OMKID4 - metric key ID for Delivery  -->
+			{{#if_equal OpMetricKey "OMKID4"}}
+				{{>asmtbaselevel/operationalmetricssod}}
+			{{else}}
+				{{>asmtbaselevel/operationalmetricscrm}}
+			{{/if_equal}}
 		{{else}}
-			<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-				{{>asmtcontrollableunit/operationalmetricscrm}}
-			</div>
+			{{>asmtbaselevel/operationalmetricsgbs}}
 		{{/if_equal}}
-	{{else}}
-		<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-			{{>asmtcontrollableunit/operationalmetricsgbs}}
-		</div>
-	{{/if_equal}}
+	</div>
 	<div id="accountrating" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/accountratings}}
 	</div>
