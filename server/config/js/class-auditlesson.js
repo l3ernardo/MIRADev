@@ -355,7 +355,7 @@ var auditlesson = {
 												var dataExport = [];
 												for(var i = 0; i < docs.length; i++){
 
-													var gpKey = docs[i].globalProcess.split(",");y);
+													var gpKey = docs[i].globalProcess.split(",");
 													for(var x = 0; x < gpKey.length; x++ ){
 														for(var y = 0; y < gpList.length;y++){
 															if(gpKey[x] == gpList[y].WWBCITKey){

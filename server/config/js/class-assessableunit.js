@@ -1066,7 +1066,7 @@ var assessableunit = {
 							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "BU Reporting Group":
-							doc[0].LevelTypeG = "1";
+							doc[0].LevelType = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							doc[0].DocRPType = "BU Mixed-Level Group";

@@ -149,63 +149,111 @@ Explicit user summary
 ***************************************************************/
 
 administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
-	res.render('accesssummary');
+			var limits = "";
+			
+			
 
-	/*
-		accesssumary.getUserAccessSummary(req,db).then(function (data){
+	
+	if(req.query.start && req.query.end){
+		
+	
+		   
+			
+			accesssumary.getUserAccessSummary(req,db,req.query.start,req.query.end).then(function (data){
 
-			if(data.status==200 & !data.error) {
+				if(data.status==200 & !data.error) {
+					console.log(req.query.limits);
+			 			
+				res.render('accesssummary',{alldata: JSON.stringify(data.data,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:req.query.limits});
+				
+				}else{
+
+					res.render('error',{errorDescription: data.error});
+					console.log("[routes][explicitAccessSummary] - " + data.error);
+
+
+				}
+			
+				}).catch(function(err) {
+				res.render('error',{errorDescription: err.error});
+				console.log("[routes][explicitAccessSummary] - " + err.error);
+				
+					});
+
+	}else
+		if(req.query.searchEmail){
+		
+		 
+		   
+		   accesssumary.getUserAccessSummaryByUser(req,db,req.query.searchEmail).then(function (data){
+
+				if(data.status==200 & !data.error) {
 					
-				res.render('accesssummary',data.data);
-				//res.render('accesssummary',data.data.Users);
+					res.render('accesssummary',{alldata: JSON.stringify(data.data,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:""});
+		
 
-			}else{
+				}else{
 
-			res.render('error',{errorDescription: data.error});
-			console.log("[routes][explicitAccessSummary] - " + data.error);
+				res.render('error',{errorDescription: data.error});
+				console.log("[routes][explicitAccessSummary] - " + data.error);
 
 
-			}
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][explicitAccessSummary] - " + err.error);
+				}
+				
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][explicitAccessSummary] - " + err.error);
 
-		});
-*/
+					});
+		   
+	}
+	
+	
+	else{ // means first time is called
 
+		accesssumary.getUserAccessSummaryTabs(req,db).then(function (tabs){
+			
+			accesssumary.getUserAccessSummary(req,db,tabs.data[0].start,tabs.data[0].end).then(function (data){
+
+				if(data.status==200 & !data.error) {
+					
+					for(var i=0;i<tabs.data.length;i++){
+					
+						if(i==tabs.data.length-1)
+							limits += tabs.data[i].start+"|"+tabs.data[i].end;
+						else
+							limits += tabs.data[i].start+"|"+tabs.data[i].end+",";
+						
+					}
+					
+					res.render('accesssummary',{alldata: JSON.stringify(data.data,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:limits});
+		
+
+				}else{
+
+				res.render('error',{errorDescription: data.error});
+				console.log("[routes][explicitAccessSummary] - " + data.error);
+
+
+				}
+				
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][explicitAccessSummary] - " + err.error);
+
+					});
+				
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][explicitAccessSummary] - " + err.error);
+
+			});
+		
+	}
+			
+	
 
 });
-
-//data feed for Explicit access summary
-administration.get('/dataFeedAccessSummary',isAuthenticated, function(req,res){
-
-	accesssumary.getUserAccessSummary(req,db).then(function (data){
-
-		if(data.status==200 & !data.error) {
-			//console.log(data.data);
-			
-			//res.render('accesssummary',data.data);
-			//res.render('accesssummary',data.data.Users);
-			
-			res.json(data.data);
-
-		}else{
-
-		res.render('error',{errorDescription: data.error});
-		console.log("[routes][explicitAccessSummary] - " + data.error);
-
-
-		}
-}).catch(function(err) {
-	res.render('error',{errorDescription: err.error});
-	console.log("[routes][explicitAccessSummary] - " + err.error);
-
-	});
-
-
-
-});
-
 
 
 
