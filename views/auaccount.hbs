@@ -46,7 +46,15 @@
 		<!-- BASICS SECTION -->
 		{{>auaccount/basics}}
 		<!-- ADMIN TABLE -->
-		{{>auaccount/administrative}}
+		{{#if_equal EnteredBU "GTS"}}
+			{{>auaccount/administrativegts}}
+		{{else}}
+			{{#if_equal EnteredBU "GBS"}}
+				{{>auaccount/administrativegbs}}
+			{{else}}
+				{{>auaccount/administrativegtstrans}}
+			{{/if_equal}}
+		{{/if_equal}}
 		<!-- ASSESSMENT SECTION -->
 		{{>assessment}}
 		<!-- ACCESS SECTION -->

@@ -84,46 +84,38 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						}
 						break;
 					case "Country Process":
-						if (data.doc[0].editmode) {
-							var lParams;
-							if (req.session.businessunit == "GTS") lParams = ['UnitSizes','GTSAuditPrograms'];
-							else lParams = ['UnitSizes','GBSAuditPrograms'];
-							parameter.getListParams(db, lParams).then(function(dataParam) {
-								if(dataParam.status==200 & !dataParam.error) {
-									data.doc[0].parameters = dataParam.parameters;
-									res.render('aucountryprocess', data.doc[0] );
-								} else {
-									res.render('error',{errorDescription: data.error});
-									console.log("[router][assessableunit][getListParams] - " + dataParam.error);
-								}
-							}).catch(function(err) {
-								res.render('error',{errorDescription: err.error});
-								console.log("[router][assessableunit][getListParams] - " + err.error);
-							})
-						} else {
-							res.render('aucountryprocess', data.doc[0] );
-						}
+						var lParams;
+						if (req.session.businessunit == "GBS") lParams = ['UnitSizes','GBSAuditPrograms','GBSOpMetricKeysProcess'];
+						else lParams = ['UnitSizes','GTSAuditPrograms','GTSOpMetricKeys'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('aucountryprocess', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[router][assessableunit][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[router][assessableunit][getListParams] - " + err.error);
+						});
 						break;
 					case "Controllable Unit":
-						if (data.doc[0].editmode) {
-							var lParams;
-							if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'UnitSizes','ARCFrequencies','GTSAuditPrograms'];
-							else lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms'];
-							parameter.getListParams(db, lParams).then(function(dataParam) {
-								if(dataParam.status==200 & !dataParam.error) {
-									data.doc[0].parameters = dataParam.parameters;
-									res.render('aucontrollableunit', data.doc[0] );
-								} else {
-									res.render('error',{errorDescription: data.error});
-									console.log("[router][assessableunit][getListParams] - " + dataParam.error);
-								}
-							}).catch(function(err) {
-								res.render('error',{errorDescription: err.error});
-								console.log("[router][assessableunit][getListParams] - " + err.error);
-							})
-						} else {
-							res.render('aucontrollableunit', data.doc[0] );
-						}
+						var lParams;
+						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms','GBSOpMetricKeysCU'];
+						else lParams = ['GTSMetrics', 'UnitSizes','ARCFrequencies','GTSAuditPrograms','GTSOpMetricKeys'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('aucontrollableunit', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[router][assessableunit][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[router][assessableunit][getListParams] - " + err.error);
+						});
 						break;
 					case "BU Reporting Group":
 						if (data.doc[0].editmode) {
@@ -147,27 +139,22 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						}
 						break;
 					case "Account":
-						if (data.doc[0].editmode) {
-							var lParams;
-							if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'AssessableUnitStatus'];
-							else lParams = ['GBSMetrics', 'AssessableUnitStatus'];
-							parameter.getListParams(db, lParams).then(function(dataParam) {
-								if(dataParam.status==200 & !dataParam.error) {
-									data.doc[0].parameters = dataParam.parameters;
-									res.render('auaccount', data.doc[0] );
-								} else {
-									res.render('error',{errorDescription: data.error});
-									console.log("[router][assessableunit][getListParams] - " + dataParam.error);
-								}
-							}).catch(function(err) {
-								res.render('error',{errorDescription: err.error});
-								console.log("[router][assessableunit][getListParams] - " + err.error);
-							})
-						} else {
-							res.render('auaccount', data.doc[0] );
-						}
+						var lParams;
+						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
+						else lParams = ['GTSMetrics', 'AssessableUnitStatus','GTSOpMetricKeys'];
+						parameter.getListParams(db, lParams).then(function(dataParam) {
+							if(dataParam.status==200 & !dataParam.error) {
+								data.doc[0].parameters = dataParam.parameters;
+								res.render('auaccount', data.doc[0] );
+							} else {
+								res.render('error',{errorDescription: data.error});
+								console.log("[router][assessableunit][getListParams] - " + dataParam.error);
+							}
+						}).catch(function(err) {
+							res.render('error',{errorDescription: err.error});
+							console.log("[router][assessableunit][getListParams] - " + err.error);
+						});
 						break;
-
 				}
 			} else {
 				res.render('error',{errorDescription: data.error});

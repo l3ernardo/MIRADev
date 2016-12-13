@@ -7,12 +7,6 @@
 <link rel="stylesheet" href="./css/jquery-ui.css">
 
 <input type="hidden" id="docTitle" value="{{CurrentPeriod}} Holistic Base Level Assessment">
-<script>
-	//Load document's name
-	$('h1#pageTitle').text($('input#docTitle').val());
-	//Load document's business unit
-	$('h3#pageSubTitle').hide();
-</script>
 
 <!-- JS and CSS for rich text edit -->
 <link rel="stylesheet" type="text/css" href="./css/skin.css">
@@ -26,7 +20,7 @@
 <script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
 
-<div class="ibm-container" style="width:85%">
+<div class="ibm-container" style="width:95%">
 	<p style="text-align:right">
 		{{#unless newunit}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
@@ -35,9 +29,10 @@
 	<form id="assessment" class="ibm-column-form" name="form" method="POST" action="/saveasmt">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
-		<input type="hidden" name="parentdocsubtype" value="{{ParentDocSubType}}">
+		<input type="hidden" name="parentdocsubtype" id="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="enteredbu" id="docid" value="{{EnteredBU}}">
 		<input type="hidden" name="close" id="close" value="0">
+		<input type="hidden" name="opmetrickey" id="opmetrickey" value="{{OpMetricKey}}">
 		<!-- Basic Details -->
 		{{>asmtcountryprocess/basics}}
 		<!-- Exception Details -->
@@ -54,3 +49,10 @@
 		{{>buttons}}
 	</form>
 </div>
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').hide();
+	$("#audit_readiness_treeview").treetable({expandable: true });
+</script>

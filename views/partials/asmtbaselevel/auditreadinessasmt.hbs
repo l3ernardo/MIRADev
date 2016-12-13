@@ -43,15 +43,31 @@
 		</tr>
 		<tr class="ar-asmt-content">
 			<td>
-				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<!--<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">-->
+				<table id="audit_readiness_treeview"  cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating" >
 					<thead>
-						<th class="ar-asmt-viewheader" scope="col" width="10%">Qtr</th>
+						<th class="ar-asmt-viewheader" scope="col" width="25%">Qtr-Type</th>
 						<th class="ar-asmt-viewheader" scope="col" width="10%">ID</th>
 						<th class="ar-asmt-viewheader" scope="col" width="35%">Summary of Issue/Recommendation</th>
-						<th class="ar-asmt-viewheader" scope="col" width="15%">Observation Category</th>
-						<th class="ar-asmt-viewheader" scope="col" width="15%">Audit/CAR</th>
-						<th class="ar-asmt-viewheader" scope="col" width="15%">Subprocess</th>
+						<th class="ar-asmt-viewheader" scope="col" width="10%">Observation Category</th>
+						<th class="ar-asmt-viewheader" scope="col" width="10%">Process</th>
+						<th class="ar-asmt-viewheader" scope="col" width="10%">Subprocess</th>
 					</thead>
+					{{#if_not_equal EnteredBU "GBS"}}
+					<tbody>
+					{{#each list}}
+						<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
+
+							<td style="background-color: white !important;" style="width:25%;white-space:nowrap;">{{name}}</td>
+							<td style="background-color: white !important;" style="width:10%;white-space:nowrap;">{{#if _id}}<a href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
+							<td style="background-color: white !important;" style="width:35%;">{{summary}}</td>
+							<td style="background-color: white !important;" style="width:10%;">{{observationCategory}}</td>
+							<td style="background-color: white !important;" style="width:10%;">{{process}}</td>
+							<td style="background-color: white !important;" style="width:10%;">{{subprocess}}</td>
+						</tr>
+					{{/each}}
+					</tbody>
+					{{else}}
 					{{#each ALLData}}
 						<tr class="asmt-viewdata">
 							{{#each col}}
@@ -63,8 +79,9 @@
 							{{/each}}
 						</tr>
 					{{/each}}
+					{{/if_not_equal}}
 					<tr>
-						<td colspan="6" class="asmt-viewdata"><a href="javascript:void(0)">Click here</a> to view all audit lessons learned.</td>
+						<td colspan="6" class="asmt-viewdata"><a href="/auditlessons">Click here</a> to view all audit lessons learned.</td>
 					</tr>
 				</table>
 			</td>

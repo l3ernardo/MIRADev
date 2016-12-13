@@ -27,8 +27,8 @@
 							</td>
 							<td class="content-data">
 								<span id={{colDate}}>
-									<input type="date" name="{{targetsatdatefield}}" id="{{targetsatdatefield}}" value="{{targetsatdate}}" size="12">
-									<span for="{{targetsatdatefield}}" class="ibm-calendar-link"></span>
+									<input type="date" name="{{targetsatdatefield}}" id="{{targetsatdatefield}}" class="ibm-calendar-link" value="{{targetsatdate}}" size="12">
+									<span for="{{targetsatdatefield}}" ></span>
 								</span>
 							</td>
 							<td class="content-data">
@@ -39,7 +39,7 @@
 							</td>
 						{{else}}
 							{{{ratingDisplayView rating}}}
-							<td class="content-data">{{{dateDisplay targetsatdate}}}</td>
+							{{{dateDisplayView targetsatdate}}}
 							<td class="content-data">{{finding}}</td>
 							<td class="content-data">{{action}}</td>
 						{{/if}}

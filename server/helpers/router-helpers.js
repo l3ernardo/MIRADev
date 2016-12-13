@@ -34,7 +34,7 @@ var register = function(Handlebars) {
 			for(i=0;i<dataSel.length;i++){
 				listvalue = eval('dataSel[i].' + optvalue);
 				listname = eval('dataSel[i].' + optname);
-				if(listname==optsel){
+				if(listname==optsel || listvalue==optsel){
 					arr += '<option value="' + listvalue + '" selected>' + listname + '</option>';
 				}else{
 					arr += '<option value="' + listvalue + '">' + listname + '</option>';
@@ -271,6 +271,25 @@ var register = function(Handlebars) {
 					else
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
 				}
+			}
+			return datehtml;
+		},
+		dateDisplayView: function(date) {
+			var datehtml;
+			if (date != undefined) {
+				if (date == "") {
+					datehtml = '<td class="asmt-viewdata">'+date+'</td>';
+				} else {
+					var currdate = new Date();
+					var dateval = new Date(date);
+					currdate.setHours(0,0,0,0);
+					if(dateval >= currdate)
+						datehtml = '<td class="asmt-viewdata">'+date+'</td>';
+					else
+						datehtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+date+'</td>';
+				}
+			} else {
+				datehtml = '<td class="asmt-viewdata"></td>';
 			}
 			return datehtml;
 		},

@@ -1,0 +1,56 @@
+<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+	{{#if editmode}}
+		<!-- Edit Mode -->
+		{{#if admin}}
+			<!-- Admin Edit Mode - Fields are Editable -->
+			<tr>
+				<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GTSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+				<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+			</tr>
+			<tr>
+				<td><label for="AuditLessonsKey">Audit Lessons Key:</label></td>
+				<td>
+					<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonsKey}}">
+					{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
+				</td>
+			</tr>
+			<tr>
+				<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "OpMetricKey" parameters.GTSOpMetricKeys.0.options "id" "name" OpMetricKey}}}
+					</span>
+				</td>
+			</tr>
+		{{else}}
+			<!-- Non-admin Edit Mode - Fields are not Editable -->
+			<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+			<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
+			<tr>
+				<td>Operational Metric Key:</td>
+				<td>
+					{{#each parameters.GTSOpMetricKeys.0.options}}
+						{{#if_equal id ../OpMetricKey}}
+							{{name}}
+						{{/if_equal}}
+					{{/each}}
+				</td>
+			</tr>
+		{{/if}}
+	{{else}}
+		<!-- Read Mode -->
+		<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+		<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
+		<tr>
+			<td>Operational Metric Key:</td>
+			<td>
+				{{#each parameters.GTSOpMetricKeys.0.options}}
+					{{#if_equal id ../OpMetricKey}}
+						{{name}}
+					{{/if_equal}}
+				{{/each}}
+			</td>
+		</tr>
+	{{/if}}
+</table>

@@ -1,8 +1,9 @@
 <table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
 	{{#if editmode}}
-		{{!-- AU ControllableUnit form - Administrative Use Only section - Edit Mode with Admin Access --}}
+		<!-- Edit Mode -->
 		{{#if admin}}
+			<!-- Admin Edit Mode - Fields are Editable -->
 			<tr>
 				<td><label for="BRGMembership">BU reporting groups:</label></td>
 				<td>
@@ -18,49 +19,33 @@
 					</span>
 				</td>
 			</tr>
-			{{#if_equal EnteredBU "GTS"}}
-				<tr>
-					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GTSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
-					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
-				</tr>
-				<tr>
-					<td><label for="AuditLessonKey">Audit Lesson Key:</label></td>
-					<td>
-						<input type="hidden" id="AuditLesonKey" name="AuditLessonKey" value="{{AuditLessonkey}}">
-						{{{multiSelect "lessonsList" lessonsList "option" "option" "scopeLessonList"}}}
-					</td>
-				</tr>
-				<tr>
-					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-					<td>
-						<span>
-							{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
-						</span>
-					</td>
-				</tr>
-			{{else}}
-				<tr>
-					<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GBSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
-					<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
-				</tr>
-				{{#if_equal EnteredBU "GTS Transformation"}}
-				<tr>
-					<td><label for="AuditLessonKey">Audit Lesson Key:</label></td>
-					<td>
-						<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonskey}}">
-						{{{multiSelect "lessonsList" lessonsList "option" "option" "scopeLessonsList"}}}
-					</td>
-				</tr>
-				{{/if_equal}}
-				<tr>
-					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-					<td>
-						<span>
-							{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
-						</span>
-					</td>
-				</tr>
-			{{/if_equal}}
+			<tr>
+				<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GTSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+				<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+			</tr>
+			<tr>
+				<td><label for="AuditLessonsKey">Audit Lessons Key:</label></td>
+				<td>
+					<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonsKey}}">
+					{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
+				</td>
+			</tr>
+			<tr>
+				<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "OpMetricKey" parameters.GTSOpMetricKeys.0.options "id" "name" OpMetricKey}}}
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
+					</span>
+				</td>
+			</tr>
 			<tr>
 				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
 				<td>
@@ -107,15 +92,23 @@
 				</td>
 			</tr>
 		{{else}}
-			{{!-- AU ControllableUnit form - Administrative Use Only section - Edit Mode with no Admin Access --}}
+			<!-- Non-Admin Edit Mode - Fields are not Editable -->
 			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 			<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
-			{{#if gts_gtsTransFlag}}
 			<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
-			{{/if}}
-			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+			<tr>
+				<td>Operational Metric Key:</td>
+				<td>
+					{{#each parameters.GTSOpMetricKeys.0.options}}
+						{{#if_equal id ../OpMetricKey}}
+							{{name}}
+						{{/if_equal}}
+					{{/each}}
+				</td>
+			</tr>
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 			{{#if_equal showARCFreq 1}}
 				<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 			{{/if_equal}}
@@ -144,15 +137,23 @@
 			{{/if}}
 		{{/if}}
 	{{else}}
-		{{!-- AU ControllableUnit form form - Administrative Use Only section - Read Mode --}}
+		<!-- Read Mode -->
 		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
 		<tr><td>Size:</td><td>{{CUSize}}</td></tr>
 		<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
-		{{#if gts_gtsTransFlag}}
 		<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
-		{{/if}}
-		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+		<tr>
+			<td>Operational Metric Key:</td>
+			<td>
+				{{#each parameters.GTSOpMetricKeys.0.options}}
+					{{#if_equal id ../OpMetricKey}}
+						{{name}}
+					{{/if_equal}}
+				{{/each}}
+			</td>
+		</tr>
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 		{{#if_equal showARCFreq 1}}
 			<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 		{{/if_equal}}
