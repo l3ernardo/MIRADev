@@ -239,8 +239,8 @@ assessableUnits.get('/newassessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Account":
 						var lParams;
-						if (req.session.businessunit == "GTS") lParams = ['GTSMetrics', 'AssessableUnitStatus'];
-						else lParams = ['GBSMetrics', 'AssessableUnitStatus'];
+						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
+						else lParams = ['GTSMetrics', 'AssessableUnitStatus','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
