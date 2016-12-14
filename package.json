@@ -21,6 +21,7 @@
     "ldapjs": "^1.0.0",
     "moment": "^2.13.0",
     "moment-timezone": "^0.5.4",
+    "node-excel-export": "^1.2.0",
     "passport": "^0.3.2",
     "passport-ldapauth": "^0.5.0",
     "path": "^0.12.7",
