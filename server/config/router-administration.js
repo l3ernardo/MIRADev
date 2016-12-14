@@ -12,6 +12,7 @@ var isAuthenticated = require('./router-authentication.js');
 var isAuthorized = require('./router-authorization.js');
 var simpleAuthentication = require('./router-simpleAuthentication.js');
 var accesssumary = require('./js/class-accesssummary.js');
+var accesssumaryreports = require('./js/class-accesssumaryreports.js');
 var geohierarchy = require('./js/class-geohierarchy.js');
 
 /**************************************************************
@@ -144,6 +145,7 @@ administration.get('/getListParams', isAuthenticated, function(req, res) {
 		console.log("[routes][getListParams] - " + err.error);
 	})
 });
+
 /**************************************************************
 Explicit user summary
 ***************************************************************/
@@ -151,20 +153,13 @@ Explicit user summary
 administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 			var limits = "";
 			
-			
-
-	
 	if(req.query.start && req.query.end){
 		
-	
-		   
-			
 			accesssumary.getUserAccessSummary(req,db,req.query.start,req.query.end).then(function (data){
 
 				if(data.status==200 & !data.error) {
-					console.log(req.query.limits);
-			 			
-				res.render('accesssummary',{alldata: JSON.stringify(data.data,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:req.query.limits});
+					
+				res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:req.query.limits, exportdata:data.data.userList});
 				
 				}else{
 
@@ -189,7 +184,7 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 
 				if(data.status==200 & !data.error) {
 					
-					res.render('accesssummary',{alldata: JSON.stringify(data.data,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:""});
+					res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:"", exportdata:data.data.userList});
 		
 
 				}else{
@@ -226,7 +221,7 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 						
 					}
 					
-					res.render('accesssummary',{alldata: JSON.stringify(data.data,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:limits});
+					res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:limits, exportdata:data.data.userList});
 		
 
 				}else{
@@ -252,6 +247,60 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 	}
 			
 	
+
+});
+
+
+
+//data feed for Explicit access summary
+administration.get('/dataFeedAccessSummary',isAuthenticated, function(req,res){
+	
+	
+	
+	
+	accesssumary.getUserAccessSummaryTabs(req,db).then(function (tabs){
+		
+		accesssumary.getUserAccessSummary(req,db,tabs.data[0].start,tabs.data[0].end).then(function (data){
+
+			if(data.status==200 & !data.error) {
+			
+				res.json(JSON.parse(JSON.stringify(data.data.datarray,'utf8').replace(/[`~!@#$%^&*()|+\-=?';:<>]/gi, '')));
+
+			}else{
+
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][explicitAccessSummary] - " + data.error);
+
+
+			}
+			
+			}).catch(function(err) {
+				res.render('error',{errorDescription: err.error});
+				console.log("[routes][explicitAccessSummary] - " + err.error);
+
+				});
+			
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][explicitAccessSummary] - " + err.error);
+
+		});
+	
+	
+});
+//report generated at server level
+administration.get('/downloadaccesssummary',isAuthenticated, function(req,res){
+
+
+	accesssumaryreports.exportToExcel(req,db).then(function (data){
+		res.attachment('report.xlsx'); 
+		res.send(data.data);
+	
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][explicitAccessSummaryReport] - " + err.error);
+
+		});
 
 });
 
