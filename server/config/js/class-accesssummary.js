@@ -326,12 +326,30 @@ var accesssumary = {
 					   				
 					   				for(var i=0;i<UserListOfDocs[key].length;i++){
 					   					var element = [];
+					   					var document = {};
 					   										
 					   					
 					   					if(count >= start && count <= end){
 					   				
 					   				
 					   					if(indexGBS[UserListOfDocs[key][i]]){ //if access doc exist on a document
+					   						
+					   						
+					   						
+					   					document._id = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc._id);
+					   					document.Name = key;
+					   					document.Type = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.DocSubType);
+					   					document.AssessableUnit = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Name.replace(/[^A-Za-z0-9]/g,''))
+					   					document.Status = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Status);
+					   					document.AddionalEditors = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalEditors);
+					   					document.AddionalReaders = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalReaders);
+					   					document.Owners = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Owner);
+					   					document.Focals = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Focals);
+					   					document.Coordinators =  accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Coordinators);
+					   					document.Readers = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Readers);
+					   					document.IOT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IOT);
+					   					document.IMT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IMT);
+					   					document.Country = "Country";
 					   				
 										element.push(UserListOfDocs[key][i]);
 										element.push(key);
@@ -401,6 +419,8 @@ var accesssumary = {
 					   					}
 					   					
 					   					datarray.push(element);
+					   					userList.push(document);
+					   					
 					   					
 					   				}//if count
 					   					counterBreaker ++;
@@ -419,10 +439,13 @@ var accesssumary = {
 							//console.log("length of list: "+count);
 							//console.log("length of array: "+datarray.length);
 							
+							response.datarray = datarray;
+							response.userList = userList;
 							
 						}catch(e){deferred.reject({"status": 500, "error": e});}
 					
-						deferred.resolve({"status": 200, "data": datarray});
+						//deferred.resolve({"status": 200, "data": datarray});
+						deferred.resolve({"status": 200, "data": response});
 						
 				}).catch(function(error){
 					deferred.reject({"status": 500, "error": err.error.reason});
@@ -514,12 +537,30 @@ getUserAccessSummaryByUser: function(req, db,userToFind){
 				   				
 				   				for(var i=0;i<UserListOfDocs[key].length;i++){
 				   					var element = [];
+				   					var document = {};
 				   										
 				   					
 				   				
 				   				
 				   				
 				   					if(indexGBS[UserListOfDocs[key][i]]){ //if access doc exist on a document
+				   						
+				   						document._id = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc._id);
+					   					document.Name = key;
+					   					document.Type = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.DocSubType);
+					   					document.AssessableUnit = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Name.replace(/[^A-Za-z0-9]/g,''))
+					   					document.Status = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Status);
+					   					document.AddionalEditors = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalEditors);
+					   					document.AddionalReaders = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalReaders);
+					   					document.Owners = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Owner);
+					   					document.Focals = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Focals);
+					   					document.Coordinators =  accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Coordinators);
+					   					document.Readers = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Readers);
+					   					document.IOT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IOT);
+					   					document.IMT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IMT);
+					   					document.Country = "Country";
+				   						
+				   						
 				   				
 									element.push(UserListOfDocs[key][i]);
 									element.push(key);
@@ -589,6 +630,7 @@ getUserAccessSummaryByUser: function(req, db,userToFind){
 				   					}
 				   					
 				   					datarray.push(element);
+				   					userList.push(document);
 				   					
 				   			
 				   					counterBreaker ++;
@@ -608,11 +650,13 @@ getUserAccessSummaryByUser: function(req, db,userToFind){
 						
 						//console.log("length of list: "+count);
 						//console.log("length of array: "+datarray.length);
-						
+						response.datarray = datarray;
+						response.userList = userList;
 						
 					}catch(e){deferred.reject({"status": 500, "error": e});}
 				
-					deferred.resolve({"status": 200, "data": datarray});
+					//deferred.resolve({"status": 200, "data": datarray});
+					deferred.resolve({"status": 200, "data": response});
 					
 			}).catch(function(error){
 				deferred.reject({"status": 500, "error": err.error.reason});
