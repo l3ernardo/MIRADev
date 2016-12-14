@@ -1,6 +1,6 @@
 <table id="opmetric_table" class="ibm-data-table">
-	<input type="hidden" name="opMetricException" id="opMetricException" value="{{opMetricException}}">
 	<input type="hidden" name="opMetricIDs" id="opMetricIDs" value="{{opMetricIDs}}">
+	<input type="hidden" name="opMetricException" id="opMetricException" value="{{opMetricException}}">
 	<tr class="op-metric-content">
 		<td>
 			<table width="100%" id="opmetric_content">
@@ -21,7 +21,7 @@
 							</td>
 							<td class="content-data">
 								<span id={{colDate}}>
-									<input type="date" name="{{targetsatdatefield}}" id="{{targetsatdatefield}}" class="ibm-calendar-link" value="{{targetsatdate}}" size="12">
+									<input type="date" name="{{targetsatdatefield}}" id="{{targetsatdatefield}}" class="ibm-calendar-link" value="{{targetsatdate}}">
 									<span for="{{targetsatdatefield}}"></span>
 								</span>
 							</td>
@@ -33,7 +33,7 @@
 							</td>
 						{{else}}
 							{{{ratingDisplayView rating}}}
-							<td class="content-data">{{{dateDisplay targetsatdate}}}</td>
+							{{{dateDisplayView targetsatdate}}}
 							<td class="content-data">{{finding}}</td>
 							<td class="content-data">{{action}}</td>
 						{{/if}}
