@@ -312,7 +312,7 @@ var assessableunit = {
 							switch (doc[0].DocSubType) {
 								case "Business Unit":
 								case "Global Process":
-					            doc[0].ReportingGroupList = [];
+					          doc[0].ReportingGroupList = [];
 								var searchobj = {
 									selector:{
 												"_id": {"$gt":0},
