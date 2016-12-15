@@ -2,6 +2,9 @@
 <link href="./css/style.css" rel="stylesheet" type="text/css" />
 <link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 <script src="./lib/jquery.dataTables.js"></script>
+<script src="/public/js/accesssummary.js"></script>
+<script src="./lib/jquery.dataTables.js"></script>
+<script src='./js/utility.js'></script>
 
 
 
@@ -15,6 +18,8 @@
 				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
 				<span class="ibm-sep"> </span>
 				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+				<span class="ibm-sep"> </span>
+				<a href="/downloadaccesssummary" value="Export all Users" name="lnk_exportods" id="lnk_exportall" class="ibm-symp-spreadsheet">Export all users</a>
 				<div align="right">
 				<form  action="/explicitAccessSummary" method="get">
 					 Search by email: <input type="text" name="searchEmail" >
@@ -26,7 +31,7 @@
 			<br/>
 		</div>
 		
-		<textarea name="textarea" id="dataForExport" cols="100" style="display:none"></textarea>
+		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{{valuesToString exportdata}}}</textarea>
 		<div >
 		
 			<table id="accesssummary_treeview"  cellspacing="0" cellpadding="0" border="0" class="display nowrap"  class="mira-dashboard-table" >
@@ -58,7 +63,7 @@
 		</div>
 		<br/>
 		<div class="ibm-buttons-row" id ="pagination">
-		 
+		 Pages:
 		
 		
 		</div>
