@@ -1,11 +1,21 @@
+/*Overrides the even-rows changing color*/
+table.ibm-data-table tbody tr.ibm-alt-row td, table.ibm-data-table tbody tr.ibm-alt-row th {
+	background: transparent;
+}
+
 /*Overrides for the mouse over behavior inherited from the v17 standard.*/
 /* -- Starts from here -- */
-table.ibm-data-table tbody tr:hover td, table.ibm-data-table tbody tr.ibm-alt-row:hover td,
-table.ibm-data-table tbody tr:hover td.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover td,
-table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover td,
-table.ibm-data-table tbody tr.ibm-alt-row-checked:hover td.ibm-alt-col, table.ibm-data-table tbody tr:hover td.ibm-sort-column,
-table.ibm-data-table.ibm-alternating-col tr:hover td.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover td.ibm-alt-col.ibm-sort-column,
-table.ibm-data-table tbody tr.ibm-alt-row-checked:hover td.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover td.ibm-sort-column {
+table.ibm-data-table tbody tr:hover td, table.ibm-data-table tbody tr:hover th,
+table.ibm-data-table tbody tr.ibm-alt-row:hover td, table.ibm-data-table tbody tr.ibm-alt-row:hover th,
+table.ibm-data-table tbody tr:hover td.ibm-alt-col,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover td, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover th,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover td, table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover th,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover td.ibm-alt-col,
+table.ibm-data-table tbody tr:hover td.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover td.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover td.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover td.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row:hover td.ibm-sort-column {
 	background: transparent;
 }
 table.ibm-data-table tbody tr:hover .sat-bg, table.ibm-data-table tbody tr.ibm-alt-row:hover .sat-bg,
@@ -14,7 +24,6 @@ table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .sat-bg, tab
 table.ibm-data-table tbody tr:hover .sat-bg.ibm-sort-column,table.ibm-data-table.ibm-alternating-col tr:hover .sat-bg.ibm-sort-column,
 table.ibm-data-table.ibm-alternating-col tr:hover .sat-bg.ibm-alt-col.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .sat-bg.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row:hover .sat-bg.ibm-sort-column {
-	font-weight: bold;
 	background-color: #00ff00;
 }
 table.ibm-data-table tbody tr:hover .unsat-bg, table.ibm-data-table tbody tr.ibm-alt-row:hover .unsat-bg,
@@ -23,7 +32,6 @@ table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .unsat-bg,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .unsat-bg.ibm-alt-col, table.ibm-data-table tbody tr:hover .unsat-bg.ibm-sort-column,
 table.ibm-data-table.ibm-alternating-col tr:hover .unsat-bg.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .unsat-bg.ibm-alt-col.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .unsat-bg.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .unsat-bg.ibm-sort-column {
-	font-weight: bold;
 	background-color: #ff0000;
 }
 table.ibm-data-table tbody tr:hover .marg-bg, table.ibm-data-table tbody tr.ibm-alt-row:hover .marg-bg,
@@ -32,7 +40,6 @@ table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .marg-bg,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .marg-bg.ibm-alt-col, table.ibm-data-table tbody tr:hover .marg-bg.ibm-sort-column,
 table.ibm-data-table.ibm-alternating-col tr:hover .marg-bg.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .marg-bg.ibm-alt-col.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .marg-bg.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .marg-bg.ibm-sort-column {
-	font-weight: bold;
 	background-color: #ffff00;
 }
 table.ibm-data-table tbody tr:hover .unrated-bg, table.ibm-data-table tbody tr.ibm-alt-row:hover .unrated-bg,
@@ -41,7 +48,6 @@ table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .unrated-bg,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .unrated-bg.ibm-alt-col, table.ibm-data-table tbody tr:hover .unrated-bg.ibm-sort-column,
 table.ibm-data-table.ibm-alternating-col tr:hover .unrated-bg.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .unrated-bg.ibm-alt-col.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .unrated-bg.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .unrated-bg.ibm-sort-column {
-	font-weight: bold;
 	background-color: #ffffff;
 }
 table.ibm-data-table tbody tr:hover .content-data-centered, table.ibm-data-table tbody tr.ibm-alt-row:hover .content-data-centered,
@@ -179,7 +185,6 @@ table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .asmt-viewda
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .asmt-viewdata-green.ibm-alt-col, table.ibm-data-table tbody tr:hover .asmt-viewdata-green.ibm-sort-column,
 table.ibm-data-table.ibm-alternating-col tr:hover .asmt-viewdata-green.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .asmt-viewdata-green.ibm-alt-col.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .asmt-viewdata-green.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .asmt-viewdata-green.ibm-sort-column {
-	font-weight: bold;
 	background-color: #00ff00;
 }
 table.ibm-data-table tbody tr:hover .asmt-viewdata-red, table.ibm-data-table tbody tr.ibm-alt-row:hover .asmt-viewdata-red,
@@ -188,7 +193,6 @@ table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .asmt-viewda
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .asmt-viewdata-red.ibm-alt-col, table.ibm-data-table tbody tr:hover .asmt-viewdata-red.ibm-sort-column,
 table.ibm-data-table.ibm-alternating-col tr:hover .asmt-viewdata-red.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .asmt-viewdata-red.ibm-alt-col.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .asmt-viewdata-red.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .asmt-viewdata-red.ibm-sort-column {
-	font-weight: bold;
 	background-color: #ff0000;
 }
 table.ibm-data-table tbody tr:hover .asmt-viewdata-yellow, table.ibm-data-table tbody tr.ibm-alt-row:hover .asmt-viewdata-yellow,
@@ -197,7 +201,6 @@ table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .asmt-viewda
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .asmt-viewdata-yellow.ibm-alt-col, table.ibm-data-table tbody tr:hover .asmt-viewdata-yellow.ibm-sort-column,
 table.ibm-data-table.ibm-alternating-col tr:hover .asmt-viewdata-yellow.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .asmt-viewdata-yellow.ibm-alt-col.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .asmt-viewdata-yellow.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .asmt-viewdata-yellow.ibm-sort-column {
-	font-weight: bold;
 	background-color: #ffff00;
 }
 table.ibm-data-table tbody tr:hover .summaryrollup-label, table.ibm-data-table tbody tr.ibm-alt-row:hover .summaryrollup-label,
@@ -392,6 +395,14 @@ table.ibm-data-table.ibm-alternating-col tr:hover .processrating-legend.ibm-sort
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .processrating-legend.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .processrating-legend.ibm-sort-column {
 	background-color: #00c1c2;
 }
+table.ibm-data-table tbody tr:hover .country-processrating, table.ibm-data-table tbody tr.ibm-alt-row:hover .country-processrating,
+table.ibm-data-table tbody tr:hover .country-processrating.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .country-processrating,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .country-processrating,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .country-processrating.ibm-alt-col, table.ibm-data-table tbody tr:hover .country-processrating.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .country-processrating.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .country-processrating.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .country-processrating.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .country-processrating.ibm-sort-column {
+	background-color: #00c1c2;
+}
 table.ibm-data-table tbody tr:hover .curating, table.ibm-data-table tbody tr.ibm-alt-row:hover .curating,
 table.ibm-data-table tbody tr:hover .curating.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .curating,
 table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .curating,
@@ -456,7 +467,72 @@ table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-viewsubheader.ibm-sor
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewsubheader.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-viewsubheader.ibm-sort-column {
 	background-color: #dadada;
 }
+table.ibm-data-table tbody tr:hover .kc-test-viewheader, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-viewheader,
+table.ibm-data-table tbody tr:hover .kc-test-viewheader.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .kc-test-viewheader,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader.ibm-alt-col, table.ibm-data-table tbody tr:hover .kc-test-viewheader.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-viewheader.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-viewheader.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-viewheader.ibm-sort-column {
+	background-color: #ffd1bb;
+}
+table.ibm-data-table tbody tr:hover .kc-test-viewheader-cell, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-viewheader-cell,
+table.ibm-data-table tbody tr:hover .kc-test-viewheader-cell.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader-cell,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .kc-test-viewheader-cell,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader-cell.ibm-alt-col, table.ibm-data-table tbody tr:hover .kc-test-viewheader-cell.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-viewheader-cell.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-viewheader-cell.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader-cell.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-viewheader-cell.ibm-sort-column {
+	background-color: #ffd1bb;
+}
+table.ibm-data-table tbody tr:hover .kc-test-viewheader-al, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-viewheader-al,
+table.ibm-data-table tbody tr:hover .kc-test-viewheader-al.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader-al,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .kc-test-viewheader-al,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader-al.ibm-alt-col, table.ibm-data-table tbody tr:hover .kc-test-viewheader-al.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-viewheader-al.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-viewheader-al.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewheader-al.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-viewheader-al.ibm-sort-column {
+	background-color: #ffd1bb;
+}
+table.ibm-data-table tbody tr:hover .kc-test-label, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-label,
+table.ibm-data-table tbody tr:hover .kc-test-label.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-label,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .kc-test-label,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-label.ibm-alt-col, table.ibm-data-table tbody tr:hover .kc-test-label.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-label.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .kc-test-label.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-label.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test-label.ibm-sort-column {
+	background-color: #ffd1bb;
+}
+table.ibm-data-table tbody tr:hover .kc-test, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test,
+table.ibm-data-table tbody tr:hover .kc-test.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .kc-test,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test.ibm-alt-col, table.ibm-data-table tbody tr:hover .kc-test.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .kc-test.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .kc-test.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .kc-test.ibm-sort-column {
+	background-color: #ff8141;
+}
+table.ibm-data-table tbody tr:hover .op-metric, table.ibm-data-table tbody tr.ibm-alt-row:hover .op-metric,
+table.ibm-data-table tbody tr:hover .op-metric.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .op-metric,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric.ibm-alt-col, table.ibm-data-table tbody tr:hover .op-metric.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .op-metric.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .op-metric.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .op-metric.ibm-sort-column {
+	background-color: #c0a1e0;
+}
+table.ibm-data-table tbody tr:hover .op-metric-content, table.ibm-data-table tbody tr.ibm-alt-row:hover .op-metric-content,
+table.ibm-data-table tbody tr:hover .op-metric-content.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-content,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .op-metric-content,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-content.ibm-alt-col, table.ibm-data-table tbody tr:hover .op-metric-content.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .op-metric-content.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .op-metric-content.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-content.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .op-metric-content.ibm-sort-column {
+	background-color: #c0a1e0;
+}
+table.ibm-data-table tbody tr:hover .op-metric-label, table.ibm-data-table tbody tr.ibm-alt-row:hover .op-metric-label,
+table.ibm-data-table tbody tr:hover .op-metric-label.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .op-metric-label,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-alt-col, table.ibm-data-table tbody tr:hover .op-metric-label.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .op-metric-label.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .op-metric-label.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .op-metric-label.ibm-sort-column {
+	background-color: #e0e0ff;
+}
 /* -- Hover override ends here*/
+
 .ibm-data-table  .mira-td-exceptions {
 	font-size:11px
 }
@@ -594,6 +670,9 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .kc-test-viewsubheader.i
 }
 .ibm-data-table .mira-subdata2 {
   font-size:10px
+}
+.ibm-data-table .mira-subdata3 {
+  font-size:9px
 }
 .ibm-data-table .mira-subdatablue {
   color: #0060A0;

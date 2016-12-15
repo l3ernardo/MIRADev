@@ -5,22 +5,16 @@
 		<td>
 			<table width="100%" id="opmetric_content">
 				<thead class="op-metric-label">
-					<th scope="col">Metric</th>
-					{{#if OpMetric.desc}}
-						<th scope="col">Defined Target</th>
-					{{/if}}
-					<th scope="col">Rating</th>
-					<th scope="col">Target to Sat</th>
-					<th scope="col">Findings</th>
-					<th scope="col">Actions</th>
+					<th scope="col" width="20%">Metric</th>
+					<th scope="col" width="15%">Rating</th>
+					<th scope="col" width="15%">Target to Sat</th>
+					<th scope="col" width="25%">Findings</th>
+					<th scope="col" width="25%">Actions</th>
 				</thead>
 				{{#each OpMetric}}
 					<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
 					<tr>
 						<td class="op-metric-label">{{name}}</td>
-						{{#if desc}}
-							<td class="op-metric-label">{{desc}}</td>
-						{{/if}}
 						{{#if ../editmode}}
 							<td class="content-data">
 								<span>{{{uniqueSelect ratingfield ../parameters.OpMetricRating.0.options "name" "name" rating}}}</span>
@@ -32,14 +26,14 @@
 								</span>
 							</td>
 							<td class="content-data">
-								<span class="content-data" id={{colFinding}}><input type="text" name="{{findingfield}}" id="{{findingfield}}" value="{{finding}}"></span>
+								<span class="content-data" id={{colFinding}}><input type="text" name="{{findingfield}}" id="{{findingfield}}" value="{{finding}}" size="40"></span>
 							</td>
 							<td class="content-data">
-								<span class="content-data" id={{colAction}}><input type="text" name="{{actionfield}}" id="{{actionfield}}" value="{{action}}"></span>
+								<span class="content-data" id={{colAction}}><input type="text" name="{{actionfield}}" id="{{actionfield}}" value="{{action}}" size="40"></span>
 							</td>
 						{{else}}
-							<td class="content-data">{{{ratingDisplay rating}}}</td>
-							<td class="content-data">{{{dateDisplay targetsatdate}}}</td>
+							{{{ratingDisplayView rating}}}
+							{{{dateDisplayView targetsatdate}}}
 							<td class="content-data">{{finding}}</td>
 							<td class="content-data">{{action}}</td>
 						{{/if}}

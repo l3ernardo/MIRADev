@@ -5,20 +5,20 @@
 		<td>
 			<table width="100%" id="opmetric_content">
 				<thead class="op-metric-label">
-					<th scope="col" width="18%">Metric</th>
-					<th scope="col" width="20%">Defined Target</th>
-					<th scope="col" width="9%">Rating</th>
-					<th scope="col" width="13%">Target to Sat</th>
-					<th scope="col" width="20%">Findings</th>
-					<th scope="col" width="20%">Actions</th>
+					<th scope="col" width="26%">Metric</th>
+					<th scope="col" width="15%">Rating</th>
+					<th scope="col" width="15%">Target to Sat</th>
+					<th scope="col" width="22%">Findings</th>
+					<th scope="col" width="22%">Actions</th>
 				</thead>
 				{{#each OpMetric}}
 					<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
 					<tr>
-						<td class="op-metric-label">{{name}}</td>
 						<td class="op-metric-label">
+							<strong>{{name}}</strong>
+							<br />
 							{{#each desc}}
-								<span class="mira-subdata2">{{this}}</span><br />
+								<span class="mira-subdata3">{{this}}</span><br />
 							{{/each}}
 						</td>
 						{{#if ../editmode}}
@@ -39,7 +39,7 @@
 							</td>
 						{{else}}
 							{{{ratingDisplayView rating}}}
-							<td class="content-data">{{{dateDisplay targetsatdate}}}</td>
+							{{{dateDisplayView targetsatdate}}}
 							<td class="content-data">{{finding}}</td>
 							<td class="content-data">{{action}}</td>
 						{{/if}}

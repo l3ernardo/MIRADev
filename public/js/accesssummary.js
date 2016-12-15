@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	t=url.indexOf("reportstaexc");
 	
+
 	$('input:checkbox').removeAttr('checked');
 
 	$('#lnk_exportxls').click(function(){
@@ -16,6 +17,8 @@ $(document).ready(function() {
 				aux++;      
 			}
 		}
+		
+		
 
 		table += "<th>"+$('#th1').text()+"</th>";   //construct the first row	
 		table += "<th>"+$('#th2').text()+"</th>";	
@@ -148,5 +151,3 @@ $("#mira_checkbox_tree").click(function(){  //set for multi row selection
 		$(".mira_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 });
-
-

@@ -1,46 +1,17 @@
 <table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
-
 	{{#if editmode}}
-
-		{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with Admin Access --}}
+		<!-- Edit Mode -->
 		{{#if admin}}
+			<!-- Admin Edit Mode - Fields are Editable -->
 			<tr>
-				<td width="25%"><label for="BRGMembership">BU reporting groups:</label></td>
+				<td><label for="BRGMembership">BU reporting groups:</label></td>
 				<td>
 					<input type="hidden" id="BRGMembership" name="BRGMembership" value="{{BRGMembership}}">
 					{{{multiSelect "brglist" ReportingGroupList "docid" "name" "scopeBRG"}}}
 				</td>
 			</tr>
 			<tr>
-				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span>
-						{{#if AuditableFlagYes}}
-							<input type="radio" name="AuditableFlag" id="AFYes" value="Yes" checked>Yes
-							<input type="radio" name="AuditableFlag" id="AFNo" value="No">No
-						{{else}}
-							<input type="radio" name="AuditableFlag" id="AFYes" value="Yes">Yes
-							<input type="radio" name="AuditableFlag" id="AFNo" value="No" checked>No
-						{{/if}}
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td><label for="CUFlag">Controllable Unit?:<span class="ibm-required">*</span></label></td>
-				<td>
-					<span>
-						{{#if CUFlagYes}}
-							<input type="radio" name="CUFlag" value="Yes" id="CFYes" checked>Yes
-							<input type="radio" name="CUFlag" value="No" id="CFNo">No
-						{{else}}
-							<input type="radio" name="CUFlag" value="Yes" id="CFYes">Yes
-							<input type="radio" name="CUFlag" value="No" id="CFNo" checked>No
-						{{/if}}
-					</span>
-				</td>
-			</tr>
-			<tr class="size">
 				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
@@ -48,21 +19,45 @@
 					</span>
 				</td>
 			</tr>
-			{{#if_equal EnteredBU "GTS"}}
+			<tr>
+				<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GBSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+				<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+			</tr>
+			<tr>
+				<td><label for="AuditLessonsKey">Audit Lesson Key:</label></td>
+				<td>
+					<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonsKey}}">
+					{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
+				</td>
+			</tr>
+			<tr>
+				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="AuditableFlag">Auditable Unit?:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{#if AuditableFlagYes}}
+							<input class="showsize" type="radio" id="AFYes" name="AuditableFlag" value="Yes" checked>Yes
+							<input type="radio" name="AuditableFlag" id="AFNo" value="No">No
+						{{else}}
+							<input class="showsize" type="radio" id="AFYes" name="AuditableFlag" value="Yes">Yes
+							<input type="radio" name="AuditableFlag" id="AFNo" value="No" checked>No
+						{{/if}}
+					</span>
+				</td>
+			</tr>
+			{{#if_equal showARCFreq 1}}
 				<tr>
-					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+					<td><label for="ARCFrequency">Audit Readiness Checklist (ARC) frequency:</label></td>
 					<td>
 						<span>
-							{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
-						</span>
-					</td>
-				</tr>
-			{{else}}
-				<tr>
-					<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
-					<td>
-						<span>
-							{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+							{{{uniqueSelect "ARCFrequency" parameters.ARCFrequencies.0.options "name" "name" ARCFrequency}}}
 						</span>
 					</td>
 				</tr>
@@ -88,17 +83,17 @@
 					</div>
 				</td>
 			</tr>
-
 		{{else}}
-
-			{{!-- AU Country Process form - Administrative Use Only section - Edit Mode with no Admin Access --}}
+			<!-- Non-Admin Edit Mode - Fields are not Editable -->
 			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
+			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+			<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+			<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
 			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
-			<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
-			{{#if SizeFlag}}
-				<tr><td>Size:</td><td>{{CUSize}}</td></tr>
-			{{/if}}
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			{{#if_equal showARCFreq 1}}
+				<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
+			{{/if_equal}}
 			{{#if AuditableFlagYes}}
 				<tr>
 					<td>Internal Audits:</td>
@@ -123,17 +118,17 @@
 				</tr>
 			{{/if}}
 		{{/if}}
-
 	{{else}}
-
-		{{!-- AU Country Process form - Administrative Use Only section - Read Mode --}}
+		<!-- Read Mode -->
 		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
+		<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+		<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+		<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
 		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
-		<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
-		{{#if SizeFlag}}
-			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
-		{{/if}}
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		{{#if_equal showARCFreq 1}}
+			<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
+		{{/if_equal}}
 		{{#if AuditableFlagYes}}
 			<tr>
 				<td>Internal Audits:</td>
@@ -141,7 +136,7 @@
 					<div class="ibm-columns ibm-graphic-tabs">
 						<table id="internalauditsview_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 							<thead class="mira-subtable">
-                <th scope="col"><font color="#FFF">Engagement</font></th>
+								<th scope="col"><font color="#FFF">Engagement</font></th>
 								<th scope="col"><font color="#FFF">Added to AQ DB</font></th>
 								<th scope="col"><font color="#FFF">Rating</font></th>
 								<th scope="col"><font color="#FFF">Size</font></th>
@@ -158,5 +153,4 @@
 			</tr>
 		{{/if}}
 	{{/if}}
-
 </table>

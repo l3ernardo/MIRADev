@@ -1,0 +1,47 @@
+<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+	{{#if editmode}}
+		<!-- Edit Mode -->
+		{{#if admin}}
+			<!-- Admin edit mode - Editable for Admins  -->
+			<tr>
+				<td width="27%">{{{uniqueSelect "MetricsCriteria" parameters.GBSMetrics.0.options "name" "name" MetricsCriteria}}}<b for="MetricsCriteria">($M USD):</b></td>
+				<td><span><input type="text" name="MetricsValue" value="{{MetricsValue}}" class="td_tcv" size="10"> (planning purposes only)</span></td>
+			</tr>
+			<tr>
+				<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "OpMetricKey" parameters.GBSOpMetricKeysCU.0.options "id" "name" OpMetricKey}}}
+					</span>
+				</td>
+			</tr>
+		{{else}}
+			<!-- Non-admin edit mode - Not Editable  -->
+			<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+			<tr>
+				<td>Operational Metric Key:</td>
+				<td>
+					{{#each parameters.GBSOpMetricKeysCU.0.options}}
+						{{#if_equal id ../OpMetricKey}}
+							{{name}}
+						{{/if_equal}}
+					{{/each}}
+				</td>
+			</tr>
+		{{/if}}
+	{{else}}
+		<!-- Read Mode -->
+		<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
+		<tr>
+			<td>Operational Metric Key:</td>
+			<td>
+				{{#each parameters.GBSOpMetricKeysCU.0.options}}
+					{{#if_equal id ../OpMetricKey}}
+						{{name}}
+					{{/if_equal}}
+				{{/each}}
+			</td>
+		</tr>
+	{{/if}}
+</table>
