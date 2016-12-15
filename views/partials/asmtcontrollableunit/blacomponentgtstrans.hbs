@@ -31,7 +31,16 @@
 		{{>asmtcontrollableunit/kctesting}}
 	</div>
 	<div id="opmetric" class="ibm-tabs-content" style='display : none'>
-		{{>asmtcontrollableunit/operationalmetricssod}}
+		{{#if_equal EnteredBU "GTS"}}
+			<!-- OMKID4 - metric key ID for Delivery  -->
+			{{#if_equal OpMetricKey "OMKID4"}}
+				{{>asmtbaselevel/operationalmetricssod}}
+			{{else}}
+				{{>asmtbaselevel/operationalmetricscrm}}
+			{{/if_equal}}
+		{{else}}
+			{{>asmtbaselevel/operationalmetricsgbs}}
+		{{/if_equal}}
 	</div>
 	<div id="other" class="ibm-tabs-content" style='display : none'>
 		{{>asmtcontrollableunit/ctrt}}

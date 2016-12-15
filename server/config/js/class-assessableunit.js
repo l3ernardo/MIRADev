@@ -870,14 +870,23 @@ var assessableunit = {
 							};
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
+								//console.log("Resdocs: "+resdocs);
 								for (var i = 0; i < resdocs.length; ++i) {
 									if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-									if (resdocs[i].DocSubType == "BU IOT") doc[0].IOTAUList.push({"iotid":resdocs[i].IOT});
+									if (resdocs[i].DocSubType == "BU IOT") {
+										if (resdocs[i].IOT != undefined) doc[0].IOTAUList.push({"iotid":resdocs[i].IOT});
+										console.log("resdocs ID: "+resdocs[i].IOT);
+										console.log("IOTAUList ID: "+doc[0].IOTAUList.iotid);
+									}
 								}
+								console.log(doc[0].IOTAUList.length);
 								var tmpIOT = [];
-								for(var tmp in req.app.locals.hierarchy.BU_IOT){
-									tmpIOT.push({docid:tmp, name:req.app.locals.hierarchy.BU_IOT[tmp].IOT});
+								console.log("Global Hierarchy exists: "+global.hierarchy.BU_IOT);
+								for(var tmp in global.hierarchy.BU_IOT){
+									console.log("Global Hierarchy IOTs: "+global.hierarchy.BU_IOT[tmp].IOT);
+									tmpIOT.push({"docid":tmp, "name":global.hierarchy.BU_IOT[tmp].IOT});
+									console.log("TMP IOT: "+tmpIOT[tmp]);
 								}
 								doc[0].IOTList = tmpIOT;
 								for (var i = 0; i < doc[0].IOTAUList.length; ++i) {
@@ -1066,7 +1075,7 @@ var assessableunit = {
 							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "BU Reporting Group":
-							doc[0].LevelTypeG = "1";
+							doc[0].LevelType = "1";
 							doc[0].AuditProgram = req.body.AuditProgram;
 							doc[0].Name = req.body.Name;
 							doc[0].DocRPType = "BU Mixed-Level Group";
