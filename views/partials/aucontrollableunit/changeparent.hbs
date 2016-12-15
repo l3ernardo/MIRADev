@@ -15,14 +15,14 @@
 				<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
 					<td>{{Name}}</td>
 					<td>{{DocSubType}}</td>
-					<td><input type="radio" name="CUParents" id="CUP_{{_id}}" value="{{Name}}" dtype="{{DocSubType}}" {{#if (eq _id ../parentid)}}checked {{/if}}/></td>
+					<td><input type="radio" name="CUParents" id="CUP_{{_id}}" value="{{Name}}" idParent="{{_id}}" level="{{LevelType}}" dtype="{{DocSubType}}" {{#if (eq _id ../parentid)}}checked {{/if}}/></td>
 				</tr>
 			{{/each}}
 		  </tbody>
 		</table>
 		<div class="ibm-buttons-row" style="box-sizing: border-box; width:95%" >
 		<p>
-			<input class="ibm-btn-pri" type="button" id="btn_okCUParent" value="Ok"/>
+			<input class="ibm-btn-pri" type="button" id="btn_okCUParent" value="Update"/>
 			<span class="ibm-sep">&nbsp;</span>
 			<input class="ibm-btn-sec" type="button" id="btn_cancelCUParent" value="Close" />
 		</p>
@@ -38,9 +38,30 @@
 		}
 		if($("#btn_okCUParent").length > 0){
 			$("#btn_okCUParent").click(function() {
-				//Save new data
-				//console.log($("input[name='CUParents']:checked").attr("dtype"))
+				//Update data
+				var pDocId = $("input[name='CUParents']:checked").attr("idParent");
 				
+				if($("#parentid").val() != pDocId){
+					var pDocName = $("input[name='CUParents']:checked").attr("value");
+					var pDocType = $("input[name='CUParents']:checked").attr("dtype");
+					var pLevelType = $("input[name='CUParents']:checked").attr("level");
+					var cuLevel = parseInt(pLevelType) + 1;
+					
+					$("span[name='ParentSubjectDisplay']").html(pDocName);
+					$("span[name='ParentDocSubTypeDisplay']").html("Parent " + pDocType + ":");
+					$("#ParentSubject").val(pDocName);
+					$("#ParentDocSubType").val(pDocType);
+					$("#LevelType").val(cuLevel.toString());
+					$("#parentid").val(pDocId);
+					
+					if(pDocType == "BU Country"){
+						var pCountry = pDocName.split(" - ")[0];
+						pCountry = pDocName.replace(pCountry + " - ", "");
+						$("span[name='Country']").html(pCountry);
+					}
+				}
+				ibmweb.overlay.hide('Overlay_Event');
+				alert("It is required to save the document to apply the changes.");
 			});
 		}
 		if($("#btn_cancelCUParent").length > 0){
