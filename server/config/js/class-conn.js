@@ -187,7 +187,83 @@ var DB = {
 			}
 		});
 		return deferred.promise;
-	}
+	},
+	// MERGE SAVE
+	mergesave: function(doc1, userdoc) {
+		//console.log(doc1.RatingJustification);
+		var deferred = q.defer();
+		// Check if there is a new version of same document in cloudant
+		var docid = userdoc._id
+		this.db.get(docid, '', function(error, data) {
+			var doc2 = data;
+			if(userdoc._rev==doc2._rev) {
+				// No changes detected, so userdoc can be saved
+				delete userdoc.fieldslist;
+				module.exports.save(userdoc).then(function(data2) {
+					if(data2.status!="200" && data2.err) {
+						deferred.reject({"status": 500, "body": {}, "error": data2.err});
+					} else{
+						deferred.resolve({"status": 200, "body": data2.body});
+					}					
+				});
+			} else {
+				// A change is detected, checking if the fields can be merged between doc2 and userdoc
+				userdoc._rev=doc2._rev; // updating the userdoc to be the last version
+				var conflictfields = [];
+				try {
+					if(userdoc.fieldslist) { // the list of the editable fields to be looked for
+						for(var i=0;i<userdoc.fieldslist.length;i++) {
+							var field = userdoc.fieldslist[i].field;
+							var label = userdoc.fieldslist[i].label;
+							// Checking and merging conflicted fields
+							//console.log("Comparing field: " + field + ", value:" + userdoc[field]);
+							var count = 0;
+							if(doc1[field]!=userdoc[field]) count++;
+							if(doc1[field]!=doc2[field]) count++;
+							if(userdoc[field]!=doc2[field]) count++;
+							if(count>=3) { // Conflict detected
+								conflictfields.push({"field":field, "label":label, "old:":doc2[field], "new":userdoc[field]});
+							} else {
+								// Only merge if doc2 has a different value from doc1 and userdoc (and doc1 and userdoc are the same)
+								if(doc1[field]==userdoc[field]) {
+									userdoc[field] = doc2[field];
+								}
+								console.log(field + " => " + userdoc[field]);
+							}
+						}
+						if(conflictfields.length>0) {
+							//console.log(conflictfields.length + " conflicts found.");
+							deferred.resolve({"status": "ERROR", "userdoc":userdoc, "conflict":conflictfields});
+						} else {
+							//console.log("No conflicts detected!");
+							// No conflicts detected, the userdoc (with all merges) can be saved
+							delete userdoc.fieldslist; // Delete temp fieldlist field
+							module.exports.save(userdoc).then(function(data2) {
+								if(data2.status!="200" && data2.err) {
+									deferred.reject({"status": 500, "body": {}, "error": data2.err});
+								} else{
+									deferred.resolve({"status": 200, "body": data2.body});
+								}					
+							});						
+						}
+					} else {
+						// No list of fields supplied, it means no need to check anything
+						delete userdoc.fieldslist; // Delete temp fieldlist field
+						module.exports.save(userdoc).then(function(data2) {
+							if(data2.status!="200" && data2.err) {
+								deferred.reject({"status": 500, "body": {}, "error": data2.err});
+							} else{
+								deferred.resolve({"status": 200, "body": data2.body});
+							}					
+						});				
+					}
+				} catch(e) {
+					console.log(e);
+				}
+			}
+		})
+		return deferred.promise;
+	}	
 };
 
 module.exports = DB;
