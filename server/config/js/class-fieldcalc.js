@@ -1070,8 +1070,33 @@ var calculatefield = {
     } catch(e) {
       console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
     }
+	},
+
+	getAccountsCU: function(db, doc) {
+	var deferred = q.defer();
+	try {
+		// Get cuurent quarter assessment
+		var accounts = {
+			selector:{
+				"_id": {"$gt":0},
+				"key": "Assessable Unit",
+				"parentid": doc[0]._id,
+				"DocSubType": "Account",
+				"MIRABusinessUnit": doc[0].MIRABusinessUnit
+			}
+		};
+		console.log(accounts)
+		db.find(accounts).then(function(actdata) {
+			deferred.resolve({"status": 200, "doc": actdata.body.docs});
+		}).catch(function(err) {
+			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+			deferred.reject({"status": 500, "error": err.error.reason});
+		});
+	} catch(e) {
+		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+		deferred.reject({"status": 500, "error": e});
 	}
-
-
+		return deferred.promise;
+	},
 }
 module.exports = calculatefield;

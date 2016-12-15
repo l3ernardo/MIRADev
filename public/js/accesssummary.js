@@ -1,3 +1,12 @@
+function validateForm() {
+    var x = document.forms["exportAllForm"]["searchEmail"].value;
+    if (x == "") {
+        alert("User name must be filled out");
+        return false;
+    }
+}
+
+
 $(document).ready(function() {
 	t=url.indexOf("reportstaexc");
 	
