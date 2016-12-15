@@ -364,7 +364,7 @@ var auditlesson = {
 															}
 														}
 													}
-													docs[0].globalProcess = gpKey;
+													docs[i].globalProcess = gpKey;
 													if(typeof uniqueBUs[docs[i].businessUnit] === "undefined"){
 														uniqueBUs[docs[i].businessUnit] = true;
 														list.push({id: docs[i].businessUnit.replace(/ /g,''), name: docs[i].businessUnit});
