@@ -21,9 +21,9 @@
 				<span class="ibm-sep"> </span>
 				<a href="/downloadaccesssummary" value="Export all Users" name="lnk_exportods" id="lnk_exportall" class="ibm-symp-spreadsheet">Export all users</a>
 				<div align="right">
-				<form  action="/explicitAccessSummary" method="get">
-					 Search by email: <input type="text" name="searchEmail" >
-					 <input type="submit" value="search">
+				<form name="exportAllForm" action="/explicitAccessSummary" method="get" onsubmit="return validateForm()">
+					 Search by user: <input type="text" name="searchEmail" >
+					 <input  type="submit" value="search">
 				</form>
 				</div>
 			</p>
@@ -62,7 +62,7 @@
 			</table>
 		</div>
 		<br/>
-		<div class="ibm-buttons-row" id ="pagination">
+		<div class="ibm-buttons-row" id ="pagination" style=" word-wrap: break-word;">
 		 Pages:
 		
 		
@@ -74,6 +74,9 @@
 
 <script>
 	//Load document's name
+	
+	
+	
 
   var listWithComa = function (list){
   
@@ -96,6 +99,8 @@
 		return newList;
   
   }
+
+
 
 	var getType = function(type){
 		var response = "";
@@ -174,7 +179,7 @@
 			a.href = "../explicitAccessSummary?start="+arrayLimits[f].start+"&end="+arrayLimits[f].end+"&limits="+limits;
 			a.innerHTML = f+1;
 			a.style["line-height"] = "1em";
-			a.style["padding"] = "8px";
+			a.style["padding"] = "2px";
 			a.style["margin"] = "2px";
 	
 			tabsDiv.appendChild(a);
