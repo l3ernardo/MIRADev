@@ -49,7 +49,7 @@ $(document).ready(function() {
 
     //list Audit Lessons Learned Key - for CU-not GBS only
     if ($("input[name='docsubtype']").val() == "Controllable Unit" || $("input[name='docsubtype']").val() == "Account") {
-      if ( $("input[name='AuditLessonsKey']").val() != "") {
+      if ( $("input[name='AuditLessonsKey']").length > 0) {
 
         var units = $("input[name='AuditLessonsKey']").val().split(",");
         for (var i = 0; i < units.length; ++i) {
