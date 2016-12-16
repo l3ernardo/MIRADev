@@ -195,7 +195,7 @@ var report = {
               DocSubType: ""+doc[i].DocSubType,
               AuditableFlag: ""+doc[i].AuditableFlag,
               Category: ""+doc[i].Category,
-              Subcategory: ""+doc[i].Subategory,
+              Subcategory: ""+doc[i].Subcategory,
               AuditProgram: ""+doc[i].AuditProgram,
               CUSize: ""+doc[i].CUSize,
               MetricsCriteria: ""+doc[i].MetricsCriteria,
