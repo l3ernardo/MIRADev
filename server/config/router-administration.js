@@ -14,6 +14,7 @@ var simpleAuthentication = require('./router-simpleAuthentication.js');
 var accesssumary = require('./js/class-accesssummary.js');
 var accesssumaryreports = require('./js/class-accesssumaryreports.js');
 var geohierarchy = require('./js/class-geohierarchy.js');
+var buffer = require('buffer').kMaxLength;
 
 /**************************************************************
 SETUP FUNCTIONALITY
@@ -153,7 +154,40 @@ Explicit user summary
 administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 			var limits = "";
 			
-	if(req.query.start && req.query.end){
+	if(req.query.start && req.query.end && req.query.searchEmail){ //user search wit limits of pagination
+		
+			
+			accesssumary.getUserAccessSummaryByUser(req,db,req.query.searchEmail,req.query.start,req.query.end).then(function (data){
+
+				if(data.status==200 & !data.error) {
+					
+					
+					
+					res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:req.query.limits, exportdata:data.data.userList, searchEmail:req.query.searchEmail});
+	
+					
+					}else{
+
+						res.render('error',{errorDescription: data.error});
+						console.log("[routes][explicitAccessSummary] - " + data.error);
+
+
+					}
+			
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][explicitAccessSummary] - " + err.error);
+
+				});
+			
+		
+		
+		
+		
+		
+		
+	}else
+		if(req.query.start && req.query.end){
 		
 			accesssumary.getUserAccessSummary(req,db,req.query.start,req.query.end).then(function (data){
 
@@ -193,7 +227,7 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 								limits += tabs.data[i].start+"|"+tabs.data[i].end+",";
 							
 						}
-						res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:limits, exportdata:data.data.userList});
+						res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:limits, exportdata:data.data.userList,searchEmail:req.query.searchEmail});
 		
 						
 						}else{
@@ -226,6 +260,7 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 			accesssumary.getUserAccessSummary(req,db,tabs.data[0].start,tabs.data[0].end).then(function (data){
 
 				if(data.status==200 & !data.error) {
+					limits = "";
 					
 					for(var i=0;i<tabs.data.length;i++){
 					
@@ -308,6 +343,8 @@ administration.get('/downloadaccesssummary',isAuthenticated, function(req,res){
 
 
 	accesssumaryreports.exportToExcel(req,db).then(function (data){
+		console.log("length of exported buffer: "+data.data.length);
+		console.log("Masimun Buffer size: "+buffer);
 		res.attachment('access_summary_report.xlsx'); 
 		res.send(data.data);
 	
