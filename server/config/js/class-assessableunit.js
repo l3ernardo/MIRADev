@@ -312,50 +312,29 @@ var assessableunit = {
 							switch (doc[0].DocSubType) {
 								case "Business Unit":
 								case "Global Process":
-					          doc[0].ReportingGroupList = [];
-								var searchobj = {
-									selector:{
-												"_id": {"$gt":0},
-												"key": "Assessable Unit",
-												"Status": "Active",
-												"BusinessUnit": doc[0].BusinessUnit,
-												"DocSubType": "BU Reporting Group"
-										}
-								};
-								db.find(searchobj).then(function(resdata) {
-									var resdocs = resdata.body.docs;
-									for (var i = 0; i < resdocs.length; ++i) {
-											doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-										}
-										deferred.resolve({"status": 200, "doc": doc});
-								}).catch(function(err) {
-								console.log("[assessableunit][ReportingGroupList]" + resdata.error);
-								deferred.reject({"status": 500, "error": err.error.reason});
-								});
-								break;
 								case "Sub-process":
 								case "Country Process":
-								doc[0].ReportingGroupList = [];
-								var searchobj = {
-									selector:{
-												"_id": {"$gt":0},
-												"key": "Assessable Unit",
-												"Status": "Active",
-												"BusinessUnit": doc[0].BusinessUnit,
-												"DocSubType": "BU Reporting Group"
-										}
-								};
-								db.find(searchobj).then(function(resdata) {
-									var resdocs = resdata.body.docs;
-									for (var i = 0; i < resdocs.length; ++i) {
-											doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-										}
-										deferred.resolve({"status": 200, "doc": doc});
-								}).catch(function(err) {
-								console.log("[assessableunit][ReportingGroupList]" + resdata.error);
-								deferred.reject({"status": 500, "error": err.error.reason});
-								});
-								break;
+									doc[0].ReportingGroupList = [];
+									var searchobj = {
+										selector:{
+													"_id": {"$gt":0},
+													"key": "Assessable Unit",
+													"Status": "Active",
+													"BusinessUnit": doc[0].BusinessUnit,
+													"DocSubType": "BU Reporting Group"
+											}
+									};
+									db.find(searchobj).then(function(resdata) {
+										var resdocs = resdata.body.docs;
+										for (var i = 0; i < resdocs.length; ++i) {
+												doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+											}
+											deferred.resolve({"status": 200, "doc": doc});
+									}).catch(function(err) {
+										console.log("[assessableunit][ReportingGroupList]" + resdata.error);
+										deferred.reject({"status": 500, "error": err.error.reason});
+									});
+									break;
 								case "Account":
 									var CUSearch = {
 												selector:{
@@ -371,43 +350,60 @@ var assessableunit = {
 										doc[0].CUPList = CUPData.body.docs;
 										//ALL Key AccountEditmode
 										if(req.session.businessunit.split(" ")[0] == "GTS"){
-										var obj = {
-											selector : {
-												"_id": {"$gt":0},
-												"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
-										}};
-										db.find(obj).then(function(dataLL){
-											doc[0].lessonsList = dataLL.body.docs[0].value;
-										deferred.resolve({"status": 200, "doc": doc});
-									}).catch(function(err) {
-										console.log("[assessableunit][LessonsList]" + dataLL.error);
-										deferred.reject({"status": 500, "error": err});
-									});
-								}
-								else {
-									deferred.resolve({"status": 200, "doc": doc});
-								}
+											var obj = {
+												selector : {
+													"_id": {"$gt":0},
+													"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+											}};
+											db.find(obj).then(function(dataLL){
+												doc[0].lessonsList = dataLL.body.docs[0].value;
+												deferred.resolve({"status": 200, "doc": doc});
+											}).catch(function(err) {
+												console.log("[assessableunit][LessonsList]" + dataLL.error);
+												deferred.reject({"status": 500, "error": err});
+											});
+										}
+										else {
+											deferred.resolve({"status": 200, "doc": doc});
+										}
 									}).catch(function(err) {
 										console.log("[assessableunit][AccountParentsList]" + err.error.reason);
 										deferred.reject({"status": 500, "error": err.error.reason});
 									});
 									break;
 								case "Controllable Unit":
-									/* get Reporting Group list for Controllable Unit, Country Process, Global Process and Business Unit */
+									/* get Reporting Group list for Controllable Unit and Parent Document information*/
 									doc[0].ReportingGroupList = [];
+									var $or = [];
 									var searchobj = {
 										selector:{
 											"_id": {"$gt":0},
 											"key": "Assessable Unit",
-											"Status": "Active",
-											"BusinessUnit": doc[0].BusinessUnit,
-											"DocSubType": "BU Reporting Group"
+											$or:[
+												{"Status": "Active","BusinessUnit": doc[0].BusinessUnit,"DocSubType": "BU Reporting Group"},
+												{"_id":doc[0].parentid}
+											]
 										}
 									};
 									db.find(searchobj).then(function(resdata) {
 										var resdocs = resdata.body.docs;
 										for (var i = 0; i < resdocs.length; ++i) {
-											doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+											if(resdocs[i].DocSubType == "BU Reporting Group")
+												doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+											else if (resdocs[i]._id == doc[0].parentid && resdocs[i].DocSubType != "Business Unit") {
+												doc[0].ParentSubject = resdocs[i].Name;
+												doc[0].ParentDocSubType = resdocs[i].DocSubType;
+												doc[0].IOT = resdocs[i].IOT;
+												switch (doc[0].ParentDocSubType) {
+													case "BU IMT":
+														doc[0].IMT = resdocs[i].IMT;
+														break;
+													case "BU Country":
+														doc[0].IMT = resdocs[i].IMT;
+														doc[0].Country = resdocs[i].Country;
+														break;
+												}
+											}
 										}
 										//Get CU Parent Documents if admin
 										if(doc[0].admin){
@@ -688,16 +684,17 @@ var assessableunit = {
 												}
 											}
 											if (doc[0].DocSubType == "Controllable Unit") {
-												if (resdocs[i]._id == doc[0].parentid && !doc[0].ParentDocSubType == "Business Unit") {
+												if (resdocs[i]._id == doc[0].parentid && resdocs[i].DocSubType != "Business Unit") {
 													doc[0].ParentSubject = resdocs[i].Name;
+													doc[0].ParentDocSubType = resdocs[i].DocSubType;
 													doc[0].IOT = resdocs[i].IOT;
 													switch (doc[0].ParentDocSubType) {
 														case "BU IMT":
-														doc[0].IMT = resdocs[i].IMT;
+															doc[0].IMT = resdocs[i].IMT;
 														break;
-														case "Country":
-														doc[0].IMT = resdocs[i].IMT;
-														doc[0].Country = resdocs[i].Country;
+														case "BU Country":
+															doc[0].IMT = resdocs[i].IMT;
+															doc[0].Country = resdocs[i].Country;
 														break;
 													}
 												}
@@ -870,14 +867,23 @@ var assessableunit = {
 							};
 							db.find(searchobj).then(function(resdata) {
 								var resdocs = resdata.body.docs;
+								//console.log("Resdocs: "+resdocs);
 								for (var i = 0; i < resdocs.length; ++i) {
 									if (resdocs[i].DocSubType == "BU Country") doc[0].BUCountryList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-									if (resdocs[i].DocSubType == "BU IOT") doc[0].IOTAUList.push({"iotid":resdocs[i].IOT});
+									if (resdocs[i].DocSubType == "BU IOT") {
+										if (resdocs[i].IOT != undefined) doc[0].IOTAUList.push({"iotid":resdocs[i].IOT});
+										console.log("resdocs ID: "+resdocs[i].IOT);
+										console.log("IOTAUList ID: "+doc[0].IOTAUList.iotid);
+									}
 								}
+								console.log(doc[0].IOTAUList.length);
 								var tmpIOT = [];
-								for(var tmp in req.app.locals.hierarchy.BU_IOT){
-									tmpIOT.push({docid:tmp, name:req.app.locals.hierarchy.BU_IOT[tmp].IOT});
+								console.log("Global Hierarchy exists: "+global.hierarchy.BU_IOT);
+								for(var tmp in global.hierarchy.BU_IOT){
+									console.log("Global Hierarchy IOTs: "+global.hierarchy.BU_IOT[tmp].IOT);
+									tmpIOT.push({"docid":tmp, "name":global.hierarchy.BU_IOT[tmp].IOT});
+									console.log("TMP IOT: "+tmpIOT[tmp]);
 								}
 								doc[0].IOTList = tmpIOT;
 								for (var i = 0; i < doc[0].IOTAUList.length; ++i) {
@@ -1101,6 +1107,7 @@ var assessableunit = {
 
 				db.get(docid).then(function(data){
 					var doc = [];
+					var updateAccounts = false;
 					doc.push(data.body);
 					if(req.body.Status !== doc[0].Status){
 						doc[0].StatusChangeWho = curruser;
@@ -1150,9 +1157,9 @@ var assessableunit = {
 							doc[0].OpMetricKey = req.body.OpMetricKey;
 							break;
 						case "Controllable Unit":
-							/* --------------------------------------------------------------------------- */
-							//Add LevelType based on ParentDocSubType - Missing functionality of Update parent
-							/* --------------------------------------------------------------------------- */
+							//Validate if accounts require to be updated
+							if(doc[0].parentid != req.body.parentid && doc[0].LevelType != req.body.LevelType);
+								updateAccounts = true;
 							doc[0].BRGMembership = req.body.BRGMembership;
 							doc[0].CUSize = req.body.CUSize;
 							doc[0].LifetimeTCV= req.body.LifetimeTCV;
@@ -1163,6 +1170,9 @@ var assessableunit = {
 							doc[0].MetricsCriteria = req.body.MetricsCriteria;
 							doc[0].MetricsValue = req.body.MetricsValue;
 							doc[0].ParentSubject = req.body.ParentSubject;
+							doc[0].ParentDocSubType = req.body.ParentDocSubType;
+							doc[0].LevelType = req.body.LevelType;
+							doc[0].parentid = req.body.parentid;
 							doc[0].IOT = req.body.IOT;
 							doc[0].IMT = req.body.IMT;
 							doc[0].Country = req.body.Country;
@@ -1184,14 +1194,15 @@ var assessableunit = {
 					}
 					doc[0].Log.push(addlog);
 					doc = accessupdates.updateAccessExistDoc(req,doc);
+					
 					//Save document
 					db.save(doc[0]).then(function(data){
-						// Get current quarter Assessment
+						//Get current quarter Assessment
 						fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
 							var asmtdoc = [];
 							if(asmtdata.doc != undefined){
 								asmtdoc.push(asmtdata.doc);
-								// Pass data to current quarter assessment
+								//Pass data to current quarter assessment
 								switch (doc[0].DocSubType) {
 									case "Controllable Unit":
 									asmtdoc[0].AuditProgram = doc[0].AuditProgram;
@@ -1199,13 +1210,61 @@ var assessableunit = {
 									break;
 								}
 								db.save(asmtdoc[0]).then(function(asmtdata){
-									deferred.resolve(data);
+									if(updateAccounts){
+										//Update accounts level
+										fieldCalc.getAccountsCU(db, doc).then(function(actsdata) {
+											if(actsdata.doc != undefined){
+												var actDocs = actsdata.doc;
+												var levelAct = parseInt(doc[0].LevelType) + 1;
+												for(var i=0; i<actDocs.length; i++){
+													actDocs[i].LevelType = levelAct.toString();
+												}
+												db.bulk(actDocs).then(function(dataActDocs){
+													deferred.resolve(data);
+												}).catch(function(err) {
+													deferred.reject({"status": 500, "error": err.error.reason});
+												});
+											}
+											else{
+												deferred.resolve(data);
+											}
+										}).catch(function(err) {
+											deferred.reject({"status": 500, "error": err.error.reason});
+										});
+									}
+									else{
+										deferred.resolve(data);
+									}
 								}).catch(function(err) {
 									deferred.reject({"status": 500, "error": err.error.reason});
 								});
 							}
 							else{
-								deferred.resolve(data);
+								if(updateAccounts){
+									//Update accounts level
+									fieldCalc.getAccountsCU(db, doc).then(function(actsdata) {
+										if(actsdata.doc != undefined){
+											var actDocs = actsdata.doc;
+											var levelAct = parseInt(doc[0].LevelType) + 1;
+											for(var i=0; i<actDocs.length; i++){
+												actDocs[i].LevelType = levelAct.toString();
+											}
+											db.bulk(actDocs).then(function(dataActDocs){
+												deferred.resolve(data);
+											}).catch(function(err) {
+												deferred.reject({"status": 500, "error": err.error.reason});
+											});
+										}
+										else{
+											deferred.resolve(data);
+										}
+									}).catch(function(err) {
+										deferred.reject({"status": 500, "error": err.error.reason});
+									});
+								}
+								else{
+									deferred.resolve(data);
+								}
 							}
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err.error.reason});
