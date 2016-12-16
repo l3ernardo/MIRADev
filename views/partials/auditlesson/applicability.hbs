@@ -27,7 +27,7 @@
 		<td>Global Process:</td>
 		<td>{{{multiSelect "processList" processList "WWBCITKey" "Name" "globalProcessList"}}}</td>
 	</tr><tr>
-		<td>Subprocess:</td><td><input type="text" name="subprocess" value="{{subprocess}}" size="100" maxlength="300"></td>
+		<td>Subprocess:</td><td>{{{uniqueSelect "subprocess" subprocessList "WWBCITKey" "Name" subprocess}}}</td>
 	</tr>
 
 	{{else}}

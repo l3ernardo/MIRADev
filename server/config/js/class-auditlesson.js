@@ -92,6 +92,18 @@ var auditlesson = {
 										deferred.reject({"status": 500, "error": "parameter does not exist"});
 									}else{
 										doc.processList = param;
+										var objSub = {
+											selector: {
+												DocSubType: "Sub-process"
+											},
+											fields: [
+												"Name","WWBCITKey"
+											]
+										};
+										db.find(objSub).then(function(dataSub){
+											var subPros = dataSub.body.docs;
+											doc.subprocessList = subPros;
+												//doc.processList = param;
 										//Audit Key
 										doc.EnteredBU = req.session.businessunit;
 										if(req.session.businessunit.split(" ")[0] == "GTS"){
@@ -111,7 +123,7 @@ var auditlesson = {
 											else {
 												deferred.resolve({"status": 200, "doc": doc});
 											}
-
+										});
 										}
 									});
 								});
@@ -168,8 +180,19 @@ var auditlesson = {
 											if(typeof gpList === "undefined"){
 												deferred.reject({"status": 500, "error": "parameter does not exist"});
 											}else{
+												var objSub = {
+													selector: {
+														DocSubType: "Sub-process"
+													},
+													fields: [
+														"Name","WWBCITKey"
+													]
+												};
+												db.find(objSub).then(function(dataSub){
+													var subPros = dataSub.body.docs;
 												//load data necessary for edit mode
 												if(typeof req.query.edit !== "undefined"){
+													doc.subprocessList = subPros;
 													doc.processList = gpList;
 													var tmpArr = data.body.reportingPeriod.split(" Q");
 													doc.reportingQuarter = tmpArr[1];
@@ -252,7 +275,12 @@ var auditlesson = {
 																	deferred.reject({"status": 500, "error": err.error.reason});
 																});
 															}else{
-																//AuditKey
+																for(var i = 0; i < subPros.length; i++){
+																		if(doc.subprocess == subPros[i].WWBCITKey){
+																			doc.subprocess = subPros[i].Name;
+																			break;
+																		}
+																}
 																if(req.session.businessunit.split(" ")[0] == "GTS" && (doc.AuditLessonsKey != null)){
 																	var obj = {
 																		selector : {
@@ -303,6 +331,9 @@ var auditlesson = {
 																		deferred.resolve({"status": 200, "doc": doc});
 																	}
 																}
+															}).catch(function(err) {
+																deferred.reject({"status": 500, "error": err.error.reason});
+															});
 															}});
 														}
 													}).catch(function(err) {
@@ -347,6 +378,16 @@ var auditlesson = {
 												};
 												db.find(objGP).then(function(datagp){
 												var gpList = datagp.body.docs;
+												var objSub = {
+													selector: {
+														DocSubType: "Sub-process"
+													},
+													fields: [
+														"Name","WWBCITKey"
+													]
+												};
+												db.find(objSub).then(function(dataSub){
+												var subPros = dataSub.body.docs;
 												var uniqueBUs = {};
 												var uniquePeriods = {};
 												var uniquePrograms = {};
@@ -365,6 +406,12 @@ var auditlesson = {
 														}
 													}
 													docs[i].globalProcess = gpKey;
+													for(var y = 0; y < subPros.length; y++){
+														if(docs[i].subprocess == subPros[y].WWBCITKey){
+															docs[i].subprocess = subPros[y].Name;
+															break;
+														}
+													}
 													if(typeof uniqueBUs[docs[i].businessUnit] === "undefined"){
 														uniqueBUs[docs[i].businessUnit] = true;
 														list.push({id: docs[i].businessUnit.replace(/ /g,''), name: docs[i].businessUnit});
@@ -409,6 +456,9 @@ var auditlesson = {
 												}
 												deferred.resolve({"status": 200, "dataExport": dataExport,"doc": list});
 												//cierra
+											}).catch(function(err){
+												deferred.reject({"status": 500, "error": err.error.reason});
+											});
 											}).catch(function(err){
 												deferred.reject({"status": 500, "error": err.error.reason});
 											});

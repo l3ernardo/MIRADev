@@ -570,6 +570,7 @@ var assessment = {
 								var riskCategory = {};
 								var openrisks = [];
 								var exportOpenRisks = [];
+								doc[0].ORMCMissedRisks = 0;
 								for(var i = 0; i < risks.length; i++){
 									if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
 										openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
@@ -577,6 +578,7 @@ var assessment = {
 									}
 									if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0){
 										risks[i].missedFlag = true;
+										doc[0].ORMCMissedRisks = 1;
 									}else {
 										risks[i].missedFlag = false;
 									}
