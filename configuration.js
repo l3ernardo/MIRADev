@@ -16,5 +16,5 @@ module.exports = {
 	addMembersURL: 'https://bluepages.ibm.com/tools/groups/protect/groups.wss?gName=%g&task=Members&mebox=%u&Select=Add+Members&API=1',
 	delMembersURL: 'https://bluepages.ibm.com/tools/groups/protect/groups.wss?gName=%g&task=DelMem&mebox=%u&Delete=Delete+Checked&API=1 ',
 	mirainterfaces: 'https://mira-connector-dev.w3ibm.mybluemix.net',
-	maxElementsPerView : 1800
+	maxElementsPerView : 1000
 }
