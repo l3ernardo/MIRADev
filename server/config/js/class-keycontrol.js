@@ -13,7 +13,6 @@ var calculatefield = {
       switch (doc[0].ParentDocSubType) {
         case "Country Process":
           if (doc[0].AUTestCount == undefined || doc[0].AUTestCount == 0 ) {
-            console.log("heremmmmm");
             doc[0].AUDefectRate = "";
           }
           break;
