@@ -59,6 +59,8 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 	console.log("[app] init database");
 	var cloudant = require('./server/config/js/class-conn');
 	cloudant.connect('miradb');
+	var config = require('./configuration.js');
+	config.start();
 });
 
 //Site variables
@@ -75,7 +77,6 @@ app.use(require('./server/config/router-reports.js'));
 app.use(require('./server/config/router-assessableUnits.js'));
 app.use(require('./server/config/router-assessments.js'));
 app.use(require('./server/config/router-asmtComponents.js'));
-
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {
