@@ -12,6 +12,7 @@ var q  = require("q");
 var moment = require('moment');
 var xml2js = require('xml2js');
 var forEach = require('async-foreach').forEach;
+var util = require('./class-utility.js');
 
 
 Array.prototype.unique = function() {
@@ -25,6 +26,77 @@ Array.prototype.unique = function() {
 
     return a;
 };
+
+
+var createUserList = function(docs){
+	var result = {};
+	var temparray = [];
+	var ordered = {};
+	var response = {};
+	
+	try{
+		forEach(docs, function (item,index,arr){
+			
+					
+			for(var i=0;i<item.doc.AllReaders.length;i++){
+				var tempObj = {};
+				   tempObj["id"] = item.doc.doc_id;
+				  	  tempObj["role"] = "Reader";
+					if(result[item.doc.AllReaders[i]] instanceof Array){
+					result[item.doc.AllReaders[i]].push(tempObj);
+					}else{//meaning if the user is created but does not have readers array added we need to add them for the first time
+						temparray.push(tempObj);
+						result[item.doc.AllReaders[i]] = [];
+						result[item.doc.AllReaders[i]] = temparray;
+						temparray = [];
+					}
+				
+				tempObj = {}; 
+			}
+			
+			for(var j=0;j<item.doc.AllEditors.length;j++){
+				var tempObj = {};
+				  tempObj["id"] = item.doc.doc_id;
+			  	  tempObj["role"] = "Editor";
+					    
+					if(result[item.doc.AllEditors[j]] instanceof Array){
+					result[item.doc.AllEditors[j]].push(tempObj);
+					}else{//meaning if the user is created but does not have editors array added we need to add them for the first time
+						temparray.push(tempObj);
+						result[item.doc.AllEditors[j]] = [];
+						result[item.doc.AllEditors[j]] = temparray;
+						temparray = [];
+						
+					}
+					tempObj = {};
+			}
+					
+		});	
+		
+		
+		try{
+
+	   		for (var key in result){  //create uniques docs response per user
+	   			if(result.hasOwnProperty(key)){
+	   			 response[key] = result[key].unique();
+	   			}
+	   		}
+	   		
+	   		
+	   		Object.keys(response).sort().forEach(function(key) {
+	   		  ordered[key] = response[key];
+	   		});
+	   		
+			
+		}catch(e){return ({"status": 500, "error": e});}
+		
+	}catch(e){deferred.reject({"status": 500, "error": e});}
+
+	
+		return ordered;
+}
+
+
 
 var shrinkSubType = function (type){
 	response = "";
@@ -100,7 +172,7 @@ var createIndexFromView = function(docs){
 
 
 
-var createUserList = function(docs){
+var createUserListOld = function(docs){
 	var result = {};
 	var temparray = [];
 	var ordered = {};
@@ -317,7 +389,7 @@ var accesssumary = {
 				
 					var UserListOfDocs = createUserList(data.body.rows);
 					
-					
+				
 
 					   
 						try{
@@ -332,44 +404,49 @@ var accesssumary = {
 					   					if(count >= start && count <= end){
 					   				
 					   				
-					   					if(indexGBS[UserListOfDocs[key][i]]){ //if access doc exist on a document
+					   					if(indexGBS[UserListOfDocs[key][i].id]){ //if access doc exist on a document
 					   						
 					   						
 					   						
-					   					document._id = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc._id);
+					   					document._id = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc._id);
 					   					document.Name = key;
-					   					document.Type = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.DocSubType);
-					   					document.AssessableUnit = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Name.replace(/[^A-Za-z0-9]/g,''))
-					   					document.Status = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Status);
-					   					document.AddionalEditors = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalEditors);
-					   					document.AddionalReaders = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalReaders);
-					   					document.Owners = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Owner);
-					   					document.Focals = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Focals);
-					   					document.Coordinators =  accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Coordinators);
-					   					document.Readers = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Readers);
-					   					document.IOT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IOT);
-					   					document.IMT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IMT);
-					   					document.Country = "Country";
-					   				
-										element.push(UserListOfDocs[key][i]);
+					   					document.Role = UserListOfDocs[key][i].role;
+					   					document.Type = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.DocSubType);
+					   					document.AssessableUnit = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Name.replace(/[^A-Za-z0-9]/g,''))
+					   					document.Status = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Status);
+					   					document.AddionalEditors = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.AdditionalEditors);
+					   					document.AddionalReaders = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.AdditionalReaders);
+					   					document.Owners = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Owner);
+					   					document.Focals = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Focals);
+					   					document.Coordinators =  accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Coordinators);
+					   					document.Readers = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Readers);
+					   					document.IOT = util.resolveGeo(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.IOT),"IOT",req);
+					   					document.IMT = util.resolveGeo(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.IMT),"IMT",req);
+					   					document.Country = util.resolveGeo(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Country),"Country",req);
+					   				 
+										element.push(UserListOfDocs[key][i].id);
 										element.push(key);
-										element.push(shrinkSubType(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.DocSubType)));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Name.replace(/[^A-Za-z0-9]/g,'')));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Status));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalEditors));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalReaders));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Owner));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Focals));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Coordinators));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Readers));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IOT));
-										element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IMT));
-										element.push("Country");
+										element.push(document.Role);
+										element.push(shrinkSubType(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.DocSubType)));
+										element.push(document.AssessableUnit);
+										element.push(document.Status);
+										element.push(document.AddionalEditors);
+										element.push(document.AddionalReaders);
+										element.push(document.Owners);
+										element.push(document.Focals);
+										element.push(document.Coordinators);
+										element.push(document.Readers);
+										element.push(document.IOT);
+										element.push(document.IMT);
+										element.push(document.Country);
+										
+															
 										
 										
-										if(typeof documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.WWBCITKey != 'undefined'  ) 					
+										//console.log(util.resolveGeo("GEO100000007","IOT",req));
+										if(typeof documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey != 'undefined'  ) 					
 										{ 
-											if(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.WWBCITKey.length == 0)
+											if(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey.length == 0)
 											{
 												 
 												element.push("M");
@@ -387,9 +464,10 @@ var accesssumary = {
 					   						
 					   						
 											
-											element.push(UserListOfDocs[key][i]);
+											element.push(UserListOfDocs[key][i].id);
 										//	element.push("");
 											element.push(key);
+											element.push("Non Existing doc");
 											element.push("Non Existing doc");
 											element.push("Non Existing doc");
 											element.push("Non Existing doc");
@@ -543,44 +621,46 @@ getUserAccessSummaryByUser: function(req, db,userToFind,start,end){
 				   				
 				   					if(count >= start && count <= end){
 				   				
-				   					if(indexGBS[UserListOfDocs[key][i]]){ //if access doc exist on a document
+				   					if(indexGBS[UserListOfDocs[key][i].id]){ //if access doc exist on a document
 				   						
-				   						document._id = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc._id);
+				   						document._id = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc._id);
 					   					document.Name = key;
-					   					document.Type = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.DocSubType);
-					   					document.AssessableUnit = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Name.replace(/[^A-Za-z0-9]/g,''))
-					   					document.Status = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Status);
-					   					document.AddionalEditors = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalEditors);
-					   					document.AddionalReaders = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalReaders);
-					   					document.Owners = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Owner);
-					   					document.Focals = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Focals);
-					   					document.Coordinators =  accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Coordinators);
-					   					document.Readers = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Readers);
-					   					document.IOT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IOT);
-					   					document.IMT = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IMT);
-					   					document.Country = "Country";
+					   					document.Role = UserListOfDocs[key][i].role;
+					   					document.Type = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.DocSubType);
+					   					document.AssessableUnit = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Name.replace(/[^A-Za-z0-9]/g,''))
+					   					document.Status = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Status);
+					   					document.AddionalEditors = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.AdditionalEditors);
+					   					document.AddionalReaders = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.AdditionalReaders);
+					   					document.Owners = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Owner);
+					   					document.Focals = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Focals);
+					   					document.Coordinators =  accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Coordinators);
+					   					document.Readers = accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Readers);
+					   					document.IOT = util.resolveGeo(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.IOT),"IOT",req);
+					   					document.IMT = util.resolveGeo(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.IMT),"IMT",req);
+					   					document.Country = util.resolveGeo(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Country),"Country",req);
 				   						
 				   						
 				   				
-									element.push(UserListOfDocs[key][i]);
-									element.push(key);
-									element.push(shrinkSubType(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.DocSubType)));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Name.replace(/[^A-Za-z0-9]/g,'')));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Status));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalEditors));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.AdditionalReaders));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Owner));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Focals));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Coordinators));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.Readers));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IOT));
-									element.push(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.IMT));
-									element.push("Country");
+					   					element.push(UserListOfDocs[key][i].id);
+										element.push(key);
+										element.push(document.Role);
+										element.push(shrinkSubType(accesssumary.checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.DocSubType)));
+										element.push(document.AssessableUnit);
+										element.push(document.Status);
+										element.push(document.AddionalEditors);
+										element.push(document.AddionalReaders);
+										element.push(document.Owners);
+										element.push(document.Focals);
+										element.push(document.Coordinators);
+										element.push(document.Readers);
+										element.push(document.IOT);
+										element.push(document.IMT);
+										element.push(document.Country);
 									
 									
-									if(typeof documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.WWBCITKey != 'undefined'  ) 					
+									if(typeof documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey != 'undefined'  ) 					
 									{ 
-										if(documents.body.rows[indexGBS[UserListOfDocs[key][i]]].doc.WWBCITKey.length == 0)
+										if(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey.length == 0)
 										{
 											 
 											element.push("M");
@@ -598,9 +678,10 @@ getUserAccessSummaryByUser: function(req, db,userToFind,start,end){
 				   						
 				   						
 										
-										element.push(UserListOfDocs[key][i]);
+										element.push(UserListOfDocs[key][i].id);
 									//	element.push("");
 										element.push(key);
+										element.push("Non Existing doc");
 										element.push("Non Existing doc");
 										element.push("Non Existing doc");
 										element.push("Non Existing doc");
