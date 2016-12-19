@@ -18,8 +18,7 @@
 				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
 				<span class="ibm-sep"> </span>
 				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
-				<span class="ibm-sep"> </span>
-				<a href="/downloadaccesssummary" value="Export all Users" name="lnk_exportods" id="lnk_exportall" class="ibm-symp-spreadsheet">Export all users</a>
+				
 				<div align="right">
 				<form name="exportAllForm" action="/explicitAccessSummary" method="get" onsubmit="return validateForm()">
 					 Search by user: <input type="text" name="searchEmail" >
@@ -145,7 +144,7 @@
 
 	var arrayLimits = [];
 	
-	//var tabs = JSON.parse('{{{tabs}}}');
+	
     var alldata = JSON.parse('{{{alldata}}}');
 		
 	
@@ -158,8 +157,10 @@
 	
 	try{
 	var limits = "{{{limits}}}";
+	var searchEmail = "{{{searchEmail}}}";
 	
 	  if(limits.length > 0){
+	  
 		var limits = limits.split(',');
 	
 		for(var l=0;l<limits.length;l++){
@@ -172,7 +173,22 @@
 		
 		}
 	
+	if(searchEmail.length >0){
 	
+		for(var f=0; f < arrayLimits.length; f++){
+
+			a = document.createElement('a');
+			a.href = "../explicitAccessSummary?searchEmail="+searchEmail+"&start="+arrayLimits[f].start+"&end="+arrayLimits[f].end+"&limits="+limits;
+			a.innerHTML = f+1;
+			a.style["line-height"] = "1em";
+			a.style["padding"] = "2px";
+			a.style["margin"] = "2px";
+	
+			tabsDiv.appendChild(a);
+			}
+	
+	
+	}else{
 		for(var f=0; f < arrayLimits.length; f++){
 
 			a = document.createElement('a');
@@ -183,10 +199,11 @@
 			a.style["margin"] = "2px";
 	
 			tabsDiv.appendChild(a);
+			}
 		}
 	}
 	
-	}catch(e){}
+	}catch(e){alert("Error while processing limits, please contact administrator"+e);}
 	
 	
 	for ( var i=0 ; i<alldata.length ; i++ ) {
