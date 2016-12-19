@@ -168,7 +168,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][CUassessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "BU Reporting Group":
 						var lParams;
 						if (data.doc[0].editmode)
@@ -188,7 +187,6 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 							console.log("[router][BUReportingGroupAssessment][getListParams] - " + err.error);
 						})
 						break;
-
 					case "Account":
 					  var lParams;
 						if (data.doc[0].editmode)
