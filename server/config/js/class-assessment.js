@@ -11,6 +11,7 @@ var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
+var kct = require('./class-keycontrol.js');
 var util = require('./class-utility.js');
 
 var assessment = {
@@ -551,8 +552,64 @@ var assessment = {
 							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
-							//AuditKey
+							// Key Controls Tesing tab
+							kct.calcDefectRate(doc);
+							console.log("AUDefectRate: " + doc[0].AUDefectRate);
+							//Open issue
+							var objIssue = {
+								selector : {
+									"_id": {"$gt":0},
+									"compntType": "openIssue",
+ 									"docType": "asmtComponent",
+									"reportingQuarter": doc[0].CurrentPeriod,
+									"process": doc[0].GlobalProcess,
+									"businessUnit": doc[0].BusinessUnit,
+									"country": doc[0].Country,
+									"scorecardCategory": {"$gt":0}
+								},
+								sort:[{"scorecardCategory":"asc"}]
+							};
+							db.find(objIssue).then(function(dataRisks){
+								var risks = dataRisks.body.docs;
+								var riskCategory = {};
+								var openrisks = [];
+								var exportOpenRisks = [];
+								doc[0].ORMCMissedRisks = 0;
+								for(var i = 0; i < risks.length; i++){
+									if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
+										openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
+										riskCategory[risks[i].scorecardCategory] = true;
+									}
+									if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0){
+										risks[i].missedFlag = true;
+										doc[0].ORMCMissedRisks = 1;
+									}else {
+										risks[i].missedFlag = false;
+									}
+									var tmp = {};
+									tmp.type = risks[i].type;
+									tmp.name = risks[i].name;
+									tmp.id = risks[i].id
+									tmp.status = risks[i].status;
+									tmp.process = risks[i].process;
+									tmp.originalTargetDate = risks[i].originalTargetDate;
+									tmp.currentTargetDate = risks[i].currentTargetDate;
+									tmp.numTasks = risks[i].numTasks;
+									tmp.numTasksOpen = risks[i].numTasksOpen;
+									tmp.numMissedTasks = risks[i].numMissedTasks;
+									tmp.missedFlag = risks[i].missedFlag;
+									tmp.riskAbstract = risks[i].riskAbstract;
+									exportOpenRisks.push(tmp);
+									risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
 
+									openrisks.push(risks[i]);
+								}
+								//console.log(openrisks);
+
+								doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
+								doc[0].openrisks = openrisks;
+							//console.log(dataRisks.body.docs);
+							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].GPPARENT != null)){
 									var obj = {
 										selector : {
@@ -632,6 +689,10 @@ var assessment = {
 								else {
 									deferred.resolve({"status": 200, "doc": doc});
 								}
+							}).catch(function(err) {
+								console.log("[assessableunit][LessonsList]" + dataLL.error);
+								deferred.reject({"status": 500, "error": err});
+							});
 							break;
 						case "Account":
 							doc[0].ALLData = fieldCalc.addTestViewData(7,defViewRow);

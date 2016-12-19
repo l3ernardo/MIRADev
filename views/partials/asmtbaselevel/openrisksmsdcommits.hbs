@@ -1,11 +1,17 @@
+<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{exportOpenRisks}}</textarea>
+<input type="hidden" name="ORMCMissedRisks" id="ORMCMissedRisks" value="{{ORMCMissedRisks}}">
 <table id="risk_table" class="ibm-data-table">
 	<tr class="risk-msdcommit-content">
 		<th class="risk-msdcommit-label">Risk Evaluations from current and prior quarters, which have tasks that are still open, and potentially missed.</th>
 	</tr>
 	<tr class="risk-msdcommit-content">
+		<a href="javascript:void(0);" value="Export to Excel" name="link-export" id="link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+		<span class="ibm-sep"> </span>
+		<a href="javascript:void(0);" value="Export to Open Office" name="link-export2" id="link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 		<td>
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table id="open_risks_treeview" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 				<thead>
+					<th class="risk-msdcommit-viewheader" scope="col" width="3%">><input type="checkbox" class="openrisks_checkbox_tree" id="openrisks_checkbox_tree" name="openrisks_checkbox "/></th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="3%">Type</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">ID</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Status</th>
@@ -14,11 +20,29 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Issue Target Date (Current)</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="6%"># Tasks</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="6%"># Open Tasks</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="9%"># Overdue Tasks</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="6%"># Overdue Tasks</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="4%">Missed</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Risk Abstract</th>
 				</thead>
-				{{#each RiskData}}
+				<tbody>
+				{{#each openrisks}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
+						<th style="background-color: white !important;" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>
+						<td style="background-color: white !important;" style="width:10%;">{{name}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{#if parent}}<a href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{status}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{process}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{originalTargetDate}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{currentTargetDate}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{numTasks}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{numTasksOpen}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{numMissedTasks}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{riskAbstract}}</td>
+					</tr>
+				{{/each}}
+				</tbody>
+				<!--{{#each RiskData}}
 					<tr class="asmt-viewdata">
 						{{#each col}}
 							{{#if @first}}
@@ -28,7 +52,7 @@
 							{{/if}}
 						{{/each}}
 					</tr>
-				{{/each}}
+				{{/each}}-->
 			</table>
 		</td>
 	</tr>
