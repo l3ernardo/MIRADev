@@ -11,6 +11,7 @@ var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
+var kct = require('./class-keycontrol.js');
 var util = require('./class-utility.js');
 
 var assessment = {
@@ -551,6 +552,9 @@ var assessment = {
 							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
+							// Key Controls Tesing tab
+							kct.calcDefectRate(doc);
+							console.log("AUDefectRate: " + doc[0].AUDefectRate);
 							//Open issue
 							var objIssue = {
 								selector : {
@@ -570,6 +574,7 @@ var assessment = {
 								var riskCategory = {};
 								var openrisks = [];
 								var exportOpenRisks = [];
+								doc[0].ORMCMissedRisks = 0;
 								for(var i = 0; i < risks.length; i++){
 									if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
 										openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
@@ -577,6 +582,7 @@ var assessment = {
 									}
 									if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0){
 										risks[i].missedFlag = true;
+										doc[0].ORMCMissedRisks = 1;
 									}else {
 										risks[i].missedFlag = false;
 									}
