@@ -10,6 +10,7 @@ var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
 var xml2js = require('xml2js');
+var fs = require('fs');
 
 Array.prototype.unique = function() {
 	var a = this.concat();
@@ -835,6 +836,17 @@ var util = {
 			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
+	},
+	
+	// Load manifest.yml to identify ORG
+	getOrg: function() {
+		var data = (fs.readFileSync('manifest.yml', 'utf8'));
+		var lines = data.split(/\r?\n/);
+		for(var i=0;i<lines.length;i++) {
+			if(lines[i].indexOf('name')!=-1) {
+				return (lines[i].split(":")[1]).trim();
+			}
+		}
 	}
 
 }
