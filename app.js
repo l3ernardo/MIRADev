@@ -1,8 +1,12 @@
+// Start configuration variables
+var config = require('./configuration.js');
+config.start();
+
 var express = require('express');
 var exphbs = require('express-handlebars');
 var path = require('path');
 var app = express(),
-
+	
 //sign in
 sessions = require('client-sessions'),
 passport = require('passport'),
@@ -59,8 +63,6 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 	console.log("[app] init database");
 	var cloudant = require('./server/config/js/class-conn');
 	cloudant.connect('miradb');
-	var config = require('./configuration.js');
-	config.start();
 });
 
 //Site variables
