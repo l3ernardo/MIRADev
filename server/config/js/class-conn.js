@@ -7,6 +7,7 @@
 
 var Cloudant = require('cloudant');
 var q  = require("q");
+var util = require("./class-utility.js");
 var cloudant, dbCredentials = {};
 var DB = {
 	db: {},
@@ -117,13 +118,14 @@ var DB = {
 		// read connection parameters from json file
 		fs = require('fs');
 		var obj = JSON.parse(fs.readFileSync('./connProfile.json', 'utf8'));
+		var org = util.getOrg();
 		
 		if(obj){
-			dbCredentials.host = obj.host;
-			dbCredentials.port = obj.port;
-			dbCredentials.user = obj.user;
-			dbCredentials.password = obj.pass;
-			dbCredentials.url = obj.url;
+			dbCredentials.host = obj[org].host;
+			dbCredentials.port = obj[org].port;
+			dbCredentials.user = obj[org].user;
+			dbCredentials.password = obj[org].pass;
+			dbCredentials.url = obj[org].url;
 			isValidDatabase = true;
 		}else{
 			console.log('Connection error');
@@ -231,6 +233,24 @@ var DB = {
 								console.log(field + " => " + userdoc[field]);
 							}
 						}
+						// Merge fields from doc2 into doc1, if they are changed and don't belong to editable fields' list
+						doc1.forEach(function(fld) {
+							try {
+								var flag = false;
+								for(var i=0;i<userdoc.fieldslist.field;i++) {
+									if(userdoc.fieldslist[i].field==fld) {
+										flag = true;
+									}	
+								}
+								if(flag) {
+									if(doc1[fld]==userdoc[fld]) {
+										userdoc[fld] = doc2[fld];
+									}
+								}
+							} catch(e) {
+								console.log(e)
+							} finally {}
+						})						
 						if(conflictfields.length>0) {
 							//console.log(conflictfields.length + " conflicts found.");
 							deferred.resolve({"status": "ERROR", "userdoc":userdoc, "conflict":conflictfields});

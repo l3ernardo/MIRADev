@@ -1,8 +1,12 @@
+// Start configuration variables
+var config = require('./configuration.js');
+config.start();
+
 var express = require('express');
 var exphbs = require('express-handlebars');
 var path = require('path');
 var app = express(),
-
+	
 //sign in
 sessions = require('client-sessions'),
 passport = require('passport'),
@@ -75,7 +79,6 @@ app.use(require('./server/config/router-reports.js'));
 app.use(require('./server/config/router-assessableUnits.js'));
 app.use(require('./server/config/router-assessments.js'));
 app.use(require('./server/config/router-asmtComponents.js'));
-
 
 /* Redirect to an error page if no page exists */
 app.get('*', function (req, res) {
