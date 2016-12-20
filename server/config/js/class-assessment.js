@@ -12,6 +12,7 @@ var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
 var kct = require('./class-keycontrol.js');
+var comp = require('./class-compdoc.js');
 var util = require('./class-utility.js');
 
 var assessment = {
@@ -43,8 +44,8 @@ var assessment = {
 				// OMKID0 - Operational Metric ID for Other Metrics as a default metric
 				doc[0].OpMetricKey = parentdoc[0].OpMetricKey;
 				doc[0].Category = parentdoc[0].Category;
-
 				fieldCalc.getDocParams(req, db, doc).then(function(data){
+
 					doc[0].PrevQtrs = [];
 					doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
 
@@ -547,14 +548,12 @@ var assessment = {
 							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
 							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].DRData = fieldCalc.addTestViewData(5,1);
-							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
-							doc[0].SCTestData = doc[0].RCTestData;
-							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
+							// doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
+							// doc[0].SCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
 							// Key Controls Tesing tab
 							kct.calcDefectRate(doc);
-							console.log("AUDefectRate: " + doc[0].AUDefectRate);
 							//Open issue
 							var objIssue = {
 								selector : {
@@ -679,7 +678,7 @@ var assessment = {
 												}
 											}
 										}
-										 doc[0].list = list;
+										doc[0].list = list;
 										deferred.resolve({"status": 200, "doc": doc});
 									}).catch(function(err) {
 										console.log("[assessableunit][LessonsList]" + dataLL.error);
@@ -687,6 +686,33 @@ var assessment = {
 									});
 								}
 								else {
+									comp.getCompDocs(db,doc).then(function(dataComp){
+										if (doc[0].RCTestData.length < defViewRow) {
+											if (doc[0].RCTestData.length == 0) {
+												doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].RCTestData,7,(defViewRow-doc[0].RCTestData.length));
+											}
+										}
+										if (doc[0].SCTestData.length < defViewRow) {
+											if (doc[0].SCTestData.length == 0) {
+												doc[0].SCTestData = fieldCalc.addTestViewData(7,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].SCTestData,7,(defViewRow-doc[0].SCTestData.length));
+											}
+										}
+										if (doc[0].SampleData.length < defViewRow) {
+											if (doc[0].SampleData.length == 0) {
+												doc[0].SampleData = fieldCalc.addTestViewData(11,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].SampleData,11,(defViewRow-doc[0].SampleData.length));
+											}
+										}
+										deferred.resolve({"status": 200, "doc": doc});
+									}).catch(function(err) {
+										console.log("[assessment][getAsmtbyID]" + dataLL.error);
+										deferred.reject({"status": 500, "error": err});
+									});
 									deferred.resolve({"status": 200, "doc": doc});
 								}
 							}).catch(function(err) {
