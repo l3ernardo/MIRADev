@@ -549,7 +549,7 @@ var assessment = {
 							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].DRData = fieldCalc.addTestViewData(5,1);
 							// doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
-							doc[0].SCTestData = fieldCalc.addTestViewData(7,defViewRow);
+							// doc[0].SCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
 							// Key Controls Tesing tab
@@ -691,7 +691,21 @@ var assessment = {
 											if (doc[0].RCTestData.length == 0) {
 												doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
 											} else {
-												fieldCalc.addTestViewDataPadding(doc[0].RCTestData,10,(defViewRow-doc[0].RCTestData.length));
+												fieldCalc.addTestViewDataPadding(doc[0].RCTestData,7,(defViewRow-doc[0].RCTestData.length));
+											}
+										}
+										if (doc[0].SCTestData.length < defViewRow) {
+											if (doc[0].SCTestData.length == 0) {
+												doc[0].SCTestData = fieldCalc.addTestViewData(7,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].SCTestData,7,(defViewRow-doc[0].SCTestData.length));
+											}
+										}
+										if (doc[0].SampleData.length < defViewRow) {
+											if (doc[0].SampleData.length == 0) {
+												doc[0].SampleData = fieldCalc.addTestViewData(11,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].SampleData,11,(defViewRow-doc[0].SampleData.length));
 											}
 										}
 										deferred.resolve({"status": 200, "doc": doc});
