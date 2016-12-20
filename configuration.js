@@ -20,7 +20,7 @@ var configuration = {
 	mirainterfaces: 'https://mira-connector-dev.w3ibm.mybluemix.net',
 	maxElementsPerView : 1000,	
 	start: function() {
-		var data = (fs.readFileSync('manifest.yml', 'utf8'));
+		var data = (fs.readFileSync('manifest.info', 'utf8'));
 		var lines = data.split(/\r?\n/);
 		for(var i=0;i<lines.length;i++) {
 			if(lines[i].indexOf('name')!=-1) {
