@@ -603,11 +603,16 @@ var assessment = {
 
 									openrisks.push(risks[i]);
 								}
-								//console.log(openrisks);
 
 								doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
+								if (openrisks.length < defViewRow) {
+									if (openrisks == 0) {
+										openrisks = fieldCalc.addTestViewData(10,defViewRow);
+									} else {
+										fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
+									}
+								}
 								doc[0].openrisks = openrisks;
-							//console.log(dataRisks.body.docs);
 							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].GPPARENT != null)){
 									var obj = {
@@ -648,7 +653,7 @@ var assessment = {
 
 												}
 											}
-										//}
+
 										var keys = Object.keys(periods);
 										keys.sort(function(a, b){
 											if(a > b) return -1;
