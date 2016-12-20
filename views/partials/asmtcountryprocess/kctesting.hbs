@@ -26,15 +26,15 @@
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
 			<span class="kc-test-header"><b>Reporting Country Testing</b></span><br /><br />
-			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table width="100%">
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader" width="10">Period</th>
-					<th class="kc-test-viewheader" width="15">Type</th>
-					<th class="kc-test-viewheader" width="30">Control</th>
+					<th class="kc-test-viewheader" width="5">Period</th>
+					<th class="kc-test-viewheader" width="5">Type</th>
+					<th class="kc-test-viewheader" width="40">Control</th>
 					<th class="kc-test-viewheader" width="10">Tests</th>
 					<th class="kc-test-viewheader" width="10">Defects</th>
 					<th class="kc-test-viewheader" width="10">Defect Rate %</th>
-					<th class="kc-test-viewheader" width="15">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="20">Remaining Fin. Impact</th>
 				</thead>
 				{{#each RCTestData}}
 					<tr class="asmt-viewdata">
@@ -53,7 +53,7 @@
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
 			<span class="kc-test-header"><b>Sampled Country Testing</b></span><br /><br />
-			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table width="100%">
 				<thead class="kc-test-viewheader">
 					<th class="kc-test-viewheader" width="10">Period</th>
 					<th class="kc-test-viewheader" width="15">Type</th>
@@ -65,9 +65,13 @@
 				</thead>
 				{{#each SCTestData}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+						<td>{{reportingQuarter}}</td>
+						<td>{{controlType}}</td>
+						<td><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
+						<td>{{reportingCountry}}</td>
+						<td>{{numtest}}</td>
+						<td>{{numDefects}}</td>
+						<td>{{defectRate}}</td>
 					</tr>
 				{{/each}}
 			</table>
@@ -92,9 +96,17 @@
 				</thead>
 				{{#each SampleData}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+						<td>{{processCategory}}</td>
+						<td>{{processSampled}}</td>
+						<td>{{controlName}}</td>
+						<td><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td>{{numDefects}}</td>
+						<td>{{defectType}}</td>
+						<td>{{remediationStatus}}</td>
+						<td>{{remainingFinancialImpact}}</td>
+						<td>{{originalTargetDate}}</td>
+						<td>{{targetClose}}</td>
+						<td>{{defectsAbstract}}</td>
 					</tr>
 				{{/each}}
 			</table>
@@ -119,9 +131,17 @@
 				</thead>
 				{{#each SampleData}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+						<td>{{originalReportingQuarter}}</td>
+						<td>{{testType}}</td>
+						<td>{{controlName}}</td>
+						<td><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td>{{processSampled}}</td>
+						<td>{{numDefects}}</td>
+						<td>{{defectType}}</td>
+						<td>{{remainingFinancialImpact}}</td>
+						<td>{{originalTargetDate}}</td>
+						<td>{{targetClose}}</td>
+						<td>{{defectsAbstract}}</td>
 					</tr>
 				{{/each}}
 			</table>
