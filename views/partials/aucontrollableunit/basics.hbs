@@ -6,9 +6,17 @@
 		{{#if admin}}
 			{{!-- CU Change parent is only available for Admin --}}
 			<tr>
-				<td width="25%"><label for="ParentSubject">Parent {{ParentDocSubType}}:</label></td>
+				<td width="25%"><span name="ParentDocSubTypeDisplay">Parent {{ParentDocSubType}}:</span></td>
 				<td>
-					<span><input type="text" name="ParentSubject" value="{{ParentSubject}}" size="100" maxlength="300"></span>
+					<span name="ParentSubjectDisplay">{{ParentSubject}}</span>
+					<br/><br/>
+					<div>
+						<a href="javascript:void(0);" value="Change Parent" name="btn_changeparent" id="btn_changeparent" class="ibm-signin-link">Change Parent</a>
+					</div>
+					<div id="Overlay_Event" title="CU Parent Selection" class="ibm-common-overlay ibm-overlay-alt-two" style=" overflow:scroll; box-sizing: border-box; height:400px">
+						{{>aucontrollableunit/changeparent}}
+					</div>
+					<div id="divSavingImg" class="ibm-common-overlay"><center><p class="ibm-spinner-large"></p><strong>Saving...</strong><p>&nbsp;</p></center></div>
 				</td>
 			</tr>
 		{{else}}
@@ -20,7 +28,7 @@
 		<tr><td>Category:</td><td>{{Category}}</td></tr>
 		<tr><td>Subcategory:</td><td>{{Subcategory}}</td></tr>
 		{{#if (eq ParentDocSubType "BU Country")}}
-			<tr><td>Country:</td><td>{{Country}}</td></tr>
+			<tr><td>Country:</td><td><span name="Country">{{Country}}</span></td></tr>
 		{{/if}}
 		<tr>
 			<td>Relevant country processes:</td>

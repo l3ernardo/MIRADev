@@ -2,8 +2,11 @@
 <link href="./css/style.css" rel="stylesheet" type="text/css" />
 <link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
 <script src="./lib/jquery.dataTables.js"></script>
-<script src="./js/accesssummary.js"></script>
-<script src="./js/utility.js"></script>
+<script src="/public/js/accesssummary.js"></script>
+<script src="./lib/jquery.dataTables.js"></script>
+<script src='./js/utility.js'></script>
+
+
 
 
 <div class="ibm-container" style="width:100%">
@@ -15,36 +18,55 @@
 				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
 				<span class="ibm-sep"> </span>
 				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+				
+				<div align="right">
+				<form name="exportAllForm" action="/explicitAccessSummary" method="get" onsubmit="return validateForm()">
+					 Search by user: <input type="text" name="searchEmail" >
+					 <input  type="submit" value="search">
+				</form>
+				</div>
 			</p>
+			
 			<br/>
 		</div>
-		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">valuesToString List</textarea>
+		
+		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{{valuesToString exportdata}}}</textarea>
 		<div >
 		
-			<table id="accesssummary_treeview"  cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
+			<table id="accesssummary_treeview"  cellspacing="0" cellpadding="0" border="0" class="display nowrap"  class="mira-dashboard-table" >
 				<thead>
 					<tr> 
-					    <th  scope="col"  >Select<input  type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
-					    <th  id="th1"  >User</th>
-						<th id="th2" >Type</th>
-						<th id="th3" >Assessable Unit (WWBCIT blue/Mira green)</th>
-						<th id="th4" >Status</th>
-						<th id="th5" >Addional Editors</th>
-						<th id="th6" >Addional Readers</th>
-						<th id="th7" >Owners</th>
-						<th id="th8" >Focals</th>
-						<th id="th9" >Coordinators</th>
-						<th id="th10" >Readers</th>
-						<th id="th11" >BU IOT</th>
-						<th id="th12" >BU IMT</th>
-						<th id="th13" >Country</th>
+					     
+					    <th  scope="col"  >Select All<input  type="checkbox"  class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
+					    <th id="th1"  >User</th>
+					    <th id="th2"  >Role</th>
+						<th id="th3" >Type</th>
+						<th id="th4" >Assessable Unit (WWBCIT blue/Mira green)</th>
+						<th id="th5" >Status</th>
+						<th id="th6" >Addional Editors</th>
+						<th id="th7" >Addional Readers</th>
+						<th id="th8" >Owners</th>
+						<th id="th9" >Focals</th>
+						<th id="th10" >Coordinators</th>
+						<th id="th11" >Readers</th>
+						<th id="th12" >BU IOT</th>
+						<th id="th13" >BU IMT</th>
+						<th id="th14" >Country</th>
 						<th >ID</th>
 						<th >Parent</th>
+						<th >Colors</th>
+						
 						
 					</tr>
 				</thead>
 		
 			</table>
+		</div>
+		<br/>
+		<div class="ibm-buttons-row" id ="pagination" style=" word-wrap: break-word;">
+		 Pages:
+		
+		
 		</div>
 	</div>
 
@@ -53,49 +75,164 @@
 
 <script>
 	//Load document's name
-	$(document).ready(function() {
+	
+	
+	
+
+  var listWithComa = function (list){
+  
+  		var newList='';
+	try{	
+		if(typeof list != 'undefined'){
+			for(i=0; i<list.length; i++){
+
+				if(list.charAt(i) != ',')
+				newList += list.charAt(i);
+				else
+				newList += '</br>';
+
+
+			}
+		}
+		
+		}catch(e){alert("Error at listWithComa please contact administrator"+e);}
+
+		return newList;
+  
+  }
+
+
+
+	var getType = function(type){
+		var response = "";
+		
+		switch(type){
+		
+			case "1": response = "Account";
+			break;
+			
+			case "2": response = "BU Country";
+			break;
+			
+			case "3": response = "BU IMT";
+			break;
+			
+			case "4": response = "BU IOT";
+			break;
+			
+			case "5": response = "BU Reporting Group";
+			break;
+			
+			case "6": response = "Controllable Unit";
+			break;
+			
+			case "7": response = "Country Process";
+			break;
+			
+			case "8": response = "Global Process";
+			break;
+			
+			case "9": response = "Sub-process";
+			break;
+			
+			default: response = "Unknown Type";
+			break;
+			
+		}
+	
+	
+		return response;
+		}
+
+	var arrayLimits = [];
+	
+	
+    var alldata = JSON.parse('{{{alldata}}}');
+		
 	
 	$('h1#pageTitle').text("Explicit Access Summary");
+	var data = [];
 	
-		$('#accesssummary_treeview').DataTable({
-			select: true,
-			"paginate": false,
+	
+	//Create the links for pagination
+	var tabsDiv = document.getElementById('pagination');
+	
+	try{
+	var limits = "{{{limits}}}";
+	var searchEmail = "{{{searchEmail}}}";
+	
+	  if(limits.length > 0){
+	  
+		var limits = limits.split(',');
+	
+		for(var l=0;l<limits.length;l++){
+			var objLimits = {};
+		
+			objLimits.start = limits[l].split("|")[0];
+			objLimits.end = limits[l].split("|")[1];
+			arrayLimits.push(objLimits);
+	
+		
+		}
+	
+	if(searchEmail.length >0){
+	
+		for(var f=0; f < arrayLimits.length; f++){
+
+			a = document.createElement('a');
+			a.href = "../explicitAccessSummary?searchEmail="+searchEmail+"&start="+arrayLimits[f].start+"&end="+arrayLimits[f].end+"&limits="+limits;
+			a.innerHTML = f+1;
+			a.style["line-height"] = "1em";
+			a.style["padding"] = "2px";
+			a.style["margin"] = "2px";
+	
+			tabsDiv.appendChild(a);
+			}
+	
+	
+	}else{
+		for(var f=0; f < arrayLimits.length; f++){
+
+			a = document.createElement('a');
+			a.href = "../explicitAccessSummary?start="+arrayLimits[f].start+"&end="+arrayLimits[f].end+"&limits="+limits;
+			a.innerHTML = f+1;
+			a.style["line-height"] = "1em";
+			a.style["padding"] = "2px";
+			a.style["margin"] = "2px";
+	
+			tabsDiv.appendChild(a);
+			}
+		}
+	}
+	
+	}catch(e){alert("Error while processing limits, please contact administrator"+e);}
+	
+	
+for ( var i=0 ; i<alldata.length ; i++ ) {
+		data.push(["<input type='checkbox' id='invidual_checkbox_tree' class='mira_checkbox_tree'/>",alldata[i][1],alldata[i][2], getType(alldata[i][3]), "<a href='/assessableunit?id="+alldata[i][0]+"'>"+alldata[i][4]+"</a>", alldata[i][5], alldata[i][6], alldata[i][7], alldata[i][8], alldata[i][9], alldata[i][10], alldata[i][11], alldata[i][12], alldata[i][13], alldata[i][14], alldata[i][16], alldata[i][17],alldata[i][15]]);
+	
+}
+	
+	$('#accesssummary_treeview').DataTable( {
+            data:  data,
+           	select: true,
+           	"searching": false,
+           	"ordering": false,
+           	"paging": false,
 			"processing": true,
-			"serverSide": true,
-			"ajax": "../dataFeedAccessSummary",
+			"pageLength": 100,
+			"scrollY": 250,
 			"scrollX": true,
-			"searching": false,
-			"ordering": false,
-			  "columnDefs": [
-            {
-                "targets": [ 15 ],
-                "visible": false,
-                "searchable": false
-            },
-            {
-                "targets": [ 14 ],
-                "visible": false,
-                "searchable": false
-            },
-            {
-                "targets": [ 16 ],
-                "visible": false
-            }
-        ],
-			"scrollY": 280,
-			"fnInitComplete": function(oSettings, json) {
-      	
-      		$("#accesssummary_treeview").treetable({expandable: true });
-    		},
-			
-			
 			"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-			        $(nRow).attr('data-tt-id', aData[15]);//added tree id and parents for tree view
+					$(nRow).attr('data-tt-id', aData[15]);//added tree id and parents for tree view
 			        $(nRow).attr('data-tt-parent-id', aData[16]);//added tree id and parents for tree view
+			    
 			        $('td:eq(0)', nRow).html('<input type="checkbox" id="invidual_checkbox_tree" class="mira_checkbox_tree"/>');
-			        $('td:eq(0)', nRow).attr('scope', 'row');
-			        /*
-			        if(aData[14] == "WWBCIT"){ //adding colors
+			       		        
+			      
+			       
+			        if(aData[17] == "W"){ //adding colors
+			       
 			        	$('td:eq(1)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(2)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(3)', nRow).attr('style', "background-color: #C0E1FF");
@@ -108,8 +245,10 @@
 			        	$('td:eq(10)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(11)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(12)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(13)', nRow).attr('style', "background-color: #C0E1FF");
+			        	$('td:eq(14)', nRow).attr('style', "background-color: #C0E1FF");
 			        	} 
-			        if(aData[14] == "Mira"){
+			        if(aData[17] == "M"){
 			        	$('td:eq(1)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(2)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(3)', nRow).attr('style', "background-color: #C2FF91");
@@ -122,14 +261,32 @@
 			        	$('td:eq(10)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(11)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(12)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(13)', nRow).attr('style', "background-color: #C2FF91");
+			        	$('td:eq(14)', nRow).attr('style', "background-color: #C2FF91");
 			        	}
-			     */
-				
-			    }
-			
-		});
-		
-
-	});
+			        
+			        
+			        
+			},
+			 "columnDefs": [
+            {
+                "targets": [ 15 ],
+                "visible": false,
+                "searchable": false
+            },
+              {
+                "targets": [ 17 ],
+                "visible": false,
+                "searchable": false
+            },
+             {
+                "targets": [ 16 ],
+                "visible": false,
+                "searchable": false
+            }]
+        } );
+	
+		$("#accesssummary_treeview").treetable({expandable: true });
+	
 	
 </script>

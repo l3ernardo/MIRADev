@@ -195,7 +195,7 @@ var report = {
               DocSubType: ""+doc[i].DocSubType,
               AuditableFlag: ""+doc[i].AuditableFlag,
               Category: ""+doc[i].Category,
-              Subcategory: ""+doc[i].Subategory,
+              Subcategory: ""+doc[i].Subcategory,
               AuditProgram: ""+doc[i].AuditProgram,
               CUSize: ""+doc[i].CUSize,
               MetricsCriteria: ""+doc[i].MetricsCriteria,
@@ -678,19 +678,7 @@ for (i=0;i<len;i++)
 		return deferred.promise;
 	},
 	cuauditlessonslearned: function(req, db) {
-		var deferred = q.defer(); var BU;
-		if(req.session.businessunit=='GBS')
-		{
-			BU="IBM GBS";
-		}
-		else if(req.session.businessunit=='GTS')
-		{
-			BU="IBM GTS";
-		}
-		else
-		{
-			BU="IBM GTS Transformation";
-		}
+		var deferred = q.defer();
 		try{
 			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
 				var objCUALL = {
@@ -700,8 +688,7 @@ for (i=0;i<len;i++)
 							"key": "Assessment",
 							"ParentDocSubType":"Controllable Unit",
 							"$not":{"AUStatus":"Retired"},
-							"BusinessUnit": BU
-							//"BusinessUnit": req.session.businessunit
+							"BusinessUnit": req.session.buname
 					},
 					"sort": [{"AssessableUnitName":"asc"},{"CurrentPeriod":"asc"}]
 				};
@@ -715,8 +702,7 @@ for (i=0;i<len;i++)
 							"ParentDocSubType":"Controllable Unit",
 							"$not":{"AUStatus":"Retired"},
 							"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
-							"BusinessUnit": BU
-							//"BusinessUnit": req.session.businessunit
+							"BusinessUnit": req.session.buname
 					},
 					"sort": [{"AssessableUnitName":"asc"},{"CurrentPeriod":"asc"}]
 				};
