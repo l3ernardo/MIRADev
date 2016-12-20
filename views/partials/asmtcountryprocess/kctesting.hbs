@@ -38,9 +38,13 @@
 				</thead>
 				{{#each RCTestData}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+						<td>{{reportingQuarter}}</td>
+						<td>{{controlType}}</td>
+						<td><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
+						<td>{{numActualTests}}</td>
+						<td>{{numDefects}}</td>
+						<td>{{defectRate}}</td>
+						<td>$ {{remFinImpact}}</td>
 					</tr>
 				{{/each}}
 			</table>
