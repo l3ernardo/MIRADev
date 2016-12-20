@@ -84,3 +84,20 @@ app.use(require('./server/config/router-asmtComponents.js'));
 app.get('*', function (req, res) {
     res.render('error',{errorDescription: req.url + ' does not exist.'});
 });
+
+var stdin = process.openStdin();
+stdin.addListener("data", function(d) {
+    // note:  d is an object, and when converted to a string it will
+    // end with a linefeed.  so we (rather crudely) account for that  
+    // with toString() and then trim() 
+    console.log("you entered: [" + 
+        d.toString().trim() + "]");
+	var prgm = './server/config/'+d.toString().trim()+'.js';
+	try {
+		app.use(require(prgm));				
+	} catch(e) {
+		console.log(e);
+		console.log(prgm);
+		console.log("choice not accepted!");
+	}
+});
