@@ -81,11 +81,11 @@ $(document).ready(function(){
 		$("#AsmtOtherConsiderationsReadOnly").html($("input[name='AsmtOtherConsiderationsRO']").val());
 	}
 
-	$('#RCTestData_table').DataTable({
+	/*$('#RCTestData_table').DataTable({
 		"scrollY":        "200px",
 		"scrollCollapse": true,
 		"paging":         false
-	});
+	});*/
 
 	//Code for Edit button
 	$('#btn_edit').click(function() {
