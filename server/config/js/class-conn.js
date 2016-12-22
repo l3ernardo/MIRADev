@@ -234,23 +234,29 @@ var DB = {
 							}
 						}
 						// Merge fields from doc2 into doc1, if they are changed and don't belong to editable fields' list
-						doc1.forEach(function(fld) {
-							try {
-								var flag = false;
-								for(var i=0;i<userdoc.fieldslist.field;i++) {
-									if(userdoc.fieldslist[i].field==fld) {
-										flag = true;
-									}	
-								}
-								if(flag) {
-									if(doc1[fld]==userdoc[fld]) {
-										userdoc[fld] = doc2[fld];
+						for (var fld in doc1) {
+							//console.log(fld);
+							if (doc1.hasOwnProperty(fld)) {
+								try {
+									// Check if it's a non-mapped field (probably read-only or system control)
+									var flag = false;
+									for(var i=0;i<userdoc.fieldslist.field;i++) {
+										if(userdoc.fieldslist[i].field==fld) {
+											flag = true;
+										}	
 									}
-								}
-							} catch(e) {
-								console.log(e)
-							} finally {}
-						})						
+									// The field does not exist, merging userdoc with the value from doc2
+									if(!flag) {
+										//console.log(fld+":"+doc1[fld]+" / " + userdoc[fld] + " / " + doc2[fld]);
+										if(doc1[fld]==userdoc[fld]) {
+											userdoc[fld] = doc2[fld];
+										}
+									}
+								} catch(e) {
+									console.log(e)
+								} finally {}
+							}
+						}					
 						if(conflictfields.length>0) {
 							//console.log(conflictfields.length + " conflicts found.");
 							deferred.resolve({"status": "ERROR", "userdoc":userdoc, "conflict":conflictfields});
@@ -283,7 +289,7 @@ var DB = {
 			}
 		})
 		return deferred.promise;
-	}	
+	}		
 };
 
 module.exports = DB;
