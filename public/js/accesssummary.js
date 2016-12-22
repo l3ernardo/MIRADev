@@ -41,7 +41,8 @@ $(document).ready(function() {
 		table += "<th>"+$('#th10').text()+"</th>";	
 		table += "<th>"+$('#th11').text()+"</th>";	
 		table += "<th>"+$('#th12').text()+"</th>";	
-		table += "<th>"+$('#th13').text()+"</th></tr>";	
+		table += "<th>"+$('#th13').text()+"</th>";
+		table += "<th>"+$('#th14').text()+"</th></tr>";	
 		
 			if ($('#mira_checkbox_tree').is(":checked")) //depending on single or multiple selection and extra row is added
 			{  incremental = 1; limit =1; }
@@ -55,6 +56,7 @@ $(document).ready(function() {
 
 				table += "<tr>";
 				table += "<td>"+fields[array2[j]-incremental].Name+"</td>";
+				table += "<td>"+fields[array2[j]-incremental].Role+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Type+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].AssessableUnit+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Status+"</td>";
@@ -110,7 +112,8 @@ $(document).ready(function() {
 		table += "<th>"+$('#th10').text()+"</th>";	
 		table += "<th>"+$('#th11').text()+"</th>";	
 		table += "<th>"+$('#th12').text()+"</th>";	
-		table += "<th>"+$('#th13').text()+"</th></tr>";	
+		table += "<th>"+$('#th13').text()+"</th>";	
+		table += "<th>"+$('#th14').text()+"</th></tr>";	
 		
 
 
@@ -129,6 +132,7 @@ $(document).ready(function() {
 
 				table += "<tr>";
 				table += "<td>"+fields[array2[j]-incremental].Name+"</td>";
+				table += "<td>"+fields[array2[j]-incremental].Role+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Type+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].AssessableUnit+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Status+"</td>";

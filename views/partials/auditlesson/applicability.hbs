@@ -26,10 +26,10 @@
 		<input type="hidden" id="globalProcess" name="globalProcess" value="{{globalProcess}}">
 		<td>Global Process:</td>
 		<td>{{{multiSelect "processList" processList "WWBCITKey" "Name" "globalProcessList"}}}</td>
-	</tr><tr>
+	</tr>{{#if_not_equal EnteredBU "GBS"}}<tr>
 		<td>Subprocess:</td><td>{{{uniqueSelect "subprocess" subprocessList "WWBCITKey" "Name" subprocess}}}</td>
 	</tr>
-
+{{/if_not_equal}}
 	{{else}}
 {{!-- auditlesson form - Applicability section - Read Mode --}}
 	<tr>
@@ -46,8 +46,11 @@
 	{{/if_not_equal}}
 	<tr>
 		<td>Global Process:</td><td>{{globalProcess}}</td>
-	</tr><tr>
+	</tr>
+	{{#if_not_equal EnteredBU "GBS"}}
+	<tr>
 		<td>Subprocess:</td><td>{{subprocess}}</td>
 	</tr>
+	{{/if_not_equal}}
 	{{/if}}
 </table>

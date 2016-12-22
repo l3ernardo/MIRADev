@@ -79,6 +79,12 @@ function addEventsCompCP(){
 		document.getElementById('kctest-li').className="";
 		document.getElementById('opmetric-li').className="";
 		document.getElementById('other-li').className="";
+		$("#cabeza").css("display", "block");
+		$("#cuerpo").css("display", "block");
+		var height = $('#cuerpo').height();
+		$("#cuerpo").css("height", height+"px");
+		$("#cuerpo").css("max-height", height+"px");
+		$("#cuerpo").css("overflow-y", "auto");
 	},true);
 	document.getElementById('auditreview-li').addEventListener('click',function()
 	{
