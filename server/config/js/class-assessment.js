@@ -555,6 +555,29 @@ var assessment = {
 							// Key Controls Tesing tab
 							kct.calcDefectRate(doc);
 							console.log("AUDefectRate: " + doc[0].AUDefectRate);
+							//Audits and Reviews   
+							var objAuditRew = {
+								selector : {
+									"_id": {"$gt":0},
+									"DOCTYPE": "ppreview",
+									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
+									"CPASSESSED_ENTITY_ID" : doc[0].WWBCITKey
+								},
+							};	
+							db.find(objAuditRew).then(function(auditdata){
+								var auditR = auditdata.body.docs;
+								var AuditTrustedData = auditR;
+
+								for(var i = 0; i < auditR.length; i++){
+									if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+										auditR[i].COFlag = false;
+									}else {
+										auditR[i].COFlag = true;
+									}
+								}
+									doc[0].AuditTrustedData = AuditTrustedData;	
+
+							});
 							//Open issue
 							var objIssue = {
 								selector : {
@@ -604,11 +627,9 @@ var assessment = {
 
 									openrisks.push(risks[i]);
 								}
-								//console.log(openrisks);
 
 								doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
 								doc[0].openrisks = openrisks;
-							//console.log(dataRisks.body.docs);
 							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].GPPARENT != null)){
 									var obj = {
