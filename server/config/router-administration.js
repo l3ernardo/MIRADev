@@ -338,7 +338,7 @@ administration.get('/dataFeedAccessSummary',isAuthenticated, function(req,res){
 	
 	
 });
-/*
+
 //report generated at server level
 administration.get('/downloadaccesssummary',isAuthenticated, function(req,res){
 
@@ -358,7 +358,7 @@ administration.get('/downloadaccesssummary',isAuthenticated, function(req,res){
 });
 
 
-*/
+
 /**************************************************************
 AUDITLESSON FUNCTIONALITY
 ***************************************************************/
