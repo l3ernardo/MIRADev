@@ -837,7 +837,7 @@ var util = {
 		}
 		return deferred.promise;
 	},
-	
+
 	// Load manifest.yml to identify ORG
 	getOrg: function() {
 		var data = (fs.readFileSync('manifest.info', 'utf8'));
