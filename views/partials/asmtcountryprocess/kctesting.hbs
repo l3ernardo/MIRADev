@@ -39,7 +39,7 @@
 				<tbody>
 				{{#each RCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%">{{reportingQuarter}}</td>
+						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{reportingQuarter}}</td>
 						<td width="5%">{{controlType}}</td>
 						<td width="40%"><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
 						<td width="10%">{{numActualTests}}</td>
@@ -68,7 +68,7 @@
 				<tbody>
 				{{#each SCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="10%">{{reportingQuarter}}</td>
+						<td width="10%" {{#unless parent}} nowrap {{/unless}}>{{reportingQuarter}}</td>
 						<td width="15%">{{controlType}}</td>
 						<td width="15%">{{#if reportingCountry}}<a href="/asmtcomponents?id={{_id}}">{{/if}}{{controlName}}{{#if reportingCountry}}</a>{{/if}}</td>
 						<td width="30%">{{reportingCountry}}</td>
@@ -101,7 +101,7 @@
 				<tbody>
 				{{#each SampleData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%">{{processCategory}}</td>
+						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{processCategory}}</td>
 						<td width="5%">{{processSampled}}</td>
 						<td width="5%">{{controlName}}</td>
 						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
@@ -138,7 +138,7 @@
 				<tbody>
 				{{#each SampleData2}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%">{{originalReportingQuarter}}</td>
+						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{originalReportingQuarter}}</td>
 						<td width="5%">{{testType}}</td>
 						<td width="10%">{{controlName}}</td>
 						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>

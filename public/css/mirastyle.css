@@ -1196,6 +1196,7 @@ table.table_with_scroll tbody tr th{
 }
 table.table_with_scroll tbody tr td{
 	table-layout:fixed;
+	text-align:center;
 }
 table.table_with_scroll thead,table.table_with_scroll tbody tr {
     display:table;

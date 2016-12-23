@@ -452,6 +452,64 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(defViewRow-doc[0].CUAsmtDataPR1view.length));
 									}
 								}
+								//Open issue
+								var objIssue = {
+									selector : {
+										"_id": {"$gt":0},
+										"compntType": "openIssue",
+	 									"docType": "asmtComponent",
+										"reportingQuarter": doc[0].CurrentPeriod,
+										"ControllableUnit": doc[0].ControllableUnit,
+										"businessUnit": doc[0].BusinessUnit,
+										"scorecardCategory": {"$gt":0}
+									},
+									sort:[{"scorecardCategory":"asc"}]
+								};
+								db.find(objIssue).then(function(dataRisks){
+									var risks = dataRisks.body.docs;
+									var riskCategory = {};
+									var openrisks = [];
+									var exportOpenRisks = [];
+									doc[0].ORMCMissedRisks = 0;
+									for(var i = 0; i < risks.length; i++){
+										if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
+											openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
+											riskCategory[risks[i].scorecardCategory] = true;
+										}
+										if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0){
+											risks[i].missedFlag = true;
+											doc[0].ORMCMissedRisks = 1;
+										}else {
+											risks[i].missedFlag = false;
+										}
+										var tmp = {};
+										tmp.type = risks[i].type;
+										tmp.name = risks[i].name;
+										tmp.id = risks[i].id
+										tmp.status = risks[i].status;
+										tmp.process = risks[i].process;
+										tmp.originalTargetDate = risks[i].originalTargetDate;
+										tmp.currentTargetDate = risks[i].currentTargetDate;
+										tmp.numTasks = risks[i].numTasks;
+										tmp.numTasksOpen = risks[i].numTasksOpen;
+										tmp.numMissedTasks = risks[i].numMissedTasks;
+										tmp.missedFlag = risks[i].missedFlag;
+										tmp.riskAbstract = risks[i].riskAbstract;
+										exportOpenRisks.push(tmp);
+										risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
+
+										openrisks.push(risks[i]);
+									}
+
+									doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
+									if (Object.keys(riskCategory).length < defViewRow) {
+										if (openrisks == 0) {
+											openrisks = fieldCalc.addTestViewData(10,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
+										}
+									};
+									doc[0].openrisks = openrisks;
 								//AuditKey
 								if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
@@ -536,6 +594,9 @@ var assessment = {
 									else {
 								deferred.resolve({"status": 200, "doc": doc});
 							}
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err});
+						});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
@@ -641,7 +702,7 @@ var assessment = {
 										}
 									}
 
-							})
+							});
 
 							//Open issue
 							var objIssue = {
