@@ -9,8 +9,8 @@
 		<span class="ibm-sep"> </span>
 		<a href="javascript:void(0);" value="Export to Open Office" name="link-export2" id="link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 		<td>
-			<table id="open_risks_treeview" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
-				<thead id="cabeza">
+			<table id="open_risks_treeview" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
+				<thead>
 					<th class="risk-msdcommit-viewheader" scope="col" width="3%"><input type="checkbox" class="openrisks_checkbox_tree" id="openrisks_checkbox_tree" name="openrisks_checkbox "/></th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="3%">Type</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">ID</th>
@@ -25,11 +25,11 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Risk Abstract</th>
 				</thead>
 
-				<tbody id="cuerpo">
+				<tbody>
 				{{#each openrisks}}
-					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" id="celda">
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" >
 						<th style="background-color: white !important;" width="3%" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>
-						<td style="background-color: white !important;" width="3%" {{#unless parent}}colspan="3" nowrap {{/unless}}>{{name}}</td>
+						<td style="background-color: white !important;" width="3%" {{#unless parent}} {{/unless}}>{{name}}</td>
 						{{#if parent}}<td style="background-color: white !important;" width="8%"><a href="/asmtcomponents?id={{_id}}">{{id}}</a></td>
 						<td style="background-color: white !important;" width="10%">{{status}}</td>{{/if}}
 						<td style="background-color: white !important;" width="20%">{{process}}</td>
