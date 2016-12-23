@@ -1,3 +1,4 @@
+<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{exportInternalAudits}}</textarea>
 <table id="auditreview_table" class="ibm-data-table">
 	<tr class="audit-review-content">
 		<td>
@@ -20,9 +21,9 @@
 				<tr class="asmt-viewdata">
 						<td style="background-color: white !important;" style="width:10%;">{{RPTG_QTR}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
-						<td style="background-color: white !important;" style="width:10%;"><a href="/audittrusted?id={{../docid}}">{{REVIEW_TYPE}}</a></td>
+						<td style="background-color: white !important;" style="width:10%;"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
 						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_ID}}</td>
-						<td style="background-color: white !important;" style="width:10%;">{{AssessableUnitName}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{countryProcess}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_END_DATE}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{RATING}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{NUM_TOTAL_RECMNDTNS}}</td>
@@ -39,10 +40,10 @@
 			<span class="audit-review"><b>Relevant CU Internal Audits</b></span><br /><br />
 			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 				<thead>
-					<th class="audit-review-viewheader" scope="col" width="4%">Period</th>
+					<th class="audit-review-viewheader" scope="col" width="6%">Period</th>
 					<th class="audit-review-viewheader" scope="col" width="15%">Audit or Review</th>
 					<th class="audit-review-viewheader" scope="col" width="10%">ID</th>
-					<th class="audit-review-viewheader" scope="col" width="24%">Assessable Unit</th>
+					<th class="audit-review-viewheader" scope="col" width="22%">Assessable Unit</th>
 					<th class="audit-review-viewheader" scope="col" width="5%">Report Date</th>
 					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
 					<th class="audit-review-viewheader" scope="col" width="5%">Total Recs</th>
@@ -53,15 +54,15 @@
 				{{#each AuditTrustedRCUData}}
 					<tr class="asmt-viewdata">
 						<td style="background-color: white !important;" style="width:10%;">{{RPTG_QTR}}</td>
-						<td style="background-color: white !important;" style="width:10%;">{{ID}}</td>
-						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_TYPE}}</td>
-						<td style="background-color: white !important;" style="width:10%;">{{RPTG_PROCESS}}</td>
-						<td style="background-color: white !important;" style="width:10%;">{{ORIG_RPTG_QTR}}</td>
+						<td style="background-color: white !important;" style="width:10%;"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_ID}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{countryProcess}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_END_DATE}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{RATING}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{NUM_TOTAL_RECMNDTNS}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{NUM_OPEN_RECMNDTNS}}</td>
 						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
-						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_TYPE}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{Comments}}</td>
 					</tr>
 				{{/each}}
 			</table>
@@ -83,13 +84,14 @@
 				</thead>
 				{{#each AuditLocalData}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+						<td style="background-color: white !important;" style="width:10%;">{{RPTG_QTR}}</td>
+						<td style="background-color: white !important;" style="width:10%;"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_END_DATE}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{RATING}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{NUM_TOTAL_RECMNDTNS}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{NUM_OPEN_RECMNDTNS}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
+						<td style="background-color: white !important;" style="width:10%;">{{Comments}}</td>
 					</tr>
 				{{/each}}
 			</table>
