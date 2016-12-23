@@ -554,12 +554,14 @@ var assessment = {
 							doc[0].EAData = doc[0].ARCData;
 							// Key Controls Tesing tab
 							kct.calcDefectRate(doc);
-							console.log("AUDefectRate: " + doc[0].AUDefectRate);
-							//Audits and Reviews   
+							//console.log("AUDefectRate: " + doc[0].AUDefectRate);
+							//Country Process hollistic tab for:
+							//Audits and Reviews (Internal Audits and Proactive Reviews)
 							var objAuditRew = {
 								selector : {
 									"_id": {"$gt":0},
-									"DOCTYPE": "ppreview",
+									"docType": "asmtComponent",
+									"compntType": "ppr",
 									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
 									"CPASSESSED_ENTITY_ID" : doc[0].WWBCITKey
 								},
@@ -567,17 +569,80 @@ var assessment = {
 							db.find(objAuditRew).then(function(auditdata){
 								var auditR = auditdata.body.docs;
 								var AuditTrustedData = auditR;
-
-								for(var i = 0; i < auditR.length; i++){
-									if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
-										auditR[i].COFlag = false;
-									}else {
-										auditR[i].COFlag = true;
+									if(auditdata.status==200) {
+										try {
+											for(var i = 0; i < auditR.length; i++){
+												if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+													auditR[i].COFlag = false;
+												}else{
+												auditR[i].COFlag = true;
+												}
+											}
+												doc[0].AuditTrustedData = AuditTrustedData;	
+										} catch(e){
+											console.log(e.stack)
+										}
 									}
-								}
-									doc[0].AuditTrustedData = AuditTrustedData;	
+							})
 
-							});
+							//Audits and Reviews(Relevant CU Internal Audits)
+							var objAuditInt = {
+								selector : {
+									"_id": {"$gt":0},
+									"docType": "asmtComponent",
+									"compntType": "ppr",
+									"REVIEW_TYPE": "CHQ Internal Audit",
+									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
+									"CPASSESSED_ENTITY_ID" : doc[0].WWBCITKey
+								},
+							};	
+							db.find(objAuditInt).then(function(auditIntdata){
+								var auditInt = auditIntdata.body.docs;
+								var AuditTrustedRCUData = auditInt;
+									if(auditIntdata.status==200) {
+										try {
+											for(var i = 0; i < auditInt.length; i++){
+												if(auditInt[i].REVIEW_TYPE == "CHQ Internal Audit"||auditInt[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+													auditInt[i].COFlag = false;
+												}else{
+												auditInt[i].COFlag = true;
+												}
+											}
+												doc[0].AuditTrustedRCUData = AuditTrustedRCUData;	
+										} catch(e){
+											console.log(e.stack)
+										}
+									}
+
+							})
+							//Audits and Reviews(AuditLocalData)
+							var objAuditLoc = {
+								selector : {
+									"_id": {"$gt":0},
+									"DOCTYPE": "ppreview",
+									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
+								},
+							};	
+							db.find(objAuditLoc).then(function(auditLocdata){
+								var auditLoc = auditLocdata.body.docs;
+								var AuditLocalData = auditLoc;
+									if(auditLocdata.status==200) {
+										try {
+											for(var i = 0; i < auditLoc.length; i++){
+												if(auditLoc[i].REVIEW_TYPE == "CHQ Internal Audit"||auditLoc[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+													auditLoc[i].COFlag = false;
+												}else {
+													auditLoc[i].COFlag = true;
+											    } 
+									        }
+												doc[0].AuditLocalData = AuditLocalData;	
+										} catch(e){
+											console.log(e.stack)
+										}
+									}
+
+							})
+
 							//Open issue
 							var objIssue = {
 								selector : {
@@ -629,6 +694,15 @@ var assessment = {
 								}
 
 								doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
+/*
+								if (openrisks.length < defViewRow) {
+-									if (openrisks == 0) {
+-										openrisks = fieldCalc.addTestViewData(10,defViewRow);
+-									} else {
+-										fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
+-									}
+-								}
+*/
 								doc[0].openrisks = openrisks;
 							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].GPPARENT != null)){
