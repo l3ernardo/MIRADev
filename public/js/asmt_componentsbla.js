@@ -79,6 +79,12 @@ function addEventsCompCP(){
 		document.getElementById('kctest-li').className="";
 		document.getElementById('opmetric-li').className="";
 		document.getElementById('other-li').className="";
+		$(".table_with_scroll tbody").each(function() {
+			if($(this).height() > 0){
+				$(this).css("height", $(this).height()+"px");
+			}
+		});
+
 	},true);
 	document.getElementById('auditreview-li').addEventListener('click',function()
 	{
@@ -119,6 +125,12 @@ function addEventsCompCP(){
 		document.getElementById('kctest-li').className="ibm-active";
 		document.getElementById('opmetric-li').className="";
 		document.getElementById('other-li').className="";
+		$(".table_with_scroll tbody").each(function() {
+			if($(this).height() > 0){
+			$(this).css("height", $(this).height()+"px");
+		}
+		});
+
 	},true);
 	document.getElementById('opmetric-li').addEventListener('click',function()
 	{
@@ -456,6 +468,11 @@ function addEventsCompCUHybrid(){
 		document.getElementById('kctest-li').className="";
 		document.getElementById('opmetric-li').className="";
 		document.getElementById('other-li').className="";
+		$(".table_with_scroll tbody").each(function() {
+			if($(this).height() > 0){
+				$(this).css("height", $(this).height()+"px");
+			}
+		});
 	},true);
 	document.getElementById('auditreview-li').addEventListener('click',function()
 	{

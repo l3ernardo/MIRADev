@@ -26,124 +26,132 @@
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
 			<span class="kc-test-header"><b>Reporting Country Testing</b></span><br /><br />
-			<table width="100%">
+			<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader" width="5">Period</th>
-					<th class="kc-test-viewheader" width="5">Type</th>
-					<th class="kc-test-viewheader" width="40">Control</th>
-					<th class="kc-test-viewheader" width="10">Tests</th>
-					<th class="kc-test-viewheader" width="10">Defects</th>
-					<th class="kc-test-viewheader" width="10">Defect Rate %</th>
-					<th class="kc-test-viewheader" width="20">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="5%">Period</th>
+					<th class="kc-test-viewheader" width="5%">Type</th>
+					<th class="kc-test-viewheader" width="40%">Control</th>
+					<th class="kc-test-viewheader" width="10%">Tests</th>
+					<th class="kc-test-viewheader" width="10%">Defects</th>
+					<th class="kc-test-viewheader" width="10%">Defect Rate %</th>
+					<th class="kc-test-viewheader" width="20%">Remaining Fin. Impact</th>
 				</thead>
+				<tbody>
 				{{#each RCTestData}}
-					<tr class="asmt-viewdata">
-						<td>{{reportingQuarter}}</td>
-						<td>{{controlType}}</td>
-						<td><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
-						<td>{{numActualTests}}</td>
-						<td>{{numDefects}}</td>
-						<td>{{defectRate}}</td>
-						<td>$ {{remFinImpact}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{reportingQuarter}}</td>
+						<td width="5%">{{controlType}}</td>
+						<td width="40%"><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
+						<td width="10%">{{numActualTests}}</td>
+						<td width="10%">{{numDefects}}</td>
+						<td width="10%">{{defectRate}}</td>
+						<td width="20%">{{#if remFinImpact}}$ {{/if}}{{remFinImpact}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
 			<span class="kc-test-header"><b>Sampled Country Testing</b></span><br /><br />
-			<table width="100%">
+			<table id="SCTest_treeview" width="100%" class="table_with_scroll">
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader" width="10">Period</th>
-					<th class="kc-test-viewheader" width="15">Type</th>
-					<th class="kc-test-viewheader" width="15">Control</th>
-					<th class="kc-test-viewheader" width="30">Reporting Country</th>
-					<th class="kc-test-viewheader" width="10">Tests</th>
-					<th class="kc-test-viewheader" width="10">Defects</th>
-					<th class="kc-test-viewheader" width="10">Defect Rate %</th>
+					<th class="kc-test-viewheader" width="10%">Period</th>
+					<th class="kc-test-viewheader" width="15%">Type</th>
+					<th class="kc-test-viewheader" width="15%">Control</th>
+					<th class="kc-test-viewheader" width="30%">Reporting Country</th>
+					<th class="kc-test-viewheader" width="10%">Tests</th>
+					<th class="kc-test-viewheader" width="10%">Defects</th>
+					<th class="kc-test-viewheader" width="10%">Defect Rate %</th>
 				</thead>
+				<tbody>
 				{{#each SCTestData}}
-					<tr class="asmt-viewdata">
-						<td>{{reportingQuarter}}</td>
-						<td>{{controlType}}</td>
-						<td><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
-						<td>{{reportingCountry}}</td>
-						<td>{{numtest}}</td>
-						<td>{{numDefects}}</td>
-						<td>{{defectRate}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%" {{#unless parent}} nowrap {{/unless}}>{{reportingQuarter}}</td>
+						<td width="15%">{{controlType}}</td>
+						<td width="15%">{{#if reportingCountry}}<a href="/asmtcomponents?id={{_id}}">{{/if}}{{controlName}}{{#if reportingCountry}}</a>{{/if}}</td>
+						<td width="30%">{{reportingCountry}}</td>
+						<td width="10%">{{numtest}}</td>
+						<td width="10%">{{numDefects}}</td>
+						<td width="10%">{{defectRate}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
 			<span class="kc-test-header"><b>Current Period Samples with Defects (includes all test types)</b></span><br /><br />
-			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table id="Sample_treeview" width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" width="5">Cat</th>
-					<th class="kc-test-viewheader" width="5">Process</th>
-					<th class="kc-test-viewheader" width="5">Control</th>
-					<th class="kc-test-viewheader" width="10">Sample ID</th>
-					<th class="kc-test-viewheader" width="5">Defects</th>
-					<th class="kc-test-viewheader" width="10">Defect Type</th>
-					<th class="kc-test-viewheader" width="10">Remed. Status</th>
-					<th class="kc-test-viewheader" width="5">Remaining Fin. Impact</th>
-					<th class="kc-test-viewheader" width="13">Original Target to Close</th>
-					<th class="kc-test-viewheader" width="12">Current Target to Close</th>
-					<th class="kc-test-viewheader" width="20">Defect Abstract</th>
+					<th class="kc-test-viewheader" width="5%">Cat</th>
+					<th class="kc-test-viewheader" width="5%">Process</th>
+					<th class="kc-test-viewheader" width="5%">Control</th>
+					<th class="kc-test-viewheader" width="10%">Sample ID</th>
+					<th class="kc-test-viewheader" width="5%">Defects</th>
+					<th class="kc-test-viewheader" width="10%">Defect Type</th>
+					<th class="kc-test-viewheader" width="10%">Remed. Status</th>
+					<th class="kc-test-viewheader" width="5%">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="13%">Original Target to Close</th>
+					<th class="kc-test-viewheader" width="12%">Current Target to Close</th>
+					<th class="kc-test-viewheader" width="20%">Defect Abstract</th>
 				</thead>
+				<tbody>
 				{{#each SampleData}}
-					<tr class="asmt-viewdata">
-						<td>{{processCategory}}</td>
-						<td>{{processSampled}}</td>
-						<td>{{controlName}}</td>
-						<td><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
-						<td>{{numDefects}}</td>
-						<td>{{defectType}}</td>
-						<td>{{remediationStatus}}</td>
-						<td>{{remainingFinancialImpact}}</td>
-						<td>{{originalTargetDate}}</td>
-						<td>{{targetClose}}</td>
-						<td>{{defectsAbstract}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{processCategory}}</td>
+						<td width="5%">{{processSampled}}</td>
+						<td width="5%">{{controlName}}</td>
+						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td width="5%">{{numDefects}}</td>
+						<td width="10%">{{defectType}}</td>
+						<td width="10%">{{remediationStatus}}</td>
+						<td width="5%">{{remainingFinancialImpact}}</td>
+						<td width="13%">{{originalTargetDate}}</td>
+						<td width="12%">{{targetClose}}</td>
+						<td width="20%">{{defectsAbstract}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
 			<span class="kc-test-header"><b>Unremediated Samples from Prior Periods (includes all test types)</b></span><br /><br />
-			<table width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table id="Sample2_treeview" width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" width="5">Period</th>
-					<th class="kc-test-viewheader" width="5">Type</th>
-					<th class="kc-test-viewheader" width="10">Control</th>
-					<th class="kc-test-viewheader" width="10">Sample ID</th>
-					<th class="kc-test-viewheader" width="10">Process</th>
-					<th class="kc-test-viewheader" width="5">Defects</th>
-					<th class="kc-test-viewheader" width="5">Defect Type</th>
-					<th class="kc-test-viewheader" width="5">Remaining Fin. Impact</th>
-					<th class="kc-test-viewheader" width="13">Original Target to Close</th>
-					<th class="kc-test-viewheader" width="12">Current Target to Close</th>
-					<th class="kc-test-viewheader" width="20">Defect Abstract</th>
+					<th class="kc-test-viewheader" width="5%">Period</th>
+					<th class="kc-test-viewheader" width="5%">Type</th>
+					<th class="kc-test-viewheader" width="10%">Control</th>
+					<th class="kc-test-viewheader" width="10%">Sample ID</th>
+					<th class="kc-test-viewheader" width="10%">Process</th>
+					<th class="kc-test-viewheader" width="5%">Defects</th>
+					<th class="kc-test-viewheader" width="5%">Defect Type</th>
+					<th class="kc-test-viewheader" width="5%">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="13%">Original Target to Close</th>
+					<th class="kc-test-viewheader" width="12%">Current Target to Close</th>
+					<th class="kc-test-viewheader" width="20%">Defect Abstract</th>
 				</thead>
-				{{#each SampleData}}
-					<tr class="asmt-viewdata">
-						<td>{{originalReportingQuarter}}</td>
-						<td>{{testType}}</td>
-						<td>{{controlName}}</td>
-						<td><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
-						<td>{{processSampled}}</td>
-						<td>{{numDefects}}</td>
-						<td>{{defectType}}</td>
-						<td>{{remainingFinancialImpact}}</td>
-						<td>{{originalTargetDate}}</td>
-						<td>{{targetClose}}</td>
-						<td>{{defectsAbstract}}</td>
+				<tbody>
+				{{#each SampleData2}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{originalReportingQuarter}}</td>
+						<td width="5%">{{testType}}</td>
+						<td width="10%">{{controlName}}</td>
+						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td width="10%">{{processSampled}}</td>
+						<td width="5%">{{numDefects}}</td>
+						<td width="5%">{{defectType}}</td>
+						<td width="5%">{{remainingFinancialImpact}}</td>
+						<td width="13%">{{originalTargetDate}}</td>
+						<td width="12%">{{targetClose}}</td>
+						<td width="20%">{{defectsAbstract}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
