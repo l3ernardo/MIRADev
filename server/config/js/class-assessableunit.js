@@ -261,6 +261,20 @@ var assessableunit = {
 							}
 						}
 						else {
+							/*
+							if(req.session.quarter == doc[0].CurrentPeriod){
+								if(doc[0].IOT){
+										doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].IOT, "IOT",req);
+
+								}else if(doc[0].IMT){
+										doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].IMT, "IMT",req);
+
+								}else if(doc[0].Country){
+										doc[0].Name = req.session.buname + " - " + util.resolveGeo(doc[0].Country, "Country",req);
+								}
+							}
+							*/
+
 							if(constidocs[i].DocSubType == "BU IOT"){
 									constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
 
@@ -405,6 +419,15 @@ var assessableunit = {
 												}
 											}
 										}
+										if(doc[0].IOT){
+												doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
+
+										} if(doc[0].IMT){
+												doc[0].IMT = util.resolveGeo(doc[0].IMT, "IMT",req);
+
+										} if(doc[0].Country){
+												doc[0].Country =  util.resolveGeo(doc[0].Country, "Country",req);
+										}
 										//Get CU Parent Documents if admin
 										if(doc[0].admin){
 											assessableunit.getCUParents(req, db).then(function(dataCP) {
@@ -421,6 +444,15 @@ var assessableunit = {
 													}};
 													db.find(obj).then(function(dataLL){
 														doc[0].lessonsList = dataLL.body.docs[0].value;
+															if(doc[0].IOT){
+																	doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
+
+															} if(doc[0].IMT){
+																	doc[0].IMT = util.resolveGeo(doc[0].IMT, "IMT",req);
+
+															} if(doc[0].Country){
+																	doc[0].Country =  util.resolveGeo(doc[0].Country, "Country",req);
+															}
 													deferred.resolve({"status": 200, "doc": doc});
 												}).catch(function(err) {
 													console.log("[assessableunit][LessonsList]" + dataLL.error);
@@ -873,17 +905,11 @@ var assessableunit = {
 									if (resdocs[i].DocSubType == "BU Reporting Group") doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 									if (resdocs[i].DocSubType == "BU IOT") {
 										if (resdocs[i].IOT != undefined) doc[0].IOTAUList.push({"iotid":resdocs[i].IOT});
-										console.log("resdocs ID: "+resdocs[i].IOT);
-										console.log("IOTAUList ID: "+doc[0].IOTAUList.iotid);
 									}
 								}
-								console.log(doc[0].IOTAUList.length);
 								var tmpIOT = [];
-								console.log("Global Hierarchy exists: "+global.hierarchy.BU_IOT);
 								for(var tmp in global.hierarchy.BU_IOT){
-									console.log("Global Hierarchy IOTs: "+global.hierarchy.BU_IOT[tmp].IOT);
 									tmpIOT.push({"docid":tmp, "name":global.hierarchy.BU_IOT[tmp].IOT});
-									console.log("TMP IOT: "+tmpIOT[tmp]);
 								}
 								doc[0].IOTList = tmpIOT;
 								for (var i = 0; i < doc[0].IOTAUList.length; ++i) {
@@ -1194,7 +1220,7 @@ var assessableunit = {
 					}
 					doc[0].Log.push(addlog);
 					doc = accessupdates.updateAccessExistDoc(req,doc);
-					
+
 					//Save document
 					db.save(doc[0]).then(function(data){
 						//Get current quarter Assessment
