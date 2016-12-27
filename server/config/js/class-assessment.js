@@ -621,12 +621,18 @@ var assessment = {
 									"docType": "asmtComponent",
 									"compntType": "ppr",
 									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
-									"CPASSESSED_ENTITY_ID" : doc[0].WWBCITKey
+									"CPASSESSED_ENTITY_ID" : doc[0].WWBCITKey,
+									"auditOrReview": {"$gt":0}
 								},
+								sort:[{"auditOrReview":"desc"}]
 							};
 							db.find(objAuditRew).then(function(auditdata){
 								var auditR = auditdata.body.docs;
-								var AuditTrustedData = auditR;
+								//var AuditTrustedData = auditR;
+								var typeList = {};
+								var periodList = {};
+								var exportPPR = [];
+								var auditRList = [];
 									if(auditdata.status==200) {
 										try {
 											for(var i = 0; i < auditR.length; i++){
@@ -635,13 +641,40 @@ var assessment = {
 												}else{
 												auditR[i].COFlag = true;
 												}
+												if(typeof typeList[auditR[i].auditOrReview] === "undefined"){
+													auditRList.push({id:auditR[i].auditOrReview.replace(/ /g,''), RPTG_QTR:auditR[i].auditOrReview});
+													typeList[auditR[i].auditOrReview] = true;
+												}
+												if(typeof periodList[auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
+													auditRList.push({parent: auditR[i].auditOrReview.replace(/ /g,''),id:auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''), RPTG_QTR:auditR[i].reportingQuarter});
+													periodList[auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] = true;
+												}
+
+												auditR[i].id = auditR[i]["_id"];
+												auditR[i].parent = auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'');
+
+												exportPPR.push({
+													period:auditR[i].RPTG_QTR,
+													CO:auditR[i].COFlag,
+													auditOrReview:auditR[i].REVIEW_TYPE,
+													id:auditR[i].REVIEW_ID,
+													assessableunit:auditR[i].countryProcess,
+													date:auditR[i].REVIEW_END_DATE,
+													rating:auditR[i].RATING,
+													totalrecs:auditR[i].NUM_TOTAL_RECMNDTNS,
+													openrecos:auditR[i].NUM_OPEN_RECMNDTNS,
+													target2close:auditR[i].REVIEW_TARGET_CLOSURE_DATE,
+													comments:auditR[i].Comments
+												});
+												auditRList.push(auditR[i]);
 											}
-												doc[0].AuditTrustedData = AuditTrustedData;
+
+												doc[0].AuditTrustedData = auditRList;
+												doc[0].exportPPR = exportPPR;
 										} catch(e){
 											console.log(e.stack)
 										}
 									}
-							})
 
 							//Audits and Reviews(Relevant CU Internal Audits)
 							var objAuditInt = {
@@ -1020,9 +1053,13 @@ var assessment = {
 									//deferred.resolve({"status": 200, "doc": doc});
 								}
 							}).catch(function(err) {
-								console.log("[assessableunit][LessonsList]" + dataLL.error);
+								console.log("[assessableunit][openIssueList]" + dataLL.error);
 								deferred.reject({"status": 500, "error": err});
 							});
+						}).catch(function(err) {
+							console.log("[assessableunit][pprList]" + dataLL.error);
+							deferred.reject({"status": 500, "error": err});
+						});;
 							break;
 						case "Account":
 							doc[0].ALLData = fieldCalc.addTestViewData(7,defViewRow);
