@@ -347,28 +347,60 @@ administration.get('/dataFeedAccessSummary',isAuthenticated, function(req,res){
 //report generated at server level
 administration.get('/downloadaccesssummary',isAuthenticated, function(req,res){
 
+	switch(req.session.businessunit){
 	
-	
-	
-	accesssumaryreports.exportToExcel(req,db).then(function (data){
-		//console.log("length of exported buffer: "+data.data.length);
-		//console.log("Maximun Buffer size: "+buffer);
-		 
-		if(data.data.length< 11809233)
-				{
-				res.attachment('access_summary_report.xlsx'); 
-				res.send(data.data);
-				}
-		else{
-			
-			res.render('accesssummaryerror');
-		}
-	
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][explicitAccessSummaryReport] - " + err.error);
+	case "GBS":
+		
+		accesssumaryreports.exportToExcel(req,db).then(function (data){
+			//console.log("length of exported buffer: "+data.data.length);
+			//console.log("Masimun Buffer size: "+buffer);
+					res.attachment('access_summary_report.xlsx'); 
+					res.send(data.data);
+		
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][explicitAccessSummaryReport] - " + err.error);
 
-		});
+			});
+		
+		
+				
+		break;
+		
+	case "GTS" :
+		
+		
+		
+		res.render('accesssummaryerror');
+		
+		
+		break;
+		
+	case "GTS Transformation" :
+		
+		accesssumaryreports.exportToExcel(req,db).then(function (data){
+			//console.log("length of exported buffer: "+data.data.length);
+			//console.log("Masimun Buffer size: "+buffer);
+					res.attachment('access_summary_report.xlsx'); 
+					res.send(data.data);
+		
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][explicitAccessSummaryReport] - " + err.error);
+
+			});
+		
+		
+		break;
+		
+		default:
+			res.render('error',{errorDescription: "invalid Business Unit"});
+		    console.log("[routes][explicitAccessSummary] - " + "invalid Business Unit");
+			break;
+	
+	}
+	
+	
 	
 	
 	
