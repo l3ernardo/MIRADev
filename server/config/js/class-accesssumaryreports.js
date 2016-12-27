@@ -6,6 +6,7 @@
  * */
 var varConf = require('../../../configuration');
 var excel = require('node-excel-export');
+
 var q  = require("q");
 var moment = require('moment');
 var xml2js = require('xml2js');
@@ -347,7 +348,7 @@ var accesssumaryreports = {
 								
 							}catch(e){deferred.reject({"status": 500, "error": e});}
 							
-					console.log(dataset);
+				//	console.log(dataset);
 							
 							var report = excel.buildExport(
 									  [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report 
@@ -363,6 +364,158 @@ var accesssumaryreports = {
 							
 						
 							deferred.resolve({"status": 200, "data": report});
+						
+							
+					}).catch(function(error){
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+					
+
+
+					}).catch(function(error){
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+					
+
+			}catch(e){
+				deferred.reject({"status": 500, "error": e});
+			}
+			
+		
+			return deferred.promise;
+		
+		},
+		
+		
+exportToExcelAll : function (req,db){
+			
+			var deferred = q.defer();
+			var response = {};
+			var datafeed = {};
+			var datarray = [];
+			var docsView = "";
+			var usersView = "";
+			var arrayofDocs = [];
+			
+			var user = {};
+			var userData = [];
+			var dataset = [];
+			
+			
+		
+		
+			
+			try{
+				
+				switch(req.session.businessunit){
+				case "GBS":
+					docsView = "view-docs-GBS";
+					usersView = "view-users-GBS";
+							
+					break;
+					
+				case "GTS" :
+					docsView = "view-docs-GTS";
+					usersView = "view-users-GTS";
+					break;
+					
+				case "GTS Transformation" :
+					docsView = "view-docs-GTSTransformation";
+					usersView = "view-users-GTSTransformation";
+					break;
+					
+					default:
+						deferred.reject({"status": 500, "error": "Wrong Business Unit"});
+						break;
+				
+				}
+			
+			
+				var count = 0;
+				db.view('assessableUnit',docsView,{include_docs:true}).then(function(documents){
+					var indexGBS = createIndexFromView(documents.body.rows);
+					
+			
+				db.view('assessableUnit',usersView,{include_docs:true}).then(function(data){
+				
+					var UserListOfDocs = createUserList(data.body.rows);
+						
+						
+							try{
+								for (var key in UserListOfDocs){ 
+						   			if(UserListOfDocs.hasOwnProperty(key)){
+						   				
+						   				for(var i=0;i<UserListOfDocs[key].length;i++){
+						   					var element = [];
+						   					var document = {};
+						   					var tempRole = "";
+						   					var role = "";
+						   			
+						   				
+						   					if(indexGBS[UserListOfDocs[key][i].id]){ //if access doc exist on a document
+						   						
+						   						
+						   						
+						   						//Obtain recursive WWBCIT/MIRA roles
+						   						if(typeof documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey != 'undefined'  ) 					
+												{ 
+													if(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey.length == 0)
+													{
+														 tempRole = findRole(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc,key);
+														 if(tempRole.length >1)
+															 document.Role = tempRole;
+														 else
+															 document.Role = UserListOfDocs[key][i].role;
+													}
+													else{
+														
+														document.Role = findRoleRecursive(indexGBS,documents.body.rows,UserListOfDocs[key][i].id,key,role);
+													}
+													
+												}
+												else{ 	
+													 tempRole = findRole(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc,key);
+													 if(tempRole.length >1)
+														 document.Role = tempRole;
+													 else
+														 document.Role = UserListOfDocs[key][i].role;
+													}
+						   						
+						   						
+						   					 
+						   					document._id = checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc._id);
+						   					document.Name = key;
+						   					
+						   					//document.Role = UserListOfDocs[key][i].role;
+						   					document.Type = checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.DocSubType);
+						   					document.AssessableUnit = checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Name);
+						   					document.Status = checkUndefined(documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.Status);
+						   					
+						   					
+						   					}
+						   					
+						   				
+						   					
+						   				
+						   					dataset.push(document);
+						   			
+						   					count++;
+						   				
+						   				}//inner for
+						   			
+								    }
+						   			
+								}
+								
+																
+								
+							}catch(e){deferred.reject({"status": 500, "error": e});}
+							
+			
+							
+							
+						
+							deferred.resolve({"status": 200, "data": dataset});
 						
 							
 					}).catch(function(error){
