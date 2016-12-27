@@ -200,7 +200,7 @@ getPPR: function(req, db){
     var obj = {
       selector : {
         "_id": req.query.id,
-        "compntType": "PPR"
+        "compntType": "ppr"
       }
     };
 

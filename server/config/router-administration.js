@@ -14,7 +14,12 @@ var simpleAuthentication = require('./router-simpleAuthentication.js');
 var accesssumary = require('./js/class-accesssummary.js');
 var accesssumaryreports = require('./js/class-accesssumaryreports.js');
 var geohierarchy = require('./js/class-geohierarchy.js');
+var accessrules = require('./js/class-accessrules.js');
 var buffer = require('buffer').kMaxLength;
+
+
+
+
 
 /**************************************************************
 SETUP FUNCTIONALITY
@@ -154,15 +159,15 @@ Explicit user summary
 administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 			var limits = "";
 			
+			
+			
 	if(req.query.start && req.query.end && req.query.searchEmail){ //user search wit limits of pagination
 		
 			
 			accesssumary.getUserAccessSummaryByUser(req,db,req.query.searchEmail,req.query.start,req.query.end).then(function (data){
 
 				if(data.status==200 & !data.error) {
-					
-					
-					
+				
 					res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:req.query.limits, exportdata:data.data.userList, searchEmail:req.query.searchEmail});
 	
 					
@@ -180,11 +185,6 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 
 				});
 			
-		
-		
-		
-		
-		
 		
 	}else
 		if(req.query.start && req.query.end){
@@ -254,8 +254,13 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 	
 	
 	else{ // means first time is called
+		
+		
 
 		accesssumary.getUserAccessSummaryTabs(req,db).then(function (tabs){
+			
+			
+		
 			
 			accesssumary.getUserAccessSummary(req,db,tabs.data[0].start,tabs.data[0].end).then(function (data){
 
@@ -338,27 +343,41 @@ administration.get('/dataFeedAccessSummary',isAuthenticated, function(req,res){
 	
 	
 });
-/*
+
 //report generated at server level
 administration.get('/downloadaccesssummary',isAuthenticated, function(req,res){
 
-
+	
+	
+	
 	accesssumaryreports.exportToExcel(req,db).then(function (data){
-		console.log("length of exported buffer: "+data.data.length);
-		console.log("Masimun Buffer size: "+buffer);
-		res.attachment('access_summary_report.xlsx'); 
-		res.send(data.data);
+		//console.log("length of exported buffer: "+data.data.length);
+		//console.log("Maximun Buffer size: "+buffer);
+		 
+		if(data.data.length< 11809233)
+				{
+				res.attachment('access_summary_report.xlsx'); 
+				res.send(data.data);
+				}
+		else{
+			
+			res.render('accesssummaryerror');
+		}
 	
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
 		console.log("[routes][explicitAccessSummaryReport] - " + err.error);
 
 		});
+	
+	
+	
+	
 
 });
 
 
-*/
+
 /**************************************************************
 AUDITLESSON FUNCTIONALITY
 ***************************************************************/
