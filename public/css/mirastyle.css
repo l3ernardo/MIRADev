@@ -1185,4 +1185,32 @@ table.mira-dashboard-table td, table.mira-dashboard-table th {
     overflow:scroll;
     height:250px;
 }
-/
+
+table.table_with_scroll tbody {
+    display:block;
+    overflow-y:auto;
+		table-layout:fixed;
+		height: 192px;
+}
+table.table_with_scroll tbody tr th{
+	table-layout:fixed;
+}
+table.table_with_scroll tbody tr td{
+	table-layout:fixed;
+	text-align:center;
+}
+table.table_with_scroll tbody tr[data-tt-parent-id=""]{
+	white-space: nowrap;
+}
+table.table_with_scroll thead,table.table_with_scroll tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+table.table_with_scroll thead {
+    width: 100%;
+}
+table.table_with_scroll {
+    width:100%;
+		table-layout:fixed;
+}
