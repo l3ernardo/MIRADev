@@ -609,13 +609,10 @@ var assessment = {
 							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
 							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].DRData = fieldCalc.addTestViewData(5,1);
-							// doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
-							// doc[0].SCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
 							// Key Controls Tesing tab
 							kct.calcDefectRate(doc);
-							//console.log("AUDefectRate: " + doc[0].AUDefectRate);
 							//Country Process hollistic tab for:
 							//Audits and Reviews (Internal Audits and Proactive Reviews)
 							var objAuditRew = {
@@ -881,19 +878,23 @@ var assessment = {
 										var typeList = {};//controlType
 										var rct = doc[0].RCTestData;
 										for(var i = 0; i < rct.length; i++){
+											if (rct[i].reportingQuarter == undefined) rct[i].reportingQuarter = "(uncategorized)";
 											if(typeof periodList[rct[i].reportingQuarter] === "undefined"){
 												tmpList.push({
 													id:rct[i].reportingQuarter.replace(/ /g,''),
 													parent:"",
-													reportingQuarter: rct[i].reportingQuarter
+													reportingQuarter: rct[i].reportingQuarter,
+													catEntry:"Yes"
 												});
 												periodList[rct[i].reportingQuarter] = true;
 											}
+											if (rct[i].controlType == undefined) rct[i].controlType = "(uncategorized)";
 											if(typeof typeList[rct[i].reportingQuarter+rct[i].controlType] === "undefined"){
 												tmpList.push({
 													parent: rct[i].reportingQuarter.replace(/ /g,''),
 													id:rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,''),
-													controlType: rct[i].controlType
+													controlType: rct[i].controlType,
+													catEntry:"Yes"
 												});
 												typeList[rct[i].reportingQuarter+rct[i].controlType] = true;
 											}
@@ -910,39 +911,46 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].RCTestData,10,(defViewRow-Object.keys(periodList).length));
 											}
 										}
-
 										//sortin for SCTest_treeview
 										var tmpList = [];
 										var periodList = {};//reportingQuarter
 										var typeList = {};//controlType
+										var ctrlnameList = {};//controlName
 										var controlList = {};
 										var sct = doc[0].SCTestData;
 										for(var i = 0; i < sct.length; i++){
+											if (sct[i].reportingQuarter == undefined) sct[i].reportingQuarter = "(uncategorized)";
 											if(typeof periodList[sct[i].reportingQuarter] === "undefined"){
 												tmpList.push({
 													id:sct[i].reportingQuarter.replace(/ /g,''),
 													parent:"",
+													catEntry:"Yes",
 													reportingQuarter: sct[i].reportingQuarter
 												});
 												periodList[sct[i].reportingQuarter] = true;
 											}
+											if (sct[i].controlType == undefined) sct[i].controlType = "(uncategorized)";
 											if(typeof typeList[sct[i].reportingQuarter+sct[i].controlType] === "undefined"){
 												tmpList.push({
 													parent: sct[i].reportingQuarter.replace(/ /g,''),
 													id:sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,''),
+													catEntry:"Yes",
 													controlType: sct[i].controlType
 												});
 												typeList[sct[i].reportingQuarter+sct[i].controlType] = true;
 											}
-											if(typeof controlList[sct[i].controlType+sct[i].controlName] === "undefined"){
+											if (sct[i].controlName == undefined) sct[i].controlName = "(uncategorized)";
+											if(typeof controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] === "undefined"){
+											// if(typeof controlList[sct[i].controlType+sct[i].controlName] === "undefined"){
 												tmpList.push({
 													parent: sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,''),
-													id:sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,''),
+													id:sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,''),
+													catEntry:"Yes",
 													controlName: sct[i].controlName
 												});
-												controlList[sct[i].controlType+sct[i].controlName] = true;
+												controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] = true;
 											}
-											sct[i].parent = sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,'');
+											sct[i].parent = sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,'');
 											sct[i].id = sct[i]["_id"];
 											tmpList.push(sct[i]);
 										}
@@ -955,7 +963,6 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].SCTestData,10,(defViewRow-Object.keys(periodList).length));
 											}
 										}
-
 										//Saving the data in new variable for next sorting
 										doc[0].SampleData2 = JSON.parse(JSON.stringify(doc[0].SampleData));;
 										//Sorting for Sample_treeview
@@ -964,18 +971,22 @@ var assessment = {
 										var processList = {};//processSampled
 										var samples = doc[0].SampleData;
 										for(var i = 0; i < samples.length; i++){
+											if (samples[i].processCategory == undefined) samples[i].processCategory = "(uncategorized)";
 											if(typeof categoryList[samples[i].processCategory] === "undefined"){
 												tmpList.push({
 													id:samples[i].processCategory.replace(/ /g,''),
 													parent:"",
+													catEntry:"Yes",
 													processCategory: samples[i].processCategory
 												});
 												categoryList[samples[i].processCategory] = true;
 											}
+											if (samples[i].processSampled == undefined) samples[i].processSampled = "(uncategorized)";
 											if(typeof processList[samples[i].processCategory+samples[i].processSampled] === "undefined"){
 												tmpList.push({
 													parent: samples[i].processCategory.replace(/ /g,''),
 													id:samples[i].processCategory.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
+													catEntry:"Yes",
 													processSampled: samples[i].processSampled
 												});
 												processList[samples[i].processCategory+samples[i].processSampled] = true;
@@ -1000,18 +1011,22 @@ var assessment = {
 										var samples2 = doc[0].SampleData2;
 
 										for(var i = 0; i < samples2.length; i++){
+											if (samples2[i].originalReportingQuarter == undefined) samples2[i].originalReportingQuarter = "(uncategorized)";
 											if(typeof periodList[samples2[i].originalReportingQuarter] === "undefined"){
 												tmpList.push({
 													id:samples2[i].originalReportingQuarter.replace(/ /g,''),
 													parent:"",
+													catEntry:"Yes",
 													originalReportingQuarter: samples2[i].originalReportingQuarter
 												});
 												periodList[samples2[i].originalReportingQuarter] = true;
 											}
+											if (samples2[i].testType == undefined) samples2[i].testType = "(uncategorized)";
 											if(typeof typeList[samples2[i].originalReportingQuarter+samples2[i].testType] === "undefined"){
 												tmpList.push({
 													parent: samples2[i].originalReportingQuarter.replace(/ /g,''),
 													id:samples2[i].originalReportingQuarter.replace(/ /g,'')+samples2[i].testType.replace(/ /g,''),
+													catEntry:"Yes",
 													testType: samples2[i].testType
 												});
 												typeList[samples2[i].originalReportingQuarter+samples2[i].testType] = true;
