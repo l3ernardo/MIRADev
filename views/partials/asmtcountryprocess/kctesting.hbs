@@ -39,8 +39,13 @@
 				<tbody>
 				{{#each RCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{reportingQuarter}}</td>
-						<td width="5%">{{controlType}}</td>
+						{{#if catEntry}}
+							<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{reportingQuarter}}</td>
+							<td width="5%">{{controlType}}</td>
+						{{else}}
+							<td width="5%" {{#unless parent}} nowrap {{/unless}}></td>
+							<td width="5%"></td>
+						{{/if}}
 						<td width="40%"><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{numDefects}}</td>
@@ -57,24 +62,30 @@
 			<span class="kc-test-header"><b>Sampled Country Testing</b></span><br /><br />
 			<table id="SCTest_treeview" width="100%" class="table_with_scroll">
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader" width="10%">Period</th>
-					<th class="kc-test-viewheader" width="15%">Type</th>
-					<th class="kc-test-viewheader" width="15%">Control</th>
-					<th class="kc-test-viewheader" width="30%">Reporting Country</th>
-					<th class="kc-test-viewheader" width="10%">Tests</th>
-					<th class="kc-test-viewheader" width="10%">Defects</th>
-					<th class="kc-test-viewheader" width="10%">Defect Rate %</th>
+					<th class="kc-test-viewheader" width="5%">Period</th>
+					<th class="kc-test-viewheader" width="5%">Type</th>
+					<th class="kc-test-viewheader" width="20%">Control</th>
+					<th class="kc-test-viewheader" width="25%">Reporting Country</th>
+					<th class="kc-test-viewheader" width="15%">Tests</th>
+					<th class="kc-test-viewheader" width="15%">Defects</th>
+					<th class="kc-test-viewheader" width="15%">Defect Rate %</th>
 				</thead>
 				<tbody>
 				{{#each SCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="10%" {{#unless parent}} nowrap {{/unless}}>{{reportingQuarter}}</td>
-						<td width="15%">{{controlType}}</td>
-						<td width="15%">{{#if reportingCountry}}<a href="/asmtcomponents?id={{_id}}">{{/if}}{{controlName}}{{#if reportingCountry}}</a>{{/if}}</td>
-						<td width="30%">{{reportingCountry}}</td>
-						<td width="10%">{{numtest}}</td>
-						<td width="10%">{{numDefects}}</td>
-						<td width="10%">{{defectRate}}</td>
+						{{#if catEntry}}
+							<td>{{reportingQuarter}}</td>
+							<td>{{controlType}}</td>
+							<td>{{controlName}}</td>
+						{{else}}
+							<td></td>
+							<td></td>
+							<td></td>
+						{{/if}}
+						<td>{{#if reportingCountry}}<a href="/asmtcomponents?id={{_id}}">{{/if}}{{reportingCountry}}{{#if reportingCountry}}</a>{{/if}}</td>
+						<td>{{numtest}}</td>
+						<td>{{numDefects}}</td>
+						<td>{{defectRate}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
@@ -101,10 +112,16 @@
 				<tbody>
 				{{#each SampleData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{processCategory}}</td>
-						<td width="5%">{{processSampled}}</td>
-						<td width="5%">{{controlName}}</td>
-						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
+						{{#if catEntry}}
+							<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{processCategory}}</td>
+							<td width="5%">{{processSampled}}</td>
+							<td width="5%">{{controlName}}</td>
+						{{else}}
+							<td width="5%" {{#unless parent}} nowrap {{/unless}}></td>
+							<td width="5%"></td>
+							<td width="5%"></td>
+						{{/if}}
+						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="10%">{{defectType}}</td>
 						<td width="10%">{{remediationStatus}}</td>
@@ -125,30 +142,35 @@
 				<thead>
 					<th class="kc-test-viewheader" width="5%">Period</th>
 					<th class="kc-test-viewheader" width="5%">Type</th>
-					<th class="kc-test-viewheader" width="10%">Control</th>
+					<th class="kc-test-viewheader" width="18%">Control</th>
 					<th class="kc-test-viewheader" width="10%">Sample ID</th>
-					<th class="kc-test-viewheader" width="10%">Process</th>
+					<th class="kc-test-viewheader" width="15%">Process</th>
 					<th class="kc-test-viewheader" width="5%">Defects</th>
 					<th class="kc-test-viewheader" width="5%">Defect Type</th>
-					<th class="kc-test-viewheader" width="5%">Remaining Fin. Impact</th>
-					<th class="kc-test-viewheader" width="13%">Original Target to Close</th>
-					<th class="kc-test-viewheader" width="12%">Current Target to Close</th>
-					<th class="kc-test-viewheader" width="20%">Defect Abstract</th>
+					<th class="kc-test-viewheader" width="7%">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="7.5%">Original Target to Close</th>
+					<th class="kc-test-viewheader" width="7.5%">Current Target to Close</th>
+					<th class="kc-test-viewheader" width="15%">Defect Abstract</th>
 				</thead>
 				<tbody>
 				{{#each SampleData2}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%" {{#unless parent}} nowrap {{/unless}}>{{originalReportingQuarter}}</td>
-						<td width="5%">{{testType}}</td>
-						<td width="10%">{{controlName}}</td>
-						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
-						<td width="10%">{{processSampled}}</td>
-						<td width="5%">{{numDefects}}</td>
-						<td width="5%">{{defectType}}</td>
-						<td width="5%">{{remainingFinancialImpact}}</td>
-						<td width="13%">{{originalTargetDate}}</td>
-						<td width="12%">{{targetClose}}</td>
-						<td width="20%">{{defectsAbstract}}</td>
+						{{#if catEntry}}
+							<td {{#unless parent}} nowrap {{/unless}}>{{originalReportingQuarter}}</td>
+							<td>{{testType}}</td>
+						{{else}}
+							<td {{#unless parent}} nowrap {{/unless}}></td>
+							<td></td>
+						{{/if}}
+						<td>{{controlName}}</td>
+						<td><a href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
+						<td>{{processSampled}}</td>
+						<td>{{numDefects}}</td>
+						<td>{{defectType}}</td>
+						<td>{{remainingFinancialImpact}}</td>
+						<td>{{originalTargetDate}}</td>
+						<td>{{targetClose}}</td>
+						<td>{{defectsAbstract}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
