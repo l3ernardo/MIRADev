@@ -349,7 +349,7 @@ var accesssumaryreports = {
 							}catch(e){deferred.reject({"status": 500, "error": e});}
 							
 				//	console.log(dataset);
-							
+							try{
 							var report = excel.buildExport(
 									  [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report 
 									    {
@@ -360,6 +360,8 @@ var accesssumaryreports = {
 									    }
 									  ]
 									);
+							
+							}catch(e){console.log(e);}
 							
 							
 						
