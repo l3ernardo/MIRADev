@@ -21,16 +21,16 @@ var getDocs = {
               "docType": "asmtComponent",
               "reportingQuarter": doc[0].CurrentPeriod,
               "$or": [
-                { "$and": [{"compntType": "countryControls"},{"status": "Active"}] },
-                { "$and": [{"compntType": "controlSample"},{"status": "Active"}] },
-                { "$and": [{"compntType": "sampledCountry"},{"status": "Active"}] }
+                { "$and": [{"compntType": "countryControls"}] },
+                { "$and": [{"compntType": "controlSample"}] },
+                { "$and": [{"compntType": "sampledCountry"}] }
               ]
             }
           };
-          // { "$and": [{"compntType": "openIssue"},{"scorecardCategory": {"$gt":0}},{"country": doc[0].Country},{"businessUnit": doc[0].BusinessUnit},{"process": doc[0].GlobalProcess}] },
-          // { "$and": [{"compntType": "countryControls"},{"status": "Active"},{"reportingCountry": doc[0].Country},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-          // { "$and": [{"compntType": "controlSample"},{"status": "Active"},{"reportingCountry": doc[0].Country},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-          // { "$and": [{"compntType": "sampledCountry"},{"status": "Active"},{"sampleCountry": doc[0].Country},{"owningBusinessUnit": doc[0].BusinessUnit}] }
+          // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+          // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
+          // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] }
+
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
             doc[0].risks = [];
@@ -64,6 +64,10 @@ var getDocs = {
               }
               else if (comps[i].compntType == "controlSample") {
                 doc[0].SampleData.push(comps[i]);
+                if (doc[0].controlType == "KCO") doc[0].processCategory = "Operational";
+                else doc[0].processCategory = "Financial";
+                // Calculate for ControlName
+                doc[0].SampleData[sampleCtr].controlName = doc[0].SampleData[sampleCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SampleData[sampleCtr].controlShortName;
                 sampleCtr++;
               }
               else {
