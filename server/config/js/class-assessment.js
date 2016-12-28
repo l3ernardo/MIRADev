@@ -619,15 +619,30 @@ var assessment = {
 								selector : {
 									"_id": {"$gt":0},
 									"docType": "asmtComponent",
-									"compntType": "ppr",
 									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
-									"CPASSESSED_ENTITY_ID" : doc[0].WWBCITKey,
-									"auditOrReview": {"$gt":0}
-								},
-								sort:[{"auditOrReview":"desc"}]
+									"CPWWBCITKey" : doc[0].WWBCITKey,
+									"reportingQuarter": {"$gt":0},
+									"$or": [
+										{"compntType": "ppr"},
+										{"compntType": "internalAudit"}
+									]
+								}
 							};
 							db.find(objAuditRew).then(function(auditdata){
 								var auditR = auditdata.body.docs;
+								auditR.sort(function(a, b){
+									var nameA=a.compntType.toLowerCase(), nameB=b.compntType.toLowerCase()
+									if (nameA < nameB) //sort string ascending
+										return -1
+									if (nameA > nameB)
+										return 1
+									var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+									if (nameA > nameB) //sort string descending
+										return -1
+									if (nameA < nameB)
+										return 1
+									return 0 //default return value (no sorting)
+								});
 								//var AuditTrustedData = auditR;
 								var typeList = {};
 								var periodList = {};
@@ -636,28 +651,33 @@ var assessment = {
 									if(auditdata.status==200) {
 										try {
 											for(var i = 0; i < auditR.length; i++){
-												if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+												if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && reportingQuarter == doc[0].CurrentPeriod){
 													auditR[i].COFlag = false;
 												}else{
 												auditR[i].COFlag = true;
 												}
-												if(typeof typeList[auditR[i].auditOrReview] === "undefined"){
-													auditRList.push({id:auditR[i].auditOrReview.replace(/ /g,''), RPTG_QTR:auditR[i].auditOrReview});
-													typeList[auditR[i].auditOrReview] = true;
+												if(auditR[i].compntType == "ppr"){
+													auditR[i].compntType = "Proactive Reviews";
+												}else{
+													auditR[i].compntType = "Internal Audit";
 												}
-												if(typeof periodList[auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
-													auditRList.push({parent: auditR[i].auditOrReview.replace(/ /g,''),id:auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''), RPTG_QTR:auditR[i].reportingQuarter});
-													periodList[auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] = true;
+												if(typeof typeList[auditR[i].compntType] === "undefined"){
+													auditRList.push({id:auditR[i].compntType.replace(/ /g,''), reportingQuarter:auditR[i].compntType});
+													typeList[auditR[i].compntType] = true;
+												}
+												if(typeof periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
+													auditRList.push({parent: auditR[i].compntType.replace(/ /g,''),id:auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditR[i].reportingQuarter});
+													periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] = true;
 												}
 
 												auditR[i].id = auditR[i]["_id"];
-												auditR[i].parent = auditR[i].auditOrReview.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'');
+												auditR[i].parent = auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'');
 
 												exportPPR.push({
-													period:auditR[i].RPTG_QTR,
+													period:auditR[i].reportingQuarter,
 													CO:auditR[i].COFlag,
-													auditOrReview:auditR[i].REVIEW_TYPE,
-													id:auditR[i].REVIEW_ID,
+													auditOrReview:auditR[i].auditOrReview,
+													id:auditR[i].id,
 													assessableunit:auditR[i].countryProcess,
 													date:auditR[i].REVIEW_END_DATE,
 													rating:auditR[i].RATING,
@@ -668,7 +688,13 @@ var assessment = {
 												});
 												auditRList.push(auditR[i]);
 											}
-
+											if (Object.keys(typeList).length < defViewRow) {
+												if (auditRList == 0) {
+													auditRList = fieldCalc.addTestViewData(10,defViewRow);
+												} else {
+													fieldCalc.addTestViewDataPadding(auditRList,10,(defViewRow-Object.keys(typeList).length));
+												}
+											};
 												doc[0].AuditTrustedData = auditRList;
 												doc[0].exportPPR = exportPPR;
 										} catch(e){
@@ -684,7 +710,7 @@ var assessment = {
 									"compntType": "ppr",
 									"REVIEW_TYPE": "CHQ Internal Audit",
 									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
-									"CPASSESSED_ENTITY_ID" : doc[0].WWBCITKey
+									"CPWWBCITKey" : doc[0].WWBCITKey
 								},
 							};
 							db.find(objAuditInt).then(function(auditIntdata){
@@ -877,6 +903,22 @@ var assessment = {
 										var periodList = {};//reportingQuarter
 										var typeList = {};//controlType
 										var rct = doc[0].RCTestData;
+										var exportRCTest = [];
+										rct.sort(function(a, b){
+											var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+											if (nameA > nameB) //sort string descending
+												return -1
+											if (nameA < nameB)
+												return 1
+											if (a.controlType == undefined) a.controlType = "(uncategorized)";
+											if (b.controlType == undefined) b.controlType = "(uncategorized)";
+											var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
+											if (nameA < nameB) //sort string ascending
+												return -1
+											if (nameA > nameB)
+												return 1
+											return 0 //default return value (no sorting)
+										});
 										for(var i = 0; i < rct.length; i++){
 											if (rct[i].reportingQuarter == undefined) rct[i].reportingQuarter = "(uncategorized)";
 											if(typeof periodList[rct[i].reportingQuarter] === "undefined"){
@@ -900,8 +942,18 @@ var assessment = {
 											}
 											rct[i].parent = rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,'');
 											rct[i].id = rct[i]["_id"];
+											exportRCTest.push({
+												reportingQuarter:rct[i].reportingQuarter || "",
+												controlType:rct[i].controlType || "",
+												controlName:rct[i].controlName || "",
+												numActualTests:rct[i].numActualTests || "",
+												numDefects:rct[i].numDefects || "",
+												defectRate:rct[i].defectRate || "",
+												remFinImpact:rct[i].remFinImpact || ""
+											});
 											tmpList.push(rct[i]);
 										}
+										doc[0].exportRCTest = exportRCTest;
 										doc[0].RCTestData = tmpList;
 
 										if (Object.keys(periodList).length < defViewRow) {
@@ -915,9 +967,31 @@ var assessment = {
 										var tmpList = [];
 										var periodList = {};//reportingQuarter
 										var typeList = {};//controlType
-										var ctrlnameList = {};//controlName
-										var controlList = {};
+										var controlList = {};//controlName
 										var sct = doc[0].SCTestData;
+										var exportSCTest = [];
+										sct.sort(function(a, b){
+											var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+											if (nameA > nameB) //sort string descending
+												return -1
+											if (nameA < nameB)
+												return 1
+											if (a.controlType == undefined) a.controlType = "(uncategorized)";
+											if (b.controlType == undefined) b.controlType = "(uncategorized)";
+											var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
+											if (nameA < nameB) //sort string ascending
+												return -1
+											if (nameA > nameB)
+												return 1
+											if (a.controlName == undefined) a.controlName = "(uncategorized)";
+											if (b.controlName == undefined) b.controlName = "(uncategorized)";
+											var nameA=a.controlName.toLowerCase(), nameB=b.controlName.toLowerCase()
+											if (nameA < nameB) //sort string ascending
+												return -1
+											if (nameA > nameB)
+												return 1
+											return 0 //default return value (no sorting)
+										});
 										for(var i = 0; i < sct.length; i++){
 											if (sct[i].reportingQuarter == undefined) sct[i].reportingQuarter = "(uncategorized)";
 											if(typeof periodList[sct[i].reportingQuarter] === "undefined"){
@@ -950,10 +1024,20 @@ var assessment = {
 												});
 												controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] = true;
 											}
+											exportSCTest.push({
+												reportingQuarter:sct[i].reportingQuarter || "",
+												controlType:sct[i].controlType || "",
+												controlName:sct[i].controlName || "",
+												reportingCountry:sct[i].reportingCountry || "",
+												numtest:sct[i].numtest || "",
+												numDefects:sct[i].numDefects || "",
+												defectRate:sct[i].defectRate || ""
+											});
 											sct[i].parent = sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,'');
 											sct[i].id = sct[i]["_id"];
 											tmpList.push(sct[i]);
 										}
+										doc[0].exportSCTest = exportSCTest;
 										doc[0].SCTestData = tmpList;
 
 										if (Object.keys(periodList).length < defViewRow) {
@@ -970,6 +1054,24 @@ var assessment = {
 										var categoryList = {};//processCategory
 										var processList = {};//processSampled
 										var samples = doc[0].SampleData;
+										var exportSample = [];
+										samples.sort(function(a, b){
+											if (a.processCategory == undefined) a.processCategory = "(uncategorized)";
+											if (b.processCategory == undefined) b.processCategory = "(uncategorized)";
+											var nameA=a.processCategory.toLowerCase(), nameB=b.processCategory.toLowerCase()
+											if (nameA < nameB) //sort string ascending
+												return -1
+											if (nameA > nameB)
+												return 1
+											if (a.processSampled == undefined) a.processSampled = "(uncategorized)";
+											if (b.processSampled == undefined) b.processSampled = "(uncategorized)";
+											var nameA=a.processSampled.toLowerCase(), nameB=b.processSampled.toLowerCase()
+											if (nameA < nameB) //sort string ascending
+												return -1
+											if (nameA > nameB)
+												return 1
+											return 0 //default return value (no sorting)
+										});
 										for(var i = 0; i < samples.length; i++){
 											if (samples[i].processCategory == undefined) samples[i].processCategory = "(uncategorized)";
 											if(typeof categoryList[samples[i].processCategory] === "undefined"){
@@ -991,10 +1093,24 @@ var assessment = {
 												});
 												processList[samples[i].processCategory+samples[i].processSampled] = true;
 											}
+											exportSample.push({
+												processCategory:samples[i].processCategory || "",
+												processSampled:samples[i].processSampled || "",
+												controlName:samples[i].controlName || "",
+												IntegrationKeyWWBCIT:samples[i].IntegrationKeyWWBCIT || "",
+												numDefects:samples[i].numDefects || "",
+												defectType:samples[i].defectType || "",
+												remediationStatus:samples[i].remediationStatus || "",
+												remainingFinancialImpact:samples[i].remainingFinancialImpact || "",
+												originalTargetDate:samples[i].originalTargetDate || "",
+												targetClose:samples[i].targetClose || "",
+												defectsAbstract:samples[i].defectsAbstract || ""
+											});
 											samples[i].parent = samples[i].processCategory.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'');
 											samples[i].id = samples[i]["_id"];
 											tmpList.push(samples[i]);
 										}
+										doc[0].exportSample = exportSample;
 										doc[0].SampleData = tmpList;
 
 										if (Object.keys(categoryList).length < defViewRow) {
@@ -1009,7 +1125,22 @@ var assessment = {
 										var periodList = {};//originalReportingQuarter
 										var typeList = {};//testType
 										var samples2 = doc[0].SampleData2;
-
+										var exportSample2 = [];
+										samples2.sort(function(a, b){
+											var nameA=a.originalReportingQuarter.toLowerCase(), nameB=b.originalReportingQuarter.toLowerCase()
+											if (nameA > nameB) //sort string descending
+												return -1
+											if (nameA < nameB)
+												return 1
+											if (a.testType == undefined) a.testType = "(uncategorized)";
+											if (b.testType == undefined) b.testType = "(uncategorized)";
+											var nameA=a.testType.toLowerCase(), nameB=b.testType.toLowerCase()
+											if (nameA < nameB) //sort string ascending
+												return -1
+											if (nameA > nameB)
+												return 1
+											return 0 //default return value (no sorting)
+										});
 										for(var i = 0; i < samples2.length; i++){
 											if (samples2[i].originalReportingQuarter == undefined) samples2[i].originalReportingQuarter = "(uncategorized)";
 											if(typeof periodList[samples2[i].originalReportingQuarter] === "undefined"){
@@ -1031,10 +1162,24 @@ var assessment = {
 												});
 												typeList[samples2[i].originalReportingQuarter+samples2[i].testType] = true;
 											}
+											exportSample2.push({
+												originalReportingQuarter:samples2[i].originalReportingQuarter || "",
+												testType:samples2[i].testType || "",
+												controlName:samples2[i].controlName || "",
+												IntegrationKeyWWBCIT:samples2[i].IntegrationKeyWWBCIT || "",
+												processSampled:samples2[i].processSampled || "",
+												numDefects:samples2[i].numDefects || "",
+												defectType:samples2[i].defectType || "",
+												remainingFinancialImpact:samples2[i].remainingFinancialImpact || "",
+												originalTargetDate:samples2[i].originalTargetDate || "",
+												targetClose:samples2[i].targetClose || "",
+												defectsAbstract:samples2[i].defectsAbstract  || ""
+											});
 											samples2[i].parent = samples2[i].originalReportingQuarter.replace(/ /g,'')+samples2[i].testType.replace(/ /g,'');
 											samples2[i].id = samples2[i]["_id"];
 											tmpList.push(samples2[i]);
 										}
+										doc[0].exportSample2 = exportSample2;
 										doc[0].SampleData2 = tmpList;
 
 										if (Object.keys(periodList).length < defViewRow) {
