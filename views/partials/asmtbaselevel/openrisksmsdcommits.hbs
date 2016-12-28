@@ -29,7 +29,7 @@
 				{{#each openrisks}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" >
 						<th style="background-color: white !important;" width="2%" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>
-						<td style="background-color: white !important;" width="3%" {{#unless parent}} nowrap {{/unless}}>{{name}}</td>
+						<td style="background-color: white !important;" width="3%" >{{name}}</td>
 						<td style="background-color: white !important;" width="10%">{{#if parent}}<a href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
 						<td style="background-color: white !important;" width="8%">{{status}}</td>
 						<td style="background-color: white !important;" width="20%">{{process}}</td>

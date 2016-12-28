@@ -241,12 +241,8 @@ var dashboard = {
 					db.find(obj).then(function(data){
 
 						var doc = data.body.docs;
-						var level1 = [];
-						var level2 = {};
-						var level3 = {};
-						var level4 = {};
-						var level5 = {};
-						var level6 = {};
+						var BUList = [];
+						var parentsList = {};
 
 						if(req.url!='/reportingdashboard'){
 							for(var i = 0; i < doc.length; i++){
@@ -261,72 +257,46 @@ var dashboard = {
 											doc[i].Name = req.session.buname + " - " + util.resolveGeo(doc[i].Country, "Country",req);
 									}
 								}
-								if(doc[i].LevelType == 1){
-									level1.push(doc[i]);
-								}else if(doc[i].LevelType == 2){
-									if(typeof level2[doc[i].parentid] === "undefined"){
-										level2[doc[i].parentid] = [doc[i]];
+								if(doc[i].DocSubType == "Business Unit"){
+									BUList.push(doc[i]);
+								}else if(typeof parentsList[doc[i].parentid] === "undefined"){
+										parentsList[doc[i].parentid] = [doc[i]];
 									}else{
-										level2[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 3){
-									if(typeof level3[doc[i].parentid] === "undefined"){
-										level3[doc[i].parentid] = [doc[i]];
-									}else{
-										level3[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 4){
-									if(typeof level4[doc[i].parentid] === "undefined"){
-										level4[doc[i].parentid] = [doc[i]];
-									}else{
-										level4[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 5){
-									if(typeof level5[doc[i].parentid] === "undefined"){
-										level5[doc[i].parentid] = [doc[i]];
-									}else{
-										level5[doc[i].parentid].push(doc[i]);
-									}
-								}else if(doc[i].LevelType == 6){
-									if(typeof level6[doc[i].parentid] === "undefined"){
-										level6[doc[i].parentid] = [doc[i]];
-									}else{
-										level6[doc[i].parentid].push(doc[i]);
+										parentsList[doc[i].parentid].push(doc[i]);
 									}
 								}
-							}
 
 							//level1
-							for(var i = 0; i < level1.length; i++){
-								F.push(level1[i]);
+							for(var i = 0; i < BUList.length; i++){
+								F.push(BUList[i]);
 
 								//level2
-								if(typeof level2[level1[i]["_id"]] !== "undefined"){
-									var tmplvl2 = level2[level1[i]["_id"]];
+								if(typeof parentsList[BUList[i]["_id"]] !== "undefined"){
+									var tmplvl2 = parentsList[BUList[i]["_id"]];
 									for(var i2 = 0; i2 < tmplvl2.length; i2++){
 										F.push(tmplvl2[i2]);
 
 										//level3
-										if(typeof level3[tmplvl2[i2]["_id"]] !== "undefined"){
-											var tmplvl3 =level3[tmplvl2[i2]["_id"]];
+										if(typeof parentsList[tmplvl2[i2]["_id"]] !== "undefined"){
+											var tmplvl3 =parentsList[tmplvl2[i2]["_id"]];
 											for(var i3 = 0; i3 < tmplvl3.length; i3++){
 												F.push(tmplvl3[i3]);
 
 												//level4
-												if(typeof level4[tmplvl3[i3]["_id"]] !== "undefined"){
-													var tmplvl4 = level4[tmplvl3[i3]["_id"]];
+												if(typeof parentsList[tmplvl3[i3]["_id"]] !== "undefined"){
+													var tmplvl4 = parentsList[tmplvl3[i3]["_id"]];
 													for(var i4 = 0; i4 < tmplvl4.length; i4++){
 														F.push(tmplvl4[i4]);
 
 														//level5
-														if(typeof level5[tmplvl4[i4]["_id"]] !== "undefined"){
-															var tmplvl5 = level5[tmplvl4[i4]["_id"]];
+														if(typeof parentsList[tmplvl4[i4]["_id"]] !== "undefined"){
+															var tmplvl5 = parentsList[tmplvl4[i4]["_id"]];
 															for(var i5 = 0; i5 < tmplvl5.length; i5++){
 																F.push(tmplvl5[i5]);
 
 																//level6
-																if(typeof level6[tmplvl5[i5]["_id"]] !== "undefined"){
-																	var tmplvl6 = level6[tmplvl5[i5]["_id"]];
+																if(typeof parentsList[tmplvl5[i5]["_id"]] !== "undefined"){
+																	var tmplvl6 = parentsList[tmplvl5[i5]["_id"]];
 																	for(var i6 = 0; i6 < tmplvl6.length; i6++){
 																		F.push(tmplvl6[i6]);
 																	}
@@ -345,29 +315,29 @@ var dashboard = {
 							var levelrp = []
 							for(var i = 0; i < doc.length; i++){
 								if(doc[i].DocSubType == "BU Reporting Group"){
-									level1.push(doc[i]);
+									BUList.push(doc[i]);
 								}
 								else{ // All other documents
 									levelrp.push(doc[i]);
 								}
 							}
-							
-							for(var i = 0; i < level1.length; i++){
+
+							for(var i = 0; i < BUList.length; i++){
 								//Group Name
-								var groupName = level1[i]["Name"];
+								var groupName = BUList[i]["Name"];
 								groupName = groupName.replace(req.session.buname + " - ","");
 								//ParentID
 								var parentidg = i;//groupName.replace(/ /g,'');
 								//ID to compare
-								var idRGroup = level1[i]["_id"];
-								
+								var idRGroup = BUList[i]["_id"];
+
 								//Group Name (parent level)
 								F.push({"id": parentidg, "GroupName": groupName});
 								//Reporting Group
-								level1[i]["id"] = level1[i]["_id"];
-								level1[i]["parentidg"] = parentidg;
-								F.push(level1[i]);
-								
+								BUList[i]["id"] = BUList[i]["_id"];
+								BUList[i]["parentidg"] = parentidg;
+								F.push(BUList[i]);
+
 								//All other documents
 								for(var j = 0; j < levelrp.length; j++){
 									var brglist = levelrp[j]["BRGMembership"];
@@ -387,9 +357,9 @@ var dashboard = {
 										addDoc = true;
 									}
 									if(addDoc){
-										F.push({"id": tmplevel2["id"], 
-												"_id":tmplevel2["_id"], 
-												"Name":tmplevel2["Name"], 
+										F.push({"id": tmplevel2["id"],
+												"_id":tmplevel2["_id"],
+												"Name":tmplevel2["Name"],
 												"parentidg": parentidg,
 												"DocSubType":tmplevel2["DocSubType"],
 												"MIRABusinessUnit":tmplevel2["MIRABusinessUnit"],
@@ -425,7 +395,7 @@ var dashboard = {
 					}).catch(function(err) {
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
-				
+
 				}
 				else{
 					deferred.reject({"status": 500, "error": response.error});
