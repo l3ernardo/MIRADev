@@ -1206,7 +1206,6 @@ function tableToReport(table){
 			var r1 = field4rows[j];
 			line="<tr>";
 			for(var obj1 in r1){
-				alert(obj1);
 				var r2 = r1[obj1];line = line+"<td>"+r2+"</td>";
 			} //end for obj1
 			tab_text=tab_text+line+"</tr>";
@@ -1330,7 +1329,6 @@ function tableToReportMultiple(table, nameTable){
 			line="<tr>";
 			for(var obj1 in r1){
 				var r2 = r1[obj1];
-				alert(r2);
 				line = line+"<td>"+r2+"</td>";
 			} //end for obj1
 			tab_text=tab_text+line+"</tr>";
