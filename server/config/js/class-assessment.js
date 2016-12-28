@@ -943,13 +943,13 @@ var assessment = {
 											rct[i].parent = rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,'');
 											rct[i].id = rct[i]["_id"];
 											exportRCTest.push({
-												reportingQuarter:rct[i].reportingQuarter,
-												controlType:rct[i].controlType,
-												controlName:rct[i].controlName,
-												numActualTests:rct[i].numActualTests,
-												numDefects:rct[i].numDefects,
-												defectRate:rct[i].defectRate,
-												remFinImpact:rct[i].remFinImpact
+												reportingQuarter:rct[i].reportingQuarter || "",
+												controlType:rct[i].controlType || "",
+												controlName:rct[i].controlName || "",
+												numActualTests:rct[i].numActualTests || "",
+												numDefects:rct[i].numDefects || "",
+												defectRate:rct[i].defectRate || "",
+												remFinImpact:rct[i].remFinImpact || ""
 											});
 											tmpList.push(rct[i]);
 										}
@@ -1025,13 +1025,13 @@ var assessment = {
 												controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] = true;
 											}
 											exportSCTest.push({
-												reportingQuarter:sct[i].reportingQuarter,
-												controlType:sct[i].controlType,
-												controlName:sct[i].controlName,
-												reportingCountry:sct[i].reportingCountry,
-												numtest:sct[i].numtest,
-												numDefects:sct[i].numDefects,
-												defectRate:sct[i].defectRate
+												reportingQuarter:sct[i].reportingQuarter || "",
+												controlType:sct[i].controlType || "",
+												controlName:sct[i].controlName || "",
+												reportingCountry:sct[i].reportingCountry || "",
+												numtest:sct[i].numtest || "",
+												numDefects:sct[i].numDefects || "",
+												defectRate:sct[i].defectRate || ""
 											});
 											sct[i].parent = sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,'');
 											sct[i].id = sct[i]["_id"];
@@ -1094,17 +1094,17 @@ var assessment = {
 												processList[samples[i].processCategory+samples[i].processSampled] = true;
 											}
 											exportSample.push({
-												processCategory:samples[i].processCategory,
-												processSampled:samples[i].processSampled,
-												controlName:samples[i].controlName,
-												IntegrationKeyWWBCIT:samples[i].IntegrationKeyWWBCIT,
-												numDefects:samples[i].numDefects,
-												defectType:samples[i].defectType,
-												remediationStatus:samples[i].remediationStatus,
-												remainingFinancialImpact:samples[i].remainingFinancialImpact,
-												originalTargetDate:samples[i].originalTargetDate,
-												targetClose:samples[i].targetClose,
-												defectsAbstract:samples[i].defectsAbstract
+												processCategory:samples[i].processCategory || "",
+												processSampled:samples[i].processSampled || "",
+												controlName:samples[i].controlName || "",
+												IntegrationKeyWWBCIT:samples[i].IntegrationKeyWWBCIT || "",
+												numDefects:samples[i].numDefects || "",
+												defectType:samples[i].defectType || "",
+												remediationStatus:samples[i].remediationStatus || "",
+												remainingFinancialImpact:samples[i].remainingFinancialImpact || "",
+												originalTargetDate:samples[i].originalTargetDate || "",
+												targetClose:samples[i].targetClose || "",
+												defectsAbstract:samples[i].defectsAbstract || ""
 											});
 											samples[i].parent = samples[i].processCategory.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'');
 											samples[i].id = samples[i]["_id"];
@@ -1163,17 +1163,17 @@ var assessment = {
 												typeList[samples2[i].originalReportingQuarter+samples2[i].testType] = true;
 											}
 											exportSample2.push({
-												originalReportingQuarter:samples2[i].originalReportingQuarter,
-												testType:samples2[i].testType,
-												controlName:samples2[i].controlName,
-												IntegrationKeyWWBCIT:samples2[i].IntegrationKeyWWBCIT,
-												processSampled:samples2[i].processSampled,
-												numDefects:samples2[i].numDefects,
-												defectType:samples2[i].defectType,
-												remainingFinancialImpact:samples2[i].remainingFinancialImpact,
-												originalTargetDate:samples2[i].originalTargetDate,
-												targetClose:samples2[i].targetClose,
-												defectsAbstract:samples2[i].defectsAbstract
+												originalReportingQuarter:samples2[i].originalReportingQuarter || "",
+												testType:samples2[i].testType || "",
+												controlName:samples2[i].controlName || "",
+												IntegrationKeyWWBCIT:samples2[i].IntegrationKeyWWBCIT || "",
+												processSampled:samples2[i].processSampled || "",
+												numDefects:samples2[i].numDefects || "",
+												defectType:samples2[i].defectType || "",
+												remainingFinancialImpact:samples2[i].remainingFinancialImpact || "",
+												originalTargetDate:samples2[i].originalTargetDate || "",
+												targetClose:samples2[i].targetClose || "",
+												defectsAbstract:samples2[i].defectsAbstract  || ""
 											});
 											samples2[i].parent = samples2[i].originalReportingQuarter.replace(/ /g,'')+samples2[i].testType.replace(/ /g,'');
 											samples2[i].id = samples2[i]["_id"];
