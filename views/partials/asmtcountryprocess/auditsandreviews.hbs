@@ -7,99 +7,105 @@
 		<a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 		<td>
 			<span class="audit-review"><b>Internal Audits and Proactive Reviews (Process Reviews, PwC Required Walkthroughs, IBM Voluntary Walkthroughs, and Application Reviews)</b></span><br /><br />
-			<table id="ppr_treeview"cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
+			<table id="ppr_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="risk-msdcommit-viewheader" scope="col" width="2%"><input type="checkbox" class="ppr_checkbox_tree" id="ppr_checkbox_tree" name="ppr_checkbox "/></th>
-					<th class="audit-review-viewheader" scope="col" width="6%">Period</th>
-					<th class="audit-review-viewheader" scope="col" width="3%">CO</th>
-					<th class="audit-review-viewheader" scope="col" width="15%">Audit or Review</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">ID</th>
-					<th class="audit-review-viewheader" scope="col" width="20%">Assessable Unit</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Date</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
-					<th class="audit-review-viewheader" scope="col" width="3%">Total Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="3%">Open Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Target to Close</th>
-					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
+					<th class="audit-review-viewheader" width="2%"><input type="checkbox" class="ppr_checkbox_tree" id="ppr_checkbox_tree" name="ppr_checkbox "/></th>
+					<th class="audit-review-viewheader" width="6%">Period</th>
+					<th class="audit-review-viewheader" width="3%">CO</th>
+					<th class="audit-review-viewheader" width="15%">Audit or Review</th>
+					<th class="audit-review-viewheader" width="10%">ID</th>
+					<th class="audit-review-viewheader" width="20%">Assessable Unit</th>
+					<th class="audit-review-viewheader" width="5%">Date</th>
+					<th class="audit-review-viewheader" width="5%">Rating</th>
+					<th class="audit-review-viewheader" width="3%">Total Recs</th>
+					<th class="audit-review-viewheader" width="3%">Open Recs</th>
+					<th class="audit-review-viewheader" width="7%">Target to Close</th>
+					<th class="audit-review-viewheader" width="20%">Comments</th>
 				</thead>
+				<tbody>
 				{{#each AuditTrustedData}}
-				<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" >
-					<th style="background-color: white !important;" width="2%" scope="row" class="ibm-table-row">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>
-						<td style="background-color: white !important;" width="6%">{{reportingQuarter}}</td>
-						<td style="background-color: white !important;" width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
-						<td style="background-color: white !important;" width="15%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
-						<td style="background-color: white !important;" width="10%">{{REVIEW_ID}}</td>
-						<td style="background-color: white !important;" width="20%">{{countryProcess}}</td>
-						<td style="background-color: white !important;" width="5%">{{REVIEW_END_DATE}}</td>
-						<td style="background-color: white !important;" width="5%">{{RATING}}</td>
-						<td style="background-color: white !important;" width="3%">{{NUM_TOTAL_RECMNDTNS}}</td>
-						<td style="background-color: white !important;" width="3%">{{NUM_OPEN_RECMNDTNS}}</td>
-						<td style="background-color: white !important;" width="7%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
-						<td style="background-color: white !important;" width="20%">{{Comments}}</td>
+				<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+					<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>
+						<td width="6%">{{#unless countryProcess}}{{reportingQuarter}}{{/unless}}</td>
+						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
+						<td width="15%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						<td width="10%">{{REVIEW_ID}}</td>
+						<td width="20%">{{countryProcess}}</td>
+						<td width="5%">{{REVIEW_END_DATE}}</td>
+						<td width="5%">{{RATING}}</td>
+						<td width="3%">{{NUM_TOTAL_RECMNDTNS}}</td>
+						<td width="3%">{{NUM_OPEN_RECMNDTNS}}</td>
+						<td width="7%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
+						<td width="20%">{{Comments}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 	<tr class="audit-review-content">
 		<td>
 			<span class="audit-review"><b>Relevant CU Internal Audits</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
+			<table width="100%" class="table_with_scroll">
 				<thead>
-					<th class="audit-review-viewheader" scope="col" width="6%">Period</th>
-					<th class="audit-review-viewheader" scope="col" width="15%">Audit or Review</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">ID</th>
-					<th class="audit-review-viewheader" scope="col" width="22%">Assessable Unit</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Report Date</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Total Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Open Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Target to Close</th>
-					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
+					<th class="audit-review-viewheader" width="6%">Period</th>
+					<th class="audit-review-viewheader" width="15%">Audit or Review</th>
+					<th class="audit-review-viewheader" width="10%">ID</th>
+					<th class="audit-review-viewheader" width="22%">Assessable Unit</th>
+					<th class="audit-review-viewheader" width="5%">Report Date</th>
+					<th class="audit-review-viewheader" width="5%">Rating</th>
+					<th class="audit-review-viewheader" width="5%">Total Recs</th>
+					<th class="audit-review-viewheader" width="5%">Open Recs</th>
+					<th class="audit-review-viewheader" width="7%">Target to Close</th>
+					<th class="audit-review-viewheader" width="20%">Comments</th>
 				</thead>
+				<tbody>
 				{{#each AuditTrustedRCUData}}
 					<tr class="asmt-viewdata">
-						<td style="background-color: white !important;" width="6%">{{RPTG_QTR}}</td>
-						<td style="background-color: white !important;" width="15%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
-						<td style="background-color: white !important;" width="10%">{{REVIEW_ID}}</td>
-						<td style="background-color: white !important;" width="22%">{{countryProcess}}</td>
-						<td style="background-color: white !important;" width="5%">{{REVIEW_END_DATE}}</td>
-						<td style="background-color: white !important;" width="5%">{{RATING}}</td>
-						<td style="background-color: white !important;" width="5%">{{NUM_TOTAL_RECMNDTNS}}</td>
-						<td style="background-color: white !important;" width="5%">{{NUM_OPEN_RECMNDTNS}}</td>
-						<td style="background-color: white !important;" width="7%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
-						<td style="background-color: white !important;" width="20%">{{Comments}}</td>
+						<td width="6%">{{RPTG_QTR}}</td>
+						<td width="15%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						<td width="10%">{{REVIEW_ID}}</td>
+						<td width="22%">{{countryProcess}}</td>
+						<td width="5%">{{REVIEW_END_DATE}}</td>
+						<td width="5%">{{RATING}}</td>
+						<td width="5%">{{NUM_TOTAL_RECMNDTNS}}</td>
+						<td width="5%">{{NUM_OPEN_RECMNDTNS}}</td>
+						<td width="7%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
+						<td width="20%">{{Comments}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 	<tr class="audit-review-content">
 		<td>
 			<span class="audit-review"><b>Audits &amp; Reviews (data managed locally)</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
+			<table width="100%" class="table_with_scroll">
 				<thead>
-					<th class="audit-review-viewheader" scope="col" width="7%">Period</th>
-					<th class="audit-review-viewheader" scope="col" width="20%">Audit or Review</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Date</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Rating</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">Total Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="9%">Open Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">Target to Close</th>
-					<th class="audit-review-viewheader" scope="col" width="30%">Comments</th>
+					<th class="audit-review-viewheader" width="7%">Period</th>
+					<th class="audit-review-viewheader" width="20%">Audit or Review</th>
+					<th class="audit-review-viewheader" width="7%">Date</th>
+					<th class="audit-review-viewheader" width="7%">Rating</th>
+					<th class="audit-review-viewheader" width="10%">Total Recs</th>
+					<th class="audit-review-viewheader" width="9%">Open Recs</th>
+					<th class="audit-review-viewheader" width="10%">Target to Close</th>
+					<th class="audit-review-viewheader" width="30%">Comments</th>
 				</thead>
+				<tbody>
 				{{#each AuditLocalData}}
 					<tr class="asmt-viewdata">
-						<td style="background-color: white !important;" width="7%">{{RPTG_QTR}}</td>
-						<td style="background-color: white !important;" width="20%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
-						<td style="background-color: white !important;" width="7%">{{REVIEW_END_DATE}}</td>
-						<td style="background-color: white !important;" width="7%">{{RATING}}</td>
-						<td style="background-color: white !important;" width="10%">{{NUM_TOTAL_RECMNDTNS}}</td>
-						<td style="background-color: white !important;" width="9%">{{NUM_OPEN_RECMNDTNS}}</td>
-						<td style="background-color: white !important;" width="10%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
-						<td style="background-color: white !important;" width="30%">{{Comments}}</td>
+						<td width="7%">{{RPTG_QTR}}</td>
+						<td width="20%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						<td width="7%">{{REVIEW_END_DATE}}</td>
+						<td width="7%">{{RATING}}</td>
+						<td width="10%">{{NUM_TOTAL_RECMNDTNS}}</td>
+						<td width="9%">{{NUM_OPEN_RECMNDTNS}}</td>
+						<td width="10%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
+						<td width="30%">{{Comments}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
