@@ -452,64 +452,10 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(defViewRow-doc[0].CUAsmtDataPR1view.length));
 									}
 								}
+
 								//Open issue
-								var objIssue = {
-									selector : {
-										"_id": {"$gt":0},
-										"compntType": "openIssue",
-	 									"docType": "asmtComponent",
-										"reportingQuarter": doc[0].CurrentPeriod,
-										"ControllableUnit": doc[0].ControllableUnit,
-										"businessUnit": doc[0].BusinessUnit,
-										"scorecardCategory": {"$gt":0}
-									},
-									sort:[{"scorecardCategory":"asc"}]
-								};
-								db.find(objIssue).then(function(dataRisks){
-									var risks = dataRisks.body.docs;
-									var riskCategory = {};
-									var openrisks = [];
-									var exportOpenRisks = [];
-									doc[0].ORMCMissedRisks = 0;
-									for(var i = 0; i < risks.length; i++){
-										if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
-											openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
-											riskCategory[risks[i].scorecardCategory] = true;
-										}
-										if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0){
-											risks[i].missedFlag = true;
-											doc[0].ORMCMissedRisks = 1;
-										}else {
-											risks[i].missedFlag = false;
-										}
-										var tmp = {};
-										tmp.type = risks[i].type;
-										tmp.name = risks[i].name;
-										tmp.id = risks[i].id
-										tmp.status = risks[i].status;
-										tmp.process = risks[i].process;
-										tmp.originalTargetDate = risks[i].originalTargetDate;
-										tmp.currentTargetDate = risks[i].currentTargetDate;
-										tmp.numTasks = risks[i].numTasks;
-										tmp.numTasksOpen = risks[i].numTasksOpen;
-										tmp.numMissedTasks = risks[i].numMissedTasks;
-										tmp.missedFlag = risks[i].missedFlag;
-										tmp.riskAbstract = risks[i].riskAbstract;
-										exportOpenRisks.push(tmp);
-										risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
+								comp.getOpenIssue(db,doc,defViewRow).then(function(){
 
-										openrisks.push(risks[i]);
-									}
-
-									doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
-									if (Object.keys(riskCategory).length < defViewRow) {
-										if (openrisks == 0) {
-											openrisks = fieldCalc.addTestViewData(10,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
-										}
-									};
-									doc[0].openrisks = openrisks;
 								//AuditKey
 								if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
@@ -761,64 +707,8 @@ var assessment = {
 							});
 
 							//Open issue
-							var objIssue = {
-								selector : {
-									"_id": {"$gt":0},
-									"compntType": "openIssue",
- 									"docType": "asmtComponent",
-									"reportingQuarter": doc[0].CurrentPeriod,
-									"process": doc[0].GlobalProcess,
-									"businessUnit": doc[0].BusinessUnit,
-									"country": doc[0].Country,
-									"scorecardCategory": {"$gt":0}
-								},
-								sort:[{"scorecardCategory":"asc"}]
-							};
-							db.find(objIssue).then(function(dataRisks){
-								var risks = dataRisks.body.docs;
-								var riskCategory = {};
-								var openrisks = [];
-								var exportOpenRisks = [];
-								doc[0].ORMCMissedRisks = 0;
-								for(var i = 0; i < risks.length; i++){
-									if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
-										openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
-										riskCategory[risks[i].scorecardCategory] = true;
-									}
-									if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0){
-										risks[i].missedFlag = true;
-										doc[0].ORMCMissedRisks = 1;
-									}else {
-										risks[i].missedFlag = false;
-									}
-									var tmp = {};
-									tmp.type = risks[i].type;
-									tmp.name = risks[i].name;
-									tmp.id = risks[i].id
-									tmp.status = risks[i].status;
-									tmp.process = risks[i].process;
-									tmp.originalTargetDate = risks[i].originalTargetDate;
-									tmp.currentTargetDate = risks[i].currentTargetDate;
-									tmp.numTasks = risks[i].numTasks;
-									tmp.numTasksOpen = risks[i].numTasksOpen;
-									tmp.numMissedTasks = risks[i].numMissedTasks;
-									tmp.missedFlag = risks[i].missedFlag;
-									tmp.riskAbstract = risks[i].riskAbstract;
-									exportOpenRisks.push(tmp);
-									risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
+							comp.getOpenIssue(db,doc,defViewRow).then(function(){
 
-									openrisks.push(risks[i]);
-								}
-
-								doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
-								if (Object.keys(riskCategory).length < defViewRow) {
-									if (openrisks == 0) {
-										openrisks = fieldCalc.addTestViewData(10,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
-									}
-								};
-								doc[0].openrisks = openrisks;
 							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].GPPARENT != null)){
 									var obj = {
@@ -896,7 +786,7 @@ var assessment = {
 										deferred.reject({"status": 500, "error": err});
 									});
 								}//end if GTS
-								else {
+								else {//if GBS
 									comp.getCompDocs(db,doc).then(function(dataComp){
 										//Sorting for RCTest_treeview
 										var tmpList = [];
@@ -913,10 +803,18 @@ var assessment = {
 											if (a.controlType == undefined) a.controlType = "(uncategorized)";
 											if (b.controlType == undefined) b.controlType = "(uncategorized)";
 											var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
-											if (nameA < nameB) //sort string ascending
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
 												return -1
-											if (nameA > nameB)
+											}
+											if (nameA > nameB){
+												if (nameB =="(uncategorized)") {
+													return -1
+												}
 												return 1
+											}
 											return 0 //default return value (no sorting)
 										});
 										for(var i = 0; i < rct.length; i++){
@@ -979,17 +877,33 @@ var assessment = {
 											if (a.controlType == undefined) a.controlType = "(uncategorized)";
 											if (b.controlType == undefined) b.controlType = "(uncategorized)";
 											var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
-											if (nameA < nameB) //sort string ascending
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
 												return -1
-											if (nameA > nameB)
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
 												return 1
-											if (a.controlName == undefined) a.controlName = "(uncategorized)";
+											}
+											if (a.controlName == undefined){ a.controlName = "(uncategorized)";  return 1;};
 											if (b.controlName == undefined) b.controlName = "(uncategorized)";
 											var nameA=a.controlName.toLowerCase(), nameB=b.controlName.toLowerCase()
-											if (nameA < nameB) //sort string ascending
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
 												return -1
-											if (nameA > nameB)
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
 												return 1
+											}
 											return 0 //default return value (no sorting)
 										});
 										for(var i = 0; i < sct.length; i++){
@@ -1015,7 +929,7 @@ var assessment = {
 											}
 											if (sct[i].controlName == undefined) sct[i].controlName = "(uncategorized)";
 											if(typeof controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] === "undefined"){
-											// if(typeof controlList[sct[i].controlType+sct[i].controlName] === "undefined"){
+
 												tmpList.push({
 													parent: sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,''),
 													id:sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,''),
@@ -1059,17 +973,33 @@ var assessment = {
 											if (a.processCategory == undefined) a.processCategory = "(uncategorized)";
 											if (b.processCategory == undefined) b.processCategory = "(uncategorized)";
 											var nameA=a.processCategory.toLowerCase(), nameB=b.processCategory.toLowerCase()
-											if (nameA < nameB) //sort string ascending
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
 												return -1
-											if (nameA > nameB)
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
 												return 1
+											}
 											if (a.processSampled == undefined) a.processSampled = "(uncategorized)";
 											if (b.processSampled == undefined) b.processSampled = "(uncategorized)";
 											var nameA=a.processSampled.toLowerCase(), nameB=b.processSampled.toLowerCase()
-											if (nameA < nameB) //sort string ascending
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
 												return -1
-											if (nameA > nameB)
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
 												return 1
+											}
 											return 0 //default return value (no sorting)
 										});
 										for(var i = 0; i < samples.length; i++){
@@ -1135,10 +1065,18 @@ var assessment = {
 											if (a.testType == undefined) a.testType = "(uncategorized)";
 											if (b.testType == undefined) b.testType = "(uncategorized)";
 											var nameA=a.testType.toLowerCase(), nameB=b.testType.toLowerCase()
-											if (nameA < nameB) //sort string ascending
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
 												return -1
-											if (nameA > nameB)
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
 												return 1
+											}
 											return 0 //default return value (no sorting)
 										});
 										for(var i = 0; i < samples2.length; i++){
@@ -1220,6 +1158,7 @@ var assessment = {
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
 							doc[0].AccountData = doc[0].RiskData;
+							console.log(Object.keys(doc[0]));
 							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 								var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){

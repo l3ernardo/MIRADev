@@ -55,11 +55,11 @@
 	$('h1#pageTitle').text($('input#docTitle').val());
 	//Load document's business unit
 	$('h3#pageSubTitle').hide();
-	$("#audit_readiness_treeview").treetable({expandable: true });
-	$("#open_risks_treeview").treetable({expandable: true });
-	$("#RCTest_treeview").treetable({expandable: true });
-	$("#SCTest_treeview").treetable({expandable: true },{column: 3});
-	$("#Sample_treeview").treetable({expandable: true });
-	$("#Sample2_treeview").treetable({expandable: true });
-	$("#ppr_treeview").treetable({expandable: true });
+	$("#audit_readiness_treeview").treetable({expandable: true ,initialState:"expanded",columnElType: "th",indent:1});
+	$("#open_risks_treeview").treetable({expandable: true ,initialState:"expanded",columnElType: "th"});
+	$("#RCTest_treeview").treetable({expandable: true ,initialState:"expanded",columnElType: "th"});
+	$("#SCTest_treeview").treetable({expandable: true ,initialState:"expanded",columnElType: "th"});
+	$("#Sample_treeview").treetable({expandable: true ,initialState:"expanded",columnElType: "th"});
+	$("#Sample2_treeview").treetable({expandable: true ,initialState:"expanded",columnElType: "th"});
+	$("#ppr_treeview").treetable({expandable: true ,initialState:"expanded",columnElType: "th",indent:10});
 </script>
