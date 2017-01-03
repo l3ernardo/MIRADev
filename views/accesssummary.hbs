@@ -21,9 +21,9 @@
 				<span class="ibm-sep"> </span>
 				<a href="/downloadaccesssummary" value="Export all Users" name="lnk_exportods" id="lnk_exportall" class="ibm-symp-spreadsheet">Export all users</a>
 				<div align="right">
-				<form  action="/explicitAccessSummary" method="get">
-					 Search by email: <input type="text" name="searchEmail" >
-					 <input type="submit" value="search">
+				<form name="exportAllForm" action="/explicitAccessSummary" method="get" onsubmit="return validateForm()">
+					 Search by user: <input type="text" name="searchEmail" >
+					 <input  type="submit" value="search">
 				</form>
 				</div>
 			</p>
@@ -32,28 +32,21 @@
 		</div>
 		
 		<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{{valuesToString exportdata}}}</textarea>
-		<div >
+		<div style="word-wrap: break-word;">
 		
-			<table id="accesssummary_treeview"  cellspacing="0" cellpadding="0" border="0" class="display nowrap"  class="mira-dashboard-table" >
+			<table id="accesssummary_treeview" width="100%"  cellspacing="0" cellpadding="0" border="0"   class="mira-dashboard-table" >
 				<thead>
 					<tr> 
-					    <th  scope="col"  >Select All<input  type="checkbox"  class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
+					     
+					    <th  scope="col"  >Select All<input  type="checkbox"   class="mira_checkbox_tree"  id="mira_checkbox_tree" name="mira_checkbox "/></th>
 					    <th id="th1"  >User</th>
-						<th id="th2" >Type</th>
-						<th id="th3" >Assessable Unit (WWBCIT blue/Mira green)</th>
-						<th id="th4" >Status</th>
-						<th id="th5" >Addional Editors</th>
-						<th id="th6" >Addional Readers</th>
-						<th id="th7" >Owners</th>
-						<th id="th8" >Focals</th>
-						<th id="th9" >Coordinators</th>
-						<th id="th10" >Readers</th>
-						<th id="th11" >BU IOT</th>
-						<th id="th12" >BU IMT</th>
-						<th id="th13" >Country</th>
-						<th >ID</th>
-						<th >Parent</th>
-						<th >Colors</th>
+					    <th id="th2"  >Role</th>
+						<th id="th3" >Type</th>
+						<th id="th4" >Assessable Unit (WWBCIT blue/Mira green)</th>
+						<th id="th5" >Status</th>
+						<th>ID</th>
+						<th>P</th>
+						<th>C</th>
 						
 						
 					</tr>
@@ -62,7 +55,7 @@
 			</table>
 		</div>
 		<br/>
-		<div class="ibm-buttons-row" id ="pagination">
+		<div class="ibm-buttons-row" id ="pagination" style=" word-wrap: break-word;">
 		 Pages:
 		
 		
@@ -74,6 +67,9 @@
 
 <script>
 	//Load document's name
+	
+	
+	
 
   var listWithComa = function (list){
   
@@ -96,6 +92,8 @@
 		return newList;
   
   }
+
+
 
 	var getType = function(type){
 		var response = "";
@@ -140,7 +138,7 @@
 
 	var arrayLimits = [];
 	
-	//var tabs = JSON.parse('{{{tabs}}}');
+	
     var alldata = JSON.parse('{{{alldata}}}');
 		
 	
@@ -153,8 +151,10 @@
 	
 	try{
 	var limits = "{{{limits}}}";
+	var searchEmail = "{{{searchEmail}}}";
 	
 	  if(limits.length > 0){
+	  
 		var limits = limits.split(',');
 	
 		for(var l=0;l<limits.length;l++){
@@ -167,25 +167,41 @@
 		
 		}
 	
+	if(searchEmail.length >0){
 	
+		for(var f=0; f < arrayLimits.length; f++){
+
+			a = document.createElement('a');
+			a.href = "../explicitAccessSummary?searchEmail="+searchEmail+"&start="+arrayLimits[f].start+"&end="+arrayLimits[f].end+"&limits="+limits;
+			a.innerHTML = f+1;
+			a.style["line-height"] = "1em";
+			a.style["padding"] = "2px";
+			a.style["margin"] = "2px";
+	
+			tabsDiv.appendChild(a);
+			}
+	
+	
+	}else{
 		for(var f=0; f < arrayLimits.length; f++){
 
 			a = document.createElement('a');
 			a.href = "../explicitAccessSummary?start="+arrayLimits[f].start+"&end="+arrayLimits[f].end+"&limits="+limits;
 			a.innerHTML = f+1;
 			a.style["line-height"] = "1em";
-			a.style["padding"] = "8px";
+			a.style["padding"] = "2px";
 			a.style["margin"] = "2px";
 	
 			tabsDiv.appendChild(a);
+			}
 		}
 	}
 	
-	}catch(e){}
+	}catch(e){alert("Error while processing limits, please contact administrator"+e);}
 	
 	
-	for ( var i=0 ; i<alldata.length ; i++ ) {
-		data.push(["<input type='checkbox' id='invidual_checkbox_tree' class='mira_checkbox_tree'/>",alldata[i][1], getType(alldata[i][2]), "<a href='/assessableunit?id="+alldata[i][0]+"'>"+alldata[i][3]+"</a>", alldata[i][4], alldata[i][5], alldata[i][6], alldata[i][7], alldata[i][8], alldata[i][9], alldata[i][10], alldata[i][11], alldata[i][12], alldata[i][13], alldata[i][15], alldata[i][16],alldata[i][14]]);
+for ( var i=0 ; i<alldata.length ; i++ ) {
+		data.push(["<input type='checkbox' id='invidual_checkbox_tree' class='mira_checkbox_tree'/>",alldata[i][1],alldata[i][2], getType(alldata[i][3]), "<a href='/assessableunit?id="+alldata[i][0]+"'>"+alldata[i][4]+"</a>", alldata[i][5], alldata[i][7], alldata[i][8], alldata[i][6]]);
 	
 }
 	
@@ -200,15 +216,15 @@
 			"scrollY": 250,
 			"scrollX": true,
 			"fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-					$(nRow).attr('data-tt-id', aData[14]);//added tree id and parents for tree view
-			        $(nRow).attr('data-tt-parent-id', aData[15]);//added tree id and parents for tree view
+					$(nRow).attr('data-tt-id', aData[6]);//added tree id and parents for tree view
+			        $(nRow).attr('data-tt-parent-id', aData[7]);//added tree id and parents for tree view
 			    
 			        $('td:eq(0)', nRow).html('<input type="checkbox" id="invidual_checkbox_tree" class="mira_checkbox_tree"/>');
 			       		        
 			      
 			       
-			        if(aData[16] == "W"){ //adding colors
-			       
+			        if(aData[8] == "W"){ //adding colors
+			       		$('td:eq(0)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(1)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(2)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(3)', nRow).attr('style', "background-color: #C0E1FF");
@@ -216,14 +232,11 @@
 			        	$('td:eq(5)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(6)', nRow).attr('style', "background-color: #C0E1FF");
 			        	$('td:eq(7)', nRow).attr('style', "background-color: #C0E1FF");
-			        	$('td:eq(8)', nRow).attr('style', "background-color: #C0E1FF");
-			        	$('td:eq(9)', nRow).attr('style', "background-color: #C0E1FF");
-			        	$('td:eq(10)', nRow).attr('style', "background-color: #C0E1FF");
-			        	$('td:eq(11)', nRow).attr('style', "background-color: #C0E1FF");
-			        	$('td:eq(12)', nRow).attr('style', "background-color: #C0E1FF");
-			        	$('td:eq(13)', nRow).attr('style', "background-color: #C0E1FF");
+			        	
+			        
 			        	} 
-			        if(aData[16] == "M"){
+			        if(aData[8] == "M"){
+			        	$('td:eq(0)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(1)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(2)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(3)', nRow).attr('style', "background-color: #C2FF91");
@@ -231,12 +244,8 @@
 			        	$('td:eq(5)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(6)', nRow).attr('style', "background-color: #C2FF91");
 			        	$('td:eq(7)', nRow).attr('style', "background-color: #C2FF91");
-			        	$('td:eq(8)', nRow).attr('style', "background-color: #C2FF91");
-			        	$('td:eq(9)', nRow).attr('style', "background-color: #C2FF91");
-			        	$('td:eq(10)', nRow).attr('style', "background-color: #C2FF91");
-			        	$('td:eq(11)', nRow).attr('style', "background-color: #C2FF91");
-			        	$('td:eq(12)', nRow).attr('style', "background-color: #C2FF91");
-			        	$('td:eq(13)', nRow).attr('style', "background-color: #C2FF91");
+			      
+			       
 			        	}
 			        
 			        
@@ -244,17 +253,17 @@
 			},
 			 "columnDefs": [
             {
-                "targets": [ 14 ],
+                "targets": [ 6],
                 "visible": false,
                 "searchable": false
             },
               {
-                "targets": [ 16 ],
+                "targets": [ 7 ],
                 "visible": false,
                 "searchable": false
             },
              {
-                "targets": [ 15 ],
+                "targets": [ 8 ],
                 "visible": false,
                 "searchable": false
             }]

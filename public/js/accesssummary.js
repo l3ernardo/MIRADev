@@ -1,3 +1,12 @@
+function validateForm() {
+    var x = document.forms["exportAllForm"]["searchEmail"].value;
+    if (x == "") {
+        alert("User name must be filled out");
+        return false;
+    }
+}
+
+
 $(document).ready(function() {
 	t=url.indexOf("reportstaexc");
 	
@@ -24,15 +33,8 @@ $(document).ready(function() {
 		table += "<th>"+$('#th2').text()+"</th>";	
 		table += "<th>"+$('#th3').text()+"</th>";	
 		table += "<th>"+$('#th4').text()+"</th>";	
-		table += "<th>"+$('#th5').text()+"</th>";	
-		table += "<th>"+$('#th6').text()+"</th>";	
-		table += "<th>"+$('#th7').text()+"</th>";	
-		table += "<th>"+$('#th8').text()+"</th>";	
-		table += "<th>"+$('#th9').text()+"</th>";	
-		table += "<th>"+$('#th10').text()+"</th>";	
-		table += "<th>"+$('#th11').text()+"</th>";	
-		table += "<th>"+$('#th12').text()+"</th>";	
-		table += "<th>"+$('#th13').text()+"</th></tr>";	
+		table += "<th>"+$('#th5').text()+"</th></tr>";	
+	
 		
 			if ($('#mira_checkbox_tree').is(":checked")) //depending on single or multiple selection and extra row is added
 			{  incremental = 1; limit =1; }
@@ -46,18 +48,11 @@ $(document).ready(function() {
 
 				table += "<tr>";
 				table += "<td>"+fields[array2[j]-incremental].Name+"</td>";
+				table += "<td>"+fields[array2[j]-incremental].Role+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Type+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].AssessableUnit+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Status+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].AddionalEditors+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].AddionalReaders+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Owners+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Focals+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Coordinators+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Readers+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].IOT+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].IMT+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Country+"</td>";
+			
 				table += "</tr>";
 
 				}
@@ -93,15 +88,8 @@ $(document).ready(function() {
 		table += "<th>"+$('#th2').text()+"</th>";	
 		table += "<th>"+$('#th3').text()+"</th>";	
 		table += "<th>"+$('#th4').text()+"</th>";	
-		table += "<th>"+$('#th5').text()+"</th>";	
-		table += "<th>"+$('#th6').text()+"</th>";	
-		table += "<th>"+$('#th7').text()+"</th>";	
-		table += "<th>"+$('#th8').text()+"</th>";	
-		table += "<th>"+$('#th9').text()+"</th>";	
-		table += "<th>"+$('#th10').text()+"</th>";	
-		table += "<th>"+$('#th11').text()+"</th>";	
-		table += "<th>"+$('#th12').text()+"</th>";	
-		table += "<th>"+$('#th13').text()+"</th></tr>";	
+		table += "<th>"+$('#th5').text()+"</th></tr>";	
+	
 		
 
 
@@ -120,18 +108,11 @@ $(document).ready(function() {
 
 				table += "<tr>";
 				table += "<td>"+fields[array2[j]-incremental].Name+"</td>";
+				table += "<td>"+fields[array2[j]-incremental].Role+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Type+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].AssessableUnit+"</td>";
 				table += "<td>"+fields[array2[j]-incremental].Status+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].AddionalEditors+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].AddionalReaders+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Owners+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Focals+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Coordinators+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Readers+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].IOT+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].IMT+"</td>";
-				table += "<td>"+fields[array2[j]-incremental].Country+"</td>";
+				
 				table += "</tr>";
 
 				}

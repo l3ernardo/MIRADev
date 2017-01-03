@@ -11,6 +11,8 @@ var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
+var kct = require('./class-keycontrol.js');
+var comp = require('./class-compdoc.js');
 var util = require('./class-utility.js');
 
 var assessment = {
@@ -19,7 +21,7 @@ var assessment = {
 	getAsmtbyID: function(req, db) {
 		var deferred = q.defer();
 		var docid = req.query.id
-		var defViewRow = 5;
+		var defViewRow = 7;
 
 		db.get(docid).then(function(data){
 			var doc = [];
@@ -450,6 +452,10 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(defViewRow-doc[0].CUAsmtDataPR1view.length));
 									}
 								}
+
+								//Open issue
+								comp.getOpenIssue(db,doc,defViewRow).then(function(){
+
 								//AuditKey
 								if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
@@ -532,8 +538,11 @@ var assessment = {
 										});
 									}
 									else {
-								deferred.resolve({"status": 200, "doc": doc});
-							}
+										deferred.resolve({"status": 200, "doc": doc});
+									}
+								}).catch(function(err) {
+									deferred.reject({"status": 500, "error": err});
+								});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
@@ -546,13 +555,175 @@ var assessment = {
 							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
 							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].DRData = fieldCalc.addTestViewData(5,1);
-							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
-							doc[0].SCTestData = doc[0].RCTestData;
-							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
-							//AuditKey
+							// Key Controls Tesing tab
+							kct.calcDefectRate(doc);
+							//Country Process hollistic tab for:
+							//Audits and Reviews (Internal Audits and Proactive Reviews)
+							var objAuditRew = {
+								selector : {
+									"_id": {"$gt":0},
+									"docType": "asmtComponent",
+									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
+									"CPWWBCITKey" : doc[0].WWBCITKey,
+									"reportingQuarter": {"$gt":0},
+									"$or": [
+										{"compntType": "ppr"},
+										{"compntType": "internalAudit"}
+									]
+								}
+							};
+							db.find(objAuditRew).then(function(auditdata){
+								var auditR = auditdata.body.docs;
+								auditR.sort(function(a, b){
+									var nameA=a.compntType.toLowerCase(), nameB=b.compntType.toLowerCase()
+									if (nameA < nameB) //sort string ascending
+										return -1
+									if (nameA > nameB)
+										return 1
+									var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+									if (nameA > nameB) //sort string descending
+										return -1
+									if (nameA < nameB)
+										return 1
+									return 0 //default return value (no sorting)
+								});
+								//var AuditTrustedData = auditR;
+								var typeList = {};
+								var periodList = {};
+								var exportPPR = [];
+								var auditRList = [];
+									if(auditdata.status==200) {
+										try {
+											for(var i = 0; i < auditR.length; i++){
+												if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && reportingQuarter == doc[0].CurrentPeriod){
+													auditR[i].COFlag = false;
+												}else{
+												auditR[i].COFlag = true;
+												}
+												if(auditR[i].compntType == "ppr"){
+													auditR[i].compntType = "Proactive Reviews";
+												}else{
+													auditR[i].compntType = "Internal Audit";
+												}
+												if(typeof typeList[auditR[i].compntType] === "undefined"){
+													auditRList.push({id:auditR[i].compntType.replace(/ /g,''), reportingQuarter:auditR[i].compntType});
+													typeList[auditR[i].compntType] = true;
+												}
+												if(typeof periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
+													auditRList.push({parent: auditR[i].compntType.replace(/ /g,''),id:auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditR[i].reportingQuarter});
+													periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] = true;
+												}
 
+												auditR[i].id = auditR[i]["_id"];
+												auditR[i].parent = auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'');
+
+												exportPPR.push({
+													period:auditR[i].reportingQuarter,
+													CO:auditR[i].COFlag,
+													auditOrReview:auditR[i].auditOrReview,
+													id:auditR[i].id,
+													assessableunit:auditR[i].countryProcess,
+													date:auditR[i].REVIEW_END_DATE,
+													rating:auditR[i].RATING,
+													totalrecs:auditR[i].NUM_TOTAL_RECMNDTNS,
+													openrecos:auditR[i].NUM_OPEN_RECMNDTNS,
+													target2close:auditR[i].REVIEW_TARGET_CLOSURE_DATE,
+													comments:auditR[i].Comments
+												});
+												auditRList.push(auditR[i]);
+											}
+											if (Object.keys(typeList).length < defViewRow) {
+												if (auditRList == 0) {
+													auditRList = fieldCalc.addTestViewData(10,defViewRow);
+												} else {
+													fieldCalc.addTestViewDataPadding(auditRList,10,(defViewRow-Object.keys(typeList).length));
+												}
+											}
+												doc[0].AuditTrustedData = auditRList;
+												doc[0].exportPPR = exportPPR;
+										} catch(e){
+											console.log(e.stack)
+										}
+									}
+
+							//Audits and Reviews(Relevant CU Internal Audits)
+							var objAuditInt = {
+								selector : {
+									"_id": {"$gt":0},
+									"docType": "asmtComponent",
+									"compntType": "ppr",
+									"REVIEW_TYPE": "CHQ Internal Audit",
+									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
+									"CPWWBCITKey" : doc[0].WWBCITKey
+								},
+							};
+							db.find(objAuditInt).then(function(auditIntdata){
+								var auditInt = auditIntdata.body.docs;
+								var AuditTrustedRCUData = auditInt;
+									if(auditIntdata.status==200) {
+										try {
+											for(var i = 0; i < auditInt.length; i++){
+												if(auditInt[i].REVIEW_TYPE == "CHQ Internal Audit"||auditInt[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+													auditInt[i].COFlag = false;
+												}else{
+												auditInt[i].COFlag = true;
+												}
+											}
+											if (Object.keys(AuditTrustedRCUData).length < defViewRow) {
+												if (Object.keys(AuditTrustedRCUData).length == 0) {
+													AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
+												} else {
+													fieldCalc.addTestViewDataPadding(AuditTrustedRCUData,10,(defViewRow-Object.keys(AuditTrustedRCUData).length));
+												}
+											}
+											doc[0].AuditTrustedRCUData = AuditTrustedRCUData;
+										} catch(e){
+											console.log(e.stack)
+										}
+									}
+
+							})
+							//Audits and Reviews(AuditLocalData)
+							var objAuditLoc = {
+								selector : {
+									"_id": {"$gt":0},
+									"DOCTYPE": "ppreview",
+									"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit,
+								},
+							};
+							db.find(objAuditLoc).then(function(auditLocdata){
+								var auditLoc = auditLocdata.body.docs;
+								var AuditLocalData = auditLoc;
+									if(auditLocdata.status==200) {
+										try {
+											for(var i = 0; i < auditLoc.length; i++){
+												if(auditLoc[i].REVIEW_TYPE == "CHQ Internal Audit"||auditLoc[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+													auditLoc[i].COFlag = false;
+												}else {
+													auditLoc[i].COFlag = true;
+											  }
+									    }
+											if (Object.keys(AuditLocalData).length < defViewRow) {
+												if (Object.keys(AuditLocalData).length == 0) {
+													AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+												} else {
+													fieldCalc.addTestViewDataPadding(AuditLocalData,8,(defViewRow-Object.keys(AuditLocalData).length));
+												}
+											}
+											doc[0].AuditLocalData = AuditLocalData;
+										} catch(e){
+											console.log(e.stack)
+										}
+									}
+
+							});
+
+							//Open issue
+							comp.getOpenIssue(db,doc,defViewRow).then(function(){
+
+							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].GPPARENT != null)){
 									var obj = {
 										selector : {
@@ -628,10 +799,364 @@ var assessment = {
 										console.log("[assessableunit][LessonsList]" + dataLL.error);
 										deferred.reject({"status": 500, "error": err});
 									});
-								}
-								else {
-									deferred.resolve({"status": 200, "doc": doc});
-								}
+								}//end if GTS
+								else {//if GBS
+									comp.getCompDocs(db,doc).then(function(dataComp){
+										//Sorting for RCTest_treeview
+										var tmpList = [];
+										var periodList = {};//reportingQuarter
+										var typeList = {};//controlType
+										var rct = doc[0].RCTestData;
+										var exportRCTest = [];
+										rct.sort(function(a, b){
+											var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+											if (nameA > nameB) //sort string descending
+												return -1
+											if (nameA < nameB)
+												return 1
+											if (a.controlType == undefined) a.controlType = "(uncategorized)";
+											if (b.controlType == undefined) b.controlType = "(uncategorized)";
+											var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
+												return -1
+											}
+											if (nameA > nameB){
+												if (nameB =="(uncategorized)") {
+													return -1
+												}
+												return 1
+											}
+											return 0 //default return value (no sorting)
+										});
+										for(var i = 0; i < rct.length; i++){
+											if (rct[i].reportingQuarter == undefined) rct[i].reportingQuarter = "(uncategorized)";
+											if(typeof periodList[rct[i].reportingQuarter] === "undefined"){
+												tmpList.push({
+													id:rct[i].reportingQuarter.replace(/ /g,''),
+													parent:"",
+													reportingQuarter: rct[i].reportingQuarter,
+													catEntry:"Yes"
+												});
+												periodList[rct[i].reportingQuarter] = true;
+											}
+											if (rct[i].controlType == undefined) rct[i].controlType = "(uncategorized)";
+											if(typeof typeList[rct[i].reportingQuarter+rct[i].controlType] === "undefined"){
+												tmpList.push({
+													parent: rct[i].reportingQuarter.replace(/ /g,''),
+													id:rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,''),
+													controlType: rct[i].controlType,
+													catEntry:"Yes"
+												});
+												typeList[rct[i].reportingQuarter+rct[i].controlType] = true;
+											}
+											rct[i].parent = rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,'');
+											rct[i].id = rct[i]["_id"];
+											exportRCTest.push({
+												reportingQuarter:rct[i].reportingQuarter || "",
+												controlType:rct[i].controlType || "",
+												controlName:rct[i].controlName || "",
+												numActualTests:rct[i].numActualTests || "",
+												numDefects:rct[i].numDefects || "",
+												defectRate:rct[i].defectRate || "",
+												remFinImpact:rct[i].remFinImpact || ""
+											});
+											tmpList.push(rct[i]);
+										}
+										doc[0].exportRCTest = exportRCTest;
+										doc[0].RCTestData = tmpList;
+
+										if (Object.keys(periodList).length < defViewRow) {
+											if (doc[0].RCTestData.length == 0) {
+												doc[0].RCTestData = fieldCalc.addTestViewData(10,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].RCTestData,10,(defViewRow-Object.keys(periodList).length));
+											}
+										}
+										//sortin for SCTest_treeview
+										var tmpList = [];
+										var periodList = {};//reportingQuarter
+										var typeList = {};//controlType
+										var controlList = {};//controlName
+										var sct = doc[0].SCTestData;
+										var exportSCTest = [];
+										sct.sort(function(a, b){
+											var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+											if (nameA > nameB) //sort string descending
+												return -1
+											if (nameA < nameB)
+												return 1
+											if (a.controlType == undefined) a.controlType = "(uncategorized)";
+											if (b.controlType == undefined) b.controlType = "(uncategorized)";
+											var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
+												return -1
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
+												return 1
+											}
+											if (a.controlName == undefined){ a.controlName = "(uncategorized)";  return 1;};
+											if (b.controlName == undefined) b.controlName = "(uncategorized)";
+											var nameA=a.controlName.toLowerCase(), nameB=b.controlName.toLowerCase()
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
+												return -1
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
+												return 1
+											}
+											return 0 //default return value (no sorting)
+										});
+										for(var i = 0; i < sct.length; i++){
+											if (sct[i].reportingQuarter == undefined) sct[i].reportingQuarter = "(uncategorized)";
+											if(typeof periodList[sct[i].reportingQuarter] === "undefined"){
+												tmpList.push({
+													id:sct[i].reportingQuarter.replace(/ /g,''),
+													parent:"",
+													catEntry:"Yes",
+													reportingQuarter: sct[i].reportingQuarter
+												});
+												periodList[sct[i].reportingQuarter] = true;
+											}
+											if (sct[i].controlType == undefined) sct[i].controlType = "(uncategorized)";
+											if(typeof typeList[sct[i].reportingQuarter+sct[i].controlType] === "undefined"){
+												tmpList.push({
+													parent: sct[i].reportingQuarter.replace(/ /g,''),
+													id:sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,''),
+													catEntry:"Yes",
+													controlType: sct[i].controlType
+												});
+												typeList[sct[i].reportingQuarter+sct[i].controlType] = true;
+											}
+											if (sct[i].controlName == undefined) sct[i].controlName = "(uncategorized)";
+											if(typeof controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] === "undefined"){
+
+												tmpList.push({
+													parent: sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,''),
+													id:sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,''),
+													catEntry:"Yes",
+													controlName: sct[i].controlName
+												});
+												controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] = true;
+											}
+											exportSCTest.push({
+												reportingQuarter:sct[i].reportingQuarter || "",
+												controlType:sct[i].controlType || "",
+												controlName:sct[i].controlName || "",
+												reportingCountry:sct[i].reportingCountry || "",
+												numtest:sct[i].numtest || "",
+												numDefects:sct[i].numDefects || "",
+												defectRate:sct[i].defectRate || ""
+											});
+											sct[i].parent = sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,'');
+											sct[i].id = sct[i]["_id"];
+											tmpList.push(sct[i]);
+										}
+										doc[0].exportSCTest = exportSCTest;
+										doc[0].SCTestData = tmpList;
+
+										if (Object.keys(periodList).length < defViewRow) {
+											if (doc[0].SCTestData.length == 0) {
+												doc[0].SCTestData = fieldCalc.addTestViewData(10,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].SCTestData,10,(defViewRow-Object.keys(periodList).length));
+											}
+										}
+										//Saving the data in new variable for next sorting
+										doc[0].SampleData2 = JSON.parse(JSON.stringify(doc[0].SampleData));;
+										//Sorting for Sample_treeview
+										var tmpList = [];
+										var categoryList = {};//processCategory
+										var processList = {};//processSampled
+										var samples = doc[0].SampleData;
+										var exportSample = [];
+										samples.sort(function(a, b){
+											if (a.processCategory == undefined) a.processCategory = "(uncategorized)";
+											if (b.processCategory == undefined) b.processCategory = "(uncategorized)";
+											var nameA=a.processCategory.toLowerCase(), nameB=b.processCategory.toLowerCase()
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
+												return -1
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
+												return 1
+											}
+											if (a.processSampled == undefined) a.processSampled = "(uncategorized)";
+											if (b.processSampled == undefined) b.processSampled = "(uncategorized)";
+											var nameA=a.processSampled.toLowerCase(), nameB=b.processSampled.toLowerCase()
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
+												return -1
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
+												return 1
+											}
+											return 0 //default return value (no sorting)
+										});
+										for(var i = 0; i < samples.length; i++){
+											if (samples[i].processCategory == undefined) samples[i].processCategory = "(uncategorized)";
+											if(typeof categoryList[samples[i].processCategory] === "undefined"){
+												tmpList.push({
+													id:samples[i].processCategory.replace(/ /g,''),
+													parent:"",
+													catEntry:"Yes",
+													processCategory: samples[i].processCategory
+												});
+												categoryList[samples[i].processCategory] = true;
+											}
+											if (samples[i].processSampled == undefined) samples[i].processSampled = "(uncategorized)";
+											if(typeof processList[samples[i].processCategory+samples[i].processSampled] === "undefined"){
+												tmpList.push({
+													parent: samples[i].processCategory.replace(/ /g,''),
+													id:samples[i].processCategory.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
+													catEntry:"Yes",
+													processSampled: samples[i].processSampled
+												});
+												processList[samples[i].processCategory+samples[i].processSampled] = true;
+											}
+											exportSample.push({
+												processCategory:samples[i].processCategory || "",
+												processSampled:samples[i].processSampled || "",
+												controlName:samples[i].controlName || "",
+												IntegrationKeyWWBCIT:samples[i].IntegrationKeyWWBCIT || "",
+												numDefects:samples[i].numDefects || "",
+												defectType:samples[i].defectType || "",
+												remediationStatus:samples[i].remediationStatus || "",
+												remainingFinancialImpact:samples[i].remainingFinancialImpact || "",
+												originalTargetDate:samples[i].originalTargetDate || "",
+												targetClose:samples[i].targetClose || "",
+												defectsAbstract:samples[i].defectsAbstract || ""
+											});
+											samples[i].parent = samples[i].processCategory.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'');
+											samples[i].id = samples[i]["_id"];
+											tmpList.push(samples[i]);
+										}
+										doc[0].exportSample = exportSample;
+										doc[0].SampleData = tmpList;
+
+										if (Object.keys(categoryList).length < defViewRow) {
+											if (doc[0].SampleData.length == 0) {
+												doc[0].SampleData = fieldCalc.addTestViewData(10,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].SampleData,10,(defViewRow-Object.keys(categoryList).length));
+											}
+										}
+										//Sorting for Sample2_treeview
+										var tmpList = [];
+										var periodList = {};//originalReportingQuarter
+										var typeList = {};//testType
+										var samples2 = doc[0].SampleData2;
+										var exportSample2 = [];
+										samples2.sort(function(a, b){
+											var nameA=a.originalReportingQuarter.toLowerCase(), nameB=b.originalReportingQuarter.toLowerCase()
+											if (nameA > nameB) //sort string descending
+												return -1
+											if (nameA < nameB)
+												return 1
+											if (a.testType == undefined) a.testType = "(uncategorized)";
+											if (b.testType == undefined) b.testType = "(uncategorized)";
+											var nameA=a.testType.toLowerCase(), nameB=b.testType.toLowerCase()
+											if (nameA < nameB){ //sort string ascending
+												if (nameA == "(uncategorized)") {
+													return 1;
+												}
+												return -1
+											}
+											if (nameA > nameB){
+												if (nameB == "(uncategorized)") {
+													return -1;
+												}
+												return 1
+											}
+											return 0 //default return value (no sorting)
+										});
+										for(var i = 0; i < samples2.length; i++){
+											if (samples2[i].originalReportingQuarter == undefined) samples2[i].originalReportingQuarter = "(uncategorized)";
+											if(typeof periodList[samples2[i].originalReportingQuarter] === "undefined"){
+												tmpList.push({
+													id:samples2[i].originalReportingQuarter.replace(/ /g,''),
+													parent:"",
+													catEntry:"Yes",
+													originalReportingQuarter: samples2[i].originalReportingQuarter
+												});
+												periodList[samples2[i].originalReportingQuarter] = true;
+											}
+											if (samples2[i].testType == undefined) samples2[i].testType = "(uncategorized)";
+											if(typeof typeList[samples2[i].originalReportingQuarter+samples2[i].testType] === "undefined"){
+												tmpList.push({
+													parent: samples2[i].originalReportingQuarter.replace(/ /g,''),
+													id:samples2[i].originalReportingQuarter.replace(/ /g,'')+samples2[i].testType.replace(/ /g,''),
+													catEntry:"Yes",
+													testType: samples2[i].testType
+												});
+												typeList[samples2[i].originalReportingQuarter+samples2[i].testType] = true;
+											}
+											exportSample2.push({
+												originalReportingQuarter:samples2[i].originalReportingQuarter || "",
+												testType:samples2[i].testType || "",
+												controlName:samples2[i].controlName || "",
+												IntegrationKeyWWBCIT:samples2[i].IntegrationKeyWWBCIT || "",
+												processSampled:samples2[i].processSampled || "",
+												numDefects:samples2[i].numDefects || "",
+												defectType:samples2[i].defectType || "",
+												remainingFinancialImpact:samples2[i].remainingFinancialImpact || "",
+												originalTargetDate:samples2[i].originalTargetDate || "",
+												targetClose:samples2[i].targetClose || "",
+												defectsAbstract:samples2[i].defectsAbstract  || ""
+											});
+											samples2[i].parent = samples2[i].originalReportingQuarter.replace(/ /g,'')+samples2[i].testType.replace(/ /g,'');
+											samples2[i].id = samples2[i]["_id"];
+											tmpList.push(samples2[i]);
+										}
+										doc[0].exportSample2 = exportSample2;
+										doc[0].SampleData2 = tmpList;
+
+										if (Object.keys(periodList).length < defViewRow) {
+											if (doc[0].SampleData2.length == 0) {
+												doc[0].SampleData2 = fieldCalc.addTestViewData(10,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].SampleData2,10,(defViewRow-Object.keys(periodList).length));
+											}
+										}
+
+										deferred.resolve({"status": 200, "doc": doc});
+										}).catch(function(err) {
+											console.log("[assessment][getAsmtbyID]" + dataLL.error);
+											deferred.reject({"status": 500, "error": err});
+										});
+									//deferred.resolve({"status": 200, "doc": doc});
+									}
+								}).catch(function(err) {
+									console.log("[assessableunit][openIssueList]" + dataLL.error);
+									deferred.reject({"status": 500, "error": err});
+								});
+							}).catch(function(err) {
+								console.log("[assessableunit][pprList]" + dataLL.error);
+								deferred.reject({"status": 500, "error": err});
+							});;
 							break;
 						case "Account":
 							doc[0].ALLData = fieldCalc.addTestViewData(7,defViewRow);
@@ -647,6 +1172,7 @@ var assessment = {
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
 							doc[0].AccountData = doc[0].RiskData;
+							console.log(Object.keys(doc[0]));
 							//AuditKey
 							if(req.session.businessunit.split(" ")[0] == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 								var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){

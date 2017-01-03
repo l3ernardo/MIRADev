@@ -14,6 +14,12 @@ var simpleAuthentication = require('./router-simpleAuthentication.js');
 var accesssumary = require('./js/class-accesssummary.js');
 var accesssumaryreports = require('./js/class-accesssumaryreports.js');
 var geohierarchy = require('./js/class-geohierarchy.js');
+var accessrules = require('./js/class-accessrules.js');
+var buffer = require('buffer').kMaxLength;
+
+
+
+
 
 /**************************************************************
 SETUP FUNCTIONALITY
@@ -153,7 +159,35 @@ Explicit user summary
 administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 			var limits = "";
 			
-	if(req.query.start && req.query.end){
+			
+			
+	if(req.query.start && req.query.end && req.query.searchEmail){ //user search wit limits of pagination
+		
+			
+			accesssumary.getUserAccessSummaryByUser(req,db,req.query.searchEmail,req.query.start,req.query.end).then(function (data){
+
+				if(data.status==200 & !data.error) {
+				
+					res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:req.query.limits, exportdata:data.data.userList, searchEmail:req.query.searchEmail});
+	
+					
+					}else{
+
+						res.render('error',{errorDescription: data.error});
+						console.log("[routes][explicitAccessSummary] - " + data.error);
+
+
+					}
+			
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[routes][explicitAccessSummary] - " + err.error);
+
+				});
+			
+		
+	}else
+		if(req.query.start && req.query.end){
 		
 			accesssumary.getUserAccessSummary(req,db,req.query.start,req.query.end).then(function (data){
 
@@ -178,39 +212,60 @@ administration.get('/explicitAccessSummary',isAuthenticated, function(req,res){
 	}else
 		if(req.query.searchEmail){
 		
-		 
-		   
-		   accesssumary.getUserAccessSummaryByUser(req,db,req.query.searchEmail).then(function (data){
+			accesssumary.getUserAccessSummaryTabsUser(req,db,req.query.searchEmail).then(function (tabs){
+			
+				accesssumary.getUserAccessSummaryByUser(req,db,req.query.searchEmail,tabs.data[0].start,tabs.data[0].end).then(function (data){
 
-				if(data.status==200 & !data.error) {
-					
-					res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:"", exportdata:data.data.userList});
+					if(data.status==200 & !data.error) {
+						
+						limits = "";
+						for(var i=0;i<tabs.data.length;i++){
+							
+							if(i==tabs.data.length-1)
+								limits += tabs.data[i].start+"|"+tabs.data[i].end;
+							else
+								limits += tabs.data[i].start+"|"+tabs.data[i].end+",";
+							
+						}
+						res.render('accesssummary',{alldata: JSON.stringify(data.data.datarray,'utf8').replace(/[`~!#$%^&*|+\-=?';:<>]/gi, ''),limits:limits, exportdata:data.data.userList,searchEmail:req.query.searchEmail});
 		
+						
+						}else{
 
-				}else{
-
-				res.render('error',{errorDescription: data.error});
-				console.log("[routes][explicitAccessSummary] - " + data.error);
+							res.render('error',{errorDescription: data.error});
+							console.log("[routes][explicitAccessSummary] - " + data.error);
 
 
-				}
+						}
 				
-				}).catch(function(err) {
-					res.render('error',{errorDescription: err.error});
-					console.log("[routes][explicitAccessSummary] - " + err.error);
+					}).catch(function(err) {
+						res.render('error',{errorDescription: err.error});
+						console.log("[routes][explicitAccessSummary] - " + err.error);
 
 					});
+				
+			}).catch(function(err) {
+				res.render('error',{errorDescription: err.error});
+				console.log("[routes][explicitAccessSummary] - " + err.error);
+
+			});
 		   
 	}
 	
 	
 	else{ // means first time is called
+		
+		
 
 		accesssumary.getUserAccessSummaryTabs(req,db).then(function (tabs){
+			
+			
+		
 			
 			accesssumary.getUserAccessSummary(req,db,tabs.data[0].start,tabs.data[0].end).then(function (data){
 
 				if(data.status==200 & !data.error) {
+					limits = "";
 					
 					for(var i=0;i<tabs.data.length;i++){
 					
@@ -288,19 +343,68 @@ administration.get('/dataFeedAccessSummary',isAuthenticated, function(req,res){
 	
 	
 });
+
 //report generated at server level
 administration.get('/downloadaccesssummary',isAuthenticated, function(req,res){
 
-
-	accesssumaryreports.exportToExcel(req,db).then(function (data){
-		res.attachment('report.xlsx'); 
-		res.send(data.data);
+	switch(req.session.businessunit){
 	
-	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
-		console.log("[routes][explicitAccessSummaryReport] - " + err.error);
+	case "GBS":
+		
+		accesssumaryreports.exportToExcel(req,db).then(function (data){
+			//console.log("length of exported buffer: "+data.data.length);
+			//console.log("Masimun Buffer size: "+buffer);
+					res.attachment('access_summary_report.xlsx'); 
+					res.send(data.data);
+		
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][explicitAccessSummaryReport] - " + err.error);
 
-		});
+			});
+		
+		
+				
+		break;
+		
+	case "GTS" :
+		
+		
+		
+		res.render('accesssummaryerror');
+		
+		
+		break;
+		
+	case "GTS Transformation" :
+		
+		accesssumaryreports.exportToExcel(req,db).then(function (data){
+			//console.log("length of exported buffer: "+data.data.length);
+			//console.log("Masimun Buffer size: "+buffer);
+					res.attachment('access_summary_report.xlsx'); 
+					res.send(data.data);
+		
+		}).catch(function(err) {
+			res.render('error',{errorDescription: err.error});
+			console.log("[routes][explicitAccessSummaryReport] - " + err.error);
+
+			});
+		
+		
+		break;
+		
+		default:
+			res.render('error',{errorDescription: "invalid Business Unit"});
+		    console.log("[routes][explicitAccessSummary] - " + "invalid Business Unit");
+			break;
+	
+	}
+	
+	
+	
+	
+	
+	
 
 });
 
