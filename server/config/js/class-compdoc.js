@@ -65,8 +65,11 @@ var getDocs = {
             }
             else if (comps[i].compntType == "controlSample") {
               doc[0].SampleData.push(comps[i]);
-              if (doc[0].controlType == "KCO") doc[0].processCategory = "Operational";
-              else doc[0].processCategory = "Financial";
+              if (comps[i].controlType == "KCO") {
+                doc[0].SampleData[sampleCtr].processCategory = "Operational";
+              } else {
+                doc[0].SampleData[sampleCtr].processCategory = "Financial";
+              }
               // Calculate for ControlName
               doc[0].SampleData[sampleCtr].controlName = doc[0].SampleData[sampleCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SampleData[sampleCtr].controlShortName;
               sampleCtr++;
