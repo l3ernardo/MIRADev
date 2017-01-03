@@ -30,7 +30,7 @@ var calculatefield = {
     var col = [];
     if (obj.length > 0) {
       for (var i = 0; i < rownum; i++) {
-        obj.push({"":""});
+        obj.push({});
         for (var prop in obj[0]) {
           if (obj[0].hasOwnProperty(prop)) {
             obj[(obj.length-1)][prop] = "";
