@@ -538,11 +538,11 @@ var assessment = {
 										});
 									}
 									else {
-								deferred.resolve({"status": 200, "doc": doc});
-							}
-						}).catch(function(err) {
-							deferred.reject({"status": 500, "error": err});
-						});
+										deferred.resolve({"status": 200, "doc": doc});
+									}
+								}).catch(function(err) {
+									deferred.reject({"status": 500, "error": err});
+								});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
@@ -640,7 +640,7 @@ var assessment = {
 												} else {
 													fieldCalc.addTestViewDataPadding(auditRList,10,(defViewRow-Object.keys(typeList).length));
 												}
-											};
+											}
 												doc[0].AuditTrustedData = auditRList;
 												doc[0].exportPPR = exportPPR;
 										} catch(e){
@@ -671,7 +671,14 @@ var assessment = {
 												auditInt[i].COFlag = true;
 												}
 											}
-												doc[0].AuditTrustedRCUData = AuditTrustedRCUData;
+											if (Object.keys(AuditTrustedRCUData).length < defViewRow) {
+												if (Object.keys(AuditTrustedRCUData).length == 0) {
+													AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
+												} else {
+													fieldCalc.addTestViewDataPadding(AuditTrustedRCUData,10,(defViewRow-Object.keys(AuditTrustedRCUData).length));
+												}
+											}
+											doc[0].AuditTrustedRCUData = AuditTrustedRCUData;
 										} catch(e){
 											console.log(e.stack)
 										}
@@ -696,9 +703,16 @@ var assessment = {
 													auditLoc[i].COFlag = false;
 												}else {
 													auditLoc[i].COFlag = true;
-											    }
-									        }
-												doc[0].AuditLocalData = AuditLocalData;
+											  }
+									    }
+											if (Object.keys(AuditLocalData).length < defViewRow) {
+												if (Object.keys(AuditLocalData).length == 0) {
+													AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+												} else {
+													fieldCalc.addTestViewDataPadding(AuditLocalData,8,(defViewRow-Object.keys(AuditLocalData).length));
+												}
+											}
+											doc[0].AuditLocalData = AuditLocalData;
 										} catch(e){
 											console.log(e.stack)
 										}
@@ -1129,20 +1143,20 @@ var assessment = {
 										}
 
 										deferred.resolve({"status": 200, "doc": doc});
-									}).catch(function(err) {
-										console.log("[assessment][getAsmtbyID]" + dataLL.error);
-										deferred.reject({"status": 500, "error": err});
-									});
+										}).catch(function(err) {
+											console.log("[assessment][getAsmtbyID]" + dataLL.error);
+											deferred.reject({"status": 500, "error": err});
+										});
 									//deferred.resolve({"status": 200, "doc": doc});
-								}
+									}
+								}).catch(function(err) {
+									console.log("[assessableunit][openIssueList]" + dataLL.error);
+									deferred.reject({"status": 500, "error": err});
+								});
 							}).catch(function(err) {
-								console.log("[assessableunit][openIssueList]" + dataLL.error);
+								console.log("[assessableunit][pprList]" + dataLL.error);
 								deferred.reject({"status": 500, "error": err});
-							});
-						}).catch(function(err) {
-							console.log("[assessableunit][pprList]" + dataLL.error);
-							deferred.reject({"status": 500, "error": err});
-						});;
+							});;
 							break;
 						case "Account":
 							doc[0].ALLData = fieldCalc.addTestViewData(7,defViewRow);

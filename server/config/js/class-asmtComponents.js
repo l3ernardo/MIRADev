@@ -121,7 +121,7 @@ var components = {
         if(typeof req.query.edit !== "undefined"){
           output.editmode = 1;
         }
-        if(output.samples.length != 0){
+        if(output.samples != undefined && output.samples.length != 0){
           var promises = output.samples.map(function(id){
             var obj = {
               selector : {
@@ -147,10 +147,12 @@ var components = {
               list.push(samp);
             }
             //console.log(list);
+            console.log("3");
             output.samples = list;
 
             /*console.log(data[1].body.docs[0]);
             console.log(data[2].body.docs[0]);*/
+            console.log("4");
             deferred.resolve({"status": 200, "data":output});
           });
         }else{
