@@ -62,11 +62,15 @@
 				<tbody>
 				{{#each AuditTrustedRCUData}}
 					<tr class="asmt-viewdata">
-						{{#if_equal RPTG_QTR ""}}
-						<td width="6%">&nbsp;</td>
+						{{#if RPTG_QTR}}
+							{{#if_equal RPTG_QTR ""}}
+								<td width="6%">&nbsp;</td>
+							{{else}}
+								<td width="6%">{{RPTG_QTR}}</td>
+							{{/if_equal}}
 						{{else}}
-						<td width="6%">{{RPTG_QTR}}</td>
-						{{/if_equal}}
+							<td width="6%">&nbsp;</td>
+						{{/if}}
 						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
 						<td width="10%">{{REVIEW_ID}}</td>
 						<td width="22%">{{countryProcess}}</td>
@@ -99,11 +103,15 @@
 				<tbody>
 				{{#each AuditLocalData}}
 					<tr class="asmt-viewdata">
-						{{#if_equal RPTG_QTR ""}}
-						<td width="6%">&nbsp;</td>
+						{{#if RPTG_QTR}}
+							{{#if_equal RPTG_QTR ""}}
+								<td width="6%">&nbsp;</td>
+							{{else}}
+								<td width="6%">{{RPTG_QTR}}</td>
+							{{/if_equal}}
 						{{else}}
-						<td width="6%">{{RPTG_QTR}}</td>
-						{{/if_equal}}
+							<td width="6%">&nbsp;</td>
+						{{/if}}
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
 						<td width="7%">{{REVIEW_END_DATE}}</td>
 						<td width="7%">{{RATING}}</td>

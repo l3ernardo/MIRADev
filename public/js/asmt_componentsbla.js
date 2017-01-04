@@ -1344,74 +1344,73 @@ $(document).ready(function() {
 		$(".openrisks_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#link-export').click(function(){
-			tableReport = tableToReport('open_risks_treeview');
-			fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
-		});
+		tableReport = tableToReport('open_risks_treeview');
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
 	$('#link-export2').click(function(){
-				tableReport = tableToReport('open_risks_treeview');
-				fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
-			});
+		tableReport = tableToReport('open_risks_treeview');
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
 //ppr export buttons
-			$("#ppr_checkbox_tree").click(function(){
-				$(".ppr_checkbox_tree").prop('checked', $(this).prop('checked'));
-			});
-			$('#ppr-link-export').click(function(){
-					tableReport = tableToReportPPR('ppr_treeview');
-					fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
-				});
-			$('#ppr-link-export2').click(function(){
-						tableReport = tableToReportPPR('ppr_treeview');
-						fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
-					});
+	$("#ppr_checkbox_tree").click(function(){
+		$(".ppr_checkbox_tree").prop('checked', $(this).prop('checked'));
+	});
+	$('#ppr-link-export').click(function(){
+		tableReport = tableToReportPPR('ppr_treeview');
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#ppr-link-export2').click(function(){
+		tableReport = tableToReportPPR('ppr_treeview');
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
 	//RCTestData export buttons
 	$("#RCTest_checkbox_tree").click(function(){
 		$(".RCTest_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#RCTest-link-export').click(function(){
-			tableReport = tableToReportMultiple('RCTest_treeview', "RCTest");
-			fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
-		});
+		tableReport = tableToReportMultiple('RCTest_treeview', "RCTest");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
 	$('#RCTest-link-export2').click(function(){
-				tableReport = tableToReportMultiple('RCTest_treeview',"RCTest");
-				fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
-			});
-
-			//SCTestData export buttons
-			$("#SCTest_checkbox_tree").click(function(){
-				$(".SCTest_checkbox_tree").prop('checked', $(this).prop('checked'));
-			});
-			$('#SCTest-link-export').click(function(){
-					tableReport = tableToReportMultiple('SCTest_treeview', "SCTest");
-					fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
-				});
-			$('#SCTest-link-export2').click(function(){
-						tableReport = tableToReportMultiple('SCTest_treeview',"SCTest");
-						fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
-					});
-					//SampleData export buttons
-					$("#Sample_checkbox_tree").click(function(){
-						$(".Sample_checkbox_tree").prop('checked', $(this).prop('checked'));
-					});
-					$('#Sample-link-export').click(function(){
-							tableReport = tableToReportMultiple('Sample_treeview',"Sample");
-							fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
-						});
-					$('#Sample-link-export2').click(function(){
-								tableReport = tableToReportMultiple('Sample_treeview',"Sample");
-								fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
-							});
-							//Sample2Data export buttons
-							$("#Sample2_checkbox_tree").click(function(){
-								$(".Sample2_checkbox_tree").prop('checked', $(this).prop('checked'));
-							});
-							$('#Sample2-link-export').click(function(){
-									tableReport = tableToReportMultiple('Sample2_treeview',"Sample2");
-									fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
-								});
-							$('#Sample2-link-export2').click(function(){
-										tableReport = tableToReportMultiple('Sample2_treeview',"Sample2");
-										fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
-									});
+		tableReport = tableToReportMultiple('RCTest_treeview',"RCTest");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//SCTestData export buttons
+	$("#SCTest_checkbox_tree").click(function(){
+		$(".SCTest_checkbox_tree").prop('checked', $(this).prop('checked'));
+	});
+	$('#SCTest-link-export').click(function(){
+		tableReport = tableToReportMultiple('SCTest_treeview', "SCTest");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#SCTest-link-export2').click(function(){
+		tableReport = tableToReportMultiple('SCTest_treeview',"SCTest");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//SampleData export buttons
+	$("#Sample_checkbox_tree").click(function(){
+		$(".Sample_checkbox_tree").prop('checked', $(this).prop('checked'));
+	});
+	$('#Sample-link-export').click(function(){
+		tableReport = tableToReportMultiple('Sample_treeview',"Sample");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#Sample-link-export2').click(function(){
+		tableReport = tableToReportMultiple('Sample_treeview',"Sample");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//Sample2Data export buttons
+	$("#Sample2_checkbox_tree").click(function(){
+		$(".Sample2_checkbox_tree").prop('checked', $(this).prop('checked'));
+	});
+	$('#Sample2-link-export').click(function(){
+		tableReport = tableToReportMultiple('Sample2_treeview',"Sample2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#Sample2-link-export2').click(function(){
+		tableReport = tableToReportMultiple('Sample2_treeview',"Sample2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
 
   switch ($("input[name='parentdocsubtype']").val()) {
 		case "Controllable Unit":
