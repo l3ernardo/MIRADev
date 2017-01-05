@@ -38,9 +38,9 @@
 					<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
 						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_tree"/></th>
 						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-						{{{ratingDisplayView PeriodRatingPrev}}}
-						{{{ratingDisplayView PeriodRating}}}
-						{{{ratingDisplayView AUNextQtrRating}}}
+						{{{ratingDisplayView priorQ "priorQ"}}}
+						{{{ratingDisplayView currentQ "currentQ"}}}
+						{{{ratingDisplayView nextQtr "nextQtr"}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>
@@ -70,9 +70,9 @@
 					<tr>
 						<th scope="row" class="ibm-table-row"><input type="checkbox" class="mira_checkbox_flat"/></th>
 						<td><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
-						{{{ratingDisplayView PeriodRatingPrev}}}
-						{{{ratingDisplayView PeriodRating}}}
-						{{{ratingDisplayView AUNextQtrRating}}}
+						{{{ratingDisplayView priorQ "priorQ"}}}
+						{{{ratingDisplayView currentQ "currentQ"}}}
+						{{{ratingDisplayView nextQtr "nextQtr"}}}
 						<td>{{Target2Sat}}</td>
 						<td class="{{{statusIcon MIRAAssessmentStatus Status}}}" title="{{MIRAAssessmentStatus}}"></td>
 						<td class="{{{statusIcon WWBCITAssessmentStatus Status}}}" title="{{WWBCITAssessmentStatus}}"></td>

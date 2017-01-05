@@ -1,0 +1,15 @@
+<div id="errormessage">
+{{#if conflictfields}}
+<div class="ibm-rule"><hr></div> 
+	<br/><p class="ibm-error"><strong>The following fields are conflicted while you are saving:</strong></p>
+	<ul class="ibm-bullet-list">	
+	{{#each conflictfields}}	
+		<li class="ibm-no-links"><b>{{{label}}}:</b> {{{old}}}</li>
+		<script>$('label[for="{{{field}}}"]').addClass("ibm-confidential");</script>
+	{{/each}}
+    </ul>	
+	<p class="ibm-error"><strong>Check the fields in RED to compare the values!</strong></p>
+<br/>	
+<div class="ibm-rule"><hr></div> 
+{{/if}}
+</div>

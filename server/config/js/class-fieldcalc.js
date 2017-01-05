@@ -30,7 +30,7 @@ var calculatefield = {
     var col = [];
     if (obj.length > 0) {
       for (var i = 0; i < rownum; i++) {
-        obj.push({"":""});
+        obj.push({});
         for (var prop in obj[0]) {
           if (obj[0].hasOwnProperty(prop)) {
             obj[(obj.length-1)][prop] = "";
@@ -110,7 +110,7 @@ var calculatefield = {
 
       // Get Parameters for Assessable Units
       if (doc[0].DocType == "Assessable Unit") {
-        if (req.session.businessunit == "GTS") {
+        if (doc[0].MIRABusinessUnit == "GTS") {
           // GTS Assessable Unit Doc Parameters
     			if (doc[0].DocSubType == "Controllable Unit") {
     				doc[0].CatCU = "";
@@ -122,7 +122,7 @@ var calculatefield = {
     				lParams = ['GTSInstanceDesign'];
     			}
         }
-        else if (req.session.businessunit == "GBS") {
+        else if (doc[0].MIRABusinessUnit == "GBS") {
           // GBS Assessable Unit Doc Parameters
           lParams.push('GBSInstanceDesign');
     		}
@@ -132,7 +132,7 @@ var calculatefield = {
       }
       // Get Parameters for Assessments
       else {
-        if (req.session.businessunit == "GTS") {
+        if (doc[0].MIRABusinessUnit == "GTS") {
           // GTS Assessment Doc Parameters
     			if (doc[0].ParentDocSubType == "Controllable Unit") {
     				doc[0].CatCU = "";
@@ -149,7 +149,7 @@ var calculatefield = {
             lParams.push('GTSRollupProcessesFIN');
           }
         }
-        else if (req.session.businessunit == "GBS") {
+        else if (doc[0].MIRABusinessUnit == "GBS") {
           // GBS Assessment Doc Parameters
           lParams.push('GBSInstanceDesign');
           if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {

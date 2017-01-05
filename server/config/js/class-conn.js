@@ -198,7 +198,7 @@ var DB = {
 		var docid = userdoc._id
 		this.db.get(docid, '', function(error, data) {
 			var doc2 = data;
-			if(userdoc._rev==doc2._rev) {
+			if(doc1._rev==doc2._rev) {
 				// No changes detected, so userdoc can be saved
 				delete userdoc.fieldslist;
 				module.exports.save(userdoc).then(function(data2) {
@@ -209,28 +209,32 @@ var DB = {
 					}					
 				});
 			} else {
+				//console.log("Conflict detected");
 				// A change is detected, checking if the fields can be merged between doc2 and userdoc
 				userdoc._rev=doc2._rev; // updating the userdoc to be the last version
+				//console.log(userdoc);
 				var conflictfields = [];
 				try {
 					if(userdoc.fieldslist) { // the list of the editable fields to be looked for
-						for(var i=0;i<userdoc.fieldslist.length;i++) {
-							var field = userdoc.fieldslist[i].field;
-							var label = userdoc.fieldslist[i].label;
+						var fieldslist = userdoc.fieldslist.split(","); // convert into an array
+						for(var i=0;i<fieldslist.length;i++) {
+							var field = fieldslist[i].split(":")[0]; //field;
+							var label = fieldslist[i].split(":")[1]; //label;
 							// Checking and merging conflicted fields
 							//console.log("Comparing field: " + field + ", value:" + userdoc[field]);
 							var count = 0;
-							if(doc1[field]!=userdoc[field]) count++;
-							if(doc1[field]!=doc2[field]) count++;
-							if(userdoc[field]!=doc2[field]) count++;
+							if(doc1[field].toString()!=userdoc[field].toString()) count++;
+							if(doc1[field].toString()!=doc2[field].toString()) count++;
+							if(userdoc[field].toString()!=doc2[field].toString()) count++;
 							if(count>=3) { // Conflict detected
-								conflictfields.push({"field":field, "label":label, "old:":doc2[field], "new":userdoc[field]});
+								//console.log("Conflicted fields found");
+								conflictfields.push({"field":field, "label":label, "old":doc2[field], "new":userdoc[field]});
 							} else {
 								// Only merge if doc2 has a different value from doc1 and userdoc (and doc1 and userdoc are the same)
-								if(doc1[field]==userdoc[field]) {
+								if(doc1[field].toString()==userdoc[field].toString()) {
 									userdoc[field] = doc2[field];
 								}
-								console.log(field + " => " + userdoc[field]);
+								//console.log(field + " => " + userdoc[field]);
 							}
 						}
 						// Merge fields from doc2 into doc1, if they are changed and don't belong to editable fields' list
@@ -240,8 +244,8 @@ var DB = {
 								try {
 									// Check if it's a non-mapped field (probably read-only or system control)
 									var flag = false;
-									for(var i=0;i<userdoc.fieldslist.field;i++) {
-										if(userdoc.fieldslist[i].field==fld) {
+									for(var i=0;i<fieldslist.length;i++) {
+										if(fieldslist[i].split(":")[0]==fld) {
 											flag = true;
 										}	
 									}
@@ -259,7 +263,11 @@ var DB = {
 						}					
 						if(conflictfields.length>0) {
 							//console.log(conflictfields.length + " conflicts found.");
-							deferred.resolve({"status": "ERROR", "userdoc":userdoc, "conflict":conflictfields});
+							try {
+								deferred.resolve({"status": 999, "id": docid, "body": userdoc, "conflictfields": conflictfields});
+							}catch(e){
+								console.log(e.stack);
+							}
 						} else {
 							//console.log("No conflicts detected!");
 							// No conflicts detected, the userdoc (with all merges) can be saved
@@ -273,6 +281,7 @@ var DB = {
 							});						
 						}
 					} else {
+						//console.log("No conflicts detected!");
 						// No list of fields supplied, it means no need to check anything
 						delete userdoc.fieldslist; // Delete temp fieldlist field
 						module.exports.save(userdoc).then(function(data2) {
