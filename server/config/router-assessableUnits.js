@@ -85,7 +85,7 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Country Process":
 						var lParams;
-						if (req.session.businessunit == "GBS") lParams = ['UnitSizes','GBSAuditPrograms','GBSOpMetricKeysProcess'];
+						if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['UnitSizes','GBSAuditPrograms','GBSOpMetricKeysProcess'];
 						else lParams = ['UnitSizes','GTSAuditPrograms','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
@@ -102,7 +102,7 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Controllable Unit":
 						var lParams;
-						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms','GBSOpMetricKeysCU'];
+						if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['GBSMetrics', 'UnitSizes','ARCFrequencies','GBSAuditPrograms','GBSOpMetricKeysCU'];
 						else lParams = ['GTSMetrics', 'UnitSizes','ARCFrequencies','GTSAuditPrograms','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
@@ -120,7 +120,7 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 					case "BU Reporting Group":
 						if (data.doc[0].editmode) {
 							var lParams;
-							if (req.session.businessunit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
+							if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
 							else lParams = ['AssessableUnitStatus'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
@@ -140,7 +140,7 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Account":
 						var lParams;
-						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
+						if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
 						else lParams = ['GTSMetrics', 'AssessableUnitStatus','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
@@ -222,7 +222,7 @@ assessableUnits.get('/newassessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "BU Reporting Group":
 						var lParams;
-						if (req.session.businessunit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
+						if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
 						else lParams = ['AssessableUnitStatus'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
@@ -239,7 +239,7 @@ assessableUnits.get('/newassessableunit', isAuthenticated, function(req, res) {
 						break;
 					case "Account":
 						var lParams;
-						if (req.session.businessunit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
+						if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['GBSMetrics', 'AssessableUnitStatus','GBSOpMetricKeysCU'];
 						else lParams = ['GTSMetrics', 'AssessableUnitStatus','GTSOpMetricKeys'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
