@@ -35,7 +35,8 @@ var assessment = {
 				parentdoc.push(pdata.body);
 				/* Get access and roles */
 				var editors = parentdoc[0].AdditionalEditors + parentdoc[0].Owner + parentdoc[0].Focals;
-				accessrules.getRules(req,editors);
+				//accessrules.getRules(req,editors);
+				accessrules.getRules(req,doc[0].parentid,db,pdata.body);
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
@@ -785,7 +786,8 @@ var assessment = {
 
 				/* Get access and roles */
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
-				accessrules.getRules(req,peditors);
+				accessrules.getRules(req,pid,db,data.body);
+				//accessrules.getRules(req,peditors);
 				var editors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 
 				if (accessrules.rules.editor) {
