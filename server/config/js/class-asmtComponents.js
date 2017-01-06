@@ -11,6 +11,37 @@ var utility = require('./class-utility.js');
 
 var components = {
 
+newAudit: function(req, db){
+  var deferred = q.defer();
+  try{
+    var obj = {
+      selector : {
+        "_id": req.query.id,
+        "compntType": "ppr"
+      }
+    };
+
+    db.find(obj).then(function(data){
+      //console.log(data.body.docs[0]);
+      data.body.docs[0]["_id"] = req.query.id;
+      if(typeof req.query.edit !== "undefined"){
+        data.body.docs[0].editmode = 1;
+      }
+      deferred.resolve({"status": 200, "data":data.body.docs[0]})
+    }).catch(function(err) {
+      deferred.reject({"status": 500, "error": err.error.reason});
+    });
+  }catch(e){
+    deferred.reject({"status": 500, "error": e});
+  }
+  return deferred.promise;
+},
+
+
+
+
+
+
   getComponent: function(req, db){
     var deferred = q.defer();
     try{
@@ -22,6 +53,7 @@ var components = {
       };
       db.find(obj).then(function(data){
         var tipo = data.body.docs[0].compntType;
+
         switch (tipo) {
           case "controlSample":
           deferred.resolve(components.getControlSample(req,db));
@@ -147,7 +179,6 @@ var components = {
               list.push(samp);
             }
             //console.log(list);
-            console.log("3");
             output.samples = list;
 
             /*console.log(data[1].body.docs[0]);
@@ -232,7 +263,6 @@ getLocalAudit: function(req, db){
       }else{
         ratingKey ="AdminAuditsRatings";
       }
-      //console.log(req.session.businessunit+ratingKey);
       var obj = {
         selector : {
           "_id": {"$gt":0},
@@ -242,8 +272,9 @@ getLocalAudit: function(req, db){
         db.find(obj).then(function(data2){
 
           var tmp = [];
+
           for(var list in data2.body.docs[0].value){
-            tmp.push({name:list});
+            tmp.push({name:list});       
           }
           output.auditList = tmp;
           output.ratingList = data2.body.docs[0].value;
@@ -252,16 +283,15 @@ getLocalAudit: function(req, db){
           output.reportingQuarter = req.session.quarter;
           var pkey = {
             selector : {
-              "_id": req.query.pID
+              "_id": req.query.id
             }};
+
             db.find(pkey).then(function(parentData){
               var parent = parentData.body.docs[0];
-              if(!((parent.DocSubType != "Controllable Unit" && parent.DocSubType != "Country Process") || (parent.MIRAStatus == "Final"))){
-                output.procesDisplay = true;
-              }
-              /*if(!((ParentSubType != "Controllable Unit" && ParentSubType != "Country Process") || ( parentStatus == "Final"))){
-              output.procesDisplay = true;
-            }*/
+                if(!((parent.ParentDocSubType != "Controllable Unit" && parent.ParentDocSubType != "Country Process") || (parent.MIRAStatus == "Final"))){
+                  output.procesDisplay = true;
+                }
+
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
