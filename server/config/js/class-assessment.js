@@ -40,7 +40,6 @@ var assessment = {
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
-				doc[0].editor = true;
 				// Get inherited fields from parent assessable unit
 				if (parentdoc[0].OpMetricKey == undefined || parentdoc[0].OpMetricKey == "") parentdoc[0].OpMetricKey = "OMKID0";
 				// OMKID0 - Operational Metric ID for Other Metrics as a default metric
