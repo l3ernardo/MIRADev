@@ -27,7 +27,7 @@ var assessableunit = {
 				var constiobj = {};
 				var toadd = {};
 				//var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
-				
+
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
 				doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
@@ -1124,6 +1124,7 @@ var assessableunit = {
 							doc[0].parentid = req.body.parentid;
 							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
 							doc[0].OpMetricKey = req.body.OpMetricKey;
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].LevelType = "1";
@@ -1209,6 +1210,7 @@ var assessableunit = {
 							doc[0].MetricsValue = req.body.MetricsValue
 							doc[0].Status = req.body.Status;
 							doc[0].OpMetricKey = req.body.OpMetricKey;
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "Controllable Unit":
 							//Validate if accounts require to be updated
