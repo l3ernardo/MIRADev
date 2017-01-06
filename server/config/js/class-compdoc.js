@@ -78,6 +78,10 @@ var getDocs = {
                 } else {
                   doc[0].SampleData[sampleCtr].processCategory = "Financial";
                 }
+                // Calculate for unremedPriorSample - Samples from prior quarters with unremediated defects. It will be used as a flag to alert that the asmt has an exception in it skey controls testing
+                if (comps[i].status != "Retired" && comps[i].reportingQuarter > comps[i].originalReportingQuarter && comps[i].remediationStatus == "Open" && comps[i].numDefects > 0) {
+                  doc[0].unremedPriorSample = true;
+                }
                 // Calculate for ControlName
                 doc[0].SampleData[sampleCtr].controlName = doc[0].SampleData[sampleCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SampleData[sampleCtr].controlShortName;
                 sampleCtr++;
