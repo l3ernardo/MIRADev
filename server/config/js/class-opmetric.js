@@ -82,12 +82,12 @@ var calculatefield = {
       }
       doc[0].OpMetric = [];
       var omIndex, paramOpMetrics;
-      if (req.session.businessunit == "GBS") paramOpMetrics = "GBSOpMetrics";
+      if (doc[0].MIRABusinessUnit == "GBS") paramOpMetrics = "GBSOpMetrics";
       else paramOpMetrics = "GTSOpMetrics";
 
       if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" ) {
         // For Base Level Assessments
-        if (req.session.businessunit == "GTS" && doc[0].OpMetricKey == "OMKID4") {
+        if (doc[0].MIRABusinessUnit == "GTS" && doc[0].OpMetricKey == "OMKID4") {
           // OMKID4 is opmetric key id for "Delivery"
           if (doc[0].OtherMetricRating == "Marg" || doc[0].OtherMetricRating == "Unsat") {
             doc[0].opMetricException = 1;
@@ -176,12 +176,12 @@ var calculatefield = {
       }
       doc[0].OpMetric = [];
       var omIndex, paramOpMetrics;
-      if (req.session.businessunit == "GBS") paramOpMetrics = "GBSOpMetrics";
+      if (doc[0].MIRABusinessUnit == "GBS") paramOpMetrics = "GBSOpMetrics";
       else paramOpMetrics = "GTSOpMetrics";
 
       if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Account" ) {
         // For Base Level Assessments
-        if (req.session.businessunit == "GTS" && doc[0].OpMetricKey == "OMKID4") {
+        if (doc[0].MIRABusinessUnit == "GTS" && doc[0].OpMetricKey == "OMKID4") {
           // OMKID4 is opmetric key id for "Delivery"
           if (doc[0].OtherMetricRating == "Marg" || doc[0].OtherMetricRating == "Unsat") {
             doc[0].opMetricException = 1;

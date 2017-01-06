@@ -28,7 +28,7 @@
 					<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>
 						<td width="6%">{{#unless countryProcess}}{{reportingQuarter}}{{/unless}}</td>
 						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
-						<td width="15%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
 						<td width="10%">{{REVIEW_ID}}</td>
 						<td width="20%">{{countryProcess}}</td>
 						<td width="5%">{{REVIEW_END_DATE}}</td>
@@ -62,8 +62,16 @@
 				<tbody>
 				{{#each AuditTrustedRCUData}}
 					<tr class="asmt-viewdata">
-						<td width="6%">{{RPTG_QTR}}</td>
-						<td width="15%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						{{#if RPTG_QTR}}
+							{{#if_equal RPTG_QTR ""}}
+								<td width="6%">&nbsp;</td>
+							{{else}}
+								<td width="6%">{{RPTG_QTR}}</td>
+							{{/if_equal}}
+						{{else}}
+							<td width="6%">&nbsp;</td>
+						{{/if}}
+						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
 						<td width="10%">{{REVIEW_ID}}</td>
 						<td width="22%">{{countryProcess}}</td>
 						<td width="5%">{{REVIEW_END_DATE}}</td>
@@ -95,8 +103,16 @@
 				<tbody>
 				{{#each AuditLocalData}}
 					<tr class="asmt-viewdata">
-						<td width="7%">{{RPTG_QTR}}</td>
-						<td width="20%"><a href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						{{#if RPTG_QTR}}
+							{{#if_equal RPTG_QTR ""}}
+								<td width="6%">&nbsp;</td>
+							{{else}}
+								<td width="6%">{{RPTG_QTR}}</td>
+							{{/if_equal}}
+						{{else}}
+							<td width="6%">&nbsp;</td>
+						{{/if}}
+						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
 						<td width="7%">{{REVIEW_END_DATE}}</td>
 						<td width="7%">{{RATING}}</td>
 						<td width="10%">{{NUM_TOTAL_RECMNDTNS}}</td>
