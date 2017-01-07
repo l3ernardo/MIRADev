@@ -84,6 +84,14 @@ var accessrules = {
 						editor = true;
 						
 					}
+					else{  //user not found
+						editor = false;
+						reader = false;
+						admin = false;
+						grantaccess = false;
+						resetstatus = false;
+						cudamin = false;
+					}
 					
 					var rules = {
 							"editor":editor,
