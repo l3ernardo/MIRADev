@@ -40,7 +40,6 @@ var assessment = {
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
-
 				// Get inherited fields from parent assessable unit
 				if (parentdoc[0].OpMetricKey == undefined || parentdoc[0].OpMetricKey == "") parentdoc[0].OpMetricKey = "OMKID0";
 				// OMKID0 - Operational Metric ID for Other Metrics as a default metric
@@ -443,7 +442,8 @@ var assessment = {
 							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
-							doc[0].AccountData = doc[0].RiskData;
+							// doc[0].AccountData = doc[0].RiskData;
+							doc[0].AccountData = [];
 							doc[0].CUAsmtDataPR1view = [];
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
@@ -452,6 +452,13 @@ var assessment = {
 										doc[0].CUAsmtDataPR1view = fieldCalc.addTestViewData(9,defViewRow);
 									} else {
 										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(defViewRow-doc[0].CUAsmtDataPR1view.length));
+									}
+								}
+								if (doc[0].AccountData.length < defViewRow) {
+									if (doc[0].AccountData.length == 0) {
+										doc[0].AccountData = fieldCalc.addTestViewData(11,defViewRow);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].AccountData,11,(defViewRow-doc[0].AccountData.length));
 									}
 								}
 
@@ -1478,6 +1485,7 @@ var assessment = {
 							}
 							//---Backend Fields---//
 							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
