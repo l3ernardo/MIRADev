@@ -464,7 +464,7 @@ var assessment = {
 
 								//Open issue
 								comp.getOpenIssue(db,doc,defViewRow).then(function(){
-									console.log(doc[0].AccountData[0]);
+									//console.log(doc[0].AccountData[0]);
 								//AuditKey
 								if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
@@ -562,7 +562,7 @@ var assessment = {
 							doc[0].RiskData = fieldCalc.addTestViewData(11,defViewRow);
 							doc[0].AuditTrustedData = doc[0].RiskData;
 							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
-							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+							//doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].DRData = fieldCalc.addTestViewData(5,1);
 							doc[0].EAData = doc[0].ARCData;
 
@@ -574,6 +574,7 @@ var assessment = {
 								aar.processARTab(doc,defViewRow);
 								//Open Issues Tab
 								comp.getOpenIssue(db,doc,defViewRow).then(function(){
+									//console.log(doc[0].AuditLocalData);
 									//AuditKey
 									if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].GPPARENT != null)){
 										var obj = {

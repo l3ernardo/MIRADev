@@ -8,7 +8,7 @@ var components = require('./js/class-asmtComponents.js');
 asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 	components.getComponent(req, db).then(function(data){
 		var type= data.data.compntType;
-		console.log("type :" + type);
+		//console.log("type :" + type);
 		switch (type) {
 			case "controlSample":
 			//9d9902492259ecc30230af749b1c2a06
