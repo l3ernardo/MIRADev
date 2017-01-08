@@ -183,7 +183,7 @@ newAudit: function(req, db){
 
             /*console.log(data[1].body.docs[0]);
             console.log(data[2].body.docs[0]);*/
-            console.log("4");
+            
             deferred.resolve({"status": 200, "data":output});
           });
         }else{
@@ -717,6 +717,7 @@ getLocalAudit: function(req, db){
 
                   if(req.body.docid === ""){
                     var obj={};
+                    obj.docType = "asmtComponent";
                     obj.compntType = "localAudit";
                     obj.controllableUnit = req.body.controllableUnit;
                     obj.auditOrReview = req.body.auditOrReview;
