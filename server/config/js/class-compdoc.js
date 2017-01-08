@@ -34,9 +34,6 @@ var getDocs = {
               ]
             }
           };
-          // { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-          // { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-          // { "$and": [{"compntType": "sampledCountry"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
@@ -57,10 +54,12 @@ var getDocs = {
               else if (comps[i].compntType == "countryControls") {
                 doc[0].RCTestData.push(comps[i]);
                 // Calculate for Defect Rate of Control doc
-                if (comps[i].numActualTests ==  undefined || comps[i].numActualTests == "" || comps[i].numActualTests == 0 || comps[i].numDefects == undefined || comps[i].numDefects == "") {
-                  doc[0].RCTestData[controlCtr].defectRate = "";
-                } else {
-                  doc[0].RCTestData[controlCtr].defectRate = ((comps[i].numDefects/comps[i].numActualTests) * 100).toFixed(1);
+                if (doc[0].RCTestData[controlCtr].defectRate != "") {
+                  doc[0].RCTestData[controlCtr].defectRate = (parseInt(doc[0].RCTestData[controlCtr].defectRate)).toFixed(1);
+                  if (doc[0].RCTestData[controlCtr].defectRate == 0.0) {
+                    doc[0].RCTestData[controlCtr].defectRate = 0;
+                    doc[0].RCTestData[controlCtr].RAGStatus = "Sat";
+                  }
                 }
                 // Calculate for ControlName
                 doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
@@ -68,6 +67,8 @@ var getDocs = {
               }
               else if (comps[i].compntType == "sampledCountry") {
                 doc[0].SCTestData.push(comps[i]);
+                // Calculate for Defect Rate of Control doc
+                doc[0].SCTestData[scControlCtr].defectRate = (parseInt(doc[0].SCTestData[scControlCtr].defectRate)).toFixed(1);
                 // Calculate for ControlName
                 doc[0].SCTestData[scControlCtr].controlName = doc[0].SCTestData[scControlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SCTestData[scControlCtr].controlShortName;
                 scControlCtr++;

@@ -59,7 +59,7 @@
 						<td width="38%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{numDefects}}</td>
-						<td width="10%">{{defectRate}}</td>
+						{{{compDocDRDisplayView RAGStatus defectRate}}}
 						<td width="20%">{{#if remFinImpact}}$ {{/if}}{{remFinImpact}}</td>
 					</tr>
 				{{/each}}
@@ -101,7 +101,7 @@
 						<td width="25%">{{#if reportingCountry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{/if}}{{reportingCountry}}{{#if reportingCountry}}</a>{{/if}}</td>
 						<td width="14%">{{numtest}}</td>
 						<td width="14%">{{numDefects}}</td>
-						<td width="15%">{{defectRate}}</td>
+						{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 					</tr>
 				{{/each}}
 			</tbody>
@@ -147,7 +147,7 @@
 						<td width="5%">{{numDefects}}</td>
 						<td width="10%">{{defectType}}</td>
 						<td width="10%">{{remediationStatus}}</td>
-						<td width="5%">{{remainingFinancialImpact}}</td>
+						<td width="5%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 						<td width="12%">{{originalTargetDate}}</td>
 						<td width="11%">{{targetClose}}</td>
 						<td width="20%">{{defectsAbstract}}</td>
@@ -195,7 +195,7 @@
 						<td width="15%">{{processSampled}}</td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="5%">{{defectType}}</td>
-						<td width="7%">{{remainingFinancialImpact}}</td>
+						<td width="7%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 						<td width="6.5%">{{originalTargetDate}}</td>
 						<td width="6.5%">{{targetClose}}</td>
 						<td width="15%">{{defectsAbstract}}</td>
