@@ -22,20 +22,21 @@ var getDocs = {
               "docType": "asmtComponent",
               "$or": [
                 // Key Controls Testing Tab
-                { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-                { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-                { "$and": [{"compntType": "sampledCountry"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
+                { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // Audits and Reviews Tab
                 { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey}] },
                 { "$and": [{"compntType": "internalAudit"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey}] },
                 { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey},{"REVIEW_TYPE": "CHQ Internal Audit"}] },
-                { "$and": [{"DOCTYPE": "ppreview"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit}] }
+                { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
+                // { "$and": [{"DOCTYPE": "ppreview"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit}] }
               ]
             }
           };
-          // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
-          // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
-          // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] }
+          // { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+          // { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+          // { "$and": [{"compntType": "sampledCountry"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
@@ -56,10 +57,10 @@ var getDocs = {
               else if (comps[i].compntType == "countryControls") {
                 doc[0].RCTestData.push(comps[i]);
                 // Calculate for Defect Rate of Control doc
-                if (doc[0].RCTestData[controlCtr].numActualTests ==  undefined || doc[0].RCTestData[controlCtr].numActualTests == "" || doc[0].RCTestData[controlCtr].numActualTests == 0 || doc[0].RCTestData[controlCtr].numDefects == undefined || doc[0].RCTestData[controlCtr].numDefects == "") {
+                if (comps[i].numActualTests ==  undefined || comps[i].numActualTests == "" || comps[i].numActualTests == 0 || comps[i].numDefects == undefined || comps[i].numDefects == "") {
                   doc[0].RCTestData[controlCtr].defectRate = "";
                 } else {
-                  doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].numDefects/doc[0].RCTestData[controlCtr].numActualTests) * 100).toFixed(1);
+                  doc[0].RCTestData[controlCtr].defectRate = ((comps[i].numDefects/comps[i].numActualTests) * 100).toFixed(1);
                 }
                 // Calculate for ControlName
                 doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
@@ -92,7 +93,7 @@ var getDocs = {
               else if (comps[i].compntType == "ppr" || comps[i].compntType == "internalAudit") {
                 doc[0].AuditTrustedData.push(comps[i]);
               }
-              else if (comps[i].DOCTYPE == "ppreview") {
+              else if (comps[i].compntType == "localAudit") {
                 doc[0].AuditLocalData.push(comps[i]);
               }
               else {
