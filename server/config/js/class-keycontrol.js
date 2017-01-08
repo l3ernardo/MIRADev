@@ -15,9 +15,9 @@ var calculateKCTab = {
       switch (doc[0].ParentDocSubType) {
         case "Country Process":
           // format defect rate
-          if (doc[0].AUTestCount == undefined || doc[0].AUTestCount == 0 ) {
-            doc[0].AUDefectRate = "";
-          }
+          // if (doc[0].AUTestCount == undefined || doc[0].AUTestCount == 0 ) {
+          //   doc[0].AUDefectRate = "";
+          // }
 
           // *** Start of Reporting Country Testing Data (1st embedded view in Testing tab) *** //
           //Sorting for RCTest_treeview
