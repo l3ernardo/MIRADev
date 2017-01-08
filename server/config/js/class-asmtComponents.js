@@ -153,7 +153,37 @@ newAudit: function(req, db){
         if(typeof req.query.edit !== "undefined"){
           output.editmode = 1;
         }
-        if(output.samples != undefined && output.samples.length != 0){
+        var obj = {
+          selector : {
+            "_id": {"$gt":0},
+            "compntType": "controlSample",
+            "reportingQuarter": output.reportingQuarter,
+            "CTRLPARENT": output.IntegrationKeyWWBCIT
+          },
+          fields:["_id","reportingQuarter","sampleUniqueID","controllableUnit","numTests","numDefects","remediationStatus","defectsAbstract"]
+        };
+        db.find(obj).then(function(data){
+          //console.log(data);
+          var quarters = {};
+          var list = [];
+          for(var i=0; i< data.body.docs.length; i++){
+            var samp = data.body.docs[i];
+            if(typeof quarters[samp.reportingQuarter] === "undefined"){
+              quarters[samp.reportingQuarter] = true;
+              list.push({id:samp.reportingQuarter.replace(/ /g,''), period:samp.reportingQuarter});
+            }
+            samp.parent = samp.reportingQuarter.replace(/ /g,'');
+            samp.id = samp["_id"];
+            samp.defectRate = (samp.numDefects / samp.numTests) * 100;
+            list.push(samp);
+          }
+          //console.log(list);
+          output.samples = list;
+          deferred.resolve({"status": 200, "data":output});
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
+        /*if(output.samples != undefined && output.samples.length != 0){
           var promises = output.samples.map(function(id){
             var obj = {
               selector : {
@@ -181,19 +211,12 @@ newAudit: function(req, db){
             //console.log(list);
             output.samples = list;
 
-            /*console.log(data[1].body.docs[0]);
-            console.log(data[2].body.docs[0]);*/
-            
             deferred.resolve({"status": 200, "data":output});
           });
         }else{
-          /*
-          var promises = searchList.map(function(word) {
-          return request(url.replace('%word%', word));
-        });
-        return q.all(promises).then(function(data){*/
+
         deferred.resolve({"status": 200, "data":output});
-      }
+      }*/
     }).catch(function(err) {
       deferred.reject({"status": 500, "error": err.error.reason});
     });
