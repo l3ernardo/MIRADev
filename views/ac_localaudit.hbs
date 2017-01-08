@@ -44,7 +44,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       {{#if editmode}}
 
       <tr>
-        <td width="25%">ControllableUnit:</td><td><b><input type="text" id="controllableUnit" name="controllableUnit" value="PENDING" readonly></b></td>
+        <td width="25%">{{parentType}}:</td><td><b><input type="text" id="controllableUnit" name="controllableUnit" value="{{AssessableUnitName}}" readonly></b></td>
       </tr>
       <tr>
         <td>Audit or Review:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>

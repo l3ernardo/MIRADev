@@ -9,7 +9,7 @@
 			<span class="audit-review"><b>Internal Audits and Proactive Reviews (Process Reviews, PwC Required Walkthroughs, IBM Voluntary Walkthroughs, and Application Reviews)</b></span><br /><br />
 			<table id="ppr_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="audit-review-viewheader" width="2%"><input type="checkbox" class="ppr_checkbox_tree" id="ppr_checkbox_tree" name="ppr_checkbox "/></th>
+					<!--<th class="audit-review-viewheader" width="2%"><input type="checkbox" class="ppr_checkbox_tree" id="ppr_checkbox_tree" name="ppr_checkbox "/></th>-->
 					<th class="audit-review-viewheader" width="6%">Period</th>
 					<th class="audit-review-viewheader" width="3%">CO</th>
 					<th class="audit-review-viewheader" width="15%">Audit or Review</th>
@@ -25,7 +25,7 @@
 				<tbody>
 				{{#each AuditTrustedData}}
 				<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-					<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>
+					<!--<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>-->
 						<td width="6%">{{#unless countryProcess}}{{reportingQuarter}}{{/unless}}</td>
 						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
 						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
@@ -90,11 +90,12 @@
 		<td>
 			<span class="audit-review"><b>Audits &amp; Reviews (data managed locally)</b></span><br /><br />
 			<table width="100%" class="table_with_scroll">
-			{{#if admin}}
+			<!--{{#if admin}}-->
+			<!--{{/if}}-->
 				<a target="_blank" href="/localaudit?id={{_id}}&new" class="ibm-add1-link">New</a></td>
 
 				<br /><br />
-			{{/if}}
+
 				<thead>
 					<th class="audit-review-viewheader" width="7%">Period</th>
 					<th class="audit-review-viewheader" width="20%">Audit or Review</th>

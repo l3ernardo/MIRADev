@@ -464,7 +464,7 @@ var assessment = {
 
 								//Open issue
 								comp.getOpenIssue(db,doc,defViewRow).then(function(){
-
+									console.log(doc[0].AccountData[0]);
 								//AuditKey
 								if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
