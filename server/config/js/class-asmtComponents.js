@@ -274,7 +274,7 @@ getLocalAudit: function(req, db){
           var tmp = [];
 
           for(var list in data2.body.docs[0].value){
-            tmp.push({name:list});       
+            tmp.push({name:list});
           }
           output.auditList = tmp;
           output.ratingList = data2.body.docs[0].value;
@@ -291,7 +291,9 @@ getLocalAudit: function(req, db){
                 if(!((parent.ParentDocSubType != "Controllable Unit" && parent.ParentDocSubType != "Country Process") || (parent.MIRAStatus == "Final"))){
                   output.procesDisplay = true;
                 }
-
+                output.parentType = parent.ParentDocSubType;
+                output.AssessableUnitName = parent.AssessableUnitName;
+                output.parentid = req.query.id;
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -301,7 +303,6 @@ getLocalAudit: function(req, db){
         });
 
       }else{
-
         var obj = {
           selector : {
             "_id": req.query.id,
@@ -715,7 +716,6 @@ getLocalAudit: function(req, db){
                   };
 
                   if(req.body.docid === ""){
-
                     var obj={};
                     obj.compntType = "localAudit";
                     obj.controllableUnit = req.body.controllableUnit;
@@ -733,6 +733,7 @@ getLocalAudit: function(req, db){
                     obj.comments = req.body.comments;
                     obj.Notes = req.body.Notes;
                     obj.Links = req.body.attachIDs;
+                    obj.parentid = req.body.parentid;
 
                     db.save(obj).then(function(data){
 
@@ -742,7 +743,6 @@ getLocalAudit: function(req, db){
                     });
                   }
                   else{
-
                     var obj = {
                       selector : {
                         "_id": req.body["_id"],
