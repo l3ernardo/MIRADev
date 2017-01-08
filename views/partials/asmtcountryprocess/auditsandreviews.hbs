@@ -90,6 +90,11 @@
 		<td>
 			<span class="audit-review"><b>Audits &amp; Reviews (data managed locally)</b></span><br /><br />
 			<table width="100%" class="table_with_scroll">
+			{{#if admin}}
+				<a target="_blank" href="/localaudit?id={{_id}}&new" class="ibm-add1-link">New</a></td>
+
+				<br /><br />
+			{{/if}}
 				<thead>
 					<th class="audit-review-viewheader" width="7%">Period</th>
 					<th class="audit-review-viewheader" width="20%">Audit or Review</th>
@@ -112,7 +117,7 @@
 						{{else}}
 							<td width="6%">&nbsp;</td>
 						{{/if}}
-						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
+						<td width="20%">{{REVIEW_TYPE}}</a></td>
 						<td width="7%">{{REVIEW_END_DATE}}</td>
 						<td width="7%">{{RATING}}</td>
 						<td width="10%">{{NUM_TOTAL_RECMNDTNS}}</td>
