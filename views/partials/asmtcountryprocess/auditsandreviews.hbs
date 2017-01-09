@@ -29,15 +29,15 @@
 					<!--<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>-->
 						<td width="6%">{{#unless countryProcess}}{{reportingQuarter}}{{/unless}}</td>
 						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
-						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
-						<td width="10%">{{REVIEW_ID}}</td>
+						<td width="15%">{{auditOrReview}}</td>
+						<td width="10%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{eid}}</a>{{/unless}}</td>
 						<td width="20%">{{countryProcess}}</td>
-						<td width="5%">{{REVIEW_END_DATE}}</td>
-						<td width="5%">{{RATING}}</td>
-						<td width="3%">{{NUM_TOTAL_RECMNDTNS}}</td>
-						<td width="3%">{{NUM_OPEN_RECMNDTNS}}</td>
-						<td width="7%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
-						<td width="20%">{{Comments}}</td>
+						<td width="5%">{{reportDate}}</td>
+						<td width="5%">{{rating}}</td>
+						<td width="3%">{{numRecommendationsTotal}}</td>
+						<td width="3%">{{numRecommendationsOpen}}</td>
+						<td width="7%">{{targetClose}}</td>
+						<td width="20%">{{comments}}</td>
 					</tr>
 				{{/each}}
 			</tbody>

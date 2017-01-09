@@ -70,7 +70,7 @@ newAudit: function(req, db){
           case "accountAudit":
           deferred.resolve(components.getAccountAudit(req,db));
           break;
-          case "ppr":
+          case "PPR":
           deferred.resolve(components.getPPR(req,db));
           break;
           case "openIssue":
@@ -256,10 +256,9 @@ getPPR: function(req, db){
     var obj = {
       selector : {
         "_id": req.query.id,
-        "compntType": "ppr"
+        "compntType": "PPR"
       }
     };
-
     db.find(obj).then(function(data){
       //console.log(data.body.docs[0]);
       data.body.docs[0]["_id"] = req.query.id;
