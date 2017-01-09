@@ -44,10 +44,10 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       {{#if editmode}}
 
       <tr>
-        <td width="25%">ControllableUnit:</td><td><b><input type="text" id="controllableUnit" name="controllableUnit" value="PENDING" readonly></b></td>
+        <td width="25%">{{parentType}}:</td><td><b><input type="text" id="AssessableUnitName" name="AssessableUnitName" value="{{AssessableUnitName}}" readonly></b></td>
       </tr>
       <tr>
-        <td>Audit or Review:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
+        <td>Audit or Review<span class="ibm-required">*</span>:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
       </tr>
 
       <tr id="auditIDTD2">
@@ -55,7 +55,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       </tr>
 
       <tr>
-        <td><span  id="reportDateSpan"></span>:</td><td>
+        <td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td><td>
           <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
         </td>
       </tr>
@@ -65,16 +65,24 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       </tr>
       {{/if}}
       <tr>
-        <td>Rating<span class="ibm-required">*</span>:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
+        <td>Status/Rating<span class="ibm-required">*</span>:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
       </tr>
       <tr>
-        <td># Recommendations:</td><td>Total:<input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>Open:<input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+        <td># Recommendations<span class="ibm-required">*</span>:</td><td>
+        Total:
+        <input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>
+        Open:
+        <input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
       </tr>
       <tr>
-        <td>Target to close:</td><td>Original:
-          {{#if new}}<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
-          {{else}}<input type="hidden" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">
-          <br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+        <td>Target to close:</td><td>
+        Original:
+          {{#if new}}
+              <input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+        Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+          {{else}}
+              <input type="hidden" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">
+              <br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
           {{/if}}
         </td>
       </tr>
@@ -82,9 +90,8 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
         <td>Comments:</td><td><input type="text" name="comments" value="{{comments}}" ></td>
       </tr>
       {{else}}
-
       <tr>
-        <td width="25%">ControllableUnit:</td><td><b>{{controllableUnit}}</b></td>
+        <td>Country Process:</td><td><b>{{AssessableUnitName}}</b></td>
       </tr>
       <tr>
         <td>Audit or Review:</td><td>{{auditOrReview}}</td>
@@ -104,7 +111,9 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
         <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
       </tr>
       <tr>
-        <td>Target to close:</td><td>Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>
+        <td>Target to close:</td><td>
+        Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
+       <!-- Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>-->
       </tr>
       <tr>
         <td>Comments:</td><td>{{comments}}</td>

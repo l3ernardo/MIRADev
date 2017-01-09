@@ -41,20 +41,33 @@ var calculateARTab = {
             }else{
             auditR[i].COFlag = true;
             }
-            if(auditR[i].compntType == "ppr"){
+            if(auditR[i].compntType == "PPR"){
               auditR[i].compntType = "Proactive Reviews";
             }else{
               auditR[i].compntType = "Internal Audit";
             }
             if(typeof typeList[auditR[i].compntType] === "undefined"){
-              auditRList.push({id:auditR[i].compntType.replace(/ /g,''), reportingQuarter:auditR[i].compntType});
+              auditRList.push(
+                {
+                  id:auditR[i].compntType.replace(/ /g,''),
+                  reportingQuarter:auditR[i].compntType,
+                  catEntry:"Yes"
+                }
+              );
               typeList[auditR[i].compntType] = true;
             }
             if(typeof periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
-              auditRList.push({parent: auditR[i].compntType.replace(/ /g,''),id:auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditR[i].reportingQuarter});
+              auditRList.push(
+                {
+                  parent: auditR[i].compntType.replace(/ /g,''),id:auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''),
+                  reportingQuarter:auditR[i].reportingQuarter,
+                  catEntry:"Yes"
+                }
+              );
               periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] = true;
             }
 
+            auditR[i].eid = auditR[i].id;
             auditR[i].id = auditR[i]["_id"];
             auditR[i].parent = auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'');
 
@@ -64,12 +77,12 @@ var calculateARTab = {
               auditOrReview:auditR[i].auditOrReview,
               id:auditR[i].id,
               assessableunit:auditR[i].countryProcess,
-              date:auditR[i].REVIEW_END_DATE,
-              rating:auditR[i].RATING,
-              totalrecs:auditR[i].NUM_TOTAL_RECMNDTNS,
-              openrecos:auditR[i].NUM_OPEN_RECMNDTNS,
-              target2close:auditR[i].REVIEW_TARGET_CLOSURE_DATE,
-              comments:auditR[i].Comments
+              date:auditR[i].reportDate,
+              rating:auditR[i].rating,
+              totalrecs:auditR[i].numRecommendationsTotal,
+              openrecos:auditR[i].numRecommendationsOpen,
+              target2close:auditR[i].targetClose,
+              comments:auditR[i].comments
             });
             auditRList.push(auditR[i]);
           }
@@ -108,24 +121,68 @@ var calculateARTab = {
           // *** End of Audits and Reviews embedded view 2 *** //
 
           // *** Start of Audits and Reviews embedded view 3 *** //
+          //sort
+          doc[0].AuditLocalData.sort(function(a, b){
+            var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+            if (nameA > nameB) //sort string descending
+              return -1
+            if (nameA < nameB)
+              return 1
+
+            return 0
+          });
+          //end sort
           var auditLoc = doc[0].AuditLocalData;
-          var AuditLocalData = auditLoc;
+          //var AuditLocalData = auditLoc;
+          var quartersList = {};
+          var localAuditsList = [];
+          var exportLocalAuditsList = [];
           for(var i = 0; i < auditLoc.length; i++){
-            if(auditLoc[i].REVIEW_TYPE == "CHQ Internal Audit"||auditLoc[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+            if(auditLoc[i].auditOrReview == "CHQ Internal Audit"||auditLoc[i].auditOrReview == "" && auditLoc[i].reportingQuarter == doc[0].CurrentPeriod){
               auditLoc[i].COFlag = false;
             }else {
               auditLoc[i].COFlag = true;
             }
+            if(typeof quartersList[auditLoc[i].reportingQuarter] === "undefined"){
+              localAuditsList.push({id:auditLoc[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditLoc[i].reportingQuarter });
+              quartersList[auditLoc[i].reportingQuarter] = true;
+            }
+            var tmp = {};
+            tmp.reportingQuarter = auditLoc[i].reportingQuarter;
+            tmp.auditOrReview = auditLoc[i].auditOrReview;
+            tmp.reportDate = auditLoc[i].reportDate;
+            tmp.rating = auditLoc[i].rating;
+            tmp.numRecommendationsTotal = auditLoc[i].numRecommendationsTotal;
+            tmp.numRecommendationsOpen = auditLoc[i].numRecommendationsOpen;
+            tmp.targetCloseOriginal = auditLoc[i].targetCloseOriginal;
+            tmp.comments = auditLoc[i].comments;
+
+            exportLocalAuditsList.push(tmp);
+            auditLoc[i].parent = auditLoc[i].reportingQuarter.replace(/ /g,'');
+            auditLoc[i].id = auditLoc[i]["_id"];
+
+            localAuditsList.push(auditLoc[i]);
           }
+          doc[0].exportLocalAuditsList = exportLocalAuditsList;
+
           // add padding
-          if (Object.keys(AuditLocalData).length < defViewRow) {
+          if (Object.keys(quartersList).length < defViewRow) {
+            if (localAuditsList == 0) {
+              localAuditsList = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(localAuditsList,10,(defViewRow-Object.keys(quartersList).length));
+            }
+          };
+          doc[0].AuditLocalData = localAuditsList;
+          // add padding
+          /*if (Object.keys(AuditLocalData).length < defViewRow) {
             if (Object.keys(AuditLocalData).length == 0) {
               AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
             } else {
               fieldCalc.addTestViewDataPadding(AuditLocalData,8,(defViewRow-Object.keys(AuditLocalData).length));
             }
-          }
-          doc[0].AuditLocalData = AuditLocalData;
+          }*/
+
           // *** End of Audits and Reviews embedded view 3 *** //
 
           break;

@@ -166,6 +166,8 @@ var calculatefield = {
         var opMetricKey = opMetric.getOpMetricKeys(doc,lParams);
 
       }
+      lParams.push('MargThresholdPercent');
+      lParams.push('UnsatThresholdPercent');
 
   		param.getListParams(db, lParams).then(function(dataParam) {
 
@@ -207,6 +209,12 @@ var calculatefield = {
   				}
           if (dataParam.parameters.GTSRollupProcessesFIN) {
             doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
+  				}
+          if (dataParam.parameters.MargThresholdPercent) {
+            doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
+  				}
+          if (dataParam.parameters.UnsatThresholdPercent) {
+            doc[0].UnsatThresholdPercent = dataParam.parameters.UnsatThresholdPercent[0].options[0].name;
   				}
 
           // Get Operational Metrics
