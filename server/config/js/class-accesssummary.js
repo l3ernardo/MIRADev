@@ -462,6 +462,34 @@ var accesssumary = {
 					   				
 					   				
 					   					if(indexGBS[UserListOfDocs[key][i].id]){ //if access doc exist on a document
+					   						
+					   						//add one first column with only the name
+					   						if(i==0){
+					   							document._id = "";
+							   					document.Name = key;
+							   					document.Role = "";
+							   					document.Type = "";
+							   					document.AssessableUnit = "";
+							   					document.Status = "";
+							   					
+							   					element.push("");
+												element.push(document.Name);
+												element.push("");
+												element.push("");
+												element.push("");
+												element.push("");
+												
+												element.push("N"); 
+												
+												element.push(key);
+						   						element.push("D");
+						   						datarray.push(element);
+							   					userList.push(document);
+							   					
+							   					document = {};
+							   					element = [];
+					   							
+					   						}
 					   					
 					   							//Obtain recursive WWBCIT/MIRA roles
 					   						if(typeof documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey != 'undefined'  ) 					
@@ -546,16 +574,12 @@ var accesssumary = {
 					   						
 					   					}
 					   					
-					   					if(i==0){
-					   						element.push(key);
-					   						element.push("D");
+					   					
 					   						
-					   						
-					   					}else{
 					   						element.push("R");
 					   						element.push(key);
 					   					
-					   					}
+					   					
 					   					
 					   					datarray.push(element);
 					   					userList.push(document);
@@ -686,6 +710,36 @@ getUserAccessSummaryByUser: function(req, db,userToFind,start,end){
 				   				
 				   					if(indexGBS[UserListOfDocs[key][i].id]){ //if access doc exist on a document
 				   						
+				   						
+				   					//add one first column with only the name
+				   						if(i==0){
+				   							document._id = "";
+						   					document.Name = key;
+						   					document.Role = "";
+						   					document.Type = "";
+						   					document.AssessableUnit = "";
+						   					document.Status = "";
+						   					
+						   					element.push("");
+											element.push(document.Name);
+											element.push("");
+											element.push("");
+											element.push("");
+											element.push("");
+											
+											element.push("N"); 
+											
+											element.push(key);
+					   						element.push("D");
+					   						datarray.push(element);
+						   					userList.push(document);
+						   					
+						   					document = {};
+						   					element = [];
+				   							
+				   						}
+				   						
+				   						
 				   						//Obtain recursive WWBCIT/MIRA roles
 				   						if(typeof documents.body.rows[indexGBS[UserListOfDocs[key][i].id]].doc.WWBCITKey != 'undefined'  ) 					
 										{ 
@@ -763,16 +817,11 @@ getUserAccessSummaryByUser: function(req, db,userToFind,start,end){
 				   						
 				   					}
 				   					
-				   					if(i==0){
-				   						element.push(key);
-				   						element.push("D");
+				   					
 				   						
-				   						
-				   					}else{
 				   						element.push("R");
 				   						element.push(key);
 				   					
-				   					}
 				   					
 				   					datarray.push(element);
 				   					userList.push(document);

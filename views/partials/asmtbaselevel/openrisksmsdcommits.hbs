@@ -1,4 +1,4 @@
-<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{exportOpenRisks}}</textarea>
+<textarea name="textarea" id="OpenRisksDataExport" cols="100" style="display:none">{{exportOpenRisks}}</textarea>
 <input type="hidden" name="ORMCMissedRisks" id="ORMCMissedRisks" value="{{ORMCMissedRisks}}">
 <table id="risk_table" class="ibm-data-table">
 	<tr class="risk-msdcommit-content">
@@ -11,7 +11,7 @@
 		<td>
 			<table id="open_risks_treeview" cellspacing="0" cellpadding="0" border="0" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="risk-msdcommit-viewheader" scope="col" width="2%"><input type="checkbox" class="openrisks_checkbox_tree" id="openrisks_checkbox_tree" name="openrisks_checkbox "/></th>
+					<!--<th class="risk-msdcommit-viewheader" scope="col" width="2%"><input type="checkbox" class="openrisks_checkbox_tree" id="openrisks_checkbox_tree" name="openrisks_checkbox "/></th>-->
 					<th class="risk-msdcommit-viewheader" scope="col" width="3%">Type</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">Status</th>
@@ -28,7 +28,7 @@
 				<tbody>
 				{{#each openrisks}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<th width="2%" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>
+						<!--<th width="2%" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>-->
 						<td width="3%" >{{#unless parent}}{{name}}{{/unless}}</td>
 						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
 						<td width="8%">{{status}}</td>
