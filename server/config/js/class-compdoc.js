@@ -78,7 +78,7 @@ var getDocs = {
                 scControlCtr++;
               }
               else if (comps[i].compntType == "controlSample") {
-                doc[0].SampleData.push(comps[i]);
+                doc[0].SampleData.push(JSON.parse(JSON.stringify(comps[i])));
                 // calculate Process Category
                 if (comps[i].controlType == "KCO") {
                   processCat = "Operational";
@@ -254,9 +254,18 @@ var getDocs = {
         var openrisks = [];
         var exportOpenRisks = [];
         doc[0].ORMCMissedRisks = 0;
+        var objects = {};//object of objects for counting
         for(var i = 0; i < risks.length; i++){
           if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
-            openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
+            var tmp = {
+              id:risks[i].scorecardCategory.replace(/ /g,''),
+              name:risks[i].scorecardCategory,
+              numTasks: 0,
+              numTasksOpen: 0,
+              numMissedTasks: 0
+            };
+            openrisks.push(tmp);
+            objects[tmp.id] = tmp;
             riskCategory[risks[i].scorecardCategory] = true;
           }
           if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
@@ -280,6 +289,10 @@ var getDocs = {
           tmp.riskAbstract = risks[i].riskAbstract;
           exportOpenRisks.push(tmp);
           risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
+          //do counting for category
+          objects[risks[i].parent].numTasks += parseFloat(risks[i].numTasks);
+          objects[risks[i].parent].numTasksOpen += parseFloat(risks[i].numTasksOpen);
+          objects[risks[i].parent].numMissedTasks += parseFloat(risks[i].numMissedTasks);
 
           openrisks.push(risks[i]);
         }
