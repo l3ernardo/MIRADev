@@ -26,9 +26,9 @@ var getDocs = {
                 { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // Audits and Reviews Tab
-                { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey}] },
+                { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
                 { "$and": [{"compntType": "internalAudit"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey}] },
-                { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey},{"REVIEW_TYPE": "CHQ Internal Audit"}] },
+                // { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey},{"REVIEW_TYPE": "CHQ Internal Audit"}] },
                 { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
                 // { "$and": [{"DOCTYPE": "ppreview"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit}] }
               ]
@@ -41,12 +41,16 @@ var getDocs = {
             doc[0].RCTestData = [];
             doc[0].SCTestData = [];
             doc[0].SampleData = [];
+            doc[0].SampleData2 = [];
             doc[0].AuditTrustedData = [];
             doc[0].AuditTrustedRCUData = [];
             doc[0].AuditLocalData = [];
             var controlCtr = 0;
             var scControlCtr = 0;
             var sampleCtr = 0;
+            var sampleCtrPQ = 0;
+            var ctrlname;
+            var processCat;
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 doc[0].risks.push(comps[i]);
@@ -75,25 +79,38 @@ var getDocs = {
               }
               else if (comps[i].compntType == "controlSample") {
                 doc[0].SampleData.push(comps[i]);
+                // calculate Process Category
                 if (comps[i].controlType == "KCO") {
-                  doc[0].SampleData[sampleCtr].processCategory = "Operational";
+                  processCat = "Operational";
                 } else {
-                  doc[0].SampleData[sampleCtr].processCategory = "Financial";
+                  processCat = "Financial";
                 }
+                doc[0].SampleData[sampleCtr].processCategory = processCat;
+
+                // calculate Control Name
+                ctrlname = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+                doc[0].SampleData[sampleCtr].controlName = ctrlname;
+
                 // Calculate for unremedPriorSample - Samples from prior quarters with unremediated defects. It will be used as a flag to alert that the asmt has an exception in it skey controls testing
+                // this will also be displayed in the Unremediated Samples from Prior Periods
                 if (comps[i].status != "Retired" && comps[i].reportingQuarter > comps[i].originalReportingQuarter && comps[i].remediationStatus == "Open" && comps[i].numDefects > 0) {
                   doc[0].unremedPriorSample = true;
+                  doc[0].SampleData2.push(comps[i]);
+                  doc[0].SampleData2[sampleCtrPQ].processCategory = processCat;
+                  doc[0].SampleData2[sampleCtrPQ].controlName = ctrlname;
+                  sampleCtrPQ++;
                 }
-                // Calculate for ControlName
-                doc[0].SampleData[sampleCtr].controlName = doc[0].SampleData[sampleCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SampleData[sampleCtr].controlShortName;
                 sampleCtr++;
               }
-              else if (comps[i].compntType == "ppr" && comps[i].REVIEW_TYPE == "CHQ Internal Audit") {
-                doc[0].AuditTrustedRCUData.push(comps[i]);
-              }
-              else if (comps[i].compntType == "ppr" || comps[i].compntType == "internalAudit") {
+              // For Audits and Reviews Tab - view 1
+              else if ((comps[i].compntType == "PPR" && comps[i].countryProcess == doc[0].AssessableUnitName) || (comps[i].compntType == "internalAudit" && comps[i].CPWWBCITKey ==  doc[0].WWBCITKey)) {
                 doc[0].AuditTrustedData.push(comps[i]);
               }
+              // For Audits and Reviews Tab - view 2
+              else if ((comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") && doc[0].RelevantCPs != undefined && doc[0].RelevantCPs.indexOf(comps[i].CPWWBCITKey)) {
+                doc[0].AuditTrustedRCUData.push(comps[i]);
+              }
+              // For Audits and Reviews Tab - view 3
               else if (comps[i].compntType == "localAudit") {
                 doc[0].AuditLocalData.push(comps[i]);
               }
@@ -242,7 +259,7 @@ var getDocs = {
             openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
             riskCategory[risks[i].scorecardCategory] = true;
           }
-          if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0){
+          if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
             risks[i].missedFlag = true;
             doc[0].ORMCMissedRisks = 1;
           }else {

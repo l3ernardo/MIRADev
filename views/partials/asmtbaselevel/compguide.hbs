@@ -79,10 +79,10 @@
 					{{#if unremedPriorSample}}
 						<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
 					{{else}}
-						{{#if_equal RAGStatus "Marg"}}
+						{{#if_equal RAGStatus "Unsat"}}
 							<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
 						{{else}}
-							{{#if_equal RAGStatus "Unsat"}}
+							{{#if_equal RAGStatus "Marg"}}
 								<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
 							{{/if_equal}}
 						{{/if_equal}}
