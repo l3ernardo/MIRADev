@@ -4,13 +4,13 @@
 		<tr>
 			<td width="14%"><div id="compguideboc"></div></td>
 			<td width="3%"></td>
-			<td width="14%"><div id="compguideara"></td>
+			<td width="14%"><div id="compguideara"></div></td>
 			<td width="3%"></td>
-			<td width="14%"><div id="compguideaar"></td>
+			<td width="14%"><div id="compguideaar"></div></td>
 			<td width="3%"></td>
-			<td width="14%"><div id="compguidekct"></td>
+			<td width="14%"><div id="compguidekct"></div></td>
 			<td width="3%"></td>
-			<td width="14%"><div id="compguideom"></td>
+			<td width="14%"><div id="compguideom"></div></td>
 			<td width="3%"></td>
 			<td width="15%"></td>
 		</tr>
@@ -68,15 +68,29 @@
 		<tr>
 			<td width="12%"><div id="compguideboc"></div></td>
 			<td width="2.5%"></td>
-			<td width="12%"><div id="compguideara"></td>
+			<td width="12%"><div id="compguideara"></div></td>
 			<td width="2.5%"></td>
-			<td width="14%"><div id="compguideormc"></td>
+			<td width="14%"><div id="compguideormc"></div></td>
 			<td width="2.5%"></td>
-			<td width="10%"><div id="compguideaar"></td>
+			<td width="10%"><div id="compguideaar"></div></td>
 			<td width="2.5%"></td>
-			<td width="12%"><div id="compguidekct"></td>
+			<td width="12%">
+				<div id="compguidekct">
+					{{#if unremedPriorSample}}
+						<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
+					{{else}}
+						{{#if_equal RAGStatus "Marg"}}
+							<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
+						{{else}}
+							{{#if_equal RAGStatus "Unsat"}}
+								<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
+							{{/if_equal}}
+						{{/if_equal}}
+					{{/if}}
+				</div>
+			</td>
 			<td width="2.5%"></td>
-			<td width="12%"><div id="compguideom"></td>
+			<td width="12%"><div id="compguideom"></div></td>
 			<td width="2.5%"></td>
 			<td width="13%"></td>
 		</tr>

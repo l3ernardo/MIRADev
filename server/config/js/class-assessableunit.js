@@ -26,12 +26,12 @@ var assessableunit = {
 				doc.push(data.body);
 				var constiobj = {};
 				var toadd = {};
-				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
+				//var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
 
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
 				doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
-				accessrules.getRules(req,editors);
+				accessrules.getRules(req,docid,db,data.body);
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].grantaccess = accessrules.rules.grantaccess;
@@ -173,7 +173,9 @@ var assessableunit = {
 						doc[0].CUData = [];
 						break;
 					case "Controllable Unit":
-					if(req.session.businessunit.split(" ")[0] == "GTS"){
+					// if(req.session.businessunit.split(" ")[0] == "GTS"){
+					if(doc[0].MIRABusinessUnit == "GTS"){
+						MIRABusinessUnit
 						doc[0].gts_gtsTransFlag = true;
 					}
 						var constiobj = {
@@ -315,7 +317,7 @@ var assessableunit = {
 						doc[0].CreateAsmt = true;
 					}
 					/* Calculate for Instance Design Specifics and parameters*/
-					doc[0].EnteredBU = req.session.businessunit;
+					doc[0].EnteredBU = doc[0].MIRABusinessUnit;
 					fieldCalc.getDocParams(req, db, doc).then(function(data) {
 						if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
 							doc[0].showARCFreq = 1;
@@ -363,11 +365,17 @@ var assessableunit = {
 									db.find(CUSearch).then(function(CUPData){
 										doc[0].CUPList = CUPData.body.docs;
 										//ALL Key AccountEditmode
-										if(req.session.businessunit.split(" ")[0] == "GTS"){
+										// if(req.session.businessunit.split(" ")[0] == "GTS"){
+										// 	var obj = {
+										// 		selector : {
+										// 			"_id": {"$gt":0},
+										// 			"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+										// 	}};
+										if(doc[0].MIRABusinessUnit == "GTS"){
 											var obj = {
 												selector : {
 													"_id": {"$gt":0},
-													"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+													"keyName": doc[0].MIRABusinessUnit+"LessonsLearnedKey"
 											}};
 											db.find(obj).then(function(dataLL){
 												doc[0].lessonsList = dataLL.body.docs[0].value;
@@ -435,12 +443,19 @@ var assessableunit = {
 													doc[0].CUParents = [];
 													doc[0].CUParents = dataCP.doc;
 													//ALL Key fEditmode
-													if(req.session.businessunit.split(" ")[0] == "GTS"){
+													// if(req.session.businessunit.split(" ")[0] == "GTS"){
+													// 	doc[0].gts_gtsTransFlag = true;
+													// var obj = {
+													// 	selector : {
+													// 		"_id": {"$gt":0},
+													// 		"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+													// }};
+													if(doc[0].MIRABusinessUnit == "GTS"){
 														doc[0].gts_gtsTransFlag = true;
 													var obj = {
 														selector : {
 															"_id": {"$gt":0},
-															"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+															"keyName": doc[0].MIRABusinessUnit+"LessonsLearnedKey"
 													}};
 													db.find(obj).then(function(dataLL){
 														doc[0].lessonsList = dataLL.body.docs[0].value;
@@ -734,12 +749,18 @@ var assessableunit = {
 										}
 										doc[0].BRGMembershipDisp = brgmNames;
 										//Display Audit Key//AuditKey
-										if(req.session.businessunit.split(" ")[0] == "GTS" && (doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Account")&&(doc[0].AuditLessonsKey != null)){
-											var obj = {
-												selector : {
-													"_id": {"$gt":0},
-													"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
-												}};
+										// if(req.session.businessunit.split(" ")[0] == "GTS" && (doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Account")&&(doc[0].AuditLessonsKey != null)){
+										if(doc[0].MIRABusinessUnit == "GTS" && (doc[0].DocSubType == "Controllable Unit" || doc[0].DocSubType == "Account")&&(doc[0].AuditLessonsKey != null)){
+											// var obj = {
+											// 	selector : {
+											// 		"_id": {"$gt":0},
+											// 		"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+											// 	}};
+												var obj = {
+													selector : {
+														"_id": {"$gt":0},
+														"keyName": doc[0].MIRABusinessUnit+"LessonsLearnedKey"
+													}};
 												db.find(obj).then(function(dataLL){
 													var ALLList = dataLL.body.docs[0].value;
 													var ALLKey = doc[0].AuditLessonsKey.split(",");
@@ -799,7 +820,7 @@ var assessableunit = {
 				pdoc.push(data.body);
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 				/* Check if user is admin to the parent doc where the new unit is created from */
-				accessrules.getRules(req,peditors);
+				accessrules.getRules(req,pid,db,data.body);
 
 				if (accessrules.rules.admin) {
 					var tmpdoc = {
@@ -814,7 +835,7 @@ var assessableunit = {
 						"grantaccess": 1,
 						"MIRAunit": 1,
 						"newunit": 1,
-						"EnteredBU": req.session.businessunit
+						"EnteredBU": pdoc[0].MIRABusinessUnit
 					};
 
 					doc.push(tmpdoc);
@@ -857,13 +878,20 @@ var assessableunit = {
 									doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
 								}
 								//ALL Key for AccountNew
-								if(req.session.businessunit.split(" ")[0] == "GTS"){
+
+								// if(req.session.businessunit.split(" ")[0] == "GTS"){
+								if(doc[0].MIRABusinessUnit == "GTS"){
 									doc[0].gts_gtsTransFlag = true;
-								var obj = {
-									selector : {
-										"_id": {"$gt":0},
-										"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
-								}};
+									// var obj = {
+									// 	selector : {
+									// 		"_id": {"$gt":0},
+									// 		"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"
+									// }};
+									var obj = {
+										selector : {
+											"_id": {"$gt":0},
+											"keyName": doc[0].MIRABusinessUnit+"LessonsLearnedKey"
+									}};
 								db.find(obj).then(function(dataLL){
 									//console.log(req.session.businessunit.split(" ")[0]);
 									doc[0].lessonsList = dataLL.body.docs[0].value;
@@ -1096,6 +1124,7 @@ var assessableunit = {
 							doc[0].parentid = req.body.parentid;
 							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
 							doc[0].OpMetricKey = req.body.OpMetricKey;
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].LevelType = "1";
@@ -1181,6 +1210,7 @@ var assessableunit = {
 							doc[0].MetricsValue = req.body.MetricsValue
 							doc[0].Status = req.body.Status;
 							doc[0].OpMetricKey = req.body.OpMetricKey;
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "Controllable Unit":
 							//Validate if accounts require to be updated

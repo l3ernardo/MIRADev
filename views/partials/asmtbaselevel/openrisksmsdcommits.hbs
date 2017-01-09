@@ -1,4 +1,4 @@
-<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{exportOpenRisks}}</textarea>
+<textarea name="textarea" id="OpenRisksDataExport" cols="100" style="display:none">{{exportOpenRisks}}</textarea>
 <input type="hidden" name="ORMCMissedRisks" id="ORMCMissedRisks" value="{{ORMCMissedRisks}}">
 <table id="risk_table" class="ibm-data-table">
 	<tr class="risk-msdcommit-content">
@@ -9,9 +9,9 @@
 		<span class="ibm-sep"> </span>
 		<a href="javascript:void(0);" value="Export to Open Office" name="link-export2" id="link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 		<td>
-			<table id="open_risks_treeview" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
+			<table id="open_risks_treeview" cellspacing="0" cellpadding="0" border="0" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="risk-msdcommit-viewheader" scope="col" width="2%"><input type="checkbox" class="openrisks_checkbox_tree" id="openrisks_checkbox_tree" name="openrisks_checkbox "/></th>
+					<!--<th class="risk-msdcommit-viewheader" scope="col" width="2%"><input type="checkbox" class="openrisks_checkbox_tree" id="openrisks_checkbox_tree" name="openrisks_checkbox "/></th>-->
 					<th class="risk-msdcommit-viewheader" scope="col" width="3%">Type</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">Status</th>
@@ -27,19 +27,19 @@
 
 				<tbody>
 				{{#each openrisks}}
-					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" >
-						<th style="background-color: white !important;" width="2%" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>
-						<td style="background-color: white !important;" width="3%" >{{name}}</td>
-						<td style="background-color: white !important;" width="10%">{{#if parent}}<a href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
-						<td style="background-color: white !important;" width="8%">{{status}}</td>
-						<td style="background-color: white !important;" width="20%">{{process}}</td>
-						<td style="background-color: white !important;" width="10%">{{originalTargetDate}}</td>
-						<td style="background-color: white !important;" width="10%">{{currentTargetDate}}</td>
-						<td style="background-color: white !important;" width="6%">{{numTasks}}</td>
-						<td style="background-color: white !important;" width="6%">{{numTasksOpen}}</td>
-						<td style="background-color: white !important;" width="6%">{{numMissedTasks}}</td>
-						<td style="background-color: white !important;" width="4%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
-						<td style="background-color: white !important;" width="15%">{{riskAbstract}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<!--<th width="2%" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>-->
+						<td width="3%" >{{#unless parent}}{{name}}{{/unless}}</td>
+						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td width="8%">{{status}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="10%">{{originalTargetDate}}</td>
+						<td width="10%">{{currentTargetDate}}</td>
+						<td width="6%">{{numTasks}}</td>
+						<td width="6%">{{numTasksOpen}}</td>
+						<td width="6%">{{numMissedTasks}}</td>
+						<td width="4%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
+						<td width="15%">{{riskAbstract}}</td>
 					</tr>
 				{{/each}}
 				</tbody>

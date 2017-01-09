@@ -35,7 +35,7 @@
 			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 			<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="RCTest_checkbox_tree" id="RCTest_checkbox_tree" name="RCTest_checkbox "/></th>
+					<!--<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="RCTest_checkbox_tree" id="RCTest_checkbox_tree" name="RCTest_checkbox "/></th>-->
 					<th class="kc-test-viewheader" width="5%">Period</th>
 					<th class="kc-test-viewheader" width="5%">Type</th>
 					<th class="kc-test-viewheader" width="38%">Control</th>
@@ -48,18 +48,18 @@
 				{{#each RCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						{{#if catEntry}}
-						<th width="2%" ></th>
+						<!--<th width="2%" ></th>-->
 							<td width="5%">{{reportingQuarter}}</td>
 							<td width="5%">{{controlType}}</td>
 						{{else}}
-						<th width="2%" >{{#if controlType}}<input type="checkbox" class="RCTest_checkbox_tree"/>{{/if}}</th>
+						<!--<th width="2%" >{{#if controlType}}<input type="checkbox" class="RCTest_checkbox_tree"/>{{/if}}</th>-->
 							<td width="5%"></td>
 							<td width="5%"></td>
 						{{/if}}
-						<td width="38%"><a href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
+						<td width="38%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{numDefects}}</td>
-						<td width="10%">{{defectRate}}</td>
+						{{{compDocDRDisplayView RAGStatus defectRate}}}
 						<td width="20%">{{#if remFinImpact}}$ {{/if}}{{remFinImpact}}</td>
 					</tr>
 				{{/each}}
@@ -75,7 +75,7 @@
 			<a href="javascript:void(0);" value="Export to Open Office" name="SCTest-link-export2" id="SCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 			<table id="SCTest_treeview" width="100%" class="table_with_scroll">
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="SCTest_checkbox_tree" id="SCTest_checkbox_tree" name="SCTest_checkbox "/></th>
+					<!--<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="SCTest_checkbox_tree" id="SCTest_checkbox_tree" name="SCTest_checkbox "/></th>-->
 					<th class="kc-test-viewheader" width="5%">Period</th>
 					<th class="kc-test-viewheader" width="5%">Type</th>
 					<th class="kc-test-viewheader" width="20%">Control</th>
@@ -88,20 +88,20 @@
 				{{#each SCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						{{#if catEntry}}
-						<th width="2%" ></th>
+						<!--<th width="2%" ></th>-->
 							<td width="5%">{{reportingQuarter}}</td>
 							<td width="5%">{{controlType}}</td>
 							<td width="20%">{{controlName}}</td>
 						{{else}}
-						<th width="2%" >{{#if controlName}}<input type="checkbox" class="SCTest_checkbox_tree"/>{{/if}}</th>
+						<!--<th width="2%" >{{#if controlName}}<input type="checkbox" class="SCTest_checkbox_tree"/>{{/if}}</th>-->
 							<td width="5%"></td>
 							<td width="5%"></td>
 							<td width="20%"></td>
 						{{/if}}
-						<td width="25%">{{#if reportingCountry}}<a href="/asmtcomponents?id={{_id}}">{{/if}}{{reportingCountry}}{{#if reportingCountry}}</a>{{/if}}</td>
+						<td width="25%">{{#if reportingCountry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{/if}}{{reportingCountry}}{{#if reportingCountry}}</a>{{/if}}</td>
 						<td width="14%">{{numtest}}</td>
 						<td width="14%">{{numDefects}}</td>
-						<td width="15%">{{defectRate}}</td>
+						{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 					</tr>
 				{{/each}}
 			</tbody>
@@ -116,7 +116,7 @@
 			<a href="javascript:void(0);" value="Export to Open Office" name="Sample-link-export2" id="Sample-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 			<table id="Sample_treeview" width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="Sample_checkbox_tree" id="Sample_checkbox_tree" name="Sample_checkbox "/></th>
+					<!--<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="Sample_checkbox_tree" id="Sample_checkbox_tree" name="Sample_checkbox "/></th>-->
 					<th class="kc-test-viewheader" width="5%">Cat</th>
 					<th class="kc-test-viewheader" width="5%">Process</th>
 					<th class="kc-test-viewheader" width="5%">Control</th>
@@ -133,21 +133,21 @@
 				{{#each SampleData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						{{#if catEntry}}
-						  <th width="2%" ></th>
+						  <!--<th width="2%" ></th>-->
 							<td width="5%" >{{processCategory}}</td>
 							<td width="5%">{{processSampled}}</td>
 							<td width="5%">{{controlName}}</td>
 						{{else}}
-							<th width="2%" >{{#if controlName}}<input type="checkbox" class="Sample_checkbox_tree"/>{{/if}}</th>
+							<!--<th width="2%" >{{#if controlName}}<input type="checkbox" class="Sample_checkbox_tree"/>{{/if}}</th>-->
 							<td width="5%" ></td>
 							<td width="5%"></td>
 							<td width="5%"></td>
 						{{/if}}
-						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="10%">{{defectType}}</td>
 						<td width="10%">{{remediationStatus}}</td>
-						<td width="5%">{{remainingFinancialImpact}}</td>
+						<td width="5%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 						<td width="12%">{{originalTargetDate}}</td>
 						<td width="11%">{{targetClose}}</td>
 						<td width="20%">{{defectsAbstract}}</td>
@@ -165,7 +165,7 @@
 			<a href="javascript:void(0);" value="Export to Open Office" name="Sample2-link-export2" id="Sample2-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 			<table id="Sample2_treeview" width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="Sample2_checkbox_tree" id="Sample2_checkbox_tree" name="Sample2_checkbox "/></th>
+					<!--<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="Sample2_checkbox_tree" id="Sample2_checkbox_tree" name="Sample2_checkbox "/></th>-->
 					<th class="kc-test-viewheader" width="5%">Period</th>
 					<th class="kc-test-viewheader" width="5%">Type</th>
 					<th class="kc-test-viewheader" width="18%">Control</th>
@@ -182,20 +182,20 @@
 				{{#each SampleData2}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						{{#if catEntry}}
-							<th width="2%" ></th>
+							<!--<th width="2%" ></th>-->
 							<td width="5%">{{originalReportingQuarter}}</td>
 							<td width="5%">{{testType}}</td>
 						{{else}}
-							<th width="2%" >{{#if controlName}}<input type="checkbox" class="Sample2_checkbox_tree"/>{{/if}}</th>
+							<!--<th width="2%" >{{#if controlName}}<input type="checkbox" class="Sample2_checkbox_tree"/>{{/if}}</th>-->
 							<td width="5%"></td>
 							<td width="5%"></td>
 						{{/if}}
 						<td width="18%">{{controlName}}</td>
-						<td width="10%"><a href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
 						<td width="15%">{{processSampled}}</td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="5%">{{defectType}}</td>
-						<td width="7%">{{remainingFinancialImpact}}</td>
+						<td width="7%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 						<td width="6.5%">{{originalTargetDate}}</td>
 						<td width="6.5%">{{targetClose}}</td>
 						<td width="15%">{{defectsAbstract}}</td>
