@@ -26,12 +26,12 @@ var assessableunit = {
 				doc.push(data.body);
 				var constiobj = {};
 				var toadd = {};
-				//var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
+				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
 
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
 				doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
-				accessrules.getRules(req,docid,db,data.body);
+				accessrules.getRules(req,editors);
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].grantaccess = accessrules.rules.grantaccess;
@@ -820,7 +820,7 @@ var assessableunit = {
 				pdoc.push(data.body);
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 				/* Check if user is admin to the parent doc where the new unit is created from */
-				accessrules.getRules(req,pid,db,data.body);
+				accessrules.getRules(req,peditors)
 
 				if (accessrules.rules.admin) {
 					var tmpdoc = {
