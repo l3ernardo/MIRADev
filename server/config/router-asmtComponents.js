@@ -30,7 +30,7 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 			//a464dfcf0335a4d86e96fd0072d58889
 				res.render("ac_accountaudit", data.data)
 				break;
-			case "ppr":
+			case "PPR":
 			//a75108a8b64db30c0f47722a78a100b8
 				res.render('ac_ppr', data.data );
 				break;
