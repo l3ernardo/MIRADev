@@ -14,24 +14,17 @@ var calculateKCTab = {
 		try {
       switch (doc[0].ParentDocSubType) {
         case "Country Process":
-          // format defect rate
-          // if (doc[0].AUTestCount == undefined || doc[0].AUTestCount == 0 ) {
-          //   doc[0].AUDefectRate = "";
-          // }
-
-          // calculate for RAGStatus
-          // if (doc[0].AUTestCount == undefined || doc[0].AUTestCount == 0 ) {
-          //   doc[0].RAGStatus = "";
-          // } else
-          doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
-          if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
-            doc[0].RAGStatus = "Unsat";
-          } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
-            doc[0].RAGStatus = "Sat";
-          } else {
-            doc[0].RAGStatus = "Marg";
-          }
-
+        doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
+        if (doc[0].AUDefectRate == 0) {
+          doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(0);
+        }
+        if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+          doc[0].RAGStatus = "Unsat";
+        } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
+          doc[0].RAGStatus = "Sat";
+        } else {
+          doc[0].RAGStatus = "Marg";
+        }
           // *** Start of Reporting Country Testing Data (1st embedded view in Testing tab) *** //
           //Sorting for RCTest_treeview
           var tmpList = [];
@@ -62,29 +55,48 @@ var calculateKCTab = {
             }
             return 0 //default return value (no sorting)
           });
+          var objects = {};//object of objects for counting
           for(var i = 0; i < rct.length; i++){
             if (rct[i].reportingQuarter == undefined) rct[i].reportingQuarter = "(uncategorized)";
             if(typeof periodList[rct[i].reportingQuarter] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 id:rct[i].reportingQuarter.replace(/ /g,''),
                 parent:"",
                 reportingQuarter: rct[i].reportingQuarter,
-                catEntry:"Yes"
-              });
+                catEntry:"Yes",
+                numActualTests: 0,
+                numDefects: 0,
+                remFinImpact: 0.00
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               periodList[rct[i].reportingQuarter] = true;
             }
             if (rct[i].controlType == undefined) rct[i].controlType = "(uncategorized)";
             if(typeof typeList[rct[i].reportingQuarter+rct[i].controlType] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 parent: rct[i].reportingQuarter.replace(/ /g,''),
                 id:rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,''),
                 controlType: rct[i].controlType,
-                catEntry:"Yes"
-              });
+                catEntry:"Yes",
+                numActualTests: 0,
+                numDefects: 0,
+                remFinImpact: 0.00
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               typeList[rct[i].reportingQuarter+rct[i].controlType] = true;
             }
             rct[i].parent = rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,'');
             rct[i].id = rct[i]["_id"];
+            //do counting for category
+            objects[rct[i].parent].numActualTests += parseFloat(rct[i].numActualTests);
+            objects[rct[i].parent].numDefects += parseFloat(rct[i].numDefects);
+            objects[rct[i].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
+            //do counting for 2nd level category
+            objects[objects[rct[i].parent].parent].numActualTests += parseFloat(rct[i].numActualTests);
+            objects[objects[rct[i].parent].parent].numDefects += parseFloat(rct[i].numDefects);
+            objects[objects[rct[i].parent].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
             exportRCTest.push({
               reportingQuarter:rct[i].reportingQuarter || "",
               controlType:rct[i].controlType || "",
@@ -95,6 +107,10 @@ var calculateKCTab = {
               remFinImpact:rct[i].remFinImpact || ""
             });
             tmpList.push(rct[i]);
+          }
+          //add ".00" to category counting
+          for(var key in objects){
+            objects[key].remFinImpact = objects[key].remFinImpact.toFixed(2);
           }
           doc[0].exportRCTest = exportRCTest;
           doc[0].RCTestData = tmpList;
@@ -154,36 +170,48 @@ var calculateKCTab = {
             }
             return 0 //default return value (no sorting)
           });
+          var objects = {};//object of objects for counting
           for(var i = 0; i < sct.length; i++){
             if (sct[i].reportingQuarter == undefined) sct[i].reportingQuarter = "(uncategorized)";
             if(typeof periodList[sct[i].reportingQuarter] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 id:sct[i].reportingQuarter.replace(/ /g,''),
                 parent:"",
                 catEntry:"Yes",
-                reportingQuarter: sct[i].reportingQuarter
-              });
+                reportingQuarter: sct[i].reportingQuarter,
+                numtest: 0,
+                numDefects: 0
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               periodList[sct[i].reportingQuarter] = true;
             }
             if (sct[i].controlType == undefined) sct[i].controlType = "(uncategorized)";
             if(typeof typeList[sct[i].reportingQuarter+sct[i].controlType] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 parent: sct[i].reportingQuarter.replace(/ /g,''),
                 id:sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,''),
                 catEntry:"Yes",
-                controlType: sct[i].controlType
-              });
+                controlType: sct[i].controlType,
+                numtest: 0,
+                numDefects: 0
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               typeList[sct[i].reportingQuarter+sct[i].controlType] = true;
             }
             if (sct[i].controlName == undefined) sct[i].controlName = "(uncategorized)";
             if(typeof controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] === "undefined"){
-
-              tmpList.push({
+              var tmp = {
                 parent: sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,''),
                 id:sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,''),
                 catEntry:"Yes",
-                controlName: sct[i].controlName
-              });
+                controlName: sct[i].controlName,
+                numtest: 0,
+                numDefects: 0
+              }
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               controlList[sct[i].reportingQuarter+sct[i].controlType+sct[i].controlName] = true;
             }
             exportSCTest.push({
@@ -197,6 +225,16 @@ var calculateKCTab = {
             });
             sct[i].parent = sct[i].reportingQuarter.replace(/ /g,'')+sct[i].controlType.replace(/ /g,'')+sct[i].controlName.replace(/ /g,'');
             sct[i].id = sct[i]["_id"];
+            //do counting for category
+            objects[sct[i].parent].numtest += parseInt(sct[i].numtest);
+            objects[sct[i].parent].numDefects += parseInt(sct[i].numDefects);
+            //do counting for 2nd level category
+            objects[objects[sct[i].parent].parent].numtest += parseInt(sct[i].numtest);
+            objects[objects[sct[i].parent].parent].numDefects += parseInt(sct[i].numDefects);
+            //do counting for 3rd level category
+            objects[objects[objects[sct[i].parent].parent].parent].numtest += parseInt(sct[i].numtest);
+            objects[objects[objects[sct[i].parent].parent].parent].numDefects += parseInt(sct[i].numDefects);
+
             tmpList.push(sct[i]);
           }
           doc[0].exportSCTest = exportSCTest;
@@ -253,25 +291,34 @@ var calculateKCTab = {
             }
             return 0 //default return value (no sorting)
           });
+          var objects = {};//object of objects for counting
           for(var i = 0; i < samples.length; i++){
             if (samples[i].processCategory == undefined) samples[i].processCategory = "(uncategorized)";
             if(typeof categoryList[samples[i].processCategory] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 id:samples[i].processCategory.replace(/ /g,''),
                 parent:"",
                 catEntry:"Yes",
-                processCategory: samples[i].processCategory
-              });
+                processCategory: samples[i].processCategory,
+                numDefects: 0,
+                remainingFinancialImpact: 0.00
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               categoryList[samples[i].processCategory] = true;
             }
             if (samples[i].processSampled == undefined) samples[i].processSampled = "(uncategorized)";
             if(typeof processList[samples[i].processCategory+samples[i].processSampled] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 parent: samples[i].processCategory.replace(/ /g,''),
                 id:samples[i].processCategory.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
                 catEntry:"Yes",
-                processSampled: samples[i].processSampled
-              });
+                processSampled: samples[i].processSampled,
+                numDefects: 0,
+                remainingFinancialImpact: 0.00
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               processList[samples[i].processCategory+samples[i].processSampled] = true;
             }
             exportSample.push({
@@ -279,8 +326,8 @@ var calculateKCTab = {
               processSampled:samples[i].processSampled || "",
               controlName:samples[i].controlName || "",
               IntegrationKeyWWBCIT:samples[i].IntegrationKeyWWBCIT || "",
-              numDefects:samples[i].numDefects || "",
               defectType:samples[i].defectType || "",
+              numDefects:samples[i].numDefects || "",
               remediationStatus:samples[i].remediationStatus || "",
               remainingFinancialImpact:samples[i].remainingFinancialImpact || "",
               originalTargetDate:samples[i].originalTargetDate || "",
@@ -289,9 +336,21 @@ var calculateKCTab = {
             });
             samples[i].parent = samples[i].processCategory.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'');
             samples[i].id = samples[i]["_id"];
+
+            //do counting for category
+            objects[samples[i].parent].remainingFinancialImpact += parseFloat(samples[i].remainingFinancialImpact);
+            objects[samples[i].parent].numDefects += parseInt(samples[i].numDefects);
+            //do counting for 2nd level category
+            objects[objects[samples[i].parent].parent].remainingFinancialImpact += parseFloat(samples[i].remainingFinancialImpact);
+            objects[objects[samples[i].parent].parent].numDefects += parseInt(samples[i].numDefects);
+
             tmpList.push(samples[i]);
           }
           doc[0].exportSample = exportSample;
+          //add ".00" to category counting
+          for(var key in objects){
+            objects[key].remainingFinancialImpact = objects[key].remainingFinancialImpact.toFixed(2);
+          }
           doc[0].SampleData = tmpList;
           // add padding for Sample data
           if (Object.keys(categoryList).length < defViewRow) {
@@ -333,25 +392,34 @@ var calculateKCTab = {
             }
             return 0 //default return value (no sorting)
           });
+          var objects = {};//object of objects for counting
           for(var i = 0; i < samples2.length; i++){
             if (samples2[i].originalReportingQuarter == undefined) samples2[i].originalReportingQuarter = "(uncategorized)";
             if(typeof periodList[samples2[i].originalReportingQuarter] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 id:samples2[i].originalReportingQuarter.replace(/ /g,''),
                 parent:"",
                 catEntry:"Yes",
-                originalReportingQuarter: samples2[i].originalReportingQuarter
-              });
+                originalReportingQuarter: samples2[i].originalReportingQuarter,
+                numDefects: 0,
+                remainingFinancialImpact: 0.00
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] =  tmp;
               periodList[samples2[i].originalReportingQuarter] = true;
             }
             if (samples2[i].testType == undefined) samples2[i].testType = "(uncategorized)";
             if(typeof typeList[samples2[i].originalReportingQuarter+samples2[i].testType] === "undefined"){
-              tmpList.push({
+              var tmp = {
                 parent: samples2[i].originalReportingQuarter.replace(/ /g,''),
                 id:samples2[i].originalReportingQuarter.replace(/ /g,'')+samples2[i].testType.replace(/ /g,''),
                 catEntry:"Yes",
-                testType: samples2[i].testType
-              });
+                testType: samples2[i].testType,
+                numDefects: 0,
+                remainingFinancialImpact: 0.00
+              };
+              tmpList.push(tmp);
+              objects[tmp.id] = tmp;
               typeList[samples2[i].originalReportingQuarter+samples2[i].testType] = true;
             }
             exportSample2.push({
@@ -360,8 +428,8 @@ var calculateKCTab = {
               controlName:samples2[i].controlName || "",
               IntegrationKeyWWBCIT:samples2[i].IntegrationKeyWWBCIT || "",
               processSampled:samples2[i].processSampled || "",
-              numDefects:samples2[i].numDefects || "",
               defectType:samples2[i].defectType || "",
+              numDefects:samples2[i].numDefects || "",
               remainingFinancialImpact:samples2[i].remainingFinancialImpact || "",
               originalTargetDate:samples2[i].originalTargetDate || "",
               targetClose:samples2[i].targetClose || "",
@@ -369,9 +437,21 @@ var calculateKCTab = {
             });
             samples2[i].parent = samples2[i].originalReportingQuarter.replace(/ /g,'')+samples2[i].testType.replace(/ /g,'');
             samples2[i].id = samples2[i]["_id"];
+
+            //do counting for category
+            objects[samples2[i].parent].remainingFinancialImpact += parseFloat(samples2[i].remainingFinancialImpact);
+            objects[samples2[i].parent].numDefects += parseInt(samples2[i].numDefects);
+            //do counting for 2nd level category
+            objects[objects[samples2[i].parent].parent].remainingFinancialImpact += parseFloat(samples2[i].remainingFinancialImpact);
+            objects[objects[samples2[i].parent].parent].numDefects += parseInt(samples2[i].numDefects);
+
             tmpList.push(samples2[i]);
           }
           doc[0].exportSample2 = exportSample2;
+          //add ".00" to category counting
+          for(var key in objects){
+            objects[key].remainingFinancialImpact = objects[key].remainingFinancialImpact.toFixed(2);
+          }
           doc[0].SampleData2 = tmpList;
           // add padding for Sample2 data
           if (Object.keys(periodList).length < defViewRow) {
