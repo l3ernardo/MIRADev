@@ -41,20 +41,33 @@ var calculateARTab = {
             }else{
             auditR[i].COFlag = true;
             }
-            if(auditR[i].compntType == "ppr"){
+            if(auditR[i].compntType == "PPR"){
               auditR[i].compntType = "Proactive Reviews";
             }else{
               auditR[i].compntType = "Internal Audit";
             }
             if(typeof typeList[auditR[i].compntType] === "undefined"){
-              auditRList.push({id:auditR[i].compntType.replace(/ /g,''), reportingQuarter:auditR[i].compntType});
+              auditRList.push(
+                {
+                  id:auditR[i].compntType.replace(/ /g,''),
+                  reportingQuarter:auditR[i].compntType,
+                  catEntry:"Yes"
+                }
+              );
               typeList[auditR[i].compntType] = true;
             }
             if(typeof periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
-              auditRList.push({parent: auditR[i].compntType.replace(/ /g,''),id:auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditR[i].reportingQuarter});
+              auditRList.push(
+                {
+                  parent: auditR[i].compntType.replace(/ /g,''),id:auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''),
+                  reportingQuarter:auditR[i].reportingQuarter,
+                  catEntry:"Yes"
+                }
+              );
               periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] = true;
             }
 
+            auditR[i].eid = auditR[i].id;
             auditR[i].id = auditR[i]["_id"];
             auditR[i].parent = auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'');
 
@@ -64,12 +77,12 @@ var calculateARTab = {
               auditOrReview:auditR[i].auditOrReview,
               id:auditR[i].id,
               assessableunit:auditR[i].countryProcess,
-              date:auditR[i].REVIEW_END_DATE,
-              rating:auditR[i].RATING,
-              totalrecs:auditR[i].NUM_TOTAL_RECMNDTNS,
-              openrecos:auditR[i].NUM_OPEN_RECMNDTNS,
-              target2close:auditR[i].REVIEW_TARGET_CLOSURE_DATE,
-              comments:auditR[i].Comments
+              date:auditR[i].reportDate,
+              rating:auditR[i].rating,
+              totalrecs:auditR[i].numRecommendationsTotal,
+              openrecos:auditR[i].numRecommendationsOpen,
+              target2close:auditR[i].targetClose,
+              comments:auditR[i].comments
             });
             auditRList.push(auditR[i]);
           }
