@@ -26,12 +26,12 @@ var assessableunit = {
 				doc.push(data.body);
 				var constiobj = {};
 				var toadd = {};
-				var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
+				//var editors = doc[0].AdditionalEditors + doc[0].Owner + doc[0].Focals;
 
 				/* CurrentPeriod of Assessable Units will always have the current period of the app */
 				doc[0].CurrentPeriod = req.session.quarter;
 				/* Get access and roles */
-				accessrules.getRules(req,editors);
+				accessrules.getRules(req,docid,db,data.body);
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].grantaccess = accessrules.rules.grantaccess;
@@ -820,7 +820,7 @@ var assessableunit = {
 				pdoc.push(data.body);
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 				/* Check if user is admin to the parent doc where the new unit is created from */
-				accessrules.getRules(req,peditors);
+				accessrules.getRules(req,pid,db,data.body);
 
 				if (accessrules.rules.admin) {
 					var tmpdoc = {
@@ -1124,6 +1124,7 @@ var assessableunit = {
 							doc[0].parentid = req.body.parentid;
 							doc[0].AuditLessonsKey = req.body.AuditLessonsKey;
 							doc[0].OpMetricKey = req.body.OpMetricKey;
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "BU Reporting Group":
 							doc[0].LevelType = "1";
@@ -1209,6 +1210,7 @@ var assessableunit = {
 							doc[0].MetricsValue = req.body.MetricsValue
 							doc[0].Status = req.body.Status;
 							doc[0].OpMetricKey = req.body.OpMetricKey;
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 						case "Controllable Unit":
 							//Validate if accounts require to be updated

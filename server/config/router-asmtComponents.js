@@ -4,11 +4,11 @@ var isAuthenticated = require('./router-authentication.js');
 var db = require('./js/class-conn.js');
 var components = require('./js/class-asmtComponents.js');
 
-
 /* Get components */
 asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 	components.getComponent(req, db).then(function(data){
 		var type= data.data.compntType;
+		//console.log("type :" + type);
 		switch (type) {
 			case "controlSample":
 			//9d9902492259ecc30230af749b1c2a06
@@ -30,7 +30,7 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 			//a464dfcf0335a4d86e96fd0072d58889
 				res.render("ac_accountaudit", data.data)
 				break;
-			case "ppr":
+			case "PPR":
 			//a75108a8b64db30c0f47722a78a100b8
 				res.render('ac_ppr', data.data );
 				break;
@@ -100,9 +100,6 @@ asmtComponents.get('/ppr', isAuthenticated, function(req, res) {
 });
 /* Local Audit */
 asmtComponents.get('/localaudit', isAuthenticated, function(req, res) {
-	if(typeof req.query.id === "undefined"){
-		req.query.id = "cb71326690d51329c153f5f950eb3c8c";
-	}
 	components.getLocalAudit(req, db).then(function(data){
 		res.render('ac_localaudit', data.data );
 	}).catch(function(err) {

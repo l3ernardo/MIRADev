@@ -166,6 +166,8 @@ var calculatefield = {
         var opMetricKey = opMetric.getOpMetricKeys(doc,lParams);
 
       }
+      lParams.push('MargThresholdPercent');
+      lParams.push('UnsatThresholdPercent');
 
   		param.getListParams(db, lParams).then(function(dataParam) {
 
@@ -207,6 +209,12 @@ var calculatefield = {
   				}
           if (dataParam.parameters.GTSRollupProcessesFIN) {
             doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
+  				}
+          if (dataParam.parameters.MargThresholdPercent) {
+            doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
+  				}
+          if (dataParam.parameters.UnsatThresholdPercent) {
+            doc[0].UnsatThresholdPercent = dataParam.parameters.UnsatThresholdPercent[0].options[0].name;
   				}
 
           // Get Operational Metrics
@@ -356,8 +364,11 @@ var calculatefield = {
               "key": "Assessment",
               "AUStatus": "Active",
               "CurrentPeriod": req.session.quarter,
-              "ParentDocSubType": "Country Process",
-              "AssessableUnitName":{"$in":doc[0].RelevantCountryProcesses}
+              "$or": [
+                { "$and": [{"ParentDocSubType": "Country Process"},{"AssessableUnitName":{"$in":doc[0].RelevantCountryProcesses}}] },
+                { "$and": [{"ParentDocSubType": "Account"}, {"BusinessUnit": "IBM GBS"}] }
+                // { "$and": [{"ParentDocSubType": "Account"},{"CUWWBCITKey":doc[0].WWBCITKey}] }
+              ]
             }
           };
           break;
@@ -432,19 +443,36 @@ var calculatefield = {
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
               break;
             case "Controllable Unit":
-              // Process Ratings Tab embedded views
-              toadd = {
-                "docid":doc[0].asmtsdocs[i]._id,
-                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                "country":doc[0].asmtsdocs[i].Country,
-                "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
-                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                "targettosat":doc[0].asmtsdocs[i].Target2Sat,
-                "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
-                "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
-              };
-              doc[0].CUAsmtDataPR1view.push(toadd);
+              if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+                // Process Ratings Tab embedded views
+                toadd = {
+                  "docid":doc[0].asmtsdocs[i]._id,
+                  "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                  "country":doc[0].asmtsdocs[i].Country,
+                  "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+                  "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+                  "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+                  "targettosat":doc[0].asmtsdocs[i].Target2Sat,
+                  "targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+                  "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+                };
+                doc[0].CUAsmtDataPR1view.push(toadd);
+              }
+              else {
+                // Account Ratings Tab embedded views
+                // toadd = {
+                //   "docid":doc[0].asmtsdocs[i]._id,
+                //   "name":doc[0].asmtsdocs[i].AssessableUnitName,
+                //   "accountPortfolioPct":doc[0].asmtsdocs[i].AccountPortfolioPct,
+                //   "ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+                //   "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+                //   "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+                //   "targettosat":doc[0].asmtsdocs[i].Target2Sat,
+                //   "coreQNoFlag":doc[0].asmtsdocs[i].CoreQNoFlag,
+                //   "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+                // };
+                doc[0].AccountData.push(doc[0].asmtsdocs[i]);
+              }
               break;
           }
           // Rating Category Counters

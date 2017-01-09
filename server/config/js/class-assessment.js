@@ -35,11 +35,11 @@ var assessment = {
 				parentdoc.push(pdata.body);
 				/* Get access and roles */
 				var editors = parentdoc[0].AdditionalEditors + parentdoc[0].Owner + parentdoc[0].Focals;
-				accessrules.getRules(req,editors);
+				//accessrules.getRules(req,editors);
+				accessrules.getRules(req,doc[0].parentid,db,pdata.body);
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
-
 				// Get inherited fields from parent assessable unit
 				if (parentdoc[0].OpMetricKey == undefined || parentdoc[0].OpMetricKey == "") parentdoc[0].OpMetricKey = "OMKID0";
 				// OMKID0 - Operational Metric ID for Other Metrics as a default metric
@@ -442,7 +442,8 @@ var assessment = {
 							doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
 							doc[0].SampleData = doc[0].RiskData;
 							doc[0].EAData = doc[0].ARCData;
-							doc[0].AccountData = doc[0].RiskData;
+							// doc[0].AccountData = doc[0].RiskData;
+							doc[0].AccountData = [];
 							doc[0].CUAsmtDataPR1view = [];
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
@@ -453,10 +454,17 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(defViewRow-doc[0].CUAsmtDataPR1view.length));
 									}
 								}
+								if (doc[0].AccountData.length < defViewRow) {
+									if (doc[0].AccountData.length == 0) {
+										doc[0].AccountData = fieldCalc.addTestViewData(11,defViewRow);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].AccountData,11,(defViewRow-doc[0].AccountData.length));
+									}
+								}
 
 								//Open issue
 								comp.getOpenIssue(db,doc,defViewRow).then(function(){
-
+									//console.log(doc[0].AccountData[0]);
 								//AuditKey
 								if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
@@ -554,7 +562,7 @@ var assessment = {
 							doc[0].RiskData = fieldCalc.addTestViewData(11,defViewRow);
 							doc[0].AuditTrustedData = doc[0].RiskData;
 							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
-							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+							//doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].DRData = fieldCalc.addTestViewData(5,1);
 							doc[0].EAData = doc[0].ARCData;
 
@@ -566,6 +574,7 @@ var assessment = {
 								aar.processARTab(doc,defViewRow);
 								//Open Issues Tab
 								comp.getOpenIssue(db,doc,defViewRow).then(function(){
+									//console.log(doc[0].AuditLocalData);
 									//AuditKey
 									if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].GPPARENT != null)){
 										var obj = {
@@ -785,7 +794,8 @@ var assessment = {
 
 				/* Get access and roles */
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
-				accessrules.getRules(req,peditors);
+				accessrules.getRules(req,pid,db,data.body);
+				//accessrules.getRules(req,peditors);
 				var editors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 
 				if (accessrules.rules.editor) {
@@ -1476,6 +1486,7 @@ var assessment = {
 							}
 							//---Backend Fields---//
 							doc[0].RatingCategory = fieldCalc.getRatingCategory(doc[0].PeriodRating,doc[0].PeriodRatingPrev1);
+							doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 							break;
 					}
 					doc[0].Notes = req.body.Notes;
