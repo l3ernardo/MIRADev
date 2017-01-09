@@ -1288,7 +1288,33 @@ function tableToReportPPR(table){
 	return (tab_text);
 }
 
-/*Function to generate PPR table to export*/
+/*Function to generate complete table to generic export*/
+function AllTableToReportMultiple(table, nameTable){
+	var field4rows = $.parseJSON($('textarea#'+nameTable+'DataExport').val());
+	var table=table;
+	var tab_text="<table border='2px'><thead><tr bgcolor='#87AFC6'>";
+	var line = "";
+	var tab = $(table);
+	var theader=$('#'+table+' tr:eq(0) th');
+	for (c=0;c<theader.length;c++){
+		test='#'+table+' tr:eq(0) th:eq('+c+')';
+		line=line+"<th>"+$(test).text()+"</th>";
+	}
+	tab_text=tab_text+line+"</tr>"+"</thead><tbody>";
+		for(j = 0; j<=field4rows.length; j++){
+			var r1 = field4rows[j];
+			line="<tr>";
+			for(var obj1 in r1){
+				var r2 = r1[obj1];line = line+"<td>"+r2+"</td>";
+			} //end for obj1
+			tab_text=tab_text+line+"</tr>";
+		}
+
+	tab_text=tab_text+"</tbody></table>";
+	return (tab_text);
+}
+
+/*Function to generate generic table to export*/
 function tableToReportMultiple(table, nameTable){
 	var field4rows = $.parseJSON($('textarea#'+nameTable+'DataExport').val());
 	var table=table;
@@ -1344,11 +1370,13 @@ $(document).ready(function() {
 		$(".openrisks_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#link-export').click(function(){
-		tableReport = tableToReport('open_risks_treeview');
+		//tableReport = tableToReport('open_risks_treeview');
+		tableReport = AllTableToReportMultiple('open_risks_treeview', "OpenRisks");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#link-export2').click(function(){
-		tableReport = tableToReport('open_risks_treeview');
+		//tableReport = tableToReport('open_risks_treeview');
+		tableReport = AllTableToReportMultiple('open_risks_treeview', "OpenRisks");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 //ppr export buttons
@@ -1356,11 +1384,13 @@ $(document).ready(function() {
 		$(".ppr_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#ppr-link-export').click(function(){
-		tableReport = tableToReportPPR('ppr_treeview');
+		//tableReport = tableToReportPPR('ppr_treeview');
+		tableReport = AllTableToReportMultiple('ppr_treeview', "PPR");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#ppr-link-export2').click(function(){
-		tableReport = tableToReportPPR('ppr_treeview');
+		//tableReport = tableToReportPPR('ppr_treeview');
+		tableReport = AllTableToReportMultiple('ppr_treeview', "PPR");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	//RCTestData export buttons
@@ -1368,11 +1398,11 @@ $(document).ready(function() {
 		$(".RCTest_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#RCTest-link-export').click(function(){
-		tableReport = tableToReportMultiple('RCTest_treeview', "RCTest");
+		tableReport = AllTableToReportMultiple('RCTest_treeview', "RCTest");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#RCTest-link-export2').click(function(){
-		tableReport = tableToReportMultiple('RCTest_treeview',"RCTest");
+		tableReport = AllTableToReportMultiple('RCTest_treeview',"RCTest");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	//SCTestData export buttons
@@ -1380,11 +1410,11 @@ $(document).ready(function() {
 		$(".SCTest_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#SCTest-link-export').click(function(){
-		tableReport = tableToReportMultiple('SCTest_treeview', "SCTest");
+		tableReport = AllTableToReportMultiple('SCTest_treeview', "SCTest");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#SCTest-link-export2').click(function(){
-		tableReport = tableToReportMultiple('SCTest_treeview',"SCTest");
+		tableReport = AllTableToReportMultiple('SCTest_treeview',"SCTest");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	//SampleData export buttons
@@ -1392,11 +1422,11 @@ $(document).ready(function() {
 		$(".Sample_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#Sample-link-export').click(function(){
-		tableReport = tableToReportMultiple('Sample_treeview',"Sample");
+		tableReport = AllTableToReportMultiple('Sample_treeview',"Sample");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#Sample-link-export2').click(function(){
-		tableReport = tableToReportMultiple('Sample_treeview',"Sample");
+		tableReport = AllTableToReportMultiple('Sample_treeview',"Sample");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	//Sample2Data export buttons
@@ -1404,11 +1434,29 @@ $(document).ready(function() {
 		$(".Sample2_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
 	$('#Sample2-link-export').click(function(){
-		tableReport = tableToReportMultiple('Sample2_treeview',"Sample2");
+		tableReport = AllTableToReportMultiple('Sample2_treeview',"Sample2");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#Sample2-link-export2').click(function(){
-		tableReport = tableToReportMultiple('Sample2_treeview',"Sample2");
+		tableReport = AllTableToReportMultiple('Sample2_treeview',"Sample2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//Local Audit export buttons
+	$('#LocalAudit-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('LocalAudit_treeview', "LocalAudit");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#LocalAudit-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('LocalAudit_treeview',"LocalAudit");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//Internal Audit export buttons
+	$('#InternalAudit-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('InternalAudit_table', "InternalAudit");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#InternalAudit-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('InternalAudit_table',"InternalAudit");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 

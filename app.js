@@ -6,7 +6,7 @@ var express = require('express');
 var exphbs = require('express-handlebars');
 var path = require('path');
 var app = express(),
-	
+
 //sign in
 sessions = require('client-sessions'),
 passport = require('passport'),
@@ -88,13 +88,13 @@ app.get('*', function (req, res) {
 var stdin = process.openStdin();
 stdin.addListener("data", function(d) {
     // note:  d is an object, and when converted to a string it will
-    // end with a linefeed.  so we (rather crudely) account for that  
-    // with toString() and then trim() 
-    console.log("you entered: [" + 
+    // end with a linefeed.  so we (rather crudely) account for that
+    // with toString() and then trim()
+    console.log("you entered: [" +
         d.toString().trim() + "]");
 	var prgm = './server/config/'+d.toString().trim()+'.js';
 	try {
-		app.use(require(prgm));				
+		app.use(require(prgm));
 	} catch(e) {
 		console.log(e);
 		console.log(prgm);
