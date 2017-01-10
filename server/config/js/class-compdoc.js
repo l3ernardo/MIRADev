@@ -27,7 +27,7 @@ var getDocs = {
                 { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // Audits and Reviews Tab
                 { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
-                { "$and": [{"compntType": "internalAudit"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey}] },
+                { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
                 // { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey},{"REVIEW_TYPE": "CHQ Internal Audit"}] },
                 { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
                 // { "$and": [{"DOCTYPE": "ppreview"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit}] }
@@ -107,7 +107,7 @@ var getDocs = {
                 doc[0].AuditTrustedData.push(comps[i]);
               }
               // For Audits and Reviews Tab - view 2
-              else if ((comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") && doc[0].RelevantCPs != undefined && doc[0].RelevantCPs.indexOf(comps[i].CPWWBCITKey)) {
+              else if ((comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") && doc[0].RelevantCPs != undefined && comps[i].RPTG_PROCESS.indexOf(doc[0].WWBCITKey)) {
                 doc[0].AuditTrustedRCUData.push(comps[i]);
               }
               // For Audits and Reviews Tab - view 3
