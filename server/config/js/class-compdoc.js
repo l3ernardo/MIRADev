@@ -27,7 +27,7 @@ var getDocs = {
                 { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // Audits and Reviews Tab
                 { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
-                { "$and": [{"compntType": "internalAudit"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey}] },
+                { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
                 // { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey},{"REVIEW_TYPE": "CHQ Internal Audit"}] },
                 { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
                 // { "$and": [{"DOCTYPE": "ppreview"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit}] }
@@ -78,7 +78,7 @@ var getDocs = {
                 scControlCtr++;
               }
               else if (comps[i].compntType == "controlSample") {
-                doc[0].SampleData.push(comps[i]);
+                doc[0].SampleData.push(JSON.parse(JSON.stringify(comps[i])));
                 // calculate Process Category
                 if (comps[i].controlType == "KCO") {
                   processCat = "Operational";
@@ -107,7 +107,7 @@ var getDocs = {
                 doc[0].AuditTrustedData.push(comps[i]);
               }
               // For Audits and Reviews Tab - view 2
-              else if ((comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") && doc[0].RelevantCPs != undefined && doc[0].RelevantCPs.indexOf(comps[i].CPWWBCITKey)) {
+              else if ((comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") && doc[0].RelevantCPs != undefined && comps[i].RPTG_PROCESS.indexOf(doc[0].WWBCITKey)) {
                 doc[0].AuditTrustedRCUData.push(comps[i]);
               }
               // For Audits and Reviews Tab - view 3
@@ -254,9 +254,18 @@ var getDocs = {
         var openrisks = [];
         var exportOpenRisks = [];
         doc[0].ORMCMissedRisks = 0;
+        var objects = {};//object of objects for counting
         for(var i = 0; i < risks.length; i++){
           if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
-            openrisks.push({id:risks[i].scorecardCategory.replace(/ /g,''), name:risks[i].scorecardCategory });
+            var tmp = {
+              id:risks[i].scorecardCategory.replace(/ /g,''),
+              name:risks[i].scorecardCategory,
+              numTasks: 0,
+              numTasksOpen: 0,
+              numMissedTasks: 0
+            };
+            openrisks.push(tmp);
+            objects[tmp.id] = tmp;
             riskCategory[risks[i].scorecardCategory] = true;
           }
           if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
@@ -280,6 +289,10 @@ var getDocs = {
           tmp.riskAbstract = risks[i].riskAbstract;
           exportOpenRisks.push(tmp);
           risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
+          //do counting for category
+          objects[risks[i].parent].numTasks += parseFloat(risks[i].numTasks);
+          objects[risks[i].parent].numTasksOpen += parseFloat(risks[i].numTasksOpen);
+          objects[risks[i].parent].numMissedTasks += parseFloat(risks[i].numMissedTasks);
 
           openrisks.push(risks[i]);
         }

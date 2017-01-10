@@ -5,7 +5,11 @@
 	<ul class="ibm-bullet-list">	
 	{{#each conflictfields}}	
 		<li class="ibm-no-links"><b>{{{label}}}:</b> {{{old}}}</li>
-		<script>$('label[for="{{{field}}}"]').addClass("ibm-confidential");</script>
+		<script>
+		window.onload = function() {
+		  $('label[for="{{{field}}}"]').addClass("ibm-confidential");  //example function call.
+		}		
+		</script>
 	{{/each}}
     </ul>	
 	<p class="ibm-error"><strong>Check the fields in RED to compare the values!</strong></p>
