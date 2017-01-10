@@ -192,12 +192,14 @@ var DB = {
 	},
 	// MERGE SAVE
 	mergesave: function(doc1, userdoc) {
-		//console.log(doc1.RatingJustification);
+		//console.log(doc1);
 		var deferred = q.defer();
 		// Check if there is a new version of same document in cloudant
 		var docid = userdoc._id
 		this.db.get(docid, '', function(error, data) {
 			var doc2 = data;
+			//console.log(doc1._rev);
+			//console.log(doc2._rev);
 			if(doc1._rev==doc2._rev) {
 				// No changes detected, so userdoc can be saved
 				delete userdoc.fieldslist;
@@ -209,10 +211,9 @@ var DB = {
 					}					
 				});
 			} else {
-				//console.log("Conflict detected");
 				// A change is detected, checking if the fields can be merged between doc2 and userdoc
 				userdoc._rev=doc2._rev; // updating the userdoc to be the last version
-				//console.log(userdoc);
+				console.log("Conflict");
 				var conflictfields = [];
 				try {
 					if(userdoc.fieldslist) { // the list of the editable fields to be looked for
@@ -223,15 +224,15 @@ var DB = {
 							// Checking and merging conflicted fields
 							//console.log("Comparing field: " + field + ", value:" + userdoc[field]);
 							var count = 0;
-							if(doc1[field].toString()!=userdoc[field].toString()) count++;
-							if(doc1[field].toString()!=doc2[field].toString()) count++;
-							if(userdoc[field].toString()!=doc2[field].toString()) count++;
+							if(doc1[field]!=userdoc[field]) count++;
+							if(doc1[field]!=doc2[field]) count++;
+							if(userdoc[field]!=doc2[field]) count++;
 							if(count>=3) { // Conflict detected
 								//console.log("Conflicted fields found");
 								conflictfields.push({"field":field, "label":label, "old":doc2[field], "new":userdoc[field]});
 							} else {
 								// Only merge if doc2 has a different value from doc1 and userdoc (and doc1 and userdoc are the same)
-								if(doc1[field].toString()==userdoc[field].toString()) {
+								if(doc1[field]==userdoc[field]) {
 									userdoc[field] = doc2[field];
 								}
 								//console.log(field + " => " + userdoc[field]);
