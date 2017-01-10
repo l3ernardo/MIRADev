@@ -292,12 +292,12 @@ getLocalAudit: function(req, db){
         }};
 
         db.find(obj).then(function(data2){
-
           var tmp = [];
 
           for(var list in data2.body.docs[0].value){
             tmp.push({name:list});
           }
+
           output.auditList = tmp;
           output.ratingList = data2.body.docs[0].value;
           output.new = 1;
@@ -316,6 +316,7 @@ getLocalAudit: function(req, db){
                 output.parentType = parent.ParentDocSubType;
                 output.AssessableUnitName = parent.AssessableUnitName;
                 output.parentid = req.query.id;
+
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -736,12 +737,12 @@ getLocalAudit: function(req, db){
                     "date": utility.getDateTime("","date"),
                     "time": utility.getDateTime("","time")
                   };
-
                   if(req.body.docid === ""){
                     var obj={};
                     obj.docType = "asmtComponent";
                     obj.compntType = "localAudit";
                     obj.controllableUnit = req.body.controllableUnit;
+                    obj.AssessableUnitName = req.body.AssessableUnitName;
                     obj.auditOrReview = req.body.auditOrReview;
                     obj.Log = [addlog];
                     obj.reportingQuarter = req.session.quarter;
@@ -759,7 +760,6 @@ getLocalAudit: function(req, db){
                     obj.parentid = req.body.parentid;
 
                     db.save(obj).then(function(data){
-
                       deferred.resolve({"status": 200, "data": data.body});
                     }).catch(function(err){
                       deferred.reject({"status": 500, "error": err.error.reason});

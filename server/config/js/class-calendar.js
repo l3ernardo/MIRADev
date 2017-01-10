@@ -17,7 +17,7 @@ var calendar = {
 		var deferred = q.defer();
 		try{
 			var doc = [];
-			accessrules.getRules(req,"0000",db, '');
+			accessrules.getRules(req, '');
 			doc.push(accessrules.rules);
 			if(doc[0]){
 				deferred.resolve({"status": 200, "doc": doc[0]});
