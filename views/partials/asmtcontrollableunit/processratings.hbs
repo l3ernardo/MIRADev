@@ -201,7 +201,7 @@
 							<td class="asmt-viewdata"width="20%">&nbsp;</td>
 						{{/if}}
 						<td class="asmt-viewdata"width="5%">{{count}}</td>
-						<td class="asmt-viewdata"width="5%">{{percent}}</td>
+						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
 						<td class="asmt-viewdata"width="10%">{{targettosat}}</td>
@@ -237,8 +237,8 @@
 						{{else}}
 							<td class="asmt-viewdata"width="20%">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"width="5%"></td>
-						<td class="asmt-viewdata"width="5%"></td>
+						<td class="asmt-viewdata"width="5%">{{count}}</td>
+						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
 						<td class="asmt-viewdata"width="10%">{{targettosat}}</td>
