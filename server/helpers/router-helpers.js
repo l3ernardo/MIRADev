@@ -147,6 +147,22 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+		compDocDRDisplayView: function(rating, field) {
+			var ratinghtml;
+			if (rating == undefined) {
+					ratinghtml = '<td class="asmt-viewdata"></td>';
+			} else {
+				if (rating == "Sat")
+					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'</td>';
+				else if (rating == "Marg")
+					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'</td>';
+				else if (rating == "Unsat")
+					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'</td>';
+				else
+					ratinghtml = '<td class="asmt-viewdata-centered">-</td>';
+			}
+			return ratinghtml;
+		},
 		defectRateDisplayView: function(dr, margThreshold, unsatThreshold) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
@@ -321,10 +337,10 @@ var register = function(Handlebars) {
 					var currdate = new Date();
 					var dateval = new Date(date);
 					currdate.setHours(0,0,0,0);
-					if(dateval >= currdate)
-						datehtml = '<span style="padding-right:1em">'+date+'</span>';
-					else
+					if(dateval < currdate)
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
+					else
+						datehtml = '<span style="padding-right:1em">'+date+'</span>';				
 					}
 				}
 			return datehtml;

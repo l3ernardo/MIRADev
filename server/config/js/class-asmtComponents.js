@@ -11,6 +11,37 @@ var utility = require('./class-utility.js');
 
 var components = {
 
+newAudit: function(req, db){
+  var deferred = q.defer();
+  try{
+    var obj = {
+      selector : {
+        "_id": req.query.id,
+        "compntType": "ppr"
+      }
+    };
+
+    db.find(obj).then(function(data){
+      //console.log(data.body.docs[0]);
+      data.body.docs[0]["_id"] = req.query.id;
+      if(typeof req.query.edit !== "undefined"){
+        data.body.docs[0].editmode = 1;
+      }
+      deferred.resolve({"status": 200, "data":data.body.docs[0]})
+    }).catch(function(err) {
+      deferred.reject({"status": 500, "error": err.error.reason});
+    });
+  }catch(e){
+    deferred.reject({"status": 500, "error": e});
+  }
+  return deferred.promise;
+},
+
+
+
+
+
+
   getComponent: function(req, db){
     var deferred = q.defer();
     try{
@@ -22,6 +53,7 @@ var components = {
       };
       db.find(obj).then(function(data){
         var tipo = data.body.docs[0].compntType;
+
         switch (tipo) {
           case "controlSample":
           deferred.resolve(components.getControlSample(req,db));
@@ -38,7 +70,7 @@ var components = {
           case "accountAudit":
           deferred.resolve(components.getAccountAudit(req,db));
           break;
-          case "ppr":
+          case "PPR":
           deferred.resolve(components.getPPR(req,db));
           break;
           case "openIssue":
@@ -121,7 +153,37 @@ var components = {
         if(typeof req.query.edit !== "undefined"){
           output.editmode = 1;
         }
-        if(output.samples != undefined && output.samples.length != 0){
+        var obj = {
+          selector : {
+            "_id": {"$gt":0},
+            "compntType": "controlSample",
+            "reportingQuarter": output.reportingQuarter,
+            "CTRLPARENT": output.IntegrationKeyWWBCIT
+          },
+          fields:["_id","reportingQuarter","sampleUniqueID","controllableUnit","numTests","numDefects","remediationStatus","defectsAbstract"]
+        };
+        db.find(obj).then(function(data){
+          //console.log(data);
+          var quarters = {};
+          var list = [];
+          for(var i=0; i< data.body.docs.length; i++){
+            var samp = data.body.docs[i];
+            if(typeof quarters[samp.reportingQuarter] === "undefined"){
+              quarters[samp.reportingQuarter] = true;
+              list.push({id:samp.reportingQuarter.replace(/ /g,''), period:samp.reportingQuarter});
+            }
+            samp.parent = samp.reportingQuarter.replace(/ /g,'');
+            samp.id = samp["_id"];
+            samp.defectRate = (samp.numDefects / samp.numTests) * 100;
+            list.push(samp);
+          }
+          //console.log(list);
+          output.samples = list;
+          deferred.resolve({"status": 200, "data":output});
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
+        /*if(output.samples != undefined && output.samples.length != 0){
           var promises = output.samples.map(function(id){
             var obj = {
               selector : {
@@ -147,22 +209,14 @@ var components = {
               list.push(samp);
             }
             //console.log(list);
-            console.log("3");
             output.samples = list;
 
-            /*console.log(data[1].body.docs[0]);
-            console.log(data[2].body.docs[0]);*/
-            console.log("4");
             deferred.resolve({"status": 200, "data":output});
           });
         }else{
-          /*
-          var promises = searchList.map(function(word) {
-          return request(url.replace('%word%', word));
-        });
-        return q.all(promises).then(function(data){*/
+
         deferred.resolve({"status": 200, "data":output});
-      }
+      }*/
     }).catch(function(err) {
       deferred.reject({"status": 500, "error": err.error.reason});
     });
@@ -202,10 +256,9 @@ getPPR: function(req, db){
     var obj = {
       selector : {
         "_id": req.query.id,
-        "compntType": "ppr"
+        "compntType": "PPR"
       }
     };
-
     db.find(obj).then(function(data){
       //console.log(data.body.docs[0]);
       data.body.docs[0]["_id"] = req.query.id;
@@ -232,7 +285,6 @@ getLocalAudit: function(req, db){
       }else{
         ratingKey ="AdminAuditsRatings";
       }
-      //console.log(req.session.businessunit+ratingKey);
       var obj = {
         selector : {
           "_id": {"$gt":0},
@@ -240,11 +292,12 @@ getLocalAudit: function(req, db){
         }};
 
         db.find(obj).then(function(data2){
-
           var tmp = [];
+
           for(var list in data2.body.docs[0].value){
             tmp.push({name:list});
           }
+
           output.auditList = tmp;
           output.ratingList = data2.body.docs[0].value;
           output.new = 1;
@@ -252,16 +305,18 @@ getLocalAudit: function(req, db){
           output.reportingQuarter = req.session.quarter;
           var pkey = {
             selector : {
-              "_id": req.query.pID
+              "_id": req.query.id
             }};
+
             db.find(pkey).then(function(parentData){
               var parent = parentData.body.docs[0];
-              if(!((parent.DocSubType != "Controllable Unit" && parent.DocSubType != "Country Process") || (parent.MIRAStatus == "Final"))){
-                output.procesDisplay = true;
-              }
-              /*if(!((ParentSubType != "Controllable Unit" && ParentSubType != "Country Process") || ( parentStatus == "Final"))){
-              output.procesDisplay = true;
-            }*/
+                if(!((parent.ParentDocSubType != "Controllable Unit" && parent.ParentDocSubType != "Country Process") || (parent.MIRAStatus == "Final"))){
+                  output.procesDisplay = true;
+                }
+                output.parentType = parent.ParentDocSubType;
+                output.AssessableUnitName = parent.AssessableUnitName;
+                output.parentid = req.query.id;
+
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -271,7 +326,6 @@ getLocalAudit: function(req, db){
         });
 
       }else{
-
         var obj = {
           selector : {
             "_id": req.query.id,
@@ -683,12 +737,12 @@ getLocalAudit: function(req, db){
                     "date": utility.getDateTime("","date"),
                     "time": utility.getDateTime("","time")
                   };
-
                   if(req.body.docid === ""){
-
                     var obj={};
+                    obj.docType = "asmtComponent";
                     obj.compntType = "localAudit";
                     obj.controllableUnit = req.body.controllableUnit;
+                    obj.AssessableUnitName = req.body.AssessableUnitName;
                     obj.auditOrReview = req.body.auditOrReview;
                     obj.Log = [addlog];
                     obj.reportingQuarter = req.session.quarter;
@@ -703,16 +757,15 @@ getLocalAudit: function(req, db){
                     obj.comments = req.body.comments;
                     obj.Notes = req.body.Notes;
                     obj.Links = req.body.attachIDs;
+                    obj.parentid = req.body.parentid;
 
                     db.save(obj).then(function(data){
-
                       deferred.resolve({"status": 200, "data": data.body});
                     }).catch(function(err){
                       deferred.reject({"status": 500, "error": err.error.reason});
                     });
                   }
                   else{
-
                     var obj = {
                       selector : {
                         "_id": req.body["_id"],
