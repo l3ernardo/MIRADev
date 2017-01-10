@@ -6,7 +6,7 @@
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/style.css">
 <script src='/js/asmtComponentsAudits.js'></script>
-
+<script src="./js/common_routines.js"></script>
 <script src="./js/attachments.js"></script>
 <!-- JS and CSS for rich text edit -->
 <link rel="stylesheet" type="text/css" href="./css/skin.css">
@@ -33,7 +33,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
     <span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
     {{/unless}}
   </p>
-  <form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/savelocalaudit">
+  <form id="asmtcomponentform" class="ibm-column-form" name="form" onsubmit="return CheckAuditReviewLocalFields()" method="POST" action="/savelocalaudit">
     <input type="hidden" name="_id" value="{{_id}}">
     <input type="hidden" name="docid" id="docid" value="{{_id}}">
     <input type="hidden" name="editmode" value="{{editmode}}">
@@ -70,9 +70,9 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       <tr>
         <td># Recommendations<span class="ibm-required">*</span>:</td><td>
         Total:
-        <input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>
+        <input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}"><br/>
         Open:
-        <input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+        <input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
       </tr>
       <tr>
         <td>Target to close:</td><td>
@@ -105,7 +105,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       </tr>
       {{/if}}
       <tr>
-        <td>Rating:</td><td>{{rating}}</td>
+        <td>Status/Rating:</td><td>{{{statusRatingLclAdt rating}}}</td>
       </tr>
       <tr>
         <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
