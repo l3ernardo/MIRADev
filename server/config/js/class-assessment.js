@@ -580,7 +580,7 @@ var assessment = {
 									tmpRatingList.push(doc[0].CUAsmtDataPR1view2[i]);
 								}
 								for(var category in catList){
-									catList[category].percent = catList[category].count/countryList[catList[category].parent].percent*100;
+									catList[category].percent = catList[category].count/countryList[catList[category].parent].count*100;
 								}
 								for(var country in countryList){
 									countryList[country].percent = countryList[country].count/doc[0].CUAsmtDataPR1view2.length*100;
