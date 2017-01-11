@@ -23,7 +23,7 @@ var assessment = {
 		var deferred = q.defer();
 		var docid = req.query.id
 		var defViewRow = 7;
-		
+
 		db.get(docid).then(function(data){
 			var doc = [];
 			try {
@@ -44,7 +44,7 @@ var assessment = {
 			}
 			module.exports.preload(global.doc1,req,db).then(function(data) {
 				var obj = [];
-				obj.push(data.doc);				
+				obj.push(data.doc);
 				deferred.resolve({"status": 200, "doc": obj});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": data.error});
@@ -60,7 +60,7 @@ var assessment = {
 		var defViewRow = 7;
 		var doc = [];
 		doc.push(newdoc);
-		
+
 		/* Format Links */
 		doc[0].Links = JSON.stringify(doc[0].Links);
 		doc[0].EnteredBU = doc[0].MIRABusinessUnit;
@@ -142,7 +142,8 @@ var assessment = {
 									fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(defViewRow-doc[0].CPAsmtDataPR1view.length));
 								}
 							}
-							deferred.resolve({"status": 200, "doc": doc});
+							var obj = doc[0]; // For Merge
+							deferred.resolve({"status": 200, "doc": obj});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -202,7 +203,8 @@ var assessment = {
 									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 								}
 							}
-							deferred.resolve({"status": 200, "doc": doc});
+							var obj = doc[0]; // For Merge
+							deferred.resolve({"status": 200, "doc": obj});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -263,7 +265,8 @@ var assessment = {
 									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 								}
 							}
-							deferred.resolve({"status": 200, "doc": doc});
+							var obj = doc[0]; // For Merge
+							deferred.resolve({"status": 200, "doc": obj});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -325,7 +328,8 @@ var assessment = {
 							}
 							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].IOT;
-							deferred.resolve({"status": 200, "doc": doc});
+							var obj = doc[0]; // For Merge
+							deferred.resolve({"status": 200, "doc": obj});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -388,7 +392,8 @@ var assessment = {
 							doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
 							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].IMT;
-							deferred.resolve({"status": 200, "doc": doc});
+							var obj = doc[0]; // For Merge
+							deferred.resolve({"status": 200, "doc": obj});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -452,7 +457,8 @@ var assessment = {
 							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							doc[0].Name = req.session.buname + " - " + doc[0].Country;
-							deferred.resolve({"status": 200, "doc": doc});
+							var obj = doc[0]; // For Merge
+							deferred.resolve({"status": 200, "doc": obj});
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -706,7 +712,8 @@ var assessment = {
 											}
 										}
 										 doc[0].list = list;
-										deferred.resolve({"status": 200, "doc": doc});
+										 var obj = doc[0]; // For Merge
+										deferred.resolve({"status": 200, "doc": obj});
 									}).catch(function(err) {
 										console.log("[assessableunit][LessonsList]" + dataLL.error);
 										deferred.reject({"status": 500, "error": err});
@@ -810,14 +817,16 @@ var assessment = {
 											}
 										}
 										doc[0].list = list;
-										deferred.resolve({"status": 200, "doc": doc});
+										var obj = doc[0]; // For Merge
+										deferred.resolve({"status": 200, "doc": obj});
 									}).catch(function(err) {
 										console.log("[assessableunit][LessonsList]" + dataLL.error);
 										deferred.reject({"status": 500, "error": err});
 									});
 								}//end if GTS
 								else {
-									deferred.resolve({"status": 200, "doc": doc});
+									var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
 								}
 							}).catch(function(err) {
 								console.log("[assessableunit][openIssueList]" + dataLL.error);
@@ -921,14 +930,16 @@ var assessment = {
 										}
 									}
 									 doc[0].list = list;
-									deferred.resolve({"status": 200, "doc": doc});
+									 var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
 									console.log("[assessableunit][LessonsList]" + dataLL.error);
 									deferred.reject({"status": 500, "error": err});
 								});
 						}
 						else {
-							deferred.resolve({"status": 200, "doc": doc});
+							var obj = doc[0]; // For Merge
+							deferred.resolve({"status": 200, "doc": obj});
 						}
 						break;
 					default:
@@ -941,7 +952,7 @@ var assessment = {
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
-		return deferred.promise;			
+		return deferred.promise;
 	},
 	/* New assessment by parent ID */
 	newAsmtByPID: function(req, db) {

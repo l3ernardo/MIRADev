@@ -225,7 +225,7 @@ var getDocs = {
             "compntType": "openIssue",
             "docType": "asmtComponent",
             "reportingQuarter": doc[0].CurrentPeriod,
-            "ControllableUnit": doc[0].AssessableUnitName,
+            "controllableUnit": doc[0].AssessableUnitName,
             "businessUnit": doc[0].BusinessUnit,
             "scorecardCategory": {"$gt":0}
           },
