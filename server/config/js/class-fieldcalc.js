@@ -365,7 +365,8 @@ var calculatefield = {
               "AUStatus": "Active",
               "CurrentPeriod": req.session.quarter,
               "$or": [
-                { "$and": [{"ParentDocSubType": "Country Process"},{"AssessableUnitName":{"$in":doc[0].RelevantCountryProcesses}}] },
+                // { "$and": [{"ParentDocSubType": "Country Process"},{"AssessableUnitName":{"$in":doc[0].RelevantCountryProcesses}}] },
+                { "$and": [{"ParentDocSubType": "Country Process"},{"Country":"Poland"}] },
                 { "$and": [{"ParentDocSubType": "Account"}, {"BusinessUnit": "IBM GBS"}] }
                 // { "$and": [{"ParentDocSubType": "Account"},{"CUWWBCITKey":doc[0].WWBCITKey}] }
               ]

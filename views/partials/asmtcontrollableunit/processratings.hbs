@@ -180,7 +180,7 @@
 	<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Rating</span><br /><br />
-			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table id="processRatings_treeview" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
 					<th class="processrating-viewheader" scope="col" width="20%">Process</th>
@@ -193,23 +193,20 @@
 					<th class="processrating-viewheader" scope="col" width="20%">Explanations</th>
 				</thead>
 				{{#each CUAsmtDataPR1view}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">
-							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
-							<div id="ratingcategoryDisplay"></div>
-						</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td class="asmt-viewdata"width="10%">{{#unless name}}{{{ratingcategory}}}{{/unless}}</td>
 						{{#if name}}
-							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+							<td class="asmt-viewdata"width="20%"><a href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
-							<td class="asmt-viewdata">&nbsp;</td>
+							<td class="asmt-viewdata"width="20%">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"width="5%">{{count}}</td>
+						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
-						<td class="asmt-viewdata">{{targettosat}}</td>
-						<td class="asmt-viewdata">{{targettosatprev}}</td>
-						<td class="asmt-viewdata">{{reviewcomments}}</td>
+						<td class="asmt-viewdata"width="10%">{{targettosat}}</td>
+						<td class="asmt-viewdata"width="10%">{{targettosatprev}}</td>
+						<td class="asmt-viewdata"width="20%">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
 				<tr>
@@ -219,7 +216,7 @@
 	<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Country</span><br /><br />
-			<table width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<table id="processRatings2_treeview"width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="10%"></th>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
@@ -231,24 +228,21 @@
 					<th class="processrating-viewheader" scope="col" width="10%">Target to Sat</th>
 					<th class="processrating-viewheader" scope="col" width="20%">Explanations</th>
 				</thead>
-				{{#each CUAsmtDataPR1view}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">{{country}}</td>
-						<td class="asmt-viewdata">
-							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
-							<div id="ratingcategoryDisplayByCountry"></div>
-						</td>
+				{{#each CUAsmtDataPR1view2}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td class="asmt-viewdata"width="10%">{{#unless name}}{{country}}{{/unless}}</td>
+						<td class="asmt-viewdata"width="10%">{{#unless name}}{{ratingcategory}}{{/unless}}</td>
 						{{#if name}}
-							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+							<td class="asmt-viewdata"width="20%"><a href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
-							<td class="asmt-viewdata">&nbsp;</td>
+							<td class="asmt-viewdata"width="20%">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"width="5%">{{count}}</td>
+						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
-						<td class="asmt-viewdata">{{targettosat}}</td>
-						<td class="asmt-viewdata">{{reviewcomments}}</td>
+						<td class="asmt-viewdata"width="10%">{{targettosat}}</td>
+						<td class="asmt-viewdata"width="20%">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
 				<tr>

@@ -40,7 +40,7 @@
 		<input type="hidden" name="close" id="close" value="0">
 		<input type="hidden" name="opmetrickey" id="opmetrickey" value="{{OpMetricKey}}">
 		<input type="hidden" name="fieldslist" id="fieldslist" value="">
-		
+
 		<!-- Error section -->
 		{{>errormessage}}
 		<!-- Basic Details -->
@@ -90,10 +90,12 @@
 	$('h3#pageSubTitle').hide();
 	$("#audit_readiness_treeview").treetable({expandable: true });
 	$("#open_risks_treeview").treetable({expandable: true });
+	$("#processRatings_treeview").treetable({expandable: true});
+	$("#processRatings2_treeview").treetable({expandable: true});
 </script>
 {{#if editmode}}
 <script>
 	//Log editable fields
 	collect();
-</script>	
+</script>
 {{/if}}
