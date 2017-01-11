@@ -295,7 +295,6 @@ var assessableunit = {
 									if(req.query.edit != undefined && doc[0].editor)	doc[0].editmode = 1;
 									/* Get Reporting Groups */
 									//doc[0].admin = false;
-									
 									assessableunit.getReportingGroups(req, db, doc[0].BusinessUnit).then(function(resdata) {
 										if(resdata.status==200 && !resdata.error){
 											//Load Reporting groups list - for edit/read mode
@@ -1442,7 +1441,7 @@ var assessableunit = {
 			db.find(objParent).then(function(data){
 				if(data.status==200 && !data.error) {
 					var doc = [];
-					if(resdata.body.docs.length > 0){
+					if(data.body.docs.length > 0){
 						doc = data.body.docs;
 					}
 					deferred.resolve({"status": 200, "doc": doc});
@@ -1478,7 +1477,7 @@ var assessableunit = {
 			db.find(searchobj).then(function(budata) {
 				if(budata.status==200 && !budata.error){
 					var doc = [];
-					if(resdata.body.docs.length > 0){
+					if(budata.body.docs.length > 0){
 						doc = budata.body.docs;
 					}
 					deferred.resolve({"status": 200, "doc": doc});
