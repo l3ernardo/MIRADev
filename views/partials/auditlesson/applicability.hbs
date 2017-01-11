@@ -2,55 +2,47 @@
 	<caption class="mira-caption"><em>Applicability</em></caption>
 	{{!-- auditlesson form - Applicability section - Edit Mode --}}
 	{{#if editmode}}
-	<textarea name="textarea" id="dataForIOTIMTs" cols="100" style="display:none">{{valuesToString IOTIMTs}}</textarea>
-	<tr>
-		<td width="25%">Business Unit:</td>
-		<td>{{{uniqueSelect "BU" businessList "Name" "Name" businessUnit}}}</td>
-	</tr><tr>
-		<td>Country:</td><td>{{{uniqueSelect "country" countries "name" "name" country}}}</td>
-	</tr><tr>
-		<td>BU IMT:</td><td><input type="text" id="IMT" name="IMT" value="{{IMT}}" readonly=""></td>
-	</tr><tr>
-		<td>BU IOT:</td><td><input type="text" id="IOT" name="IOT" value="{{IOT}}" readonly=""></td>
-	</tr>
-	{{#if_not_equal EnteredBU "GBS"}}
-	<tr>
-		<td><label for="AuditLessonsKey">Audit Lessons Key:</label></td>
-		<td>
-			<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonsKey}}">
-			{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
-		</td>
-	</tr>
-	{{/if_not_equal}}
-	<tr>
-		<input type="hidden" id="globalProcess" name="globalProcess" value="{{globalProcess}}">
-		<td>Global Process:</td>
-		<td>{{{multiSelect "processList" processList "WWBCITKey" "Name" "globalProcessList"}}}</td>
-	</tr>{{#if_not_equal EnteredBU "GBS"}}<tr>
-		<td>Subprocess:</td><td>{{{uniqueSelect "subprocess" subprocessList "WWBCITKey" "Name" subprocess}}}</td>
-	</tr>
-{{/if_not_equal}}
+		<textarea name="textarea" id="dataForIOTIMTs" cols="100" style="display:none">{{valuesToString IOTIMTs}}</textarea>
+		<tr>
+			<td width="25%">Business Unit:</td>
+			<td>{{{uniqueSelect "BU" businessList "Name" "Name" businessUnit}}}</td>
+		</tr><tr>
+			<td>Country:</td><td>{{{uniqueSelect "country" countries "name" "name" country}}}</td>
+		</tr><tr>
+			<td>BU IMT:</td><td><input type="text" id="IMT" name="IMT" value="{{IMT}}" readonly=""></td>
+		</tr><tr>
+			<td>BU IOT:</td><td><input type="text" id="IOT" name="IOT" value="{{IOT}}" readonly=""></td>
+		</tr>
+		{{#if_not_equal EnteredBU "GBS"}}
+		<tr>
+			<td><label for="AuditLessonsKey">Audit Lessons Key:</label></td>
+			<td>
+				<input type="hidden" id="AuditLesonsKey" name="AuditLessonsKey" value="{{AuditLessonsKey}}">
+				{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
+			</td>
+		</tr>
+		{{/if_not_equal}}
+		<tr>
+			<input type="hidden" id="globalProcess" name="globalProcess" value="{{globalProcess}}">
+			<td>Global Process:</td>
+			<td>{{{multiSelect "processList" processList "WWBCITKey" "Name" "globalProcessList"}}}</td>
+		</tr>
 	{{else}}
-{{!-- auditlesson form - Applicability section - Read Mode --}}
-	<tr>
-		<td width="25%">Business Unit:</td><td>{{businessUnit}}</td>
-	</tr><tr>
-		<td>Country:</td><td>{{country}}</td>
-	</tr><tr>
-		<td>BU IMT:</td><td>{{IMT}}</td>
-	</tr><tr>
-		<td>BU IOT:</td><td>{{IOT}}</td>
-	</tr>
-	{{#if_not_equal EnteredBU "GBS"}}
-	<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
-	{{/if_not_equal}}
-	<tr>
-		<td>Global Process:</td><td>{{globalProcess}}</td>
-	</tr>
-	{{#if_not_equal EnteredBU "GBS"}}
-	<tr>
-		<td>Subprocess:</td><td>{{subprocess}}</td>
-	</tr>
-	{{/if_not_equal}}
+	{{!-- auditlesson form - Applicability section - Read Mode --}}
+		<tr>
+			<td width="25%">Business Unit:</td><td>{{businessUnit}}</td>
+		</tr><tr>
+			<td>Country:</td><td>{{country}}</td>
+		</tr><tr>
+			<td>BU IMT:</td><td>{{IMT}}</td>
+		</tr><tr>
+			<td>BU IOT:</td><td>{{IOT}}</td>
+		</tr>
+		{{#if_not_equal EnteredBU "GBS"}}
+		<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
+		{{/if_not_equal}}
+		<tr>
+			<td>Global Process:</td><td>{{globalProcess}}</td>
+		</tr>
 	{{/if}}
 </table>
