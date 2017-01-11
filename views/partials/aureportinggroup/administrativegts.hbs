@@ -4,20 +4,20 @@
 		{{!-- AU Reporting Group form - Administrative Use Only section - Edit Mode with Admin Access --}}
 		{{#if admin}}
 			<tr>
-				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+				<td width="25%"><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-						{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						{{{uniqueSelect "AuditProgram" parameters.GTSAuditPrograms.0.options "name" "name" AuditProgram}}}
 					</span>
 				</td>
 			</tr>
 		{{else}}
 			{{!-- AU Reporting Group form - Administrative Use Only section - Edit Mode with no Admin Access --}}
-			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			<tr><td width="25%">Audit Program:</td><td>{{AuditProgram}}</td></tr>
 		{{/if}}
 	{{else}}
 		{{!-- AU Reporting Group form - Administrative Use Only section - Read Mode --}}
-		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		<tr><td width="25%">Audit Program:</td><td>{{AuditProgram}}</td></tr>
 	{{/if}}
 
 </table>
