@@ -270,7 +270,7 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
 										data.doc[0].editmode = "1";											
-									}										
+									}				
 									res.render('asmtcontrollableunit', data.doc[0] );
 								}catch(e){
 									console.log(e.stack);
