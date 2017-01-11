@@ -300,7 +300,7 @@ var calculatefield = {
               "AUStatus": "Active",
               "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
               "BusinessUnit": doc[0].BusinessUnit,
-              "CurrentPeriod": req.session.quarter,
+              "CurrentPeriod": doc[0].CurrentPeriod,
               "Country": doc[0].Country
             }
           };
@@ -376,6 +376,11 @@ var calculatefield = {
       }
       db.find(asmts).then(function(asmtsdata) {
         doc[0].asmtsdocs = asmtsdata.body.docs;
+        // Populate View Data
+        for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
+          // if (doc[0].asmtsdocs[i].AuditableFlag == "Yes" )
+          doc[0].AUData.push(doc[0].asmtsdocs[i]);
+        }
         deferred.resolve({"status": 200, "doc": doc});
       }).catch(function(err) {
         console.log("[class-fieldcalc][getAssessments] - " + err.error);

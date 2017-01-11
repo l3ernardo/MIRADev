@@ -410,10 +410,10 @@ var assessment = {
 							doc[0].InternalAuditData = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].PPRData = fieldCalc.addTestViewData(11,defViewRow);
 							doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
+							// doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
+							// doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
 						}
-						doc[0].AUData = fieldCalc.addTestViewData(17,defViewRow);
+						// doc[0].AUData = fieldCalc.addTestViewData(17,defViewRow);
 						doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
 						doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
 						doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
@@ -424,8 +424,17 @@ var assessment = {
 						doc[0].BUCAsmtDataCURview = [];
 						doc[0].BUCAsmtDataPIview = [];
 						doc[0].BUCAsmtDataOIview = [];
+						doc[0].AUData = [];
+						doc[0].RiskView1Data = [];
+						doc[0].RiskView2Data = [];
+
+						doc[0].Country = util.resolveGeo(parentdoc[0].Country,"Country",req);
+						doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+						// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+						doc[0].Name = req.session.buname + " - " + doc[0].Country;
 
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
+							console.log("audata: " + doc[0].AUData.length);
 							fieldCalc.getRatingProfile(doc);
 							if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 								if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -455,9 +464,9 @@ var assessment = {
 									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 								}
 							}
-							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
-							doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].Country;
+							// doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+							// doc[0].Name = req.session.buname + " - " + doc[0].Country;
 							var obj = doc[0]; // For Merge
 							deferred.resolve({"status": 200, "doc": obj});
 						}).catch(function(err) {
@@ -508,23 +517,23 @@ var assessment = {
 							//Open issue
 							comp.getOpenIssue(db,doc,defViewRow).then(function(){
 								//console.log(doc[0].CUAsmtDataPR1view);
-							//AuditKey
-							if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
-								var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
-									var obj = {
-										selector : {
-											"_id": {"$gt":0},
-											"docType": "auditLesson",
-											"reportingPeriod": {"$gt":0},
-											"AuditType": {"$gt":0},
-											"businessUnit": req.session.buname,
-											"AuditLessonsKey": {
-												"$regex":".*"+id+".*"}
-										},
-										sort:[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
-									};
-									return db.find(obj);
-								});
+								//AuditKey
+								if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
+									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
+										var obj = {
+											selector : {
+												"_id": {"$gt":0},
+												"docType": "auditLesson",
+												"reportingPeriod": {"$gt":0},
+												"AuditType": {"$gt":0},
+												"businessUnit": req.session.buname,
+												"AuditLessonsKey": {
+													"$regex":".*"+id+".*"}
+											},
+											sort:[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
+										};
+										return db.find(obj);
+									});
 									q.all(promises).then(function(dataLL){
 
 										var ALLs = {};
