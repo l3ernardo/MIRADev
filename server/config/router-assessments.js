@@ -14,6 +14,19 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 	assessment.getAsmtbyID(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
 			if(data.doc) {
+				try {
+					// Temporary save the original document status
+					if(global.userdoc!="") {
+						var docOrig = Object.assign({},global.userdoc);
+						global.doc1 = docOrig;
+						global.userdoc="";
+					} else {
+						var docOrig = Object.assign({},data.doc);
+						global.doc1 = docOrig[0];
+					}
+				} catch(e) {
+					console.log(e.stack)
+				}				
 				switch (data.doc[0].ParentDocSubType) {
 					case "Business Unit":
 						var lParams;
@@ -24,6 +37,19 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 								res.render('asmtbusinessunit', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -43,7 +69,20 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
-								res.render('asmtglobalprocess', data.doc[0] );
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+									res.render('asmtglobalprocess', data.doc[0] );
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][GPassessment][getListParams] - " + dataParam.error);
@@ -62,7 +101,20 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
-								res.render('asmtsubprocess', data.doc[0] );
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+									res.render('asmtsubprocess', data.doc[0] );
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][SPassessment][getListParams] - " + dataParam.error);
@@ -81,7 +133,20 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
-								res.render('asmtbuiot', data.doc[0] );
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+									res.render('asmtbuiot', data.doc[0] );
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][BUIOTassessment][getListParams] - " + dataParam.error);
@@ -100,7 +165,20 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
-								res.render('asmtbuimt', data.doc[0] );
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+									res.render('asmtbuimt', data.doc[0] );
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][BUIMTassessment][getListParams] - " + dataParam.error);
@@ -119,6 +197,19 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 								res.render('asmtbucountry', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -139,6 +230,19 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 								res.render('asmtcountryprocess', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -158,7 +262,20 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
-								res.render('asmtcontrollableunit', data.doc[0] );
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+									res.render('asmtcontrollableunit', data.doc[0] );
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][CUassessment][getListParams] - " + dataParam.error);
@@ -177,6 +294,19 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 								res.render('asmtbureportinggroup', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -196,7 +326,20 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;
-								res.render('asmtaccount', data.doc[0] );
+								// Update the doc if it comes from a merge conflict
+								try {
+									var newdoc = Object.assign({},global.userdoc); // Working document
+									global.userdoc="";
+									if(global.conflictfields[0]!=undefined) {
+										data.doc[0].conflictfields = global.conflictfields;
+										global.conflictfields="";
+										data.doc[0].editmode = "1";											
+									}										
+									res.render('asmtaccount', data.doc[0] );
+								}catch(e){
+									console.log(e.stack);
+								}		
+								// end merge here								
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][AccountAssessment][getListParams] - " + dataParam.error);
@@ -334,16 +477,27 @@ assessments.get('/newassessment', isAuthenticated, function(req, res) {
 /* Save Assessment document */
 assessments.post('/saveasmt', isAuthenticated, function(req, res){
 	assessment.saveAsmt(req, db).then(function(data) {
-		var close = req.body.close;
-		if(data.status==200 & !data.error) {
-			if(close=='1') {
-				res.redirect('/assessableunit?id='+ data.parentid);
-			} else {
-				res.redirect('/assessment?id=' + data.id);
+		if(data.status==999) {
+			try {
+				global.userdoc = data.userdoc;
+				global.conflictfields = data.conflictfields;
+				res.redirect('/assessment?id=' + data.id + "&edit");
+			}catch(e){
+				console.log(e.stack);
 			}
 		} else {
-			res.render('error',{errorDescription: data.error});
-			console.log("[router][assessments][saveasmt] - " + data.error);
+			var close = req.body.close;
+			if(data.status==200 & !data.error) {
+				if(close=='1') {
+					res.redirect('/assessableunit?id='+ data.parentid);
+				} else {
+					res.redirect('/assessment?id=' + data.id);
+				}
+			} else {
+				res.render('error',{errorDescription: data.error});
+				console.log("[router][assessments][saveasmt] - " + data.error);
+
+			}
 		}
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
