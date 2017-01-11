@@ -329,7 +329,7 @@ var getDocs = {
           openrisks.push(risks[i]);
         }
 
-        doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
+        doc[0].exportOpenRisks = exportOpenRisks;
         if (Object.keys(riskCategory).length < defViewRow) {
           if (openrisks == 0) {
             openrisks = fieldCalc.addTestViewData(10,defViewRow);

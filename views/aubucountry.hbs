@@ -12,12 +12,6 @@
 
 <input type="hidden" id="docTitle" value="{{DocType}} ({{DocSubType}})">
 <input type="hidden" id="docSubTitle" value="{{Name}}">
-<script>
-	//Load document's name
-	$('h1#pageTitle').text($('input#docTitle').val());
-	//Load document's business unit
-	$('h3#pageSubTitle').text($('input#docSubTitle').val());
-</script>
 
 <!-- JS and CSS for rich text edit -->
 <link rel="stylesheet" type="text/css" href="./css/skin.css">
@@ -61,3 +55,12 @@
 		{{>buttons}}
 	</form>
 </div>
+<script>
+	//Load document's name
+	$('h1#pageTitle').text($('input#docTitle').val());
+	//Load document's business unit
+	$('h3#pageSubTitle').text($('input#docSubTitle').val());
+	$("#open_risks_treeview").treetable({expandable: true});
+	$("#open_risks2_treeview").treetable({expandable: true});
+	$("#AUniverse_treeview").treetable({expandable: true});
+</script>

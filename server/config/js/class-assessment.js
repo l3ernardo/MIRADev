@@ -14,6 +14,8 @@ var fieldCalc = require('./class-fieldcalc.js');
 var kct = require('./class-keycontrol.js');
 var pct = require('./class-processratings.js');
 var aar = require('./class-auditsandreviews.js');
+var ort = require('./class-risks.js');
+var aut = require('./class-auniverse.js');
 var comp = require('./class-compdoc.js');
 var util = require('./class-utility.js');
 
@@ -464,6 +466,14 @@ var assessment = {
 									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 								}
 							}
+							//open risks
+							ort.processORTab(doc,defViewRow);
+							//console.log(RiskView1Data);
+							//doc[0].RiskView2Data
+							//audit universe
+							aut.processAUTab(doc,defViewRow);
+
+							//doc[0].AUData
 							// doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							// doc[0].Name = req.session.buname + " - " + doc[0].Country;
