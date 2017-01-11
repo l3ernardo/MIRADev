@@ -23,7 +23,7 @@ var assessment = {
 		var deferred = q.defer();
 		var docid = req.query.id
 		var defViewRow = 7;
-
+		
 		db.get(docid).then(function(data){
 			var doc = [];
 			try {
@@ -44,7 +44,7 @@ var assessment = {
 			}
 			module.exports.preload(global.doc1,req,db).then(function(data) {
 				var obj = [];
-				obj.push(data.doc);
+				obj.push(data.doc);				
 				deferred.resolve({"status": 200, "doc": obj});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": data.error});
@@ -60,7 +60,7 @@ var assessment = {
 		var defViewRow = 7;
 		var doc = [];
 		doc.push(newdoc);
-
+		
 		/* Format Links */
 		doc[0].Links = JSON.stringify(doc[0].Links);
 		doc[0].EnteredBU = doc[0].MIRABusinessUnit;
@@ -952,7 +952,7 @@ var assessment = {
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
 		});
-		return deferred.promise;
+		return deferred.promise;			
 	},
 	/* New assessment by parent ID */
 	newAsmtByPID: function(req, db) {

@@ -303,23 +303,21 @@ var assessableunit = {
 											switch (doc[0].DocSubType) {
 												case "Business Unit":
 													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid", "name");
+														doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid","name");
 													}
 													deferred.resolve({"status": 200, "doc": doc});
 													break;
 												case "Global Process":
 												case "Sub-process":
 													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid", "name");
-														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership
-, "docid", "name");
+														doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid","name");
+														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
 													}
 													deferred.resolve({"status": 200, "doc": doc});
 													break;
 												case "Country Process":
 													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership
-, "docid", "name");
+														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
 													}
 													//internal audit missing (IAData)
 													deferred.resolve({"status": 200, "doc": doc});
@@ -341,8 +339,7 @@ var assessableunit = {
 																		doc[0].lessonsList = adata.doc;
 																		//AuditLessonsKey for read mode - or edit non admin user
 																		if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-																			doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey
-, "id", "option");
+																			doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
 																		}
 																		deferred.resolve({"status": 200, "doc": doc});
 																	}
@@ -404,26 +401,23 @@ var assessableunit = {
 																						deferred.reject({"status": 500, "error": dataCP.error});
 																					}
 																				}).catch(function(err) {
-																					console.log("[assessableunit][CUParentList]" + dataCP.error);
-																					deferred.reject({"status": 500, "error": err});
+																					console.log("[assessableunit][CUParentList]" + err.error.reason);
+																					deferred.reject({"status": 500, "error": err.error.reason});
 																				});
 																			}
 																			//Edit non admin - Read
 																			else{
 																				//ALL keys
 																				if(doc[0].MIRABusinessUnit != "GBS"){
-																					doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey
-		, "id", "option");
+																					doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
 																				}
 																				//Sub-process keys
 																				if(doc[0].MIRABusinessUnit == "GTS Transformation"){
-																					doc[0].SubprocessDisp = assessableunit.getNames(doc[0].subprocessList, doc[0].subprocess
-			, "WWBCITKey", "Name");
+																					doc[0].SubprocessDisp = assessableunit.getNames(doc[0].subprocessList, doc[0].subprocess, "WWBCITKey", "Name");
 																				}
 																				
 																				//BU reporting groups
-																				doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership
-		, "docid", "name");
+																				doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
 																				//IA Data - missing
 																				
 																				deferred.resolve({"status": 200, "doc": doc});
@@ -463,12 +457,9 @@ var assessableunit = {
 															doc[0].Name = req.session.buname + " - " + doc[0].IOT;
 															
 															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-																doc[0].BUCountryIOTDisp = assessableunit.getNames(doc[0].BUCountryList, doc[0].BUCountryIOT
-, "docid", "name");
-																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership
-, "docid", "name");
-																doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup
-, "docid", "name");
+																doc[0].BUCountryIOTDisp = assessableunit.getNames(doc[0].BUCountryList, doc[0].BUCountryIOT, "docid", "name");
+																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
+																doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid", "name");
 															}
 															deferred.resolve({"status": 200, "doc": doc});
 														}
@@ -493,8 +484,7 @@ var assessableunit = {
 														doc[0].Name = req.session.buname + " - " + doc[0].Country;
 													}
 													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership
-, "docid", "name");
+														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
 													}
 													deferred.resolve({"status": 200, "doc": doc});
 													break;
@@ -518,7 +508,8 @@ var assessableunit = {
 									deferred.reject({"status": 500, "error": data.error});
 								}
 							}).catch(function(err) { //end fieldCalc.getDocParams
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessableunit][getDocParams]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							
 						}
@@ -885,11 +876,6 @@ var assessableunit = {
 			
 			else{
 				// existing doc
-				var obj = {
-					selector:{
-						"_id": docid,
-					}
-				};
 				db.get(docid).then(function(data){
 					if(data.status==200 && !data.error) {
 						var doc = [];
@@ -946,8 +932,8 @@ var assessableunit = {
 								break;
 							case "Account":
 								doc[0].Name = req.body.Name;
-								doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
-								if(req.body.OpMetricKey != undefined){//only for admin user
+								//doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
+								if(req.body.MetricsCriteria != undefined){//only for admin user
 									doc[0].MetricsCriteria = req.body.MetricsCriteria;
 									doc[0].MetricsValue = req.body.MetricsValue;
 									doc[0].OpMetricKey = req.body.OpMetricKey;
@@ -1006,81 +992,9 @@ var assessableunit = {
 						}
 						doc[0].Log.push(addlog);
 						doc = accessupdates.updateAccessExistDoc(req,doc);
-
 						//Save document
 						db.save(doc[0]).then(function(data){
-							
 							deferred.resolve(data);
-							//Get current quarter Assessment
-							// fieldCalc.getCurrentAsmt(db, doc).then(function(asmtdata) {
-								// var asmtdoc = [];
-								// if(asmtdata.doc != undefined){
-									// asmtdoc.push(asmtdata.doc);
-									// //Pass data to current quarter assessment
-									// if(doc[0].DocSubType == "Controllable Unit"){
-										// asmtdoc[0].AuditProgram = doc[0].AuditProgram;
-										// asmtdoc[0].Portfolio = doc[0].Portfolio;
-									// }
-									// db.save(asmtdoc[0]).then(function(asmtdata){
-										// if(updateAccounts){
-											// //Update accounts level
-											// fieldCalc.getAccountsCU(db, doc).then(function(actsdata) {
-												// if(actsdata.doc != undefined){
-													// var actDocs = actsdata.doc;
-													// var levelAct = parseInt(doc[0].LevelType) + 1;
-													// for(var i=0; i<actDocs.length; i++){
-														// actDocs[i].LevelType = levelAct.toString();
-													// }
-													// db.bulk(actDocs).then(function(dataActDocs){
-														// deferred.resolve(data);
-													// }).catch(function(err) {
-														// deferred.reject({"status": 500, "error": err.error.reason});
-													// });
-												// }
-												// else{
-													// deferred.resolve(data);
-												// }
-											// }).catch(function(err) {
-												// deferred.reject({"status": 500, "error": err.error.reason});
-											// });
-										// }
-										// else{
-											// deferred.resolve(data);
-										// }
-									// }).catch(function(err) {
-										// deferred.reject({"status": 500, "error": err.error.reason});
-									// });
-								// }
-								// else{
-									// if(updateAccounts){
-										// //Update accounts level
-										// fieldCalc.getAccountsCU(db, doc).then(function(actsdata) {
-											// if(actsdata.doc != undefined){
-												// var actDocs = actsdata.doc;
-												// var levelAct = parseInt(doc[0].LevelType) + 1;
-												// for(var i=0; i<actDocs.length; i++){
-													// actDocs[i].LevelType = levelAct.toString();
-												// }
-												// db.bulk(actDocs).then(function(dataActDocs){
-													// deferred.resolve(data);
-												// }).catch(function(err) {
-													// deferred.reject({"status": 500, "error": err.error.reason});
-												// });
-											// }
-											// else{
-												// deferred.resolve(data);
-											// }
-										// }).catch(function(err) {
-											// deferred.reject({"status": 500, "error": err.error.reason});
-										// });
-									// }
-									// else{
-										// deferred.resolve(data);
-									// }
-								// }
-							// }).catch(function(err) {
-								// deferred.reject({"status": 500, "error": err.error.reason});
-							// });
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});

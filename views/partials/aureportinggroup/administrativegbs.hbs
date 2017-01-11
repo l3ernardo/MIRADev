@@ -1,0 +1,23 @@
+<table id="admin_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	<caption class="mira-caption"><em>For Administrative Use Only</em></caption>
+	{{#if editmode}}
+		{{!-- AU Reporting Group form - Administrative Use Only section - Edit Mode with Admin Access --}}
+		{{#if admin}}
+			<tr>
+				<td width="25%"><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+					</span>
+				</td>
+			</tr>
+		{{else}}
+			{{!-- AU Reporting Group form - Administrative Use Only section - Edit Mode with no Admin Access --}}
+			<tr><td width="25%">Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		{{/if}}
+	{{else}}
+		{{!-- AU Reporting Group form - Administrative Use Only section - Read Mode --}}
+		<tr><td width="25%">Audit Program:</td><td>{{AuditProgram}}</td></tr>
+	{{/if}}
+
+</table>
