@@ -713,7 +713,8 @@ var assessment = {
 									});
 								}
 								else {
-									deferred.resolve({"status": 200, "doc": doc});
+									var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
 								}
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
