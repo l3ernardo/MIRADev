@@ -1460,6 +1460,26 @@ $(document).ready(function() {
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 
+	//Process Ratings export buttons
+	$('#ProcessRatings-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings_treeview', "ProcessRatings");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#ProcessRatings-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings_treeview',"ProcessRatings");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+
+	//Process Ratings by country export buttons
+	$('#ProcessRatings2-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings2_treeview', "ProcessRatings2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#ProcessRatings2-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings2_treeview',"ProcessRatings2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+
   switch ($("input[name='parentdocsubtype']").val()) {
 		case "Controllable Unit":
 			if ($("input[name='enteredbu']").val() == "GTS Transformation") {
