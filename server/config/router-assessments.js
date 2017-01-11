@@ -26,7 +26,7 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 					}
 				} catch(e) {
 					console.log(e.stack)
-				}				
+				}
 				switch (data.doc[0].ParentDocSubType) {
 					case "Business Unit":
 						var lParams;
@@ -44,12 +44,12 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 								res.render('asmtbusinessunit', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -76,13 +76,13 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 									res.render('asmtglobalprocess', data.doc[0] );
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][GPassessment][getListParams] - " + dataParam.error);
@@ -108,13 +108,13 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 									res.render('asmtsubprocess', data.doc[0] );
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][SPassessment][getListParams] - " + dataParam.error);
@@ -140,13 +140,13 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 									res.render('asmtbuiot', data.doc[0] );
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][BUIOTassessment][getListParams] - " + dataParam.error);
@@ -172,13 +172,13 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 									res.render('asmtbuimt', data.doc[0] );
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][BUIMTassessment][getListParams] - " + dataParam.error);
@@ -204,12 +204,12 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 								res.render('asmtbucountry', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -237,12 +237,12 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 								res.render('asmtcountryprocess', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -269,12 +269,12 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}				
+										data.doc[0].editmode = "1";
+									}
 									res.render('asmtcontrollableunit', data.doc[0] );
 								}catch(e){
 									console.log(e.stack);
-								}		
+								}
 								// end merge here
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -301,12 +301,12 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 								res.render('asmtbureportinggroup', data.doc[0] );
 							} else {
 								res.render('error',{errorDescription: data.error});
@@ -333,13 +333,13 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 									if(global.conflictfields[0]!=undefined) {
 										data.doc[0].conflictfields = global.conflictfields;
 										global.conflictfields="";
-										data.doc[0].editmode = "1";											
-									}										
+										data.doc[0].editmode = "1";
+									}
 									res.render('asmtaccount', data.doc[0] );
 								}catch(e){
 									console.log(e.stack);
-								}		
-								// end merge here								
+								}
+								// end merge here
 							} else {
 								res.render('error',{errorDescription: data.error});
 								console.log("[router][AccountAssessment][getListParams] - " + dataParam.error);
