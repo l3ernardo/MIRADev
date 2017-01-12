@@ -1,3 +1,5 @@
+<textarea name="textarea" id="ProcessRatingsDataExport" cols="100" style="display:none">{{valuesToString exportProcessRatings}}</textarea>
+<textarea name="textarea" id="ProcessRatings2DataExport" cols="100" style="display:none">{{valuesToString exportProcessRatings2}}</textarea>
 <table id="processrating_table" class="ibm-data-table">
 	<tr class="processrating">
 		<td width="70%" class="processrating-legend">
@@ -180,7 +182,10 @@
 	<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Rating</span><br /><br />
-			<table id="processRatings_treeview" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
+			<a href="javascript:void(0);" value="Export to Excel" name="ProcessRatings-link-export" id="ProcessRatings-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="ProcessRatings-link-export2" id="ProcessRatings-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="ProcessRatings_treeview" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
 					<th class="processrating-viewheader" scope="col" width="20%">Process</th>
@@ -216,7 +221,10 @@
 	<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Country</span><br /><br />
-			<table id="processRatings2_treeview"width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
+			<a href="javascript:void(0);" value="Export to Excel" name="ProcessRatings2-link-export" id="ProcessRatings2-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="ProcessRatings2-link-export2" id="ProcessRatings2-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="ProcessRatings2_treeview"width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="10%"></th>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
