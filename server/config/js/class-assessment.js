@@ -13,6 +13,7 @@ var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
 var kct = require('./class-keycontrol.js');
 var pct = require('./class-processratings.js');
+var art = require('./class-accountratings.js');
 var aar = require('./class-auditsandreviews.js');
 var ort = require('./class-risks.js');
 var aut = require('./class-auniverse.js');
@@ -506,16 +507,10 @@ var assessment = {
 						doc[0].CUAsmtDataPR1view = [];
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
 							fieldCalc.getRatingProfile(doc);
-							if (doc[0].AccountData.length < defViewRow) {
-								if (doc[0].AccountData.length == 0) {
-									doc[0].AccountData = fieldCalc.addTestViewData(11,defViewRow);
-								} else {
-									fieldCalc.addTestViewDataPadding(doc[0].AccountData,11,(defViewRow-doc[0].AccountData.length));
-								}
-							}
-
 							// Get Component Docs
 							comp.getCompDocs(db,doc).then(function(dataComp){
+								//Account Ratings tab
+								art.processARTab(doc,defViewRow);
 								// Key Controls Tesing tab
 								kct.processKCTab(doc,defViewRow);
 								// Audits and Reviews Tab
