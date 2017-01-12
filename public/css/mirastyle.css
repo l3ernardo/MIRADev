@@ -1218,3 +1218,7 @@ table.table_with_scroll {
     width:100%;
 		table-layout:fixed;
 }
+a#whiteanchor:link { color:white; text-decoration: none; }
+a#whiteanchor:visited { color:white; text-decoration: none; }
+a#whiteanchor:hover { color:white; text-decoration: none; }
+a#whiteanchor:active { color:white; text-decoration: underline; }
