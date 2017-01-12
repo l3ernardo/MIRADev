@@ -846,6 +846,11 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sor
 	font-size: 11px;
 	background-color: #ffffff;
 }
+.ibm-data-table .asmt-viewdata-al {
+	text-align: left;
+	font-size: 11px;
+	background-color: #ffffff;
+}
 .ibm-data-table .asmt-viewdata-centered {
 	text-align: center;
 	font-size: 11px;
@@ -1218,3 +1223,7 @@ table.table_with_scroll {
     width:100%;
 		table-layout:fixed;
 }
+a#whiteanchor:link { color:white; text-decoration: none; }
+a#whiteanchor:visited { color:white; text-decoration: none; }
+a#whiteanchor:hover { color:white; text-decoration: none; }
+a#whiteanchor:active { color:white; text-decoration: underline; }

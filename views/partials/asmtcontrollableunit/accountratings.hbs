@@ -17,13 +17,17 @@
 				</thead>
 				{{#each AccountData}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/assessment?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+						<td class="asmt-viewdata">{{PeriodRating}}</td>
+						<td class="asmt-viewdata-al"><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td class="asmt-viewdata">{{#if _id}}{{else}}&nbsp;{{/if}}</td>
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">{{PeriodRatingPrev1}}</td>
+						{{{ratingDisplayView PeriodRating}}}
+						<td class="asmt-viewdata">{{Target2Sat}}</td>
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata"></td>
 					</tr>
 				{{/each}}
 			</table>

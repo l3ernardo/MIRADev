@@ -123,19 +123,51 @@ var getDocs = {
             console.log("[class-compdoc][getCompDocs] - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
-        break;
+          break;
         case "Global Process":
-        break;
+          break;
         case "BU Reporting Group":
-        break;
+          break;
         case "Business Unit":
-        break;
+          break;
         case "BU IOT":
-        break;
+          break;
         case "BU IMT":
-        break;
+          break;
         case "BU Country":
-        break;
+          var compObj = {
+            selector : {
+              "_id": {"$gt":0},
+              "docType": "asmtComponent",
+              "$or": [
+                // Risks
+                { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
+                // Key Controls Testing Tab
+                // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
+                // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                // Audits and Reviews Tab
+                // { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
+                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
+                // { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
+              ]
+            }
+          };
+
+          db.find(compObj).then(function(compdata) {
+            var comps = compdata.body.docs;
+            for(var i = 0; i < comps.length; i++) {
+              if (comps[i].compntType == "openIssue") {
+                doc[0].RiskView1Data.push(comps[i]);
+                doc[0].RiskView2Data.push(comps[i]);
+              }
+            }
+            deferred.resolve({"status": 200, "doc": doc});
+          }).catch(function(err) {
+            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            deferred.reject({"status": 500, "error": err.error.reason});
+          });
+          break;
         case "Controllable Unit":
           var compObj = {
             selector : {
@@ -146,6 +178,10 @@ var getDocs = {
                 { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
                 { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
                 { "$and": [{"compntType": "sampledCountry"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                // Audits and Reviews Tab
+                { "$and": [{"compntType": "PPR"},{"CU" : doc[0].AssessableUnitName}] },
+                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
+                { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
               ]
             }
           };
@@ -194,6 +230,14 @@ var getDocs = {
                 doc[0].SampleData[sampleCtr].controlName = doc[0].SampleData[sampleCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SampleData[sampleCtr].controlShortName;
                 sampleCtr++;
               }
+              // For Audits and Reviews Tab - view 1
+              else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
+                doc[0].AuditTrustedData.push(comps[i]);
+              }
+              // For Audits and Reviews Tab - view 2
+              else if (comps[i].compntType == "localAudit") {
+                doc[0].AuditLocalData.push(comps[i]);
+              }
               else {
 
               }
@@ -225,7 +269,7 @@ var getDocs = {
             "compntType": "openIssue",
             "docType": "asmtComponent",
             "reportingQuarter": doc[0].CurrentPeriod,
-            "ControllableUnit": doc[0].AssessableUnitName,
+            "controllableUnit": doc[0].AssessableUnitName,
             "businessUnit": doc[0].BusinessUnit,
             "scorecardCategory": {"$gt":0}
           },
@@ -297,7 +341,7 @@ var getDocs = {
           openrisks.push(risks[i]);
         }
 
-        doc[0].exportOpenRisks =JSON.stringify(exportOpenRisks, 'utf8');
+        doc[0].exportOpenRisks = exportOpenRisks;
         if (Object.keys(riskCategory).length < defViewRow) {
           if (openrisks == 0) {
             openrisks = fieldCalc.addTestViewData(10,defViewRow);
