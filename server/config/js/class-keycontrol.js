@@ -613,7 +613,7 @@ var calculateKCTab = {
         // *** End of Reporting Country Testing Data (1st embedded view in Testing tab) *** //
         // *** Start of Sample Data (3rd embedded view in Testing tab) *** //
         //Saving the data in new variable for next sorting
-        doc[0].SampleData2 = JSON.parse(JSON.stringify(doc[0].SampleData));;
+        //doc[0].SampleData2 = JSON.parse(JSON.stringify(doc[0].SampleData));;
         //Sorting for Sample_treeview
         var tmpList = [];
         var categoryList = {};//processCategory
