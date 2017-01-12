@@ -125,15 +125,15 @@ var getDocs = {
           });
           break;
         case "Global Process":
-        break;
+          break;
         case "BU Reporting Group":
-        break;
+          break;
         case "Business Unit":
-        break;
+          break;
         case "BU IOT":
-        break;
+          break;
         case "BU IMT":
-        break;
+          break;
         case "BU Country":
           var compObj = {
             selector : {
@@ -178,6 +178,10 @@ var getDocs = {
                 { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
                 { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
                 { "$and": [{"compntType": "sampledCountry"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                // Audits and Reviews Tab
+                { "$and": [{"compntType": "PPR"},{"CU" : doc[0].AssessableUnitName}] },
+                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
+                { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
               ]
             }
           };
@@ -225,6 +229,14 @@ var getDocs = {
                 // Calculate for ControlName
                 doc[0].SampleData[sampleCtr].controlName = doc[0].SampleData[sampleCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SampleData[sampleCtr].controlShortName;
                 sampleCtr++;
+              }
+              // For Audits and Reviews Tab - view 1
+              else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
+                doc[0].AuditTrustedData.push(comps[i]);
+              }
+              // For Audits and Reviews Tab - view 2
+              else if (comps[i].compntType == "localAudit") {
+                doc[0].AuditLocalData.push(comps[i]);
               }
               else {
 
