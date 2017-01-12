@@ -436,7 +436,6 @@ var assessment = {
 						doc[0].Name = req.session.buname + " - " + doc[0].Country;
 
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
-							console.log("audata: " + doc[0].AUData.length);
 							fieldCalc.getRatingProfile(doc);
 							if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 								if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -507,13 +506,6 @@ var assessment = {
 						doc[0].CUAsmtDataPR1view = [];
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
 							fieldCalc.getRatingProfile(doc);
-							if (doc[0].CUAsmtDataPR1view.length < defViewRow) {
-								if (doc[0].CUAsmtDataPR1view.length == 0) {
-									doc[0].CUAsmtDataPR1view = fieldCalc.addTestViewData(9,defViewRow);
-								} else {
-									fieldCalc.addTestViewDataPadding(doc[0].CUAsmtDataPR1view,9,(defViewRow-doc[0].CUAsmtDataPR1view.length));
-								}
-							}
 							if (doc[0].AccountData.length < defViewRow) {
 								if (doc[0].AccountData.length == 0) {
 									doc[0].AccountData = fieldCalc.addTestViewData(11,defViewRow);
@@ -534,7 +526,6 @@ var assessment = {
 
 								//Open issue
 								comp.getOpenIssue(db,doc,defViewRow).then(function(){
-									//console.log(doc[0].CUAsmtDataPR1view);
 									//AuditKey
 									if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 										var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){

@@ -11,7 +11,7 @@ var fieldCalc = require('./class-fieldcalc.js');
 var calculateORTab = {
 
   processORTab: function(doc, defViewRow) {
-    var risks = RiskView1Data;
+    var risks = doc[0].RiskView1Data;
     var riskCategory = {};
     var openrisks = [];
     var exportOpenRisks = [];
