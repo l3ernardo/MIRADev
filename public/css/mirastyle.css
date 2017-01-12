@@ -1191,6 +1191,12 @@ table.mira-dashboard-table td, table.mira-dashboard-table th {
     height:250px;
 }
 
+table.table_with_scroll {
+    width:100%;
+		table-layout:fixed;
+		border-spacing: 0;
+}
+
 table.table_with_scroll tbody {
     display:block;
     overflow-y:auto;
@@ -1208,6 +1214,9 @@ table.table_with_scroll tbody tr td{
 table.table_with_scroll tbody tr.branch{
 	white-space: nowrap;
 }
+table.table_with_scroll tbody tr.branch td:nth-child(1){
+	text-align:left;
+}
 /*table.table_with_scroll tbody tr[data-tt-parent-id=""]{
 	white-space: nowrap;
 }*/
@@ -1216,13 +1225,7 @@ table.table_with_scroll thead,table.table_with_scroll tbody tr {
     width:100%;
     table-layout:fixed;
 }
-table.table_with_scroll thead {
-    width: 100%;
-}
-table.table_with_scroll {
-    width:100%;
-		table-layout:fixed;
-}
+
 a#whiteanchor:link { color:white; text-decoration: none; }
 a#whiteanchor:visited { color:white; text-decoration: none; }
 a#whiteanchor:hover { color:white; text-decoration: none; }

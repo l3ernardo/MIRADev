@@ -1,5 +1,4 @@
 <textarea name="textarea" id="RCTestDataExport" cols="100" style="display:none">{{valuesToString exportRCTest}}</textarea>
-<textarea name="textarea" id="SCTestDataExport" cols="100" style="display:none">{{valuesToString exportSCTest}}</textarea>
 <textarea name="textarea" id="SampleDataExport" cols="100" style="display:none">{{valuesToString exportSample}}</textarea>
 <textarea name="textarea" id="Sample2DataExport" cols="100" style="display:none">{{valuesToString exportSample2}}</textarea>
 <table id="kctest_table" width="100%" class="ibm-data-table">
@@ -29,7 +28,7 @@
 	</tr>
 	<tr class="kc-test-content">
 		<td class="kc-test-content" colspan="2">
-			<!-- <span class="kc-test-header"><b>Reporting Country Testing</b></span><br /><br /> -->
+			<!--<span class="kc-test-header"><b>Reporting Country Testing</b></span><br /><br />-->
 			<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
 			<span class="ibm-sep"> </span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
@@ -38,8 +37,8 @@
 					<!--<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="RCTest_checkbox_tree" id="RCTest_checkbox_tree" name="RCTest_checkbox "/></th>-->
 					<th class="kc-test-viewheader" width="5%">Period</th>
 					<th class="kc-test-viewheader" width="5%">Type</th>
-					<th class="kc-test-viewheader" width="25%">Process</th>
-					<th class="kc-test-viewheader" width="15%">Control</th>
+					<th class="kc-test-viewheader" width="20%">Process</th>
+					<th class="kc-test-viewheader" width="20%">Control</th>
 					<th class="kc-test-viewheader" width="10%">Tests</th>
 					<th class="kc-test-viewheader" width="10%">Defects</th>
 					<th class="kc-test-viewheader" width="10%">Defect Rate %</th>
@@ -48,21 +47,18 @@
 				<tbody>
 				{{#each RCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<!-- {{#if catEntry}} -->
+						{{#if catEntry}}
 						<!--<th width="2%" ></th>-->
-							<!-- <td width="5%">{{reportingQuarter}}</td>
+							<td width="5%">{{reportingQuarter}}</td>
 							<td width="5%">{{controlType}}</td>
 							<td width="20%">{{process}}</td>
-						{{else}} -->
+						{{else}}
 						<!--<th width="2%" >{{#if controlType}}<input type="checkbox" class="RCTest_checkbox_tree"/>{{/if}}</th>-->
-							<!-- <td width="5%"></td>
+							<td width="5%"></td>
 							<td width="5%"></td>
 							<td width="20%"></td>
-						{{/if}} -->
-						<td width="5%">{{reportingQuarter}}</td>
-						<td width="5%">{{controlType}}</td>
-						<td width="20%">{{process}}</td>
-						<td width="15%">{{#if _id}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a>{{else}}&nbsp;{{/if}}</td>
+						{{/if}}
+						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{numDefects}}</td>
 						<td width="10%">{{defectRate}}</td>
@@ -85,9 +81,9 @@
 					<th class="kc-test-viewheader" width="5%">Cat</th>
 					<th class="kc-test-viewheader" width="5%">Process</th>
 					<th class="kc-test-viewheader" width="5%">Control</th>
-					<th class="kc-test-viewheader" width="10%">Sample ID</th>
-					<th class="kc-test-viewheader" width="5%">Defects</th>
+					<th class="kc-test-viewheader" width="12%">Sample ID</th>
 					<th class="kc-test-viewheader" width="10%">Defect Type</th>
+					<th class="kc-test-viewheader" width="5%">Defects</th>
 					<th class="kc-test-viewheader" width="10%">Remed. Status</th>
 					<th class="kc-test-viewheader" width="5%">Remaining Fin. Impact</th>
 					<th class="kc-test-viewheader" width="12%">Original Target to Close</th>
@@ -108,11 +104,11 @@
 							<td width="5%"></td>
 							<td width="5%"></td>
 						{{/if}}
-						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
-						<td width="5%">{{numDefects}}</td>
+						<td width="12%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
 						<td width="10%">{{defectType}}</td>
+						<td width="5%">{{numDefects}}</td>
 						<td width="10%">{{remediationStatus}}</td>
-						<td width="5%">{{remainingFinancialImpact}}</td>
+						<td width="5%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 						<td width="12%">{{originalTargetDate}}</td>
 						<td width="11%">{{targetClose}}</td>
 						<td width="20%">{{defectsAbstract}}</td>
@@ -160,7 +156,7 @@
 						<td width="15%">{{processSampled}}</td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="5%">{{defectType}}</td>
-						<td width="7%">{{remainingFinancialImpact}}</td>
+						<td width="7%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 						<td width="6.5%">{{originalTargetDate}}</td>
 						<td width="6.5%">{{targetClose}}</td>
 						<td width="15%">{{defectsAbstract}}</td>
