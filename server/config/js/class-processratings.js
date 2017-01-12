@@ -172,4 +172,5 @@ var calculatePRTab = {
     doc[0].CUAsmtDataPR1view2 = tmpRatingList;
   }
 }
+
 module.exports = calculatePRTab;
