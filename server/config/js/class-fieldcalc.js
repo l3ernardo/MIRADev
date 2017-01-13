@@ -408,61 +408,6 @@ var calculatefield = {
 		return deferred.promise;
 	},
 
-  getAccountInheritedFields: function(db, doc) {
-    var deferred = q.defer();
-
-		try {
-      //*** Process Portfolio Value and Percentage
-
-      // get account parent assessable unit
-      var parentAU = {
-        selector:{
-          "_id": doc[0].parentid
-        }
-      };
-      db.find(parentAU).then(function(audata) {
-        if(audata.status==200 && !audata.error) {
-          var pdoc = audata.body.docs[0];
-          doc[0].MetricsValue = pdoc.MetricsValue;
-          // Get Parent CU Assessable Unit
-          var parentCUAU = {
-            selector:{
-              "_id": pdoc.parentid
-            }
-          };
-          db.find(parentCUAU).then(function(cuaudata) {
-            if(cuaudata.status==200 && !cuaudata.error) {
-              var pdocCU = cuaudata.body.docs[0];
-              doc[0].MetricsValueCU = pdocCU.MetricsValue;
-              deferred.resolve({"status": 200, "doc": doc});
-            }
-            else {
-              deferred.reject({"status": 500, "error": cuaudata.error});
-            }
-          }).catch(function(err) {
-            console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
-            deferred.reject({"status": 500, "error": err.error.reason});
-          });
-        }
-        else {
-          deferred.reject({"status": 500, "error": audata.error});
-        }
-      }).catch(function(err) {
-        console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
-        deferred.reject({"status": 500, "error": err.error.reason});
-      });
-
-    }
-    catch(e) {
-
-      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-			deferred.reject({"status": 500, "error": e.stack});
-
-		}
-
-		return deferred.promise;
-	},
-
   /* Populates the Rating Profile table */
 	getRatingProfile: function(doc) {
 		try {
@@ -1177,6 +1122,86 @@ var calculatefield = {
     } catch(e) {
       console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
     }
+	},
+
+  getAccountInheritedFields: function(db, doc) {
+    var deferred = q.defer();
+
+		try {
+      //*** Process Portfolio Value and Percentage
+
+      for (var i = 0; i < doc[0].AccountData.length; i++) {
+        // get account parent assessable unit
+        console.log("mmmi: " + doc[0].AccountData[i].AssessableUnitName);
+        var parentAU = {
+          selector:{
+            "_id": { $in: [doc[0].AccountData[i].parentid, doc[0].AccountData[i].grandparentid] }
+          }
+        };
+        console.log("parentAU: " + JSON.stringify(parentAU));
+        console.log("doc[0].AccountData[i].parentid: " + doc[0].AccountData[i].parentid);
+        console.log("doc[0].AccountData[i].grandparentid: " + doc[0].AccountData[i].grandparentid);
+
+        db.find(parentAU).then(function(audata) {
+          console.log("gggi: " + i);
+          if(audata.status==200 && !audata.error) {
+            for (var j = 0; j < audata.body.docs.length; j++) {
+              console.log("audata.body.docs[j]:: " + audata.body.docs[j]._id);
+              // if (audata.body.docs[j].DocSubType == "Account") doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue;
+              // else doc[0].AccountData[i].MetricsValueCU = audata.body.docs[j].MetricsValue;
+            }
+            // console.log("1: --- " + JSON.stringify(audata.body.docs[0].MetricsValue));
+            // console.log("acc data: " + doc[0].AccountData[0].length);
+            // console.log("i: " + i);
+            // doc[0].AccountData[i].MetricsValue = "";
+            // console.log("doc[0].AccountData[i].MetricsValue: " + doc[0].AccountData[i].MetricsValue);
+            // doc[0].AccountData[i].MetricsValue = audata.body.docs[0].MetricsValue;
+            // doc[0].AccountData[i].MetricsValueCU = cuaudata.body.docs[0].MetricsValue;
+
+            deferred.resolve({"status": 200, "doc": doc});
+
+            // // Get Parent CU Assessable Unit
+            // console.log("mmmmmmmmm");
+            // console.log("2.0------ " + audata.body.docs[0].parentid);
+            // var parentCUAU = {
+            //   selector:{
+            //     "_id": audata.body.docs[0].parentid
+            //   }
+            // };
+            // console.log("2.0------ " + audata.body.docs[0].parentid);
+            // db.find(parentCUAU).then(function(cuaudata) {
+            //   if(cuaudata.status==200 && !cuaudata.error) {
+            //     console.log("2: " + cuaudata.body.docs[0].MetricsValue);
+            //     doc[0].AccountData[i].MetricsValueCU = cuaudata.body.docs[0].MetricsValue;
+            //     deferred.resolve({"status": 200, "doc": doc});
+            //   }
+            //   else {
+            //     deferred.reject({"stdoc[0].AccountData[auindex]atus": 500, "error": cuaudata.error});
+            //   }
+            // }).catch(function(err) {
+            //   console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+            //   deferred.reject({"status": 500, "error": err.error.reason});
+            // });
+
+          }
+          else {
+            deferred.reject({"status": 500, "error": audata.error});
+          }
+        }).catch(function(err) {
+          console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
+        console.log("ffffi: " + i);
+      }
+    }
+    catch(e) {
+
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+			deferred.reject({"status": 500, "error": e.stack});
+
+		}
+
+		return deferred.promise;
 	},
 
 	getAccountsCU: function(db, doc) {

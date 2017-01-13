@@ -175,7 +175,8 @@ var getDocs = {
               "docType": "asmtComponent",
               "$or": [
                 // Key Controls Testing Tab
-                { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                // { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                { "$and": [{"compntType": "CUSummarySample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
                 { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
                 // Audits and Reviews Tab
                 { "$and": [{"compntType": "PPR"},{"CU" : doc[0].AssessableUnitName}] },
@@ -198,16 +199,17 @@ var getDocs = {
               if (comps[i].compntType == "openIssue") {
                 doc[0].risks.push(comps[i]);
               }
-              else if (comps[i].compntType == "countryControls") {
+              else if (comps[i].compntType == "CUSummarySample") {
                 doc[0].RCTestData.push(comps[i]);
                 // Calculate for Defect Rate of Control doc
-                if (doc[0].RCTestData[controlCtr].numActualTests ==  undefined || doc[0].RCTestData[controlCtr].numActualTests == "" || doc[0].RCTestData[controlCtr].numActualTests == 0 || doc[0].RCTestData[controlCtr].numDefects == undefined || doc[0].RCTestData[controlCtr].numDefects == "") {
+                if (doc[0].RCTestData[controlCtr].numTests ==  undefined || doc[0].RCTestData[controlCtr].numTests == "" || doc[0].RCTestData[controlCtr].numTests == 0 || doc[0].RCTestData[controlCtr].DefectCount == undefined || doc[0].RCTestData[controlCtr].DefectCount == "") {
                   doc[0].RCTestData[controlCtr].defectRate = "";
                 } else {
-                  doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].numDefects/doc[0].RCTestData[controlCtr].numActualTests) * 100).toFixed(1);
+                  doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].DefectCount/doc[0].RCTestData[controlCtr].numTests) * 100).toFixed(1);
                 }
                 // Calculate for ControlName
-                doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
+                doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlShortName;
+                // doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
                 controlCtr++;
               }
               else if (comps[i].compntType == "controlSample") {
