@@ -68,7 +68,7 @@
 		if($("#btn_okIntAudId").length > 0){
 			$("#btn_okIntAudId").click(function() {
 				//Update data	
-                    var p_id=$("input[name='IntAud']:checked").attr("idintaud");			
+                    var p_id=$("input[name='IntAud']:checked").attr("idintaud");
 					var pEngagement = $("input[name='IntAud']:checked").attr("value");
 					var paddedToAQDB = $("input[name='IntAud']:checked").attr("addedToAQDB");
 					var pRating = $("input[name='IntAud']:checked").attr("rating");
@@ -82,8 +82,11 @@
 					$('#InternalAudits').val(adding);
 					//get all values to save on InternalAuditsData	
                     var list=$('#InternalAuditsData').val();
-					list=list=list+','+p_id;
-					$('#InternalAuditsData').val(list);					
+					if(list == "")
+						list = p_id;
+					else
+						list = list + ',' + p_id;
+					$('#InternalAuditsData').val(list);
 			        ibmweb.overlay.hide('Overlay_EventbyId');
 				//alert("It is required to save the document to apply the changes.");
 			});

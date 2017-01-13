@@ -59,13 +59,13 @@
 				<td><label>Internal Audits:</label>
 					<input type="text" id="InternalAudits"  size="10"  style="visibility:hidden">
 					<input type="hidden" id="InternalAuditsData" name="InternalAuditsData"  value="{{InternalAuditsData}}">
+					<input type="hidden" id="InternalAuditsDataDel" name="InternalAuditsDataDel"  value="{{InternalAuditsData}}">
 					<input type="text" id="flagIntAud"  size="10"  style="visibility:hidden"></td>
 				<td>
 					<div class="ibm-columns ibm-graphic-tabs">
-					   <div>
-						<a href="javascript:void(0);" value="Find Select" name="btn_findselect" id="btn_findselect" class="ibm-signin-link">Find/Select</a>
-						<a href="javascript:void(0);" value="Remove" name="btn_remove" id="btn_remove" class="ibm-signin-link">Remove</a>
-					</div>
+						<div>
+							<a href="javascript:void(0);" value="Find Select" name="btn_findselect" id="btn_findselect" class="ibm-signin-link">Find/Select</a>
+						</div>
 					<div id="Overlay_Event2" title="Find Engagement" class="ibm-common-overlay ibm-overlay-alt-two" style=" overflow:scroll; box-sizing: border-box; height:400px">
 						{{>aucountryprocess/findengagement}}
 					</div>
@@ -76,16 +76,18 @@
 								<th scope="col"><font color="#FFF">Rating</font></th>
 								<th scope="col"><font color="#FFF">Size</font></th>
 								<th scope="col"><font color="#FFF">Score</font></th>
+								<th scope="col"><font color="#FFF">&nbsp;</font></th>
 							</thead>
 							<tbody>
 							{{#each InternalAuditsDataDisp}}
-							<tr>
-								<td><a href="/assessment?id={{docid}}">{{engagement}}</a></td>
+								<tr>
+									<td><a href="/asmtcomponents?id={{id}}">{{engagement}}</a></td>
 									<td>{{addedToAQDB}}</td>
 									<td>{{rating}}</td>
 									<td>{{size}}</td>
 									<td>{{score}}</td>
-							</tr>
+									<td><a class="ibm-delete-link" id="btn_remove" name="btn_remove" value="Remove" href="javascript:void(0);">Remove</a></td>
+								</tr>
 							{{/each}}
 							</tbody>
 						</table>
@@ -117,11 +119,11 @@
 								<tbody>
 									{{#each InternalAuditsDataDisp}}
 									<tr>
-										<td>{{engagement}}</td>
-											<td>{{addedToAQDB}}</td>
-											<td>{{rating}}</td>
-											<td>{{size}}</td>
-											<td>{{score}}</td>
+										<td><a href="/asmtcomponents?id={{id}}">{{engagement}}</a></td>
+										<td>{{addedToAQDB}}</td>
+										<td>{{rating}}</td>
+										<td>{{size}}</td>
+										<td>{{score}}</td>
 									</tr>
 									{{/each}}
 								</tbody>
