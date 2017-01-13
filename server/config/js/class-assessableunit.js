@@ -321,12 +321,11 @@ var assessableunit = {
 														if(dataIntAud.status==200 && !dataIntAud.error){
 															doc[0].IntAud = [];
 															doc[0].IntAud = dataIntAud.doc;
-															
+															//IA Data
+															doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
 															//Edit but not Admin - Reader
 															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
 																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-																//IA Data - missing
-																doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(doc[0].IntAud, doc[0].InternalAuditsData);
 																
 																deferred.resolve({"status": 200, "doc": doc});
 															}
@@ -413,7 +412,8 @@ var assessableunit = {
 																				if(dataIntAud.status==200 && !dataIntAud.error){
 																					doc[0].IntAud = [];
 																					doc[0].IntAud = dataIntAud.doc;
-																					
+																					//IA Data
+																					doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
 																					//Edit && Admin
 																					if(req.query.edit != undefined && doc[0].editor && doc[0].admin){
 																						//Get CU Parents List
@@ -444,8 +444,6 @@ var assessableunit = {
 																						
 																						//BU reporting groups
 																						doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-																						//IA Data - missing
-																						doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(doc[0].IntAud, doc[0].InternalAuditsData);
 																						
 																						deferred.resolve({"status": 200, "doc": doc});
 																					}
@@ -966,7 +964,7 @@ var assessableunit = {
 									if(req.body.InternalAuditsData != undefined){//IA Data
 										if(doc[0].InternalAuditsData != req.body.InternalAuditsData){
 											doc[0].InternalAuditsData = req.body.InternalAuditsData;
-											//updateIntAudit = true;
+											updateIntAudit = true;
 										}
 									}
 									
@@ -1018,7 +1016,7 @@ var assessableunit = {
 									if(req.body.InternalAuditsData != undefined){
 										if(doc[0].InternalAuditsData != req.body.InternalAuditsData){
 											doc[0].InternalAuditsData = req.body.InternalAuditsData;
-											//updateIntAudit = true;
+											updateIntAudit = true;
 										}
 									}
 								}
@@ -1041,67 +1039,72 @@ var assessableunit = {
 						doc = accessupdates.updateAccessExistDoc(req,doc);
 						//Save document
 						db.save(doc[0]).then(function(data){
-							//Update Internal Audit if necessary - CPs/CUs
-							if(updateIntAudit){
-								var $or, addArr, delArr = [];
-								var addIds = req.body.InternalAuditsData;
-								var delIds = req.body.InternalAuditsDataDel;
-								if(addIds != ""){
-									var addArr = addIds.split(',');
-									for (var i = 0; i < addArr.length; i++) {
-										$or.push({"_id":addArr[i]});
+							if(data.status==200 && !data.error) {
+								//Update Internal Audit if necessary - CPs/CUs
+								if(updateIntAudit){
+									var $or = [];
+									var addArr = [];
+									var delArr = [];
+									var addIds = req.body.InternalAuditsData;
+									var delIds = req.body.InternalAuditsDataDel;
+									if(addIds != ""){
+										addArr = addIds.split(',');
+										for (var i = 0; i < addArr.length; i++) {
+											$or.push({"_id":addArr[i]});
+										}
+									} 
+									if(delIds != ""){ 
+										delArr = delIds.split(',');
+										for (var i = 0; i < delArr.length; i++) {
+											$or.push({"_id":delArr[i]});
+										}
 									}
-								} 
-								if(delIds != ""){ 
-									var delArr = delIds.split(',');
-									for (var i = 0; i < delArr.length; i++) {
-										$or.push({"_id":delArr[i]});
-									}
+									var searchobj = { selector: {"_id": {"$gt":0}, "docType": "asmtComponent", "compntType": "internalAudit", $or } };
+									db.find(searchobj).then(function(resdata) {
+										if(resdata.status==200 && !resdata.error) {
+											var resdocs = resdata.body.docs;
+											for(var j=0; j<resdocs.length; j++){
+												for (var i = 0; i < addArr.length; i++) {
+													if(resdocs[j]._id == addArr[i]){
+														resdocs[j].parentid = doc[0]._id;
+														break;
+													}
+												}
+											}
+											for(var j=0; j<resdocs.length; j++){
+												for (var i = 0; i < delArr.length; i++) {
+													if(resdocs[j]._id == delArr[i]){
+														resdocs[j].parentid = "";
+														break;
+													}
+												}
+											}
+											db.bulk(resdocs).then(function(dataIADocs){
+												if(dataIADocs.status==200 && !dataIADocs.error) {
+													deferred.resolve(data);
+												}
+												else{
+													deferred.reject({"status": 500, "error": dataIADocs.error});
+												}
+											}).catch(function(err) {
+												console.log("[assessableunit][saveAUBU][updateIntAudit] - " + err.error.reason);
+												deferred.reject({"status": 500, "error": err.error.reason});
+											});
+										}
+										else{
+											deferred.reject({"status": 500, "error": resdata.error});
+										}
+									}).catch(function(err) {
+										console.log("[assessableunit][saveAUBU][findIntAudit] - " + err.error.reason);
+										deferred.reject({"status": 500, "error": err.error.reason});
+									});
 								}
-								var searchobj = { selector: {"_id": {"$gt":0}, "docType": "asmtComponent", "compntType": "internalAudit", $or } };
-								
-								db.find(searchobj).then(function(resdata) {
-									if(resdata.status==200 && !resdata.error) {
-										var resdocs = resdata.body.docs;
-										for(var j=0; j<resdocs.length; j++){
-											for (var i = 0; i < addArr.length; i++) {
-												if(resdocs[j] == addArr[i]._id){
-													resdocs[j].parentId = doc[0]._id;
-													break;
-												}
-											}
-										}
-										for(var j=0; j<resdocs.length; j++){
-											for (var i = 0; i < delArr.length; i++) {
-												if(resdocs[j] == delArr[i]._id){
-													resdocs[j].parentId = "";
-													break;
-												}
-											}
-										}
-										
-										db.bulk(resdocs).then(function(dataIADocs){
-											if(dataIADocs.status==200 && !dataIADocs.error) {
-												deferred.resolve(data);
-											}
-											else{
-												deferred.reject({"status": 500, "error": dataIADocs.error});
-											}
-										}).catch(function(err) {
-											console.log("[assessableunit][saveAUBU][updateIntAudit] - " + err.error.reason);
-											deferred.reject({"status": 500, "error": err.error.reason});
-										});
-									}
-									else{
-										deferred.reject({"status": 500, "error": resdata.error});
-									}
-								}).catch(function(err) {
-									console.log("[assessableunit][saveAUBU][findIntAudit] - " + err.error.reason);
-									deferred.reject({"status": 500, "error": err.error.reason});
-								});
+								else{
+									deferred.resolve(data);
+								}
 							}
 							else{
-								deferred.resolve(data);
+								deferred.reject({"status": 500, "error": data.error});
 							}
 						}).catch(function(err) {
 							console.log("[assessableunit][saveAUBU][save] - " + err.error.reason);
@@ -1532,8 +1535,7 @@ var assessableunit = {
 					"$and": [
 						{"engagement": { "$gt": null }},
 						{"docType": "asmtComponent"},
-						{"compntType": "internalAudit"},
-						{"$or": [{"parentid":{ "$exists": true, "$eq": "" }},{"parentid":{ "$exists": false }}]}
+						{"compntType": "internalAudit"}
 					]
 				},
 				"fields": [
@@ -1548,17 +1550,26 @@ var assessableunit = {
 					"addedToAQDB",
 					"rating", 
 					"size",
-					"score"
+					"score",
+					"parentid"
 				],
 				"sort": [{"engagement":"asc"}]
 			};
 			db.find(iaObj).then(function(data){
 				if(data.status==200 && !data.error){
 					var doc = [];
+					var docList = [];
 					if(data.body.docs.length > 0){
-						doc = data.body.docs;
+						var docs = data.body.docs;
+						
+						for (var i = 0; i < docs.length; ++i) {
+							if(docs[i].parentid != null && docs[i].parentid != "")
+								docList.push(docs[i]);
+							else
+								doc.push(docs[i]);
+						}
 					}
-					deferred.resolve({"status": 200, "doc": doc});
+					deferred.resolve({"status": 200, "doc": doc, "docList": docList});
 				}
 				else{
 					console.log("[assessableunit][getInternalAudits]" + data.error);
@@ -1582,20 +1593,16 @@ var assessableunit = {
 		try{
 			if(idList != "" && idList != null) {
 				arrIds = idList.split(',');
-				
 				for (var i = 0; i < arrObj.length; ++i) {
 					for (var j = 0; j < arrIds.length; j++) {
-						console.log(arrObj[i])
-							console.log(arrIds[j])
-							
 						if (arrIds[j] == arrObj[i]._id){
-							
 							aux = {
-							   "engagement": arrObj[i].engagement,
-							   "addedToAQDB": arrObj[i].addedToAQDB,
-							   "rating": arrObj[i].rating,
-							   "size": arrObj[i].size,
-							   "score": arrObj[i].score
+								"engagement": arrObj[i].engagement,
+								"addedToAQDB": arrObj[i].addedToAQDB,
+								"rating": arrObj[i].rating,
+								"size": arrObj[i].size,
+								"score": arrObj[i].score,
+								"id": arrObj[i]._id
 							};
 							dataIntAudits.push(aux);
 						}
