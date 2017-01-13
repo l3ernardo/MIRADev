@@ -493,7 +493,6 @@ var assessment = {
 						//doc[0].ALLData = fieldCalc.addTestViewData(6,defViewRow);
 						doc[0].ARCData = fieldCalc.addTestViewData(4,defViewRow);
 						doc[0].RiskData = fieldCalc.addTestViewData(11,defViewRow);
-						doc[0].AuditTrustedData = doc[0].RiskData;
 						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
 						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 						doc[0].DRData = fieldCalc.addTestViewData(5,1);
@@ -504,6 +503,7 @@ var assessment = {
 						doc[0].EAData = doc[0].ARCData;
 						// doc[0].AccountData = doc[0].RiskData;
 						doc[0].AccountData = [];
+						doc[0].AuditTrustedData = [];
 						doc[0].CUAsmtDataPR1view = [];
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
 							fieldCalc.getRatingProfile(doc);
