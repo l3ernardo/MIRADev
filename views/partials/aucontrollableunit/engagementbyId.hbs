@@ -81,8 +81,11 @@
 					$('#flagIntAud').val(flagIntAud);	
 					$('#InternalAudits').val(adding);
 					//get all values to save on InternalAuditsData	
-                    var list=$('#InternalAuditsData').val();
-					list=list=list+','+p_id;
+					var list=$('#InternalAuditsData').val();
+					if(list == "")
+						list = p_id;
+					else
+						list = list + ',' + p_id;
 					$('#InternalAuditsData').val(list);					
 			        ibmweb.overlay.hide('Overlay_EventbyId');
 				//alert("It is required to save the document to apply the changes.");
