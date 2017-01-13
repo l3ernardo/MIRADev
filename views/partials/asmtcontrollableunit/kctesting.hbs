@@ -59,10 +59,10 @@
 							<td width="20%"></td>
 						{{/if}}
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
-						<td width="10%">{{numActualTests}}</td>
-						<td width="10%">{{numDefects}}</td>
+						<td width="10%">{{numTests}}</td>
+						<td width="10%">{{DefectCount}}</td>
 						<td width="10%">{{defectRate}}</td>
-						<td width="20%">{{#if remFinImpact}}$ {{/if}}{{remFinImpact}}</td>
+						<td width="20%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
