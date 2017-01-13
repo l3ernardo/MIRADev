@@ -408,6 +408,61 @@ var calculatefield = {
 		return deferred.promise;
 	},
 
+  getAccountInheritedFields: function(db, doc) {
+    var deferred = q.defer();
+
+		try {
+      //*** Process Portfolio Value and Percentage
+
+      // get account parent assessable unit
+      var parentAU = {
+        selector:{
+          "_id": doc[0].parentid
+        }
+      };
+      db.find(parentAU).then(function(audata) {
+        if(audata.status==200 && !audata.error) {
+          var pdoc = audata.body.docs[0];
+          doc[0].MetricsValue = pdoc.MetricsValue;
+          // Get Parent CU Assessable Unit
+          var parentCUAU = {
+            selector:{
+              "_id": pdoc.parentid
+            }
+          };
+          db.find(parentCUAU).then(function(cuaudata) {
+            if(cuaudata.status==200 && !cuaudata.error) {
+              var pdocCU = cuaudata.body.docs[0];
+              doc[0].MetricsValueCU = pdocCU.MetricsValue;
+              deferred.resolve({"status": 200, "doc": doc});
+            }
+            else {
+              deferred.reject({"status": 500, "error": cuaudata.error});
+            }
+          }).catch(function(err) {
+            console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+            deferred.reject({"status": 500, "error": err.error.reason});
+          });
+        }
+        else {
+          deferred.reject({"status": 500, "error": audata.error});
+        }
+      }).catch(function(err) {
+        console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+        deferred.reject({"status": 500, "error": err.error.reason});
+      });
+
+    }
+    catch(e) {
+
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+			deferred.reject({"status": 500, "error": e.stack});
+
+		}
+
+		return deferred.promise;
+	},
+
   /* Populates the Rating Profile table */
 	getRatingProfile: function(doc) {
 		try {
@@ -1125,30 +1180,30 @@ var calculatefield = {
 	},
 
 	getAccountsCU: function(db, doc) {
-	var deferred = q.defer();
-	try {
-		// Get cuurent quarter assessment
-		var accounts = {
-			selector:{
-				"_id": {"$gt":0},
-				"key": "Assessable Unit",
-				"parentid": doc[0]._id,
-				"DocSubType": "Account",
-				"MIRABusinessUnit": doc[0].MIRABusinessUnit
-			}
-		};
-		console.log(accounts)
-		db.find(accounts).then(function(actdata) {
-			deferred.resolve({"status": 200, "doc": actdata.body.docs});
-		}).catch(function(err) {
-			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
-			deferred.reject({"status": 500, "error": err.error.reason});
-		});
-	} catch(e) {
-		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
-		deferred.reject({"status": 500, "error": e});
-	}
-		return deferred.promise;
-	},
+  	var deferred = q.defer();
+  	try {
+  		// Get cuurent quarter assessment
+  		var accounts = {
+  			selector:{
+  				"_id": {"$gt":0},
+  				"key": "Assessable Unit",
+  				"parentid": doc[0]._id,
+  				"DocSubType": "Account",
+  				"MIRABusinessUnit": doc[0].MIRABusinessUnit
+  			}
+  		};
+  		console.log(accounts)
+  		db.find(accounts).then(function(actdata) {
+  			deferred.resolve({"status": 200, "doc": actdata.body.docs});
+  		}).catch(function(err) {
+  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+  			deferred.reject({"status": 500, "error": err.error.reason});
+  		});
+  	} catch(e) {
+  		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+  		deferred.reject({"status": 500, "error": e});
+  	}
+  		return deferred.promise;
+  },
 }
 module.exports = calculatefield;
