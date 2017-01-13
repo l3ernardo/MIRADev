@@ -7,35 +7,34 @@
 		<span class="ibm-sep"> </span>
 		<a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 		<td>
-			<span class="audit-review"><b>Internal Audits and Proactive Reviews (Process Reviews, PwC Required Walkthroughs, IBM Voluntary Walkthroughs, and Application Reviews)</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<span class="audit-review"><b>Audits & Reviews (data from trusted sources)</b></span><br /><br />
+			<!--<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">-->
+			<table id="ppr_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="audit-review-viewheader" scope="col" width="4%">Period</th>
-					<th class="audit-review-viewheader" scope="col" width="4%">CO</th>
-					<th class="audit-review-viewheader" scope="col" width="15%">Audit or Review</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">ID</th>
-					<th class="audit-review-viewheader" scope="col" width="20%">Assessable Unit</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Date</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Rating</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Total Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Open Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Target to Close</th>
-					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
+					<th class="audit-review-viewheader" scope="col" width="6%">Period</th>
+					<th class="audit-review-viewheader" scope="col" width="6%">CO</th>
+					<th class="audit-review-viewheader" scope="col" width="17%">Audit or Review</th>
+					<th class="audit-review-viewheader" scope="col" width="12%">ID</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Date</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Rating</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Total Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="7%">Open Recs</th>
+					<th class="audit-review-viewheader" scope="col" width="9%">Target to Close</th>
+					<th class="audit-review-viewheader" scope="col" width="22%">Comments</th>
 				</thead>
 				{{#each AuditTrustedData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 					<!--<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>-->
-						<td width="6%">{{#unless countryProcess}}{{reportingQuarter}}{{/unless}}</td>
-						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
-						<td width="15%">{{auditOrReview}}</td>
-						<td width="10%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{eid}}</a>{{/unless}}</td>
-						<td width="20%">{{countryProcess}}</td>
-						<td width="5%">{{reportDate}}</td>
-						<td width="5%">{{rating}}</td>
-						<td width="3%">{{numRecommendationsTotal}}</td>
-						<td width="3%">{{numRecommendationsOpen}}</td>
-						<td width="7%">{{targetClose}}</td>
-						<td width="20%">{{comments}}</td>
+						<td width="6%" color="red">{{#unless reportDate}}{{reportingQuarter}}{{/unless}}</td>
+						<td width="6%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
+						<td width="17%">{{auditOrReview}}</td>
+						<td width="12%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{eid}}</a>{{/unless}}</td>
+						<td width="7%">{{reportDate}}</td>
+						<td width="7%">{{rating}}</td>
+						<td width="7%">{{numRecommendationsTotal}}</td>
+						<td width="7%">{{numRecommendationsOpen}}</td>
+						<td width="9%">{{targetClose}}</td>
+						<td width="22%">{{comments}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
@@ -72,7 +71,7 @@
 							<td width="6%">&nbsp;</td>
 						{{/unless}}
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{auditOrReview}}</a></td>
-						<td width="7%">{{reportDate}}</td>
+						<td width="7%">{{#if _id}}{{reportDate}}{{else}}&nbsp;{{/if}}</td>
 						<td width="7%">{{rating}}</td>
 						<td width="10%">{{numRecommendationsTotal}}</td>
 						<td width="9%">{{numRecommendationsOpen}}</td>

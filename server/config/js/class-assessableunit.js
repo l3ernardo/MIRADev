@@ -316,11 +316,30 @@ var assessableunit = {
 													deferred.resolve({"status": 200, "doc": doc});
 													break;
 												case "Country Process":
-													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-													}
-													//internal audit missing (IAData)
-													deferred.resolve({"status": 200, "doc": doc});
+													//Get IA Data
+													assessableunit.getInternalAudits(req, db, doc[0].BusinessUnit).then(function(dataIntAud) {
+														if(dataIntAud.status==200 && !dataIntAud.error){
+															doc[0].IntAud = [];
+															doc[0].IntAud = dataIntAud.doc;
+															//IA Data
+															doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
+															//Edit but not Admin - Reader
+															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
+																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
+																
+																deferred.resolve({"status": 200, "doc": doc});
+															}
+															else{
+																deferred.resolve({"status": 200, "doc": doc});
+															}
+														}
+														else{
+															deferred.reject({"status": 500, "error": dataIntAud.error});
+														}
+													}).catch(function(err) { // end assessableunit.getInternalAudits
+														console.log("[assessableunit][getInternalAudits]" + err.error.reason);
+														deferred.reject({"status": 500, "error": err.error.reason});
+													});
 													break;
 												case "Account":
 													//CUPList
@@ -388,40 +407,54 @@ var assessableunit = {
 																	assessableunit.getSubprocess(req, db, doc[0].BusinessUnit).then(function(spdata) {
 																		if(spdata.status==200 && !spdata.error){
 																			doc[0].subprocessList = spdata.doc;
-																			//Edit && Admin
-																			if(req.query.edit != undefined && doc[0].editor && doc[0].admin){
-																				//Get CU Parents List
-																				assessableunit.getCUParents(req, db).then(function(dataCP) {
-																					if(dataCP.status==200 && !dataCP.error){
-																						doc[0].CUParents = [];
-																						doc[0].CUParents = dataCP.doc;
+																			//Get IA Data
+																			assessableunit.getInternalAudits(req, db, doc[0].BusinessUnit).then(function(dataIntAud) {
+																				if(dataIntAud.status==200 && !dataIntAud.error){
+																					doc[0].IntAud = [];
+																					doc[0].IntAud = dataIntAud.doc;
+																					//IA Data
+																					doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
+																					//Edit && Admin
+																					if(req.query.edit != undefined && doc[0].editor && doc[0].admin){
+																						//Get CU Parents List
+																						assessableunit.getCUParents(req, db).then(function(dataCP) {
+																							if(dataCP.status==200 && !dataCP.error){
+																								doc[0].CUParents = [];
+																								doc[0].CUParents = dataCP.doc;
+																								deferred.resolve({"status": 200, "doc": doc});
+																							}
+																							else{
+																								deferred.reject({"status": 500, "error": dataCP.error});
+																							}
+																						}).catch(function(err) {
+																							console.log("[assessableunit][CUParentList]" + err.error.reason);
+																							deferred.reject({"status": 500, "error": err.error.reason});
+																						});
+																					}
+																					//Edit non admin - Read
+																					else{
+																						//ALL keys
+																						if(doc[0].MIRABusinessUnit != "GBS"){
+																							doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
+																						}
+																						//Sub-process keys
+																						if(doc[0].MIRABusinessUnit == "GTS Transformation"){
+																							doc[0].SubprocessDisp = assessableunit.getNames(doc[0].subprocessList, doc[0].subprocess, "WWBCITKey", "Name");
+																						}
+																						
+																						//BU reporting groups
+																						doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
+																						
 																						deferred.resolve({"status": 200, "doc": doc});
 																					}
-																					else{
-																						deferred.reject({"status": 500, "error": dataCP.error});
-																					}
-																				}).catch(function(err) {
-																					console.log("[assessableunit][CUParentList]" + err.error.reason);
-																					deferred.reject({"status": 500, "error": err.error.reason});
-																				});
-																			}
-																			//Edit non admin - Read
-																			else{
-																				//ALL keys
-																				if(doc[0].MIRABusinessUnit != "GBS"){
-																					doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
 																				}
-																				//Sub-process keys
-																				if(doc[0].MIRABusinessUnit == "GTS Transformation"){
-																					doc[0].SubprocessDisp = assessableunit.getNames(doc[0].subprocessList, doc[0].subprocess, "WWBCITKey", "Name");
+																				else{
+																					deferred.reject({"status": 500, "error": dataIntAud.error});
 																				}
-																				
-																				//BU reporting groups
-																				doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-																				//IA Data - missing
-																				
-																				deferred.resolve({"status": 200, "doc": doc});
-																			}
+																			}).catch(function(err) { // end assessableunit.getInternalAudits
+																				console.log("[assessableunit][getInternalAudits]" + err.error.reason);
+																				deferred.reject({"status": 500, "error": err.error.reason});
+																			});
 																		}
 																		else{
 																			deferred.reject({"status": 500, "error": spdata.error});
@@ -879,7 +912,7 @@ var assessableunit = {
 				db.get(docid).then(function(data){
 					if(data.status==200 && !data.error) {
 						var doc = [];
-						var updateAccounts = false;
+						var updateIntAudit = false;
 						doc.push(data.body);
 						
 						if(req.body.Status != undefined){
@@ -928,6 +961,13 @@ var assessableunit = {
 									doc[0].AuditProgram = req.body.AuditProgram;
 									doc[0].CUSize = req.body.CUSize;
 									doc[0].OpMetricKey = req.body.OpMetricKey;
+									if(req.body.InternalAuditsData != undefined){//IA Data
+										if(doc[0].InternalAuditsData != req.body.InternalAuditsData){
+											doc[0].InternalAuditsData = req.body.InternalAuditsData;
+											updateIntAudit = true;
+										}
+									}
+									
 								}
 								break;
 							case "Account":
@@ -947,7 +987,6 @@ var assessableunit = {
 								//Validate if accounts require to be updated
 								if(doc[0].parentid != req.body.parentid && doc[0].LevelType != req.body.LevelType){
 									doc[0].parentid = req.body.parentid;
-									updateAccounts = true;
 								}
 								doc[0].Portfolio = req.body.Portfolio;
 								doc[0].ParentSubject = req.body.ParentSubject;
@@ -973,7 +1012,13 @@ var assessableunit = {
 									if(doc[0].MIRABusinessUnit == "GTS Transformation"){
 										doc[0].subprocess = req.body.subprocess;
 									}
-									//IA Data not for GTS Transformation - pending
+									//IA Data
+									if(req.body.InternalAuditsData != undefined){
+										if(doc[0].InternalAuditsData != req.body.InternalAuditsData){
+											doc[0].InternalAuditsData = req.body.InternalAuditsData;
+											updateIntAudit = true;
+										}
+									}
 								}
 								break;
 							case "BU Reporting Group":
@@ -994,8 +1039,75 @@ var assessableunit = {
 						doc = accessupdates.updateAccessExistDoc(req,doc);
 						//Save document
 						db.save(doc[0]).then(function(data){
-							deferred.resolve(data);
+							if(data.status==200 && !data.error) {
+								//Update Internal Audit if necessary - CPs/CUs
+								if(updateIntAudit){
+									var $or = [];
+									var addArr = [];
+									var delArr = [];
+									var addIds = req.body.InternalAuditsData;
+									var delIds = req.body.InternalAuditsDataDel;
+									if(addIds != ""){
+										addArr = addIds.split(',');
+										for (var i = 0; i < addArr.length; i++) {
+											$or.push({"_id":addArr[i]});
+										}
+									} 
+									if(delIds != ""){ 
+										delArr = delIds.split(',');
+										for (var i = 0; i < delArr.length; i++) {
+											$or.push({"_id":delArr[i]});
+										}
+									}
+									var searchobj = { selector: {"_id": {"$gt":0}, "docType": "asmtComponent", "compntType": "internalAudit", $or } };
+									db.find(searchobj).then(function(resdata) {
+										if(resdata.status==200 && !resdata.error) {
+											var resdocs = resdata.body.docs;
+											for(var j=0; j<resdocs.length; j++){
+												for (var i = 0; i < addArr.length; i++) {
+													if(resdocs[j]._id == addArr[i]){
+														resdocs[j].parentid = doc[0]._id;
+														break;
+													}
+												}
+											}
+											for(var j=0; j<resdocs.length; j++){
+												for (var i = 0; i < delArr.length; i++) {
+													if(resdocs[j]._id == delArr[i]){
+														resdocs[j].parentid = "";
+														break;
+													}
+												}
+											}
+											db.bulk(resdocs).then(function(dataIADocs){
+												if(dataIADocs.status==200 && !dataIADocs.error) {
+													deferred.resolve(data);
+												}
+												else{
+													deferred.reject({"status": 500, "error": dataIADocs.error});
+												}
+											}).catch(function(err) {
+												console.log("[assessableunit][saveAUBU][updateIntAudit] - " + err.error.reason);
+												deferred.reject({"status": 500, "error": err.error.reason});
+											});
+										}
+										else{
+											deferred.reject({"status": 500, "error": resdata.error});
+										}
+									}).catch(function(err) {
+										console.log("[assessableunit][saveAUBU][findIntAudit] - " + err.error.reason);
+										deferred.reject({"status": 500, "error": err.error.reason});
+									});
+								}
+								else{
+									deferred.resolve(data);
+								}
+							}
+							else{
+								deferred.reject({"status": 500, "error": data.error});
+							}
 						}).catch(function(err) {
+							console.log("[assessableunit][saveAUBU][save] - " + err.error.reason);
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});
 						
@@ -1004,11 +1116,13 @@ var assessableunit = {
 						deferred.reject({"status": 500, "error": data.error});
 					}
 				}).catch(function(err) {
+					console.log("[assessableunit][saveAUBU][getDoc] - " + err.error.reason);
 					deferred.reject({"status": 500, "error": err.error.reason});
 				});
 			}
 		}catch(e){
-			deferred.reject({"status": 500, "error": e});
+			console.log("[assessableunit][saveAUBU] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
 	},
@@ -1410,7 +1524,96 @@ var assessableunit = {
 			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
-	}
+	},
+	//Get Internal Audit list
+	getInternalAudits: function(req, db){
+		var deferred = q.defer();
+		try{
+			var doc = [];
+			var iaObj = {
+				"selector":{
+					"$and": [
+						{"engagement": { "$gt": null }},
+						{"docType": "asmtComponent"},
+						{"compntType": "internalAudit"}
+					]
+				},
+				"fields": [
+					"_id",
+					"docType",
+					"compntType",
+					"engagement",
+					"location",
+					"locationDescription",
+					"organization",
+					"RPTG_PROCESS",
+					"addedToAQDB",
+					"rating", 
+					"size",
+					"score",
+					"parentid"
+				],
+				"sort": [{"engagement":"asc"}]
+			};
+			db.find(iaObj).then(function(data){
+				if(data.status==200 && !data.error){
+					var doc = [];
+					var docList = [];
+					if(data.body.docs.length > 0){
+						var docs = data.body.docs;
+						
+						for (var i = 0; i < docs.length; ++i) {
+							if(docs[i].parentid != null && docs[i].parentid != "")
+								docList.push(docs[i]);
+							else
+								doc.push(docs[i]);
+						}
+					}
+					deferred.resolve({"status": 200, "doc": doc, "docList": docList});
+				}
+				else{
+					console.log("[assessableunit][getInternalAudits]" + data.error);
+					deferred.reject({"status": 500, "error": data.error});
+				}
+			}).catch(function(err) {
+				console.log("[assessableunit][getInternalAudits]" + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
+			console.log("[assessableunit][getInternalAudits]" + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
+		}
+		return deferred.promise;
+	},
+	/* Get Internal Audit to display*/
+	getIADisplay: function(arrObj, idList){
+		var dataIntAudits = [];
+		var aux = {};
+		var arrIds;
+		try{
+			if(idList != "" && idList != null) {
+				arrIds = idList.split(',');
+				for (var i = 0; i < arrObj.length; ++i) {
+					for (var j = 0; j < arrIds.length; j++) {
+						if (arrIds[j] == arrObj[i]._id){
+							aux = {
+								"engagement": arrObj[i].engagement,
+								"addedToAQDB": arrObj[i].addedToAQDB,
+								"rating": arrObj[i].rating,
+								"size": arrObj[i].size,
+								"score": arrObj[i].score,
+								"id": arrObj[i]._id
+							};
+							dataIntAudits.push(aux);
+						}
+					}
+				}
+			}
+		}catch(e){
+			console.log("[assessableunit][getIADisplay]" + e.stack);
+		}
+		return dataIntAudits;
+	},
 };
 
 module.exports = assessableunit;

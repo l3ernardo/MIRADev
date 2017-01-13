@@ -846,6 +846,11 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sor
 	font-size: 11px;
 	background-color: #ffffff;
 }
+.ibm-data-table .asmt-viewdata-al {
+	text-align: left;
+	font-size: 11px;
+	background-color: #ffffff;
+}
 .ibm-data-table .asmt-viewdata-centered {
 	text-align: center;
 	font-size: 11px;
@@ -1186,11 +1191,17 @@ table.mira-dashboard-table td, table.mira-dashboard-table th {
     height:250px;
 }
 
+table.table_with_scroll {
+    width:100%;
+		table-layout:fixed;
+		border-spacing: 0;
+}
+
 table.table_with_scroll tbody {
     display:block;
-    overflow-y:auto;
+    overflow-y:scroll;
 		table-layout:fixed;
-		height: 192px;
+		height: 178.182px;
 }
 table.table_with_scroll tbody tr th{
 	table-layout:fixed;
@@ -1203,20 +1214,27 @@ table.table_with_scroll tbody tr td{
 table.table_with_scroll tbody tr.branch{
 	white-space: nowrap;
 }
+table.table_with_scroll tbody tr.branch td:nth-child(1){
+	text-align:left;
+}
 /*table.table_with_scroll tbody tr[data-tt-parent-id=""]{
 	white-space: nowrap;
 }*/
-table.table_with_scroll thead,table.table_with_scroll tbody tr {
+table.table_with_scroll tbody tr {
     display:table;
     width:100%;
     table-layout:fixed;
 }
-table.table_with_scroll thead {
-    width: 100%;
-}
-table.table_with_scroll {
-    width:100%;
-		table-layout:fixed;
+table.table_with_scroll thead{
+	display:table;
+	table-layout:fixed;
+/* fallback */
+	 width: 98%;
+	 /* minus scroll bar width */
+	 width:    -moz-calc(100% - 15px);
+	 width:         calc(100% - 17px);
+	 width: -webkit-calc(100% - 15px);
+
 }
 a#whiteanchor:link { color:white; text-decoration: none; }
 a#whiteanchor:visited { color:white; text-decoration: none; }
