@@ -1232,7 +1232,7 @@ table.table_with_scroll thead{
 	 width: 98%;
 	 /* minus scroll bar width */
 	 width:    -moz-calc(100% - 15px);
-	 width:         calc(100% - 17.5px);
+	 width:         calc(100% - 17px);
 	 width: -webkit-calc(100% - 15px);
 
 }
