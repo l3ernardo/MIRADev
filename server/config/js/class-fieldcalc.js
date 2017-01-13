@@ -176,21 +176,33 @@ var calculatefield = {
   					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
   						if (doc[0].GlobalProcess == dataParam.parameters.CRMProcess[0].options[j].name) doc[0].CatP = "CRM";
   					}
+            if (doc[0].MIRABusinessUnit == "GTS") {
+              doc[0].CRMProcess = dataParam.parameters.CRMProcess;
+            }
   				}
   				if (dataParam.parameters.DeliveryProcess) {
   					for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
   						if (doc[0].GlobalProcess == dataParam.parameters.DeliveryProcess[0].options[j].name) doc[0].CatP = "Delivery";
   					}
+            if (doc[0].MIRABusinessUnit == "GTS") {
+              doc[0].DeliveryProcess = dataParam.parameters.DeliveryProcess;
+            }
   				}
   				if (dataParam.parameters.CRMCU) {
   					for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
   						if (doc[0].Category == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
   					}
+            if (doc[0].MIRABusinessUnit == "GTS") {
+              doc[0].CRMCU = dataParam.parameters.CRMCU;
+            }
   				}
   				if (dataParam.parameters.DeliveryCU) {
   					for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
   						if (doc[0].Category == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
   					}
+            if (doc[0].MIRABusinessUnit == "GTS") {
+              doc[0].DeliveryCU = dataParam.parameters.DeliveryCU;
+            }
   				}
           if (dataParam.parameters.ProcessCatFIN) {
             doc[0].ProcessCategory = "OPS";
