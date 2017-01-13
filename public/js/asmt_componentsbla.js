@@ -1366,19 +1366,38 @@ function tableToReportMultiple(table, nameTable){
 
 /* main */
 $(document).ready(function() {
+	//Risks export buttons
 	$("#openrisks_checkbox_tree").click(function(){
 		$(".openrisks_checkbox_tree").prop('checked', $(this).prop('checked'));
 	});
-	$('#link-export').click(function(){
+	$('#OpenRisks-link-export').click(function(){
 		//tableReport = tableToReport('open_risks_treeview');
 		tableReport = AllTableToReportMultiple('open_risks_treeview', "OpenRisks");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
-	$('#link-export2').click(function(){
+	$('#OpenRisks-link-export2').click(function(){
 		//tableReport = tableToReport('open_risks_treeview');
 		tableReport = AllTableToReportMultiple('open_risks_treeview', "OpenRisks");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
+	$('#OpenRisks2-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('open_risks2_treeview', "OpenRisks2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#OpenRisks2-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('open_risks2_treeview', "OpenRisks2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//Audit Universe export buttons
+	$('#AUniverse-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('AUniverse_treeview', "AUniverse");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#AUniverse-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('AUniverse_treeview', "AUniverse");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+
 //ppr export buttons
 	$("#ppr_checkbox_tree").click(function(){
 		$(".ppr_checkbox_tree").prop('checked', $(this).prop('checked'));
@@ -1460,6 +1479,34 @@ $(document).ready(function() {
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 
+	//Process Ratings export buttons
+	$('#ProcessRatings-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings_treeview', "ProcessRatings");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#ProcessRatings-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings_treeview',"ProcessRatings");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+
+	//Process Ratings by country export buttons
+	$('#ProcessRatings2-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings2_treeview', "ProcessRatings2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#ProcessRatings2-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('ProcessRatings2_treeview',"ProcessRatings2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//Account Ratings export buttons
+	$('#AccountRatings-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('AccountRatings_treeview', "AccountRatings");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#AccountRatings-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('AccountRatings_treeview',"AccountRatings");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
   switch ($("input[name='parentdocsubtype']").val()) {
 		case "Controllable Unit":
 			if ($("input[name='enteredbu']").val() == "GTS Transformation") {

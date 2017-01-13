@@ -337,13 +337,31 @@ var register = function(Handlebars) {
 					var currdate = new Date();
 					var dateval = new Date(date);
 					currdate.setHours(0,0,0,0);
-					if(dateval >= currdate)
-						datehtml = '<span style="padding-right:1em">'+date+'</span>';
-					else
+					if(dateval < currdate)
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
+					else
+						datehtml = '<span style="padding-right:1em">'+date+'</span>';				
 					}
 				}
 			return datehtml;
+		},
+
+		statusRatingLclAdt: function(rating) {
+				var rateHTML;
+			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Qualified") {
+				rateHTML = '<span style="background-color: #00ff00; padding-left:1em; padding-right:1em; color: #ffffff">'+rating+'</span>';
+			} else {
+				if (rating == "Unsatisfactory" || rating == "unsat" || rating == "Unfavorable" || rating == "Negative" || rating == "Unqualified") {
+					rateHTML = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+rating+'</span>';
+				} else {
+					if (rating == "Marginal") {
+						rateHTML = '<span style="background-color: yellow; padding-left:1em; padding-right:1em; color: #000000">'+rating+'</span>';
+					} else {
+						rateHTML = rating;
+					}
+						return rateHTML;	
+				}
+			}
 		},
 		radioBtnVal: function(fieldName, fieldVal) {
 			var radioBtnHtml;

@@ -121,7 +121,7 @@ assessableUnits.get('/assessableunit', isAuthenticated, function(req, res) {
 						if (data.doc[0].editmode) {
 							var lParams;
 							if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
-							else lParams = ['AssessableUnitStatus'];
+							else lParams = ['GTSAuditPrograms','AssessableUnitStatus'];
 							parameter.getListParams(db, lParams).then(function(dataParam) {
 								if(dataParam.status==200 & !dataParam.error) {
 									data.doc[0].parameters = dataParam.parameters;
@@ -223,7 +223,7 @@ assessableUnits.get('/newassessableunit', isAuthenticated, function(req, res) {
 					case "BU Reporting Group":
 						var lParams;
 						if (data.doc[0].MIRABusinessUnit == "GBS") lParams = ['GBSAuditPrograms','AssessableUnitStatus'];
-						else lParams = ['AssessableUnitStatus'];
+						else lParams = ['GTSAuditPrograms','AssessableUnitStatus'];
 						parameter.getListParams(db, lParams).then(function(dataParam) {
 							if(dataParam.status==200 & !dataParam.error) {
 								data.doc[0].parameters = dataParam.parameters;

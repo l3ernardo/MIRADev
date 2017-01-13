@@ -21,6 +21,14 @@ var auditlesson = {
 			for(var key in global.hierarchy.countries){
 				tmpcountries.push({"name": key});
 			}
+			tmpcountries.sort(function(a, b){
+				var nameA=a.name, nameB=b.name
+				if (nameA < nameB) //sort string ascending
+					return -1
+				if (nameA > nameB)
+					return 1
+				return 0 //default return value (no sorting)
+			});
 			doc.countries = tmpcountries;
 			doc.IOTIMTs = global.hierarchy.countries;
 			doc.editmode = "new";
