@@ -91,7 +91,7 @@ var calculateARTab = {
     }
     doc[0].exportAccountRatings = exportList;
     for(var category in catList){
-      catList[category].percent = catList[category].count/doc[0].AccountData.length*100;
+      catList[category].percent = (catList[category].count/doc[0].AccountData.length*100).toFixed(1);
     }
     //Adding padding
     if (Object.keys(catList).length < defViewRow) {
