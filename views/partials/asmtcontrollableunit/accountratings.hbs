@@ -1,8 +1,14 @@
+<textarea name="textarea" id="AccountRatingsDataExport" cols="100" style="display:none">{{valuesToString exportAccountRatings}}</textarea>
 <table id="accntratings_table" class="ibm-data-table">
 	<tr class="account-ratings-content">
 		<td>
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<a href="javascript:void(0);" value="Export to Excel" name="AccountRatings-link-export" id="AccountRatings-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="AccountRatings-link-export2" id="AccountRatings-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<!--<table cellspacing="0" cellpadding="0" border="0" width="10Ratings0%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">-->
+			<table id="AccountRatings_treeview" width="100%" class="table_with_scroll">
 				<thead>
+					<tr>
 					<th class="account-ratings-viewheader" scope="col" width="5%">MSAC Rating</th>
 					<th class="account-ratings-viewheader" scope="col" width="25%">Account</th>
 					<th class="account-ratings-viewheader" scope="col" width="5%">Count</th>
@@ -14,20 +20,21 @@
 					<th class="account-ratings-viewheader" scope="col" width="5%">ARC</th>
 					<th class="account-ratings-viewheader" scope="col" width="10%">Basics of Control Exceptions</th>
 					<th class="account-ratings-viewheader" scope="col" width="25%">Explanations</th>
+				</tr>
 				</thead>
 				{{#each AccountData}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">{{PeriodRating}}</td>
-						<td class="asmt-viewdata-al"><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
-						<td class="asmt-viewdata">{{#if _id}}{{else}}&nbsp;{{/if}}</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata">{{PeriodRatingPrev1}}</td>
-						{{{ratingDisplayView PeriodRating}}}
-						<td class="asmt-viewdata">{{Target2Sat}}</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td class="asmt-viewdata"width="5%">{{{category}}}</td>
+						<td class="asmt-viewdata-al"width="25%"><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td class="asmt-viewdata"width="5%">{{count}}</td>
+						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
+						<td class="asmt-viewdata"width="5%">{{MetricsValue}}{{#if MetricsValue}}%{{/if}}</td>
+						{{{ratingDisplayView PeriodRatingPrev1 5}}}
+						{{{ratingDisplayView PeriodRating 5}}}
+						<td class="asmt-viewdata"width="5%">{{Target2Sat}}</td>
+						<td class="asmt-viewdata"width="5%"></td>
+						<td class="asmt-viewdata"width="10%"></td>
+						<td class="asmt-viewdata"width="25%">{{ReviewComments}}</td>
 					</tr>
 				{{/each}}
 			</table>

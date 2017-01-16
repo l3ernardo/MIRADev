@@ -75,7 +75,7 @@ var calculateARTab = {
               period:auditR[i].reportingQuarter,
               CO:auditR[i].COFlag,
               auditOrReview:auditR[i].auditOrReview,
-              id:auditR[i].id,
+              id:auditR[i].eid,
               assessableunit:auditR[i].countryProcess,
               date:auditR[i].reportDate,
               rating:auditR[i].rating,
@@ -199,6 +199,97 @@ var calculateARTab = {
         case "BU Country":
           break;
         case "Controllable Unit":
+
+        // *** Start of Audits and Reviews embedded view 1 *** //
+        var auditR = doc[0].AuditTrustedData;
+        auditR.sort(function(a, b){
+          var nameA=a.compntType.toLowerCase(), nameB=b.compntType.toLowerCase()
+          if (nameA < nameB) //sort string ascending
+            return -1
+          if (nameA > nameB)
+            return 1
+          var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+          if (nameA > nameB) //sort string descending
+            return -1
+          if (nameA < nameB)
+            return 1
+          return 0 //default return value (no sorting)
+        });
+        var typeList = {};
+        var periodList = {};
+        var exportPPR = [];
+        var auditRList = [];
+
+        for(var i = 0; i < auditR.length; i++){
+          if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && reportingQuarter == doc[0].CurrentPeriod){
+            auditR[i].COFlag = false;
+          }else{
+          auditR[i].COFlag = true;
+          }
+          if(auditR[i].compntType == "PPR"){
+            auditR[i].compntType = "Proactive Reviews";
+          }else{
+            auditR[i].compntType = "Internal Audit";
+          }
+          if(typeof typeList[auditR[i].compntType] === "undefined"){
+            auditRList.push(
+              {
+                id:auditR[i].compntType.replace(/ /g,''),
+                reportingQuarter:auditR[i].compntType,
+                catEntry:"Yes"
+              }
+            );
+            typeList[auditR[i].compntType] = true;
+          }
+          if(typeof periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
+            auditRList.push(
+              {
+                parent: auditR[i].compntType.replace(/ /g,''),id:auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,''),
+                reportingQuarter:auditR[i].reportingQuarter,
+                catEntry:"Yes"
+              }
+            );
+            periodList[auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'')] = true;
+          }
+
+          auditR[i].eid = auditR[i].id;
+          auditR[i].id = auditR[i]["_id"];
+          auditR[i].parent = auditR[i].compntType.replace(/ /g,'')+auditR[i].reportingQuarter.replace(/ /g,'');
+
+          exportPPR.push({
+            period:auditR[i].reportingQuarter,
+            CO:auditR[i].COFlag,
+            auditOrReview:auditR[i].auditOrReview,
+            id:auditR[i].eid,
+            date:auditR[i].reportDate,
+            rating:auditR[i].rating,
+            totalrecs:auditR[i].numRecommendationsTotal,
+            openrecos:auditR[i].numRecommendationsOpen,
+            target2close:auditR[i].targetClose,
+            comments:auditR[i].comments
+          });
+          auditRList.push(auditR[i]);
+        }
+        // add padding
+        if (Object.keys(typeList).length < defViewRow) {
+          if (auditRList == 0) {
+            auditRList = fieldCalc.addTestViewData(10,defViewRow);
+          } else {
+            fieldCalc.addTestViewDataPadding(auditRList,10,(defViewRow-Object.keys(typeList).length));
+          }
+        }
+
+        doc[0].AuditTrustedData = auditRList;
+        doc[0].exportPPR = exportPPR;
+        // *** End of Audits and Reviews embedded view 1 *** //
+        // add padding for local audits
+          if (doc[0].AuditLocalData.length < defViewRow) {
+            if (doc[0].AuditLocalData.length == 0) {
+              doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].AuditLocalData,8,(8-doc[0].AuditLocalData.length));
+            }
+          }
           break;
       }
     }catch(e){
