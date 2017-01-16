@@ -140,11 +140,11 @@ var register = function(Handlebars) {
 					}
 					ratinghtml += '></td>';
 			} else {
-				if (rating == "Sat")
+				if (rating == "Sat" || rating == "Satisfactory")
 					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;"';
-				else if (rating == "Marg")
+				else if (rating == "Marg" || rating == "Marginal")
 					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;"';
-				else if (rating == "Unsat")
+				else if (rating == "Unsat" || rating == "Unsatisfactory")
 					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;"';
 				else
 					ratinghtml += 'asmt-viewdata-centered"';
