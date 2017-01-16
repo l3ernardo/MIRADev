@@ -131,19 +131,23 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
-		ratingDisplayView: function(rating, field) {
-			var ratinghtml;
+		ratingDisplayView: function(rating, percent) {
+			var ratinghtml = '<td ';
 			if (rating == undefined) {
-					ratinghtml = '<td class="asmt-viewdata"></td>';
+					ratinghtml += 'asmt-viewdata"></td>';
 			} else {
 				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+rating+'</td>';
+					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;"';
 				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+rating+'</td>';
+					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;"';
 				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+rating+'</td>';
+					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;"';
 				else
-					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
+					ratinghtml += 'asmt-viewdata-centered"';
+				if(!isNaN(percent)){
+					ratinghtml += ' width="'+percent+'%"';
+				}
+				ratinghtml += '>'+rating+'</td>';
 			}
 			return ratinghtml;
 		},
