@@ -385,15 +385,43 @@ var calculatefield = {
             }
           };
           break;
+        case "Country Process":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "CurrentPeriod": req.session.quarter,
+              "$or": [
+                { "$and": [{"ParentDocSubType": "Controllable Unit"},{"WWBCITKey":{"$in":doc[0].CURelevant}}] }
+              ]
+            }
+          };
+          break;
       }
       db.find(asmts).then(function(asmtsdata) {
-        doc[0].asmtsdocs = asmtsdata.body.docs;
         // Populate View Data
-        if (doc[0].ParentDocSubType == "BU Country") {
-          for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-            // if (doc[0].asmtsdocs[i].AuditableFlag == "Yes" )
-            doc[0].AUData.push(doc[0].asmtsdocs[i]);
-          }
+        switch (doc[0].ParentDocSubType) {
+          case "BU Country":
+            doc[0].asmtsdocs = asmtsdata.body.docs;
+            for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
+              doc[0].AUData.push(doc[0].asmtsdocs[i]);
+            }
+            break;
+          case "Country Process":
+            doc[0].CURelevantAU = [];
+            doc[0].CURelevantAUID = [];
+            for (var i = 0; i < asmtsdata.body.docs.length; ++i) {
+              doc[0].CURelevantAUID.push(asmtsdata.body.docs[i].parentid);
+              doc[0].CURelevantAU.push(
+                {"id": asmtsdata.body.docs[i].parentid},
+                {"name": asmtsdata.body.docs[i].AssessableUnitName},
+                {"wwbcitid": asmtsdata.body.docs[i].WWBCITKey}
+              );
+            }
+            break;
+          default:
+            doc[0].asmtsdocs = asmtsdata.body.docs;
         }
 
         deferred.resolve({"status": 200, "doc": doc});
@@ -1126,7 +1154,6 @@ var calculatefield = {
 
   getAccountInheritedFields: function(db, doc) {
     var deferred = q.defer();
-
 		try {
       //*** Process Portfolio Value and Percentage
 
@@ -1138,21 +1165,21 @@ var calculatefield = {
             "$or": [{"_id":doc[0].AccountData[k].parentid}, {"_id":doc[0].AccountData[k].grandparentid}]
           }
         };
+        var gpid = doc[0].AccountData[k].grandparentid;
         db.find(parentAU).then(function(audata) {
           if(audata.status==200 && !audata.error) {
             for (var j = 0; j < audata.body.docs.length; j++) {
+              if (gpid == audata.body.docs[j]._id) {
+                doc[0].MetricsValueCU = audata.body.docs[j].MetricsValue;
+              }
               if (audata.body.docs[j].DocSubType != undefined && audata.body.docs[j].DocSubType == "Account") {
                 for (var i = 0; i < doc[0].AccountData.length; i++) {
                   if (doc[0].AccountData[i].parentid == audata.body.docs[j]._id) {
-                    doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue
-                  }
-                  if (doc[0].AccountData[i].grandparentid == audata.body.docs[j]._id) {
-                    doc[0].AccountData[i].MetricsValueCU = audata.body.docs[j].MetricsValue;
+                    doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue;
                   }
                 }
               }
             }
-
             deferred.resolve({"status": 200, "doc": doc});
           }
           else {
@@ -1163,6 +1190,7 @@ var calculatefield = {
           deferred.reject({"status": 500, "error": err.error.reason});
         });
       }
+      deferred.resolve({"status": 200, "doc": doc});
     }
     catch(e) {
 

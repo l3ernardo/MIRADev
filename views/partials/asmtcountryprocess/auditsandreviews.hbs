@@ -28,13 +28,13 @@
 				{{#each AuditTrustedData}}
 				<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 					<!--<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>-->
-						<td width="6%">{{#unless countryProcess}}{{reportingQuarter}}{{/unless}}</td>
+						<td width="6%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
 						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
 						<td width="15%">{{#if auditOrReview}}{{auditOrReview}}{{else}}&nbsp;{{/if}}</td>
 						<td width="10%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{eid}}</a>{{/unless}}</td>
 						<td width="20%">{{countryProcess}}</td>
 						<td width="5%">{{reportDate}}</td>
-						<td width="5%">{{rating}}</td>
+						{{{ratingDisplayView rating}}}
 						<td width="3%">{{numRecommendationsTotal}}</td>
 						<td width="3%">{{numRecommendationsOpen}}</td>
 						<td width="7%">{{targetClose}}</td>
@@ -67,24 +67,17 @@
 				<tbody>
 				{{#each AuditTrustedRCUData}}
 					<tr class="asmt-viewdata">
-						{{#if RPTG_QTR}}
-							{{#if_equal RPTG_QTR ""}}
-								<td width="6%">&nbsp;</td>
-							{{else}}
-								<td width="6%">{{RPTG_QTR}}</td>
-							{{/if_equal}}
-						{{else}}
-							<td width="6%">&nbsp;</td>
-						{{/if}}
-						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{REVIEW_TYPE}}</a></td>
-						<td width="10%">{{REVIEW_ID}}</td>
-						<td width="22%">{{countryProcess}}</td>
-						<td width="5%">{{REVIEW_END_DATE}}</td>
-						<td width="5%">{{RATING}}</td>
-						<td width="5%">{{NUM_TOTAL_RECMNDTNS}}</td>
-						<td width="5%">{{NUM_OPEN_RECMNDTNS}}</td>
-						<td width="7%">{{REVIEW_TARGET_CLOSURE_DATE}}</td>
-						<td width="20%">{{Comments}}</td>
+						<td width="6%">{{reportingQuarter}}</td>
+						<td width="15%">{{auditOrReview}}</a></td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a></td>
+						<td width="22%">{{#if _id}}{{controllableUnit}}{{else}}&nbsp;{{/if}}</td>
+						<td width="5%">{{reportDate}}</td>
+						<!-- {{{ratingDisplayView rating}}} -->
+						<td width="5%">{{{ratingDisplayViewWOtd rating}}}</td>
+						<td width="5%">{{numRecommendationsTotal}}</td>
+						<td width="5%">{{numRecommendationsOpen}}</td>
+						<td width="7%">{{targetClose}}</td>
+						<td width="20%">{{comments}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
