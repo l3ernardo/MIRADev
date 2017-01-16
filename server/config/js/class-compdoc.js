@@ -154,6 +154,39 @@ var getDocs = {
           break;
         case "BU IMT":
           break;
+        case "Account":
+          var compObj = {
+            selector : {
+              "_id": {"$gt":0},
+              "docType": "asmtComponent",
+              "$or": [
+                // Risks
+                //{ "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
+                // Key Controls Testing Tab
+                // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
+                // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                // Audits and Reviews Tab
+                // { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
+                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
+                { "$and": [{"compntType": "accountAudit"},{"parentid": doc[0]._id}] }
+              ]
+            }
+          };
+          db.find(compObj).then(function(compdata) {
+            var comps = compdata.body.docs
+            doc[0].AuditLocalData = [];
+            for(var i = 0; i < comps.length; i++) {
+              if (comps[i].compntType == "accountAudit") {
+                doc[0].AuditLocalData.push(comps[i]);
+              }
+            }
+            deferred.resolve({"status": 200, "doc": doc});
+          }).catch(function(err) {
+            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            deferred.reject({"status": 500, "error": err.error.reason});
+          });
+          break;
         case "BU Country":
           var compObj = {
         	     selector : {

@@ -479,19 +479,19 @@ var assessment = {
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
-								 console.log("KFCRDefectRate: "+doc[0].performanceTab.KFCRDefectRate);
-								 console.log("KCODefectRate: "+doc[0].performanceTab.KCODefectRate);
-								 console.log("MissedRisks: "+doc[0].performanceTab.MissedRisks);
-								 console.log(doc[0].BUCAsmtDataPIview);
-								 
+								 //console.log("KFCRDefectRate: "+doc[0].performanceTab.KFCRDefectRate);
+								 //console.log("KCODefectRate: "+doc[0].performanceTab.KCODefectRate);
+								 //console.log("MissedRisks: "+doc[0].performanceTab.MissedRisks);
+								 //console.log(doc[0].BUCAsmtDataPIview);
+
 								    var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 
-								
+
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
-							
+
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -761,7 +761,7 @@ var assessment = {
 						doc[0].RiskData = fieldCalc.addTestViewData(11,defViewRow);
 						doc[0].AuditTrustedData = doc[0].RiskData;
 						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(9,defViewRow);
-						doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+						//doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
 						doc[0].DRData = fieldCalc.addTestViewData(5,1);
 						doc[0].RCTestData = fieldCalc.addTestViewData(9,defViewRow);
 						doc[0].SCTestData = doc[0].RCTestData;
@@ -769,6 +769,10 @@ var assessment = {
 						doc[0].SampleData = doc[0].RiskData;
 						doc[0].EAData = doc[0].ARCData;
 						doc[0].AccountData = doc[0].RiskData;
+						//Get components docs
+						comp.getCompDocs(db,doc).then(function(dataComp){
+						// Audits and Reviews Tab
+						aar.processARTab(doc,defViewRow);
 						//AuditKey
 						if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 							var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
@@ -855,6 +859,10 @@ var assessment = {
 							var obj = doc[0]; // For Merge
 							deferred.resolve({"status": 200, "doc": obj});
 						}
+					}).catch(function(err) {
+						console.log("[assessment][getAsmtbyID][getCompDocs]" + dataLL.error);
+						deferred.reject({"status": 500, "error": err});
+					});
 						break;
 					default:
 						deferred.resolve({"status": 200, "doc": doc});
