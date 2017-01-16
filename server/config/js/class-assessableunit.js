@@ -397,6 +397,7 @@ var assessableunit = {
 																if(doc[0].ParentDocSubType == "BU Country"){
 																	doc[0].IMT = resdoc.IMT;
 																	doc[0].Country = resdoc.Country;
+																	doc[0].CountryDisp = util.resolveGeo(doc[0].Country, "Country", req)
 																}
 															}
 															//Get ALL Keys
