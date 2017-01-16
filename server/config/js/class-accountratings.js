@@ -66,14 +66,17 @@ var calculateARTab = {
         var tmp= {
           id: doc[0].AccountData[i].RatingCategory.replace(/ /g,''),
           category: doc[0].AccountData[i].RatingCategory,
-          count: 0
+          count: 0,
+          MetricsValue: 0
         }
         tmpAccountList.push(tmp);
         catList[doc[0].AccountData[i].RatingCategory] = tmp;
       }
       catList[doc[0].AccountData[i].RatingCategory].count++;
+      catList[doc[0].AccountData[i].RatingCategory].MetricsValue += parseInt(doc[0].AccountData[i].MetricsValue);
       doc[0].AccountData[i].id = doc[0].AccountData[i]["_id"];
       doc[0].AccountData[i].parent = doc[0].AccountData[i].RatingCategory.replace(/ /g,'');
+
       tmpAccountList.push(doc[0].AccountData[i]);
       exportList.push({
         category:doc[0].AccountData[i].RatingCategory  || " ",
@@ -92,6 +95,7 @@ var calculateARTab = {
     doc[0].exportAccountRatings = exportList;
     for(var category in catList){
       catList[category].percent = (catList[category].count/doc[0].AccountData.length*100).toFixed(1);
+      catList[category].MetricsValue = ((catList[category].MetricsValue/parseFloat(doc[0].MetricsValueCU))*100).toFixed(1);
     }
     //Adding padding
     if (Object.keys(catList).length < defViewRow) {
