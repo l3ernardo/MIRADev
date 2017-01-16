@@ -473,12 +473,25 @@ var assessment = {
 							//audit universe
 							aut.processAUTab(doc,defViewRow);
 
-							//doc[0].AUData
-							// doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
-							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-							// doc[0].Name = req.session.buname + " - " + doc[0].Country;
-							var obj = doc[0]; // For Merge
-							deferred.resolve({"status": 200, "doc": obj});
+							//create a space for performance Tab
+							doc[0].performanceTab = {};
+							comp.getCompDocs(db,doc).then(function(dataComp){
+								performanceTab.getKFCRDefectRate(db,doc);
+								performanceTab.getKCODefectRate(db,doc);
+								performanceTab.getMissedRisks(db,doc);
+								 console.log("KFCRDefectRate: "+doc[0].performanceTab.KFCRDefectRate);
+								 console.log("KCODefectRate: "+doc[0].performanceTab.KCODefectRate);
+								 console.log("MissedRisks: "+doc[0].performanceTab.MissedRisks);
+								 console.log(doc[0].BUCAsmtDataPIview);
+								 
+								    var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
+
+								
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
