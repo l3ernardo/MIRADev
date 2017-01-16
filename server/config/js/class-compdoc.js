@@ -27,14 +27,12 @@ var getDocs = {
                 { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // Audits and Reviews Tab
                 { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
-                { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
-                // { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey},{"REVIEW_TYPE": "CHQ Internal Audit"}] },
+                { "$and": [{"compntType": "internalAudit"},{"parentid":doc[0].parentid}] },
+                { "$and": [{"compntType": "internalAudit"},{"parentid": {"$in": doc[0].CURelevantAUID}}] },
                 { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
-                // { "$and": [{"DOCTYPE": "ppreview"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit}] }
               ]
             }
           };
-
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
             doc[0].risks = [];
@@ -102,13 +100,35 @@ var getDocs = {
                 }
                 sampleCtr++;
               }
-              // For Audits and Reviews Tab - view 1
-              else if ((comps[i].compntType == "PPR" && comps[i].countryProcess == doc[0].AssessableUnitName) || (comps[i].compntType == "internalAudit" && comps[i].CPWWBCITKey ==  doc[0].WWBCITKey)) {
-                doc[0].AuditTrustedData.push(comps[i]);
-              }
-              // For Audits and Reviews Tab - view 2
-              else if ((comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") && doc[0].RelevantCPs != undefined && comps[i].RPTG_PROCESS.indexOf(doc[0].WWBCITKey)) {
-                doc[0].AuditTrustedRCUData.push(comps[i]);
+              // For Audits and Reviews Tab - view 1 and 2
+              else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
+                // For view 1
+                if (comps[i].compntType == "PPR") {
+                  doc[0].AuditTrustedData.push(comps[i]);
+                }
+                // For view 1
+                if (comps[i].compntType == "internalAudit" && comps[i].parentid == doc[0].parentid) {
+                  comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
+                  comps[i].auditOrReview = "CHQ Internal Audit";
+                  comps[i].id = comps[i].engagement;
+                  comps[i].reportDate = comps[i].addedToAQDB;
+                  comps[i].countryProcess = doc[0].AssessableUnitName;
+                  doc[0].AuditTrustedData.push(comps[i]);
+                }
+                // For view 2
+                if (comps[i].compntType == "internalAudit") {
+                  for (var j = 0; j < doc[0].CURelevantAU.length; j++) {
+                    if (comps[i].parentid == doc[0].CURelevantAU[j].id) {
+                      comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
+                      comps[i].auditOrReview = "CHQ Internal Audit";
+                      comps[i].id = comps[i].engagement;
+                      comps[i].reportDate = comps[i].addedToAQDB;
+                      comps[i].controllableUnit = doc[0].CURelevantAU[j].name;
+                      doc[0].AuditTrustedRCUData.push(comps[i]);
+                      break;
+                    }
+                  }
+                }
               }
               // For Audits and Reviews Tab - view 3
               else if (comps[i].compntType == "localAudit") {
