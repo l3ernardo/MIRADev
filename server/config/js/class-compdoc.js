@@ -208,8 +208,8 @@ var getDocs = {
                   doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].DefectCount/doc[0].RCTestData[controlCtr].numTests) * 100).toFixed(1);
                 }
                 // Calculate for ControlName
-                doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlShortName;
-                // doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
+                // doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlShortName;
+                doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
                 controlCtr++;
               }
               else if (comps[i].compntType == "controlSample") {
