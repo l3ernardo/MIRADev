@@ -21,6 +21,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
   <form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveaccountaudit">
     <input type="hidden" name="docid" id="docid" value="{{_id}}">
     <input type="hidden" name="editmode" value="{{editmode}}">
+    <input type="hidden" name="close" id="close" value="0">
     <input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
     <input type="hidden" name="docType" id="docType" value="accountAudit">
     <table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
@@ -28,7 +29,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       {{#if editmode}}
 
       <tr>
-        <td width="25%">ControllableUnit:</td><td><b><input type="text" id="controllableUnit" name="controllableUnit" value="{{#if new}}PENDING{{else}}{{controllableUnit}}{{/if}}" readonly></b></td>
+        <td width="25%">Account:</td><td><b><input type="text" id="controllableUnit" name="controllableUnit" value="{{AssessableUnitName}}" readonly></b></td>
       </tr>
       <tr>
         <td>Audit or Review:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
@@ -63,7 +64,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
         {{else}}
 
         <tr>
-          <td width="25%">ControllableUnit:</td><td><b>{{controllableUnit}}</b></td>
+          <td width="25%">Account:</td><td><b>{{controllableUnit}}</b></td>
         </tr>
         <tr>
           <td>Audit or Review:</td><td>{{auditOrReview}}</td>
@@ -131,7 +132,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
     });
     $('#btn_save_close').click(function() {
       $('#close').val("back");
-      $("#accountauditform").submit();
+      $("#asmtcomponentform").submit();
     });
     $('#btn_save').click(function(evt) {
       $("#asmtcomponentform").submit();
