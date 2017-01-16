@@ -1126,7 +1126,6 @@ var calculatefield = {
 
   getAccountInheritedFields: function(db, doc) {
     var deferred = q.defer();
-
 		try {
       //*** Process Portfolio Value and Percentage
 
@@ -1163,6 +1162,7 @@ var calculatefield = {
           deferred.reject({"status": 500, "error": err.error.reason});
         });
       }
+      deferred.resolve({"status": 200, "doc": doc});
     }
     catch(e) {
 
