@@ -27,14 +27,14 @@
 						<td class="asmt-viewdata"width="5%">{{{category}}}</td>
 						<td class="asmt-viewdata-al"width="25%"><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td class="asmt-viewdata"width="5%">{{count}}</td>
-						<td class="asmt-viewdata"width="5%">{{percent}}</td>
-						<td class="asmt-viewdata"width="5%"></td>
-						<td class="asmt-viewdata"width="5%">{{PeriodRatingPrev1}}</td>
+						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
+						<td class="asmt-viewdata"width="5%">{{MetricsValue}}{{#if MetricsValue}}%{{/if}}</td>
+						{{{ratingDisplayView PeriodRatingPrev1}}}
 						{{{ratingDisplayView PeriodRating}}}
 						<td class="asmt-viewdata"width="5%">{{Target2Sat}}</td>
 						<td class="asmt-viewdata"width="5%"></td>
 						<td class="asmt-viewdata"width="10%"></td>
-						<td class="asmt-viewdata"width="25%"></td>
+						<td class="asmt-viewdata"width="25%">{{ReviewComments}}</td>
 					</tr>
 				{{/each}}
 			</table>

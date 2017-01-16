@@ -508,7 +508,7 @@ var assessment = {
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
 							fieldCalc.getRatingProfile(doc);
 
-							// fieldCalc.getAccountInheritedFields(db, doc).then(function(accdata){
+							fieldCalc.getAccountInheritedFields(db, doc).then(function(accdata){
 								// Get Component Docs
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									//Account Ratings tab
@@ -620,9 +620,9 @@ var assessment = {
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
-						// }).catch(function(err) {
-						// 	deferred.reject({"status": 500, "error": err});
-						// });
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err});
+						});
 						break;
 					case "Country Process":
 						doc[0].ALLData = fieldCalc.addTestViewData(6,defViewRow);
