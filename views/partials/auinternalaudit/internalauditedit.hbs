@@ -2,7 +2,7 @@
 	<td><label>Internal Audits:</label>
 		<input type="text" id="InternalAudits"  size="10"  style="visibility:hidden">
 		<input type="hidden" id="InternalAuditsData" name="InternalAuditsData"  value="{{InternalAuditsData}}">
-		<input type="hidden" id="InternalAuditsDataDel" name="InternalAuditsDataDel"  value="{{InternalAuditsData}}">
+		<input type="hidden" id="InternalAuditsDataDel" name="InternalAuditsDataDel"  value="{{InternalAuditsDataDel}}">
 		<input type="text" id="flagIntAud"  size="10"  style="visibility:hidden"></td>
 	<td>
 		<div class="ibm-columns ibm-graphic-tabs">
@@ -23,13 +23,13 @@
 				</thead>
 				<tbody>
 				{{#each InternalAuditsDataDisp}}
-					<tr>
-						<td><a href="/asmtcomponents?id={{id}}">{{engagement}}</a></td>
+					<tr id={{id}}>
+						<td p_id={{id}}><a target="_blank" href="/asmtcomponents?id={{id}}">{{engagement}}</a></td>
 						<td>{{addedToAQDB}}</td>
-						<td>{{rating}}</td>
+						{{{ratingDisplayView rating "rating"}}}
 						<td>{{size}}</td>
 						<td>{{score}}</td>
-						<td><a class="ibm-delete-link" id="btn_remove" name="btn_remove" value="Remove" href="javascript:void(0);">Remove</a></td>
+						<td><a class="ibm-delete-link"   id="btn_remove{{id}}"  value="Remove"  href="javascript:void(0);">Remove</a></td>
 					</tr>
 				{{/each}}
 				</tbody>
@@ -37,3 +37,48 @@
 		</div>
 	</td>
 </tr>
+<script>
+    $(document).ready(function() {
+	var copylist=$('#InternalAuditsData').val();
+	 $('#internalauditsview_table tr').each(function() {
+	  var id= $(this).find("td:first");
+      var id2=id.attr('p_id');
+						    $("#btn_remove"+id2).on('click',function() {
+							$('#internalauditsview_table tr').each(function() {
+											var engagement = $(this).find("td:first").text();
+											var p_id= $(this).find("td:first");
+											var p_id2=id.attr('p_id');
+											if (engagement!='' && engagement!='Engagement' && p_id2==id2 )
+											{
+													//get all values to save on InternalAuditsData
+														var list=$('#InternalAuditsData').val();
+														var listdel=$('#InternalAuditsDataDel').val();
+														if(list != "")
+														{
+																var pattern=id2;
+																list=list.replace(pattern,'');
+																var pattern3=',,';
+																list=list.replace(pattern3,',');
+																if(list[0]==','){list=list.substr(1,list.length);}
+																if(list[list.length]==','){list=list.substr(0,list.length-1);}
+																$('#InternalAuditsData').val(list);
+																//add id to DelList
+																if(copylist.indexOf(id2)> -1 && copylist.length>'0')
+																{
+																   if(listdel == "")
+																		listdel = p_id2;
+																	else{
+																			if(listdel.indexOf(p_id2) == -1)
+																			listdel = listdel + ',' + p_id2;
+																	}
+																	$('#InternalAuditsDataDel').val(listdel);
+																}
+														}
+													$("#"+id2).remove()
+											}
+
+									});
+				 });
+      });
+	});
+</script>

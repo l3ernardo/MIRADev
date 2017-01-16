@@ -1124,31 +1124,81 @@ var calculatefield = {
     }
 	},
 
-	getAccountsCU: function(db, doc) {
-	var deferred = q.defer();
-	try {
-		// Get cuurent quarter assessment
-		var accounts = {
-			selector:{
-				"_id": {"$gt":0},
-				"key": "Assessable Unit",
-				"parentid": doc[0]._id,
-				"DocSubType": "Account",
-				"MIRABusinessUnit": doc[0].MIRABusinessUnit
-			}
-		};
-		console.log(accounts)
-		db.find(accounts).then(function(actdata) {
-			deferred.resolve({"status": 200, "doc": actdata.body.docs});
-		}).catch(function(err) {
-			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
-			deferred.reject({"status": 500, "error": err.error.reason});
-		});
-	} catch(e) {
-		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
-		deferred.reject({"status": 500, "error": e});
-	}
+  getAccountInheritedFields: function(db, doc) {
+    var deferred = q.defer();
+		try {
+      //*** Process Portfolio Value and Percentage
+
+      for (var k = 0; k < doc[0].AccountData.length; k++) {
+        // get account parent assessable unit
+        var parentAU = {
+          selector:{
+            "_id": {"$gt": 0},
+            "$or": [{"_id":doc[0].AccountData[k].parentid}, {"_id":doc[0].AccountData[k].grandparentid}]
+          }
+        };
+        var gpid = doc[0].AccountData[k].grandparentid;
+        db.find(parentAU).then(function(audata) {
+          if(audata.status==200 && !audata.error) {
+            for (var j = 0; j < audata.body.docs.length; j++) {
+              if (gpid == audata.body.docs[j]._id) {
+                doc[0].MetricsValueCU = audata.body.docs[j].MetricsValue;
+              }
+              if (audata.body.docs[j].DocSubType != undefined && audata.body.docs[j].DocSubType == "Account") {
+                for (var i = 0; i < doc[0].AccountData.length; i++) {
+                  if (doc[0].AccountData[i].parentid == audata.body.docs[j]._id) {
+                    doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue;
+                  }
+                }
+              }
+            }
+            deferred.resolve({"status": 200, "doc": doc});
+          }
+          else {
+            deferred.reject({"status": 500, "error": audata.error});
+          }
+        }).catch(function(err) {
+          console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
+      }
+      deferred.resolve({"status": 200, "doc": doc});
+    }
+    catch(e) {
+
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+			deferred.reject({"status": 500, "error": e.stack});
+
+		}
+
 		return deferred.promise;
 	},
+
+	getAccountsCU: function(db, doc) {
+  	var deferred = q.defer();
+  	try {
+  		// Get cuurent quarter assessment
+  		var accounts = {
+  			selector:{
+  				"_id": {"$gt":0},
+  				"key": "Assessable Unit",
+  				"parentid": doc[0]._id,
+  				"DocSubType": "Account",
+  				"MIRABusinessUnit": doc[0].MIRABusinessUnit
+  			}
+  		};
+  		console.log(accounts)
+  		db.find(accounts).then(function(actdata) {
+  			deferred.resolve({"status": 200, "doc": actdata.body.docs});
+  		}).catch(function(err) {
+  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+  			deferred.reject({"status": 500, "error": err.error.reason});
+  		});
+  	} catch(e) {
+  		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+  		deferred.reject({"status": 500, "error": e});
+  	}
+  		return deferred.promise;
+  },
 }
 module.exports = calculatefield;

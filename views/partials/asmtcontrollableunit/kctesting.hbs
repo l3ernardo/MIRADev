@@ -59,10 +59,10 @@
 							<td width="20%"></td>
 						{{/if}}
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
-						<td width="10%">{{numActualTests}}</td>
-						<td width="10%">{{numDefects}}</td>
+						<td width="10%">{{numTests}}</td>
+						<td width="10%">{{DefectCount}}</td>
 						<td width="10%">{{defectRate}}</td>
-						<td width="20%">{{#if remFinImpact}}$ {{/if}}{{remFinImpact}}</td>
+						<td width="20%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
@@ -80,15 +80,15 @@
 					<!--<th class="kc-test-viewheader" width="2%"><input type="checkbox" class="Sample_checkbox_tree" id="Sample_checkbox_tree" name="Sample_checkbox "/></th>-->
 					<th class="kc-test-viewheader" width="5%">Cat</th>
 					<th class="kc-test-viewheader" width="5%">Process</th>
-					<th class="kc-test-viewheader" width="5%">Control</th>
-					<th class="kc-test-viewheader" width="12%">Sample ID</th>
+					<th class="kc-test-viewheader" width="16%">Control</th>
+					<th class="kc-test-viewheader" width="7%">Sample ID</th>
 					<th class="kc-test-viewheader" width="10%">Defect Type</th>
 					<th class="kc-test-viewheader" width="5%">Defects</th>
 					<th class="kc-test-viewheader" width="10%">Remed. Status</th>
-					<th class="kc-test-viewheader" width="5%">Remaining Fin. Impact</th>
-					<th class="kc-test-viewheader" width="12%">Original Target to Close</th>
-					<th class="kc-test-viewheader" width="11%">Current Target to Close</th>
-					<th class="kc-test-viewheader" width="20%">Defect Abstract</th>
+					<th class="kc-test-viewheader" width="8%">Remaining Fin. Impact</th>
+					<th class="kc-test-viewheader" width="8%">Original Target to Close</th>
+					<th class="kc-test-viewheader" width="8%">Current Target to Close</th>
+					<th class="kc-test-viewheader" width="18%">Defect Abstract</th>
 				</thead>
 				<tbody>
 				{{#each SampleData}}
@@ -97,21 +97,20 @@
 						  <!--<th width="2%" ></th>-->
 							<td width="5%" >{{processCategory}}</td>
 							<td width="5%">{{processSampled}}</td>
-							<td width="5%">{{controlName}}</td>
 						{{else}}
 							<!--<th width="2%" >{{#if controlName}}<input type="checkbox" class="Sample_checkbox_tree"/>{{/if}}</th>-->
 							<td width="5%" ></td>
 							<td width="5%"></td>
-							<td width="5%"></td>
 						{{/if}}
-						<td width="12%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
+						<td width="16%">{{controlName}}</td>
+						<td width="7%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
 						<td width="10%">{{defectType}}</td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="10%">{{remediationStatus}}</td>
-						<td width="5%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
-						<td width="12%">{{originalTargetDate}}</td>
-						<td width="11%">{{targetClose}}</td>
-						<td width="20%">{{defectsAbstract}}</td>
+						<td width="8%">{{#if remainingFinancialImpact}}$ {{/if}}{{remainingFinancialImpact}}</td>
+						<td width="8%">{{originalTargetDate}}</td>
+						<td width="8%">{{targetClose}}</td>
+						<td width="18%">{{defectsAbstract}}</td>
 					</tr>
 				{{/each}}
 			</tbody>

@@ -175,11 +175,12 @@ var getDocs = {
               "docType": "asmtComponent",
               "$or": [
                 // Key Controls Testing Tab
-                { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-                { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                // { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                { "$and": [{"compntType": "CUSummarySample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
+                { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
                 // Audits and Reviews Tab
-                { "$and": [{"compntType": "PPR"},{"CU" : doc[0].AssessableUnitName}] },
-                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
+                { "$and": [{"compntType": "PPR"},{"AssessableUnitName" : doc[0].AssessableUnitName}] },
+                { "$and": [{"compntType": "internalAudit"},{"parentid":doc[0].parentid}] },
                 { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
               ]
             }
@@ -194,20 +195,26 @@ var getDocs = {
             var sampleCtrPQ = 0;
             var ctrlname;
             var processCat;
+            var numTestsTotal = 0;
+            var DefectCountTotal = 0;
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 doc[0].risks.push(comps[i]);
               }
-              else if (comps[i].compntType == "countryControls") {
+              else if (comps[i].compntType == "CUSummarySample") {
                 doc[0].RCTestData.push(comps[i]);
                 // Calculate for Defect Rate of Control doc
-                if (doc[0].RCTestData[controlCtr].numActualTests ==  undefined || doc[0].RCTestData[controlCtr].numActualTests == "" || doc[0].RCTestData[controlCtr].numActualTests == 0 || doc[0].RCTestData[controlCtr].numDefects == undefined || doc[0].RCTestData[controlCtr].numDefects == "") {
+                if (doc[0].RCTestData[controlCtr].numTests ==  undefined || doc[0].RCTestData[controlCtr].numTests == "" || doc[0].RCTestData[controlCtr].numTests == 0 || doc[0].RCTestData[controlCtr].DefectCount == undefined || doc[0].RCTestData[controlCtr].DefectCount == "") {
                   doc[0].RCTestData[controlCtr].defectRate = "";
                 } else {
-                  doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].numDefects/doc[0].RCTestData[controlCtr].numActualTests) * 100).toFixed(1);
+                  doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].DefectCount/doc[0].RCTestData[controlCtr].numTests) * 100).toFixed(1);
                 }
                 // Calculate for ControlName
                 doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
+                // Calculate for Defect Rate
+                numTestsTotal = numTestsTotal + comps[i].numTests;
+                DefectCountTotal = DefectCountTotal + comps[i].DefectCount;
+
                 controlCtr++;
               }
               else if (comps[i].compntType == "controlSample") {
@@ -237,6 +244,12 @@ var getDocs = {
               }
               // For Audits and Reviews Tab - view 1
               else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
+                if (comps[i].compntType == "internalAudit") {
+                  comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
+                  comps[i].auditOrReview = "CHQ Internal Audit";
+                  comps[i].id = comps[i].engagement;
+                  comps[i].reportDate = comps[i].addedToAQDB;
+                }
                 doc[0].AuditTrustedData.push(comps[i]);
               }
               // For Audits and Reviews Tab - view 2
@@ -246,6 +259,12 @@ var getDocs = {
               else {
 
               }
+            }
+            // Calculate for Defect Rate
+            if (numTestsTotal == 0) {
+              doc[0].AUDefectRate = "";
+            } else {
+              doc[0].AUDefectRate = ((DefectCountTotal/numTestsTotal) * 100).toFixed(1);
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
