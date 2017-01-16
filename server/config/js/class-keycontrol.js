@@ -14,17 +14,17 @@ var calculateKCTab = {
 		try {
       switch (doc[0].ParentDocSubType) {
         case "Country Process":
-        doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
-        if (doc[0].AUDefectRate == 0) {
-          doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(0);
-        }
-        if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
-          doc[0].RAGStatus = "Unsat";
-        } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
-          doc[0].RAGStatus = "Sat";
-        } else {
-          doc[0].RAGStatus = "Marg";
-        }
+          doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
+          if (doc[0].AUDefectRate == 0) {
+            doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(0);
+          }
+          if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+            doc[0].RAGStatus = "Unsat";
+          } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
+            doc[0].RAGStatus = "Sat";
+          } else {
+            doc[0].RAGStatus = "Marg";
+          }
           // *** Start of Reporting Country Testing Data (1st embedded view in Testing tab) *** //
           //Sorting for RCTest_treeview
           var tmpList = [];
@@ -523,6 +523,7 @@ var calculateKCTab = {
           }
           return 0 //default return value (no sorting)
         });
+        //*** Process CU Process Testing data for 2 ***//
         var objects = {};//object of objects for counting
         for(var i = 0; i < rct.length; i++){
           if (rct[i].reportingQuarter == undefined) rct[i].reportingQuarter = "(uncategorized)";
@@ -532,9 +533,9 @@ var calculateKCTab = {
               parent:"",
               reportingQuarter: rct[i].reportingQuarter,
               catEntry:"Yes",
-              numActualTests: 0,
-              numDefects: 0,
-              remFinImpact: 0.00
+              numTests: 0,
+              DefectCount: 0,
+              remainingFinancialImpact: 0.00
             };
             tmpList.push(tmp);
             objects[tmp.id] = tmp;
@@ -547,9 +548,9 @@ var calculateKCTab = {
               id:rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,''),
               controlType: rct[i].controlType,
               catEntry:"Yes",
-              numActualTests: 0,
-              numDefects: 0,
-              remFinImpact: 0.00
+              numTests: 0,
+              DefectCount: 0,
+              remainingFinancialImpact: 0.00
             };
             tmpList.push(tmp);
             objects[tmp.id] = tmp;
@@ -562,9 +563,9 @@ var calculateKCTab = {
               id:rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,'')+rct[i].process.replace(/ /g,''),
               catEntry:"Yes",
               process: rct[i].process,
-              numActualTests: 0,
-              numDefects: 0,
-              remFinImpact: 0.00
+              numTests: 0,
+              DefectCount: 0,
+              remainingFinancialImpact: 0.00
             }
             tmpList.push(tmp);
             objects[tmp.id] = tmp;
@@ -573,32 +574,32 @@ var calculateKCTab = {
           rct[i].parent = rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,'')+rct[i].process.replace(/ /g,'');
           rct[i].id = rct[i]["_id"];
           //do counting for category
-          objects[rct[i].parent].numActualTests += parseFloat(rct[i].numActualTests);
-          objects[rct[i].parent].numDefects += parseFloat(rct[i].numDefects);
-          objects[rct[i].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
+          objects[rct[i].parent].numTests += parseFloat(rct[i].numTests);
+          objects[rct[i].parent].DefectCount += parseFloat(rct[i].DefectCount);
+          objects[rct[i].parent].remainingFinancialImpact += parseFloat(rct[i].remainingFinancialImpact);
           //do counting for 2nd level category
-          objects[objects[rct[i].parent].parent].numActualTests += parseFloat(rct[i].numActualTests);
-          objects[objects[rct[i].parent].parent].numDefects += parseFloat(rct[i].numDefects);
-          objects[objects[rct[i].parent].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
+          objects[objects[rct[i].parent].parent].numTests += parseFloat(rct[i].numTests);
+          objects[objects[rct[i].parent].parent].DefectCount += parseFloat(rct[i].DefectCount);
+          objects[objects[rct[i].parent].parent].remainingFinancialImpact += parseFloat(rct[i].remainingFinancialImpact);
           //do counting for 3d level category
-          objects[objects[objects[rct[i].parent].parent].parent].numActualTests += parseFloat(rct[i].numActualTests);
-          objects[objects[objects[rct[i].parent].parent].parent].numDefects += parseFloat(rct[i].numDefects);
-          objects[objects[objects[rct[i].parent].parent].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
+          objects[objects[objects[rct[i].parent].parent].parent].numTests += parseFloat(rct[i].numTests);
+          objects[objects[objects[rct[i].parent].parent].parent].DefectCount += parseFloat(rct[i].DefectCount);
+          objects[objects[objects[rct[i].parent].parent].parent].remainingFinancialImpact += parseFloat(rct[i].remainingFinancialImpact);
           exportRCTest.push({
             reportingQuarter:rct[i].reportingQuarter || "",
             controlType:rct[i].controlType || "",
             process: rct[i].process || " ",
             controlName:rct[i].controlName || "",
-            numActualTests:rct[i].numActualTests || "",
-            numDefects:rct[i].numDefects || "",
+            numActualTests:rct[i].numTests || "",
+            numDefects:rct[i].DefectCount || "",
             defectRate:rct[i].defectRate || "",
-            remFinImpact:rct[i].remFinImpact || ""
+            remFinImpact:rct[i].remainingFinancialImpact || ""
           });
           tmpList.push(rct[i]);
         }
         //add ".00" to category counting
         for(var key in objects){
-          objects[key].remFinImpact = objects[key].remFinImpact.toFixed(2);
+          objects[key].remainingFinancialImpact = objects[key].remainingFinancialImpact.toFixed(2);
         }
         doc[0].exportRCTest = exportRCTest;
         doc[0].RCTestData = tmpList;
@@ -653,6 +654,7 @@ var calculateKCTab = {
           }
           return 0 //default return value (no sorting)
         });
+        // Process Sample data for table 3
         var objects = {};//object of objects for counting
         for(var i = 0; i < samples.length; i++){
           if (samples[i].processCategory == undefined) samples[i].processCategory = "(uncategorized)";

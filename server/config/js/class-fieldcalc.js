@@ -1137,21 +1137,21 @@ var calculatefield = {
             "$or": [{"_id":doc[0].AccountData[k].parentid}, {"_id":doc[0].AccountData[k].grandparentid}]
           }
         };
+        var gpid = doc[0].AccountData[k].grandparentid;
         db.find(parentAU).then(function(audata) {
           if(audata.status==200 && !audata.error) {
             for (var j = 0; j < audata.body.docs.length; j++) {
+              if (gpid == audata.body.docs[j]._id) {
+                doc[0].MetricsValueCU = audata.body.docs[j].MetricsValue;
+              }
               if (audata.body.docs[j].DocSubType != undefined && audata.body.docs[j].DocSubType == "Account") {
                 for (var i = 0; i < doc[0].AccountData.length; i++) {
                   if (doc[0].AccountData[i].parentid == audata.body.docs[j]._id) {
-                    doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue
-                  }
-                  if (doc[0].AccountData[i].grandparentid == audata.body.docs[j]._id) {
-                    doc[0].AccountData[i].MetricsValueCU = audata.body.docs[j].MetricsValue;
+                    doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue;
                   }
                 }
               }
             }
-
             deferred.resolve({"status": 200, "doc": doc});
           }
           else {
