@@ -147,6 +147,22 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+		ratingDisplayViewWOtd: function(rating, field) {
+			var ratinghtml;
+			if (rating == undefined) {
+					ratinghtml = '';
+			} else {
+				if (rating == "Sat")
+					ratinghtml = '<span class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+rating+'</span>';
+				else if (rating == "Marg")
+					ratinghtml = '<span class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+rating+'</span>';
+				else if (rating == "Unsat")
+					ratinghtml = '<span class="asmt-viewdata-red"  style="background-color: red !important;">'+rating+'</span>';
+				else
+					ratinghtml = '<span class="asmt-viewdata-centered">'+rating+'</span>';
+			}
+			return ratinghtml;
+		},
 		compDocDRDisplayView: function(rating, field) {
 			var ratinghtml;
 			if (rating == undefined) {
@@ -340,7 +356,7 @@ var register = function(Handlebars) {
 					if(dateval < currdate)
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
 					else
-						datehtml = '<span style="padding-right:1em">'+date+'</span>';				
+						datehtml = '<span style="padding-right:1em">'+date+'</span>';
 					}
 				}
 			return datehtml;
@@ -359,7 +375,7 @@ var register = function(Handlebars) {
 					} else {
 						rateHTML = rating;
 					}
-						return rateHTML;	
+						return rateHTML;
 				}
 			}
 		},

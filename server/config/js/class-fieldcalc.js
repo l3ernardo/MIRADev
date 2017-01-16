@@ -385,15 +385,43 @@ var calculatefield = {
             }
           };
           break;
+        case "Country Process":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "CurrentPeriod": req.session.quarter,
+              "$or": [
+                { "$and": [{"ParentDocSubType": "Controllable Unit"},{"WWBCITKey":{"$in":doc[0].CURelevant}}] }
+              ]
+            }
+          };
+          break;
       }
       db.find(asmts).then(function(asmtsdata) {
-        doc[0].asmtsdocs = asmtsdata.body.docs;
         // Populate View Data
-        if (doc[0].ParentDocSubType == "BU Country") {
-          for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-            // if (doc[0].asmtsdocs[i].AuditableFlag == "Yes" )
-            doc[0].AUData.push(doc[0].asmtsdocs[i]);
-          }
+        switch (doc[0].ParentDocSubType) {
+          case "BU Country":
+            doc[0].asmtsdocs = asmtsdata.body.docs;
+            for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
+              doc[0].AUData.push(doc[0].asmtsdocs[i]);
+            }
+            break;
+          case "Country Process":
+            doc[0].CURelevantAU = [];
+            doc[0].CURelevantAUID = [];
+            for (var i = 0; i < asmtsdata.body.docs.length; ++i) {
+              doc[0].CURelevantAUID.push(asmtsdata.body.docs[i].parentid);
+              doc[0].CURelevantAU.push(
+                {"id": asmtsdata.body.docs[i].parentid},
+                {"name": asmtsdata.body.docs[i].AssessableUnitName},
+                {"wwbcitid": asmtsdata.body.docs[i].WWBCITKey}
+              );
+            }
+            break;
+          default:
+            doc[0].asmtsdocs = asmtsdata.body.docs;
         }
 
         deferred.resolve({"status": 200, "doc": doc});
