@@ -24,15 +24,15 @@
 				</thead>
 				{{#each AuditTrustedData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-					<!--<th width="2%">{{#if countryProcess}}<input type="checkbox" 
+					<!--<th width="2%">{{#if countryProcess}}<input type="checkbox"
 					class="ppr_checkbox_tree"/>{{/if}}</th>-->
 						<td width="6%" color="red">{{#unless reportDate}}{{reportingQuarter}}{{/unless}}</td>
 						<td width="6%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
 						<!--	<td width="17%">{{auditOrReview}}</td> -->
-						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{auditOrReview}}</a></td>
+						<td width="17%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{auditOrReview}}</a></td>
 						<td width="12%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{eid}}</a>{{/unless}}</td>
 						<td width="7%">{{reportDate}}</td>
-						<td width="7%">{{rating}}</td>
+						{{{ratingDisplayView rating 7}}}
 						<td width="7%">{{numRecommendationsTotal}}</td>
 						<td width="7%">{{numRecommendationsOpen}}</td>
 						<td width="9%">{{targetClose}}</td>
