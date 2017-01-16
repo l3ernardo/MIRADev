@@ -283,7 +283,7 @@ var assessableunit = {
 							/* Calculate for Instance Design Specifics and parameters*/
 							//console.log("MBU: "+doc[0].MIRABusinessUnit);
 							//console.log("BU session: " + req.session.businessunit);
-							
+
 							doc[0].EnteredBU = doc[0].MIRABusinessUnit;
 							fieldCalc.getDocParams(req, db, doc).then(function(data) {
 								if(!data.error){
@@ -326,7 +326,7 @@ var assessableunit = {
 															//Edit but not Admin - Reader
 															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
 																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-																
+
 																deferred.resolve({"status": 200, "doc": doc});
 															}
 															else{
@@ -441,10 +441,10 @@ var assessableunit = {
 																						if(doc[0].MIRABusinessUnit == "GTS Transformation"){
 																							doc[0].SubprocessDisp = assessableunit.getNames(doc[0].subprocessList, doc[0].subprocess, "WWBCITKey", "Name");
 																						}
-																						
+
 																						//BU reporting groups
 																						doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-																						
+
 																						deferred.resolve({"status": 200, "doc": doc});
 																					}
 																				}
@@ -481,14 +481,14 @@ var assessableunit = {
 													});
 													break;
 												case "BU IOT":
-													//Get BU Country list 
+													//Get BU Country list
 													doc[0].BUCountryList = [];
 													assessableunit.getBUCountry(req, db, doc[0].BusinessUnit).then(function(bucdata) {
 														if(bucdata.status==200 && !bucdata.error){
 															doc[0].BUCountryList = bucdata.doc;
 															doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 															doc[0].Name = req.session.buname + " - " + doc[0].IOT;
-															
+
 															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
 																doc[0].BUCountryIOTDisp = assessableunit.getNames(doc[0].BUCountryList, doc[0].BUCountryIOT, "docid", "name");
 																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
@@ -521,7 +521,7 @@ var assessableunit = {
 													}
 													deferred.resolve({"status": 200, "doc": doc});
 													break;
-												
+
 												default:
 													deferred.resolve({"status": 200, "doc": doc});
 													break;
@@ -530,12 +530,12 @@ var assessableunit = {
 										else{
 											deferred.reject({"status": 500, "error": resdata.error});
 										}
-										
+
 									}).catch(function(err) { // end assessableunit.getReportingGroups
 										console.log("[assessableunit][ReportingGroupList]" + err.error.reason);
 										deferred.reject({"status": 500, "error": err.error.reason});
 									});
-									
+
 								}
 								else{
 									deferred.reject({"status": 500, "error": data.error});
@@ -544,7 +544,7 @@ var assessableunit = {
 								console.log("[assessableunit][getDocParams]" + err.error.reason);
 								deferred.reject({"status": 500, "error": err.error.reason});
 							});
-							
+
 						}
 						else{
 							deferred.reject({"status": 500, "error": constidata.error});
@@ -607,14 +607,14 @@ var assessableunit = {
 						else
 							doc[0].BUWWBCITKey = pdoc[0].BUWWBCITKey;
 
-						
+
 						/* Get Reporting groups */
 						assessableunit.getReportingGroups(req, db, doc[0].BusinessUnit).then(function(resdata) {
 							if(resdata.status==200 && !resdata.error){
 								//Load Reporting groups list - for edit/read mode
 								doc[0].ReportingGroupList = [];
 								doc[0].ReportingGroupList = resdata.doc;
-								
+
 								switch (doc[0].DocSubType) {
 									case "Account":
 										if (pdoc[0].IOT != undefined) {
@@ -653,8 +653,8 @@ var assessableunit = {
 										doc[0].BUCountryList = [];
 										doc[0].IOTList = [];
 										doc[0].IOTAUList = [];
-										
-										//Get BU Country list 
+
+										//Get BU Country list
 										assessableunit.getBUCountry(req, db, doc[0].BusinessUnit).then(function(bucdata) {
 											if(bucdata.status==200 && !bucdata.error){
 												doc[0].BUCountryList = bucdata.doc;
@@ -694,8 +694,8 @@ var assessableunit = {
 											console.log("[assessableunit][getBUCountry]" + err.error.reason);
 											deferred.reject({"status": 500, "error": err.error.reason});
 										});
-										
-										
+
+
 										break;
 									case "BU IMT":
 										doc[0].IOT = util.resolveGeo(pdoc[0].IOT, "IOT",req);
@@ -896,7 +896,7 @@ var assessableunit = {
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});
-						
+
 					}
 					else {
 						deferred.reject({"status": 500, "error": data.error});
@@ -906,7 +906,7 @@ var assessableunit = {
 				});
 
 			}
-			
+
 			else{
 				// existing doc
 				db.get(docid).then(function(data){
@@ -914,7 +914,7 @@ var assessableunit = {
 						var doc = [];
 						var updateIntAudit = false;
 						doc.push(data.body);
-						
+
 						if(req.body.Status != undefined){
 							if(req.body.Status != doc[0].Status){
 								doc[0].StatusChangeWho = curruser;
@@ -967,7 +967,7 @@ var assessableunit = {
 											updateIntAudit = true;
 										}
 									}
-									
+
 								}
 								break;
 							case "Account":
@@ -1052,8 +1052,8 @@ var assessableunit = {
 										for (var i = 0; i < addArr.length; i++) {
 											$or.push({"_id":addArr[i]});
 										}
-									} 
-									if(delIds != ""){ 
+									}
+									if(delIds != ""){
 										delArr = delIds.split(',');
 										for (var i = 0; i < delArr.length; i++) {
 											$or.push({"_id":delArr[i]});
@@ -1110,7 +1110,7 @@ var assessableunit = {
 							console.log("[assessableunit][saveAUBU][save] - " + err.error.reason);
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});
-						
+
 					}
 					else {
 						deferred.reject({"status": 500, "error": data.error});
@@ -1281,13 +1281,13 @@ var assessableunit = {
 		}
 		return deferred.promise;
 	},
-	
+
 	/* Get names from array comparing ids*/
 	getNames: function(arrObj, idList, idField, nameField){
 		var listNames = "";
 		var arrIds;
 		var listId, listName;
-		
+
 		try{
 			if(idList != "" && idList != null) {
 				arrIds = idList.split(',');
@@ -1307,7 +1307,7 @@ var assessableunit = {
 		}
 		return listNames;
 	},
-	
+
 	/* Get Portfolio Controllable Units */
 	getPortfolioCUs: function(req, db, bunit){
 		var deferred = q.defer();
@@ -1344,7 +1344,7 @@ var assessableunit = {
 		}
 		return deferred.promise;
 	},
-	
+
 	/* Get Audit Lessons List */
 	getALLKey: function(req, db, MIRABunit){
 		var deferred = q.defer();
@@ -1378,7 +1378,7 @@ var assessableunit = {
 		}
 		return deferred.promise;
 	},
-	
+
 	/* Get Active BU Country */
 	getBUCountry: function(req, db, bunit){
 		var deferred = q.defer();
@@ -1419,7 +1419,7 @@ var assessableunit = {
 		}
 		return deferred.promise;
 	},
-	
+
 	/* Get Subprocess */
 	getSubprocess: function(req, db, bunit){
 		var deferred = q.defer();
@@ -1454,7 +1454,7 @@ var assessableunit = {
 		}
 		return deferred.promise;
 	},
-	
+
 	/* Get actual Parent of CU  */
 	getParentCU: function(req, db, parentId){
 		var deferred = q.defer();
@@ -1518,7 +1518,7 @@ var assessableunit = {
 				console.log("[assessableunit][getMIRABU]" + err.error.reason);
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
-			
+
 		}catch(e){
 			console.log("[assessableunit][getMIRABU]" + e.stack);
 			deferred.reject({"status": 500, "error": e.stack});
@@ -1548,7 +1548,7 @@ var assessableunit = {
 					"organization",
 					"RPTG_PROCESS",
 					"addedToAQDB",
-					"rating", 
+					"rating",
 					"size",
 					"score",
 					"parentid"
@@ -1561,7 +1561,7 @@ var assessableunit = {
 					var docList = [];
 					if(data.body.docs.length > 0){
 						var docs = data.body.docs;
-						
+
 						for (var i = 0; i < docs.length; ++i) {
 							if(docs[i].parentid != null && docs[i].parentid != "")
 								docList.push(docs[i]);
