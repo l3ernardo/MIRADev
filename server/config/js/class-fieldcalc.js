@@ -100,6 +100,34 @@ var calculatefield = {
     return p4Qtrs;
   },
 
+  getCUMaxScore: function(CUSize) {
+    var CUMaxScore;
+    if (CUSize == "Large") {
+      CUMaxScore = 9;
+    } else if (CUSize == "Medium") {
+      CUMaxScore = 3;
+    } else if (CUSize == "Small") {
+      CUMaxScore = 1;
+    } else {
+      CUMaxScore = 0;
+    }
+    return CUMaxScore;
+  },
+
+  getCUScore: function(arrating, cumaxscore) {
+    var ratingscore;
+    var cuscore;
+    if (arrating == "Sat") {
+      ratingscore = 1;
+    } else if (arrating == "Marg") {
+      ratingscore = 0.75;
+    } else {
+      ratingscore = 0;
+    }
+    cuscore = ratingscore * cumaxscore
+    return cuscore;
+  },
+
 	/* Calculates CatP, CatCU, BusinessUnitOLD, ShowEA ... etc */
 	getDocParams: function(req, db, doc) {
     var deferred = q.defer();

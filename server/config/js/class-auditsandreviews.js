@@ -282,6 +282,14 @@ var calculateARTab = {
         doc[0].AuditTrustedData = auditRList;
         doc[0].exportPPR = exportPPR;
         // *** End of Audits and Reviews embedded view 1 *** //
+        // add padding for local audits
+          if (doc[0].AuditLocalData.length < defViewRow) {
+            if (doc[0].AuditLocalData.length == 0) {
+              doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].AuditLocalData,8,(8-doc[0].AuditLocalData.length));
+            }
+          }
           break;
       }
     }catch(e){
