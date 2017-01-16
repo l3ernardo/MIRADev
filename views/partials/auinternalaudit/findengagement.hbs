@@ -63,7 +63,7 @@
 				ibmweb.overlay.show('Overlay_Event2');
 			});
 		}
-		
+		var copylist=$('#InternalAuditsData').val();
 		if($("#btn_okIntAud").length > 0){
 			$("#btn_okIntAud").click(function() {
 				//use flagIntAud to add data
@@ -87,6 +87,47 @@
                       	if(ind!='1')
 						{
 						   $('#internalauditsview_table tbody').append("'"+adding+"'");
+						     $('#internalauditsview_table tr').each(function() {
+						    var id= $(this).find("td:first");
+                            var id2=id.attr('p_id');
+						    $("#btn_remove"+id2).on('click',function() { 							   
+							       $('#internalauditsview_table tr').each(function() { 
+											var engagement = $(this).find("td:first").text(); 
+											var p_id= $(this).find("td:first");
+											var p_id2=id.attr('p_id');
+											if (engagement!='' && engagement!='Engagement' && p_id2==id2 )
+											{      
+													//get all values to save on InternalAuditsData	
+														var list=$('#InternalAuditsData').val();
+														var listdel=$('#InternalAuditsDataDel').val();
+														if(list != "")
+														{
+																var pattern=id2;
+																list=list.replace(pattern,'');
+																var pattern3=',,';
+																list=list.replace(pattern3,',');
+																if(list[0]==','){list=list.substr(1,list.length);}
+																if(list[list.length]==','){list=list.substr(0,list.length-1);}
+																$('#InternalAuditsData').val(list);	
+                                                                //add id to DelList
+																if(copylist.indexOf(id2) > -1 && copylist.length>'0')
+																{  
+																   if(listdel == "")
+																		listdel = p_id2;
+																	else{
+																			if(listdel.indexOf(p_id2) == -1)
+																			listdel = listdel + ',' + p_id2;
+																	}
+																	$('#InternalAuditsDataDel').val(listdel);		
+																}
+														}
+													$("#"+id2).remove()
+											}
+
+									});
+							   });
+						   });
+						   
 						}			  	  
 				  }
 				  else

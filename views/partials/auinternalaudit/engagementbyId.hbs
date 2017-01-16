@@ -27,7 +27,7 @@
 					<td>{{organization}}</td>
 					<td>{{RPTG_PROCESS}}</td>
 					<td>{{addedToAQDB}}</td>
-					<td>{{rating}}</td>
+					{{{ratingDisplayView rating "rating"}}}
 					<td><input type="radio" name="IntAud" id="IAID_{{_id}}" value="{{engagement}}" idintaud="{{_id}}" addedToAQDB="{{addedToAQDB}}" rating="{{rating}}" size1="{{size}}"  score="{{score}}"{{#if (eq _id ../parentid)}}checked {{/if}}/></td>
 					<td></td>
 				</tr>
@@ -45,6 +45,7 @@
 </div>
 <script>
 	    $(document).ready(function() {
+		var listdel=$('#InternalAuditsDataDel').val();
 		if($("#btn_Select").length > 0){
 			$('#btn_Select').click(function() {
 			    if($("select[name='myselection']").val() == 'ById'){
@@ -72,15 +73,28 @@
 					var pEngagement = $("input[name='IntAud']:checked").attr("value");
 					var paddedToAQDB = $("input[name='IntAud']:checked").attr("addedToAQDB");
 					var pRating = $("input[name='IntAud']:checked").attr("rating");
+					if (pRating== undefined)
+					{
+					   ratinghtml = '<td class="asmt-viewdata"></td>';
+					}					
+					 else {
+							if (pRating == "Sat")
+								ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+pRating+'</td>';
+								else if (pRating == "Marg")
+								ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+pRating+'</td>';
+							else if (pRating == "Unsat")
+								ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+pRating+'</td>';
+									else
+									ratinghtml = '<td class="asmt-viewdata-centered">'+pRating+'</td>';
+						}					
 					var pSize = $("input[name='IntAud']:checked").attr("size");
 					var pScore = $("input[name='IntAud']:checked").attr("rating");
-					var adding='<tr><td><a href="/asmtcomponents?id='+p_id+'">'+pEngagement+'</a></td><td>'+paddedToAQDB+'</td><td>'+pRating+'</td><td>'+pSize+'</td><td>'+pScore+'</td><td><a class="ibm-delete-link" id="btn_remove" name="btn_remove" value="Remove" href="javascript:void(0);">Remove</a></td></tr>';
-					
+					var adding='<tr id="'+p_id+'"><td p_id="'+p_id+'"><a href="/assessment?id='+p_id+'">'+pEngagement+'</a></td><td>'+paddedToAQDB+'</td>'+ratinghtml+'<td>'+pSize+'</td><td>'+pScore+'</td><td><a href="javascript:void(0);" value="Remove'+p_id+'"  id="btn_remove'+p_id+'" class="ibm-delete-link">Remove</a></td></tr>';	
 					var flagIntAud='1';		
 					$('#flagIntAud').val(flagIntAud);	
 					$('#InternalAudits').val(adding);
-					//get all values to save on InternalAuditsData	
-                    var list=$('#InternalAuditsData').val();
+					//get all values to save on InternalAuditsData 
+                    var list=$('#InternalAuditsData').val();					
 					if(list == "")
 						list = p_id;
 					else{
@@ -88,6 +102,20 @@
 							list = list + ',' + p_id;
 					}
 					$('#InternalAuditsData').val(list);
+					//check if id is on InternalAuditsDataDel
+                    if(listdel != "")
+						{						
+								if(listdel.indexOf(p_id) > -1)
+									{
+											var pattern2=p_id;
+											listdel=listdel.replace(pattern2,'');
+											pattern2=',,';
+											listdel=listdel.replace(p_id,',');
+											if(listdel[0]==','){listdel=listdel.substr(1,listdel.length);}
+											if(listdel[listdel.length]==','){listdel=listdel.substr(0,listdel.length-1);}
+											$('#InternalAuditsDataDel').val(listdel);		
+									}
+					}
 			        ibmweb.overlay.hide('Overlay_EventbyId');
 				//alert("It is required to save the document to apply the changes.");
 			});
