@@ -473,12 +473,25 @@ var assessment = {
 							//audit universe
 							aut.processAUTab(doc,defViewRow);
 
-							//doc[0].AUData
-							// doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
-							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-							// doc[0].Name = req.session.buname + " - " + doc[0].Country;
-							var obj = doc[0]; // For Merge
-							deferred.resolve({"status": 200, "doc": obj});
+							//create a space for performance Tab
+							doc[0].performanceTab = {};
+							comp.getCompDocs(db,doc).then(function(dataComp){
+								performanceTab.getKFCRDefectRate(db,doc);
+								performanceTab.getKCODefectRate(db,doc);
+								performanceTab.getMissedRisks(db,doc);
+								 console.log("KFCRDefectRate: "+doc[0].performanceTab.KFCRDefectRate);
+								 console.log("KCODefectRate: "+doc[0].performanceTab.KCODefectRate);
+								 console.log("MissedRisks: "+doc[0].performanceTab.MissedRisks);
+								 console.log(doc[0].BUCAsmtDataPIview);
+								 
+								    var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
+
+								
+							}).catch(function(err) {
+								deferred.reject({"status": 500, "error": err});
+							});
+							
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
@@ -494,7 +507,7 @@ var assessment = {
 						doc[0].ARCData = fieldCalc.addTestViewData(4,defViewRow);
 						doc[0].RiskData = fieldCalc.addTestViewData(11,defViewRow);
 						doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(10,defViewRow);
-						doc[0].AuditLocalData = fieldCalc.addTestViewData(defViewRow);
+						// doc[0].AuditLocalData = fieldCalc.addTestViewData(defViewRow);
 						doc[0].DRData = fieldCalc.addTestViewData(5,1);
 						doc[0].RCTestData = fieldCalc.addTestViewData(7,defViewRow);
 						doc[0].SCTestData = doc[0].RCTestData;
@@ -505,6 +518,7 @@ var assessment = {
 						doc[0].AccountData = [];
 						doc[0].AuditTrustedData = [];
 						doc[0].CUAsmtDataPR1view = [];
+						doc[0].AuditLocalData = [];
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
 							fieldCalc.getRatingProfile(doc);
 
