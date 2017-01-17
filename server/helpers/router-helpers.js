@@ -131,6 +131,7 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+
 		ratingDisplayView: function(rating, percent) {
 			var ratinghtml = '<td ';
 			if (rating == undefined) {
@@ -140,11 +141,11 @@ var register = function(Handlebars) {
 					}
 					ratinghtml += '></td>';
 			} else {
-				if (rating == "Sat" || rating == "Satisfactory")
+				if (rating == "Sat" || rating == "Satisfactory" || rating == "Favorable" || rating == "Unqualified" || rating == "Positive")
 					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;"';
 				else if (rating == "Marg" || rating == "Marginal")
 					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;"';
-				else if (rating == "Unsat" || rating == "Unsatisfactory")
+				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative")
 					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;"';
 				else
 					ratinghtml += 'asmt-viewdata-centered"';
