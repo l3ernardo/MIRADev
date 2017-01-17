@@ -1068,6 +1068,10 @@ var assessableunit = {
 												for (var i = 0; i < addArr.length; i++) {
 													if(resdocs[j]._id == addArr[i]){
 														resdocs[j].parentid = doc[0]._id;
+														resdocs[j].size = doc[0].CUSize;
+														var CUScore = fieldCalc.getCUMaxScore(doc[0].CUSize);
+														var finalscore = fieldCalc.getCUScore(resdocs[j].rating, CUScore);
+														resdocs[j].score = finalscore;
 														break;
 													}
 												}
@@ -1076,6 +1080,8 @@ var assessableunit = {
 												for (var i = 0; i < delArr.length; i++) {
 													if(resdocs[j]._id == delArr[i]){
 														resdocs[j].parentid = "";
+														resdocs[j].size = "";
+														resdocs[j].score = "";
 														break;
 													}
 												}

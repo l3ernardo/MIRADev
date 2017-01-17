@@ -47,7 +47,7 @@
 					</tr>
 					<tr>
 						<td class="ar-asmt-label"><label for="MissedREComments">Missed Risk Evaluations</label></td>
-						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data" align="center">{{MissedOpenIssueCount}}</td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
 								<span><textarea id="MissedREComments" type="text" name="MissedREComments">{{MissedREComments}}</textarea></span>
@@ -158,7 +158,7 @@
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Missed Risk Evaluations</td>
-						<td class="content-data">{{MissedOpenIssueCount}}</td>
+						<td class="content-data" align="center">{{MissedOpenIssueCount}}</td>
 						<td class="content-data">
 							<input type="hidden" name="MissedRECommentsRO" value="{{MissedREComments}}">
 							<div id="MissedRECommentsReadOnly"></div>
@@ -218,7 +218,7 @@
 	<tr class="ar-asmt-content">
 		<td>
 			<span class="ar-asmt-header">Country Process and CU Performance Indicators</span><br /><br />
-			<table width="100%" id="CPCUPerformanceIn_treeview" class="table_with_scroll>
+			<table width="100%" id="CPCUPerformanceIn_treeview" class="table_with_scroll">
 				<thead>
 					<th class="ar-asmt-viewheader" scope="col" width="33%">Assessed Unit</th>
 					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-4</th>
@@ -237,8 +237,15 @@
 						{{#if_equal name ""}}
 							<td class="asmt-viewdata" width="33%">&nbsp;</td>
 						{{else}}
-							<td class="asmt-viewdata" width="33%"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{#if_equal treeParent "1"}}
+								<td class="asmt-viewdata" width="33%">{{name}}</td>
+							{{else}}
+								<td class="asmt-viewdata" width="33%"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{/if_equal}}
+							
 						{{/if_equal}}
+						
+						
 						{{{ratingDisplayView ratingPQ4 7}}}
 						{{{ratingDisplayView ratingPQ3 7}}}
 						{{{ratingDisplayView ratingPQ2 7}}}
