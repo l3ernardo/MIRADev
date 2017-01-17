@@ -51,9 +51,10 @@ var performanceoverviewcountry = {
 			}
 			
 			
-		doc[0].performanceTab.KFCRDefectRate = KFCRDefectRate;
+		doc[0].KCFRDefectRate = KFCRDefectRate;
 		
 		}catch(e){
+			console.log(e);
 			deferred.reject({"status": 500, "error": e});
 		}
 		
@@ -96,7 +97,7 @@ var performanceoverviewcountry = {
 			}
 			
 			
-		doc[0].performanceTab.KCODefectRate= KCODefectRate;
+		doc[0].KCODefectRate= KCODefectRate;
 		
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
@@ -135,7 +136,7 @@ var performanceoverviewcountry = {
 				}
 			}
 			
-			doc[0].performanceTab.MissedRisks = conterRisks;
+			doc[0].MissedOpenIssueCount = conterRisks;
 			
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
