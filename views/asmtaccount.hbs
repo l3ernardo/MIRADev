@@ -38,7 +38,7 @@
 		<input type="hidden" name="opmetrickey" id="opmetrickey" value="{{OpMetricKey}}">
 		<input type="hidden" name="fieldslist" id="fieldslist" value="">
 		<!-- Error section -->
-		{{>errormessage}}		
+		{{>errormessage}}
 		<!-- Basic Details -->
 		{{>asmtaccount/basics}}
 		<!-- Exception Details -->
@@ -61,6 +61,7 @@
 	//Load document's business unit
 	$('h3#pageSubTitle').hide();
 	$("#audit_readiness_treeview").treetable({expandable: true });
+	$("#LocalAudit_treeview").treetable({expandable: true });
 </script>
 {{#if editmode}}
 <script>
