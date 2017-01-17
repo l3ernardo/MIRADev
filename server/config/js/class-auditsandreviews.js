@@ -196,6 +196,63 @@ var calculateARTab = {
           break;
         case "BU IMT":
           break;
+        case "Account":
+          // *** Start of Audits and Reviews embedded view *** //
+          //sort
+          doc[0].AuditLocalData.sort(function(a, b){
+            var nameA=a.reportingQuarter.toLowerCase(), nameB=b.reportingQuarter.toLowerCase()
+            if (nameA > nameB) //sort string descending
+              return -1
+            if (nameA < nameB)
+              return 1
+
+            return 0
+          });
+          //end sort
+          var auditLoc = doc[0].AuditLocalData;
+          var quartersList = {};
+          var localAuditsList = [];
+          var exportLocalAuditsList = [];
+          for(var i = 0; i < auditLoc.length; i++){
+            if(auditLoc[i].auditOrReview == "CHQ Internal Audit"||auditLoc[i].auditOrReview == "" && auditLoc[i].reportingQuarter == doc[0].CurrentPeriod){
+              auditLoc[i].COFlag = false;
+            }else {
+              auditLoc[i].COFlag = true;
+            }
+            if(typeof quartersList[auditLoc[i].reportingQuarter] === "undefined"){
+              localAuditsList.push({id:auditLoc[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditLoc[i].reportingQuarter });
+              quartersList[auditLoc[i].reportingQuarter] = true;
+            }
+            var tmp = {};
+            tmp.reportingQuarter = auditLoc[i].reportingQuarter;
+            tmp.auditOrReview = auditLoc[i].auditOrReview;
+            tmp.reportDate = auditLoc[i].reportDate;
+            tmp.rating = auditLoc[i].rating;
+            tmp.numRecommendationsTotal = auditLoc[i].numRecommendationsTotal;
+            tmp.numRecommendationsOpen = auditLoc[i].numRecommendationsOpen;
+            tmp.targetCloseOriginal = auditLoc[i].targetCloseOriginal;
+            tmp.comments = auditLoc[i].comments;
+
+            exportLocalAuditsList.push(tmp);
+            auditLoc[i].parent = auditLoc[i].reportingQuarter.replace(/ /g,'');
+            auditLoc[i].id = auditLoc[i]["_id"];
+
+            localAuditsList.push(auditLoc[i]);
+          }
+          doc[0].exportLocalAuditsList = exportLocalAuditsList;
+
+          // add padding
+          if (Object.keys(quartersList).length < defViewRow) {
+            if (localAuditsList == 0) {
+              localAuditsList = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(localAuditsList,10,(defViewRow-Object.keys(quartersList).length));
+            }
+          };
+          doc[0].AuditLocalData = localAuditsList;
+
+          // *** End of Audits and Reviews embedded view *** //
+          break;
         case "BU Country":
           break;
         case "Controllable Unit":
@@ -282,10 +339,18 @@ var calculateARTab = {
         doc[0].AuditTrustedData = auditRList;
         doc[0].exportPPR = exportPPR;
         // *** End of Audits and Reviews embedded view 1 *** //
+        // add padding for local audits
+          if (doc[0].AuditLocalData.length < defViewRow) {
+            if (doc[0].AuditLocalData.length == 0) {
+              doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].AuditLocalData,8,(8-doc[0].AuditLocalData.length));
+            }
+          }
           break;
       }
     }catch(e){
-      console.log("[class-keycontrol][calcDefectRate] - " + e.stack);
+      console.log("[class-auditsandreviews][calcAudits] - " + e.stack);
 		}
 	}
 

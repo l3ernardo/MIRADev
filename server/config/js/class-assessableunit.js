@@ -397,6 +397,7 @@ var assessableunit = {
 																if(doc[0].ParentDocSubType == "BU Country"){
 																	doc[0].IMT = resdoc.IMT;
 																	doc[0].Country = resdoc.Country;
+																	doc[0].CountryDisp = util.resolveGeo(doc[0].Country, "Country", req)
 																}
 															}
 															//Get ALL Keys
@@ -1067,6 +1068,10 @@ var assessableunit = {
 												for (var i = 0; i < addArr.length; i++) {
 													if(resdocs[j]._id == addArr[i]){
 														resdocs[j].parentid = doc[0]._id;
+														resdocs[j].size = doc[0].CUSize;
+														var CUScore = fieldCalc.getCUMaxScore(doc[0].CUSize);
+														var finalscore = fieldCalc.getCUScore(resdocs[j].rating, CUScore);
+														resdocs[j].score = finalscore;
 														break;
 													}
 												}
@@ -1075,6 +1080,8 @@ var assessableunit = {
 												for (var i = 0; i < delArr.length; i++) {
 													if(resdocs[j]._id == delArr[i]){
 														resdocs[j].parentid = "";
+														resdocs[j].size = "";
+														resdocs[j].score = "";
 														break;
 													}
 												}

@@ -34,7 +34,7 @@
 						<td width="10%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{eid}}</a>{{/unless}}</td>
 						<td width="20%">{{countryProcess}}</td>
 						<td width="5%">{{reportDate}}</td>
-						{{{ratingDisplayView rating}}}
+						{{{ratingDisplayView rating 5}}}
 						<td width="3%">{{numRecommendationsTotal}}</td>
 						<td width="3%">{{numRecommendationsOpen}}</td>
 						<td width="7%">{{targetClose}}</td>
@@ -72,8 +72,7 @@
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a></td>
 						<td width="22%">{{#if _id}}{{controllableUnit}}{{else}}&nbsp;{{/if}}</td>
 						<td width="5%">{{reportDate}}</td>
-						<!-- {{{ratingDisplayView rating}}} -->
-						<td width="5%">{{{ratingDisplayViewWOtd rating}}}</td>
+						{{{ratingDisplayView rating 5}}}
 						<td width="5%">{{numRecommendationsTotal}}</td>
 						<td width="5%">{{numRecommendationsOpen}}</td>
 						<td width="7%">{{targetClose}}</td>
@@ -117,7 +116,7 @@
 						{{/unless}}
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{auditOrReview}}</a></td>
 						<td width="7%">{{reportDate}}</td>
-						<td width="7%">{{rating}}</td>
+						{{{ratingDisplayView rating 7}}}
 						<td width="10%">{{numRecommendationsTotal}}</td>
 						<td width="9%">{{numRecommendationsOpen}}</td>
 						<td width="10%">{{targetCloseOriginal}}</td>
