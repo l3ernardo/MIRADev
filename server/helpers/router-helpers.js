@@ -131,19 +131,27 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
-		ratingDisplayView: function(rating, field) {
-			var ratinghtml;
+		ratingDisplayView: function(rating, percent) {
+			var ratinghtml = '<td ';
 			if (rating == undefined) {
-					ratinghtml = '<td class="asmt-viewdata"></td>';
+					ratinghtml += 'asmt-viewdata"'
+					if(!isNaN(percent)){
+						ratinghtml += ' width="'+percent+'%"';
+					}
+					ratinghtml += '></td>';
 			} else {
-				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+rating+'</td>';
-				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+rating+'</td>';
-				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+rating+'</td>';
+				if (rating == "Sat" || rating == "Satisfactory")
+					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;"';
+				else if (rating == "Marg" || rating == "Marginal")
+					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;"';
+				else if (rating == "Unsat" || rating == "Unsatisfactory")
+					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;"';
 				else
-					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
+					ratinghtml += 'asmt-viewdata-centered"';
+				if(!isNaN(percent)){
+					ratinghtml += ' width="'+percent+'%"';
+				}
+				ratinghtml += '>'+rating+'</td>';
 			}
 			return ratinghtml;
 		},
@@ -340,12 +348,11 @@ var register = function(Handlebars) {
 					if(dateval < currdate)
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
 					else
-						datehtml = '<span style="padding-right:1em">'+date+'</span>';				
+						datehtml = '<span style="padding-right:1em">'+date+'</span>';
 					}
 				}
 			return datehtml;
 		},
-
 		statusRatingLclAdt: function(rating) {
 				var rateHTML;
 			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Qualified") {
@@ -359,9 +366,9 @@ var register = function(Handlebars) {
 					} else {
 						rateHTML = rating;
 					}
-						return rateHTML;	
 				}
 			}
+			return rateHTML;
 		},
 		radioBtnVal: function(fieldName, fieldVal) {
 			var radioBtnHtml;

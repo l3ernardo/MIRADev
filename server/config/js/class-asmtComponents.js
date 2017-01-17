@@ -416,13 +416,16 @@ getLocalAudit: function(req, db){
                 output.reportingQuarter = req.session.quarter;
                 var pkey = {
                   selector : {
-                    "_id": req.query.pID
+                    "_id": req.query.id
                   }};
                   db.find(pkey).then(function(parentData){
                     var parent = parentData.body.docs[0]
                     if(!(parent.MIRAStatus == "Final")){
-                      output.procesDisplay = true;
+                      //output.procesDisplay = true;
                     }
+                    output.parentType = parent.ParentDocSubType;
+                    output.AssessableUnitName = parent.AssessableUnitName;
+                    output.parentid = req.query.id;
                     deferred.resolve({"status": 200, "data":output});
                   }).catch(function(err) {
                     deferred.reject({"status": 500, "error": err.error.reason});
@@ -442,9 +445,7 @@ getLocalAudit: function(req, db){
                   "compntType": "accountAudit"
                 }
               };
-
               db.find(obj).then(function(data){
-
                 //console.log(data.body.docs[0]);
                 var output = data.body.docs[0];
                 output["_id"] = req.query.id;
@@ -465,19 +466,25 @@ getLocalAudit: function(req, db){
                   }};
 
                   db.find(obj).then(function(data2){
-
                     var tmp = [];
                     for(var list in data2.body.docs[0].value){
                       tmp.push({name:list});
                     }
                     output.auditList = tmp;
                     output.ratingList = data2.body.docs[0].value;
-                    //terminar
-                    if(!( parent.reportingQuarter != req.session.quarter || parent.MIRAStatus == "Final")){
-                      output.procesDisplay = true;
-                    }
-
-                    deferred.resolve({"status": 200, "data":output});
+                    var pkey = {
+                      selector : {
+                        "_id": output.parentid
+                      }};
+                      db.find(pkey).then(function(parentData){
+                        var parent = parentData.body.docs[0]
+                        if(!( parent.CurrentPeriod != req.session.quarter || parent.MIRAStatus == "Final")){
+                          //output.procesDisplay = true;
+                        }
+                        deferred.resolve({"status": 200, "data":output});
+                      }).catch(function(err) {
+                        deferred.reject({"status": 500, "error": err.error.reason});
+                  });
                   }).catch(function(err) {
                     deferred.reject({"status": 500, "error": err.error.reason});
                   });
@@ -631,6 +638,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
+                      "docType": "asmtComponent",
                       "compntType": "openIssue"
                     }
                   };
@@ -666,6 +674,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
+                      "docType": "asmtComponent",
                       "compntType": "countryControls"
                     }
                   };
@@ -702,6 +711,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
+                      "docType": "asmtComponent",
                       "compntType": "PPR"
                     }
                   };
@@ -769,6 +779,7 @@ getLocalAudit: function(req, db){
                     var obj = {
                       selector : {
                         "_id": req.body["_id"],
+                        "docType": "asmtComponent",
                         "compntType": "localAudit"
                       }
                     };
@@ -821,6 +832,7 @@ getLocalAudit: function(req, db){
                   if(req.body.docid === ""){
 
                     var obj={};
+                    obj.docType = "asmtComponent";
                     obj.compntType = "accountControls";
                     obj.account = req.body.account;
                     obj.process = req.body.process;
@@ -834,7 +846,7 @@ getLocalAudit: function(req, db){
                     obj.remediationStatus = req.body.remediationStatus;
                     obj.targetToClose = req.body.targetToClose;
                     obj.comments = req.body.comments;
-                    obj.parentID = req.body.parentID;
+                    obj.parentid = req.body.parentid;
 
                     db.save(obj).then(function(data){
 
@@ -849,6 +861,7 @@ getLocalAudit: function(req, db){
                     var obj = {
                       selector : {
                         "_id": req.body.docid,
+                        "docType": "asmtComponent",
                         "compntType": "accountControls"
                       }
                     };
@@ -896,6 +909,7 @@ getLocalAudit: function(req, db){
                   if(req.body.docid === ""){
 
                     var obj={};
+                    obj.docType = "asmtComponent";
                     obj.compntType = "accountAudit";
                     obj.controllableUnit = req.body.controllableUnit;
                     obj.auditOrReview = req.body.auditOrReview;
@@ -910,6 +924,7 @@ getLocalAudit: function(req, db){
                     obj.targetCloseOriginal = req.body.targetCloseOriginal;
                     obj.targetCloseCurrent = req.body.targetCloseCurrent;
                     obj.comments = req.body.comments;
+                    obj.parentid = req.body.parentid;
 
                     db.save(obj).then(function(data){
 
@@ -923,6 +938,7 @@ getLocalAudit: function(req, db){
                     var obj = {
                       selector : {
                         "_id": req.body["docid"],
+                        "docType": "asmtComponent",
                         "compntType": "accountAudit"
                       }
                     };
@@ -970,6 +986,7 @@ getLocalAudit: function(req, db){
                   var obj = {
                     selector : {
                       "_id": req.body["_id"],
+                      "docType": "asmtComponent",
                       "compntType": "internalAudit"
                     }
                   };

@@ -100,6 +100,34 @@ var calculatefield = {
     return p4Qtrs;
   },
 
+  getCUMaxScore: function(CUSize) {
+    var CUMaxScore;
+    if (CUSize == "Large") {
+      CUMaxScore = 9;
+    } else if (CUSize == "Medium") {
+      CUMaxScore = 3;
+    } else if (CUSize == "Small") {
+      CUMaxScore = 1;
+    } else {
+      CUMaxScore = 0;
+    }
+    return CUMaxScore;
+  },
+
+  getCUScore: function(arrating, cumaxscore) {
+    var ratingscore;
+    var cuscore;
+    if (arrating == "Sat") {
+      ratingscore = 1;
+    } else if (arrating == "Marg") {
+      ratingscore = 0.75;
+    } else {
+      ratingscore = 0;
+    }
+    cuscore = ratingscore * cumaxscore
+    return cuscore;
+  },
+
 	/* Calculates CatP, CatCU, BusinessUnitOLD, ShowEA ... etc */
 	getDocParams: function(req, db, doc) {
     var deferred = q.defer();
@@ -385,15 +413,43 @@ var calculatefield = {
             }
           };
           break;
+        case "Country Process":
+          var asmts = {
+            selector:{
+              "_id": {"$gt":0},
+              "key": "Assessment",
+              "AUStatus": "Active",
+              "CurrentPeriod": req.session.quarter,
+              "$or": [
+                { "$and": [{"ParentDocSubType": "Controllable Unit"},{"WWBCITKey":{"$in":doc[0].CURelevant}}] }
+              ]
+            }
+          };
+          break;
       }
       db.find(asmts).then(function(asmtsdata) {
-        doc[0].asmtsdocs = asmtsdata.body.docs;
         // Populate View Data
-        if (doc[0].ParentDocSubType == "BU Country") {
-          for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-            // if (doc[0].asmtsdocs[i].AuditableFlag == "Yes" )
-            doc[0].AUData.push(doc[0].asmtsdocs[i]);
-          }
+        switch (doc[0].ParentDocSubType) {
+          case "BU Country":
+            doc[0].asmtsdocs = asmtsdata.body.docs;
+            for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
+              doc[0].AUData.push(doc[0].asmtsdocs[i]);
+            }
+            break;
+          case "Country Process":
+            doc[0].CURelevantAU = [];
+            doc[0].CURelevantAUID = [];
+            for (var i = 0; i < asmtsdata.body.docs.length; ++i) {
+              doc[0].CURelevantAUID.push(asmtsdata.body.docs[i].parentid);
+              doc[0].CURelevantAU.push(
+                {"id": asmtsdata.body.docs[i].parentid},
+                {"name": asmtsdata.body.docs[i].AssessableUnitName},
+                {"wwbcitid": asmtsdata.body.docs[i].WWBCITKey}
+              );
+            }
+            break;
+          default:
+            doc[0].asmtsdocs = asmtsdata.body.docs;
         }
 
         deferred.resolve({"status": 200, "doc": doc});
@@ -858,22 +914,88 @@ var calculatefield = {
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
               break;
             case "BU Country":
-              // PO tab performance indicators view
-              toadd = {
-                "docid":doc[0].asmtsdocs[i]._id,
-                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-                "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
-                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
-              };
+            	if(doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && POCountryFlag == 0){
+           		 toadd = {
+           		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
+                   "name":doc[0].asmtsdocs[i].ParentDocSubType,
+                   "ParentDocSubType":"",
+                   "ratingCQ":"",
+                   "ratingPQ1":"",
+                   "ratingPQ2":"",
+                   "ratingPQ3":"",
+                   "ratingPQ4":"",
+                   "kcfrDR":"",
+                   "kcoDR":"",
+                   "auditScore":"",
+                   "msdRisk":"",
+                   "msdMSAC":"",
+                   "treeParent" : "1"
+           		 };
+           		 doc[0].BUCAsmtDataPIview.push(toadd);
+           		POCountryFlag = 1;
+           	}
+           	
+           	if(doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit" && POCUFlah == 0){
+           		 toadd = {
+           		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
+                   "name":doc[0].asmtsdocs[i].ParentDocSubType,
+                   "ParentDocSubType":"",
+                   "ratingCQ":"",
+                   "ratingPQ1":"",
+                   "ratingPQ2":"",
+                   "ratingPQ3":"",
+                   "ratingPQ4":"",
+                   "kcfrDR":"",
+                   "kcoDR":"",
+                   "auditScore":"",
+                   "msdRisk":"",
+                   "msdMSAC":"",
+                   "treeParent" : "2"
+           		 };
+           		 doc[0].BUCAsmtDataPIview.push(toadd);
+           		
+           		POCUFlah = 1;
+           	}
+           	
+           	
+
+           	if(doc[0].asmtsdocs[i].ParentDocSubType == "BU Country" &&  POBUCFlag == 0){
+           		 toadd = {
+           		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
+                   "name":doc[0].asmtsdocs[i].ParentDocSubType,
+                   "ParentDocSubType":"",
+                   "ratingCQ":"",
+                   "ratingPQ1":"",
+                   "ratingPQ2":"",
+                   "ratingPQ3":"",
+                   "ratingPQ4":"",
+                   "kcfrDR":"",
+                   "kcoDR":"",
+                   "auditScore":"",
+                   "msdRisk":"",
+                   "msdMSAC":"",
+                   "treeParent" : "3"
+           		 };
+           		 doc[0].BUCAsmtDataPIview.push(toadd);
+                   POBUCFlag = 1;
+           	}
+           	
+             toadd = {
+               "docid":doc[0].asmtsdocs[i]._id,
+               "name":doc[0].asmtsdocs[i].AssessableUnitName,
+               "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+               "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+               "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+               "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+               "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+               "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+               "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+               "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+               "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
+               "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+               "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
+               "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'') 
+             };
               doc[0].BUCAsmtDataPIview.push(toadd);
               // PO tab other indicators view
               toadd = {
