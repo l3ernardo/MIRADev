@@ -19,6 +19,7 @@ var ort = require('./class-risks.js');
 var aut = require('./class-auniverse.js');
 var comp = require('./class-compdoc.js');
 var util = require('./class-utility.js');
+var performanceTab = require('./class-performanceoverviewcountry.js');
 
 var assessment = {
 
@@ -474,18 +475,19 @@ var assessment = {
 							aut.processAUTab(doc,defViewRow);
 
 							//create a space for performance Tab
-							doc[0].performanceTab = {};
 							comp.getCompDocs(db,doc).then(function(dataComp){
+							
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
-								 //console.log("KFCRDefectRate: "+doc[0].performanceTab.KFCRDefectRate);
-								 //console.log("KCODefectRate: "+doc[0].performanceTab.KCODefectRate);
-								 //console.log("MissedRisks: "+doc[0].performanceTab.MissedRisks);
+								// console.log("KFCRDefectRate: "+doc[0].KCFRDefectRate);
+								 //console.log("KCODefectRate: "+doc[0].KCODefectRate);
+								 //console.log("MissedRisks: "+doc[0].MissedOpenIssueCount);
 								 //console.log(doc[0].BUCAsmtDataPIview);
-
-								    var obj = doc[0]; // For Merge
+							 
+								 var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
+							
 
 
 							}).catch(function(err) {

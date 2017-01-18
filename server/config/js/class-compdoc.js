@@ -8,6 +8,7 @@
 
 var q  = require("q");
 var fieldCalc = require('./class-fieldcalc.js');
+var util = require('./class-utility.js');
 
 var getDocs = {
 
@@ -188,28 +189,34 @@ var getDocs = {
           });
           break;
         case "BU Country":
+         
+        	doc[0].CountryControlsData = [];
+        	doc[0].RiskView1Data =  [];
+        	doc[0].RiskView2Data = [];
           var compObj = {
-        	     selector : {
-                     "_id": {"$gt":0},
-                     "docType": "asmtComponent",
-                     "$or": [
-                       // Risks
-                     //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
-                       //Performance Tab
-                       { "$and": [{"compntType": "countryControls"}, {"reportingCountry":  util.resolveGeo(doc[0].Country,"Country")}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
-                   //    { "$and": [{"compntType": "openIssue"}, {"country": util.resolveGeo(doc[0].Country,"Country")},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
-                       { "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
-                       // Key Controls Testing Tab
-                       // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
-                       // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
-                       // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
-                       // Audits and Reviews Tab
-                       // { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
-                       // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
-                       // { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
-                     ]
-                   }
-                 };
+            selector : {
+              "_id": {"$gt":0},
+              "docType": "asmtComponent",
+              "$or": [
+                // Risks
+              //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
+                //Performance Tab
+                { "$and": [{"compntType": "countryControls"}, {"reportingCountry":  util.resolveGeo(doc[0].Country,"Country")}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+            //    { "$and": [{"compntType": "openIssue"}, {"country": util.resolveGeo(doc[0].Country,"Country")},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
+                { "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
+                // Key Controls Testing Tab
+                // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
+                // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                // Audits and Reviews Tab
+                // { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
+                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
+                // { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
+              ]
+            }
+          };
+          
+          
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
@@ -217,6 +224,9 @@ var getDocs = {
               if (comps[i].compntType == "openIssue") {
                 doc[0].RiskView1Data.push(comps[i]);
                 doc[0].RiskView2Data.push(comps[i]);
+              }
+              if (comps[i].compntType == "countryControls"){
+               	  doc[0].CountryControlsData.push(comps[i]);
               }
             }
             deferred.resolve({"status": 200, "doc": doc});
