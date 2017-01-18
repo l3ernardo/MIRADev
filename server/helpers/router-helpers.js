@@ -133,7 +133,7 @@ var register = function(Handlebars) {
 		},
 
 		ratingDisplayView: function(rating, percent) {
-			var ratinghtml = '<td ';
+			var ratinghtml = '<td class="';
 			if (rating == undefined) {
 					ratinghtml += 'asmt-viewdata"'
 					if(!isNaN(percent)){
@@ -142,11 +142,11 @@ var register = function(Handlebars) {
 					ratinghtml += '></td>';
 			} else {
 				if (rating == "Sat" || rating == "Satisfactory" || rating == "Favorable" || rating == "Unqualified" || rating == "Positive")
-					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;"';
+					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00; text-align: center; !important;"';
 				else if (rating == "Marg" || rating == "Marginal")
-					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;"';
+					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow; text-align: center; !important;"';
 				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative")
-					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;"';
+					ratinghtml += 'asmt-viewdata-red"  style="background-color: red; color: #ffffff; text-align: center; !important;"';
 				else
 					ratinghtml += 'asmt-viewdata-centered"';
 				if(!isNaN(percent)){
@@ -188,6 +188,47 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold, percent) {
+			var drhtml = '<td ';
+			if (dr == undefined || dr == "") {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%"';
+					}
+				drhtml += ' ></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+			} else {
+				if (dr < margThreshold){
+					drhtml += ' class="asmt-viewdata-green" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else if (dr >= unsatThreshold){
+					drhtml += ' class="asmt-viewdata-red" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else{
+					drhtml += ' class="asmt-viewdata-yellow" ';
+					if(!isNaN(percent)){
+						drhtml += ' width="'+percent+'%" ';
+						}
+					drhtml += '>'+dr+'</td>';
+				}
+			}
+			return drhtml;
+		},
+
+		/*
 		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
@@ -204,6 +245,7 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		*/
 		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
@@ -337,8 +379,10 @@ var register = function(Handlebars) {
 		},
 		openRiskDisplay: function(open, date) {
 			var datehtml;
+			if (date == undefined) {
+				date = '';
+			}
 			if (open == undefined) {
-
 			} else {
 				if (open < 0) {
 					datehtml = '<span style="padding-left:1em; padding-right:1em">$'+date+'</span>';
