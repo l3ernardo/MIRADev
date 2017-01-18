@@ -188,6 +188,47 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold, percent) {
+			var drhtml = '<td ';
+			if (dr == undefined || dr == "") {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%"';
+					}
+				drhtml += ' ></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+			} else {
+				if (dr < margThreshold){
+					drhtml += ' class="asmt-viewdata-green" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else if (dr >= unsatThreshold){
+					drhtml += ' class="asmt-viewdata-red" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else{
+					drhtml += ' class="asmt-viewdata-yellow" ';
+					if(!isNaN(percent)){
+						drhtml += ' width="'+percent+'%" ';
+						}
+					drhtml += '>'+dr+'</td>';
+				}
+			}
+			return drhtml;
+		},
+		
+		/*
 		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
@@ -204,6 +245,7 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		*/
 		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
