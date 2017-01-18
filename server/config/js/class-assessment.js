@@ -476,7 +476,7 @@ var assessment = {
 
 							//create a space for performance Tab
 							comp.getCompDocs(db,doc).then(function(dataComp){
-							
+
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
@@ -484,10 +484,10 @@ var assessment = {
 								 //console.log("KCODefectRate: "+doc[0].KCODefectRate);
 								 //console.log("MissedRisks: "+doc[0].MissedOpenIssueCount);
 								 //console.log(doc[0].BUCAsmtDataPIview);
-							 
+
 								 var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
-							
+
 
 
 							}).catch(function(err) {
@@ -775,6 +775,8 @@ var assessment = {
 						comp.getCompDocs(db,doc).then(function(dataComp){
 						// Audits and Reviews Tab
 						aar.processARTab(doc,defViewRow);
+						// Key Controls Tesing tab
+						kct.processKCTab(doc,defViewRow);
 						//AuditKey
 						if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
 							var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
