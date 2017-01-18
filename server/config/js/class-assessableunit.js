@@ -418,7 +418,7 @@ var assessableunit = {
 																					//Edit && Admin
 																					if(req.query.edit != undefined && doc[0].editor && doc[0].admin){
 																						//Get CU Parents List
-																						assessableunit.getCUParents(req, db).then(function(dataCP) {
+																						assessableunit.getCUParents(req, db, doc[0].MIRABusinessUnit).then(function(dataCP) {
 																							if(dataCP.status==200 && !dataCP.error){
 																								doc[0].CUParents = [];
 																								doc[0].CUParents = dataCP.doc;
