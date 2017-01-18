@@ -27,6 +27,10 @@
 			<td>Global Process:</td>
 			<td>{{{multiSelect "processList" processList "WWBCITKey" "Name" "globalProcessList"}}}</td>
 		</tr>
+		<tr>
+			<td>Subprocess:</td>
+			<td><input type="text" id="subprocess" name="subprocess" value="{{subprocess}}" size="100" maxlength="300"></td>
+		</tr>
 	{{else}}
 	{{!-- auditlesson form - Applicability section - Read Mode --}}
 		<tr>
@@ -43,6 +47,9 @@
 		{{/if_not_equal}}
 		<tr>
 			<td>Global Process:</td><td>{{globalProcess}}</td>
+		</tr>
+		<tr>
+			<td>Subprocess:</td><td>{{subprocess}}</td>
 		</tr>
 	{{/if}}
 </table>
