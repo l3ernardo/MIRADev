@@ -424,6 +424,7 @@ var components = {
             output.parentType = parent.ParentDocSubType;
             output.AssessableUnitName = parent.AssessableUnitName;
             output.parentid = req.query.id;
+            // output.editor = true;
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -481,6 +482,7 @@ var components = {
               if(!( parent.CurrentPeriod != req.session.quarter || parent.MIRAStatus == "Final")){
                 //output.procesDisplay = true;
               }
+              // output.editor = true;
               deferred.resolve({"status": 200, "data":output});
             }).catch(function(err) {
               deferred.reject({"status": 500, "error": err.error.reason});
@@ -538,6 +540,7 @@ var components = {
                   deferred.reject({"status": 500, "error": "parameter does not exist"});
                 }else{
                   internal.sizes = doc.value.options;
+                  internal.editor = true;
                   deferred.resolve({"status": 200, "data": internal})
                 }
               }).catch(function(err) {
@@ -941,7 +944,7 @@ var components = {
         var obj={};
         obj.docType = "asmtComponent";
         obj.compntType = "accountAudit";
-        obj.controllableUnit = req.body.controllableUnit;
+        obj.AssessableUnitName = req.body.AssessableUnitName;
         obj.auditOrReview = req.body.auditOrReview;
         obj.Log = [addlog];
         obj.reportingQuarter = req.session.quarter;
