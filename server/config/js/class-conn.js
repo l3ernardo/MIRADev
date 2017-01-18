@@ -1,8 +1,8 @@
 /**************************************************************************************************
- * 
+ *
  * IBM Bluemix app with Cloudant service using Node.js
  * Date: 09 May 2016
- * 
+ *
  */
 
 var Cloudant = require('cloudant');
@@ -119,7 +119,7 @@ var DB = {
 		fs = require('fs');
 		var obj = JSON.parse(fs.readFileSync('./connProfile.json', 'utf8'));
 		var org = util.getOrg();
-		
+
 		if(obj){
 			dbCredentials.host = obj[org].host;
 			dbCredentials.port = obj[org].port;
@@ -163,11 +163,11 @@ var DB = {
 	//GET ATTACHMENT
 	getattachment: function(id, filename, params, res) {
 		var deferred = q.defer();
-		
+
 		try{
 			res.setHeader('Content-disposition', 'attachment; filename='+filename);
 			this.db.attachment.get(id, filename).pipe(res, function(error){
-				if(error) { 
+				if(error) {
 					 deferred.reject({"status": 500, "body": {}, "error": error});
 				}
 			});
@@ -208,7 +208,7 @@ var DB = {
 						deferred.reject({"status": 500, "body": {}, "error": data2.err});
 					} else{
 						deferred.resolve({"status": 200, "body": data2.body});
-					}					
+					}
 				});
 			} else {
 				// A change is detected, checking if the fields can be merged between doc2 and userdoc
@@ -248,7 +248,7 @@ var DB = {
 									for(var i=0;i<fieldslist.length;i++) {
 										if(fieldslist[i].split(":")[0]==fld) {
 											flag = true;
-										}	
+										}
 									}
 									// The field does not exist, merging userdoc with the value from doc2
 									if(!flag) {
@@ -261,7 +261,7 @@ var DB = {
 									console.log(e)
 								} finally {}
 							}
-						}					
+						}
 						if(conflictfields.length>0) {
 							//console.log(conflictfields.length + " conflicts found.");
 							try {
@@ -278,8 +278,8 @@ var DB = {
 									deferred.reject({"status": 500, "body": {}, "error": data2.err});
 								} else{
 									deferred.resolve({"status": 200, "body": data2.body});
-								}					
-							});						
+								}
+							});
 						}
 					} else {
 						//console.log("No conflicts detected!");
@@ -290,8 +290,8 @@ var DB = {
 								deferred.reject({"status": 500, "body": {}, "error": data2.err});
 							} else{
 								deferred.resolve({"status": 200, "body": data2.body});
-							}					
-						});				
+							}
+						});
 					}
 				} catch(e) {
 					console.log(e);
@@ -299,7 +299,7 @@ var DB = {
 			}
 		})
 		return deferred.promise;
-	}		
+	}
 };
 
 module.exports = DB;
