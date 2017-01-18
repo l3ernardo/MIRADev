@@ -24,12 +24,13 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
     <input type="hidden" name="close" id="close" value="0">
     <input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
     <input type="hidden" name="docType" id="docType" value="accountAudit">
+    <input type="hidden" id="AssessableUnitName" name="AssessableUnitName" value="{{AssessableUnitName}}">
     <table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
       <caption class="mira-caption"><em>Basics</em></caption>
       {{#if editmode}}
 
       <tr>
-        <td width="25%">Account:</td><td><b><input type="text" id="controllableUnit" name="controllableUnit" value="{{AssessableUnitName}}" readonly></b></td>
+        <td width="25%">Account:</td><td><b>{{AssessableUnitName}}</b></td>
       </tr>
       <tr>
         <td>Audit or Review:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
@@ -48,7 +49,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
         <td>Rating:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
       </tr>
       <tr>
-        <td># Recommendations:</td><td>Total:<input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>Open:<input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+        <td>Recommendations:</td><td>Total:<input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>Open:<input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
       </tr>
       <tr>
         <td>Target to close:</td><td>Original:
@@ -64,7 +65,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
         {{else}}
 
         <tr>
-          <td width="25%">Account:</td><td><b>{{controllableUnit}}</b></td>
+          <td width="25%">Account:</td><td><b>{{AssessableUnitName}}</b></td>
         </tr>
         <tr>
           <td>Audit or Review:</td><td>{{auditOrReview}}</td>
@@ -81,7 +82,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
           <td>Rating:</td><td>{{{ rating}}}</td>
         </tr>
         <tr>
-          <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
+          <td>Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
         </tr>
         <tr>
           <td>Target to close:</td><td>Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>
