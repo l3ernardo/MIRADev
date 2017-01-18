@@ -95,6 +95,13 @@ $(document).ready(function(){
 	$('#btn_cancel').click(function() {
 		window.location.href = $("li#breadcrumb > a").attr("href");
 	});
+
+	//Code for field validation     // jesus
+	$('#btn_validate').click(function() {
+		//window.location.href = $().
+		validation();
+	});
+
 	//Code for Save button
 	$('#btn_save').click(function(evt) {
 		myEditor.saveHTML();
@@ -846,3 +853,352 @@ function counter(name) {
   rdiv2="#"+use+"_container";
   $(rdiv2).append($newdiv1);
 };
+
+
+
+	function validation(){ 
+		var req_flds = "";
+	var frm = $("input[name='DocType']").val()
+
+if (frm == "Assessment") {  // check if document ype = assessment.
+// Basic of Control field validation.
+		if (!$("#BoCResponse1Yes").is(':checked') && !$("#BoCResponse1No").is(':checked')){
+				alert("Require entries on the Tab Basic of Controls (Row1) are incomplete. Click OK to continue checking.");
+				$('#BoCResponse1Yes').focus();
+				return false;
+		}else{
+			if ($('#BoCResponse1No').is(':checked')) {
+				if (!$("#BoCTargetCloseDate1").val()) {
+					alert("Target to close date (row 1) is require. Click OK to continue checking.");
+					$('#BoCTargetCloseDate1').focus();
+					return false;
+				 }else{
+					if (!$("#BoCComments1").val()) {
+						alert("Comment (row 1) is require. Click OK to continue checking.");
+						$('#BoCComments1').focus();
+						return false;
+					}
+				}
+			}
+		} 
+		if (!$("#BoCResponse2Yes").is(':checked') && !$("#BoCResponse2No").is(':checked')){
+				alert("Require entries on the Tab Basic of Controls (Row2) are incomplete. Click OK to continue checking.");
+					$('#BoCResponse1Yes').focus();
+					return false;
+		}else{
+			if ($('#BoCResponse2No').is(':checked')) {
+			 	if (!$("#BoCTargetCloseDate2").val()) {
+					alert("Target to close date (row 2) is require. Click OK to continue checking.");
+					$('#BoCTargetCloseDate2').focus();
+					return false;
+				}else{
+					if (!$("#BoCComments2").val()) {
+						alert("Comment (row 2) is require. Click OK to continue checking.");
+						$('#BoCComments2').focus();
+						return false;
+					}
+				}
+		   	}
+		}
+		if (!$("#BoCResponse3Yes").is(':checked') && !$("#BoCResponse3No").is(':checked')){
+				alert("Require entries on the Tab Basic of Controls (Row3) are incomplete. Click OK to continue checking.");
+				$('#BoCResponse3Yes').focus();
+				return false;
+		}else{
+			if ($('#BoCResponse3No').is(':checked')) {
+				if (!$("#BoCTargetCloseDate3").val()) {
+					alert("Target to close date (row 3) is require. Click OK to continue checking.");
+					$('#BoCTargetCloseDate3').focus();
+					return false;
+			    }else{
+					if (!$("#BoCComments3").val()) {
+						alert("Comment (row 3) is require. Click OK to continue checking.");
+						$('#BoCComments3').focus();
+						return false;
+					}
+				}
+			}
+		}
+		if (!$("#BoCResponse4Yes").is(':checked') && !$("#BoCResponse4No").is(':checked')){
+				alert("Require entries on the Tab Basic of Controls (Row4) are incomplete. Click OK to continue checking.");
+					$('#BoCResponse4Yes').focus();
+					return false;
+		}else{
+			if ($('#BoCResponse4No').is(':checked')) {
+			  if (!$("#BoCTargetCloseDate4").val()) {
+					alert("Target to close date (row 4) is require. Click OK to continue checking.");
+					$('#BoCTargetCloseDate4').focus();
+					return false;
+				}else{
+					if (!$("#BoCComments4").val()) {
+						alert("Comment (row 4) is require. Click OK to continue checking.");
+						$('#BoCComments4').focus();
+						return false;
+					}
+				}
+			}
+		}
+		if (!$("#BoCResponse5Yes").is(':checked') && !$("#BoCResponse5No").is(':checked')){
+				alert("Require entries on the Tab Basic of Controls (Row5) are incomplete. Click OK to continue checking.");
+					$('#BoCResponse5Yes').focus();
+					return false;
+		}else{
+			if ($('#BoCResponse5No').is(':checked')) {
+				if (!$("#BoCTargetCloseDate5").val()) {
+					alert("Target to close date (row 5) is require. Click OK to continue checking.");
+					$('#BoCTargetCloseDate5').focus();
+					return false;
+				} else {
+					if (!$("#BoCComments5").val()) {
+						alert("Comment (row 5) is require. Click OK to continue checking.");
+						$('#BoCComments5').focus();
+						return false;
+					}
+				}
+			}
+		}
+
+//Operational Metrics Table.
+//Audit Lessons Learned
+		if (!$('#OMID2Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID2Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID2Rating').val() =='Marg' || $('#OMID2Rating').val() =='Unsat') {
+				  if (!$("#OMID2TargetSatDate").val()) {
+						alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+						$('#OMID2TargetSatDate').focus();
+						 return false;
+				} else {
+					if (!$("#OMID2Finding").val()) {
+						 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+						 $('#OMID2Finding').focus();
+						  return false;
+					} else {
+						if (!$("#OMID2Action").val()) {
+							 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+							 $('#OMID2Action').focus();
+							  return false;
+						}
+					}
+				}
+			}
+		}
+//DS&P Overall Rating
+		if (!$('#OMID5Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID5Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID5Rating').val() =='Marg' || $('#OMID5Rating').val() =='Unsat') {
+					  if (!$("#OMID5TargetSatDate").val()) {
+							alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+							$('#OMID5TargetSatDate').focus();
+							return false;
+				} else {
+					if (!$("#OMID5Finding").val()) {
+						 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+						 $('#OMID5Finding').focus();
+						 return false;
+					} else {
+						if (!$("#OMID5Action").val()) {
+							 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+							 $('#OMID5Action').focus();
+							 return false;
+						}
+					}
+				}
+			}
+		}
+// SOD 
+		if (!$('#OMID12Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID12Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID12Rating').val() =='Marg' || $('#OMID12Rating').val() =='Unsat') {
+				  if (!$("#OMID12TargetSatDate").val()) {
+						alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+						$('#OMID2TargetSatDate').focus();
+						return false;
+				} else {
+					if (!$("#OMID12Finding").val()) {
+						 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+						 $('#OMID12Finding').focus();
+						 return false;
+					} else {
+						if (!$("#OMID12Action").val()) {
+							 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+							 $('#OMID12Action').focus();
+							 return false;
+						}
+					}
+				}
+			}
+		}
+//Access Mgmt
+		if (!$('#OMID1Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID1Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID1Rating').val() =='Marg' || $('#OMID1Rating').val() =='Unsat') {
+					  if (!$("#OMID1TargetSatDate").val()) {
+							alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+							$('#OMID1TargetSatDate').focus();
+							return false;
+					} else {
+						if (!$("#OMID1Finding").val()) {
+							 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+							 $('#OMID1Finding').focus();
+							 return false;
+						} else {
+							if (!$("#OMID1Action").val()) {
+								 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+								 $('#OMID1Action').focus();
+								 return false;
+							}
+						}
+					}
+				}	
+			}
+//Workplace Security - Violations	
+		if (!$('#OMID16Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID16Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID16Rating').val() =='Marg' || $('#OMID16Rating').val() =='Unsat') {
+				  if (!$("#OMID16TargetSatDate").val()) {
+						alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+						$('#OMID16TargetSatDate').focus();
+						return false;
+				} else {
+					if (!$("#OMID16Finding").val()) {
+						 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+						 $('#OMID16Finding').focus();
+						 return false;
+					} else {
+						if (!$("#OMID16Action").val()) {
+							 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+							 $('#OMID16Action').focus();
+							 return false;
+						}
+					}
+				}
+			}
+		}
+//Workplace Security - Disciplinary Action
+		if (!$('#OMID15Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID15Rating').focus();
+					return false;
+			} else {		
+				if ($('#OMID15Rating').val() =='Marg' || $('#OMID15Rating').val() =='Unsat') {
+				  if (!$("#OMID15TargetSatDate").val()) {
+						alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+						$('#OMID15TargetSatDate').focus();
+						return false;
+				} else {
+					if (!$("#OMID15Finding").val()) {
+						 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+						 $('#OMID15Finding').focus();
+						 return false;
+					} else {
+						if (!$("#OMID15Action").val()) {
+							 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+							 $('#OMID15Action').focus();
+							 return false;
+						}
+					}
+				}
+			}
+		}
+//Workstation Security - WST
+		if (!$('#OMID17Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID17Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID17Rating').val() =='Marg' || $('#OMID17Rating').val() =='Unsat') {
+					  if (!$("#OMID17TargetSatDate").val()) {
+							alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+							$('#OMID17TargetSatDate').focus();
+							return false;
+					} else {
+						if (!$("#OMID17Finding").val()) {
+							 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+							 $('#OMID17Finding').focus();
+							 return false;
+						} else {
+							if (!$("#OMID17Action").val()) {
+								 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+								 $('#OMID17Action').focus();
+								 return false;
+							}
+						}
+					}
+				}
+		}
+//Number DP Incidents
+		if (!$('#OMID8Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID8Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID8Rating').val() =='Marg' || $('#OMID8Rating').val() =='Unsat') {
+					  if (!$("#OMID8TargetSatDate").val()) {
+							alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+							$('#OMID8TargetSatDate').focus();
+							return false;
+					} else {
+						if (!$("#OMID8Finding").val()) {
+							 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+							 $('#OMID8Finding').focus();
+							 return false;
+						} else {
+							if (!$("#OMID8Action").val()) {
+								 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+								 $('#OMID8Action').focus();
+								 return false;
+							}
+						}
+					}
+				}
+		}
+//Completion of Mandatory Data Privacy Training
+		if (!$('#OMID3Rating').val()) {
+				alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
+				$('#OMID3Rating').focus();
+					return false;
+			} else {
+				if ($('#OMID3Rating').val() =='Marg' || $('#OMID3Rating').val() =='Unsat') {
+				  if (!$("#OMID3TargetSatDate").val()) {
+						alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
+						$('#OMID3TargetSatDate').focus();
+						return false;
+				} else {
+					if (!$("#OMID3Finding").val()) {
+						 alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
+						 $('#OMID3Finding').focus();
+						 return false;
+					} else {
+						if (!$("#OMID3Action").val()) {
+							 alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
+							 $('#OMID3Action').focus();
+							 return false;
+						}
+					}
+				}
+			}
+		}
+		alert("Field validation passed.");
+		return true;
+	}
+} // end form
+
+
+
+
+
