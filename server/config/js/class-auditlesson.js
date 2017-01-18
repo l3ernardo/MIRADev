@@ -400,6 +400,7 @@ var auditlesson = {
 							IMT: docs[i].IMT,
 							country: docs[i].country,
 							process: docs[i].globalProcess,
+							subprocess: docs[i].subprocess,
 							observationCategory: docs[i].observationCategory,
 							summary: docs[i].summary
 						});
@@ -407,11 +408,12 @@ var auditlesson = {
 							BU: docs[i].businessUnit,
 							period: docs[i].reportingPeriod,
 							type: docs[i].AuditType,
-							engagementID: docs[i].engagementIDone +"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum,
+							engagementID: docs[i].engagementIDone+"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum,
 							IOT: docs[i].IOT,
 							IMT: docs[i].IMT,
 							country: docs[i].country,
 							process: docs[i].globalProcess,
+							subprocess: docs[i].subprocess,
 							observationCategory: docs[i].observationCategory,
 							summary: docs[i].summary
 						});
@@ -466,6 +468,7 @@ var auditlesson = {
 				newAudit.IMT = req.body.IMT;
 				newAudit.IOT = req.body.IOT;
 				newAudit.globalProcess = req.body.globalProcess;
+				newAudit.subprocess = req.body.subprocess;
 				newAudit.summary = req.body.Notes;
 				if(req.body.BU != "GBS")
 					newAudit.AuditLessonsKey = req.body.AuditLessonsKey;
@@ -503,6 +506,7 @@ var auditlesson = {
 					data.body.docs[0].IMT = req.body.IMT;
 					data.body.docs[0].IOT = req.body.IOT;
 					data.body.docs[0].globalProcess = req.body.globalProcess;
+					data.body.docs[0].subprocess = req.body.subprocess;
 					data.body.docs[0].summary = req.body.Notes;
 					if(req.body.BU != "GBS")
 						data.body.docs[0].AuditLessonsKey = req.body.AuditLessonsKey;
