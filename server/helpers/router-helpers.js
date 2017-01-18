@@ -131,6 +131,7 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
+
 		ratingDisplayView: function(rating, percent) {
 			var ratinghtml = '<td ';
 			if (rating == undefined) {
@@ -140,11 +141,11 @@ var register = function(Handlebars) {
 					}
 					ratinghtml += '></td>';
 			} else {
-				if (rating == "Sat" || rating == "Satisfactory")
+				if (rating == "Sat" || rating == "Satisfactory" || rating == "Favorable" || rating == "Unqualified" || rating == "Positive")
 					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;"';
 				else if (rating == "Marg" || rating == "Marginal")
 					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;"';
-				else if (rating == "Unsat" || rating == "Unsatisfactory")
+				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative")
 					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;"';
 				else
 					ratinghtml += 'asmt-viewdata-centered"';
@@ -187,6 +188,47 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold, percent) {
+			var drhtml = '<td ';
+			if (dr == undefined || dr == "") {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%"';
+					}
+				drhtml += ' ></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+			} else {
+				if (dr < margThreshold){
+					drhtml += ' class="asmt-viewdata-green" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else if (dr >= unsatThreshold){
+					drhtml += ' class="asmt-viewdata-red" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else{
+					drhtml += ' class="asmt-viewdata-yellow" ';
+					if(!isNaN(percent)){
+						drhtml += ' width="'+percent+'%" ';
+						}
+					drhtml += '>'+dr+'</td>';
+				}
+			}
+			return drhtml;
+		},
+		
+		/*
 		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
@@ -203,6 +245,7 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		*/
 		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
