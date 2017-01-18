@@ -972,6 +972,10 @@ var assessableunit = {
 								}
 								break;
 							case "Account":
+								//Validate if account changed parent
+								if(doc[0].parentid != req.body.cuparentname){
+									doc[0].parentid = req.body.cuparentname;
+								}
 								doc[0].Name = req.body.Name;
 								//doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 								if(req.body.MetricsCriteria != undefined){//only for admin user
