@@ -155,11 +155,9 @@ asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
 	});
 });
 
-/* Save Open Issue in cloudant */
+/* Save Account Key Controls Testing */
 asmtComponents.post('/saveaccountcontrols', isAuthenticated, function(req, res) {
-console.log("hola1");
 	components.saveAccountControls(req, db).then(function(data) {
-		console.log("hola");
 		if(data.status==200 & !data.error) {
 			if(req.body.close === "back"){
 				res.redirect("/assessment?id="+req.body.parentid);

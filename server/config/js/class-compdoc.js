@@ -135,9 +135,6 @@ var getDocs = {
               else if (comps[i].compntType == "localAudit") {
                 doc[0].AuditLocalData.push(comps[i]);
               }
-              else {
-
-              }
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
@@ -161,27 +158,40 @@ var getDocs = {
               "_id": {"$gt":0},
               "docType": "asmtComponent",
               "$or": [
-                // Risks
-                //{ "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
                 // Key Controls Testing Tab
-                // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
-                // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
-                // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                { "$and": [{"compntType": "accountControls"},{"parentid": doc[0]._id}] },
                 // Audits and Reviews Tab
-                // { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
-                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
                 { "$and": [{"compntType": "accountAudit"},{"parentid": doc[0]._id}] }
               ]
             }
           };
           db.find(compObj).then(function(compdata) {
-            var comps = compdata.body.docs
+            var comps = compdata.body.docs;
+            doc[0].RCTestData = [];
             doc[0].AuditLocalData = [];
+            var acctControlCounter = 0; //Counter to iterate for the Defect Rate
             for(var i = 0; i < comps.length; i++) {
+              //Calculate for Audit data
               if (comps[i].compntType == "accountAudit") {
                 doc[0].AuditLocalData.push(comps[i]);
               }
+              //Calculate for Account Key Control Testing (Account Controls)
+              else if (comps[i].compntType == "accountControls") {
+                doc[0].RCTestData.push(comps[i]);
+                // Calculate for Defect Rate of Account Key Control Testing doc
+                if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
+                  doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
+                  if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
+                    doc[0].RCTestData[acctControlCounter].defectRate = 0;
+                    doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
+                  }
+                }
+                // Calculate for ControlName
+                //doc[0].RCTestData[acctControlCounter].controlName = doc[0].RCTestData[acctControlCounter].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[acctControlCounter].controlShortName;
+                acctControlCounter++;
+              }
             }
+
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
             console.log("[class-compdoc][getCompDocs] - " + err.error);
@@ -189,7 +199,7 @@ var getDocs = {
           });
           break;
         case "BU Country":
-         
+
         	doc[0].CountryControlsData = [];
         	doc[0].RiskView1Data =  [];
         	doc[0].RiskView2Data = [];
@@ -215,8 +225,8 @@ var getDocs = {
               ]
             }
           };
-          
-          
+
+
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
