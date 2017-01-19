@@ -199,7 +199,7 @@ var getDocs = {
           });
           break;
         case "BU Country":
-
+          doc[0].AUData = [];
         	doc[0].CountryControlsData = [];
         	doc[0].RiskView1Data =  [];
         	doc[0].RiskView2Data = [];
@@ -212,8 +212,8 @@ var getDocs = {
               //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
                 //Performance Tab
                 { "$and": [{"compntType": "countryControls"}, {"reportingCountry":  util.resolveGeo(doc[0].Country,"Country")}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
-            //    { "$and": [{"compntType": "openIssue"}, {"country": util.resolveGeo(doc[0].Country,"Country")},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
-                { "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
+                {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
+                //{ "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
                 // Key Controls Testing Tab
                 // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
@@ -232,8 +232,9 @@ var getDocs = {
             var comps = compdata.body.docs;
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
+                comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
-                doc[0].RiskView2Data.push(comps[i]);
+                doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
               }
               if (comps[i].compntType == "countryControls"){
                	  doc[0].CountryControlsData.push(comps[i]);
@@ -372,7 +373,8 @@ var getDocs = {
             "reportingQuarter": doc[0].CurrentPeriod,
             "controllableUnit": doc[0].AssessableUnitName,
             "businessUnit": doc[0].BusinessUnit,
-            "scorecardCategory": {"$gt":0}
+            "scorecardCategory": {"$gt":0},
+            "status": {"$ne": "Closed"}
           },
           sort:[{"scorecardCategory":"asc"}]
         };
@@ -387,7 +389,8 @@ var getDocs = {
             "process": doc[0].GlobalProcess,
             "businessUnit": doc[0].BusinessUnit,
             "country": doc[0].Country,
-            "scorecardCategory": {"$gt":0}
+            "scorecardCategory": {"$gt":0},
+            "status": {"$ne": "Closed"}
           },
           sort:[{"scorecardCategory":"asc"}]
         };
