@@ -31,6 +31,7 @@
 	<form id="assessment" class="ibm-column-form" name="form" method="POST" action="/saveasmt">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
+		<input type="hidden" name="DocType" id="DocType" value="{{DocType}}">
 		<input type="hidden" name="parentdocsubtype" id="parentdocsubtype" value="{{ParentDocSubType}}">
 		<input type="hidden" name="enteredbu" id="docid" value="{{EnteredBU}}">
 		<input type="hidden" name="close" id="close" value="0">
@@ -76,6 +77,7 @@
 		$("#Sample2_treeview").treetable({expandable: true});
 		$("#ppr_treeview").treetable({expandable: true,indent:10});
 		$("#LocalAudit_treeview").treetable({expandable: true});
+
 
 </script>
 {{#if editmode}}

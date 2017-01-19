@@ -136,7 +136,6 @@ $(document).ready(function(){
       var unsatT = $("#UnsatThreshold").val();;
       var margT = $("#MargThreshold").val();
       var tmp = tests / defects;
-      alert(margT);
       if(tmp >= unsatT){
         $("#RAGStatus").val("Unsat");
       }else if(tmp < margT){
@@ -153,7 +152,6 @@ $(document).ready(function(){
       var unsatT = $("#UnsatThreshold").val();;
       var margT = $("#MargThreshold").val();
       var tmp = tests / defects;
-      alert(unsatT);
       if(tmp >= unsatT){
         $("#RAGStatus").val("Unsat");
       }else if(tmp < margT){
@@ -168,7 +166,7 @@ $('#btn_edit').click(function() {
 });
 $('#btn_save_close').click(function() {
   $('#close').val("back");
-  $("#accountauditform").submit();
+  $("#asmtcomponentform").submit();
 });
 $('#btn_save').click(function(evt) {
   $("#asmtcomponentform").submit();
