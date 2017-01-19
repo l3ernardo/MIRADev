@@ -1381,12 +1381,10 @@ $(document).ready(function() {
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	$('#OpenRisks2-link-export').click(function(){
-		alert("hola");
 		tableReport = AllTableToReportMultiple('open_risks2_treeview', "OpenRisks2");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#OpenRisks2-link-export2').click(function(){
-		alert("Hola2;")
 		tableReport = AllTableToReportMultiple('open_risks2_treeview', "OpenRisks2");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
