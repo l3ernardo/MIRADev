@@ -4,7 +4,6 @@
 
 <input type="hidden" id="docTitle" value="Key Controls Test">
 <input type="hidden" id="docSubTitle" value="{{account}}">
-<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
 
 <script>
 	//Load document's name
@@ -27,12 +26,13 @@
 <form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveaccountcontrols">
   <input type="hidden" name="docid" id="docid" value="{{_id}}">
   <input type="hidden" name="editmode" value="{{editmode}}">
-  <input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+	<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
   <input type="hidden" name="docType" id="docType" value="accountControls">
+	<input type="hidden" name="quarter" id="quarter" value="{{reportingQuarter}}">
 <table id="sample-table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
   <caption class="mira-caption"><em>Details</em></caption>
 <tr>
-  <td width="25%">Reporting quarter:</td><td><b class="ibm-important"><input type="text" name="reportingQuarter" value="{{reportingQuarter}}" {{#unless new}}readonly{{/unless}}></b></td>
+  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
 </tr>
 <tr>
   <td>Process:</td><td><input type="text" name="process" value="{{process}}"></td>
@@ -136,7 +136,6 @@ $(document).ready(function(){
       var unsatT = $("#UnsatThreshold").val();;
       var margT = $("#MargThreshold").val();
       var tmp = tests / defects;
-      alert(margT);
       if(tmp >= unsatT){
         $("#RAGStatus").val("Unsat");
       }else if(tmp < margT){
@@ -153,7 +152,6 @@ $(document).ready(function(){
       var unsatT = $("#UnsatThreshold").val();;
       var margT = $("#MargThreshold").val();
       var tmp = tests / defects;
-      alert(unsatT);
       if(tmp >= unsatT){
         $("#RAGStatus").val("Unsat");
       }else if(tmp < margT){
@@ -168,7 +166,7 @@ $('#btn_edit').click(function() {
 });
 $('#btn_save_close').click(function() {
   $('#close').val("back");
-  $("#accountauditform").submit();
+  $("#asmtcomponentform").submit();
 });
 $('#btn_save').click(function(evt) {
   $("#asmtcomponentform").submit();

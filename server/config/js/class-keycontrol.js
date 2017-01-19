@@ -13,6 +13,26 @@ var calculateKCTab = {
   processKCTab: function(doc, defViewRow) {
 		try {
       switch (doc[0].ParentDocSubType) {
+        case "Account":
+          //Functionality to export the Account's Key Controls Testing to Excel and ODS.
+          var rct = doc[0].RCTestData;
+          var exportRCTest = [];
+          for(var i = 0; i < rct.length; i++) {
+            exportRCTest.push({
+              process:rct[i].process || "",
+              eventDate:rct[i].eventDate || "",
+              numTestsCompleted:rct[i].numTestsCompleted || "",
+              numProcessDefects:rct[i].numProcessDefects || "",
+              numControlDeficiencies:rct[i].numControlDeficiencies || "",
+              defectRate:rct[i].defectRate || "",
+              remediationStatus:rct[i].remediationStatus || "",
+              targetToClose:rct[i].targetToClose || "",
+              comments:rct[i].comments || ""
+            });
+
+          }
+          doc[0].exportRCTest = exportRCTest;
+          break;
         case "Country Process":
           doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
           if (doc[0].AUDefectRate == 0) {

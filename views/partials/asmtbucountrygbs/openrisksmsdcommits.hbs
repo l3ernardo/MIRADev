@@ -177,17 +177,17 @@
 						<th class="risk-msdcommit-viewheader" scope="col" width="15%">Missed Target Date</th>
 						<th class="risk-msdcommit-viewheader" scope="col" width="15%">Current Target Date</th>
 					</thead>
+					<tbody>
 					{{#each RiskView1Data}}
 						<tr class="asmt-viewdata">
-							{{#each col}}
-								{{#if @first}}
-									<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-								{{else}}
-									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-								{{/if}}
-							{{/each}}
+							<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
+							<td width="8%">{{status}}</td>
+							<td width="20%">{{PeriodRating}}</td>
+							<td width="10%">{{originalTargetDate}}</td>
+							<td width="10%">{{currentTargetDate}}</td>
 						</tr>
 					{{/each}}
+				</tbody>
 				</table>
 			</td>
 		</tr>
@@ -363,17 +363,17 @@
 						<th class="risk-msdcommit-viewheader" scope="col" width="15%">Missed Target Date</th>
 						<th class="risk-msdcommit-viewheader" scope="col" width="15%">Current Target Date</th>
 					</thead>
+					<tbody>
 					{{#each RiskView1Data}}
 						<tr class="asmt-viewdata">
-							{{#each col}}
-								{{#if @first}}
-									<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-								{{else}}
-									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-								{{/if}}
-							{{/each}}
+							<td width="50%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
+							<td width="10%">{{status}}</td>
+							<td width="10%">{{PeriodRating}}</td>
+							<td width="15%">{{originalTargetDate}}</td>
+							<td width="15%">{{currentTargetDate}}</td>
 						</tr>
 					{{/each}}
+				</tbody>
 				</table>
 			</td>
 		</tr>
@@ -384,7 +384,7 @@
 			<a href="javascript:void(0);" value="Export to Excel" name="OpenRisks2-link-export" id="OpenRisks2-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
 			<span class="ibm-sep"> </span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="OpenRisks2-link-export2" id="OpenRisks2-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
-			<table id="open_risks2_treeview" cellspacing="0" cellpadding="0" border="0" width="100%">
+			<table id="open_risks2_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Type</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
@@ -398,18 +398,27 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="4%">Missed</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="20%">Risk Abstract</th>
 				</thead>
+				<tbody>
 				{{#each RiskView2Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="15%" >{{#unless parent}}{{type}}{{/unless}}</td>
+						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td width="15%">{{status}}</td>
+						<td width="8%">{{originalTargetDate}}</td>
+						<td width="8%">{{currentTargetDate}}</td>
+						<td width="5%">{{numTasks}}</td>
+						<td width="5%">{{numTasksOpen}}</td>
+						<td width="5%">{{numMissedTasks}}</td>
+						<td width="5%">{{numOpenIssues}}</td>
+						<td width="4%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
+						<td width="20%">{{riskAbstract}}</td>
 					</tr>
 				{{/each}}
+				</tbody>
 			</table>
 		</td>
 	</tr>
 </table>
+<script>
+	$("#open_risks2_treeview").treetable({expandable: true });
+</script>
