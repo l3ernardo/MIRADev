@@ -18,7 +18,6 @@ var calculateKCTab = {
           var rct = doc[0].RCTestData;
           var exportRCTest = [];
           for(var i = 0; i < rct.length; i++) {
-            console.log("Var");
             exportRCTest.push({
               process:rct[i].process || "",
               eventDate:rct[i].eventDate || "",
@@ -32,7 +31,6 @@ var calculateKCTab = {
             });
 
           }
-          console.log("exportRCTest: "+exportRCTest);
           doc[0].exportRCTest = exportRCTest;
           break;
         case "Country Process":
