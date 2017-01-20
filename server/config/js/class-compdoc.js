@@ -242,14 +242,23 @@ var getDocs = {
           var compObj = {
             selector : {
               "_id": {"$gt":0},
-              "docType": "asmtComponent",
               "$or": [
+                //Getting all country process assessment
+                {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                //Getting all controllable units assessable units
+                {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
+                //Performance Tab
+                { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+                //Risks Tab
+                {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] }
+              //"docType": "asmtComponent",
+              //"$or": [
                 // Risks
               //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
                 //Performance Tab
-                { "$and": [{"compntType": "countryControls"}, {"reportingCountry":  util.resolveGeo(doc[0].Country,"Country")}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+                //{ "$and": [{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
               //  {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
-                { "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
+                //{ "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$ne": "Closed"}}] }
                 // Key Controls Testing Tab
                 // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
@@ -266,17 +275,54 @@ var getDocs = {
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
+            doc[0].CPasmts = [];
+            doc[0].CUassunits = [];
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
                 doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
               }
-              if (comps[i].compntType == "countryControls"){
+              else if (comps[i].compntType == "countryControls"){
                	  doc[0].CountryControlsData.push(comps[i]);
               }
+              else if (comps[i].key == "Assessment"){
+               	  doc[0].CPasmts.push(comps[i]);
+              }
+              else if (comps[i].key == "Assessable Unit"){
+               	  doc[0].CUassunits.push(comps[i]);
+              }
             }
-            deferred.resolve({"status": 200, "doc": doc});
+            //console.log(doc[0].CPasmts.length);
+            //console.log(doc[0].CUassunits.length);
+            //getting assessments under BU country instead of Assessable units
+            var arrayPromises = [];
+            for(var i = 0; i < doc[0].CUassunits.length; i++){
+              var tmpQuery = {
+                selector : {
+                  "_id": {"$gt":0},
+                  "key": "Assessment",
+                  "AUStatus": "Active",
+                  "ParentDocSubType": "Controllable Unit",
+                  "CurrentPeriod": doc[0].CurrentPeriod,
+                  "parentid": doc[0].CUassunits[i]["_id"]
+                }
+              };
+              arrayPromises.push(db.find(tmpQuery));
+            }
+            q.all(arrayPromises).then(function(asmts) {
+              for (var i = 0; i < asmts.length; i++) {
+                if (doc[0].CUassunits[i].AuditableFlag == "Yes",) {
+                  doc[0].AUData.push(JSON.parse(JSON.stringify(asmts[i].body.docs[0])));
+                }
+                doc[0].CUassunits[i] = asmts[i].body.docs[0];
+              }
+              deferred.resolve({"status": 200, "doc": doc});
+            }).catch(function(err) {
+              console.log("[class-compdoc][getCompDocs] - " + err.error);
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
+
           }).catch(function(err) {
             console.log("[class-compdoc][getCompDocs] - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});

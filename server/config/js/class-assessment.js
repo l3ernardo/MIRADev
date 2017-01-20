@@ -432,6 +432,7 @@ var assessment = {
 						doc[0].RiskView1Data = [];
 						doc[0].RiskView2Data = [];
 
+						doc[0].CountryId = parentdoc[0].Country;
 						doc[0].Country = util.resolveGeo(parentdoc[0].Country,"Country",req);
 						doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 						// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
@@ -470,17 +471,14 @@ var assessment = {
 								}
 							}
 							//create a space for performance Tab
-							
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
 								performanceTab.getMSACCommitments(db,doc);
-								// console.log("KFCRDefectRate: "+doc[0].KCFRDefectRate);
-								 //console.log("KCODefectRate: "+doc[0].KCODefectRate);
-								 //console.log("MissedRisks: "+doc[0].MissedOpenIssueCount);
-								 //console.log(doc[0].AUData);
-								 //console.log(doc[0].asmtsdocs);
-								//console.log(doc[0].RiskView1Data);
+								//open risks
+								ort.processORTab(doc,defViewRow);
+								//audit universe
+								aut.processAUTab(doc,defViewRow);
 
 								 var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});

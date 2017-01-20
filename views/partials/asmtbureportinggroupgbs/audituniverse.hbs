@@ -24,17 +24,29 @@
 					<th class="other-viewheader" scope="col" width="5%">CQ Score</th>
 					<th class="other-viewheader" scope="col" width="10%">Explanation</th>
 				</thead>
+				<tbody>
 				{{#each AUData}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
+						<td width="20%">{{process}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
