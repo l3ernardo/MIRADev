@@ -10,12 +10,13 @@
 		<a target="_blank" href="/accountControls?id={{_id}}&new" class="ibm-add1-link">New</a>
 		<table id="RCTest_treeview" width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 			<thead class="kc-test-viewheader">
+				<th class="kc-test-viewheader" width="15%"></th>
 				<th class="kc-test-viewheader" width="18%">Process</th>
 				<th class="kc-test-viewheader" width="10%">Event Date</th>
-				<th class="kc-test-viewheader" width="10%">Tests</th>
-				<th class="kc-test-viewheader" width="10%">Process Defects</th>
+				<th class="kc-test-viewheader" width="5%">Tests</th>
+				<th class="kc-test-viewheader" width="5%">Process Defects</th>
 				<th class="kc-test-viewheader" width="5%">Control Deficiences</th>
-				<th class="kc-test-viewheader" width="10%">Defect Rate</th>
+				<th class="kc-test-viewheader" width="5%">Defect Rate</th>
 				<th class="kc-test-viewheader" width="10%">Remediation Status</th>
 				<th class="kc-test-viewheader" width="10%">Target to Close</th>
 				<th class="kc-test-viewheader" width="17%">Comments</th>
@@ -25,12 +26,13 @@
 			<tbody>
 				{{#each RCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="15%">{{processCategory}}</td>
 						<td width="18%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{process}}</a></td>
 						<td width="10%">{{eventDate}}</td>
-						<td width="10%">{{numTestsCompleted}}</td>
-						<td width="10%">{{numProcessDefects}}</td>
+						<td width="5%">{{numTestsCompleted}}</td>
+						<td width="5%">{{numProcessDefects}}</td>
 						<td width="5%">{{numControlDeficiencies}}</td>
-						<td width="10%">{{{compDocDRDisplayView RAGStatus defectRate}}}</td>
+						{{{compDocDRDisplayView RAGStatus defectRate}}}
 						<!-- {{{defectRateDisplayView defectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}} -->
 
 						<td width="10%">{{remediationStatus}}</td>
