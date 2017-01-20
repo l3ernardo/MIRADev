@@ -65,7 +65,7 @@
 							<td style="background-color: white !important;" style="width:10%;white-space:nowrap;">{{#if _id}}<a href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
 							<td style="background-color: white !important;" style="width:35%;">{{{summary}}}</td>
 							<td style="background-color: white !important;" style="width:10%;">{{observationCategory}}</td>
-							{{#if_equal ParentDocSubType "Country Process"}}
+							{{#if_equal ../ParentDocSubType "Country Process"}}
 							<td style="background-color: white !important;" style="width:10%;">{{AuditCAR}}</td>
 							{{else}}
 							<td style="background-color: white !important;" style="width:10%;">{{process}}</td>
