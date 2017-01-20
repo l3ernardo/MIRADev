@@ -171,7 +171,7 @@ var calculatefield = {
     			} else {
     				lParams = ['GTSInstanceDesign'];
     			}
-          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
+          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
             // For Testing Tab Dynamic tables in the Rollup Assessments
             lParams.push('GTSRollupProcessesOPS');
             lParams.push('GTSRollupProcessesFIN');
@@ -180,7 +180,7 @@ var calculatefield = {
         else if (doc[0].MIRABusinessUnit == "GBS") {
           // GBS Assessment Doc Parameters
           lParams.push('GBSInstanceDesign');
-          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country") {
+          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
             // For Testing Tab Dynamic tables in the Rollup Assessments
             lParams.push('GBSRollupProcessesOPS');
             lParams.push('GBSRollupProcessesFIN');
@@ -917,7 +917,7 @@ var calculatefield = {
               break;
             case "BU Country":
             	 // PO tab performance indicators view
-                
+
             	if(doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && POCountryFlag == 0){
             		 toadd = {
             		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
@@ -938,7 +938,7 @@ var calculatefield = {
             		 doc[0].BUCAsmtDataPIview.push(toadd);
             		POCountryFlag = 1;
             	}
-            	
+
             	if(doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit" && POCUFlah == 0){
             		 toadd = {
             		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
@@ -957,11 +957,11 @@ var calculatefield = {
                     "treeParent" : "1"
             		 };
             		 doc[0].BUCAsmtDataPIview.push(toadd);
-            		
+
             		POCUFlah = 1;
             	}
-            	
-            	
+
+
 
             	if(doc[0].asmtsdocs[i].ParentDocSubType == "BU Country" &&  POBUCFlag == 0){
             		 toadd = {
@@ -983,7 +983,7 @@ var calculatefield = {
             		 doc[0].BUCAsmtDataPIview.push(toadd);
                     POBUCFlag = 1;
             	}
-            	
+
               toadd = {
                 "docid":doc[0].asmtsdocs[i]._id,
                 "name":doc[0].asmtsdocs[i].AssessableUnitName,
@@ -998,7 +998,7 @@ var calculatefield = {
                 "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
                 "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
                 "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
-                "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'') 
+                "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
               };
               doc[0].BUCAsmtDataPIview.push(toadd);
               // PO tab other indicators view
