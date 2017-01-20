@@ -586,7 +586,28 @@ var components = {
             data.reportingQuarter =  pdoc.CurrentPeriod;
             data.account = pdoc.AssessableUnitName;
             data.parentid = req.query.id;
-            deferred.resolve({"status": 200, "data":data})
+
+            var Thresholds = [];
+            var keyN = {
+              selector : {
+                "_id": {"$gt":0},
+                keyName: "KCO/KCFR Marginal Defect Rate Threshold"
+            }};
+            Thresholds.push(db.find(keyN));
+            keyN = {
+              selector : {
+                "_id": {"$gt":0},
+                keyName: "KCO/KCFR Unsat Defect Rate Threshold"
+            }};
+            Thresholds.push(db.find(keyN));
+            Thresholds.push(db.find(keyN));
+            q.all(Thresholds).then(function(thres){
+              data.Marg = thres[0].body.docs[0].value.option;
+              data.Unsat = thres[1].body.docs[0].value.option;
+              deferred.resolve({"status": 200, "data":data})
+            });
+
+
           }
         }).catch(function(err) {
           deferred.reject({"status": 500, "error": err.error.reason});
@@ -879,7 +900,7 @@ var components = {
         if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
           obj.defectRate = 0;
         } else {
-          obj.defectRate = (parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted)) .toFixed(2);
+          obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
         }
         db.save(obj).then(function(data){
 
@@ -917,7 +938,7 @@ var components = {
           if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
             obj.defectRate = 0;
           } else {
-            obj.defectRate = (parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted)) .toFixed(2);
+            obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
           }
 
           db.save(obj).then(function(data){
