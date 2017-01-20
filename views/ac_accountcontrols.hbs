@@ -4,7 +4,6 @@
 
 <input type="hidden" id="docTitle" value="Key Controls Test">
 <input type="hidden" id="docSubTitle" value="{{account}}">
-<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
 
 <script>
 	//Load document's name
@@ -27,12 +26,15 @@
 <form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveaccountcontrols">
   <input type="hidden" name="docid" id="docid" value="{{_id}}">
   <input type="hidden" name="editmode" value="{{editmode}}">
-  <input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+	<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
   <input type="hidden" name="docType" id="docType" value="accountControls">
+	<input type="hidden" name="quarter" id="quarter" value="{{reportingQuarter}}">
+	<input type="hidden" name="RAGStatus" id="RAGStatus" value="{{RAGStatus}}">
+
 <table id="sample-table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
   <caption class="mira-caption"><em>Details</em></caption>
 <tr>
-  <td width="25%">Reporting quarter:</td><td><b class="ibm-important"><input type="text" name="reportingQuarter" value="{{reportingQuarter}}" {{#unless new}}readonly{{/unless}}></b></td>
+  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
 </tr>
 <tr>
   <td>Process:</td><td><input type="text" name="process" value="{{process}}"></td>
@@ -58,11 +60,11 @@
   </thead>
   <tbody>
     <tr>
-      <td ><input type="number" name="numTestsCompleted" id="numTestsCompleted" value="{{numTestsCompleted}}"></td>
-      <td ><input type="number" name="numProcessDefects" id="numProcessDefects" value="{{numProcessDefects}}"></td>
+      <td><input type="number" name="numTestsCompleted" id="numTestsCompleted" value="{{numTestsCompleted}}"></td>
+      <td><input type="number" name="numProcessDefects" id="numProcessDefects" value="{{numProcessDefects}}"></td>
       <td><input type="number" name="numControlDeficiencies" value="{{numControlDeficiencies}}"></td>
-      <td ><input type="text" name="RAGStatus" id="RAGStatus" value="{{RAGStatus}}" readonly></td>
-      <td ><input type="text" name="remediationStatus" value="{{remediationStatus}}"></td>
+			<td id="ragstatustd"></td>
+      <td><input type="text" name="remediationStatus" value="{{remediationStatus}}"></td>
       <td><input type="text" name="targetToClose" id="targetToClose" value="{{targetToClose}}"></td>
       <td><input type="text" name="comments" value="{{comments}}"></td>
     </tr>
@@ -100,7 +102,7 @@
       <td >{{numTestsCompleted}}</td>
       <td >{{numProcessDefects}}</td>
       <td>{{numControlDeficiencies}}</td>
-      <td >{{{ratingDisplay RAGStatus}}}</td>
+			{{{ratingDisplayView RAGStatus}}}
       <td >{{remediationStatus}}</td>
       <td>{{targetToClose}}</td>
       <td>{{comments}}</td>
@@ -113,6 +115,27 @@
 </div>
 <script>
 $(document).ready(function(){
+	if($("#RAGStatus").val()=="" || $("#RAGStatus").val()==undefined) {
+		$("#ragstatustd").html("&nbsp;");
+	} else if ($("#RAGStatus").val()=="Unsat") {
+		$("#ragstatustd").attr('width','5%');
+		$("#ragstatustd").attr('class','asmt-viewdata-red');
+		$("#ragstatustd").attr('style','background-color: red; color: #ffffff; text-align: center; !important;');
+		$("#ragstatustd").html('Unsat');
+	} else if ($("#RAGStatus").val()=="Sat") {
+		$("#ragstatustd").attr('width','5%');
+		$("#ragstatustd").attr('class','asmt-viewdata-green');
+		$("#ragstatustd").attr('style','background-color: #00FF00; text-align: center; !important;');
+		$("#ragstatustd").html('Sat');
+	} else if ($("#RAGStatus").val()=="Marg") {
+		$("#ragstatustd").attr('width','5%');
+		$("#ragstatustd").attr('class','asmt-viewdata-yellow');
+		$("#ragstatustd").attr('style','background-color: yellow; text-align: center; !important;');
+		$("#ragstatustd").html('Marg');
+	} else {
+		$("#ragstatustd").html("&nbsp;");
+	}
+
   $('#eventDate').datepicker( {
           changeMonth: true,
           changeYear: true,
@@ -135,15 +158,31 @@ $(document).ready(function(){
       var defects = $("#numProcessDefects").val();
       var unsatT = $("#UnsatThreshold").val();;
       var margT = $("#MargThreshold").val();
-      var tmp = tests / defects;
-      alert(margT);
-      if(tmp >= unsatT){
-        $("#RAGStatus").val("Unsat");
-      }else if(tmp < margT){
-        $("#RAGStatus").val("Sat");
-      }else{
-        $("#RAGStatus").val("Marg");
-      }
+			if (tests == "" || tests < 1 || defects < 0 || defects == "" ) {
+				$("#RAGStatus").val("");
+				$("#ragstatustd").html("&nbsp;");
+			} else {
+				var tmp = (defects / tests) * 100;
+				if(tmp >= unsatT){
+	        $("#RAGStatus").val("Unsat");
+					$("#ragstatustd").attr('width','5%');
+					$("#ragstatustd").attr('class','asmt-viewdata-red');
+					$("#ragstatustd").attr('style','background-color: red; color: #ffffff; text-align: center; !important;');
+					$("#ragstatustd").html('Unsat');
+	      }else if(tmp < margT){
+	        $("#RAGStatus").val("Sat");
+					$("#ragstatustd").attr('width','5%');
+					$("#ragstatustd").attr('class','asmt-viewdata-green');
+					$("#ragstatustd").attr('style','background-color: #00FF00; text-align: center; !important;');
+					$("#ragstatustd").html('Sat');
+	      }else{
+	        $("#RAGStatus").val("Marg");
+					$("#ragstatustd").attr('width','5%');
+					$("#ragstatustd").attr('class','asmt-viewdata-yellow');
+					$("#ragstatustd").attr('style','background-color: yellow; text-align: center; !important;');
+					$("#ragstatustd").html('Marg');
+	      }
+			}
     });
 
     $("#numProcessDefects").change(function () {
@@ -152,15 +191,31 @@ $(document).ready(function(){
       var tests = $("#numTestsCompleted").val();
       var unsatT = $("#UnsatThreshold").val();;
       var margT = $("#MargThreshold").val();
-      var tmp = tests / defects;
-      alert(unsatT);
-      if(tmp >= unsatT){
-        $("#RAGStatus").val("Unsat");
-      }else if(tmp < margT){
-        $("#RAGStatus").val("Sat");
-      }else{
-        $("#RAGStatus").val("Marg");
-      }
+			if (tests == "" || tests < 1 || defects < 0 || defects == "" ) {
+				$("#RAGStatus").val("");
+				$("#ragstatustd").html("&nbsp;");
+			} else {
+				var tmp = (defects / tests) * 100;
+				if(tmp >= unsatT){
+	        $("#RAGStatus").val("Unsat");
+					$("#ragstatustd").attr('width','5%');
+					$("#ragstatustd").attr('class','asmt-viewdata-red');
+					$("#ragstatustd").attr('style','background-color: red; color: #ffffff; text-align: center; !important;');
+					$("#ragstatustd").html('Unsat');
+	      }else if(tmp < margT){
+	        $("#RAGStatus").val("Sat");
+					$("#ragstatustd").attr('width','5%');
+					$("#ragstatustd").attr('class','asmt-viewdata-green');
+					$("#ragstatustd").attr('style','background-color: #00FF00; text-align: center; !important;');
+					$("#ragstatustd").html('Sat');
+	      }else{
+	        $("#RAGStatus").val("Marg");
+					$("#ragstatustd").attr('width','5%');
+					$("#ragstatustd").attr('class','asmt-viewdata-yellow');
+					$("#ragstatustd").attr('style','background-color: yellow; text-align: center; !important;');
+					$("#ragstatustd").html('Marg');
+	      }
+			}
     });
 
 $('#btn_edit').click(function() {
@@ -168,7 +223,7 @@ $('#btn_edit').click(function() {
 });
 $('#btn_save_close').click(function() {
   $('#close').val("back");
-  $("#accountauditform").submit();
+  $("#asmtcomponentform").submit();
 });
 $('#btn_save').click(function(evt) {
   $("#asmtcomponentform").submit();

@@ -38,10 +38,13 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
     <table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
       <caption class="mira-caption"><em>Basics</em></caption>
       <tr>
-        <td width="25%">ID:</td><td><b>{{id}}</b></td>
+        <td width="25%">{{parentdocsubtype}}:</td><td><b>{{parentname}}</b></td>
       </tr>
       <tr>
-        <td>Audit or Review:</td><td>{{auditOrReview}}</td>
+        <td width="25%">ID:</td><td><b>{{engagement}}</b></td>
+      </tr>
+      <tr>
+        <td>Audit or Review:</td><td>CHQ Internal Audit</td>
       </tr>
       <tr>
         <td>Status:</td><td>{{status}}</td>

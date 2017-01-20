@@ -59,7 +59,7 @@
 						<td width="38%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{numDefects}}</td>
-						{{{compDocDRDisplayView RAGStatus defectRate}}}
+						<td width="10%">{{{compDocDRDisplayView RAGStatus defectRate}}}</td>
 						<td width="20%">{{#if remFinImpact}}$ {{/if}}{{remFinImpact}}</td>
 					</tr>
 				{{/each}}
@@ -102,9 +102,9 @@
 						<td width="14%">{{numtest}}</td>
 						<td width="14%">{{numDefects}}</td>
 						{{#if defectRate}}
-						{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
+						<td width="15%">{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}</td>
 						{{else}}
-						<td></td>
+						<td width="15%"></td>
 						{{/if}}
 					</tr>
 				{{/each}}

@@ -133,7 +133,7 @@ var register = function(Handlebars) {
 		},
 
 		ratingDisplayView: function(rating, percent) {
-			var ratinghtml = '<td ';
+			var ratinghtml = '<td class="';
 			if (rating == undefined) {
 					ratinghtml += 'asmt-viewdata"'
 					if(!isNaN(percent)){
@@ -142,11 +142,11 @@ var register = function(Handlebars) {
 					ratinghtml += '></td>';
 			} else {
 				if (rating == "Sat" || rating == "Satisfactory" || rating == "Favorable" || rating == "Unqualified" || rating == "Positive")
-					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;"';
+					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00; text-align: center; !important;"';
 				else if (rating == "Marg" || rating == "Marginal")
-					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;"';
+					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow; text-align: center; !important;"';
 				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative")
-					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;"';
+					ratinghtml += 'asmt-viewdata-red"  style="background-color: red; color: #ffffff; text-align: center; !important;"';
 				else
 					ratinghtml += 'asmt-viewdata-centered"';
 				if(!isNaN(percent)){
@@ -162,11 +162,11 @@ var register = function(Handlebars) {
 					ratinghtml = '<td class="asmt-viewdata"></td>';
 			} else {
 				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'%</td>';
 				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'%</td>';
 				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'%</td>';
 				else
 					ratinghtml = '<td class="asmt-viewdata-centered">-</td>';
 			}
@@ -227,7 +227,7 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
-		
+
 		/*
 		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
 			var drhtml;
@@ -379,8 +379,10 @@ var register = function(Handlebars) {
 		},
 		openRiskDisplay: function(open, date) {
 			var datehtml;
+			if (date == undefined) {
+				date = '';
+			}
 			if (open == undefined) {
-
 			} else {
 				if (open < 0) {
 					datehtml = '<span style="padding-left:1em; padding-right:1em">$'+date+'</span>';

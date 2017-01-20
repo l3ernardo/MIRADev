@@ -418,7 +418,7 @@ var assessableunit = {
 																					//Edit && Admin
 																					if(req.query.edit != undefined && doc[0].editor && doc[0].admin){
 																						//Get CU Parents List
-																						assessableunit.getCUParents(req, db).then(function(dataCP) {
+																						assessableunit.getCUParents(req, db, doc[0].MIRABusinessUnit).then(function(dataCP) {
 																							if(dataCP.status==200 && !dataCP.error){
 																								doc[0].CUParents = [];
 																								doc[0].CUParents = dataCP.doc;
@@ -972,6 +972,10 @@ var assessableunit = {
 								}
 								break;
 							case "Account":
+								//Validate if account changed parent
+								if(doc[0].parentid != req.body.cuparentname){
+									doc[0].parentid = req.body.cuparentname;
+								}
 								doc[0].Name = req.body.Name;
 								//doc[0].CUWWBCITKey = pdoc[0].WWBCITKey;
 								if(req.body.MetricsCriteria != undefined){//only for admin user
