@@ -186,8 +186,44 @@ var getDocs = {
                     doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
                   }
                 }
-                // Calculate for ControlName
-                //doc[0].RCTestData[acctControlCounter].controlName = doc[0].RCTestData[acctControlCounter].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[acctControlCounter].controlShortName;
+
+                //calculate for Process Category
+                if (doc[0].GBSRollupProcessesOPS !== undefined) {
+                  for (var j = 0; j < doc[0].GBSRollupProcessesOPS.length; j++) {
+                    if (comps[i].process == doc[0].GBSRollupProcessesOPS[j].name) {
+                      comps[i].processCategory = "Operational Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GBSRollupProcessesFIN !== undefined) {
+                  for (var j = 0; j < doc[0].GBSRollupProcessesFIN.length; j++) {
+                    if (comps[i].process == doc[0].GBSRollupProcessesFIN[j].name) {
+                      comps[i].processCategory = "Financial Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GTSRollupProcessesOPS !== undefined) {
+                  for (var j = 0; j < doc[0].GTSRollupProcessesOPS.length; j++) {
+                    if (comps[i].process == doc[0].GTSRollupProcessesOPS[j].name) {
+                      comps[i].processCategory = "Operational Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GTSRollupProcessesFIN !== undefined) {
+                  for (var j = 0; j < doc[0].GTSRollupProcessesFIN.length; j++) {
+                    if (comps[i].process == doc[0].GTSRollupProcessesFIN[j].name) {
+                      comps[i].processCategory = "Financial Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined) {
+                  comps[i].processCategory = "Operational Processes";
+                }
+
                 acctControlCounter++;
               }
             }
