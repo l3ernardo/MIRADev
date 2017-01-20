@@ -437,6 +437,8 @@ var assessment = {
 						// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 						doc[0].Name = req.session.buname + " - " + doc[0].Country;
 
+						comp.getCompDocs(db,doc).then(function(dataComp){
+
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
 							fieldCalc.getRatingProfile(doc);
 							if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
@@ -468,18 +470,17 @@ var assessment = {
 								}
 							}
 							//create a space for performance Tab
-							comp.getCompDocs(db,doc).then(function(dataComp){
-								//open risks
-								ort.processORTab(doc,defViewRow);
-								//audit universe
-								aut.processAUTab(doc,defViewRow);
+							
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
+								performanceTab.getMSACCommitments(db,doc);
 								// console.log("KFCRDefectRate: "+doc[0].KCFRDefectRate);
 								 //console.log("KCODefectRate: "+doc[0].KCODefectRate);
 								 //console.log("MissedRisks: "+doc[0].MissedOpenIssueCount);
-								 //console.log(doc[0].BUCAsmtDataPIview);
+								 //console.log(doc[0].AUData);
+								 //console.log(doc[0].asmtsdocs);
+								//console.log(doc[0].RiskView1Data);
 
 								 var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
