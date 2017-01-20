@@ -568,22 +568,53 @@ var components = {
   },
 
   getAccountControls: function(req, db){
-    /******************
-
-    PROCESS PENDNING
-
-    *************************/
     var deferred = q.defer();
-    if(typeof req.query.new !== "undefined"){
-      var data = {};
-      data.new = 1;
-      data.editmode = true;
-      deferred.resolve({"status": 200, "data":data})
 
-      return deferred.promise;
+    try{
+      // new doc
+      if(typeof req.query.new !== "undefined"){
+        // get parent doc
+        db.get(req.query.id).then(function(pdata){
+          var pdoc = pdata.body;
+          if(typeof pdoc === "undefined"){
+            deferred.reject({"status": 500, "error": "parent document does not exist"});
+          }else{
+            var data = {};
+            data.new = 1;
+            data.editmode = true;
+            // inherited fields from parent
+            data.reportingQuarter =  pdoc.CurrentPeriod;
+            data.account = pdoc.AssessableUnitName;
+            data.parentid = req.query.id;
 
-    }else{
-      try{
+            var Thresholds = [];
+            var keyN = {
+              selector : {
+                "_id": {"$gt":0},
+                keyName: "KCO/KCFR Marginal Defect Rate Threshold"
+            }};
+            Thresholds.push(db.find(keyN));
+            keyN = {
+              selector : {
+                "_id": {"$gt":0},
+                keyName: "KCO/KCFR Unsat Defect Rate Threshold"
+            }};
+            Thresholds.push(db.find(keyN));
+            Thresholds.push(db.find(keyN));
+            q.all(Thresholds).then(function(thres){
+              data.Marg = thres[0].body.docs[0].value.option;
+              data.Unsat = thres[1].body.docs[0].value.option;
+              deferred.resolve({"status": 200, "data":data})
+            });
+
+
+          }
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
+      }
+      // existing document
+      else{
         var obj = {
           selector : {
             "_id": req.query.id,
@@ -592,41 +623,54 @@ var components = {
         };
 
         db.find(obj).then(function(data){
-        //console.log(data.body.docs[0]);
-        //data.body.docs[0]["_id"] = req.query.id;
-        if(typeof req.query.edit !== "undefined"){
-          data.body.docs[0].editmode = 1;
-          var Thresholds = [];
-          var keyN = {
-            selector : {
-              "_id": {"$gt":0},
-              keyName: "KCO/KCFR Marginal Defect Rate Threshold"
-            }};
-            Thresholds.push(db.find(keyN));
-             keyN = {
-              selector : {
-                "_id": {"$gt":0},
-                keyName: "KCO/KCFR Unsat Defect Rate Threshold"
+          if(typeof data === "undefined"){
+            deferred.reject({"status": 500, "error": "document does not exist"});
+          }
+          else{
+            // data.body.docs[0].reportingQuarter =  pdoc.CurrentPeriod;
+            // data.body.docs[0].account = pdoc.AssessableUnitName;
+            data.body.docs[0].editor = true;
+            if(typeof req.query.edit !== "undefined"){
+              data.body.docs[0].editmode = 1;
+              var Thresholds = [];
+              var keyN = {
+                selector : {
+                  "_id": {"$gt":0},
+                  keyName: "KCO/KCFR Marginal Defect Rate Threshold"
+              }};
+              Thresholds.push(db.find(keyN));
+              keyN = {
+                selector : {
+                  "_id": {"$gt":0},
+                  keyName: "KCO/KCFR Unsat Defect Rate Threshold"
+              }};
+              Thresholds.push(db.find(keyN));
+              // get parent doc
+              keyN = {
+                selector : {
+                  "_id": data.body.docs[0].parentid
               }};
               Thresholds.push(db.find(keyN));
               q.all(Thresholds).then(function(thres){
-
                 data.body.docs[0].Marg = thres[0].body.docs[0].value.option;
                 data.body.docs[0].Unsat = thres[1].body.docs[0].value.option;
-                  deferred.resolve({"status": 200, "data":data.body.docs[0]});
+                data.body.docs[0].account = thres[2].body.docs[0].AssessableUnitName;
+                deferred.resolve({"status": 200, "data":data.body.docs[0]});
               });
-        }else{
-          deferred.resolve({"status": 200, "data":data.body.docs[0]});
-        }
-      }).catch(function(err) {
-        deferred.reject({"status": 500, "error": err.error.reason});
-      });
-
-      }catch(e){
-        deferred.reject({"status": 500, "error": e});
+            }else{
+              deferred.resolve({"status": 200, "data":data.body.docs[0]});
+            }
+          }
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
       }
-      return deferred.promise;
     }
+    catch(e){
+      deferred.reject({"status": 500, "error": e});
+    }
+
+    return deferred.promise;
   },
 
   /* Save Open Issue number of missed tasks override in cloudant */
@@ -761,7 +805,7 @@ var components = {
         obj.AssessableUnitName = req.body.AssessableUnitName;
         obj.auditOrReview = req.body.auditOrReview;
         obj.Log = [addlog];
-        obj.reportingQuarter = req.session.quarter;
+        obj.reportingQuarter = req.body.quarter;
         obj.auditID = req.body.auditID;
         obj.reportDate = req.body.reportDate;
         obj.process = req.body.process;
@@ -836,11 +880,10 @@ var components = {
       };
 
       if(req.body.docid === ""){
-
         var obj={};
         obj.docType = "asmtComponent";
         obj.compntType = "accountControls";
-        obj.account = req.body.account;
+        // obj.account = req.body.account;
         obj.process = req.body.process;
         obj.Log = [addlog];
         obj.reportingQuarter = req.session.quarter;
@@ -853,7 +896,12 @@ var components = {
         obj.targetToClose = req.body.targetToClose;
         obj.comments = req.body.comments;
         obj.parentid = req.body.parentid;
-
+        // calculate for defect Rate
+        if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
+          obj.defectRate = 0;
+        } else {
+          obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
+        }
         db.save(obj).then(function(data){
 
           deferred.resolve({"status": 200, "data": data.body});
@@ -885,6 +933,13 @@ var components = {
           obj.remediationStatus = req.body.remediationStatus;
           obj.targetToClose = req.body.targetToClose;
           obj.comments = req.body.comments;
+
+          // calculate for defect Rate
+          if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
+            obj.defectRate = 0;
+          } else {
+            obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
+          }
 
           db.save(obj).then(function(data){
 
