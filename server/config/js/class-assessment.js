@@ -437,6 +437,8 @@ var assessment = {
 						// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 						doc[0].Name = req.session.buname + " - " + doc[0].Country;
 
+						comp.getCompDocs(db,doc).then(function(dataComp){
+
 						fieldCalc.getAssessments(db, doc, req).then(function(data){
 							fieldCalc.getRatingProfile(doc);
 							if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
@@ -468,18 +470,17 @@ var assessment = {
 								}
 							}
 							//create a space for performance Tab
-							comp.getCompDocs(db,doc).then(function(dataComp){
-								//open risks
-								ort.processORTab(doc,defViewRow);
-								//audit universe
-								aut.processAUTab(doc,defViewRow);
+							
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
+								performanceTab.getMSACCommitments(db,doc);
 								// console.log("KFCRDefectRate: "+doc[0].KCFRDefectRate);
 								 //console.log("KCODefectRate: "+doc[0].KCODefectRate);
 								 //console.log("MissedRisks: "+doc[0].MissedOpenIssueCount);
-								 //console.log(doc[0].BUCAsmtDataPIview);
+								 //console.log(doc[0].AUData);
+								 //console.log(doc[0].asmtsdocs);
+								//console.log(doc[0].RiskView1Data);
 
 								 var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
@@ -714,12 +715,13 @@ var assessment = {
 											for(var i = 0; i < keys.length; i++){
 												list.push({id: keys[i].replace(/ /g,''), name: keys[i]});
 												for(var j =0; j < periods[keys[i]].length; j++){
-													list.push({id: periods[keys[i]][j].replace(/ /g,''), name: periods[keys[i]][j].split("@")[0], parent:keys[i].replace(/ /g,'')});
+													//list.push({id: periods[keys[i]][j].replace(/ /g,''), name: periods[keys[i]][j].split("@")[0], parent:keys[i].replace(/ /g,'')});
 													var current = ALLs[periods[keys[i]][j]];
 													for (var l = 0; l < current.length; l++) {
 														current[l].engagementID = current[l].engagementIDone +"-"+current[l].engagementIDtwo+"-"+current[l].engagementIDthree+" "+current[l].recommendationNum,
-														current[l].parent = periods[keys[i]][j].replace(/ /g,'');
+														current[l].parent = keys[i].replace(/ /g,'');//periods[keys[i]][j].replace(/ /g,'');
 														current[l].id = current[l]["_id"];
+														current[l].AuditCAR = current[l]["AuditCAR"];
 														list.push(current[l]);
 													}
 												}

@@ -186,8 +186,44 @@ var getDocs = {
                     doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
                   }
                 }
-                // Calculate for ControlName
-                //doc[0].RCTestData[acctControlCounter].controlName = doc[0].RCTestData[acctControlCounter].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[acctControlCounter].controlShortName;
+
+                //calculate for Process Category
+                if (doc[0].GBSRollupProcessesOPS !== undefined) {
+                  for (var j = 0; j < doc[0].GBSRollupProcessesOPS.length; j++) {
+                    if (comps[i].process == doc[0].GBSRollupProcessesOPS[j].name) {
+                      comps[i].processCategory = "Operational Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GBSRollupProcessesFIN !== undefined) {
+                  for (var j = 0; j < doc[0].GBSRollupProcessesFIN.length; j++) {
+                    if (comps[i].process == doc[0].GBSRollupProcessesFIN[j].name) {
+                      comps[i].processCategory = "Financial Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GTSRollupProcessesOPS !== undefined) {
+                  for (var j = 0; j < doc[0].GTSRollupProcessesOPS.length; j++) {
+                    if (comps[i].process == doc[0].GTSRollupProcessesOPS[j].name) {
+                      comps[i].processCategory = "Operational Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GTSRollupProcessesFIN !== undefined) {
+                  for (var j = 0; j < doc[0].GTSRollupProcessesFIN.length; j++) {
+                    if (comps[i].process == doc[0].GTSRollupProcessesFIN[j].name) {
+                      comps[i].processCategory = "Financial Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined) {
+                  comps[i].processCategory = "Operational Processes";
+                }
+
                 acctControlCounter++;
               }
             }
@@ -212,8 +248,8 @@ var getDocs = {
               //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
                 //Performance Tab
                 { "$and": [{"compntType": "countryControls"}, {"reportingCountry":  util.resolveGeo(doc[0].Country,"Country")}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
-                {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
-                //{ "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
+              //  {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
+                { "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
                 // Key Controls Testing Tab
                 // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },

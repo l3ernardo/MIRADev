@@ -11,7 +11,42 @@ var forEach = require('async-foreach').forEach;
 var util = require('./class-utility.js');
 var moment = require('moment');
 
+var getOpenIssuePerAssessment = function (RiskView1Data,AssessableUnitName){
+	
+	try{
+		
+		
+	//var tempCountry = AssessableUnitName.split('-')[0].replace(/ /g,'');
+	var tempCountry = "USA";
+	
+	
+	if(AssessableUnitName.split('-').length>2){
+		var tempProcess = AssessableUnitName.split('-')[1];
+		tempProcess += "-";
+		tempProcess += AssessableUnitName.split('-')[2];
+	}
+	else{
+		var tempProcess = AssessableUnitName.split('-')[1] ;
+	} 
+	
+	tempProcess = tempProcess.replace(/ /g,'');
+	tempCountry = tempCountry.replace(/ /g,'');
+	
+	tempRiskCountry = RiskView1Data.country.replace(/ /g,'');
+	tempRiskProcess = RiskView1Data.process.replace(/ /g,'');
 
+	if(tempRiskCountry == tempCountry && tempRiskProcess == tempProcess )
+		return true;
+		else
+			return false;
+	
+	}catch (e){
+		console.log(e);
+		return false;
+	}
+	
+	
+}
 
 var performanceoverviewcountry = {
 	
@@ -112,8 +147,49 @@ var performanceoverviewcountry = {
 	},
 	
 	
+	
+	getMissedRisksIndividual : function (RiskView1Data,AssessableUnitName){
+		var counterRisks = 0;
+		
+		
+		try{
+		
+			for(var i=0; i< RiskView1Data.length; i++){
+				
+				if(getOpenIssuePerAssessment(RiskView1Data[i],AssessableUnitName)){
+							
+					if(RiskView1Data[i].status != "Closed"){
+						    
+						if(!isNaN(parseInt(RiskView1Data[i].ctrg))){
+							if(parseInt(RiskView1Data[i].ctrg) > 0 || RiskView1Data[i].FlagTodaysDate == "1" )
+								counterRisks ++;
+						}
+						else
+							if(!isNaN(parseInt(RiskView1Data[i].numMissedTasks))){
+								if(parseInt(RiskView1Data[i].numMissedTasks) > 0 || RiskView1Data[i].FlagTodaysDate == "1")
+									counterRisks ++;
+							}
+							else
+								if(RiskView1Data[i].FlagTodaysDate == "1")
+									counterRisks ++;
+					}
+			
+				}
+				
+		}
+		}catch(e){
+		    console.log(e);
+			return "err";
+		}
+				
+		return counterRisks.toString();
+	},
+	
+	
+	
+	
 	getMissedRisks : function (db,doc){
-		var conterRisks =0;
+		var counterRisks =0;
 		try{
 			
 			//obtain defect and test count from the components(Open issue)
@@ -136,10 +212,10 @@ var performanceoverviewcountry = {
 				}
 			}
 			
-			doc[0].MissedOpenIssueCount = conterRisks;
+			doc[0].MissedOpenIssueCount = counterRisks;
 			
 		}catch(e){
-			deferred.reject({"status": 500, "error": e});
+			 console.log(e);
 		}
 		
 		/*
@@ -151,21 +227,61 @@ var performanceoverviewcountry = {
 		 */
 	},
 	
-	
+	getMSACCOmmitmentsIndividual: function (AUData){
+		var count =0;
+		var currentDate =  util.getDateTime("","date")
+		
+		try{
+		
+				if(AUData.PeriodRating == "Marg" || AUData.PeriodRating =="Unsat" ){
+					if(AUData.AUStatus != "Retired"){
+						if(AUData.Target2Sat != undefined && AUData.Target2SatPrev != undefined){  
+							if(AUData.Target2Sat != "" && AUData.Target2SatPrev != "" ){
+								//console.log( "Target2Sat: "+new Date(doc[0].AUData[i].Target2Sat).getTime()); console.log( "Target2SatPrev: "+new Date(doc[0].AUData[i].Target2SatPrev).getTime()); console.log("current date: "+new Date(currentDate ).getTime());
+								
+								if( (new Date(AUData.Target2Sat).getTime() > new Date(AUData.Target2SatPrev).getTime()) || (new Date(AUData.Target2SatPrev).getTime() < new Date(currentDate).getTime()) ){
+									count++;
+								} 
+							}
+						
+						}
+						
+					}
+				}
+				
+			
+			return count.toString();
+			
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		
+	},
 	
 	getMSACCommitments : function (db,doc){
+		var count =0;
+		var currentDate =  util.getDateTime("","date");
+	   
 		try{
-			for(var i=0;i<doc[0].AUData.length;i++){
-				if(doc[0].AUData.PeriodRating == "Marg" || doc[0].AUData.PeriodRating =="Unsat" ){
-					if(doc[0].AUData.AUStatus != "Retired"){
+			for(var i=0;i<doc[0].AUData.length;i++){ 
+				if(doc[0].AUData[i].PeriodRating == "Marg" || doc[0].AUData[i].PeriodRating =="Unsat" ){
+					if(doc[0].AUData[i].AUStatus != "Retired"){
+						if(doc[0].AUData[i].Target2Sat != undefined && doc[0].AUData[i].Target2SatPrev != undefined){  
+							if(doc[0].AUData[i].Target2Sat != "" && doc[0].AUData[i].Target2SatPrev != "" ){
+								//console.log( "Target2Sat: "+new Date(doc[0].AUData[i].Target2Sat).getTime()); console.log( "Target2SatPrev: "+new Date(doc[0].AUData[i].Target2SatPrev).getTime()); console.log("current date: "+new Date(currentDate ).getTime());
+								
+								if( (new Date(doc[0].AUData[i].Target2Sat).getTime() > new Date(doc[0].AUData[i].Target2SatPrev).getTime()) || (new Date(doc[0].AUData[i].Target2SatPrev).getTime() < new Date(currentDate).getTime()) ){
+									count++;
+								} 
+							}
 						
-						
+						}
 						
 					}
 				}
 				
 			}
-			
+			doc[0].MissedMSACSatCount = count.toString();
 			
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
@@ -173,7 +289,7 @@ var performanceoverviewcountry = {
 		
 		/*
 		 * all assessments under the BU Country, where reportign quarter is the same, business unit is the same, and country is the same 
-	???? target		, including Country Process, Controllable Unit and BU Country    ,  PeriodRating = "Marg" or "Unsat" , AUStatus != "Retired" AND ( (Target2Sat != "" & Target2SatPrev != "" & Target2Sat > Target2SatPrev ) | (Target2SatPrev < currentdate) )  
+	 target		, including Country Process, Controllable Unit and BU Country    ,  PeriodRating = "Marg" or "Unsat" , AUStatus != "Retired" AND ( (Target2Sat != "" & Target2SatPrev != "" & Target2Sat > Target2SatPrev ) | (Target2SatPrev < currentdate) )  
 		 */
 		
 	},

@@ -162,11 +162,11 @@ var register = function(Handlebars) {
 					ratinghtml = '<td class="asmt-viewdata"></td>';
 			} else {
 				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'%</td>';
 				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'%</td>';
 				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'%</td>';
 				else
 					ratinghtml = '<td class="asmt-viewdata-centered">-</td>';
 			}
