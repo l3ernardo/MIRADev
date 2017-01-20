@@ -10,33 +10,6 @@ var q  = require("q");
 var utility = require('./class-utility.js');
 
 var components = {
-
-  newAudit: function(req, db){
-    var deferred = q.defer();
-    try{
-      var obj = {
-        selector : {
-          "_id": req.query.id,
-          "compntType": "ppr"
-        }
-      };
-
-      db.find(obj).then(function(data){
-        //console.log(data.body.docs[0]);
-        data.body.docs[0]["_id"] = req.query.id;
-        if(typeof req.query.edit !== "undefined"){
-          data.body.docs[0].editmode = 1;
-        }
-        deferred.resolve({"status": 200, "data":data.body.docs[0]})
-      }).catch(function(err) {
-        deferred.reject({"status": 500, "error": err.error.reason});
-      });
-    }catch(e){
-      deferred.reject({"status": 500, "error": e});
-    }
-    return deferred.promise;
-  },
-
   getComponent: function(req, db){
     var deferred = q.defer();
     try{

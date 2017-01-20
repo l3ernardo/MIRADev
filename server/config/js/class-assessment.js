@@ -467,16 +467,12 @@ var assessment = {
 									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 								}
 							}
-							//open risks
-							ort.processORTab(doc,defViewRow);
-							//console.log(RiskView1Data);
-							//doc[0].RiskView2Data
-							//audit universe
-							aut.processAUTab(doc,defViewRow);
-
 							//create a space for performance Tab
 							comp.getCompDocs(db,doc).then(function(dataComp){
-
+								//open risks
+								ort.processORTab(doc,defViewRow);
+								//audit universe
+								aut.processAUTab(doc,defViewRow);
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
