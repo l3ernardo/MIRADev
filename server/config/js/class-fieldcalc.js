@@ -101,6 +101,27 @@ var calculatefield = {
     return p4Qtrs;
   },
 
+  getPrevQtr: function(currentQtr) {
+    var prevQtr;
+    var current = currentQtr.split("Q");
+    var prevYr = current[0]-1;
+    switch (current[1]) {
+      case "1":
+        prevQtr = prevYr+" Q4";
+        break;
+      case "2":
+        prevQtr = current[0]+" Q1";
+        break;
+      case "3":
+        prevQtr = current[0]+" Q2";
+        break;
+      case "4":
+        prevQtr = current[0]+" Q3";
+        break;
+    }
+    return prevQtr;
+  },
+
   getCUMaxScore: function(CUSize) {
     var CUMaxScore;
     if (CUSize == "Large") {
@@ -918,7 +939,7 @@ var calculatefield = {
               break;
             case "BU Country":
             	// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
-                
+
             	if(doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && POCountryFlag == 0){
             		 toadd = {
             		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
@@ -939,7 +960,7 @@ var calculatefield = {
             		 doc[0].BUCAsmtDataPIview.push(toadd);
             		POCountryFlag = 1;
             	}
-            	
+
             	if(doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit" && POCUFlag == 0){
             		 toadd = {
             		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
@@ -958,11 +979,11 @@ var calculatefield = {
                     "treeParent" : "1"
             		 };
             		 doc[0].BUCAsmtDataPIview.push(toadd);
-            		
+
             		POCUFlag = 1;
             	}
-            	
-            	
+
+
 
             	if(doc[0].asmtsdocs[i].ParentDocSubType == "BU Country" &&  POBUCFlag == 0){
             		 toadd = {
@@ -988,7 +1009,7 @@ var calculatefield = {
             	doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
             	//get Open Issue count per child assessment
             	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i].AssessableUnitName);
-            
+
               toadd = {
                 "docid":doc[0].asmtsdocs[i]._id,
                 "name":doc[0].asmtsdocs[i].AssessableUnitName,
@@ -1001,18 +1022,18 @@ var calculatefield = {
                 "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
                 "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
                 "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
-                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,  
-                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,  
-                "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'') 
+                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
+                "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
               };
               doc[0].BUCAsmtDataPIview.push(toadd);
-              
-              
-              
-                
-              
+
+
+
+
+
               // PO tab other indicators view
-              
+
               if(doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && POCountryOtherFlag  == 0){
             	  toadd = {
                    		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
@@ -1024,7 +1045,7 @@ var calculatefield = {
          		 doc[0].BUCAsmtDataOIview.push(toadd);
          		POCountryOtherFlag  = 1;
          	}
-         	
+
          	if(doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit" && POCUOtherFlag == 0){
          		 toadd = {
                   		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
@@ -1034,11 +1055,11 @@ var calculatefield = {
                           "treeParent" : "1"
                   		 };
          		 doc[0].BUCAsmtDataOIview.push(toadd);
-         		
+
          		POCUOtherFlag = 1;
          	}
-         	
-         	
+
+
 
          	if(doc[0].asmtsdocs[i].ParentDocSubType == "BU Country" &&  POBUCOtherFlag == 0){
          		 toadd = {
@@ -1051,7 +1072,7 @@ var calculatefield = {
          		 doc[0].BUCAsmtDataOIview.push(toadd);
          		POBUCOtherFlag = 1;
          	}
-         	
+
               toadd = {
                 "docid":doc[0].asmtsdocs[i]._id,
                 "name":doc[0].asmtsdocs[i].AssessableUnitName,
@@ -1059,28 +1080,28 @@ var calculatefield = {
                 "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount,
                 "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
               };
-              
-             
-              if (doc[0].asmtsdocs[i].OpMetric != undefined) {  
-            	 
+
+
+              if (doc[0].asmtsdocs[i].OpMetric != undefined) {
+
                 for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; j++) {
-                	
-                	
-                	
-                         
+
+
+
+
                 	toadd[doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
                 	toadd["docid"] = doc[0].asmtsdocs[i]._id;
                 	toadd["name"] = doc[0].asmtsdocs[i].AssessableUnitName;
                 	toadd["ParentDocSubType"] = doc[0].asmtsdocs[i].ParentDocSubType;
                 	toadd["bocExCount"] = doc[0].asmtsdocs[i].BOCExceptionCount;
-                        
-                         
+
+
                  // doc[0].BUCAsmtDataOIview[i] = {};
                   //doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
                 //  console.log(doc[0].asmtsdocs[i].OpMetric[j].id+"Rating");
                 }
                 doc[0].BUCAsmtDataOIview.push(toadd);
-                
+
               }
               // Basics of Control Exception Counter
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
