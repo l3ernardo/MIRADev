@@ -51,6 +51,7 @@ var calculateKCTab = {
             rct[i].parent = rct[i].processCategory.replace(/ /g,'');
             rct[i].id = rct[i]["_id"];
             exportRCTest.push({
+              processCategory:rct[i].processCategory || "",
               process:rct[i].process || "",
               eventDate:rct[i].eventDate || "",
               numTestsCompleted:rct[i].numTestsCompleted || "",
