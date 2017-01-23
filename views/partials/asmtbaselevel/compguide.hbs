@@ -6,9 +6,21 @@
 			<td width="3%"></td>
 			<td width="14%"><div id="compguideara"></div></td>
 			<td width="3%"></td>
-			<td width="14%"><div id="compguideaar"></div></td>
+			<td width="14%">
+				<div id="compguideaar">
+					{{#if auditReviewException}}
+						<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
+					{{/if}}
+				</div>
+			</td>
 			<td width="3%"></td>
-			<td width="14%"><div id="compguidekct"></div></td>
+			<td width="14%">
+				<div id="compguidekct">
+					{{#if kctException}}
+						<p class="ibm-ind-caution mira-alert-sign">&nbsp;</p>
+					{{/if}}
+				</div>
+			</td>
 			<td width="3%"></td>
 			<td width="14%"><div id="compguideom"></div></td>
 			<td width="3%"></td>
