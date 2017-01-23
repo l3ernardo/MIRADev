@@ -138,7 +138,7 @@ var getDocs = {
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs](Country Process) - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
           break;
@@ -169,7 +169,6 @@ var getDocs = {
             var comps = compdata.body.docs;
             doc[0].RCTestData = [];
             doc[0].AuditLocalData = [];
-            var acctControlCounter = 0; //Counter to iterate for the Defect Rate
             var totalTest = 0;
             var withTest = false;
             var totalDefect = 0;
@@ -213,15 +212,6 @@ var getDocs = {
                   totalDefect += parseInt(comps[i].numProcessDefects);
                 }
 
-                // // Calculate for Defect Rate of Account Key Control Testing doc
-                // if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
-                //   doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
-                //   if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
-                //     doc[0].RCTestData[acctControlCounter].defectRate = 0;
-                //     doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
-                //   }
-                // }
-
                 //calculate for Process Category
                 if (doc[0].GBSRollupProcessesOPS !== undefined) {
                   for (var j = 0; j < doc[0].GBSRollupProcessesOPS.length; j++) {
@@ -258,18 +248,16 @@ var getDocs = {
                 if (comps[i].processCategory == undefined) {
                   comps[i].processCategory = "Operational Processes";
                 }
-
-                acctControlCounter++;
               }
               else {
-                //
+                console.log("Did not enter either Account Audits or Audit Controls");
               }
             }
             // Calculate for Defect Rate and RAGStatus
             if (withTest) {
               doc[0].AUDefectRate = ((totalDefect/totalTest) * 100).toFixed(1);
               if (doc[0].AUDefectRate == 0) {
-                doc[0].AUDefectRate = doc[0].AUDefectRate.toFixed(0);
+                doc[0].AUDefectRate = 0;
               }
               if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
                 doc[0].RAGStatus = "Unsat";
@@ -286,7 +274,7 @@ var getDocs = {
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs](Account) - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
           break;
@@ -375,12 +363,12 @@ var getDocs = {
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {
-              console.log("[class-compdoc][getCompDocs] - " + err.error);
+              console.log("[class-compdoc][getCompDocs]3 - " + err.error);
               deferred.reject({"status": 500, "error": err.error.reason});
             });
 
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs]4 - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
           break;
@@ -484,14 +472,14 @@ var getDocs = {
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs]5 - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
         break;
       }
     }
     catch(e) {
-      console.log("[class-compdoc][getCompDocs] - " + err.error);
+      console.log("[class-compdoc][getCompDocs]6 - " + err.error);
       deferred.reject({"status": 500, "error": err.error.reason});
     }
     return deferred.promise;
@@ -599,7 +587,7 @@ var getDocs = {
       });
     }
     catch(e) {
-      console.log("[class-compdoc][getCompDocs] - " + err.error);
+      console.log("[class-compdoc][getCompDocs]7 - " + err.error);
       deferred.reject({"status": 500, "error": err.error.reason});
     }
     return deferred.promise;
