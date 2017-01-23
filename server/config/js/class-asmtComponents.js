@@ -397,7 +397,7 @@ var components = {
             output.parentType = parent.ParentDocSubType;
             output.AssessableUnitName = parent.AssessableUnitName;
             output.parentid = req.query.id;
-            // output.editor = true;
+            output.editor = true;
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -455,7 +455,7 @@ var components = {
               if(!( parent.CurrentPeriod != req.session.quarter || parent.MIRAStatus == "Final")){
                 //output.procesDisplay = true;
               }
-              // output.editor = true;
+              output.editor = true;
               deferred.resolve({"status": 200, "data":output});
             }).catch(function(err) {
               deferred.reject({"status": 500, "error": err.error.reason});
@@ -952,7 +952,7 @@ var components = {
         if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
           obj.defectRate = 0;
         } else {
-          obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
+          obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(1);
         }
         db.save(obj).then(function(data){
 
@@ -990,7 +990,7 @@ var components = {
           if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
             obj.defectRate = 0;
           } else {
-            obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
+            obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(1);
           }
 
           db.save(obj).then(function(data){

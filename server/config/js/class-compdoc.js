@@ -159,9 +159,9 @@ var getDocs = {
               "docType": "asmtComponent",
               "$or": [
                 // Key Controls Testing Tab
-                { "$and": [{"compntType": "accountControls"},{"parentid": doc[0]._id}] },
+                { "$and": [{"compntType": "accountControls"},{"parentid": doc[0]._id},{"reportingQuarter":doc[0].CurrentPeriod}] },
                 // Audits and Reviews Tab
-                { "$and": [{"compntType": "accountAudit"},{"parentid": doc[0]._id}] }
+                { "$and": [{"compntType": "accountAudit"},{"parentid": doc[0]._id}, {"reportingQuarter": {"$in":[doc[0].CurrentPeriod,fieldCalc.getPrevQtr(doc[0].CurrentPeriod)]}}] }
               ]
             }
           };
@@ -170,22 +170,57 @@ var getDocs = {
             doc[0].RCTestData = [];
             doc[0].AuditLocalData = [];
             var acctControlCounter = 0; //Counter to iterate for the Defect Rate
+            var totalTest = 0;
+            var withTest = false;
+            var totalDefect = 0;
             for(var i = 0; i < comps.length; i++) {
               //Calculate for Audit data
               if (comps[i].compntType == "accountAudit") {
-                doc[0].AuditLocalData.push(comps[i]);
+                if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+                  doc[0].AuditLocalData.push(comps[i]);
+                }
+                // Calculate for Audit/Review exception
+                if (comps[i].numRecommendationsOpen !== "" && parseInt(comps[i].numRecommendationsOpen) > 0 ) {
+                  var currdate = new Date();
+                  currdate.setHours(0,0,0,0);
+                  var dateval = "";
+                  if (comps[i].targetCloseCurrent !== undefined && comps[i].targetCloseCurrent !== "") {
+                    dateval = new Date(comps[i].targetCloseCurrent);
+                  } else {
+                    if (comps[i].targetCloseOriginal !== undefined && comps[i].targetCloseOriginal !== "") {
+                      dateval = new Date(comps[i].targetCloseOriginal);
+                    }
+                  }
+                  if (comps[i].rating == "Marginal" || comps[i].rating == "Marg" || comps[i].rating == "Unsat" || comps[i].rating == "Qualified" || comps[i].rating == "C" ||
+                      comps[i].rating == "D" || comps[i].rating == "Negative" || comps[i].rating == "Unsatisfactory" || comps[i].rating == "Unfavorable" ||
+                      (dateval !== "" && dateval < currdate)) {
+
+                    doc[0].auditReviewException = true;
+                  }
+                }
+
               }
               //Calculate for Account Key Control Testing (Account Controls)
               else if (comps[i].compntType == "accountControls") {
                 doc[0].RCTestData.push(comps[i]);
-                // Calculate for Defect Rate of Account Key Control Testing doc
-                if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
-                  doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
-                  if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
-                    doc[0].RCTestData[acctControlCounter].defectRate = 0;
-                    doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
-                  }
+                // For Defect rate calculation
+                if (comps[i].numTestsComplete !== undefined && comps[i].numTestsComplete !== "") {
+                  withTest = true;
+                  totalTest += parseInt(comps[i].numTestsComplete);
                 }
+                if (comps[i].numProcessDefects !== undefined && comps[i].numProcessDefects !== "") {
+                  withTest = true;
+                  totalDefect += parseInt(comps[i].numProcessDefects);
+                }
+
+                // // Calculate for Defect Rate of Account Key Control Testing doc
+                // if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
+                //   doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
+                //   if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
+                //     doc[0].RCTestData[acctControlCounter].defectRate = 0;
+                //     doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
+                //   }
+                // }
 
                 //calculate for Process Category
                 if (doc[0].GBSRollupProcessesOPS !== undefined) {
@@ -226,8 +261,29 @@ var getDocs = {
 
                 acctControlCounter++;
               }
+              else {
+                //
+              }
             }
-
+            // Calculate for Defect Rate and RAGStatus
+            if (withTest) {
+              doc[0].AUDefectRate = ((totalDefect/totalTest) * 100).toFixed(1);
+              if (doc[0].AUDefectRate == 0) {
+                doc[0].AUDefectRate = doc[0].AUDefectRate.toFixed(0);
+              }
+              if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+                doc[0].RAGStatus = "Unsat";
+                doc[0].kctException = true;
+              } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
+                doc[0].RAGStatus = "Sat";
+              } else {
+                doc[0].RAGStatus = "Marg";
+                doc[0].kctException = true;
+              }
+            }else{
+              doc[0].RAGStatus = "";
+              doc[0].defectRate = "";
+            }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
             console.log("[class-compdoc][getCompDocs] - " + err.error);
