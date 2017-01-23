@@ -609,7 +609,7 @@ var components = {
               data.remedStats.push({"name":"Closed"});
 
               data.RelevantGPs = [];
-              data.RelevantGPs.push({"name":"no relevant process available"});
+              data.RelevantGPs.push({"name":""});
 
               // get CU parent of parent doc
               db.get(pdoc.grandparentid).then(function(gpdata){
@@ -689,7 +689,7 @@ var components = {
 
                 // for process field
                 data.body.docs[0].RelevantGPs = [];
-                data.body.docs[0].RelevantGPs.push({"name":"no relevant process available"});
+                data.body.docs[0].RelevantGPs.push({"name":""});
                 // get CU parent of parent doc for process field
                 db.get(thres[2].body.docs[0].grandparentid).then(function(gpdata){
                   var gpdoc = gpdata.body;
