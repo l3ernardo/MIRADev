@@ -159,9 +159,9 @@ var getDocs = {
               "docType": "asmtComponent",
               "$or": [
                 // Key Controls Testing Tab
-                { "$and": [{"compntType": "accountControls"},{"parentid": doc[0]._id}] },
+                { "$and": [{"compntType": "accountControls"},{"parentid": doc[0]._id},{"reportingQuarter":doc[0].CurrentPeriod}] },
                 // Audits and Reviews Tab
-                { "$and": [{"compntType": "accountAudit"},{"parentid": doc[0]._id}] }
+                { "$and": [{"compntType": "accountAudit"},{"parentid": doc[0]._id}, {"reportingQuarter": {"$in":[doc[0].CurrentPeriod,fieldCalc.getPrevQtr(doc[0].CurrentPeriod)]}}] }
               ]
             }
           };
@@ -170,22 +170,57 @@ var getDocs = {
             doc[0].RCTestData = [];
             doc[0].AuditLocalData = [];
             var acctControlCounter = 0; //Counter to iterate for the Defect Rate
+            var totalTest = 0;
+            var withTest = false;
+            var totalDefect = 0;
             for(var i = 0; i < comps.length; i++) {
               //Calculate for Audit data
               if (comps[i].compntType == "accountAudit") {
-                doc[0].AuditLocalData.push(comps[i]);
+                if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+                  doc[0].AuditLocalData.push(comps[i]);
+                }
+                // Calculate for Audit/Review exception
+                if (comps[i].numRecommendationsOpen !== "" && parseInt(comps[i].numRecommendationsOpen) > 0 ) {
+                  var currdate = new Date();
+                  currdate.setHours(0,0,0,0);
+                  var dateval = "";
+                  if (comps[i].targetCloseCurrent !== undefined && comps[i].targetCloseCurrent !== "") {
+                    dateval = new Date(comps[i].targetCloseCurrent);
+                  } else {
+                    if (comps[i].targetCloseOriginal !== undefined && comps[i].targetCloseOriginal !== "") {
+                      dateval = new Date(comps[i].targetCloseOriginal);
+                    }
+                  }
+                  if (comps[i].rating == "Marginal" || comps[i].rating == "Marg" || comps[i].rating == "Unsat" || comps[i].rating == "Qualified" || comps[i].rating == "C" ||
+                      comps[i].rating == "D" || comps[i].rating == "Negative" || comps[i].rating == "Unsatisfactory" || comps[i].rating == "Unfavorable" ||
+                      (dateval !== "" && dateval < currdate)) {
+
+                    doc[0].auditReviewException = true;
+                  }
+                }
+
               }
               //Calculate for Account Key Control Testing (Account Controls)
               else if (comps[i].compntType == "accountControls") {
                 doc[0].RCTestData.push(comps[i]);
-                // Calculate for Defect Rate of Account Key Control Testing doc
-                if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
-                  doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
-                  if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
-                    doc[0].RCTestData[acctControlCounter].defectRate = 0;
-                    doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
-                  }
+                // For Defect rate calculation
+                if (comps[i].numTestsCompleted !== undefined && comps[i].numTestsCompleted !== "") {
+                  withTest = true;
+                  totalTest += parseInt(comps[i].numTestsCompleted);
                 }
+                if (comps[i].numProcessDefects !== undefined && comps[i].numProcessDefects !== "") {
+                  withTest = true;
+                  totalDefect += parseInt(comps[i].numProcessDefects);
+                }
+
+                // // Calculate for Defect Rate of Account Key Control Testing doc
+                // if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
+                //   doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
+                //   if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
+                //     doc[0].RCTestData[acctControlCounter].defectRate = 0;
+                //     doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
+                //   }
+                // }
 
                 //calculate for Process Category
                 if (doc[0].GBSRollupProcessesOPS !== undefined) {
@@ -226,8 +261,29 @@ var getDocs = {
 
                 acctControlCounter++;
               }
+              else {
+                //
+              }
             }
-
+            // Calculate for Defect Rate and RAGStatus
+            if (withTest) {
+              doc[0].AUDefectRate = ((totalDefect/totalTest) * 100).toFixed(1);
+              if (doc[0].AUDefectRate == 0) {
+                doc[0].AUDefectRate = doc[0].AUDefectRate.toFixed(0);
+              }
+              if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+                doc[0].RAGStatus = "Unsat";
+                doc[0].kctException = true;
+              } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
+                doc[0].RAGStatus = "Sat";
+              } else {
+                doc[0].RAGStatus = "Marg";
+                doc[0].kctException = true;
+              }
+            }else{
+              doc[0].RAGStatus = "";
+              doc[0].defectRate = "";
+            }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
             console.log("[class-compdoc][getCompDocs] - " + err.error);
@@ -242,14 +298,23 @@ var getDocs = {
           var compObj = {
             selector : {
               "_id": {"$gt":0},
-              "docType": "asmtComponent",
               "$or": [
+                //Getting all country process assessment
+                {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                //Getting all controllable units assessable units
+                {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
+                //Performance Tab
+                { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+                //Risks Tab
+                {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] }
+              //"docType": "asmtComponent",
+              //"$or": [
                 // Risks
               //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
                 //Performance Tab
-                { "$and": [{"compntType": "countryControls"}, {"reportingCountry":  util.resolveGeo(doc[0].Country,"Country")}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
-                {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
-                //{ "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}] }
+                //{ "$and": [{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+              //  {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
+                //{ "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$ne": "Closed"}}] }
                 // Key Controls Testing Tab
                 // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
@@ -266,17 +331,54 @@ var getDocs = {
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
+            doc[0].CPasmts = [];
+            doc[0].CUassunits = [];
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
                 doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
               }
-              if (comps[i].compntType == "countryControls"){
+              else if (comps[i].compntType == "countryControls"){
                	  doc[0].CountryControlsData.push(comps[i]);
               }
+              else if (comps[i].key == "Assessment"){
+               	  doc[0].CPasmts.push(comps[i]);
+              }
+              else if (comps[i].key == "Assessable Unit"){
+               	  doc[0].CUassunits.push(comps[i]);
+              }
             }
-            deferred.resolve({"status": 200, "doc": doc});
+            //console.log(doc[0].CPasmts.length);
+            //console.log(doc[0].CUassunits.length);
+            //getting assessments under BU country instead of Assessable units
+            var arrayPromises = [];
+            for(var i = 0; i < doc[0].CUassunits.length; i++){
+              var tmpQuery = {
+                selector : {
+                  "_id": {"$gt":0},
+                  "key": "Assessment",
+                  "AUStatus": "Active",
+                  "ParentDocSubType": "Controllable Unit",
+                  "CurrentPeriod": doc[0].CurrentPeriod,
+                  "parentid": doc[0].CUassunits[i]["_id"]
+                }
+              };
+              arrayPromises.push(db.find(tmpQuery));
+            }
+            q.all(arrayPromises).then(function(asmts) {
+              for (var i = 0; i < asmts.length; i++) {
+                if (doc[0].CUassunits[i].AuditableFlag == "Yes") {
+                  doc[0].AUData.push(JSON.parse(JSON.stringify(asmts[i].body.docs[0])));
+                }
+                doc[0].CUassunits[i] = asmts[i].body.docs[0];
+              }
+              deferred.resolve({"status": 200, "doc": doc});
+            }).catch(function(err) {
+              console.log("[class-compdoc][getCompDocs] - " + err.error);
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
+
           }).catch(function(err) {
             console.log("[class-compdoc][getCompDocs] - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});

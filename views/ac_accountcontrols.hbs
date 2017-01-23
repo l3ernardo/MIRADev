@@ -37,7 +37,10 @@
   <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
 </tr>
 <tr>
-  <td>Process:</td><td><input type="text" name="process" value="{{process}}"></td>
+  <td>Process:</td>
+	<td>
+		{{{uniqueSelect "process" RelevantGPs "name" "name" process}}}
+	</td>
 </tr>
 <tr>
   <td>Event date:</td><td>
@@ -64,8 +67,8 @@
       <td><input type="number" name="numProcessDefects" id="numProcessDefects" value="{{numProcessDefects}}"></td>
       <td><input type="number" name="numControlDeficiencies" value="{{numControlDeficiencies}}"></td>
 			<td id="ragstatustd"></td>
-      <td><input type="text" name="remediationStatus" value="{{remediationStatus}}"></td>
-      <td><input type="text" name="targetToClose" id="targetToClose" value="{{targetToClose}}"></td>
+      <td>{{{uniqueSelect "remediationStatus" remedStats "name" "name" remediationStatus}}}</td>
+      <td><div id="targetToClosediv"><input type="text" name="targetToClose" id="targetToClose" value="{{targetToClose}}"></div></td>
       <td><input type="text" name="comments" value="{{comments}}"></td>
     </tr>
     </tbody>
@@ -115,6 +118,11 @@
 </div>
 <script>
 $(document).ready(function(){
+	if( isNaN($("#numProcessDefects").val()) || $("#numProcessDefects").val() < 1 || $("#numProcessDefects").val()=="") {
+		$("#targetToClosediv").hide();
+	}else{
+		$("#targetToClosediv").show();
+	}
 	if($("#RAGStatus").val()=="" || $("#RAGStatus").val()==undefined) {
 		$("#ragstatustd").html("&nbsp;");
 	} else if ($("#RAGStatus").val()=="Unsat") {
@@ -215,6 +223,11 @@ $(document).ready(function(){
 					$("#ragstatustd").attr('style','background-color: yellow; text-align: center; !important;');
 					$("#ragstatustd").html('Marg');
 	      }
+			}
+			if( isNaN(defects) || defects < 1 || defects=="") {
+				$("#targetToClosediv").hide();
+			}else{
+				$("#targetToClosediv").show();
 			}
     });
 

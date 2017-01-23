@@ -10,6 +10,7 @@
  var util = require('./class-utility.js');
  var opMetric = require('./class-opmetric.js');
  var q  = require("q");
+ var performanceTab = require('./class-performanceoverviewcountry.js');
 
 var calculatefield = {
 
@@ -98,6 +99,27 @@ var calculatefield = {
         break;
     }
     return p4Qtrs;
+  },
+
+  getPrevQtr: function(currentQtr) {
+    var prevQtr;
+    var current = currentQtr.split("Q");
+    var prevYr = current[0]-1;
+    switch (current[1]) {
+      case "1":
+        prevQtr = prevYr+" Q4";
+        break;
+      case "2":
+        prevQtr = current[0]+" Q1";
+        break;
+      case "3":
+        prevQtr = current[0]+" Q2";
+        break;
+      case "4":
+        prevQtr = current[0]+" Q3";
+        break;
+    }
+    return prevQtr;
   },
 
   getCUMaxScore: function(CUSize) {
@@ -472,7 +494,7 @@ var calculatefield = {
       var satEqFin = 0, satUpFin = 0, margUpFin = 0, margEqFin = 0, margDwnFin = 0, unsatEqFin = 0, unsatDwnFin = 0, exemptFin = 0, nrFin = 0;
       var satEqOps = 0, satUpOps = 0, margUpOps = 0, margEqOps = 0, margDwnOps = 0, unsatEqOps = 0, unsatDwnOps = 0, exemptOps = 0, nrOps = 0;
       var toadd;
-	var POCountryFlag = 0, POCUFlah = 0, POBUCFlag  =0;
+	 var POCountryFlag = 0, POCUFlag = 0, POBUCFlag  =0, POCountryOtherFlag = 0, POCUOtherFlag = 0, POBUCOtherFlag  =0;
 
       if (doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "Controllable Unit" ) {
         for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
@@ -916,7 +938,7 @@ var calculatefield = {
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
               break;
             case "BU Country":
-            	 // PO tab performance indicators view
+            	// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
 
             	if(doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && POCountryFlag == 0){
             		 toadd = {
@@ -939,7 +961,7 @@ var calculatefield = {
             		POCountryFlag = 1;
             	}
 
-            	if(doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit" && POCUFlah == 0){
+            	if(doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit" && POCUFlag == 0){
             		 toadd = {
             		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
                     "name":doc[0].asmtsdocs[i].ParentDocSubType,
@@ -958,7 +980,7 @@ var calculatefield = {
             		 };
             		 doc[0].BUCAsmtDataPIview.push(toadd);
 
-            		POCUFlah = 1;
+            		POCUFlag = 1;
             	}
 
 
@@ -983,6 +1005,10 @@ var calculatefield = {
             		 doc[0].BUCAsmtDataPIview.push(toadd);
                     POBUCFlag = 1;
             	}
+            	//get MSAC missed commitments
+            	doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
+            	//get Open Issue count per child assessment
+            	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i].AssessableUnitName);
 
               toadd = {
                 "docid":doc[0].asmtsdocs[i]._id,
@@ -1001,17 +1027,81 @@ var calculatefield = {
                 "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
               };
               doc[0].BUCAsmtDataPIview.push(toadd);
+
+
+
+
+
               // PO tab other indicators view
+
+              if(doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && POCountryOtherFlag  == 0){
+            	  toadd = {
+                   		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
+                           "name":doc[0].asmtsdocs[i].ParentDocSubType,
+                           "ParentDocSubType":"",
+                           "bocExCount":"",
+                           "treeParent" : "1"
+                   		 };
+         		 doc[0].BUCAsmtDataOIview.push(toadd);
+         		POCountryOtherFlag  = 1;
+         	}
+
+         	if(doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit" && POCUOtherFlag == 0){
+         		 toadd = {
+                  		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
+                          "name":doc[0].asmtsdocs[i].ParentDocSubType,
+                          "ParentDocSubType":"",
+                          "bocExCount":"",
+                          "treeParent" : "1"
+                  		 };
+         		 doc[0].BUCAsmtDataOIview.push(toadd);
+
+         		POCUOtherFlag = 1;
+         	}
+
+
+
+         	if(doc[0].asmtsdocs[i].ParentDocSubType == "BU Country" &&  POBUCOtherFlag == 0){
+         		 toadd = {
+         		"docid":doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,''),
+                 "name":doc[0].asmtsdocs[i].ParentDocSubType,
+                 "ParentDocSubType":"",
+                 "bocExCount":"",
+                 "treeParent" : "1"
+         		 };
+         		 doc[0].BUCAsmtDataOIview.push(toadd);
+         		POBUCOtherFlag = 1;
+         	}
+
               toadd = {
                 "docid":doc[0].asmtsdocs[i]._id,
                 "name":doc[0].asmtsdocs[i].AssessableUnitName,
                 "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
+                "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount,
+                "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
               };
+
+
               if (doc[0].asmtsdocs[i].OpMetric != undefined) {
-                for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
-                  doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+
+                for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; j++) {
+
+
+
+
+                	toadd[doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+                	toadd["docid"] = doc[0].asmtsdocs[i]._id;
+                	toadd["name"] = doc[0].asmtsdocs[i].AssessableUnitName;
+                	toadd["ParentDocSubType"] = doc[0].asmtsdocs[i].ParentDocSubType;
+                	toadd["bocExCount"] = doc[0].asmtsdocs[i].BOCExceptionCount;
+
+
+                 // doc[0].BUCAsmtDataOIview[i] = {};
+                  //doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+                //  console.log(doc[0].asmtsdocs[i].OpMetric[j].id+"Rating");
                 }
+                doc[0].BUCAsmtDataOIview.push(toadd);
+
               }
               // Basics of Control Exception Counter
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {

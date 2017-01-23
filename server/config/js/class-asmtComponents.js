@@ -397,7 +397,7 @@ var components = {
             output.parentType = parent.ParentDocSubType;
             output.AssessableUnitName = parent.AssessableUnitName;
             output.parentid = req.query.id;
-            // output.editor = true;
+            output.editor = true;
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -455,7 +455,7 @@ var components = {
               if(!( parent.CurrentPeriod != req.session.quarter || parent.MIRAStatus == "Final")){
                 //output.procesDisplay = true;
               }
-              // output.editor = true;
+              output.editor = true;
               deferred.resolve({"status": 200, "data":output});
             }).catch(function(err) {
               deferred.reject({"status": 500, "error": err.error.reason});
@@ -586,7 +586,6 @@ var components = {
             data.reportingQuarter =  pdoc.CurrentPeriod;
             data.account = pdoc.AssessableUnitName;
             data.parentid = req.query.id;
-
             var Thresholds = [];
             var keyN = {
               selector : {
@@ -600,11 +599,38 @@ var components = {
                 keyName: "KCO/KCFR Unsat Defect Rate Threshold"
             }};
             Thresholds.push(db.find(keyN));
-            Thresholds.push(db.find(keyN));
             q.all(Thresholds).then(function(thres){
               data.Marg = thres[0].body.docs[0].value.option;
               data.Unsat = thres[1].body.docs[0].value.option;
-              deferred.resolve({"status": 200, "data":data})
+
+              // Remediation Status option
+              data.remedStats = [];
+              data.remedStats.push({"name":"Open"});
+              data.remedStats.push({"name":"Closed"});
+
+              data.RelevantGPs = [];
+              data.RelevantGPs.push({"name":"no relevant process available"});
+
+              // get CU parent of parent doc
+              db.get(pdoc.grandparentid).then(function(gpdata){
+                var gpdoc = gpdata.body;
+                if(typeof gpdoc === "undefined"){
+                  deferred.resolve({"status": 200, "data":data})
+                } else {
+                  if (gpdoc.RelevantGPs !== undefined) {
+                    for (var i = 0; i < gpdoc.RelevantGPs.length; i++) {
+                      data.RelevantGPs.push({"name":gpdoc.RelevantGPs[i]});
+                    }
+                  }
+                  deferred.resolve({"status": 200, "data":data})
+                }
+              }).catch(function(err) {
+                deferred.reject({"status": 500, "error": err.error.reason});
+              });
+
+
+            }).catch(function(err) {
+              deferred.reject({"status": 500, "error": err.error.reason});
             });
 
 
@@ -655,7 +681,33 @@ var components = {
                 data.body.docs[0].Marg = thres[0].body.docs[0].value.option;
                 data.body.docs[0].Unsat = thres[1].body.docs[0].value.option;
                 data.body.docs[0].account = thres[2].body.docs[0].AssessableUnitName;
-                deferred.resolve({"status": 200, "data":data.body.docs[0]});
+
+                // Remediation Status option
+                data.body.docs[0].remedStats = [];
+                data.body.docs[0].remedStats.push({"name":"Open"});
+                data.body.docs[0].remedStats.push({"name":"Closed"});
+
+                // for process field
+                data.body.docs[0].RelevantGPs = [];
+                data.body.docs[0].RelevantGPs.push({"name":"no relevant process available"});
+                // get CU parent of parent doc for process field
+                db.get(thres[2].body.docs[0].grandparentid).then(function(gpdata){
+                  var gpdoc = gpdata.body;
+                  if(typeof gpdoc === "undefined"){
+                    deferred.resolve({"status": 200, "data":data.body.docs[0]});
+                  } else {
+                    if (gpdoc.RelevantGPs !== undefined) {
+                      for (var i = 0; i < gpdoc.RelevantGPs.length; i++) {
+                        data.body.docs[0].RelevantGPs.push({"name":gpdoc.RelevantGPs[i]});
+                      }
+                    }
+                    deferred.resolve({"status": 200, "data":data.body.docs[0]});
+                  }
+                }).catch(function(err) {
+                  deferred.reject({"status": 500, "error": err.error.reason});
+                });
+              }).catch(function(err) {
+                deferred.reject({"status": 500, "error": err.error.reason});
               });
             }else{
               deferred.resolve({"status": 200, "data":data.body.docs[0]});
@@ -900,7 +952,7 @@ var components = {
         if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
           obj.defectRate = 0;
         } else {
-          obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
+          obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(1);
         }
         db.save(obj).then(function(data){
 
@@ -938,7 +990,7 @@ var components = {
           if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
             obj.defectRate = 0;
           } else {
-            obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(2);
+            obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(1);
           }
 
           db.save(obj).then(function(data){
