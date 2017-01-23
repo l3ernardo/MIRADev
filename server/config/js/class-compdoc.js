@@ -312,7 +312,7 @@ var getDocs = {
             }
             q.all(arrayPromises).then(function(asmts) {
               for (var i = 0; i < asmts.length; i++) {
-                if (doc[0].CUassunits[i].AuditableFlag == "Yes",) {
+                if (doc[0].CUassunits[i].AuditableFlag == "Yes") {
                   doc[0].AUData.push(JSON.parse(JSON.stringify(asmts[i].body.docs[0])));
                 }
                 doc[0].CUassunits[i] = asmts[i].body.docs[0];
