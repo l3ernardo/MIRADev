@@ -204,9 +204,9 @@ var getDocs = {
               else if (comps[i].compntType == "accountControls") {
                 doc[0].RCTestData.push(comps[i]);
                 // For Defect rate calculation
-                if (comps[i].numTestsComplete !== undefined && comps[i].numTestsComplete !== "") {
+                if (comps[i].numTestsCompleted !== undefined && comps[i].numTestsCompleted !== "") {
                   withTest = true;
-                  totalTest += parseInt(comps[i].numTestsComplete);
+                  totalTest += parseInt(comps[i].numTestsCompleted);
                 }
                 if (comps[i].numProcessDefects !== undefined && comps[i].numProcessDefects !== "") {
                   withTest = true;
