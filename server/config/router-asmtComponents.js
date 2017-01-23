@@ -63,9 +63,6 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 
 /* Control Sample */
 asmtComponents.get('/controlsample', isAuthenticated, function(req, res) {
-	if(typeof req.query.id === "undefined"){
-		req.query.id = "9d9902492259ecc30230af749b1c2a06";
-	}
 	components.getControlSample(req, db).then(function(data){
 		res.render('ac_controlsample', data.data );
 	}).catch(function(err) {
@@ -76,9 +73,6 @@ asmtComponents.get('/controlsample', isAuthenticated, function(req, res) {
 
 /* Open Issue */
 asmtComponents.get('/openissue', isAuthenticated, function(req, res) {
-	if(typeof req.query.id === "undefined"){
-		req.query.id = "1caba93791bd9eeb006a97bd03324f8f";
-	}
 	components.getIssue(req, db).then(function(data){
 		res.render('ac_openissue', data.data );
 	}).catch(function(err) {
@@ -88,9 +82,6 @@ asmtComponents.get('/openissue', isAuthenticated, function(req, res) {
 });
 /* PPR */
 asmtComponents.get('/ppr', isAuthenticated, function(req, res) {
-	if(typeof req.query.id === "undefined"){
-		req.query.id = "a75108a8b64db30c0f47722a78a100b8";
-	}
 	components.getPPR(req, db).then(function(data){
 		res.render('ac_ppr', data.data );
 	}).catch(function(err) {
@@ -109,9 +100,6 @@ asmtComponents.get('/localaudit', isAuthenticated, function(req, res) {
 });
 	/* Account Controls */
 	asmtComponents.get('/accountcontrols', isAuthenticated, function(req, res) {
-		if(typeof req.query.id === "undefined"){
-			req.query.id = "cb71326690d51329c153f5f950eb3c8c";
-		}
 		components.getAccountControls(req, db).then(function(data){
 			res.render('ac_accountcontrols', data.data );
 		}).catch(function(err) {
@@ -121,9 +109,6 @@ asmtComponents.get('/localaudit', isAuthenticated, function(req, res) {
 });
 /* Account Audit */
 asmtComponents.get('/accountaudit', isAuthenticated, function(req, res) {
-	if(typeof req.query.id === "undefined"){
-		req.query.id = "a464dfcf0335a4d86e96fd0072d58889";
-	}
 	components.getAccountAudit(req, db).then(function(data){
 		res.render('ac_accountaudit', data.data );
 	}).catch(function(err) {
@@ -134,9 +119,6 @@ asmtComponents.get('/accountaudit', isAuthenticated, function(req, res) {
 });
 /* Internal Audit */
 asmtComponents.get('/internalaudit', isAuthenticated, function(req, res) {
-	if(typeof req.query.id === "undefined"){
-		req.query.id = "b0b51b526058b829e373769998e771e0";
-	}
 	components.getInternalAudit(req, db).then(function(data){
 		res.render('ac_internalaudit', data.data );
 	}).catch(function(err) {
@@ -146,10 +128,7 @@ asmtComponents.get('/internalaudit', isAuthenticated, function(req, res) {
 });
 /* CU Summary Sample */
 asmtComponents.get('/cusummarysample', isAuthenticated, function(req, res) {
-	if(typeof req.query.id === "undefined"){
-		req.query.id = "df91794db326710c753a48ffbb8a70ae";
-	}
-	components.getCUSummary(req, db).then(function(data){
+components.getCUSummary(req, db).then(function(data){
 		res.render('ac_cusummarysample', data.data );
 	}).catch(function(err) {
 		res.render('error',{errorDescription: err.error});
@@ -176,10 +155,9 @@ asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
 	});
 });
 
-/* Save Open Issue in cloudant */
+/* Save Account Key Controls Testing */
 asmtComponents.post('/saveaccountcontrols', isAuthenticated, function(req, res) {
 	components.saveAccountControls(req, db).then(function(data) {
-
 		if(data.status==200 & !data.error) {
 			if(req.body.close === "back"){
 				res.redirect("/assessment?id="+req.body.parentid);

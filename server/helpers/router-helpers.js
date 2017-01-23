@@ -131,19 +131,28 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
-		ratingDisplayView: function(rating, field) {
-			var ratinghtml;
+
+		ratingDisplayView: function(rating, percent) {
+			var ratinghtml = '<td class="';
 			if (rating == undefined) {
-					ratinghtml = '<td class="asmt-viewdata"></td>';
+					ratinghtml += 'asmt-viewdata"'
+					if(!isNaN(percent)){
+						ratinghtml += ' width="'+percent+'%"';
+					}
+					ratinghtml += '></td>';
 			} else {
-				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+rating+'</td>';
-				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+rating+'</td>';
-				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+rating+'</td>';
+				if (rating == "Sat" || rating == "Satisfactory" || rating == "Favorable" || rating == "Unqualified" || rating == "Positive")
+					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00; text-align: center; !important;"';
+				else if (rating == "Marg" || rating == "Marginal")
+					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow; text-align: center; !important;"';
+				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative")
+					ratinghtml += 'asmt-viewdata-red"  style="background-color: red; color: #ffffff; text-align: center; !important;"';
 				else
-					ratinghtml = '<td class="asmt-viewdata-centered">'+rating+'</td>';
+					ratinghtml += 'asmt-viewdata-centered"';
+				if(!isNaN(percent)){
+					ratinghtml += ' width="'+percent+'%"';
+				}
+				ratinghtml += '>'+rating+'</td>';
 			}
 			return ratinghtml;
 		},
@@ -153,11 +162,11 @@ var register = function(Handlebars) {
 					ratinghtml = '<td class="asmt-viewdata"></td>';
 			} else {
 				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'%</td>';
 				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'%</td>';
 				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'</td>';
+					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'%</td>';
 				else
 					ratinghtml = '<td class="asmt-viewdata-centered">-</td>';
 			}
@@ -179,6 +188,47 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold, percent) {
+			var drhtml = '<td ';
+			if (dr == undefined || dr == "") {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%"';
+					}
+				drhtml += ' ></td>';
+			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
+				drhtml += ' class="asmt-viewdata-centered" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+			} else {
+				if (dr < margThreshold){
+					drhtml += ' class="asmt-viewdata-green" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else if (dr >= unsatThreshold){
+					drhtml += ' class="asmt-viewdata-red" ';
+				if(!isNaN(percent)){
+					drhtml += ' width="'+percent+'%" ';
+					}
+				drhtml += '>'+dr+'</td>';
+				}
+				else{
+					drhtml += ' class="asmt-viewdata-yellow" ';
+					if(!isNaN(percent)){
+						drhtml += ' width="'+percent+'%" ';
+						}
+					drhtml += '>'+dr+'</td>';
+				}
+			}
+			return drhtml;
+		},
+
+		/*
 		defectRateDisplayViewNoDash: function(dr, margThreshold, unsatThreshold) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
@@ -195,6 +245,7 @@ var register = function(Handlebars) {
 			}
 			return drhtml;
 		},
+		*/
 		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
@@ -328,8 +379,10 @@ var register = function(Handlebars) {
 		},
 		openRiskDisplay: function(open, date) {
 			var datehtml;
+			if (date == undefined) {
+				date = '';
+			}
 			if (open == undefined) {
-
 			} else {
 				if (open < 0) {
 					datehtml = '<span style="padding-left:1em; padding-right:1em">$'+date+'</span>';
@@ -340,12 +393,11 @@ var register = function(Handlebars) {
 					if(dateval < currdate)
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
 					else
-						datehtml = '<span style="padding-right:1em">'+date+'</span>';				
+						datehtml = '<span style="padding-right:1em">'+date+'</span>';
 					}
 				}
 			return datehtml;
 		},
-
 		statusRatingLclAdt: function(rating) {
 				var rateHTML;
 			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Qualified") {
@@ -359,9 +411,9 @@ var register = function(Handlebars) {
 					} else {
 						rateHTML = rating;
 					}
-						return rateHTML;	
 				}
 			}
+			return rateHTML;
 		},
 		radioBtnVal: function(fieldName, fieldVal) {
 			var radioBtnHtml;

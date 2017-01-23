@@ -1,0 +1,143 @@
+<link href="./css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+
+<div class="ibm-container" style="width:100%">
+	<div class="ibm-container-body">
+	<p>
+	<h3>Please select an engagement from the list</h3>
+	</p>
+		<table id="EngagementbyId" cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
+			<thead>
+					<tr>
+						<th scope="col">&nbsp;</th>
+						<th scope="col">Engagement</th>
+						<th scope="col">Location</th>
+						<th scope="col">Location Description</th>
+						<th scope="col">Organization</th>
+						<th scope="col">Process</th>
+						<th scope="col">Added to AQ DB</th>
+						<th scope="col">Rating</th>
+					</tr>
+			</thead>
+			<tbody>
+			{{#each IntAud}}
+				<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
+					<td><input type="radio" name="IntAud" id="IAID_{{_id}}" value="{{engagement}}" idintaud="{{_id}}" addedToAQDB="{{addedToAQDB}}" rating="{{rating}}" size1="{{size}}"  score="{{score}}"{{#if (eq _id ../parentid)}}checked {{/if}}/></td>
+					<td>{{engagement}}</td>
+					<td>{{location}}</td>
+					<td>{{locationdescription}}</td>
+					<td>{{organization}}</td>
+					<td>{{RPTG_PROCESS}}</td>
+					<td>{{addedToAQDB}}</td>
+					{{{ratingDisplayView rating "rating"}}}
+				</tr>
+			{{/each}}
+		  </tbody>
+		</table>
+		<div class="ibm-buttons-row" style="box-sizing: border-box; width:95%" >
+		<p>
+			<input class="ibm-btn-pri" type="button" id="btn_okIntAudId" value="OK"/>
+			<span class="ibm-sep">&nbsp;</span>
+			<input class="ibm-btn-sec" type="button" id="btn_cancelIntAudId" value="Cancel" />
+		</p>
+	</div>
+  </div>
+</div>
+<script>
+	$(document).ready(function() {
+		var listdel=$('#InternalAuditsDataDel').val();
+		if($("#btn_okIntAudId").length > 0){
+			$("#btn_okIntAudId").click(function() {
+				//Update data
+				var p_id=$("input[name='IntAud']:checked").attr("idintaud");
+				var pEngagement = $("input[name='IntAud']:checked").attr("value");
+				var paddedToAQDB = $("input[name='IntAud']:checked").attr("addedToAQDB");
+				var pRating = $("input[name='IntAud']:checked").attr("rating");
+				if (pRating== undefined){
+					ratinghtml = '<td class="asmt-viewdata"></td>';
+				}
+				 else {
+					if (pRating == "Sat")
+						ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+pRating+'</td>';
+					else if (pRating == "Marg")
+						ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+pRating+'</td>';
+					else if (pRating == "Unsat")
+						ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+pRating+'</td>';
+					else
+						ratinghtml = '<td class="asmt-viewdata-centered">'+pRating+'</td>';
+				}
+				//Calculate Size
+				var CUSize = $( "#CUSize option:selected" ).text();
+				var pSize = CUSize; // $("input[name='IntAud']:checked").attr("size");
+				//Calculate Score
+				var CUScore = getCUMaxScore(CUSize);
+				var finalscore = getCUScore(pRating,CUScore);
+				var pScore = finalscore; //$("input[name='IntAud']:checked").attr("rating");
+				var adding='<tr id="'+p_id+'"><td p_id="'+p_id+'"><a href="/assessment?id='+p_id+'">'+pEngagement+'</a></td><td>'+paddedToAQDB+'</td>'+ratinghtml+'<td>'+pSize+'</td><td>'+pScore+'</td><td><a href="javascript:void(0);" value="Remove'+p_id+'"  id="btn_remove'+p_id+'" class="ibm-delete-link">Remove</a></td></tr>';
+				var flagIntAud='1';
+				$('#flagIntAud').val(flagIntAud);
+				$('#InternalAudits').val(adding);
+				//get all values to save on InternalAuditsData 
+				var list=$('#InternalAuditsData').val();
+				if(list == "")
+					list = p_id;
+				else{
+					if(list.indexOf(p_id) == -1)
+						list = list + ',' + p_id;
+				}
+				$('#InternalAuditsData').val(list);
+				//check if id is on InternalAuditsDataDel
+				if(listdel != ""){
+					if(listdel.indexOf(p_id) > -1){
+						var pattern2=p_id;
+						listdel=listdel.replace(pattern2,'');
+						pattern2=',,';
+						listdel=listdel.replace(p_id,',');
+						if(listdel[0]==','){	listdel=listdel.substr(1,listdel.length);}
+						if(listdel[listdel.length]==','){	listdel=listdel.substr(0,listdel.length-1);}
+						$('#InternalAuditsDataDel').val(listdel);
+					}
+				}
+				//Display name of engagement on main Find overlay
+				$('#idToAdd').html(pEngagement);
+				
+				ibmweb.overlay.hide('Overlay_EventbyId');
+				//alert("It is required to save the document to apply the changes.");
+			});
+		}
+		if($("#btn_cancelIntAudId").length > 0){
+			$('#btn_cancelIntAudId').click(function() {
+				var flagIntAud='0';
+				var adding='';
+				$('#flagIntAud').val(flagIntAud);
+				$('#InternalAudits').val(adding);
+				ibmweb.overlay.hide('Overlay_EventbyId');
+			});
+		}
+	});
+	function getCUMaxScore(CUSize) {
+		var CUMaxScore;
+		if (CUSize == "Large") {
+			CUMaxScore = 9;
+		} else if (CUSize == "Medium") {
+			CUMaxScore = 3;
+		} else if (CUSize == "Small") {
+			CUMaxScore = 1;
+		} else {
+			CUMaxScore = 0;
+		}
+		return CUMaxScore;
+	}
+	function getCUScore(arrating, cumaxscore) {
+		var ratingscore;
+		var cuscore;
+		if (arrating == "Sat") {
+			ratingscore = 1;
+		} else if (arrating == "Marg") {
+			ratingscore = 0.75;
+		} else {
+			ratingscore = 0;
+		}
+		cuscore = ratingscore * cumaxscore
+		return cuscore;
+	}
+</script> 

@@ -8,6 +8,7 @@
 
 var q  = require("q");
 var fieldCalc = require('./class-fieldcalc.js');
+var util = require('./class-utility.js');
 
 var getDocs = {
 
@@ -27,14 +28,12 @@ var getDocs = {
                 { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // Audits and Reviews Tab
                 { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
-                { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
-                // { "$and": [{"compntType": "ppr"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit},{"CPWWBCITKey" : doc[0].WWBCITKey},{"REVIEW_TYPE": "CHQ Internal Audit"}] },
+                { "$and": [{"compntType": "internalAudit"},{"parentid":doc[0].parentid}] },
+                { "$and": [{"compntType": "internalAudit"},{"parentid": {"$in": doc[0].CURelevantAUID}}] },
                 { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
-                // { "$and": [{"DOCTYPE": "ppreview"},{"RPTG_BUSINESS_UNIT": doc[0].BusinessUnit}] }
               ]
             }
           };
-
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
             doc[0].risks = [];
@@ -102,20 +101,39 @@ var getDocs = {
                 }
                 sampleCtr++;
               }
-              // For Audits and Reviews Tab - view 1
-              else if ((comps[i].compntType == "PPR" && comps[i].countryProcess == doc[0].AssessableUnitName) || (comps[i].compntType == "internalAudit" && comps[i].CPWWBCITKey ==  doc[0].WWBCITKey)) {
-                doc[0].AuditTrustedData.push(comps[i]);
-              }
-              // For Audits and Reviews Tab - view 2
-              else if ((comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") && doc[0].RelevantCPs != undefined && comps[i].RPTG_PROCESS.indexOf(doc[0].WWBCITKey)) {
-                doc[0].AuditTrustedRCUData.push(comps[i]);
+              // For Audits and Reviews Tab - view 1 and 2
+              else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
+                // For view 1
+                if (comps[i].compntType == "PPR") {
+                  doc[0].AuditTrustedData.push(comps[i]);
+                }
+                // For view 1
+                if (comps[i].compntType == "internalAudit" && comps[i].parentid == doc[0].parentid) {
+                  comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
+                  comps[i].auditOrReview = "CHQ Internal Audit";
+                  comps[i].id = comps[i].engagement;
+                  comps[i].reportDate = comps[i].addedToAQDB;
+                  comps[i].countryProcess = doc[0].AssessableUnitName;
+                  doc[0].AuditTrustedData.push(comps[i]);
+                }
+                // For view 2
+                if (comps[i].compntType == "internalAudit") {
+                  for (var j = 0; j < doc[0].CURelevantAU.length; j++) {
+                    if (comps[i].parentid == doc[0].CURelevantAU[j].id) {
+                      comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
+                      comps[i].auditOrReview = "CHQ Internal Audit";
+                      comps[i].id = comps[i].engagement;
+                      comps[i].reportDate = comps[i].addedToAQDB;
+                      comps[i].controllableUnit = doc[0].CURelevantAU[j].name;
+                      doc[0].AuditTrustedRCUData.push(comps[i]);
+                      break;
+                    }
+                  }
+                }
               }
               // For Audits and Reviews Tab - view 3
               else if (comps[i].compntType == "localAudit") {
                 doc[0].AuditLocalData.push(comps[i]);
-              }
-              else {
-
               }
             }
             deferred.resolve({"status": 200, "doc": doc});
@@ -125,23 +143,178 @@ var getDocs = {
           });
           break;
         case "Global Process":
-        break;
+          break;
         case "BU Reporting Group":
-        break;
+          break;
         case "Business Unit":
-        break;
+          break;
         case "BU IOT":
-        break;
+          break;
         case "BU IMT":
-        break;
-        case "BU Country":
+          break;
+        case "Account":
           var compObj = {
             selector : {
               "_id": {"$gt":0},
               "docType": "asmtComponent",
               "$or": [
+                // Key Controls Testing Tab
+                { "$and": [{"compntType": "accountControls"},{"parentid": doc[0]._id},{"reportingQuarter":doc[0].CurrentPeriod}] },
+                // Audits and Reviews Tab
+                { "$and": [{"compntType": "accountAudit"},{"parentid": doc[0]._id}, {"reportingQuarter": {"$in":[doc[0].CurrentPeriod,fieldCalc.getPrevQtr(doc[0].CurrentPeriod)]}}] }
+              ]
+            }
+          };
+          db.find(compObj).then(function(compdata) {
+            var comps = compdata.body.docs;
+            doc[0].RCTestData = [];
+            doc[0].AuditLocalData = [];
+            var acctControlCounter = 0; //Counter to iterate for the Defect Rate
+            var totalTest = 0;
+            var withTest = false;
+            var totalDefect = 0;
+            for(var i = 0; i < comps.length; i++) {
+              //Calculate for Audit data
+              if (comps[i].compntType == "accountAudit") {
+                if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+                  doc[0].AuditLocalData.push(comps[i]);
+                }
+                // Calculate for Audit/Review exception
+                if (comps[i].numRecommendationsOpen !== "" && parseInt(comps[i].numRecommendationsOpen) > 0 ) {
+                  var currdate = new Date();
+                  currdate.setHours(0,0,0,0);
+                  var dateval = "";
+                  if (comps[i].targetCloseCurrent !== undefined && comps[i].targetCloseCurrent !== "") {
+                    dateval = new Date(comps[i].targetCloseCurrent);
+                  } else {
+                    if (comps[i].targetCloseOriginal !== undefined && comps[i].targetCloseOriginal !== "") {
+                      dateval = new Date(comps[i].targetCloseOriginal);
+                    }
+                  }
+                  if (comps[i].rating == "Marginal" || comps[i].rating == "Marg" || comps[i].rating == "Unsat" || comps[i].rating == "Qualified" || comps[i].rating == "C" ||
+                      comps[i].rating == "D" || comps[i].rating == "Negative" || comps[i].rating == "Unsatisfactory" || comps[i].rating == "Unfavorable" ||
+                      (dateval !== "" && dateval < currdate)) {
+
+                    doc[0].auditReviewException = true;
+                  }
+                }
+
+              }
+              //Calculate for Account Key Control Testing (Account Controls)
+              else if (comps[i].compntType == "accountControls") {
+                doc[0].RCTestData.push(comps[i]);
+                // For Defect rate calculation
+                if (comps[i].numTestsCompleted !== undefined && comps[i].numTestsCompleted !== "") {
+                  withTest = true;
+                  totalTest += parseInt(comps[i].numTestsCompleted);
+                }
+                if (comps[i].numProcessDefects !== undefined && comps[i].numProcessDefects !== "") {
+                  withTest = true;
+                  totalDefect += parseInt(comps[i].numProcessDefects);
+                }
+
+                // // Calculate for Defect Rate of Account Key Control Testing doc
+                // if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
+                //   doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
+                //   if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
+                //     doc[0].RCTestData[acctControlCounter].defectRate = 0;
+                //     doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
+                //   }
+                // }
+
+                //calculate for Process Category
+                if (doc[0].GBSRollupProcessesOPS !== undefined) {
+                  for (var j = 0; j < doc[0].GBSRollupProcessesOPS.length; j++) {
+                    if (comps[i].process == doc[0].GBSRollupProcessesOPS[j].name) {
+                      comps[i].processCategory = "Operational Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GBSRollupProcessesFIN !== undefined) {
+                  for (var j = 0; j < doc[0].GBSRollupProcessesFIN.length; j++) {
+                    if (comps[i].process == doc[0].GBSRollupProcessesFIN[j].name) {
+                      comps[i].processCategory = "Financial Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GTSRollupProcessesOPS !== undefined) {
+                  for (var j = 0; j < doc[0].GTSRollupProcessesOPS.length; j++) {
+                    if (comps[i].process == doc[0].GTSRollupProcessesOPS[j].name) {
+                      comps[i].processCategory = "Operational Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined && doc[0].GTSRollupProcessesFIN !== undefined) {
+                  for (var j = 0; j < doc[0].GTSRollupProcessesFIN.length; j++) {
+                    if (comps[i].process == doc[0].GTSRollupProcessesFIN[j].name) {
+                      comps[i].processCategory = "Financial Processes";
+                      break;
+                    }
+                  }
+                }
+                if (comps[i].processCategory == undefined) {
+                  comps[i].processCategory = "Operational Processes";
+                }
+
+                acctControlCounter++;
+              }
+              else {
+                //
+              }
+            }
+            // Calculate for Defect Rate and RAGStatus
+            if (withTest) {
+              doc[0].AUDefectRate = ((totalDefect/totalTest) * 100).toFixed(1);
+              if (doc[0].AUDefectRate == 0) {
+                doc[0].AUDefectRate = doc[0].AUDefectRate.toFixed(0);
+              }
+              if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+                doc[0].RAGStatus = "Unsat";
+                doc[0].kctException = true;
+              } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
+                doc[0].RAGStatus = "Sat";
+              } else {
+                doc[0].RAGStatus = "Marg";
+                doc[0].kctException = true;
+              }
+            }else{
+              doc[0].RAGStatus = "";
+              doc[0].defectRate = "";
+            }
+            deferred.resolve({"status": 200, "doc": doc});
+          }).catch(function(err) {
+            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            deferred.reject({"status": 500, "error": err.error.reason});
+          });
+          break;
+        case "BU Country":
+          doc[0].AUData = [];
+        	doc[0].CountryControlsData = [];
+        	doc[0].RiskView1Data =  [];
+        	doc[0].RiskView2Data = [];
+          var compObj = {
+            selector : {
+              "_id": {"$gt":0},
+              "$or": [
+                //Getting all country process assessment
+                {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                //Getting all controllable units assessable units
+                {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
+                //Performance Tab
+                { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+                //Risks Tab
+                {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] }
+              //"docType": "asmtComponent",
+              //"$or": [
                 // Risks
-                { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
+              //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
+                //Performance Tab
+                //{ "$and": [{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+              //  {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
+                //{ "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$ne": "Closed"}}] }
                 // Key Controls Testing Tab
                 // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
                 // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
@@ -154,15 +327,58 @@ var getDocs = {
             }
           };
 
+
+
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
+            doc[0].CPasmts = [];
+            doc[0].CUassunits = [];
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
+                comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
-                doc[0].RiskView2Data.push(comps[i]);
+                doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
+              }
+              else if (comps[i].compntType == "countryControls"){
+               	  doc[0].CountryControlsData.push(comps[i]);
+              }
+              else if (comps[i].key == "Assessment"){
+               	  doc[0].CPasmts.push(comps[i]);
+              }
+              else if (comps[i].key == "Assessable Unit"){
+               	  doc[0].CUassunits.push(comps[i]);
               }
             }
-            deferred.resolve({"status": 200, "doc": doc});
+            //console.log(doc[0].CPasmts.length);
+            //console.log(doc[0].CUassunits.length);
+            //getting assessments under BU country instead of Assessable units
+            var arrayPromises = [];
+            for(var i = 0; i < doc[0].CUassunits.length; i++){
+              var tmpQuery = {
+                selector : {
+                  "_id": {"$gt":0},
+                  "key": "Assessment",
+                  "AUStatus": "Active",
+                  "ParentDocSubType": "Controllable Unit",
+                  "CurrentPeriod": doc[0].CurrentPeriod,
+                  "parentid": doc[0].CUassunits[i]["_id"]
+                }
+              };
+              arrayPromises.push(db.find(tmpQuery));
+            }
+            q.all(arrayPromises).then(function(asmts) {
+              for (var i = 0; i < asmts.length; i++) {
+                if (doc[0].CUassunits[i].AuditableFlag == "Yes") {
+                  doc[0].AUData.push(JSON.parse(JSON.stringify(asmts[i].body.docs[0])));
+                }
+                doc[0].CUassunits[i] = asmts[i].body.docs[0];
+              }
+              deferred.resolve({"status": 200, "doc": doc});
+            }).catch(function(err) {
+              console.log("[class-compdoc][getCompDocs] - " + err.error);
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
+
           }).catch(function(err) {
             console.log("[class-compdoc][getCompDocs] - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -175,60 +391,96 @@ var getDocs = {
               "docType": "asmtComponent",
               "$or": [
                 // Key Controls Testing Tab
-                { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-                { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
-                { "$and": [{"compntType": "sampledCountry"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                // { "$and": [{"compntType": "countryControls"},{"reportingQuarter": doc[0].CurrentPeriod},{"owningBusinessUnit": doc[0].BusinessUnit}] },
+                { "$and": [{"compntType": "CUSummarySample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
+                { "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
+                // Audits and Reviews Tab
+                { "$and": [{"compntType": "PPR"},{"AssessableUnitName" : doc[0].AssessableUnitName}] },
+                { "$and": [{"compntType": "internalAudit"},{"parentid":doc[0].parentid}] },
+                { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
               ]
             }
           };
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
             doc[0].RCTestData = [];
-            doc[0].SCTestData = [];
             doc[0].SampleData = [];
+            doc[0].SampleData2 = [];
             var controlCtr = 0;
-            var scControlCtr = 0;
             var sampleCtr = 0;
+            var sampleCtrPQ = 0;
+            var ctrlname;
+            var processCat;
+            var numTestsTotal = 0;
+            var DefectCountTotal = 0;
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 doc[0].risks.push(comps[i]);
               }
-              else if (comps[i].compntType == "countryControls") {
+              else if (comps[i].compntType == "CUSummarySample") {
                 doc[0].RCTestData.push(comps[i]);
                 // Calculate for Defect Rate of Control doc
-                if (doc[0].RCTestData[controlCtr].numActualTests ==  undefined || doc[0].RCTestData[controlCtr].numActualTests == "" || doc[0].RCTestData[controlCtr].numActualTests == 0 || doc[0].RCTestData[controlCtr].numDefects == undefined || doc[0].RCTestData[controlCtr].numDefects == "") {
+                if (doc[0].RCTestData[controlCtr].numTests ==  undefined || doc[0].RCTestData[controlCtr].numTests == "" || doc[0].RCTestData[controlCtr].numTests == 0 || doc[0].RCTestData[controlCtr].DefectCount == undefined || doc[0].RCTestData[controlCtr].DefectCount == "") {
                   doc[0].RCTestData[controlCtr].defectRate = "";
                 } else {
-                  doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].numDefects/doc[0].RCTestData[controlCtr].numActualTests) * 100).toFixed(1);
+                  doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].DefectCount/doc[0].RCTestData[controlCtr].numTests) * 100).toFixed(1);
                 }
                 // Calculate for ControlName
                 doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
+                // Calculate for Defect Rate
+                numTestsTotal = numTestsTotal + comps[i].numTests;
+                DefectCountTotal = DefectCountTotal + comps[i].DefectCount;
+
                 controlCtr++;
               }
-              else if (comps[i].compntType == "sampledCountry") {
-                doc[0].SCTestData.push(comps[i]);
-                // Calculate for ControlName
-                doc[0].SCTestData[scControlCtr].controlName = doc[0].SCTestData[scControlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SCTestData[scControlCtr].controlShortName;
-                scControlCtr++;
-              }
               else if (comps[i].compntType == "controlSample") {
-                doc[0].SampleData.push(comps[i]);
+                doc[0].SampleData.push(JSON.parse(JSON.stringify(comps[i])));
+                // calculate Process Category
                 if (comps[i].controlType == "KCO") {
-                  doc[0].SampleData[sampleCtr].processCategory = "Operational";
+                  processCat = "Operational";
                 } else {
-                  doc[0].SampleData[sampleCtr].processCategory = "Financial";
+                  processCat = "Financial";
                 }
+                doc[0].SampleData[sampleCtr].processCategory = processCat;
+
+                // calculate Control Name
+                ctrlname = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+                doc[0].SampleData[sampleCtr].controlName = ctrlname;
+
                 // Calculate for unremedPriorSample - Samples from prior quarters with unremediated defects. It will be used as a flag to alert that the asmt has an exception in it skey controls testing
+                // this will also be displayed in the Unremediated Samples from Prior Periods
                 if (comps[i].status != "Retired" && comps[i].reportingQuarter > comps[i].originalReportingQuarter && comps[i].remediationStatus == "Open" && comps[i].numDefects > 0) {
                   doc[0].unremedPriorSample = true;
+                  doc[0].SampleData2.push(comps[i]);
+                  doc[0].SampleData2[sampleCtrPQ].processCategory = processCat;
+                  doc[0].SampleData2[sampleCtrPQ].controlName = ctrlname;
+                  sampleCtrPQ++;
                 }
-                // Calculate for ControlName
-                doc[0].SampleData[sampleCtr].controlName = doc[0].SampleData[sampleCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].SampleData[sampleCtr].controlShortName;
                 sampleCtr++;
+              }
+              // For Audits and Reviews Tab - view 1
+              else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
+                if (comps[i].compntType == "internalAudit") {
+                  comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
+                  comps[i].auditOrReview = "CHQ Internal Audit";
+                  comps[i].id = comps[i].engagement;
+                  comps[i].reportDate = comps[i].addedToAQDB;
+                }
+                doc[0].AuditTrustedData.push(comps[i]);
+              }
+              // For Audits and Reviews Tab - view 2
+              else if (comps[i].compntType == "localAudit") {
+                doc[0].AuditLocalData.push(comps[i]);
               }
               else {
 
               }
+            }
+            // Calculate for Defect Rate
+            if (numTestsTotal == 0) {
+              doc[0].AUDefectRate = "";
+            } else {
+              doc[0].AUDefectRate = ((DefectCountTotal/numTestsTotal) * 100).toFixed(1);
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
@@ -259,7 +511,8 @@ var getDocs = {
             "reportingQuarter": doc[0].CurrentPeriod,
             "controllableUnit": doc[0].AssessableUnitName,
             "businessUnit": doc[0].BusinessUnit,
-            "scorecardCategory": {"$gt":0}
+            "scorecardCategory": {"$gt":0},
+            "status": {"$ne": "Closed"}
           },
           sort:[{"scorecardCategory":"asc"}]
         };
@@ -274,7 +527,8 @@ var getDocs = {
             "process": doc[0].GlobalProcess,
             "businessUnit": doc[0].BusinessUnit,
             "country": doc[0].Country,
-            "scorecardCategory": {"$gt":0}
+            "scorecardCategory": {"$gt":0},
+            "status": {"$ne": "Closed"}
           },
           sort:[{"scorecardCategory":"asc"}]
         };

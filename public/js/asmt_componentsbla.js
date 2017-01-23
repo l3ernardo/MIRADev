@@ -1498,7 +1498,15 @@ $(document).ready(function() {
 		tableReport = AllTableToReportMultiple('ProcessRatings2_treeview',"ProcessRatings2");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
-
+	//Account Ratings export buttons
+	$('#AccountRatings-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('AccountRatings_treeview', "AccountRatings");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#AccountRatings-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('AccountRatings_treeview',"AccountRatings");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
   switch ($("input[name='parentdocsubtype']").val()) {
 		case "Controllable Unit":
 			if ($("input[name='enteredbu']").val() == "GTS Transformation") {
