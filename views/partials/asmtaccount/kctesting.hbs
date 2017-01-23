@@ -2,13 +2,13 @@
 
 <table id="kctest_table" class="ibm-data-table">
 	<tr class="kc-test-content">
-		<td>
+		<td class="kc-test-content">
 		<span class="kc-test-header"><b>Key Controls Testing</b></span><br /><br />
 		<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
 		<span class="ibm-sep"> </span>
 		<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 		<a target="_blank" href="/accountControls?id={{_id}}&new" class="ibm-add1-link">New</a>
-		<table id="RCTest_treeview" width="100%" cellspacing="0" cellpadding="0" border="0" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+		<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 			<thead class="kc-test-viewheader">
 				<th class="kc-test-viewheader" width="15%"></th>
 				<th class="kc-test-viewheader" width="18%">Process</th>
@@ -21,12 +21,10 @@
 				<th class="kc-test-viewheader" width="10%">Target to Close</th>
 				<th class="kc-test-viewheader" width="17%">Comments</th>
 			</thead>
-		</td>
-		<td>
 			<tbody>
 				{{#each RCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="15%">{{processCategory}}</td>
+						<td width="15%">{{name}}</td>
 						<td width="18%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{process}}</a></td>
 						<td width="10%">{{eventDate}}</td>
 						<td width="5%">{{numTestsCompleted}}</td>
