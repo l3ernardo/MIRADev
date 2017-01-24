@@ -294,7 +294,9 @@ var getDocs = {
                 //Performance Tab
                 { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
                 //Risks Tab
-                {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] }
+                {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] },
+                //Getting open issue categories to displaye
+                {"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] }
               //"docType": "asmtComponent",
               //"$or": [
                 // Risks
@@ -319,29 +321,35 @@ var getDocs = {
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
-            doc[0].CPasmts = [];
-            doc[0].CUassunits = [];
+            doc[0].AllAsmts = [];
+            var CUassunits = [];
+            doc[0].riskCategories = [];
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
-                doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
+                if(comps[i].reportingQuarter == doc[0].CurrentPeriod ){
+                  doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
+                }
               }
               else if (comps[i].compntType == "countryControls"){
                	  doc[0].CountryControlsData.push(comps[i]);
               }
               else if (comps[i].key == "Assessment"){
-               	  doc[0].CPasmts.push(comps[i]);
+               	  doc[0].AllAsmts.push(comps[i]);
               }
               else if (comps[i].key == "Assessable Unit"){
-               	  doc[0].CUassunits.push(comps[i]);
+               	  CUassunits.push(comps[i]);
+              }
+              else if (comps[i].docType == "setup"){
+               	  doc[0].riskCategories = comps[i].value.options;
               }
             }
             //console.log(doc[0].CPasmts.length);
             //console.log(doc[0].CUassunits.length);
             //getting assessments under BU country instead of Assessable units
             var arrayPromises = [];
-            for(var i = 0; i < doc[0].CUassunits.length; i++){
+            for(var i = 0; i < CUassunits.length; i++){
               var tmpQuery = {
                 selector : {
                   "_id": {"$gt":0},
@@ -349,17 +357,17 @@ var getDocs = {
                   "AUStatus": "Active",
                   "ParentDocSubType": "Controllable Unit",
                   "CurrentPeriod": doc[0].CurrentPeriod,
-                  "parentid": doc[0].CUassunits[i]["_id"]
+                  "parentid": CUassunits[i]["_id"]
                 }
               };
               arrayPromises.push(db.find(tmpQuery));
             }
             q.all(arrayPromises).then(function(asmts) {
               for (var i = 0; i < asmts.length; i++) {
-                if (doc[0].CUassunits[i].AuditableFlag == "Yes") {
+                if (CUassunits[i].AuditableFlag == "Yes") {
                   doc[0].AUData.push(JSON.parse(JSON.stringify(asmts[i].body.docs[0])));
                 }
-                doc[0].CUassunits[i] = asmts[i].body.docs[0];
+                doc[0].AllAsmts.push(asmts[i].body.docs[0]);
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {
