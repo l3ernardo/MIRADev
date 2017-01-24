@@ -22,12 +22,16 @@
 <script src="./lib/yui-min.js"></script>
 <!-- end rich text -->
 
+
 <div class="ibm-container" style="width:95%">
 	<p style="text-align:right">
 		{{#unless newunit}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}
 		{{/unless}}
 	</p>
+
+	<div class="ibm-error" id="validationmsg"></div></p>
+
 	<form id="assessment" class="ibm-column-form" name="form" method="POST" action="/saveasmt">
 		<input type="hidden" name="docid" id="docid" value="{{_id}}">
 		<input type="hidden" name="editmode" value="{{editmode}}">
@@ -86,3 +90,14 @@
 	collect();
 </script>
 {{/if}}
+
+<script>   // jesus
+    $(document).ready(function (){
+        $("#btn_validate").click(function (){
+            $('html, body').animate({
+            	scrollTop: $("#pageTitle").offset().top
+                //scrollTop: $("#ibm-content-main").offset().top
+            }, 500);
+        });
+    });
+</script>
