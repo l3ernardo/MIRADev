@@ -13,6 +13,68 @@ var calculateKCTab = {
   processKCTab: function(doc, defViewRow) {
 		try {
       switch (doc[0].ParentDocSubType) {
+        case "Account":
+          //Functionality to export the Account's Key Controls Testing to Excel and ODS.
+          var rct = doc[0].RCTestData;
+          var exportRCTest = [];
+          //Sort
+          rct.sort(function(a, b){
+            if (a.processCategory == undefined) a.processCategory = "(uncategorized)";
+            if (b.processCategory == undefined) b.processCategory = "(uncategorized)";
+            var nameA=a.processCategory.toLowerCase(), nameB=b.processCategory.toLowerCase()
+            if (nameA < nameB){ //sort string ascending
+              if (nameA == "(uncategorized)") {
+                return 1;
+              }
+              return -1
+            }
+            if (nameA > nameB){
+              if (nameB =="(uncategorized)") {
+                return -1
+              }
+              return 1
+            }
+            return 0 //default return value (no sorting)
+          });
+          var categoryList = {};
+          var tmpList = [];
+          for(var i = 0; i < rct.length; i++) {
+            if(typeof categoryList[rct[i].processCategory] === "undefined"){
+              var tmp = {
+                id:rct[i].processCategory.replace(/ /g,''),
+                parent:"",
+                name: rct[i].processCategory
+              };
+              tmpList.push(tmp);
+              categoryList[rct[i].processCategory] = true;
+            }
+            rct[i].parent = rct[i].processCategory.replace(/ /g,'');
+            rct[i].id = rct[i]["_id"];
+            exportRCTest.push({
+              processCategory:rct[i].processCategory || "",
+              process:rct[i].process || "",
+              eventDate:rct[i].eventDate || "",
+              numTestsCompleted:rct[i].numTestsCompleted || "",
+              numProcessDefects:rct[i].numProcessDefects || "",
+              numControlDeficiencies:rct[i].numControlDeficiencies || "",
+              defectRate:rct[i].defectRate || "",
+              remediationStatus:rct[i].remediationStatus || "",
+              targetToClose:rct[i].targetToClose || "",
+              comments:rct[i].comments || ""
+            });
+            tmpList.push(rct[i]);
+          }
+          doc[0].exportRCTest = exportRCTest;
+          doc[0].RCTestData = tmpList;
+          // add padding for RCT Data
+          if (Object.keys(categoryList).length < defViewRow) {
+            if (Object.keys(categoryList).length == 0) {
+              doc[0].RCTestData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].RCTestData,10,(defViewRow-Object.keys(categoryList).length));
+            }
+          }
+          break;
         case "Country Process":
           doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
           if (doc[0].AUDefectRate == 0) {

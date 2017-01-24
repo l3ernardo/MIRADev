@@ -1,3 +1,5 @@
+<script src="/public/js/bucountry_performanceoverview.js"></script>
+<script src='/public/js/utility.js'></script>
 <table id="po_table" class="ibm-data-table">
 	<input type="hidden" name="opMetricIDs" id="opMetricIDs" value="{{opMetricIDs}}">
 	{{#if editmode}}
@@ -56,7 +58,7 @@
 					</tr>
 					<tr>
 						<td class="ar-asmt-label"><label for="MissedMSACComments">Missed MSAC Commitments</label></td>
-						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data" align="center">{{MissedMSACSatCount}}</td>
 						<td class="content-data">
 							<div class='yui-skin-sam'>
 								<span><textarea id="MissedMSACComments" type="text" name="MissedMSACComments">{{MissedMSACComments}}</textarea></span>
@@ -166,7 +168,7 @@
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Missed MSAC Commitments</td>
-						<td class="content-data">{{MissedMSACSatCount}}</td>
+						<td class="content-data" align="center">{{MissedMSACSatCount}}</td>
 						<td class="content-data">
 							<input type="hidden" name="MissedMSACCommentsRO" value="{{MissedMSACComments}}">
 							<div id="MissedMSACCommentsReadOnly"></div>
@@ -217,7 +219,10 @@
 	{{/if}}
 	<tr class="ar-asmt-content">
 		<td>
-			<span class="ar-asmt-header">Country Process and CU Performance Indicators</span><br /><br />
+			<span id="CPCUPerformanceIn_tittle" name = "CPCUPerformanceIn_tittle"  class="ar-asmt-header">Country Process and CU Performance Indicators</span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="POBU-link-export" id="POBU-link-export" class="ibm-symp-spreadsheet witheanchor" id="whiteanchor">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="POBU-link-export2" id="POBU-link-export2" class="ibm-symp-spreadsheet witheanchor" id="whiteanchor">Export to Open Office</a>
 			<table width="100%" id="CPCUPerformanceIn_treeview" class="table_with_scroll">
 				<thead>
 					<th class="ar-asmt-viewheader" scope="col" width="33%">Assessed Unit</th>
@@ -260,8 +265,11 @@
 				</tbody>
 			</table>
 			<br />
-			<span class="ar-asmt-header">Country Process and CU Operational and Indicators</span><br /><br />
-			<table width="100%">
+			<span id="CPCUPerformanceInOthers_tittle" name = "CPCUPerformanceInOthers_tittle" class="ar-asmt-header">Country Process and CU Operational and Other Indicators</span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="POBUOT-link-export"  class="ibm-symp-spreadsheet witheanchor" id="POBUOT-link-export">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="POBUOT-link-export2"  class="ibm-symp-spreadsheet witheanchor" id="POBUOT-link-export2">Export to Open Office</a>
+			<table width="100%" id="CPCUPerformanceInOther_treeview" class="table_with_scroll">
 				<thead>
 					<th class="ar-asmt-viewheader" scope="col" width="37%">Assessed Unit</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Proactive Reviews</th>
@@ -273,19 +281,25 @@
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Other Metrics</th>
 				</thead>
 				{{#each BUCAsmtDataOIview}}
-					<tr class="asmt-viewdata">
+					<tr class="asmt-viewdata" data-tt-id={{docid}} data-tt-parent-id="{{treeParent}}">
 						{{#if_equal name ""}}
-							<td class="asmt-viewdata">&nbsp;</td>
+							<td class="asmt-viewdata" width="37%">&nbsp;</td>
 						{{else}}
-							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{#if_equal treeParent "1"}}
+								<td class="asmt-viewdata" width="37%">{{name}}</td>
+							{{else}}
+								<td class="asmt-viewdata" width="37%"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{/if_equal}}
+							
 						{{/if_equal}}
-						{{{ratingDisplayView opmetric12Rating}}}
-						{{{ratingDisplayView opmetric13Rating}}}
-						{{{ratingDisplayView opmetric9Rating}}}
-						{{{ratingDisplayView opmetric8Rating}}}
-						{{{ratingDisplayView opmetric16Rating}}}
-						<td class="asmt-viewdata-centered">{{bocExCount}}</td>
-						{{{ratingDisplayView opmetric11Rating}}}
+						
+						{{{ratingDisplayView OMID10Rating 9}}}
+						{{{ratingDisplayView OMID11Rating 9}}}
+						{{{ratingDisplayView OMID7Rating 9}}}
+						{{{ratingDisplayView OMID5Rating 9}}}
+						{{{ratingDisplayView OMID13Rating 9}}}
+						<td class="asmt-viewdata-centered" width="9%">{{bocExCount}}</td>
+						{{{ratingDisplayView OMID9Rating 9}}}
 					</tr>
 				{{/each}}
 				<tr>
@@ -296,6 +310,8 @@
 
 <script>
 		
-		//load tree table for Country Process and CU Performance Indicators table at performanceoverview partial
+		//load tree tables for Country Process and CU Performance Indicators and others indicators tables at performanceoverview partial
 	$("#CPCUPerformanceIn_treeview").treetable({expandable: true});
+	
+	$("#CPCUPerformanceInOther_treeview").treetable({expandable: true});
 </script>

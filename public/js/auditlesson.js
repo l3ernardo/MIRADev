@@ -1,6 +1,4 @@
 $(document).ready(function(){
-	//Hide left navigation
-	//hide_divs();
 	//Display notes
 	$("#NotesReadOnly").html($("input[name='NotesRO']").val());
 	//Setup some private variables
@@ -21,7 +19,7 @@ $(document).ready(function(){
 	myEditor.on('editorKeyPress',function(){counter(myEditor)},myEditor,true);
 	myEditor.on('editorMouseUp',function(){counter(myEditor)},myEditor,true);
 	myEditor.on('editorContentLoaded', function () {counter(myEditor)},myEditor,true);
-//click al droplist
+	//click al droplist
 	$(".dropdown dt a").on('click', function() {
 		$("#"+$(this).attr('name')).slideToggle('fast');
 	});
@@ -30,7 +28,7 @@ $(document).ready(function(){
 		$("#"+$(this).attr('name')).hide();
 	});
 
-//click al elemento que sea
+	//click any element
 	$(document).bind('click', function(e) {
 		var $clicked = $(e.target);
 		if (!$clicked.parents().hasClass("dropdown")){
@@ -39,7 +37,6 @@ $(document).ready(function(){
 	});
 
 	function updateIDlist(id, scope, selID) {
-
 		var listItems = $("#"+selID+" input");
 		var newlist = "";
 		listItems.each(function(idx, cbx) {
@@ -71,32 +68,37 @@ $(document).ready(function(){
 			for (var i = 0; i < units.length; ++i) {
 				var title = $("[id='processList"+units[i]+"']").prop('name') + ",";
 				var html = '<span id="globalProcessList'+units[i]+'" title="' + title + '">' + title + '</span>';
-
-			$("[id='processList']").append(html);
-			$("[id='processList"+units[i]+"']").prop('checked', true);
+				if(title!="undefined"){
+					$("[id='processList']").append(html);
+					$("[id='processList"+units[i]+"']").prop('checked', true);
+				}
 			}
 			$("#globalProcessListSel").hide();
 			updateIDlist("globalProcess","processList","globalProcessList");
 		};
 
-	//list Audit Lessons Learned Key - for CU-not GBS only
-		if ( $("input[name='AuditLessonsKey']").length > 0) {
+	//list Audit Lessons Learned Key
+	if ( $("input[name='AuditLessonsKey']").length > 0) {
+		if ( $("input[name='AuditLessonsKey']").val() != "") {
 			var units = $("input[name='AuditLessonsKey']").val().split(",");
 			for (var i = 0; i < units.length; ++i) {
 				var title = $("#lessonsList" + units[i]).prop('name') + ",";
-				var html = '<span id="scopeLessonsList'+units[i]+'" title="' + title + '">' + title + '</span>';
-				$('#lessonsList').append(html);
-				$("#lessonsList" + units[i]).prop('checked', true);
+				if(title!="undefined"){
+					var html = '<span id="scopeLessonsList'+units[i]+'" title="' + title + '">' + title + '</span>';
+					$('#lessonsList').append(html);
+					$("#lessonsList" + units[i]).prop('checked', true);
+				}
 			}
 			$("#scopeLessonsListSel").hide();
 		}
-		//click al elemento que sea
-			$(document).bind('click', function(e) {
-				var $clicked = $(e.target);
-				if (!$clicked.parents().hasClass("dropdown")){
-					myEditor.saveHTML();
-					$(".dropdown dd ul").hide();}
-			});
+	}
+	//Click on elements
+	$(document).bind('click', function(e) {
+		var $clicked = $(e.target);
+		if (!$clicked.parents().hasClass("dropdown")){
+			myEditor.saveHTML();
+			$(".dropdown dd ul").hide();}
+	});
 }
 
 $('#scopeLessonsList input[type="checkbox"]').on('click', function() {
@@ -112,9 +114,7 @@ $('#scopeLessonsList input[type="checkbox"]').on('click', function() {
 	updateIDlist("AuditLessonsKey","lessonsList","scopeLessonsList");
 });
 
-
-
-//checar
+//Mark any global process
 $('#globalProcessList input[type="checkbox"]').on('click', function() {
 	var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
 	title = $(this).attr('name') + ",";
@@ -134,7 +134,6 @@ $('#country').on('change', function() {
 	$('#IOT').val(tmp[this.value].IOT);
 });
 
-
 });
 function getSelectedValue(id) {
 	return $("#" + id).find("dt a span.value").html();
@@ -145,18 +144,18 @@ function hide_divs(){
 }
 //character counter
 function counter(name) {
-  var string1=name.toString(),
-  i=string1.indexOf("#")+1,
-  f=string1.indexOf('_');
-  use=string1.substring(i,f),
-  html = name.saveHTML();
-  data2= html.replace(/<\S[^><]*>/g, ''),
-  data3= data2.replace(/&nbsp;/g,' ');
-  charCount = ((data3.length) ? data3.length : 0),
-  ndiv= "<div id='"+use+"_Char"+"'><span title='"+use+"_Char"+"'>Chars:"+charCount+"</span></div>",
-  $newdiv1 =ndiv,
-  rdiv="#"+use+"_Char",
-  $(rdiv).remove(),
-  rdiv2="#"+use+"_container";
-  $(rdiv2).append($newdiv1);
+	var string1=name.toString(),
+	i=string1.indexOf("#")+1,
+	f=string1.indexOf('_');
+	use=string1.substring(i,f),
+	html = name.saveHTML();
+	data2= html.replace(/<\S[^><]*>/g, ''),
+	data3= data2.replace(/&nbsp;/g,' ');
+	charCount = ((data3.length) ? data3.length : 0),
+	ndiv= "<div id='"+use+"_Char"+"'><span title='"+use+"_Char"+"'>Chars:"+charCount+"</span></div>",
+	$newdiv1 =ndiv,
+	rdiv="#"+use+"_Char",
+	$(rdiv).remove(),
+	rdiv2="#"+use+"_container";
+	$(rdiv2).append($newdiv1);
 };

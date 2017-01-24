@@ -10,33 +10,6 @@ var q  = require("q");
 var utility = require('./class-utility.js');
 
 var components = {
-
-  newAudit: function(req, db){
-    var deferred = q.defer();
-    try{
-      var obj = {
-        selector : {
-          "_id": req.query.id,
-          "compntType": "ppr"
-        }
-      };
-
-      db.find(obj).then(function(data){
-        //console.log(data.body.docs[0]);
-        data.body.docs[0]["_id"] = req.query.id;
-        if(typeof req.query.edit !== "undefined"){
-          data.body.docs[0].editmode = 1;
-        }
-        deferred.resolve({"status": 200, "data":data.body.docs[0]})
-      }).catch(function(err) {
-        deferred.reject({"status": 500, "error": err.error.reason});
-      });
-    }catch(e){
-      deferred.reject({"status": 500, "error": e});
-    }
-    return deferred.promise;
-  },
-
   getComponent: function(req, db){
     var deferred = q.defer();
     try{
@@ -424,6 +397,7 @@ var components = {
             output.parentType = parent.ParentDocSubType;
             output.AssessableUnitName = parent.AssessableUnitName;
             output.parentid = req.query.id;
+            output.editor = true;
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -481,6 +455,7 @@ var components = {
               if(!( parent.CurrentPeriod != req.session.quarter || parent.MIRAStatus == "Final")){
                 //output.procesDisplay = true;
               }
+              output.editor = true;
               deferred.resolve({"status": 200, "data":output});
             }).catch(function(err) {
               deferred.reject({"status": 500, "error": err.error.reason});
@@ -538,6 +513,7 @@ var components = {
                   deferred.reject({"status": 500, "error": "parameter does not exist"});
                 }else{
                   internal.sizes = doc.value.options;
+                  internal.editor = true;
                   deferred.resolve({"status": 200, "data": internal})
                 }
               }).catch(function(err) {
@@ -592,22 +568,79 @@ var components = {
   },
 
   getAccountControls: function(req, db){
-    /******************
-
-    PROCESS PENDNING
-
-    *************************/
     var deferred = q.defer();
-    if(typeof req.query.new !== "undefined"){
-      var data = {};
-      data.new = 1;
-      data.editmode = true;
-      deferred.resolve({"status": 200, "data":data})
 
-      return deferred.promise;
+    try{
+      // new doc
+      if(typeof req.query.new !== "undefined"){
+        // get parent doc
+        db.get(req.query.id).then(function(pdata){
+          var pdoc = pdata.body;
+          if(typeof pdoc === "undefined"){
+            deferred.reject({"status": 500, "error": "parent document does not exist"});
+          }else{
+            var data = {};
+            data.new = 1;
+            data.editmode = true;
+            // inherited fields from parent
+            data.reportingQuarter =  pdoc.CurrentPeriod;
+            data.account = pdoc.AssessableUnitName;
+            data.parentid = req.query.id;
+            var Thresholds = [];
+            var keyN = {
+              selector : {
+                "_id": {"$gt":0},
+                keyName: "KCO/KCFR Marginal Defect Rate Threshold"
+            }};
+            Thresholds.push(db.find(keyN));
+            keyN = {
+              selector : {
+                "_id": {"$gt":0},
+                keyName: "KCO/KCFR Unsat Defect Rate Threshold"
+            }};
+            Thresholds.push(db.find(keyN));
+            q.all(Thresholds).then(function(thres){
+              data.Marg = thres[0].body.docs[0].value.option;
+              data.Unsat = thres[1].body.docs[0].value.option;
 
-    }else{
-      try{
+              // Remediation Status option
+              data.remedStats = [];
+              data.remedStats.push({"name":"Open"});
+              data.remedStats.push({"name":"Closed"});
+
+              data.RelevantGPs = [];
+              data.RelevantGPs.push({"name":""});
+
+              // get CU parent of parent doc
+              db.get(pdoc.grandparentid).then(function(gpdata){
+                var gpdoc = gpdata.body;
+                if(typeof gpdoc === "undefined"){
+                  deferred.resolve({"status": 200, "data":data})
+                } else {
+                  if (gpdoc.RelevantGPs !== undefined) {
+                    for (var i = 0; i < gpdoc.RelevantGPs.length; i++) {
+                      data.RelevantGPs.push({"name":gpdoc.RelevantGPs[i]});
+                    }
+                  }
+                  deferred.resolve({"status": 200, "data":data})
+                }
+              }).catch(function(err) {
+                deferred.reject({"status": 500, "error": err.error.reason});
+              });
+
+
+            }).catch(function(err) {
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
+
+
+          }
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
+      }
+      // existing document
+      else{
         var obj = {
           selector : {
             "_id": req.query.id,
@@ -616,41 +649,80 @@ var components = {
         };
 
         db.find(obj).then(function(data){
-        //console.log(data.body.docs[0]);
-        //data.body.docs[0]["_id"] = req.query.id;
-        if(typeof req.query.edit !== "undefined"){
-          data.body.docs[0].editmode = 1;
-          var Thresholds = [];
-          var keyN = {
-            selector : {
-              "_id": {"$gt":0},
-              keyName: "KCO/KCFR Marginal Defect Rate Threshold"
-            }};
-            Thresholds.push(db.find(keyN));
-             keyN = {
-              selector : {
-                "_id": {"$gt":0},
-                keyName: "KCO/KCFR Unsat Defect Rate Threshold"
+          if(typeof data === "undefined"){
+            deferred.reject({"status": 500, "error": "document does not exist"});
+          }
+          else{
+            // data.body.docs[0].reportingQuarter =  pdoc.CurrentPeriod;
+            // data.body.docs[0].account = pdoc.AssessableUnitName;
+            data.body.docs[0].editor = true;
+            if(typeof req.query.edit !== "undefined"){
+              data.body.docs[0].editmode = 1;
+              var Thresholds = [];
+              var keyN = {
+                selector : {
+                  "_id": {"$gt":0},
+                  keyName: "KCO/KCFR Marginal Defect Rate Threshold"
+              }};
+              Thresholds.push(db.find(keyN));
+              keyN = {
+                selector : {
+                  "_id": {"$gt":0},
+                  keyName: "KCO/KCFR Unsat Defect Rate Threshold"
+              }};
+              Thresholds.push(db.find(keyN));
+              // get parent doc
+              keyN = {
+                selector : {
+                  "_id": data.body.docs[0].parentid
               }};
               Thresholds.push(db.find(keyN));
               q.all(Thresholds).then(function(thres){
-
                 data.body.docs[0].Marg = thres[0].body.docs[0].value.option;
                 data.body.docs[0].Unsat = thres[1].body.docs[0].value.option;
-                  deferred.resolve({"status": 200, "data":data.body.docs[0]});
-              });
-        }else{
-          deferred.resolve({"status": 200, "data":data.body.docs[0]});
-        }
-      }).catch(function(err) {
-        deferred.reject({"status": 500, "error": err.error.reason});
-      });
+                data.body.docs[0].account = thres[2].body.docs[0].AssessableUnitName;
 
-      }catch(e){
-        deferred.reject({"status": 500, "error": e});
+                // Remediation Status option
+                data.body.docs[0].remedStats = [];
+                data.body.docs[0].remedStats.push({"name":"Open"});
+                data.body.docs[0].remedStats.push({"name":"Closed"});
+
+                // for process field
+                data.body.docs[0].RelevantGPs = [];
+                data.body.docs[0].RelevantGPs.push({"name":""});
+                // get CU parent of parent doc for process field
+                db.get(thres[2].body.docs[0].grandparentid).then(function(gpdata){
+                  var gpdoc = gpdata.body;
+                  if(typeof gpdoc === "undefined"){
+                    deferred.resolve({"status": 200, "data":data.body.docs[0]});
+                  } else {
+                    if (gpdoc.RelevantGPs !== undefined) {
+                      for (var i = 0; i < gpdoc.RelevantGPs.length; i++) {
+                        data.body.docs[0].RelevantGPs.push({"name":gpdoc.RelevantGPs[i]});
+                      }
+                    }
+                    deferred.resolve({"status": 200, "data":data.body.docs[0]});
+                  }
+                }).catch(function(err) {
+                  deferred.reject({"status": 500, "error": err.error.reason});
+                });
+              }).catch(function(err) {
+                deferred.reject({"status": 500, "error": err.error.reason});
+              });
+            }else{
+              deferred.resolve({"status": 200, "data":data.body.docs[0]});
+            }
+          }
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
       }
-      return deferred.promise;
     }
+    catch(e){
+      deferred.reject({"status": 500, "error": e});
+    }
+
+    return deferred.promise;
   },
 
   /* Save Open Issue number of missed tasks override in cloudant */
@@ -785,7 +857,7 @@ var components = {
         obj.AssessableUnitName = req.body.AssessableUnitName;
         obj.auditOrReview = req.body.auditOrReview;
         obj.Log = [addlog];
-        obj.reportingQuarter = req.session.quarter;
+        obj.reportingQuarter = req.body.quarter;
         obj.auditID = req.body.auditID;
         obj.reportDate = req.body.reportDate;
         obj.process = req.body.process;
@@ -860,11 +932,10 @@ var components = {
       };
 
       if(req.body.docid === ""){
-
         var obj={};
         obj.docType = "asmtComponent";
         obj.compntType = "accountControls";
-        obj.account = req.body.account;
+        // obj.account = req.body.account;
         obj.process = req.body.process;
         obj.Log = [addlog];
         obj.reportingQuarter = req.session.quarter;
@@ -877,7 +948,12 @@ var components = {
         obj.targetToClose = req.body.targetToClose;
         obj.comments = req.body.comments;
         obj.parentid = req.body.parentid;
-
+        // calculate for defect Rate
+        if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
+          obj.defectRate = 0;
+        } else {
+          obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(1);
+        }
         db.save(obj).then(function(data){
 
           deferred.resolve({"status": 200, "data": data.body});
@@ -910,6 +986,13 @@ var components = {
           obj.targetToClose = req.body.targetToClose;
           obj.comments = req.body.comments;
 
+          // calculate for defect Rate
+          if (obj.numTestsCompleted == undefined || obj.numTestsCompleted == "" || obj.numTestsCompleted < 1 || obj.numProcessDefects == undefined || obj.numProcessDefects == "" || obj.numProcessDefects < 1) {
+            obj.defectRate = 0;
+          } else {
+            obj.defectRate = ((parseFloat(obj.numProcessDefects) / parseFloat(obj.numTestsCompleted))*100).toFixed(1);
+          }
+
           db.save(obj).then(function(data){
 
             deferred.resolve({"status": 200, "data": data.body});
@@ -941,7 +1024,7 @@ var components = {
         var obj={};
         obj.docType = "asmtComponent";
         obj.compntType = "accountAudit";
-        obj.controllableUnit = req.body.controllableUnit;
+        obj.AssessableUnitName = req.body.AssessableUnitName;
         obj.auditOrReview = req.body.auditOrReview;
         obj.Log = [addlog];
         obj.reportingQuarter = req.session.quarter;

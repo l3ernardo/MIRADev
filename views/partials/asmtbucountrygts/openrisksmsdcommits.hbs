@@ -306,17 +306,23 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Missed</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Risk Abstract</th>
 				</thead>
+				<tbody>
 				{{#each RiskView2Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="15%" >{{#unless parent}}{{type}}{{/unless}}</td>
+						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td width="15%">{{status}}</td>
+						<td width="8%">{{originalTargetDate}}</td>
+						<td width="8%">{{currentTargetDate}}</td>
+						<td width="5%">{{numTasks}}</td>
+						<td width="5%">{{numTasksOpen}}</td>
+						<td width="5%">{{numMissedTasks}}</td>
+						<td width="5%">{{numOpenIssues}}</td>
+						<td width="4%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
+						<td width="20%">{{riskAbstract}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>

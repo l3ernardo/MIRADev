@@ -43,14 +43,17 @@
 		</tr>
 		<tr class="ar-asmt-content">
 			<td>
-				<!--<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">-->
 				<table id="audit_readiness_treeview"  cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating" >
 					<thead>
 						<th class="ar-asmt-viewheader" scope="col" width="25%">Qtr-Type</th>
 						<th class="ar-asmt-viewheader" scope="col" width="10%">ID</th>
 						<th class="ar-asmt-viewheader" scope="col" width="35%">Summary of Issue/Recommendation</th>
 						<th class="ar-asmt-viewheader" scope="col" width="10%">Observation Category</th>
+						{{#if_equal ParentDocSubType "Country Process"}}
+						<th class="ar-asmt-viewheader" scope="col" width="10%">Audit/CAR</th>
+						{{else}}
 						<th class="ar-asmt-viewheader" scope="col" width="10%">Process</th>
+						{{/if_equal}}
 						<th class="ar-asmt-viewheader" scope="col" width="10%">Subprocess</th>
 					</thead>
 					{{#if_not_equal EnteredBU "GBS"}}
@@ -60,9 +63,13 @@
 
 							<td style="background-color: white !important;" style="width:25%;white-space:nowrap;">{{name}}</td>
 							<td style="background-color: white !important;" style="width:10%;white-space:nowrap;">{{#if _id}}<a href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
-							<td style="background-color: white !important;" style="width:35%;">{{summary}}</td>
+							<td style="background-color: white !important;" style="width:35%;">{{{summary}}}</td>
 							<td style="background-color: white !important;" style="width:10%;">{{observationCategory}}</td>
+							{{#if_equal ../ParentDocSubType "Country Process"}}
+							<td style="background-color: white !important;" style="width:10%;">{{AuditCAR}}</td>
+							{{else}}
 							<td style="background-color: white !important;" style="width:10%;">{{process}}</td>
+							{{/if_equal}}
 							<td style="background-color: white !important;" style="width:10%;">{{subprocess}}</td>
 						</tr>
 					{{/each}}
