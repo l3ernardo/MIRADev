@@ -463,7 +463,7 @@ var calculatefield = {
                else if (asmtsdocs[i].key == "Assessable Unit"){
                    CUassunits.push(asmtsdocs[i]);
                    if(asmtsdocs[i].AuditableFlag == "Yes"){
-                     auditables[asmtsdocs[i]["_id"]] = true;
+                     auditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                    }
                }
             }
@@ -485,6 +485,11 @@ var calculatefield = {
               doc[0].asmtsdocs = asmtsdocs.concat(asmts.body.docs);
               for (var i = 0; i < asmts.body.docs.length; i++) {
                 if(auditables[asmts.body.docs[i].parentid]){
+                    if(auditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
+                      asmts.body.docs[i].Portfolio = "Portfolio CU";
+                    }else{
+                      asmts.body.docs[i].Portfolio = "Standalone CU";
+                    }
                     doc[0].AUData.push(asmts.body.docs[i]);
                 }
               }
@@ -505,12 +510,12 @@ var calculatefield = {
                 {"wwbcitid": asmtsdata.body.docs[i].WWBCITKey}
               );
             }
+            deferred.resolve({"status": 200, "doc": doc});
             break;
           default:
             doc[0].asmtsdocs = asmtsdata.body.docs;
+            deferred.resolve({"status": 200, "doc": doc});
         }
-
-        deferred.resolve({"status": 200, "doc": doc});
       }).catch(function(err) {
         console.log("[class-fieldcalc][getAssessments] - " + err.error);
         deferred.reject({"status": 500, "error": err.error.reason});

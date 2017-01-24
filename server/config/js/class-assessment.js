@@ -479,7 +479,7 @@ var assessment = {
 								performanceTab.getMissedRisks(db,doc);
 								performanceTab.getMSACCommitments(db,doc);
 								//open risks
-								ort.processORTab(doc,defViewRow);
+								ort.processORTab(doc,defViewRow,req);
 								//audit universe
 								aut.processAUTab(doc,defViewRow);
 
