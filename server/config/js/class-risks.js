@@ -73,6 +73,49 @@ var calculateORTab = {
         doc[0].openrisks = openrisks;
         break;
       case "BU Country":
+      //count the category issues
+      doc[0].totalRisks = {
+        PrevQtr1: 0,
+        PrevQtr2: 0,
+        PrevQtr3: 0,
+        PrevQtr4: 0,
+        Current: 0
+      };
+      doc[0].riskCategories[0].flagForTextarea = true;
+      for (var i = 0; i < doc[0].RiskView2Data.length; i++) {
+        for (var j = 0; j < doc[0].riskCategories.length; j++) {
+          if(doc[0].RiskView2Data[i].scorecardCategory == doc[0].riskCategories[j].name){
+            if (doc[0].RiskView2Data[i].reportingQuarter == doc[0].CurrentPeriod) {
+              doc[0].totalRisks.Current++;
+              if(doc[0].riskCategories[j]["Current"] == undefined){
+                doc[0].riskCategories[j]["Current"] = 1;
+              }else {
+                doc[0].riskCategories[j]["Current"]++;
+              }
+            }
+            else{
+              for (var k = 0; k < doc[0].PrevQtrs.length; k++) {
+                if(doc[0].RiskView2Data[i].reportingQuarter == doc[0].PrevQtrs[k]){
+                  doc[0].totalRisks["PrevQtr"+(k+1)]++;
+                  if(doc[0].riskCategories[j]["PrevQtr"+(k+1)] == undefined){
+                    doc[0].riskCategories[j]["PrevQtr"+(k+1)] = 1;
+                  }else {
+                    doc[0].riskCategories[j]["PrevQtr"+(k+1)]++;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      //Quarters change
+      doc[0].QtdChangeRisks = {
+        QtdChange1:  Math.abs(doc[0].totalRisks.PrevQtr1 - doc[0].totalRisks.PrevQtr2),
+        QtdChange2: Math.abs(doc[0].totalRisks.PrevQtr2 - doc[0].totalRisks.PrevQtr3),
+        QtdChange3: Math.abs(doc[0].totalRisks.PrevQtr3 - doc[0].totalRisks.PrevQtr4),
+        QtdChange4: Math.abs(doc[0].totalRisks.PrevQtr4 - doc[0].totalRisks.Current)
+      };
+
         var risks = doc[0].RiskView1Data;
         var exportOpenRisks = [];
         for(var i = 0; i < risks.length; i++){
