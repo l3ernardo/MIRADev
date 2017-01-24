@@ -356,15 +356,14 @@ var calculatefield = {
           break;
         case "BU Country":
           var asmts = {
-            selector:{
-              "_id": {"$gt":0},
-              "key": "Assessment",
-              "AUStatus": "Active",
-              "ParentDocSubType":{"$in":["Controllable Unit","Country Process"]},
-              "BusinessUnit": doc[0].BusinessUnit,
-              "CurrentPeriod": doc[0].CurrentPeriod,
-              "Country": doc[0].Country
-            }
+              selector : {
+                "_id": {"$gt":0},
+                "$or": [
+                  //Getting all country process assessment
+                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                  //Getting all controllable units assessable units
+                  {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]}
+                ]}
           };
           break;
         case "BU IMT":
@@ -453,10 +452,47 @@ var calculatefield = {
         // Populate View Data
         switch (doc[0].ParentDocSubType) {
           case "BU Country":
-            doc[0].asmtsdocs = asmtsdata.body.docs;
-            for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-              doc[0].AUData.push(doc[0].asmtsdocs[i]);
+            doc[0].asmtsdocs = [];
+             var asmtsdocs = asmtsdata.body.docs;
+            var CUassunits = [];
+            var auditables = {};
+            for (var i = 0; i < asmtsdocs.length; ++i) {
+              if (asmtsdocs[i].key == "Assessment"){
+                 doc[0].asmtsdocs.push(asmtsdocs[i]);
+               }
+               else if (asmtsdocs[i].key == "Assessable Unit"){
+                   CUassunits.push(asmtsdocs[i]);
+                   if(asmtsdocs[i].AuditableFlag == "Yes"){
+                     auditables[asmtsdocs[i]["_id"]] = true;
+                   }
+               }
             }
+            var $or = [];
+            for(var i = 0; i < CUassunits.length; i++){
+                $or.push({parentid: CUassunits[i]["_id"]});
+            };
+            var tmpQuery = {
+              selector : {
+                "_id": {"$gt":0},
+                "key": "Assessment",
+                "AUStatus": "Active",
+                "ParentDocSubType": "Controllable Unit",
+                "CurrentPeriod": doc[0].CurrentPeriod,
+                $or
+              }
+            };
+            db.find(tmpQuery).then(function(asmts) {
+              doc[0].asmtsdocs = asmtsdocs.concat(asmts.body.docs);
+              for (var i = 0; i < asmts.body.docs.length; i++) {
+                if(auditables[asmts.body.docs[i].parentid]){
+                    doc[0].AUData.push(asmts.body.docs[i]);
+                }
+              }
+              deferred.resolve({"status": 200, "doc": doc});
+            }).catch(function(err) {
+              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
             break;
           case "Country Process":
             doc[0].CURelevantAU = [];
