@@ -74,8 +74,12 @@ var assessment = {
 			parentdoc.push(pdata.body);
 			/* Get access and roles */
 			var editors = parentdoc[0].AdditionalEditors + parentdoc[0].Owner + parentdoc[0].Focals;
-			accessrules.getRules(req,editors);
-			//accessrules.getRules(req,doc[0].parentid,db,pdata.body);
+			//accessrules.getRules(req,editors);
+			
+			accessrules.getRules(req,doc[0].parentid,db,parentdoc[0]).then(function(result){
+				
+				accessrules.rules = result.rules;
+				
 			doc[0].editor = accessrules.rules.editor;
 			doc[0].admin = accessrules.rules.admin;
 			doc[0].resetstatus = accessrules.rules.resetstatus;
@@ -432,6 +436,7 @@ var assessment = {
 						doc[0].RiskView1Data = [];
 						doc[0].RiskView2Data = [];
 
+						doc[0].CountryId = parentdoc[0].Country;
 						doc[0].Country = util.resolveGeo(parentdoc[0].Country,"Country",req);
 						doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 						// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
@@ -470,17 +475,14 @@ var assessment = {
 								}
 							}
 							//create a space for performance Tab
-							
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
 								performanceTab.getMSACCommitments(db,doc);
-								// console.log("KFCRDefectRate: "+doc[0].KCFRDefectRate);
-								 //console.log("KCODefectRate: "+doc[0].KCODefectRate);
-								 //console.log("MissedRisks: "+doc[0].MissedOpenIssueCount);
-								 //console.log(doc[0].AUData);
-								 //console.log(doc[0].asmtsdocs);
-								//console.log(doc[0].RiskView1Data);
+								//open risks
+								ort.processORTab(doc,defViewRow);
+								//audit universe
+								aut.processAUTab(doc,defViewRow);
 
 								 var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
@@ -872,6 +874,12 @@ var assessment = {
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err});
 			});
+			
+		
+			}).catch(function(err) {
+			deferred.reject({"status": 500, "error": err});
+			});
+			
 
 		}).catch(function(err) {
 			deferred.reject({"status": 500, "error": err});
@@ -891,8 +899,10 @@ var assessment = {
 
 				/* Get access and roles */
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
-				//accessrules.getRules(req,pid,db,data.body);
-				accessrules.getRules(req,peditors);
+				accessrules.getRules(req,pid,db,data.body).then(function(result){
+					
+				accessrules.rules = result.rules;
+				//accessrules.getRules(req,peditors);
 				var editors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 
 				if (accessrules.rules.editor) {
@@ -1270,6 +1280,11 @@ var assessment = {
 				} else {
 					deferred.reject({"status": 500, "error": "Access denied!"});
 				}
+				
+				}).catch(function(err) {
+					deferred.reject({"status": 500, "error": err.error.reason});
+				});
+				
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});

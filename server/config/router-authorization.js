@@ -20,7 +20,7 @@ module.exports = function isAuthorized(req, res, next) {
 			req.body.password = userinfo[1];
 			var credentials = JSON.parse(fs.readFileSync('./APIProfile.json', 'utf8'));
 			//console.log('Checking user...');
-			if(userinfo[0]==credentials.username) {	
+			if(userinfo[0]==credentials.username || userinfo[0]==credentials.username2) {	
 				// if we have to test the user and pass, the code should be here
 				// 'ldapjs' module seems to be the one, but it does not work as intended
 				//console.log('Authorized!');
