@@ -21,97 +21,98 @@
 	</p>
 
 {{#if editmode}}
-<input type="hidden" id="UnsatThreshold" value="{{Unsat}}">
-<input type="hidden" id="MargThreshold" value="{{Marg}}">
-<form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveaccountcontrols">
-  <input type="hidden" name="docid" id="docid" value="{{_id}}">
-  <input type="hidden" name="editmode" value="{{editmode}}">
-	<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
-  <input type="hidden" name="docType" id="docType" value="accountControls">
-	<input type="hidden" name="quarter" id="quarter" value="{{reportingQuarter}}">
-	<input type="hidden" name="RAGStatus" id="RAGStatus" value="{{RAGStatus}}">
+	<input type="hidden" id="UnsatThreshold" value="{{Unsat}}">
+	<input type="hidden" id="MargThreshold" value="{{Marg}}">
+	<form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveaccountcontrols">
+	  <input type="hidden" name="docid" id="docid" value="{{_id}}">
+	  <input type="hidden" name="editmode" value="{{editmode}}">
+		<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+	  <input type="hidden" name="docType" id="docType" value="accountControls">
+		<input type="hidden" name="quarter" id="quarter" value="{{reportingQuarter}}">
+		<input type="hidden" name="RAGStatus" id="RAGStatus" value="{{RAGStatus}}">
 
-<table id="sample-table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <caption class="mira-caption"><em>Details</em></caption>
-<tr>
-  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
-</tr>
-<tr>
-  <td>Process:</td>
-	<td>
-		{{{uniqueSelect "process" RelevantGPs "name" "name" process}}}
-	</td>
-</tr>
-<tr>
-  <td>Event date:</td><td>
-    <input type="text" id="eventDate" name="eventDate" value="{{eventDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
-  </td>
-</tr>
-</table>
+	<table id="sample-table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	  <caption class="mira-caption"><em>Details</em></caption>
+	<tr>
+	  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
+	</tr>
+	<tr>
+	  <td>Process:</td>
+		<td>
+			{{{uniqueSelect "process" RelevantGPs "name" "name" process}}}
+		</td>
+	</tr>
+	<tr>
+	  <td>Event date:</td><td>
+	    <input type="text" id="eventDate" name="eventDate" value="{{eventDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+	  </td>
+	</tr>
+	</table>
 
-<table id="details_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <thead bgcolor="#FF0000" style="color:#FFFFFF;">
-    <tr>
-      <th ># Tests Completed</th>
-      <th ># Process Defects</th>
-      <th ># Control Deficiencies</th>
-      <th >RAG Status</th>
-      <th >Remediation Status</th>
-      <th >Target to Close</th>
-      <th >Comments</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><input type="number" name="numTestsCompleted" id="numTestsCompleted" value="{{numTestsCompleted}}"></td>
-      <td><input type="number" name="numProcessDefects" id="numProcessDefects" value="{{numProcessDefects}}"></td>
-      <td><input type="number" name="numControlDeficiencies" value="{{numControlDeficiencies}}"></td>
-			<td id="ragstatustd"></td>
-      <td>{{{uniqueSelect "remediationStatus" remedStats "name" "name" remediationStatus}}}</td>
-      <td><div id="targetToClosediv"><input type="text" name="targetToClose" id="targetToClose" value="{{targetToClose}}"></div></td>
-      <td><input type="text" name="comments" value="{{comments}}"></td>
-    </tr>
-    </tbody>
-</table>
-</form>
+	<table id="details_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	  <thead bgcolor="#FF0000" style="color:#FFFFFF;">
+	    <tr>
+	      <th ># Tests Completed</th>
+	      <th ># Process Defects</th>
+	      <th ># Control Deficiencies</th>
+	      <th >RAG Status</th>
+	      <th >Remediation Status</th>
+	      <th >Target to Close</th>
+	      <th >Comments</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td><input type="number" name="numTestsCompleted" id="numTestsCompleted" value="{{numTestsCompleted}}"></td>
+	      <td><input type="number" name="numProcessDefects" id="numProcessDefects" value="{{numProcessDefects}}"></td>
+	      <td><input type="number" name="numControlDeficiencies" value="{{numControlDeficiencies}}"></td>
+				<td id="ragstatustd"></td>
+	      <td>{{{uniqueSelect "remediationStatus" remedStats "name" "name" remediationStatus}}}</td>
+	      <td><div id="targetToClosediv"><input type="text" name="targetToClose" id="targetToClose" value="{{targetToClose}}"></div></td>
+	      <td><input type="text" name="comments" value="{{comments}}"></td>
+	    </tr>
+	    </tbody>
+	</table>
+	</form>
 {{else}}
-<table id="sample-table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <caption class="mira-caption"><em>Details</em></caption>
-<tr>
-  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
-</tr>
-<tr>
-  <td>Process:</td><td>{{process}}</td>
-</tr>
-<tr>
-  <td>Event date:</td><td>{{eventDate}}</td>
-</tr>
-</table>
+	<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+	<table id="sample-table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	  <caption class="mira-caption"><em>Details</em></caption>
+	<tr>
+	  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
+	</tr>
+	<tr>
+	  <td>Process:</td><td>{{process}}</td>
+	</tr>
+	<tr>
+	  <td>Event date:</td><td>{{eventDate}}</td>
+	</tr>
+	</table>
 
-<table id="details_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <thead bgcolor="#FF0000" style="color:#FFFFFF;">
-    <tr>
-      <th ># Tests Completed</th>
-      <th ># Process Defects</th>
-      <th ># Control Deficiencies</th>
-      <th >RAG Status</th>
-      <th >Remediation Status</th>
-      <th >Target to Close</th>
-      <th >Comments</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td >{{numTestsCompleted}}</td>
-      <td >{{numProcessDefects}}</td>
-      <td>{{numControlDeficiencies}}</td>
-			{{{ratingDisplayView RAGStatus}}}
-      <td >{{remediationStatus}}</td>
-      <td>{{targetToClose}}</td>
-      <td>{{comments}}</td>
-    </tr>
-    </tbody>
-</table>
+	<table id="details_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+	  <thead bgcolor="#FF0000" style="color:#FFFFFF;">
+	    <tr>
+	      <th ># Tests Completed</th>
+	      <th ># Process Defects</th>
+	      <th ># Control Deficiencies</th>
+	      <th >RAG Status</th>
+	      <th >Remediation Status</th>
+	      <th >Target to Close</th>
+	      <th >Comments</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td >{{numTestsCompleted}}</td>
+	      <td >{{numProcessDefects}}</td>
+	      <td>{{numControlDeficiencies}}</td>
+				{{{ratingDisplayView RAGStatus}}}
+	      <td >{{remediationStatus}}</td>
+	      <td>{{targetToClose}}</td>
+	      <td>{{comments}}</td>
+	    </tr>
+	    </tbody>
+	</table>
 {{/if}}
 <!-- BUTTONS AREA -->
 {{>buttons}}
