@@ -1289,7 +1289,8 @@ var assessableunit = {
 					"BusinessUnit": bunit,
 					"DocSubType": "BU Reporting Group"
 				},
-				"fields": ["_id", "Name"]
+				"fields": ["_id", "Name"],
+				"sort": ["DocSubType","Name"]
 			};
 			db.find(searchobj).then(function(resdata) {
 				if(resdata.status==200 && !resdata.error) {

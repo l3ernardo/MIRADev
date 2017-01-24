@@ -363,8 +363,15 @@ var dashboard = {
 						 var doctest=data.body.docs;
 						if(req.url!='/geodashboard'){
 						doctest.sort(function (a, b) {
-								var aConcat = a.LevelType+a.Name;
-								var bConcat = b.LevelType+b.Name;
+								if(req.url=='/reportingdashboard'){
+									var aConcat = a.DocSubType+a.Name;
+									var bConcat = b.DocSubType+b.Name;
+								}
+								else{
+									var aConcat = a.LevelType+a.Name;
+									var bConcat = b.LevelType+b.Name;
+								}
+								
 								var nameA=aConcat.toString().toLowerCase();
 								var nameB=bConcat.toString().toLowerCase();
 								if (nameA < nameB) {
