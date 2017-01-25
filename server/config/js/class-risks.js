@@ -116,16 +116,16 @@ var calculateORTab = {
             QtdChange3: Math.abs(doc[0].totalRisks.PrevQtr3 - doc[0].totalRisks.PrevQtr4),
             QtdChange4: Math.abs(doc[0].totalRisks.PrevQtr4 - doc[0].totalRisks.Current)
           };
-
-            var risks = doc[0].RiskView1Data;
+          //first table
+            var risks = doc[0].AUDataMSAC;
             var exportOpenRisks = [];
             for(var i = 0; i < risks.length; i++){
               var tmp = {};
               tmp.AssessableUnitName = risks[i].AssessableUnitName || " ";
-              tmp.status = risks[i].status || " ";
+              tmp.PeriodRatingPrev1 = risks[i].PeriodRatingPrev1 || " ";
               tmp.PeriodRating = risks[i].PeriodRating || " ";
               tmp.originalTargetDate = risks[i].originalTargetDate || " ";
-              tmp.currentTargetDate = risks[i].currentTargetDate || " ";
+              tmp.Target2Sat = risks[i].Target2Sat || " ";
               exportOpenRisks.push(tmp);
             }
             doc[0].exportOpenRisks = exportOpenRisks;
@@ -135,6 +135,7 @@ var calculateORTab = {
             var exportOpenRisks2 = [];
             doc[0].ORMCMissedRisks = 0;
 
+            //second table
           var objects = {};//object of objects for counting
           risks.sort(function(a, b){
             var nameA=a.type.toLowerCase(), nameB=b.type.toLowerCase()
@@ -180,9 +181,18 @@ var calculateORTab = {
             objects[risks[i].parent].numOpenIssues++ ;
             openrisks.push(risks[i]);
           }
-        }
-        else{
-          var objects = {};//object of objects for counting
+          doc[0].exportOpenRisks2 = exportOpenRisks2;
+          if (Object.keys(riskCategory).length < defViewRow) {
+            if (openrisks.length == 0) {
+              openrisks = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
+            }
+          };
+          doc[0].RiskView2Data = openrisks;
+
+        }else{//no GBS
+          /*var objects = {};//object of objects for counting
           var risksType = {};
           risks.sort(function(a, b){
             var nameA=a.scorecardCategory.toLowerCase(), nameB=b.scorecardCategory.toLowerCase()
@@ -247,17 +257,9 @@ var calculateORTab = {
             objects[risks[i].parent].numOpenIssues++ ;
             objects[objects[risks[i].parent].parent].numOpenIssues++ ;
             openrisks.push(risks[i]);
-          }
+          }*/
         }
-        doc[0].exportOpenRisks2 = exportOpenRisks2;
-        if (Object.keys(riskCategory).length < defViewRow) {
-          if (openrisks.length == 0) {
-            openrisks = fieldCalc.addTestViewData(10,defViewRow);
-          } else {
-            fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
-          }
-        };
-        doc[0].RiskView2Data = openrisks;
+
 
       break;
       }
