@@ -19,7 +19,7 @@ var ort = require('./class-risks.js');
 var aut = require('./class-auniverse.js');
 var comp = require('./class-compdoc.js');
 var util = require('./class-utility.js');
-var performanceTab = require('./class-performanceoverviewcountry.js');
+var performanceTab = require('./class-performanceoverview.js');
 
 var assessment = {
 
@@ -435,6 +435,7 @@ var assessment = {
 						doc[0].AUData = [];
 						doc[0].RiskView1Data = [];
 						doc[0].RiskView2Data = [];
+						doc[0].AUDataMSAC = [];
 
 						doc[0].CountryId = parentdoc[0].Country;
 						doc[0].Country = util.resolveGeo(parentdoc[0].Country,"Country",req);
@@ -474,10 +475,16 @@ var assessment = {
 								}
 							}
 							//create a space for performance Tab
+							
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
-								performanceTab.getMSACCommitments(db,doc);
+								performanceTab.getMSACCommitmentsCount(db,doc);
+								performanceTab.getMSACCommitmentsAU(db,doc);
+								performanceTab.getCPANDCUPerformanceIndicators(db,doc);
+								performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+								
+								//console.log(doc[0].AUDataMSAC);
 								//open risks
 								ort.processORTab(doc,defViewRow,req);
 								//audit universe
