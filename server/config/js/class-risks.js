@@ -10,7 +10,7 @@ var fieldCalc = require('./class-fieldcalc.js');
 
 var calculateORTab = {
 
-  processORTab: function(doc, defViewRow){
+  processORTab: function(doc, defViewRow, req){
     try {
       switch (doc[0].ParentDocSubType) {
         case "Country Process":
@@ -73,7 +73,7 @@ var calculateORTab = {
         doc[0].openrisks = openrisks;
         break;
       case "BU Country":
-        if(doc[0].MIRABusinessUnit == "GBS"){
+        if(req.session.businessunit == "GBS"){
           //count the category issues
           doc[0].totalRisks = {
             PrevQtr1: 0,
@@ -251,7 +251,7 @@ var calculateORTab = {
         }
         doc[0].exportOpenRisks2 = exportOpenRisks2;
         if (Object.keys(riskCategory).length < defViewRow) {
-          if (openrisks == 0) {
+          if (openrisks.length == 0) {
             openrisks = fieldCalc.addTestViewData(10,defViewRow);
           } else {
             fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
