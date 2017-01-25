@@ -279,7 +279,6 @@ var getDocs = {
           });
           break;
         case "BU Country":
-          doc[0].AUData = [];
         	doc[0].CountryControlsData = [];
         	doc[0].RiskView1Data =  [];
         	doc[0].RiskView2Data = [];
@@ -288,9 +287,9 @@ var getDocs = {
               "_id": {"$gt":0},
               "$or": [
                 //Getting all country process assessment
-                {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                //{"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
                 //Getting all controllable units assessable units
-                {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
+                //{"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                 //Performance Tab
                 { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
                 //Risks Tab
@@ -321,8 +320,6 @@ var getDocs = {
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
-            doc[0].AllAsmts = [];
-            var CUassunits = [];
             doc[0].riskCategories = [];
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
@@ -335,45 +332,13 @@ var getDocs = {
               else if (comps[i].compntType == "countryControls"){
                	  doc[0].CountryControlsData.push(comps[i]);
               }
-              else if (comps[i].key == "Assessment"){
-               	  doc[0].AllAsmts.push(comps[i]);
-              }
-              else if (comps[i].key == "Assessable Unit"){
-               	  CUassunits.push(comps[i]);
-              }
               else if (comps[i].docType == "setup"){
                	  doc[0].riskCategories = comps[i].value.options;
               }
             }
-            //console.log(doc[0].CPasmts.length);
-            //console.log(doc[0].CUassunits.length);
-            //getting assessments under BU country instead of Assessable units
-            var arrayPromises = [];
-            for(var i = 0; i < CUassunits.length; i++){
-              var tmpQuery = {
-                selector : {
-                  "_id": {"$gt":0},
-                  "key": "Assessment",
-                  "AUStatus": "Active",
-                  "ParentDocSubType": "Controllable Unit",
-                  "CurrentPeriod": doc[0].CurrentPeriod,
-                  "parentid": CUassunits[i]["_id"]
-                }
-              };
-              arrayPromises.push(db.find(tmpQuery));
-            }
-            q.all(arrayPromises).then(function(asmts) {
-              for (var i = 0; i < asmts.length; i++) {
-                if (CUassunits[i].AuditableFlag == "Yes") {
-                  doc[0].AUData.push(JSON.parse(JSON.stringify(asmts[i].body.docs[0])));
-                }
-                doc[0].AllAsmts.push(asmts[i].body.docs[0]);
-              }
+
               deferred.resolve({"status": 200, "doc": doc});
-            }).catch(function(err) {
-              console.log("[class-compdoc][getCompDocs]3 - " + err.error);
-              deferred.reject({"status": 500, "error": err.error.reason});
-            });
+
 
           }).catch(function(err) {
             console.log("[class-compdoc][getCompDocs]4 - " + err.error);
