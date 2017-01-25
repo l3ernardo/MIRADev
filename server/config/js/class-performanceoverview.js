@@ -268,6 +268,7 @@ var performanceoverviewcountry = {
 	getMSACCommitmentsCount : function (db,doc){
 		var count =0;
 		var currentDate =  util.getDateTime("","date");
+		var var AUDataMSAC = [];
 	   
 		try{
 			for(var i=0;i<doc[0].asmtsdocs.length;i++){ 
@@ -279,11 +280,13 @@ var performanceoverviewcountry = {
 								
 								if( (new Date(doc[0].asmtsdocs[i].Target2Sat).getTime() > new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime()) || (new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime()) ){
 									count++;
+									AUDataMSAC.push(doc[0].asmtsdocs[i]);
 								} 
 							}else
 								if(doc[0].asmtsdocs[i].Target2SatPrev != ""){
 									if( (new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime())){
 										count++;
+										AUDataMSAC.push(doc[0].asmtsdocs[i]);
 									}
 									
 								}
@@ -294,6 +297,7 @@ var performanceoverviewcountry = {
 				}
 				
 			}
+			doc[0].AUDataMSAC = AUDataMSAC;
 			doc[0].MissedMSACSatCount = count.toString();
 			
 		}catch(e){
@@ -306,47 +310,6 @@ var performanceoverviewcountry = {
 		 */
 		
 	},
-	//Saves all the missed MSAC on a new array to be displayed
-	getMSACCommitmentsAU: function (db,doc){
-		var count =0;
-		var AUDataMSAC = [];
-		var currentDate =  util.getDateTime("","date");
-
-	   
-		try{
-			for(var i=0;i<doc[0].AUData.length;i++){ 
-				if(doc[0].AUData[i].PeriodRating == "Marg" || doc[0].AUData[i].PeriodRating =="Unsat" ){
-					if(doc[0].AUData[i].AUStatus != "Retired"){
-						if(doc[0].AUData[i].Target2Sat != undefined && doc[0].AUData[i].Target2SatPrev != undefined){  
-							if(doc[0].AUData[i].Target2Sat != "" && doc[0].AUData[i].Target2SatPrev != "" ){
-								
-								if( (new Date(doc[0].AUData[i].Target2Sat).getTime() > new Date(doc[0].AUData[i].Target2SatPrev).getTime()) || (new Date(doc[0].AUData[i].Target2SatPrev).getTime() < new Date(currentDate).getTime()) ){
-									AUDataMSAC.push(doc[0].AUData[i]);
-									count++;
-								} 
-							}else
-								if(doc[0].AUData[i].Target2SatPrev != ""){
-									if( (new Date(doc[0].AUData[i].Target2SatPrev).getTime() < new Date(currentDate).getTime())){
-										AUDataMSAC.push(doc[0].AUData[i]);
-										count++;
-									}
-									
-								}
-						
-						}
-						
-					}
-				}
-				
-			}
-			//console.log(doc[0].AUData);
-//console.log("irving: "+AUDataMSAC.length);
-			doc[0].AUDataMSAC = AUDataMSAC;
-			
-		}catch(e){
-			console.log("error at [class-performanceoverview][getMSACCommitmentsAU]: "+e);
-		}
-		
 	
 	},
 	
