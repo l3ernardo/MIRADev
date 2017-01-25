@@ -8,10 +8,9 @@
 			<a href="javascript:void(0);" value="Export to Excel" name="AUniverse-link-export" id="AUniverse-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
 			<span class="ibm-sep"> </span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="AUniverse-link-export2" id="AUniverse-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
-			<table id="AUniverse_treeview" width="100%" class="other-viewheader">
+			<table id="AUniverse_treeview" width="100%" class="other-viewheader table_with_scroll">
 				<thead>
-					<th class="other-viewheader" scope="col" width="3%"></th>
-					<th class="other-viewheader" scope="col" width="3%"></th>
+					<th class="other-viewheader" scope="col" width="6%"></th>
 					<th class="other-viewheader" scope="col" width="15%">Audit Universe</th>
 					<th class="other-viewheader" scope="col" width="5%">Count</th>
 					<th class="other-viewheader" scope="col" width="8%">Type</th>
@@ -28,18 +27,32 @@
 					<th class="other-viewheader" scope="col" width="5%">CQ Score</th>
 					<th class="other-viewheader" scope="col" width="10%">Explanation</th>
 				</thead>
+				<tbody>
 				{{#each AUData}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="6%">{{name}}</td>
+						<td width="15%">{{AssessableUnitName}}</td>
+						<td width="5%">{{counter}}</td>
+						<td width="8%">{{Portfolio}}</td>
+						<td width="8%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="4%">{{process}}</td>
+						<td width="4%">{{process}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="10%">{{process}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 </table>
+<script>
+	$("#AUniverse_treeview").treetable({expandable: true });
+</script>

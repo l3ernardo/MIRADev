@@ -10,7 +10,7 @@ var fieldCalc = require('./class-fieldcalc.js');
 
 var calculateORTab = {
 
-  processORTab: function(doc, defViewRow){
+  processORTab: function(doc, defViewRow, req){
     try {
       switch (doc[0].ParentDocSubType) {
         case "Country Process":
@@ -73,67 +73,68 @@ var calculateORTab = {
         doc[0].openrisks = openrisks;
         break;
       case "BU Country":
-      //count the category issues
-      doc[0].totalRisks = {
-        PrevQtr1: 0,
-        PrevQtr2: 0,
-        PrevQtr3: 0,
-        PrevQtr4: 0,
-        Current: 0
-      };
-      doc[0].riskCategories[0].flagForTextarea = true;
-      for (var i = 0; i < doc[0].RiskView2Data.length; i++) {
-        for (var j = 0; j < doc[0].riskCategories.length; j++) {
-          if(doc[0].RiskView2Data[i].scorecardCategory == doc[0].riskCategories[j].name){
-            if (doc[0].RiskView2Data[i].reportingQuarter == doc[0].CurrentPeriod) {
-              doc[0].totalRisks.Current++;
-              if(doc[0].riskCategories[j]["Current"] == undefined){
-                doc[0].riskCategories[j]["Current"] = 1;
-              }else {
-                doc[0].riskCategories[j]["Current"]++;
-              }
-            }
-            else{
-              for (var k = 0; k < doc[0].PrevQtrs.length; k++) {
-                if(doc[0].RiskView2Data[i].reportingQuarter == doc[0].PrevQtrs[k]){
-                  doc[0].totalRisks["PrevQtr"+(k+1)]++;
-                  if(doc[0].riskCategories[j]["PrevQtr"+(k+1)] == undefined){
-                    doc[0].riskCategories[j]["PrevQtr"+(k+1)] = 1;
+        if(req.session.businessunit == "GBS"){
+          //count the category issues
+          doc[0].totalRisks = {
+            PrevQtr1: 0,
+            PrevQtr2: 0,
+            PrevQtr3: 0,
+            PrevQtr4: 0,
+            Current: 0
+          };
+          doc[0].riskCategories[0].flagForTextarea = true;
+          for (var i = 0; i < doc[0].RiskView2Data.length; i++) {
+            for (var j = 0; j < doc[0].riskCategories.length; j++) {
+              if(doc[0].RiskView2Data[i].scorecardCategory == doc[0].riskCategories[j].name){
+                if (doc[0].RiskView2Data[i].reportingQuarter == doc[0].CurrentPeriod) {
+                  doc[0].totalRisks.Current++;
+                  if(doc[0].riskCategories[j]["Current"] == undefined){
+                    doc[0].riskCategories[j]["Current"] = 1;
                   }else {
-                    doc[0].riskCategories[j]["PrevQtr"+(k+1)]++;
+                    doc[0].riskCategories[j]["Current"]++;
+                  }
+                }
+                else{
+                  for (var k = 0; k < doc[0].PrevQtrs.length; k++) {
+                    if(doc[0].RiskView2Data[i].reportingQuarter == doc[0].PrevQtrs[k]){
+                      doc[0].totalRisks["PrevQtr"+(k+1)]++;
+                      if(doc[0].riskCategories[j]["PrevQtr"+(k+1)] == undefined){
+                        doc[0].riskCategories[j]["PrevQtr"+(k+1)] = 1;
+                      }else {
+                        doc[0].riskCategories[j]["PrevQtr"+(k+1)]++;
+                      }
+                    }
                   }
                 }
               }
             }
           }
-        }
-      }
-      //Quarters change
-      doc[0].QtdChangeRisks = {
-        QtdChange1:  Math.abs(doc[0].totalRisks.PrevQtr1 - doc[0].totalRisks.PrevQtr2),
-        QtdChange2: Math.abs(doc[0].totalRisks.PrevQtr2 - doc[0].totalRisks.PrevQtr3),
-        QtdChange3: Math.abs(doc[0].totalRisks.PrevQtr3 - doc[0].totalRisks.PrevQtr4),
-        QtdChange4: Math.abs(doc[0].totalRisks.PrevQtr4 - doc[0].totalRisks.Current)
-      };
+          //Quarters change
+          doc[0].QtdChangeRisks = {
+            QtdChange1:  Math.abs(doc[0].totalRisks.PrevQtr1 - doc[0].totalRisks.PrevQtr2),
+            QtdChange2: Math.abs(doc[0].totalRisks.PrevQtr2 - doc[0].totalRisks.PrevQtr3),
+            QtdChange3: Math.abs(doc[0].totalRisks.PrevQtr3 - doc[0].totalRisks.PrevQtr4),
+            QtdChange4: Math.abs(doc[0].totalRisks.PrevQtr4 - doc[0].totalRisks.Current)
+          };
 
-        var risks = doc[0].RiskView1Data;
-        var exportOpenRisks = [];
-        for(var i = 0; i < risks.length; i++){
-          var tmp = {};
-          tmp.AssessableUnitName = risks[i].AssessableUnitName || " ";
-          tmp.status = risks[i].status || " ";
-          tmp.PeriodRating = risks[i].PeriodRating || " ";
-          tmp.originalTargetDate = risks[i].originalTargetDate || " ";
-          tmp.currentTargetDate = risks[i].currentTargetDate || " ";
-          exportOpenRisks.push(tmp);
-        }
-        doc[0].exportOpenRisks = exportOpenRisks;
-        var risks = doc[0].RiskView2Data;
-        var riskCategory = {};
-        var openrisks = [];
-        var exportOpenRisks2 = [];
-        doc[0].ORMCMissedRisks = 0;
-        if(doc[0].MIRABusinessUnit == "GBS"){
+            var risks = doc[0].RiskView1Data;
+            var exportOpenRisks = [];
+            for(var i = 0; i < risks.length; i++){
+              var tmp = {};
+              tmp.AssessableUnitName = risks[i].AssessableUnitName || " ";
+              tmp.status = risks[i].status || " ";
+              tmp.PeriodRating = risks[i].PeriodRating || " ";
+              tmp.originalTargetDate = risks[i].originalTargetDate || " ";
+              tmp.currentTargetDate = risks[i].currentTargetDate || " ";
+              exportOpenRisks.push(tmp);
+            }
+            doc[0].exportOpenRisks = exportOpenRisks;
+            var risks = doc[0].RiskView2Data;
+            var riskCategory = {};
+            var openrisks = [];
+            var exportOpenRisks2 = [];
+            doc[0].ORMCMissedRisks = 0;
+
           var objects = {};//object of objects for counting
           risks.sort(function(a, b){
             var nameA=a.type.toLowerCase(), nameB=b.type.toLowerCase()
@@ -250,7 +251,7 @@ var calculateORTab = {
         }
         doc[0].exportOpenRisks2 = exportOpenRisks2;
         if (Object.keys(riskCategory).length < defViewRow) {
-          if (openrisks == 0) {
+          if (openrisks.length == 0) {
             openrisks = fieldCalc.addTestViewData(10,defViewRow);
           } else {
             fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
