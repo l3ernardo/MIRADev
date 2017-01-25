@@ -19,7 +19,7 @@ var ort = require('./class-risks.js');
 var aut = require('./class-auniverse.js');
 var comp = require('./class-compdoc.js');
 var util = require('./class-utility.js');
-var performanceTab = require('./class-performanceoverviewcountry.js');
+var performanceTab = require('./class-performanceoverview.js');
 
 var assessment = {
 
@@ -78,7 +78,7 @@ var assessment = {
 
 			accessrules.getRules(req,doc[0].parentid,db,parentdoc[0]).then(function(result){
 
-				accessrules.rules = result.rules;
+			accessrules.rules = result.rules;
 
 			doc[0].editor = accessrules.rules.editor;
 			doc[0].admin = accessrules.rules.admin;
@@ -435,6 +435,7 @@ var assessment = {
 						doc[0].AUData = [];
 						doc[0].RiskView1Data = [];
 						doc[0].RiskView2Data = [];
+						doc[0].AUDataMSAC = [];
 
 						doc[0].CountryId = parentdoc[0].Country;
 						doc[0].Country = util.resolveGeo(parentdoc[0].Country,"Country",req);
@@ -443,55 +444,58 @@ var assessment = {
 						doc[0].Name = req.session.buname + " - " + doc[0].Country;
 
 						comp.getCompDocs(db,doc).then(function(dataComp){
-						fieldCalc.getAssessments(db, doc, req).then(function(data){
-							fieldCalc.getRatingProfile(doc);
-							if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
-								if (doc[0].BUCAsmtDataPRview.length == 0) {
-									doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
-								} else {
-									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
+								fieldCalc.getRatingProfile(doc);
+								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
+									if (doc[0].BUCAsmtDataPRview.length == 0) {
+										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+									}
 								}
-							}
-							if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
-								if (doc[0].BUCAsmtDataCURview.length == 0) {
-									doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
-								} else {
-									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataCURview.length));
+								if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
+									if (doc[0].BUCAsmtDataCURview.length == 0) {
+										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataCURview.length));
+									}
 								}
-							}
-							if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
-								if (doc[0].BUCAsmtDataPIview.length == 0) {
-									doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-								} else {
-									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+								if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
+									if (doc[0].BUCAsmtDataPIview.length == 0) {
+										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+									}
 								}
-							}
-							if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
-								if (doc[0].BUCAsmtDataOIview.length == 0) {
-									doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-								} else {
-									fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+								if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
+									if (doc[0].BUCAsmtDataOIview.length == 0) {
+										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+									} else {
+										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+									}
 								}
-							}
-							//create a space for performance Tab
+
+								//create a space for performance Tab
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
-								performanceTab.getMSACCommitments(db,doc);
+								performanceTab.getMSACCommitmentsCount(db,doc);
+								performanceTab.getMSACCommitmentsAU(db,doc);
+								performanceTab.getCPANDCUPerformanceIndicators(db,doc);
+								performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+
+								//console.log(doc[0].AUDataMSAC);
 								//open risks
 								ort.processORTab(doc,defViewRow,req);
 								//audit universe
 								aut.processAUTab(doc,defViewRow);
 
-								 var obj = doc[0]; // For Merge
-									deferred.resolve({"status": 200, "doc": obj});
-
-
+							 	var obj = doc[0]; // For Merge
+							 	deferred.resolve({"status": 200, "doc": obj});
 
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
-
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
