@@ -16,29 +16,34 @@ var getOpenIssuePerAssessment = function (RiskView1Data,AssessableUnitName){
 	try{
 		
 		if(AssessableUnitName != undefined){
-	var tempCountry = AssessableUnitName.split('-')[0].replace(/ /g,'');
-	//var tempCountry = "USA";
+			
+			if(AssessableUnitName.split('-').length > 1 && AssessableUnitName.indexOf("-") > -1 ){
+			
+			var tempCountry = AssessableUnitName.split('-')[0].replace(/ /g,'');
+			//var tempCountry = "USA";
 	
 	
-	if(AssessableUnitName.split('-').length>2){
-		var tempProcess = AssessableUnitName.split('-')[1];
-		tempProcess += "-";
-		tempProcess += AssessableUnitName.split('-')[2];
-	}
-	else{
-		var tempProcess = AssessableUnitName.split('-')[1] ;
-	} 
+			if(AssessableUnitName.split('-').length>2){
+				var tempProcess = AssessableUnitName.split('-')[1];
+				tempProcess += "-";
+				tempProcess += AssessableUnitName.split('-')[2];
+			}
+			else{
+				var tempProcess = AssessableUnitName.split('-')[1] ;
+				} 
 	
-	tempProcess = tempProcess.replace(/ /g,'');
-	tempCountry = tempCountry.replace(/ /g,'');
+			tempProcess = tempProcess.replace(/ /g,'');
+			tempCountry = tempCountry.replace(/ /g,'');
 	
-	tempRiskCountry = RiskView1Data.country.replace(/ /g,'');
-	tempRiskProcess = RiskView1Data.process.replace(/ /g,'');
+			tempRiskCountry = RiskView1Data.country.replace(/ /g,'');
+			tempRiskProcess = RiskView1Data.process.replace(/ /g,'');
 
-	if(tempRiskCountry == tempCountry && tempRiskProcess == tempProcess )
-		return true;
-		else
-			return false;
+			if(tempRiskCountry == tempCountry && tempRiskProcess == tempProcess )
+				return true;
+			else
+				return false;
+	
+			}
 	
 		}
 	
@@ -311,7 +316,7 @@ var performanceoverviewcountry = {
 		
 	},
 	
-	
+		
 	
 	getCPANDCUPerformanceIndicators: function (db,doc){
 		//Sort for correct display
