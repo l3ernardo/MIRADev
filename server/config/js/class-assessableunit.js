@@ -299,7 +299,7 @@ var assessableunit = {
 									if(req.query.edit != undefined && doc[0].editor)	doc[0].editmode = 1;
 									/* Get Reporting Groups */
 									//doc[0].admin = false;
-									assessableunit.getReportingGroups(req, db, doc[0].BusinessUnit).then(function(resdata) {
+									assessableunit.getReportingGroups(req, db, doc[0].MIRABusinessUnit).then(function(resdata) {
 										if(resdata.status==200 && !resdata.error){
 											//Load Reporting groups list - for edit/read mode
 											doc[0].ReportingGroupList = [];
@@ -321,7 +321,7 @@ var assessableunit = {
 													break;
 												case "Country Process":
 													//Get IA Data
-													assessableunit.getInternalAudits(req, db, doc[0].BusinessUnit).then(function(dataIntAud) {
+													assessableunit.getInternalAudits(req, db).then(function(dataIntAud) {
 														if(dataIntAud.status==200 && !dataIntAud.error){
 															doc[0].IntAud = [];
 															doc[0].IntAud = dataIntAud.doc;
@@ -347,7 +347,7 @@ var assessableunit = {
 													break;
 												case "Account":
 													//CUPList
-													assessableunit.getPortfolioCUs(req, db, doc[0].BusinessUnit).then(function(cudata) {
+													assessableunit.getPortfolioCUs(req, db, doc[0].MIRABusinessUnit).then(function(cudata) {
 														if(cudata.status==200 && !cudata.error){
 															doc[0].CUPList = cudata.doc;
 															//Load CU name read mode
@@ -409,11 +409,11 @@ var assessableunit = {
 																if(adata.status==200 && !adata.error){
 																	doc[0].lessonsList = adata.doc;
 																	//Get ALL Keys
-																	assessableunit.getSubprocess(req, db, doc[0].BusinessUnit).then(function(spdata) {
+																	assessableunit.getSubprocess(req, db, doc[0].MIRABusinessUnit).then(function(spdata) {
 																		if(spdata.status==200 && !spdata.error){
 																			doc[0].subprocessList = spdata.doc;
 																			//Get IA Data
-																			assessableunit.getInternalAudits(req, db, doc[0].BusinessUnit).then(function(dataIntAud) {
+																			assessableunit.getInternalAudits(req, db).then(function(dataIntAud) {
 																				if(dataIntAud.status==200 && !dataIntAud.error){
 																					doc[0].IntAud = [];
 																					doc[0].IntAud = dataIntAud.doc;
@@ -488,7 +488,7 @@ var assessableunit = {
 												case "BU IOT":
 													//Get BU Country list
 													doc[0].BUCountryList = [];
-													assessableunit.getBUCountry(req, db, doc[0].BusinessUnit).then(function(bucdata) {
+													assessableunit.getBUCountry(req, db, doc[0].MIRABusinessUnit).then(function(bucdata) {
 														if(bucdata.status==200 && !bucdata.error){
 															doc[0].BUCountryList = bucdata.doc;
 															doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
@@ -623,7 +623,7 @@ var assessableunit = {
 
 
 						/* Get Reporting groups */
-						assessableunit.getReportingGroups(req, db, doc[0].BusinessUnit).then(function(resdata) {
+						assessableunit.getReportingGroups(req, db, doc[0].MIRABusinessUnit).then(function(resdata) {
 							if(resdata.status==200 && !resdata.error){
 								//Load Reporting groups list - for edit/read mode
 								doc[0].ReportingGroupList = [];
@@ -669,11 +669,11 @@ var assessableunit = {
 										doc[0].IOTAUList = [];
 
 										//Get BU Country list
-										assessableunit.getBUCountry(req, db, doc[0].BusinessUnit).then(function(bucdata) {
+										assessableunit.getBUCountry(req, db, doc[0].MIRABusinessUnit).then(function(bucdata) {
 											if(bucdata.status==200 && !bucdata.error){
 												doc[0].BUCountryList = bucdata.doc;
 												//Get BU IOTs available
-												assessableunit.getMIRABUs(req, db, doc[0].BusinessUnit, "BU IOT").then(function(buiotdata) {
+												assessableunit.getMIRABUs(req, db, doc[0].MIRABusinessUnit, "BU IOT").then(function(buiotdata) {
 													if(buiotdata.status==200 && !buiotdata.error){
 														var resdocs = buiotdata.doc;
 														for (var i = 0; i < resdocs.length; ++i) {
@@ -718,7 +718,7 @@ var assessableunit = {
 										doc[0].IMTList = [];
 										doc[0].IMTAUList = [];
 										//Get BU IMTs available
-										assessableunit.getMIRABUs(req, db, doc[0].BusinessUnit, "BU IMT").then(function(buimtdata) {
+										assessableunit.getMIRABUs(req, db, doc[0].MIRABusinessUnit, "BU IMT").then(function(buimtdata) {
 											if(buimtdata.status==200 && !buimtdata.error){
 												var resdocs = buimtdata.doc;
 												for (var i = 0; i < resdocs.length; ++i) {
@@ -745,7 +745,7 @@ var assessableunit = {
 										doc[0].CountryList = [];
 										doc[0].CountryAUList = [];
 										//Get BU Countries available
-										assessableunit.getMIRABUs(req, db, doc[0].BusinessUnit, "BU Country").then(function(bucdata) {
+										assessableunit.getMIRABUs(req, db, doc[0].MIRABusinessUnit, "BU Country").then(function(bucdata) {
 											if(bucdata.status==200 && !bucdata.error){
 												var resdocs = bucdata.doc;
 												for (var i = 0; i < resdocs.length; ++i) {
@@ -1277,7 +1277,7 @@ var assessableunit = {
 	},
 
 	/* Get Active Reporting Groups */
-	getReportingGroups: function(req, db, bunit){
+	getReportingGroups: function(req, db, MIRABunit){
 		var deferred = q.defer();
 		try{
 			var objRG = [];
@@ -1286,7 +1286,7 @@ var assessableunit = {
 					"_id": {"$gt":0},
 					"key": "Assessable Unit",
 					"Status": "Active",
-					"BusinessUnit": bunit,
+					"MIRABusinessUnit": MIRABunit,
 					"DocSubType": "BU Reporting Group"
 				},
 				"fields": ["_id", "Name"],
@@ -1344,13 +1344,13 @@ var assessableunit = {
 	},
 
 	/* Get Portfolio Controllable Units */
-	getPortfolioCUs: function(req, db, bunit){
+	getPortfolioCUs: function(req, db, MIRABunit){
 		var deferred = q.defer();
 		try{
 			var searchobj = {
 				"selector": {
 					"_id": {"$gt":0},
-					"BusinessUnit": bunit,
+					"MIRABusinessUnit": MIRABunit,
 					"DocType": "Assessable Unit",
 					"DocSubType": "Controllable Unit",
 					"Portfolio": "Yes"
@@ -1415,7 +1415,7 @@ var assessableunit = {
 	},
 
 	/* Get Active BU Country */
-	getBUCountry: function(req, db, bunit){
+	getBUCountry: function(req, db, MIRABunit){
 		var deferred = q.defer();
 		try{
 			var objBUC = [];
@@ -1424,7 +1424,7 @@ var assessableunit = {
 					"_id": {"$gt":0},
 					"key": "Assessable Unit",
 					"Status": "Active",
-					"BusinessUnit": bunit,
+					"BusinessUnit": MIRABunit,
 					"DocSubType": "BU Country"
 				},
 				"fields": ["_id", "Name"]
@@ -1456,14 +1456,15 @@ var assessableunit = {
 	},
 
 	/* Get Subprocess */
-	getSubprocess: function(req, db, bunit){
+	getSubprocess: function(req, db, MIRABunit){
 		var deferred = q.defer();
 		try{
 			var searchobj = {
 				"selector": {
 					"_id": {"$gt":0},
 					"DocType": "Assessable Unit",
-					"DocSubType": "Sub-process"
+					"DocSubType": "Sub-process",
+					"MIRABusinessUnit": MIRABunit
 				},
 				"fields": ["WWBCITKey", "Name"]
 			};
@@ -1524,7 +1525,7 @@ var assessableunit = {
 	},
 
 	/* Get MIRA BUs */
-	getMIRABUs: function(req, db, bunit, docType){
+	getMIRABUs: function(req, db, MIRABunit, docType){
 		var deferred = q.defer();
 		try{
 			var searchobj = {
@@ -1533,7 +1534,7 @@ var assessableunit = {
 					"key": "Assessable Unit",
 					"Status": "Active",
 					"DocSubType": docType,
-					"BusinessUnit": bunit
+					"BusinessUnit": MIRABunit
 				},
 				"fields": [ "_id", "IOT", "IMT", "Country" ]
 			};
