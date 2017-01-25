@@ -268,7 +268,7 @@ var performanceoverviewcountry = {
 	getMSACCommitmentsCount : function (db,doc){
 		var count =0;
 		var currentDate =  util.getDateTime("","date");
-		var var AUDataMSAC = [];
+	    var AUDataMSAC = [];
 	   
 		try{
 			for(var i=0;i<doc[0].asmtsdocs.length;i++){ 
@@ -311,7 +311,7 @@ var performanceoverviewcountry = {
 		
 	},
 	
-	},
+	
 	
 	getCPANDCUPerformanceIndicators: function (db,doc){
 		//Sort for correct display
