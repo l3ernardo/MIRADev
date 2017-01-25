@@ -39,9 +39,22 @@ var calculateAUTab = {
       }
       audits[i].counter = 1;
       var tmp = {};
-      tmp.PeriodRating = audits[i].PeriodRating || " ";
+      tmp.cat = audits[i].PeriodRating || " ";
+      tmp.AssessableUnitName = audits[i].AssessableUnitName || " ";
       tmp.Counter = audits[i].counter || " ";
-      tmp.Portfolio = audits[i].Portfolio || " ";
+      tmp.Type = audits[i].Type || " ";
+      tmp.ARRGATTStatus = audits[i].ARRGATTStatus || " ";
+      tmp.PeriodRatingPrev4 = audits[i].PeriodRatingPrev4 || " ";
+      tmp.PeriodRatingPrev3 = audits[i].PeriodRatingPrev3 || " ";
+      tmp.PeriodRatingPrev2 = audits[i].PeriodRatingPrev2 || " ";
+      tmp.PeriodRatingPrev1 = audits[i].PeriodRatingPrev1 || " ";
+      tmp.PeriodRating = audits[i].PeriodRating || " ";
+      tmp.NextQtrRating = audits[i].NextQtrRating || " ";
+      tmp.Target2Sat = audits[i].Target2Sat || " ";
+      tmp.CUSize = audits[i].CUSize || " ";
+      tmp.CUMaxScore = audits[i].CUMaxScore || " ";
+      tmp.CUScore = audits[i].CUScore || " ";
+      tmp.ReviewComments = audits[i].ReviewComments || " ";
 
       exportAudits.push(tmp);
       audits[i].parent = audits[i].PeriodRating.replace(/ /g,'');

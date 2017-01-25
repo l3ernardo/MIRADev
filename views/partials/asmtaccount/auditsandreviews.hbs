@@ -7,7 +7,9 @@
 			<span class="ibm-sep"> </span>
 			<a  href="javascript:void(0);" value="Export to Open Office" name="LocalAudit-link-export2" id="LocalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
 			<table id="LocalAudit_treeview" width="100%" class="table_with_scroll">
+{{#unless newunit}}{{#if editor}}
 			<a target="_blank" href="/accountAudit?id={{_id}}&new" class="ibm-add1-link whiteanchor">New</a></td>
+			{{/if}}{{/unless}}
 				<br /><br />
 				<thead>
 					<th class="audit-review-viewheader" width="7%">Period</th>
