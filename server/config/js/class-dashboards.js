@@ -505,7 +505,20 @@ var dashboard = {
 									levelrp.push(doc[i]);
 								}
 							}
-
+							//Order RPGroup Name
+							BUList.sort(function (a, b) {  
+								var aConcat = a.Name.replace(req.session.buname + " - ","");
+								var bConcat = b.Name.replace(req.session.buname + " - ","");
+								var nameA=aConcat.toString().toLowerCase();
+								var nameB=bConcat.toString().toLowerCase();
+								
+								if (nameA < nameB)
+								{	return -1 }
+								else if (nameA > nameB)
+								{ return 1}
+								else 
+								{  return 0 }
+						    });	
 							for(var i = 0; i < BUList.length; i++){
 								//Group Name
 								var groupName = BUList[i]["Name"];
