@@ -138,7 +138,7 @@ var getDocs = {
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs](Country Process) - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
           break;
@@ -169,7 +169,6 @@ var getDocs = {
             var comps = compdata.body.docs;
             doc[0].RCTestData = [];
             doc[0].AuditLocalData = [];
-            var acctControlCounter = 0; //Counter to iterate for the Defect Rate
             var totalTest = 0;
             var withTest = false;
             var totalDefect = 0;
@@ -213,15 +212,6 @@ var getDocs = {
                   totalDefect += parseInt(comps[i].numProcessDefects);
                 }
 
-                // // Calculate for Defect Rate of Account Key Control Testing doc
-                // if (doc[0].RCTestData[acctControlCounter].defectRate != "") {
-                //   doc[0].RCTestData[acctControlCounter].defectRate = (parseInt(doc[0].RCTestData[acctControlCounter].defectRate)).toFixed(1);
-                //   if (doc[0].RCTestData[acctControlCounter].defectRate == 0.0) {
-                //     doc[0].RCTestData[acctControlCounter].defectRate = 0;
-                //     doc[0].RCTestData[acctControlCounter].RAGStatus = "Sat";
-                //   }
-                // }
-
                 //calculate for Process Category
                 if (doc[0].GBSRollupProcessesOPS !== undefined) {
                   for (var j = 0; j < doc[0].GBSRollupProcessesOPS.length; j++) {
@@ -258,18 +248,16 @@ var getDocs = {
                 if (comps[i].processCategory == undefined) {
                   comps[i].processCategory = "Operational Processes";
                 }
-
-                acctControlCounter++;
               }
               else {
-                //
+                console.log("Did not enter either Account Audits or Audit Controls");
               }
             }
             // Calculate for Defect Rate and RAGStatus
             if (withTest) {
               doc[0].AUDefectRate = ((totalDefect/totalTest) * 100).toFixed(1);
               if (doc[0].AUDefectRate == 0) {
-                doc[0].AUDefectRate = doc[0].AUDefectRate.toFixed(0);
+                doc[0].AUDefectRate = 0;
               }
               if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
                 doc[0].RAGStatus = "Unsat";
@@ -286,12 +274,11 @@ var getDocs = {
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs](Account) - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
           break;
         case "BU Country":
-          doc[0].AUData = [];
         	doc[0].CountryControlsData = [];
         	doc[0].RiskView1Data =  [];
         	doc[0].RiskView2Data = [];
@@ -300,13 +287,15 @@ var getDocs = {
               "_id": {"$gt":0},
               "$or": [
                 //Getting all country process assessment
-                {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                //{"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
                 //Getting all controllable units assessable units
-                {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
+                //{"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                 //Performance Tab
                 { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
                 //Risks Tab
-                {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] }
+                {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] },
+                //Getting open issue categories to displaye
+                {"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] }
               //"docType": "asmtComponent",
               //"$or": [
                 // Risks
@@ -331,56 +320,28 @@ var getDocs = {
 
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
-            doc[0].CPasmts = [];
-            doc[0].CUassunits = [];
+            doc[0].riskCategories = [];
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
-                doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
+                if(comps[i].reportingQuarter == doc[0].CurrentPeriod ){
+                  doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
+                }
               }
               else if (comps[i].compntType == "countryControls"){
                	  doc[0].CountryControlsData.push(comps[i]);
               }
-              else if (comps[i].key == "Assessment"){
-               	  doc[0].CPasmts.push(comps[i]);
-              }
-              else if (comps[i].key == "Assessable Unit"){
-               	  doc[0].CUassunits.push(comps[i]);
+              else if (comps[i].docType == "setup"){
+               	  doc[0].riskCategories = comps[i].value.options;
               }
             }
-            //console.log(doc[0].CPasmts.length);
-            //console.log(doc[0].CUassunits.length);
-            //getting assessments under BU country instead of Assessable units
-            var arrayPromises = [];
-            for(var i = 0; i < doc[0].CUassunits.length; i++){
-              var tmpQuery = {
-                selector : {
-                  "_id": {"$gt":0},
-                  "key": "Assessment",
-                  "AUStatus": "Active",
-                  "ParentDocSubType": "Controllable Unit",
-                  "CurrentPeriod": doc[0].CurrentPeriod,
-                  "parentid": doc[0].CUassunits[i]["_id"]
-                }
-              };
-              arrayPromises.push(db.find(tmpQuery));
-            }
-            q.all(arrayPromises).then(function(asmts) {
-              for (var i = 0; i < asmts.length; i++) {
-                if (doc[0].CUassunits[i].AuditableFlag == "Yes") {
-                  doc[0].AUData.push(JSON.parse(JSON.stringify(asmts[i].body.docs[0])));
-                }
-                doc[0].CUassunits[i] = asmts[i].body.docs[0];
-              }
+
               deferred.resolve({"status": 200, "doc": doc});
-            }).catch(function(err) {
-              console.log("[class-compdoc][getCompDocs] - " + err.error);
-              deferred.reject({"status": 500, "error": err.error.reason});
-            });
+
 
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs]4 - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
           break;
@@ -484,14 +445,14 @@ var getDocs = {
             }
             deferred.resolve({"status": 200, "doc": doc});
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs] - " + err.error);
+            console.log("[class-compdoc][getCompDocs]5 - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
         break;
       }
     }
     catch(e) {
-      console.log("[class-compdoc][getCompDocs] - " + err.error);
+      console.log("[class-compdoc][getCompDocs]6 - " + err.error);
       deferred.reject({"status": 500, "error": err.error.reason});
     }
     return deferred.promise;
@@ -599,7 +560,7 @@ var getDocs = {
       });
     }
     catch(e) {
-      console.log("[class-compdoc][getCompDocs] - " + err.error);
+      console.log("[class-compdoc][getCompDocs]7 - " + err.error);
       deferred.reject({"status": 500, "error": err.error.reason});
     }
     return deferred.promise;

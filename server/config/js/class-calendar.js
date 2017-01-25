@@ -17,13 +17,21 @@ var calendar = {
 		var deferred = q.defer();
 		try{
 			var doc = [];
-			accessrules.getRules(req, '');
+			accessrules.getRules(req,"",db,"").then(function(result){
+				
+				accessrules.rules = result.rules;
+			
 			doc.push(accessrules.rules);
 			if(doc[0]){
 				deferred.resolve({"status": 200, "doc": doc[0]});
 			}else{
 				deferred.reject({"status": 500, "error": 'Access roles error.'});
 			}
+			
+			}).catch(function(err) {
+				deferred.reject({"status": 500, "error": err});
+			});
+			
 		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
