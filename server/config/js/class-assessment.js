@@ -480,7 +480,6 @@ var assessment = {
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
 								performanceTab.getMSACCommitmentsCount(db,doc);
-								performanceTab.getMSACCommitmentsAU(db,doc);
 								performanceTab.getCPANDCUPerformanceIndicators(db,doc);
 								performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
 
