@@ -248,6 +248,7 @@ var components = {
   getLocalAudit: function(req, db){
     var deferred = q.defer();
     try{
+      // new document
       if(typeof req.query.new !== "undefined"){
         var output = {};
         var ratingKey = "";
@@ -280,12 +281,14 @@ var components = {
           }};
           db.find(pkey).then(function(parentData){
             var parent = parentData.body.docs[0];
-            if(!((parent.ParentDocSubType != "Controllable Unit" && parent.ParentDocSubType != "Country Process") || (parent.MIRAStatus == "Final"))){
-              output.procesDisplay = true;
-            }
             output.parentType = parent.ParentDocSubType;
             output.AssessableUnitName = parent.AssessableUnitName;
             output.parentid = req.query.id;
+            if(parent.ParentDocSubType == "Controllable Unit") {
+              output.process = parent.RelevantCPs;
+            } else {
+              output.process = parent.GlobalProcess;
+            }
             deferred.resolve({"status": 200, "data":output});
           }).catch(function(err) {
             deferred.reject({"status": 500, "error": err.error.reason});
@@ -295,6 +298,7 @@ var components = {
           deferred.reject({"status": 500, "error": err.error.reason});
         });
       }
+      // existing document
       else{
         var obj = {
           selector : {
@@ -306,6 +310,7 @@ var components = {
         db.find(obj).then(function(data){
 
           var output = data.body.docs[0];
+          output.editor = true;
           output["_id"] = req.query.id;
           if(typeof req.query.edit !== "undefined"){
             output.editmode = 1;
@@ -335,8 +340,12 @@ var components = {
             }};
             db.find(pkey).then(function(parentData){
               var parent = parentData.body.docs[0]
-              if(!((parent.ParentDocSubType != "Controllable Unit" && parent.ParentDocSubType != "Country Process") || ( parent.reportingQuarter != req.session.quarter || parent.MIRAStatus == "Final"))){
-                output.procesDisplay = true;
+              output.parentType = parent.ParentDocSubType;
+              output.AssessableUnitName = parent.AssessableUnitName;
+              if(parent.ParentDocSubType == "Controllable Unit") {
+                output.process = parent.RelevantCPs;
+              } else {
+                output.process = parent.GlobalProcess;
               }
               deferred.resolve({"status": 200, "data":output});
             }).catch(function(err) {
@@ -896,7 +905,6 @@ var components = {
           obj.rating = req.body.rating;
           obj.numRecommendationsTotal = req.body.numRecommendationsTotal;
           obj.numRecommendationsOpen = req.body.numRecommendationsOpen;
-          obj.targetCloseOriginal = req.body.targetCloseOriginal;
           obj.targetCloseCurrent = req.body.targetCloseCurrent;
           obj.comments = req.body.comments;
           obj.Notes = req.body.Notes;

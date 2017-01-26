@@ -9,6 +9,7 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 	components.getComponent(req, db).then(function(data){
 		var type= data.data.compntType;
 		//console.log("type :" + type);
+		data.data.editor=true;
 		switch (type) {
 			case "controlSample":
 			//9d9902492259ecc30230af749b1c2a06

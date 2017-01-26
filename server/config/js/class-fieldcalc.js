@@ -187,7 +187,7 @@ var calculatefield = {
     			if (doc[0].ParentDocSubType == "Controllable Unit") {
     				doc[0].CatCU = "";
     				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-    			} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].DocSubType == "BU Country") {
+    			} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country") {
     				doc[0].CatP = "";
     				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
     			} else {
