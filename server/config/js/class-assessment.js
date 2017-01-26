@@ -1202,7 +1202,7 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
-							doc[0].IOT = pdoc[0].IOT;
+								doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
 							doc[0].Country = pdoc[0].Country;
 							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
@@ -1233,6 +1233,10 @@ var assessment = {
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
+							doc[0].AUDataMSAC = [];
+							
+						comp.getCompDocs(db,doc).then(function(dataComp){
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
@@ -1263,13 +1267,27 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
+								
+								//create a space for performance Tab
+								performanceTab.getKFCRDefectRate(db,doc);
+								performanceTab.getKCODefectRate(db,doc);
+								performanceTab.getMissedRisks(db,doc);
+								performanceTab.getMSACCommitmentsCount(db,doc);
+								performanceTab.getCPANDCUPerformanceIndicators(db,doc);
+								performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+																
+								
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
-							break;
-						default:
-							deferred.resolve({"status": 200, "doc": doc});
+							
+						}).catch(function(err) {
+							deferred.reject({"status": 500, "error": err});
+						});
+							
+							
+							
 							break;
 					}
 				}).catch(function(err) {
