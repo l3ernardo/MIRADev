@@ -62,7 +62,7 @@ var assessment = {
 	preload: function(newdoc,req,db) {
 		var deferred = q.defer();
 		var docid = req.query.id
-		var defViewRow = 7;
+		var defViewRow = 10;
 		var doc = [];
 		doc.push(newdoc);
 
@@ -933,8 +933,7 @@ var assessment = {
 					doc[0].CurrentPeriod = req.session.quarter;
 					doc[0].PrevQtrs = [];
 					doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
-					doc[0].EnteredBU = doc[0].MIRABusinessUnit;
-
+					doc[0].EnteredBU = pdoc[0].MIRABusinessUnit;
 					// Get inherited fields from parent assessable unit
 					if (pdoc[0].OpMetricKey == undefined || pdoc[0].OpMetricKey == "") pdoc[0].OpMetricKey = "OMKID0";
 					doc[0].OpMetricKey = pdoc[0].OpMetricKey;
@@ -1334,7 +1333,6 @@ var assessment = {
 						"Owner": pdoc[0].Owner
 					};
 					doc.push(tmpdoc);
-
 					//---Basics Section---//
 					doc[0].CurrentPeriod = req.session.quarter;
 					if (doc[0].PrevRatingUpdate != req.body.PeriodRating) {
@@ -1358,7 +1356,6 @@ var assessment = {
 					doc[0].MIRAStatus = req.body.MIRAStatus;
 					doc[0].NextQtrRating = req.body.NextQtrRating;
 					doc[0].DecommitExplanation = req.body.DecommitExplanation;
-
 					switch (doc[0].ParentDocSubType) {
 						case "BU Reporting Group":
 						case "BU IOT":
@@ -1420,6 +1417,7 @@ var assessment = {
 									doc[0].OpMetric[i].action = req.body[fname];
 								}
 							}
+							// For GTS
 							if (req.session.businessunit == "GTS") {
 								//---Summary Tab---//
 								doc[0].HighlightCRM = req.body.HighlightCRM;
@@ -1474,7 +1472,9 @@ var assessment = {
 								doc[0].MissedIssueRptColorCRM = req.body.MissedIssueRptColorCRM;
 								doc[0].MissedMSACsRptColorSOD = req.body.MissedMSACsRptColorSOD;
 								doc[0].MissedIssueRptColorSOD = req.body.MissedIssueRptColorSOD;
-							} else {
+							}
+							// For GBS
+							else {
 								//---Summary Tab---//
 								doc[0].Highlight = req.body.Highlight;
 								doc[0].FocusArea = req.body.FocusArea;
@@ -1606,7 +1606,6 @@ var assessment = {
 					doc[0].Log = [];
 					doc[0].Log.push(addlog);
 					doc[0].Status = req.body.Status;
-
 					db.save(doc[0]).then(function(data){
 						deferred.resolve({"status": 200, "id": data.body.id, "parentid": doc[0].parentid});
 					}).catch(function(err) {
