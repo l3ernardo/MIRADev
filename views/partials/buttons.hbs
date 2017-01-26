@@ -3,8 +3,10 @@
 	<div class="ibm-buttons-row">
 		<p>
 			{{#unless compntType}}
+				{{#unless new}}
 				<input class="ibm-btn-arrow-pri" type="button" id="btn_save_close" value="Save & Close"/>
 				<span class="ibm-sep">&nbsp;</span>
+				{{/unless}}
 			{{/unless}}
 			<input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Save"/>
 			<span class="ibm-sep">&nbsp;</span>			
