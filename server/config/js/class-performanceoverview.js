@@ -12,33 +12,46 @@ var util = require('./class-utility.js');
 var moment = require('moment');
 
 var getOpenIssuePerAssessment = function (RiskView1Data,AssessableUnitName){
+	var tempProcess = "";
+	var tempCountry = "";
+	var tempRiskCountry = "";
+	var tempRiskProces = "";
 	
 	try{
-		
-		if(AssessableUnitName != undefined){
-	var tempCountry = AssessableUnitName.split('-')[0].replace(/ /g,'');
-	//var tempCountry = "USA";
+		 
+		if(AssessableUnitName != undefined && RiskView1Data != undefined){
+			if(AssessableUnitName.indexOf("-") != -1 ){
+			
+			if(AssessableUnitName.split('-').length > 0 ){
+			
+			 tempCountry = AssessableUnitName.split('-')[0].replace(/ /g,'');
+			//var tempCountry = "USA";
 	
+	 
+			if(AssessableUnitName.split('-').length>2){
+			    tempProcess = AssessableUnitName.split('-')[1];
+				tempProcess += "-";
+				tempProcess += AssessableUnitName.split('-')[2];
+			}
+			else{
+				 tempProcess = AssessableUnitName.split('-')[1] ;
+				} 
 	
-	if(AssessableUnitName.split('-').length>2){
-		var tempProcess = AssessableUnitName.split('-')[1];
-		tempProcess += "-";
-		tempProcess += AssessableUnitName.split('-')[2];
-	}
-	else{
-		var tempProcess = AssessableUnitName.split('-')[1] ;
-	} 
+				tempProcess = tempProcess.replace(/ /g,'');
+				tempCountry = tempCountry.replace(/ /g,'');
 	
-	tempProcess = tempProcess.replace(/ /g,'');
-	tempCountry = tempCountry.replace(/ /g,'');
-	
-	tempRiskCountry = RiskView1Data.country.replace(/ /g,'');
-	tempRiskProcess = RiskView1Data.process.replace(/ /g,'');
+			if(RiskView1Data.country != undefined && RiskView1Data.process != undefined ){
+				tempRiskCountry = RiskView1Data.country.replace(/ /g,'');
+				tempRiskProcess = RiskView1Data.process.replace(/ /g,'');
+			}
 
-	if(tempRiskCountry == tempCountry && tempRiskProcess == tempProcess )
-		return true;
-		else
-			return false;
+			if(tempRiskCountry == tempCountry && tempRiskProcess == tempProcess )
+				return true;
+			else
+				return false;
+			}
+			
+			}
 	
 		}
 	
@@ -311,7 +324,7 @@ var performanceoverviewcountry = {
 		
 	},
 	
-	
+		
 	
 	getCPANDCUPerformanceIndicators: function (db,doc){
 		//Sort for correct display
