@@ -221,10 +221,15 @@ var calculatefield = {
 
   		param.getListParams(db, lParams).then(function(dataParam) {
 
+        if (doc[0].MIRABusinessUnit == "GTS") {
+          doc[0].CRMProcessObj = {};
+          doc[0].DeliveryProcessObj = {};
+        }
         if(dataParam.status==200 & !dataParam.error) {
   				if (dataParam.parameters.CRMProcess) {
   					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
   						if (doc[0].GlobalProcess == dataParam.parameters.CRMProcess[0].options[j].name) doc[0].CatP = "CRM";
+              if (doc[0].MIRABusinessUnit == "GTS") doc[0].CRMProcessObj[dataParam.parameters.CRMProcess[0].options[j].name] = true
   					}
             if (doc[0].MIRABusinessUnit == "GTS") {
               doc[0].CRMProcess = dataParam.parameters.CRMProcess;
@@ -233,6 +238,7 @@ var calculatefield = {
   				if (dataParam.parameters.DeliveryProcess) {
   					for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
   						if (doc[0].GlobalProcess == dataParam.parameters.DeliveryProcess[0].options[j].name) doc[0].CatP = "Delivery";
+              if (doc[0].MIRABusinessUnit == "GTS") doc[0].DeliveryProcessObj[dataParam.parameters.DeliveryProcess[0].options[j].name] = true
   					}
             if (doc[0].MIRABusinessUnit == "GTS") {
               doc[0].DeliveryProcess = dataParam.parameters.DeliveryProcess;

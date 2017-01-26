@@ -23,7 +23,24 @@
 				<tr>
 					<td class="risk-msdcommit-label" colspan="12"><b>Open issues from risk evaluations, deviations, etc.</b></td>
 				</tr>
+				{{#each riskCategories}}
 				<tr>
+					<td class="risk-msdcommit-label">{{name}}</td>
+					<td class="asmt-viewdata" align="center">{{CRMPrevQtr1}}</td>
+					<td class="asmt-viewdata" align="center">{{CRMPrevQtr2}}</td>
+					<td class="asmt-viewdata" align="center">{{CRMPrevQtr3}}</td>
+					<td class="asmt-viewdata" align="center">{{CRMPrevQtr4}}</td>
+					<td class="asmt-viewdata" align="center">{{CRMCurrent}}</td>
+					<!--<td class="risk-msdcommit-viewheader" rowspan="10"></td>-->
+					<td class="risk-msdcommit-viewheader"></td>
+					<td class="asmt-viewdata" align="center">{{DeliveryPrevQtr1}}</td>
+					<td class="asmt-viewdata" align="center">{{DeliveryPrevQtr2}}</td>
+					<td class="asmt-viewdata" align="center">{{DeliveryPrevQtr3}}</td>
+					<td class="asmt-viewdata" align="center">{{DeliveryPrevQtr4}}</td>
+					<td class="asmt-viewdata" align="center">{{DeliveryCurrent}}</td>
+				</tr>
+				{{/each}}
+				<!--<tr>
 					<td class="risk-msdcommit-label">Self Assessment Issues - prior year</td>
 					<td class="asmt-viewdata"></td>
 					<td class="asmt-viewdata"></td>
@@ -153,23 +170,23 @@
 					<td class="asmt-viewdata"></td>
 					<td class="asmt-viewdata"></td>
 					<td class="asmt-viewdata"></td>
-				</tr>
+				</tr>-->
 				<tr>
 					<td class="risk-msdcommit-label" colspan="12"><b>Totals</b></td>
 				</tr>
 				<tr>
 					<td class="risk-msdcommit-label">Total Open Issues</td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.CRMPrevQtr1}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.CRMPrevQtr2}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.CRMPrevQtr3}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.CRMPrevQtr4}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.CRMCurrent}}</td>
 					<td class="risk-msdcommit-viewheader" rowspan="4"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.DeliveryPrevQtr1}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.DeliveryPrevQtr2}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.DeliveryPrevQtr3}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.DeliveryPrevQtr4}}</td>
+					<td class="asmt-viewdata" align="center">{{totalRisks.DeliveryCurrent}}</td>
 				</tr>
 				<tr>
 					<td class="risk-msdcommit-label">Qtd Net Change</td>
