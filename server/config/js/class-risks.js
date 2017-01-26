@@ -83,7 +83,7 @@ var calculateORTab = {
             Current: 0
           };
           doc[0].riskCategories[0].flagForTextarea = true;
-          for (var i = 0; i < doc[0].RiskView2Data.length; i++) {
+          for (var i = 0; i < doc[0].RiskView1Data.length; i++) {
             for (var j = 0; j < doc[0].riskCategories.length; j++) {
               if(doc[0].RiskView2Data[i].scorecardCategory == doc[0].riskCategories[j].name){
                 if (doc[0].RiskView2Data[i].reportingQuarter == doc[0].CurrentPeriod) {
@@ -192,6 +192,77 @@ var calculateORTab = {
           doc[0].RiskView2Data = openrisks;
 
         }else{//no GBS
+          //count the totals category issues
+          doc[0].totalRisks = {
+            CRMPrevQtr1: 0,
+            CRMPrevQtr2: 0,
+            CRMPrevQtr3: 0,
+            CRMPrevQtr4: 0,
+            CRMCurrent: 0,
+            DeliveryPrevQtr1: 0,
+            DeliveryPrevQtr2: 0,
+            DeliveryPrevQtr3: 0,
+            DeliveryPrevQtr4: 0,
+            DeliveryCurrent: 0
+          };
+          //count the CRM category issues
+          for (var i = 0; i < doc[0].RiskView1DataCRM.length; i++) {
+            for (var j = 0; j < doc[0].riskCategories.length; j++) {
+              if(doc[0].RiskView1DataCRM[i].scorecardCategory == doc[0].riskCategories[j].name){
+                if (doc[0].RiskView1DataCRM[i].reportingQuarter == doc[0].CurrentPeriod) {
+                  doc[0].totalRisks.CRMCurrent++;
+                  if(doc[0].riskCategories[j]["CRMCurrent"] == undefined){
+                    doc[0].riskCategories[j]["CRMCurrent"] = 1;
+                  }else {
+                    doc[0].riskCategories[j]["CRMCurrent"]++;
+                  }
+                }
+                else{
+                  for (var k = 0; k < doc[0].PrevQtrs.length; k++) {
+                    if(doc[0].RiskView1DataCRM[i].reportingQuarter == doc[0].PrevQtrs[k]){
+                      doc[0].totalRisks["CRMPrevQtr"+(k+1)]++;
+                      if(doc[0].riskCategories[j]["CRMPrevQtr"+(k+1)] == undefined){
+                        doc[0].riskCategories[j]["CRMPrevQtr"+(k+1)] = 1;
+                      }else {
+                        doc[0].riskCategories[j]["CRMPrevQtr"+(k+1)]++;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          //count the Delivery category issues
+          for (var i = 0; i < doc[0].RiskView1DataDelivery.length; i++) {
+            for (var j = 0; j < doc[0].riskCategories.length; j++) {
+              if(doc[0].RiskView1DataDelivery[i].scorecardCategory == doc[0].riskCategories[j].name){
+                if (doc[0].RiskView1DataDelivery[i].reportingQuarter == doc[0].CurrentPeriod) {
+                  doc[0].totalRisks.DeliveryCurrent++;
+                  if(doc[0].riskCategories[j]["DeliveryCurrent"] == undefined){
+                    doc[0].riskCategories[j]["DeliveryCurrent"] = 1;
+                  }else {
+                    doc[0].riskCategories[j]["DeliveryCurrent"]++;
+                  }
+                }
+                else{
+                  for (var k = 0; k < doc[0].PrevQtrs.length; k++) {
+                    if(doc[0].RiskView1DataDelivery[i].reportingQuarter == doc[0].PrevQtrs[k]){
+                      doc[0].totalRisks["DeliveryPrevQtr"+(k+1)]++;
+                      if(doc[0].riskCategories[j]["DeliveryPrevQtr"+(k+1)] == undefined){
+                        doc[0].riskCategories[j]["DeliveryPrevQtr"+(k+1)] = 1;
+                      }else {
+                        doc[0].riskCategories[j]["DeliveryPrevQtr"+(k+1)]++;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+            //console.log(doc[0].RiskView1DataCRM);
+            //console.log("delivery");
+            //console.log(doc[0].RiskView1DataDelivery);
+            //console.log(Object.keys(doc[0].DeliveryProcessObj));
           /*var objects = {};//object of objects for counting
           var risksType = {};
           risks.sort(function(a, b){
