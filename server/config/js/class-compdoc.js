@@ -330,11 +330,15 @@ var getDocs = {
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
                 if(comps[i].reportingQuarter == doc[0].CurrentPeriod ){
-                  doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
+                  doc[0].RiskView2Data.push(comps[i]);
                 }
                 if (doc[0].MIRABusinessUnit == "GTS") {
-                  if(doc[0].CRMProcessObj[comps[i].process]){ doc[0].RiskView1DataCRM.push(comps[i])
-                  }else{doc[0].RiskView1DataDelivery.push(comps[i]);}
+                  if(doc[0].CRMProcessObj[comps[i].process]){
+                    comps[i].catP = "CRM/Other";
+                    doc[0].RiskView1DataCRM.push(comps[i]);
+                  }else{
+                    comps[i].catP = "Delivery";
+                    doc[0].RiskView1DataDelivery.push(comps[i]);}
                   /*else if(doc[0].DeliveryProcessObj[comps[i].process]){ doc[0].RiskView1DataDelivery.push(comps[i])}
                   else console.log("no encontro el process"+comps[i].process);*/
                 }

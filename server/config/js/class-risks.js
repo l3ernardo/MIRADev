@@ -129,16 +129,15 @@ var calculateORTab = {
               exportOpenRisks.push(tmp);
             }
             doc[0].exportOpenRisks = exportOpenRisks;
+            //second table
             var risks = doc[0].RiskView2Data;
             var riskCategory = {};
             var openrisks = [];
             var exportOpenRisks2 = [];
             doc[0].ORMCMissedRisks = 0;
-
-            //second table
           var objects = {};//object of objects for counting
           risks.sort(function(a, b){
-            var nameA=a.type.toLowerCase(), nameB=b.type.toLowerCase()
+            var nameA=a.scorecardCategory.toLowerCase(), nameB=b.scorecardCategory.toLowerCase()
             if (nameA > nameB) //sort string descending
               return -1
             if (nameA < nameB)
@@ -146,15 +145,15 @@ var calculateORTab = {
             return 0 //default return value (no sorting)
           });
           for(var i = 0; i < risks.length; i++){
-            if(typeof riskCategory[risks[i].type] === "undefined"){
+            if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
               var tmp = {
-                id:risks[i].type.replace(/ /g,''),
-                type:risks[i].type,
+                id:risks[i].scorecardCategory.replace(/ /g,''),
+                type:risks[i].scorecardCategory,
                 numOpenIssues: 0,
               };
               openrisks.push(tmp);
               objects[tmp.id] = tmp;
-              riskCategory[risks[i].type] = true;
+              riskCategory[risks[i].scorecardCategory] = true;
             }
             if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
               risks[i].missedFlag = true;
@@ -164,7 +163,7 @@ var calculateORTab = {
             }
             risks[i].numOpenIssues = 1;
             var tmp = {};
-            tmp.type = risks[i].type || " ";
+            tmp.scorecardCategory = risks[i].scorecardCategory || " ";
             tmp.id = risks[i].id || " ";
             tmp.status = risks[i].status || " ";
             tmp.originalTargetDate = risks[i].originalTargetDate || " ";
@@ -176,7 +175,7 @@ var calculateORTab = {
             tmp.missedFlag = risks[i].missedFlag || " ";
             tmp.riskAbstract = risks[i].riskAbstract || " ";
             exportOpenRisks2.push(tmp);
-            risks[i].parent = risks[i].type.replace(/ /g,'');
+            risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
             //do counting for category
             objects[risks[i].parent].numOpenIssues++ ;
             openrisks.push(risks[i]);
@@ -259,79 +258,95 @@ var calculateORTab = {
               }
             }
           }
-            //console.log(doc[0].RiskView1DataCRM);
-            //console.log("delivery");
-            //console.log(doc[0].RiskView1DataDelivery);
-            //console.log(Object.keys(doc[0].DeliveryProcessObj));
-          /*var objects = {};//object of objects for counting
-          var risksType = {};
-          risks.sort(function(a, b){
-            var nameA=a.scorecardCategory.toLowerCase(), nameB=b.scorecardCategory.toLowerCase()
-            if (nameA > nameB) //sort string descending
-              return -1
-            if (nameA < nameB)
-              return 1
-            var nameA=a.type.toLowerCase(), nameB=b.type.toLowerCase()
-            if (nameA > nameB) //sort string descending
-              return -1
-            if (nameA < nameB)
-              return 1
-            return 0 //default return value (no sorting)
-          });
-          for(var i = 0; i < risks.length; i++){
-            if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
-              var tmp = {
-                id:risks[i].scorecardCategory.replace(/ /g,''),
-                scorecardCategory:risks[i].scorecardCategory,
-                numOpenIssues: 0,
-              };
-              openrisks.push(tmp);
-              objects[tmp.id] = tmp;
-              riskCategory[risks[i].scorecardCategory] = true;
-            }
-            if(typeof riskType[risks[i].type] === "undefined"){
-              var tmp = {
-                parent: risks[i].scorecardCategory.replace(/ /g,''),
-                id: risks[i].type.replace(/ /g,''),
-                type:risks[i].type,
-                numOpenIssues: 0,
-              };
-              openrisks.push(tmp);
-              objects[tmp.id] = tmp;
-              riskType[risks[i].type] = true;
-            }
-            if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
-              risks[i].missedFlag = true;
-              doc[0].ORMCMissedRisks = 1;
-            }else {
-              risks[i].missedFlag = false;
-            }
-            risks[i].numOpenIssues = 1;
-            var tmp = {};
-            tmp.scorecardCategory = risks[i].scorecardCategory || " ";
-            tmp.type = risks[i].type || " ";
-            tmp.id = risks[i].id || " ";
-            tmp.country = risks[i].country || " ";
-            tmp.process = risks[i].process || " ";
-            tmp.status = risks[i].status || " ";
-            tmp.originalTargetDate = risks[i].originalTargetDate || " ";
-            tmp.currentTargetDate = risks[i].currentTargetDate || " ";
-            tmp.numTasks = risks[i].numTasks || " ";
-            tmp.numTasksOpen = risks[i].numTasksOpen || " ";
-            tmp.numMissedTasks = risks[i].numMissedTasks || " ";
-            tmp.numOpenIssues = risks[i].numOpenIssues || " ";
-            tmp.missedFlag = risks[i].missedFlag || " ";
-            tmp.riskAbstract = risks[i].riskAbstract || " ";
-            exportOpenRisks2.push(tmp);
-            risks[i].parent = risks[i].scorecardCategory.replace(/ /g,''),
-            //do counting for category
-            objects[risks[i].parent].numOpenIssues++ ;
-            objects[objects[risks[i].parent].parent].numOpenIssues++ ;
-            openrisks.push(risks[i]);
-          }*/
+          //Quarters change
+          doc[0].QtdChangeRisks = {
+            CRMQtdChange1:  Math.abs(doc[0].totalRisks.CRMPrevQtr1 - doc[0].totalRisks.CRMPrevQtr2),
+            CRMQtdChange2: Math.abs(doc[0].totalRisks.CRMPrevQtr2 - doc[0].totalRisks.CRMPrevQtr3),
+            CRMQtdChange3: Math.abs(doc[0].totalRisks.CRMPrevQtr3 - doc[0].totalRisks.CRMPrevQtr4),
+            CRMQtdChange4: Math.abs(doc[0].totalRisks.CRMPrevQtr4 - doc[0].totalRisks.CRMCurrent),
+            DeliveryQtdChange1:  Math.abs(doc[0].totalRisks.DeliveryPrevQtr1 - doc[0].totalRisks.DeliveryPrevQtr2),
+            DeliveryQtdChange2: Math.abs(doc[0].totalRisks.DeliveryPrevQtr2 - doc[0].totalRisks.DeliveryPrevQtr3),
+            DeliveryQtdChange3: Math.abs(doc[0].totalRisks.DeliveryPrevQtr3 - doc[0].totalRisks.DeliveryPrevQtr4),
+            DeliveryQtdChange4: Math.abs(doc[0].totalRisks.DeliveryPrevQtr4 - doc[0].totalRisks.DeliveryCurrent)
+          };
+          //second table
+          var risks = doc[0].RiskView2Data;
+          var riskCategory = {};
+          var openrisks = [];
+          var exportOpenRisks2 = [];
+          doc[0].ORMCMissedRisks = 0;
+        var objects = {};//object of objects for counting
+        risks.sort(function(a, b){
+          var nameA=a.catP.toLowerCase(), nameB=b.catP.toLowerCase()
+          if (nameA > nameB) //sort string descending
+            return -1
+          if (nameA < nameB)
+            return 1
+          var nameA=a.scorecardCategory.toLowerCase(), nameB=b.scorecardCategory.toLowerCase()
+          if (nameA > nameB) //sort string descending
+            return -1
+          if (nameA < nameB)
+            return 1
+          return 0 //default return value (no sorting)
+        });
+        for(var i = 0; i < risks.length; i++){
+          if(typeof riskCategory[risks[i].catP] === "undefined"){
+            var tmp = {
+              id:risks[i].catP.replace(/ /g,''),
+              catP:risks[i].catP,
+              numOpenIssues: 0,
+            };
+            openrisks.push(tmp);
+            objects[tmp.catP] = tmp;
+            riskCategory[risks[i].catP] = true;
+          }
+          if(typeof riskCategory[risks[i].catP.replace(/ /g,'')+risks[i].scorecardCategory.replace(/ /g,'')] === "undefined"){
+            var tmp = {
+              id:risks[i].catP.replace(/ /g,'')+risks[i].scorecardCategory.replace(/ /g,''),
+              parent:risks[i].catP.replace(/ /g,''),
+              type:risks[i].scorecardCategory,
+              numOpenIssues: 0,
+            };
+            openrisks.push(tmp);
+            objects[tmp.id] = tmp;
+            riskCategory[risks[i].catP.replace(/ /g,'')+risks[i].scorecardCategory.replace(/ /g,'')] = true;
+          };
+          if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
+            risks[i].missedFlag = true;
+            doc[0].ORMCMissedRisks = 1;
+          }else {
+            risks[i].missedFlag = false;
+          };
+          risks[i].numOpenIssues = 1;
+          var tmp = {};
+          tmp.scorecardCategory = risks[i].scorecardCategory || " ";
+          tmp.id = risks[i].id || " ";
+          tmp.status = risks[i].status || " ";
+          tmp.originalTargetDate = risks[i].originalTargetDate || " ";
+          tmp.currentTargetDate = risks[i].currentTargetDate || " ";
+          tmp.numTasks = risks[i].numTasks || " ";
+          tmp.numTasksOpen = risks[i].numTasksOpen || " ";
+          tmp.numMissedTasks = risks[i].numMissedTasks || " ";
+          tmp.numOpenIssues = risks[i].numOpenIssues || " ";
+          tmp.missedFlag = risks[i].missedFlag || " ";
+          tmp.riskAbstract = risks[i].riskAbstract || " ";
+          exportOpenRisks2.push(tmp);
+          risks[i].parent = risks[i].catP.replace(/ /g,'')+risks[i].scorecardCategory.replace(/ /g,'');
+          //do counting for category
+          objects[risks[i].parent].numOpenIssues++ ;
+          objects[risks[i].catP].numOpenIssues++ ;
+          openrisks.push(risks[i]);
         }
-
-
+        doc[0].exportOpenRisks2 = exportOpenRisks2;
+        if (Object.keys(riskCategory).length < defViewRow) {
+          if (openrisks.length == 0) {
+            openrisks = fieldCalc.addTestViewData(10,defViewRow);
+          } else {
+            fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
+          }
+        };
+        doc[0].RiskView2Data = openrisks;
+      }
       break;
       }
     }catch(e){
