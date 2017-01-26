@@ -75,7 +75,7 @@
 						{{/unless}}
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{auditOrReview}}</a></td>
 						<td width="7%">{{#if _id}}{{reportDate}}{{else}}&nbsp;{{/if}}</td>
-						<td width="7%">{{rating}}</td>
+						{{{ratingDisplayView rating 7}}}
 						<td width="10%">{{numRecommendationsTotal}}</td>
 						<td width="9%">{{numRecommendationsOpen}}</td>
 						<td width="10%">{{targetCloseOriginal}}</td>

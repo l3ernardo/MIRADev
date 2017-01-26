@@ -397,7 +397,7 @@ var register = function(Handlebars) {
 					if(dateval < currdate)
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
 					else
-						datehtml = '<span style="padding-right:1em">'+date+'</span>';
+						datehtml = '<span style="padding-left:1em; padding-right:1em;">'+date+'</span>';
 					}
 				}
 			return datehtml;
@@ -405,7 +405,7 @@ var register = function(Handlebars) {
 		statusRatingLclAdt: function(rating) {
 				var rateHTML;
 			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Qualified") {
-				rateHTML = '<span style="background-color: #00ff00; padding-left:1em; padding-right:1em; color: #ffffff">'+rating+'</span>';
+				rateHTML = '<span style="background-color: #00ff00; padding-left:1em; padding-right:1em">'+rating+'</span>';
 			} else {
 				if (rating == "Unsatisfactory" || rating == "unsat" || rating == "Unfavorable" || rating == "Negative" || rating == "Unqualified") {
 					rateHTML = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+rating+'</span>';
