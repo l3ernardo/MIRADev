@@ -474,22 +474,18 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
-
 								//create a space for performance Tab
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
 								performanceTab.getMissedRisks(db,doc);
 								performanceTab.getMSACCommitmentsCount(db,doc);
-								performanceTab.getMSACCommitmentsAU(db,doc);
 								performanceTab.getCPANDCUPerformanceIndicators(db,doc);
 								performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
-
 								//console.log(doc[0].AUDataMSAC);
 								//open risks
 								ort.processORTab(doc,defViewRow,req);
 								//audit universe
 								aut.processAUTab(doc,defViewRow);
-
 							 	var obj = doc[0]; // For Merge
 							 	deferred.resolve({"status": 200, "doc": obj});
 
