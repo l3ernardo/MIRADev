@@ -333,23 +333,23 @@ var auditlesson = {
 		try{
 			var view = [];
 			var obj = {
-				selector : {
+				"selector" : {
 					"_id": {"$gt":0},
 					"reportingPeriod": {"$gt":0},
 					"AuditType": {"$gt":0},
-					docType: "auditLesson",
-					businessUnit: req.session.buname
+					"docType": "auditLesson",
+					"MIRABusinessUnit": req.session.businessunit
 				},
-				sort:[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
+				"sort":[{"reportingPeriod":"desc"}, {"AuditType":"desc"}]
 			};
 			db.find(obj).then(function(data){
 				var objGP = {
-					selector: {
-						Name: { "$gt": null },
-						key: "Assessable Unit",
-						DocSubType:"Global Process",
-						Status: "Active",
-						MIRABusinessUnit: req.session.businessunit
+					"selector": {
+						"Name": { "$gt": null },
+						"key": "Assessable Unit",
+						"DocSubType":"Global Process",
+						"Status": "Active",
+						"MIRABusinessUnit": req.session.businessunit
 					},
 					fields: [
 						"Name","WWBCITKey"
@@ -464,6 +464,7 @@ var auditlesson = {
 				newAudit.observationCategory = req.body.observationCategory;
 				newAudit.reportingPeriod = req.body.reportingYear+" Q"+req.body.reportingQuarter;
 				newAudit.businessUnit = req.body.BU;
+				newAudit.MIRABusinessUnit = req.session.businessunit;
 				newAudit.country = req.body.country;
 				newAudit.IMT = req.body.IMT;
 				newAudit.IOT = req.body.IOT;
@@ -488,7 +489,8 @@ var auditlesson = {
 						"_id",
 						"_rev",
 						"docType",
-						"Log"
+						"Log",
+						"MIRABusinessUnit"
 					]
 				};
 				db.find(obj).then(function(data){
@@ -508,6 +510,7 @@ var auditlesson = {
 					data.body.docs[0].globalProcess = req.body.globalProcess;
 					data.body.docs[0].subprocess = req.body.subprocess;
 					data.body.docs[0].summary = req.body.Notes;
+					
 					if(req.body.BU != "GBS")
 						data.body.docs[0].AuditLessonsKey = req.body.AuditLessonsKey;
 
