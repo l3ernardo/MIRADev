@@ -865,7 +865,6 @@ function counter(name) {
 if (frm == "Assessment") {  // check if document ype = assessment.
 
 		if ($("#PeriodRating").val() == "NR" || $("#PeriodRating").val() == "Pending") {
-			//alert("Holistic Rating is require.");
 			$("#validationmsg").text("");
 			$("#validationmsg").append("<li>Holistic Rating field is require.</li>");
 			$('#PeriodRating').focus();
@@ -878,8 +877,6 @@ if (frm == "Assessment") {  // check if document ype = assessment.
 		}
 
 if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("input[name='Target2Sat']").val() == "") {
-	//req_flds = req_flds + "  - Target to Sat\n";
-		//alert("Fields with (*) are required!\n" + req_flds);
 		$("#validationmsg").text("");
 		$("#validationmsg").append("<li>Target to Sat field is required.</li>");
 		$('#Target2Sat').focus();
@@ -889,8 +886,6 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 //NextQtrRating validation
 
 if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" || $("#PeriodRating").val() == "Unsat")) && $("#NextQtrRating").val() == "") {
-	//req_flds = req_flds + "  - Target to Sat\n";
-		//alert("Fields with (*) are required!\n" + req_flds);
 		$("#validationmsg").text("");
 		$("#validationmsg").append("<li>Next Quarter Outlook is required.</li>");
 		$('#Target2Sat').focus();
@@ -900,8 +895,9 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 // Basic of Control field validation.
 		if (!$("#BoCResponse1Yes").is(':checked') && !$("#BoCResponse1No").is(':checked')){
 				$("#validationmsg").text("");
-				//$("#validationmsg").append('<li><span>Require entries on the Tab Basic of Controls (Row1) are incomplete. Click OK to continue checking.</span></li>');
 					$("#validationmsg").append('<li class="valimesg">Require entries on the Tab Basics of Controls (Row1) are incomplete.<a class="validmsg">Click Here.</a></li>');
+					$( "#summary" ).css("display","none");
+ 					$( "#basiccontrol" ).css("display","block");
 						$(".validmsg").on("click", function( e ) {
        						e.preventDefault();
        							$('#BoCResponse1Yes').focus();
@@ -912,8 +908,6 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 			if ($('#BoCResponse1No').is(':checked')) {
 				if (!$("#BoCTargetCloseDate1").val()) {
 					$("#validationmsg").text("");
-					//$("#validationmsg").append('<li><span>Target to close date (row 1) is require. Click OK to continue checking.</span></li>');
-					//$('#BoCTargetCloseDate1').focus();
 					$("#validationmsg").append('<li class="valimesg">Target to close date (row 1) is require.<a class="validmsg">Click Here.</a></li>');
 						$(".validmsg").on("click", function( e ) {
        						e.preventDefault();
@@ -923,8 +917,6 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 				 }else{
 					if (!$("#BoCComments1").val()) {
 						$("#validationmsg").text("");
-						//$("#validationmsg").append('<li><span>Comments (row 1) is require. Click OK to continue checking.</span></li>');
-						//$("#BoCComments1").focus();
 						$("#validationmsg").append('<li class="valimesg">Comments (row 1) is require.<a class="validmsg">Click Here.</a></li>');
 							$(".validmsg").on("click", function( e ) {
        							e.preventDefault();
@@ -938,6 +930,8 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 		if (!$("#BoCResponse2Yes").is(':checked') && !$("#BoCResponse2No").is(':checked')){
 				$("#validationmsg").text("");
 				$("#validationmsg").append('<li class="valimesg">Require entries on the Tab Basics of Controls (Row2) are incomplete.<a class="validmsg">Click Here.</a></li>');
+					$( "#summary" ).css("display","none");
+ 					$( "#basiccontrol" ).css("display","block");
 						$(".validmsg").on("click", function( e ) {
        						e.preventDefault();
        							$('#BoCResponse2Yes').focus();
@@ -970,6 +964,8 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 		if (!$("#BoCResponse3Yes").is(':checked') && !$("#BoCResponse3No").is(':checked')){
 		   	$("#validationmsg").text("");
 				$("#validationmsg").append('<li class="valimesg">Require entries on the Tab Basics of Controls (Row3) are incomplete.<a class="validmsg">Click Here.</a></li>');
+					$( "#summary" ).css("display","none");
+ 					$( "#basiccontrol" ).css("display","block");
 						$(".validmsg").on("click", function( e ) {
        						e.preventDefault();
        							$('#BoCResponse3Yes').focus();
@@ -1000,6 +996,8 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 		if (!$("#BoCResponse4Yes").is(':checked') && !$("#BoCResponse4No").is(':checked')){
 			  $("#validationmsg").text("");
 				$("#validationmsg").append('<li class="valimesg">Require entries on the Tab Basics of Controls (Row4) are incomplete.<a class="validmsg">Click Here.</a></li>');
+						$( "#summary" ).css("display","none");
+ 						$( "#basiccontrol" ).css("display","block");
 						$(".validmsg").on("click", function( e ) {
        						e.preventDefault();
        							$('#BoCResponse4Yes').focus();
@@ -1031,6 +1029,8 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 		if (!$("#BoCResponse5Yes").is(':checked') && !$("#BoCResponse5No").is(':checked')){
 				$("#validationmsg").text("");
 				$("#validationmsg").append('<li class="valimesg">Require entries on the Tab Basics of Controls (Row5) are incomplete.<a class="validmsg">Click Here.</a></li>');
+						$( "#summary" ).css("display","none");
+ 						$( "#basiccontrol" ).css("display","block");
 						$(".validmsg").on("click", function( e ) {
        						e.preventDefault();
        							$('#BoCResponse5Yes').focus();
@@ -1065,7 +1065,6 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 //Proactive Reviews
 	if ( $( "#OMID10Rating" ).length ) {
 		if (!$('#OMID10Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Proactive Reviews.</li>");
 				$('#OMID10Rating').focus();
@@ -1107,7 +1106,6 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 //Procurement Bypass (YTD)
 	if ( $( "#OMID11Rating" ).length ) {
 		if (!$('#OMID11Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Procurement Bypass.</li>");
 				$('#OMID11Rating').focus();
@@ -1150,7 +1148,6 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 //Audit Lessons Learned
 if ( $( "#OMID2Rating" ).length ) {
 		if (!$('#OMID2Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on the Audit Lessons Learned.</li>");
 				$('#OMID2Rating').focus();
@@ -1168,7 +1165,6 @@ if ( $( "#OMID2Rating" ).length ) {
 						 return false;
 				} else {
 					if (!$("#OMID2Finding").val()) {
-						//alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
 						 $("#validationmsg").text("");
 						    $("#validationmsg").append('<li class="valimesg">Tab Operational Metrics: Finding is required.<a class="validmsg">Click Here.</a></li>');
 								$(".validmsg").on("click", function( e ) {
@@ -1178,7 +1174,6 @@ if ( $( "#OMID2Rating" ).length ) {
 						  return false;
 					} else {
 						if (!$("#OMID2Action").val()) {
-							//alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
 							$("#validationmsg").text("");
 							$("#validationmsg").append('<li class="valimesg">Tab Operational Metrics: Action is required.<a class="validmsg">Click Here.</a></li>');
 								$(".validmsg").on("click", function( e ) {
@@ -1196,7 +1191,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Current Asset Inventory
 	if ( $( "#OMID4Rating" ).length ) {
 		if (!$('#OMID4Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Current Asset Inventory.</li>");				
 					$('#OMID4Rating').focus();
@@ -1239,7 +1233,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Labour Claiming	
 	if ( $( "#OMID7Rating" ).length ) {
 		if (!$('#OMID7Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Labour Claiming.</li>");
 				$('#OMID7Rating').focus();
@@ -1282,7 +1275,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //IES Recertifications
 	if ( $( "#OMID6Rating" ).length ) {
 		if (!$('#OMID6Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on IES Recertifications.</li>");
 				$('#OMID6Rating').focus();
@@ -1325,7 +1317,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //DS&P Overall Rating
 	if ( $( "#OMID5Rating" ).length ) {
 		if (!$('#OMID5Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on DS&P Overall Rating.</li>");
 				$('#OMID5Rating').focus();
@@ -1368,7 +1359,6 @@ if ( $( "#OMID2Rating" ).length ) {
 // SOD
 	if ( $( "#OMID12Rating" ).length ) { 
 		if (!$('#OMID12Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on SOD.</li>");
 				$('#OMID12Rating').focus();
@@ -1412,7 +1402,6 @@ if ( $( "#OMID2Rating" ).length ) {
 	if ( $( "#OMID1Rating" ).length ) { 
 		console.log("entrou");
 		if (!$('#OMID1Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on the Access Mgmt.</li>");
 				$('#OMID1Rating').focus();
@@ -1420,9 +1409,7 @@ if ( $( "#OMID2Rating" ).length ) {
 			} else {
 				if ($('#OMID1Rating').val() =='Marg' || $('#OMID1Rating').val() =='Unsat') {
 					  if (!$("#OMID1TargetSatDate").val()) {
-						//alert("Tab Operational Metrics: Target to Sat is required. Click OK to continue checking.");
 						$("#validationmsg").text("");
-						//$("#validationmsg").append("<li>Tab Operational Metrics: Target to Sat is required.</li>");
 							 $("#validationmsg").append('<li class="valimesg">Tab Operational Metrics: Target to Sat is required.<a class="validmsg">Click Here.</a></li>');
 								$(".validmsg").on("click", function( e ) {
        								e.preventDefault();
@@ -1431,9 +1418,7 @@ if ( $( "#OMID2Rating" ).length ) {
 							return false;
 				}else{
 					if (!$("#OMID1Finding").val()) {
-							//alert("Tab Operational Metrics: Finding is required. Click OK to continue checking.");
 							$("#validationmsg").text("");
-            				//$("#validationmsg").append("<a href="#pliip">Tab Operational Metrics: Finding is required.</a>");
             				$("#validationmsg").append('<li class="valimesg">Tab Operational Metrics: Finding is required.<a class="validmsg">Click Here.</a></li>');
 								$(".validmsg").on("click", function( e ) {
        								e.preventDefault();
@@ -1442,10 +1427,7 @@ if ( $( "#OMID2Rating" ).length ) {
 							return false;
 					} else {
 						if (!$("#OMID1Action").val()) {
-							 //alert("Tab Operational Metrics: Action is required. Click OK to continue checking.");
 							 $("#validationmsg").text("");
-							// $("#validationmsg").append("<li>Tab Operational Metrics: Action is required.</li>");
-							 //$('#OMID1Action').focus();
 							 $("#validationmsg").append('<li class="valimesg">Tab Operational Metrics: Action is required.<a class="validmsg">Click Here.</a></li>');
 								$(".validmsg").on("click", function( e ) {
        								e.preventDefault();
@@ -1461,7 +1443,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Workplace Security - Violations	
 	if ( $( "#OMID16Rating" ).length ) { 
 		if (!$('#OMID16Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Workplace Security - Violations.</li>");
 				$('#OMID16Rating').focus();
@@ -1503,7 +1484,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Workplace Security - Disciplinary Action
 	if ( $( "#OMID15Rating" ).length ) {
 		if (!$('#OMID15Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Workplace Security - Disciplinary Action.</li>");
 				$('#OMID15Rating').focus();
@@ -1545,7 +1525,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Workstation Security - WST
 	if ( $( "#OMID17Rating" ).length ) {
 		if (!$('#OMID17Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li><strong>Tab Operational Metrics: Require entries on Workstation Security - WST.</string></li>");
 				$('#OMID17Rating').focus();
@@ -1630,7 +1609,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Completion of Mandatory Data Privacy Training
 	if ( $( "#OMID3Rating" ).length ) {
 		if (!$('#OMID3Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Completion of Mandatory Data Privacy Training.</li>");
 					$('#OMID3Rating').focus();
@@ -1673,7 +1651,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Work @ Risk (Pre-Contract Work)
 	if ( $( "#OMID14Rating" ).length ) {
 		if (!$('#OMID14Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Work @ Risk .</li>");
 				$('#OMID14Rating').focus();
@@ -1716,7 +1693,6 @@ if ( $( "#OMID2Rating" ).length ) {
 //Unauth. Pricing Commitments (UPC)
 	if ( $( "#OMID13Rating" ).length ) {
 		if (!$('#OMID13Rating').val()) {
-				//alert("Tab Operational Metrics: Require entries on the Tab Operational Metrics are Incomplete. Click OK to continue checking.");
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Unauth. Pricing Commitments.</li>");
 				$('#OMID13Rating').focus();
