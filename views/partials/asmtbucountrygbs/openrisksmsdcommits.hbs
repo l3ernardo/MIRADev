@@ -29,7 +29,7 @@
 						<td class="asmt-viewdata" align="center">{{PrevQtr2}}</td>
 						<td class="asmt-viewdata" align="center">{{PrevQtr3}}</td>
 						<td class="asmt-viewdata" align="center">{{PrevQtr4}}</td>
-						<td class="asmt-viewdata" align="center">{{Current}}</td>
+						<!--<td class="asmt-viewdata" align="center">{{Current}}</td>-->
 						<td class="risk-msdcommit-viewheader"></td>
 						{{#if flagForTextarea}}
 						<td class="asmt-viewdata" rowspan="10">
@@ -398,8 +398,8 @@
 					{{#each RiskView1Data}}
 						<tr class="asmt-viewdata">
 							<td width="50%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
-							<td width="10%">{{status}}</td>
-							<td width="10%">{{PeriodRating}}</td>
+							{{{ratingDisplayView PeriodRating 10}}}
+							{{{ratingDisplayView PeriodRating 10}}}
 							<td width="15%">{{originalTargetDate}}</td>
 							<td width="15%">{{currentTargetDate}}</td>
 						</tr>

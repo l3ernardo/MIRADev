@@ -165,10 +165,13 @@ var calculatefield = {
 					if (doc[0].DocSubType == "Controllable Unit") {
 						doc[0].CatCU = "";
 						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-					} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "BU Country") {
+					} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-					} else {
+					} else if (doc[0].DocSubType == "BU Country") {
+    				lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
+    			}
+          else {
 						lParams = ['GTSInstanceDesign'];
 					}
 			}
@@ -187,10 +190,13 @@ var calculatefield = {
 					if (doc[0].ParentDocSubType == "Controllable Unit") {
 						doc[0].CatCU = "";
 						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-					} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country") {
+					} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-					} else {
+					} else if (doc[0].ParentDocSubType == "BU Country") {
+    				lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
+    			}
+           else {
 						lParams = ['GTSInstanceDesign'];
 					}
 			  if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
@@ -224,6 +230,8 @@ var calculatefield = {
 			if (doc[0].MIRABusinessUnit == "GTS") {
 			  doc[0].CRMProcessObj = {};
 			  doc[0].DeliveryProcessObj = {};
+        doc[0].CRMCUObj = {};
+        doc[0].DeliveryCUObj = {};
 			}
 			if(dataParam.status==200 & !dataParam.error) {
 					if (dataParam.parameters.CRMProcess) {
@@ -247,6 +255,7 @@ var calculatefield = {
 					if (dataParam.parameters.CRMCU) {
 						for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
 							if (doc[0].Category == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
+              if (doc[0].MIRABusinessUnit == "GTS") doc[0].CRMCUObj[dataParam.parameters.CRMCU[0].options[j].name] = true;
 						}
 				if (doc[0].MIRABusinessUnit == "GTS") {
 				  doc[0].CRMCU = dataParam.parameters.CRMCU;
@@ -255,6 +264,7 @@ var calculatefield = {
 					if (dataParam.parameters.DeliveryCU) {
 						for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
 							if (doc[0].Category == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
+              if (doc[0].MIRABusinessUnit == "GTS") doc[0].DeliveryCUObj[dataParam.parameters.DeliveryCU[0].options[j].name] = true;
 						}
 				if (doc[0].MIRABusinessUnit == "GTS") {
 				  doc[0].DeliveryCU = dataParam.parameters.DeliveryCU;
@@ -462,19 +472,44 @@ var calculatefield = {
              var asmtsdocs = asmtsdata.body.docs;
             var CUassunits = [];
             var CUauditables = {};
+            var CUCRMables = {};
             var CPauditables = [];
             var CPassmts = {};
+            if (doc[0].MIRABusinessUnit == "GTS") {
+              doc[0].asmtsdocsCRM = [];
+              doc[0].asmtsdocsDelivery = [];
+            }
             for (var i = 0; i < asmtsdocs.length; ++i) {
               if (asmtsdocs[i].key == "Assessment"){
                  doc[0].asmtsdocs.push(asmtsdocs[i]);
                  asmtsdocs[i].Type = "Country Process";
                  CPassmts[asmtsdocs[i].parentid] = asmtsdocs[i];
+                 if (doc[0].MIRABusinessUnit == "GTS") {
+                   if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
+                     asmtsdocs[i].catP = "CRM";
+                     doc[0].asmtsdocsCRM.push(asmtsdocs[i])
+                   }else if(doc[0].DeliveryProcessObj[asmtsdocs[i].GPWWBCITKey]){
+                     asmtsdocs[i].catP = "Delivery";
+                     doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
+                   }else {
+                     doc[0].asmtsdocs.pop();
+                     console.log("GP not found: "+ asmtsdocs[i].GPWWBCITKey);
+                   }
+                 }
                }
                else if (asmtsdocs[i].key == "Assessable Unit"){
                  if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                    CUassunits.push(asmtsdocs[i]);
                    if(asmtsdocs[i].AuditableFlag == "Yes"){
                      CUauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
+                   }
+                   if(doc[0].CRMCUObj[asmtsdocs[i].Category]){
+                     CUCRMables[asmtsdocs[i]["_id"]] = true;
+                   }else if(doc[0].DeliveryCUObj[asmtsdocs[i].Category]){
+                     CUCRMables[asmtsdocs[i]["_id"]] = false;
+                   }else{
+                     CUassunits.pop();
+                     console.log("CU category not found: "+ asmtsdocs[i].Category);
                    }
                  }else{
                    if(asmtsdocs[i].AuditableFlag == "Yes"){
@@ -501,15 +536,22 @@ var calculatefield = {
               }
             };
             db.find(tmpQuery).then(function(asmts) {
-              doc[0].asmtsdocs = asmtsdocs.concat(asmts.body.docs);
+              doc[0].asmtsdocs = doc[0].asmtsdocs.concat(asmts.body.docs);
               for (var i = 0; i < asmts.body.docs.length; i++) {
                 if(CUauditables[asmts.body.docs[i].parentid]){
-                    if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
-                      asmts.body.docs[i].Type = "Portfolio CU";
-                    }else{
-                      asmts.body.docs[i].Type = "Standalone CU";
-                    }
-                    doc[0].AUData.push(asmts.body.docs[i]);
+                  if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
+                    asmts.body.docs[i].Type = "Portfolio CU";
+                  }else{
+                    asmts.body.docs[i].Type = "Standalone CU";
+                  }
+                  doc[0].AUData.push(asmts.body.docs[i]);
+                }
+                if(CUCRMables[asmts.body.docs[i].parentid]) {
+                  asmts.body.docs[i].catP = "CRM";
+                  doc[0].asmtsdocsCRM.push(asmts.body.docs[i]);
+                }else{
+                  asmts.body.docs[i].catP = "Delivery";
+                  doc[0].asmtsdocsDelivery.push(asmts.body.docs[i]);
                 }
               }
               deferred.resolve({"status": 200, "doc": doc});
@@ -1413,7 +1455,7 @@ var calculatefield = {
 					"Name","WWBCITKey"
 				]
 			};
-			
+
 			db.find(gprocess).then(function(gpdata) {
 				if(gpdata.status==200 && !gpdata.error){
 					var docs = [];
