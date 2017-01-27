@@ -537,8 +537,8 @@ var assessment = {
 
 									//Open issue
 									comp.getOpenIssue(db,doc,defViewRow).then(function(){
-										//AuditKey
-										if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
+										//AuditKey - GTS & GTS Transformation
+										if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 											var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 												var obj = {
 													selector : {
@@ -547,6 +547,7 @@ var assessment = {
 														"reportingPeriod": {"$gt":0},
 														"AuditType": {"$gt":0},
 														"businessUnit": req.session.buname,
+														"MIRABusinessUnit": doc[0].MIRABusinessUnit,
 														"AuditLessonsKey": {
 															"$regex":".*"+id+".*"}
 													},
@@ -660,7 +661,7 @@ var assessment = {
 								comp.getOpenIssue(db,doc,defViewRow).then(function(){
 									//console.log(doc[0].AuditLocalData);
 									//AuditKey
-									if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].GPPARENT != null)){
+									if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].GPPARENT != null)){
 										var obj = {
 											selector : {
 												"_id": {"$gt":0},
@@ -668,6 +669,7 @@ var assessment = {
 												"reportingPeriod": {"$gt":0},
 												"AuditType": {"$gt":0},
 												"businessUnit": req.session.buname,
+												"MIRABusinessUnit": doc[0].MIRABusinessUnit,
 												"globalProcess": {
 													"$regex":".*"+parentdoc[0].GPPARENT+".*"}
 											},
@@ -777,7 +779,7 @@ var assessment = {
 						// Key Controls Tesing tab
 						kct.processKCTab(doc,defViewRow);
 						//AuditKey
-						if(doc[0].MIRABusinessUnit == "GTS" && (parentdoc[0].AuditLessonsKey != null)){
+						if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 							var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 								var obj = {
 									selector : {
@@ -786,6 +788,7 @@ var assessment = {
 										"reportingPeriod": {"$gt":0},
 										"AuditType": {"$gt":0},
 										"businessUnit": req.session.buname,
+										"MIRABusinessUnit": doc[0].MIRABusinessUnit,
 										"AuditLessonsKey": {
 											"$regex":".*"+id+".*"}
 									},
@@ -1233,9 +1236,9 @@ var assessment = {
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
 							doc[0].AUDataMSAC = [];
-							
+
 						comp.getCompDocs(db,doc).then(function(dataComp){
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
@@ -1266,7 +1269,7 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
-								
+
 								//create a space for performance Tab
 								performanceTab.getKFCRDefectRate(db,doc);
 								performanceTab.getKCODefectRate(db,doc);
@@ -1274,19 +1277,19 @@ var assessment = {
 								performanceTab.getMSACCommitmentsCount(db,doc);
 								performanceTab.getCPANDCUPerformanceIndicators(db,doc);
 								performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
-																
-								
+
+
 								deferred.resolve({"status": 200, "doc": doc});
 							}).catch(function(err) {
 								deferred.reject({"status": 500, "error": err});
 							});
-							
+
 						}).catch(function(err) {
 							deferred.reject({"status": 500, "error": err});
 						});
-							
-							
-							
+
+
+
 							break;
 					}
 				}).catch(function(err) {
