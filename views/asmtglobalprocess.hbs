@@ -61,3 +61,12 @@
 	collect();
 </script>
 {{/if}}
+<script>
+    $(document).ready(function (){
+        $("#btn_validate").click(function (){
+            $('html, body').animate({
+            	scrollTop: $("#pageTitle").offset().top
+            }, 500);
+        });
+    });
+</script>

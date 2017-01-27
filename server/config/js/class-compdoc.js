@@ -279,54 +279,55 @@ var getDocs = {
           });
           break;
         case "BU Country":
+          var quarters = doc[0].PrevQtrs;
+          quarters.push(doc[0].CurrentPeriod);
         	doc[0].CountryControlsData = [];
         	doc[0].RiskView1Data =  [];
         	doc[0].RiskView2Data = [];
+          doc[0].SCTest1Data = [];
+          doc[0].SCTestDataPQ1 = [];
+          doc[0].SCTestDataPQ2 = [];
+          doc[0].SCTestDataPQ3 = [];
+          doc[0].SCTestDataPQ4 = [];
           var compObj = {
             selector : {
               "_id": {"$gt":0},
               "$or": [
-                //Getting all country process assessment
-                //{"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
-                //Getting all controllable units assessable units
-                //{"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                 //Performance Tab
                 { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
                 //Risks Tab
                 {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] },
                 //Getting open issue categories to displaye
-                {"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] }
-              //"docType": "asmtComponent",
-              //"$or": [
-                // Risks
-              //  { "$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].businessUnit}, {"country": doc[0].Country}] },
-                //Performance Tab
-                //{ "$and": [{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
-              //  {"$and": [{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}},{"reportingQuarter": doc[0].CurrentPeriod}] }
-                //{ "$and": [{"compntType": "openIssue"}, {"country": "USA"},{"businessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$ne": "Closed"}}] }
-                // Key Controls Testing Tab
-                // { "$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
-                // { "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
-                // { "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
-                // Audits and Reviews Tab
-                // { "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
-                // { "$and": [{"compntType": "internalAudit"},{"$or":[{"CPWWBCITKey" : doc[0].WWBCITKey},{"RPTG_PROCESS": {"$ne": ""}}]}] },
-                // { "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
+                {"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] },
+                // Sampled Country Testing tab
+                { "$and": [{"compntType": "sampledCountry"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": quarters}}, {"status": {"$ne": "Retired"}}] }
               ]
             }
           };
 
-
-
           db.find(compObj).then(function(compdata) {
             var comps = compdata.body.docs;
             doc[0].riskCategories = [];
+            if (doc[0].MIRABusinessUnit == "GTS") {
+              doc[0].RiskView1DataCRM = [];
+              doc[0].RiskView1DataDelivery = [];
+            }
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 doc[0].RiskView1Data.push(comps[i]);
                 if(comps[i].reportingQuarter == doc[0].CurrentPeriod ){
-                  doc[0].RiskView2Data.push(JSON.parse(JSON.stringify(comps[i])));
+                  doc[0].RiskView2Data.push(comps[i]);
+                }
+                if (doc[0].MIRABusinessUnit == "GTS") {
+                  if(doc[0].CRMProcessObj[comps[i].process]){
+                    comps[i].catP = "CRM/Other";
+                    doc[0].RiskView1DataCRM.push(comps[i]);
+                  }else{
+                    comps[i].catP = "Delivery";
+                    doc[0].RiskView1DataDelivery.push(comps[i]);}
+                  /*else if(doc[0].DeliveryProcessObj[comps[i].process]){ doc[0].RiskView1DataDelivery.push(comps[i])}
+                  else console.log("no encontro el process"+comps[i].process);*/
                 }
               }
               else if (comps[i].compntType == "countryControls"){
@@ -335,9 +336,22 @@ var getDocs = {
               else if (comps[i].docType == "setup"){
                	  doc[0].riskCategories = comps[i].value.options;
               }
-            }
+              else if (comps[i].compntType == "sampledCountry"){
+                if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+                  doc[0].SCTest1Data.push(comps[i]);
+                } else if (comps[i].reportingQuarter == quarters[0]) {
+                  doc[0].SCTestDataPQ1.push(comps[i]);
+                } else if (comps[i].reportingQuarter == quarters[1]) {
+                  doc[0].SCTestDataPQ2.push(comps[i]);
+                } else if (comps[i].reportingQuarter == quarters[2]) {
+                  doc[0].SCTestDataPQ3.push(comps[i]);
+                } else if (comps[i].reportingQuarter == quarters[3]) {
+                  doc[0].SCTestDataPQ4.push(comps[i]);
+                } else {}
 
-              deferred.resolve({"status": 200, "doc": doc});
+              }
+            }
+            deferred.resolve({"status": 200, "doc": doc});
 
 
           }).catch(function(err) {
