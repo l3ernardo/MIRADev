@@ -12,6 +12,7 @@ var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
 var kct = require('./class-keycontrol.js');
+var sct = require('./class-sampledcountrycontrol.js');
 var pct = require('./class-processratings.js');
 var art = require('./class-accountratings.js');
 var aar = require('./class-auditsandreviews.js');
@@ -426,7 +427,7 @@ var assessment = {
 						doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
 						doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
 						doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-						doc[0].SCTest1Data = doc[0].RCTest1Data;
+						// doc[0].SCTest1Data = doc[0].RCTest1Data;
 						doc[0].SCTest2Data = doc[0].RCTest3Data;
 						doc[0].BUCAsmtDataPRview = [];
 						doc[0].BUCAsmtDataCURview = [];
@@ -445,7 +446,13 @@ var assessment = {
 
 						comp.getCompDocs(db,doc).then(function(dataComp){
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
+
+								// Get rating profiles
 								fieldCalc.getRatingProfile(doc);
+
+								// Process Sampled Country Testing Tab
+								sct.processSCTab(doc,defViewRow);
+
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
 										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
