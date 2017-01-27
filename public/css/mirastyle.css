@@ -1201,7 +1201,7 @@ table.table_with_scroll tbody {
     display:block;
     overflow-y:scroll;
 		table-layout:fixed;
-		height: 178.182px;
+		height: 245px;
 }
 table.table_with_scroll tbody tr th{
 	table-layout:fixed;
