@@ -320,14 +320,17 @@ var getDocs = {
                   doc[0].RiskView2Data.push(comps[i]);
                 }
                 if (doc[0].MIRABusinessUnit == "GTS") {
-                  if(doc[0].CRMProcessObj[comps[i].process]){
+                  comps[i].catP = "(uncategorized)";
+                  if(doc[0].CRMProcessObj[comps[i].GPPARENT]){
                     comps[i].catP = "CRM/Other";
                     doc[0].RiskView1DataCRM.push(comps[i]);
-                  }else{
+                  }/*else{
                     comps[i].catP = "Delivery";
-                    doc[0].RiskView1DataDelivery.push(comps[i]);}
-                  /*else if(doc[0].DeliveryProcessObj[comps[i].process]){ doc[0].RiskView1DataDelivery.push(comps[i])}
-                  else console.log("no encontro el process"+comps[i].process);*/
+                    doc[0].RiskView1DataDelivery.push(comps[i]);}*/
+                  else if(doc[0].DeliveryProcessObj[comps[i].GPPARENT]){
+                    comps[i].catP = "Delivery";
+                    doc[0].RiskView1DataDelivery.push(comps[i])}
+                  else console.log("Process not found: "+comps[i].GPPARENT);
                 }
               }
               else if (comps[i].compntType == "countryControls"){
