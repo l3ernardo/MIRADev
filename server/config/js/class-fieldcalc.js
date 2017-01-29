@@ -14,297 +14,305 @@
 
 var calculatefield = {
 
-  // adding empty Test View Data Only
-  addTestViewData: function(colnum, rownum) {
-    var vwData = [];
-    var col = [];
-    for (var i = 0; i < colnum; i++) {
-      col.push("");
-    }
-    var listdata = {col};
-    for (var i = 0; i < rownum; i++) {
-      vwData.push(listdata);
-    }
-    return vwData;
-  },
-  addTestViewDataPadding: function(obj, colnum, rownum) {
-    var col = [];
-    if (obj.length > 0) {
-      for (var i = 0; i < rownum; i++) {
-        obj.push({});
-        for (var prop in obj[0]) {
-          if (obj[0].hasOwnProperty(prop)) {
-            obj[(obj.length-1)][prop] = "";
-          }
-        }
-      }
-    }
-  },
-  // adding empty Test View Data Only
-  getRatingCategory: function(rating, ratingPrev) {
-    var ratingCat;
-    if (rating == "Sat") {
-      if (ratingPrev == "Marg" || ratingPrev == "Unsat")
-        ratingCat = "Sat &#9650;";
-      else
-        ratingCat = "Sat &#61;";
-    } else if (rating == "Marg") {
-      if (ratingPrev == "Unsat")
-        ratingCat = "Marg &#9650;";
-      else if (ratingPrev == "Sat")
-        ratingCat = "Marg &#9660;";
-      else
-        ratingCat = "Marg &#61;";
-    } else if (rating == "Unsat") {
-      if (ratingPrev == "Sat" || ratingPrev == "Marg")
-       ratingCat = "Unsat &#9660;";
-      else
-       ratingCat = "Unsat &#61;";
-    } else if (rating == "Exempt") {
-      ratingCat = "Exempt";
-    } else {
-      ratingCat = "NR";
-    }
-    return ratingCat;
-  },
+	// adding empty Test View Data Only
+	addTestViewData: function(colnum, rownum) {
+		var vwData = [];
+		var col = [];
+		for (var i = 0; i < colnum; i++) {
+			col.push("");
+		}
+		var listdata = {col};
+		for (var i = 0; i < rownum; i++) {
+			vwData.push(listdata);
+		}
+		return vwData;
+	},
+	addTestViewDataPadding: function(obj, colnum, rownum) {
+		var col = [];
+		if (obj.length > 0) {
+			for (var i = 0; i < rownum; i++) {
+				obj.push({});
+				for (var prop in obj[0]) {
+					if (obj[0].hasOwnProperty(prop)) {
+						obj[(obj.length-1)][prop] = "";
+					}
+				}
+			}
+		}
+	},
+	// adding empty Test View Data Only
+	getRatingCategory: function(rating, ratingPrev) {
+		var ratingCat;
+		if (rating == "Sat") {
+			if (ratingPrev == "Marg" || ratingPrev == "Unsat")
+				ratingCat = "Sat &#9650;";
+			else
+				ratingCat = "Sat &#61;";
+		} else if (rating == "Marg") {
+			if (ratingPrev == "Unsat")
+				ratingCat = "Marg &#9650;";
+			else if (ratingPrev == "Sat")
+				ratingCat = "Marg &#9660;";
+			else
+				ratingCat = "Marg &#61;";
+		} else if (rating == "Unsat") {
+			if (ratingPrev == "Sat" || ratingPrev == "Marg")
+				ratingCat = "Unsat &#9660;";
+			else
+				ratingCat = "Unsat &#61;";
+		} else if (rating == "Exempt") {
+			ratingCat = "Exempt";
+		} else {
+			ratingCat = "NR";
+		}
+		return ratingCat;
+	},
 
-  getPrev4Qtrs: function(currentQtr) {
-    var p4Qtrs = [];
-    var current = currentQtr.split("Q");
-    var prevYr = current[0]-1;
-    switch (current[1]) {
-      case "1":
-        p4Qtrs.push(prevYr1+" Q1");
-        p4Qtrs.push(prevYr+" Q2");
-        p4Qtrs.push(prevYr+" Q3");
-        p4Qtrs.push(prevYr+" Q4");
-        break;
-      case "2":
-        p4Qtrs.push(prevYr+" Q2");
-        p4Qtrs.push(prevYr+" Q3");
-        p4Qtrs.push(prevYr+" Q4");
-        p4Qtrs.push(current[0]+" Q1");
-        break;
-      case "3":
-        p4Qtrs.push(prevYr+" Q3");
-        p4Qtrs.push(prevYr+" Q4");
-        p4Qtrs.push(current[0]+" Q1");
-        p4Qtrs.push(current[0]+" Q2");
-        break;
-      case "4":
-        p4Qtrs.push(prevYr+" Q4");
-        p4Qtrs.push(current[0]+" Q1");
-        p4Qtrs.push(current[0]+" Q2");
-        p4Qtrs.push(current[0]+" Q3");
-        break;
-    }
-    return p4Qtrs;
-  },
+	getPrev4Qtrs: function(currentQtr) {
+		var p4Qtrs = [];
+		var current = currentQtr.split("Q");
+		var prevYr = current[0]-1;
+		switch (current[1]) {
+		  case "1":
+			p4Qtrs.push(prevYr1+" Q1");
+			p4Qtrs.push(prevYr+" Q2");
+			p4Qtrs.push(prevYr+" Q3");
+			p4Qtrs.push(prevYr+" Q4");
+			break;
+		  case "2":
+			p4Qtrs.push(prevYr+" Q2");
+			p4Qtrs.push(prevYr+" Q3");
+			p4Qtrs.push(prevYr+" Q4");
+			p4Qtrs.push(current[0]+" Q1");
+			break;
+		  case "3":
+			p4Qtrs.push(prevYr+" Q3");
+			p4Qtrs.push(prevYr+" Q4");
+			p4Qtrs.push(current[0]+" Q1");
+			p4Qtrs.push(current[0]+" Q2");
+			break;
+		  case "4":
+			p4Qtrs.push(prevYr+" Q4");
+			p4Qtrs.push(current[0]+" Q1");
+			p4Qtrs.push(current[0]+" Q2");
+			p4Qtrs.push(current[0]+" Q3");
+			break;
+		}
+		return p4Qtrs;
+	},
 
-  getPrevQtr: function(currentQtr) {
-    var prevQtr;
-    var current = currentQtr.split("Q");
-    var prevYr = current[0]-1;
-    switch (current[1]) {
-      case "1":
-        prevQtr = prevYr+" Q4";
-        break;
-      case "2":
-        prevQtr = current[0]+" Q1";
-        break;
-      case "3":
-        prevQtr = current[0]+" Q2";
-        break;
-      case "4":
-        prevQtr = current[0]+" Q3";
-        break;
-    }
-    return prevQtr;
-  },
+	getPrevQtr: function(currentQtr) {
+		var prevQtr;
+		var current = currentQtr.split("Q");
+		var prevYr = current[0]-1;
+		switch (current[1]) {
+			case "1":
+				prevQtr = prevYr+" Q4";
+				break;
+			case "2":
+				prevQtr = current[0]+" Q1";
+				break;
+			case "3":
+				prevQtr = current[0]+" Q2";
+				break;
+			case "4":
+				prevQtr = current[0]+" Q3";
+				break;
+		}
+		return prevQtr;
+	},
 
-  getCUMaxScore: function(CUSize) {
-    var CUMaxScore;
-    if (CUSize == "Large") {
-      CUMaxScore = 9;
-    } else if (CUSize == "Medium") {
-      CUMaxScore = 3;
-    } else if (CUSize == "Small") {
-      CUMaxScore = 1;
-    } else {
-      CUMaxScore = 0;
-    }
-    return CUMaxScore;
-  },
+	getCUMaxScore: function(CUSize) {
+		var CUMaxScore;
+		if (CUSize == "Large") {
+			CUMaxScore = 9;
+		} else if (CUSize == "Medium") {
+			CUMaxScore = 3;
+		} else if (CUSize == "Small") {
+			CUMaxScore = 1;
+		} else {
+			CUMaxScore = 0;
+		}
+		return CUMaxScore;
+	},
 
-  getCUScore: function(arrating, cumaxscore) {
-    var ratingscore;
-    var cuscore;
-    if (arrating == "Sat") {
-      ratingscore = 1;
-    } else if (arrating == "Marg") {
-      ratingscore = 0.75;
-    } else {
-      ratingscore = 0;
-    }
-    cuscore = ratingscore * cumaxscore
-    return cuscore;
-  },
+	getCUScore: function(arrating, cumaxscore) {
+		var ratingscore;
+		var cuscore;
+		if (arrating == "Sat") {
+			ratingscore = 1;
+		} else if (arrating == "Marg") {
+			ratingscore = 0.75;
+		} else {
+			ratingscore = 0;
+		}
+		cuscore = ratingscore * cumaxscore
+		return cuscore;
+	},
 
 	/* Calculates CatP, CatCU, BusinessUnitOLD, ShowEA ... etc */
 	getDocParams: function(req, db, doc) {
-    var deferred = q.defer();
+		var deferred = q.defer();
 		try{
 
-      /* Calculate for Instance Design Specifics and parameters*/
-  		var lParams = [];
+			/* Calculate for Instance Design Specifics and parameters*/
+			var lParams = [];
 
-      // Get Parameters for Assessable Units
-      if (doc[0].DocType == "Assessable Unit") {
-        if (doc[0].MIRABusinessUnit == "GTS") {
-          // GTS Assessable Unit Doc Parameters
-    			if (doc[0].DocSubType == "Controllable Unit") {
-    				doc[0].CatCU = "";
-    				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-    			} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process" || doc[0].DocSubType == "BU Country") {
-    				doc[0].CatP = "";
-    				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-    			} else {
-    				lParams = ['GTSInstanceDesign'];
+		  // Get Parameters for Assessable Units
+		  if (doc[0].DocType == "Assessable Unit") {
+			if (doc[0].MIRABusinessUnit == "GTS") {
+			  // GTS Assessable Unit Doc Parameters
+					if (doc[0].DocSubType == "Controllable Unit") {
+						doc[0].CatCU = "";
+						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+					} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
+						doc[0].CatP = "";
+						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
+					} else if (doc[0].DocSubType == "BU Country") {
+    				lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
     			}
-        }
-        else if (doc[0].MIRABusinessUnit == "GBS") {
-          // GBS Assessable Unit Doc Parameters
-          lParams.push('GBSInstanceDesign');
-    		}
-        else {
-          // GTS Transformation Assessable Unit Doc Parameters
-    		}
-      }
-      // Get Parameters for Assessments
-      else {
-        if (doc[0].MIRABusinessUnit == "GTS") {
-          // GTS Assessment Doc Parameters
-    			if (doc[0].ParentDocSubType == "Controllable Unit") {
-    				doc[0].CatCU = "";
-    				lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
-    			} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process" || doc[0].ParentDocSubType == "BU Country") {
-    				doc[0].CatP = "";
-    				lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-    			} else {
-    				lParams = ['GTSInstanceDesign'];
+          else {
+						lParams = ['GTSInstanceDesign'];
+					}
+			}
+			else if (doc[0].MIRABusinessUnit == "GBS") {
+			  // GBS Assessable Unit Doc Parameters
+			  lParams.push('GBSInstanceDesign');
+				}
+			else {
+			  // GTS Transformation Assessable Unit Doc Parameters
+				}
+		  }
+		  // Get Parameters for Assessments
+		  else {
+			if (doc[0].MIRABusinessUnit == "GTS") {
+			  // GTS Assessment Doc Parameters
+					if (doc[0].ParentDocSubType == "Controllable Unit") {
+						doc[0].CatCU = "";
+						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+					} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
+						doc[0].CatP = "";
+						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
+					} else if (doc[0].ParentDocSubType == "BU Country") {
+    				lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
     			}
-          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
-            // For Testing Tab Dynamic tables in the Rollup Assessments
-            lParams.push('GTSRollupProcessesOPS');
-            lParams.push('GTSRollupProcessesFIN');
-          }
-        }
-        else if (doc[0].MIRABusinessUnit == "GBS") {
-          // GBS Assessment Doc Parameters
-          lParams.push('GBSInstanceDesign');
-          if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
-            // For Testing Tab Dynamic tables in the Rollup Assessments
-            lParams.push('GBSRollupProcessesOPS');
-            lParams.push('GBSRollupProcessesFIN');
-          }
-    		}
-        else {
-          // GTS Transformation Assessment Doc Parameters
-    		}
+           else {
+						lParams = ['GTSInstanceDesign'];
+					}
+			  if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
+				// For Testing Tab Dynamic tables in the Rollup Assessments
+				lParams.push('GTSRollupProcessesOPS');
+				lParams.push('GTSRollupProcessesFIN');
+			  }
+			}
+			else if (doc[0].MIRABusinessUnit == "GBS") {
+			  // GBS Assessment Doc Parameters
+			  lParams.push('GBSInstanceDesign');
+			  if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
+				// For Testing Tab Dynamic tables in the Rollup Assessments
+				lParams.push('GBSRollupProcessesOPS');
+				lParams.push('GBSRollupProcessesFIN');
+			  }
+				}
+			else {
+			  // GTS Transformation Assessment Doc Parameters
+				}
 
-        // For Operational Metric Parameters of Assessments
-        var opMetricKey = opMetric.getOpMetricKeys(doc,lParams);
+			// For Operational Metric Parameters of Assessments
+			var opMetricKey = opMetric.getOpMetricKeys(doc,lParams);
 
-      }
-      lParams.push('MargThresholdPercent');
-      lParams.push('UnsatThresholdPercent');
+		  }
+		  lParams.push('MargThresholdPercent');
+		  lParams.push('UnsatThresholdPercent');
 
-  		param.getListParams(db, lParams).then(function(dataParam) {
+			param.getListParams(db, lParams).then(function(dataParam) {
 
-        if (doc[0].MIRABusinessUnit == "GTS") {
-          doc[0].CRMProcessObj = {};
-          doc[0].DeliveryProcessObj = {};
-        }
-        if(dataParam.status==200 & !dataParam.error) {
-  				if (dataParam.parameters.CRMProcess) {
-  					for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters.CRMProcess[0].options[j].name) doc[0].CatP = "CRM";
-              if (doc[0].MIRABusinessUnit == "GTS") doc[0].CRMProcessObj[dataParam.parameters.CRMProcess[0].options[j].name] = true
-  					}
-            if (doc[0].MIRABusinessUnit == "GTS") {
-              doc[0].CRMProcess = dataParam.parameters.CRMProcess;
-            }
-  				}
-  				if (dataParam.parameters.DeliveryProcess) {
-  					for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
-  						if (doc[0].GlobalProcess == dataParam.parameters.DeliveryProcess[0].options[j].name) doc[0].CatP = "Delivery";
-              if (doc[0].MIRABusinessUnit == "GTS") doc[0].DeliveryProcessObj[dataParam.parameters.DeliveryProcess[0].options[j].name] = true
-  					}
-            if (doc[0].MIRABusinessUnit == "GTS") {
-              doc[0].DeliveryProcess = dataParam.parameters.DeliveryProcess;
-            }
-  				}
-  				if (dataParam.parameters.CRMCU) {
-  					for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
-  						if (doc[0].Category == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
-  					}
-            if (doc[0].MIRABusinessUnit == "GTS") {
-              doc[0].CRMCU = dataParam.parameters.CRMCU;
-            }
-  				}
-  				if (dataParam.parameters.DeliveryCU) {
-  					for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
-  						if (doc[0].Category == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
-  					}
-            if (doc[0].MIRABusinessUnit == "GTS") {
-              doc[0].DeliveryCU = dataParam.parameters.DeliveryCU;
-            }
-  				}
-          if (dataParam.parameters.ProcessCatFIN) {
-            doc[0].ProcessCategory = "OPS";
-  					for (var j = 0; j < dataParam.parameters.ProcessCatFIN[0].options.length; ++j) {
-  						if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name) doc[0].ProcessCategory = "FIN";
-  					}
-  				}
-          if (dataParam.parameters.GBSRollupProcessesOPS) {
-            doc[0].KCProcessOPS = dataParam.parameters.GBSRollupProcessesOPS[0].options;
-  				}
-          if (dataParam.parameters.GBSRollupProcessesFIN) {
-            doc[0].KCProcessFIN = dataParam.parameters.GBSRollupProcessesFIN[0].options;
-  				}
-          if (dataParam.parameters.GTSRollupProcessesOPS) {
-            doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
-  				}
-          if (dataParam.parameters.GTSRollupProcessesFIN) {
-            doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
-  				}
-          if (dataParam.parameters.MargThresholdPercent) {
-            doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
-  				}
-          if (dataParam.parameters.UnsatThresholdPercent) {
-            doc[0].UnsatThresholdPercent = dataParam.parameters.UnsatThresholdPercent[0].options[0].name;
-  				}
+			if (doc[0].MIRABusinessUnit == "GTS") {
+			  doc[0].CRMProcessObj = {};
+			  doc[0].DeliveryProcessObj = {};
+        doc[0].CRMCUObj = {};
+        doc[0].DeliveryCUObj = {};
+			}
+			if(dataParam.status==200 & !dataParam.error) {
+					if (dataParam.parameters.CRMProcess) {
+						for (var j = 0; j < dataParam.parameters.CRMProcess[0].options.length; ++j) {
+							if (doc[0].GlobalProcess == dataParam.parameters.CRMProcess[0].options[j].name) doc[0].CatP = "CRM";
+				  if (doc[0].MIRABusinessUnit == "GTS") doc[0].CRMProcessObj[dataParam.parameters.CRMProcess[0].options[j].name] = true
+						}
+				if (doc[0].MIRABusinessUnit == "GTS") {
+				  doc[0].CRMProcess = dataParam.parameters.CRMProcess;
+				}
+					}
+					if (dataParam.parameters.DeliveryProcess) {
+						for (var j = 0; j < dataParam.parameters.DeliveryProcess[0].options.length; ++j) {
+							if (doc[0].GlobalProcess == dataParam.parameters.DeliveryProcess[0].options[j].name) doc[0].CatP = "Delivery";
+				  if (doc[0].MIRABusinessUnit == "GTS") doc[0].DeliveryProcessObj[dataParam.parameters.DeliveryProcess[0].options[j].name] = true
+						}
+				if (doc[0].MIRABusinessUnit == "GTS") {
+				  doc[0].DeliveryProcess = dataParam.parameters.DeliveryProcess;
+				}
+					}
+					if (dataParam.parameters.CRMCU) {
+						for (var j = 0; j < dataParam.parameters.CRMCU[0].options.length; ++j) {
+							if (doc[0].Category == dataParam.parameters.CRMCU[0].options[j].name) doc[0].CatCU = "CRM";
+              if (doc[0].MIRABusinessUnit == "GTS") doc[0].CRMCUObj[dataParam.parameters.CRMCU[0].options[j].name] = true;
+						}
+				if (doc[0].MIRABusinessUnit == "GTS") {
+				  doc[0].CRMCU = dataParam.parameters.CRMCU;
+				}
+					}
+					if (dataParam.parameters.DeliveryCU) {
+						for (var j = 0; j < dataParam.parameters.DeliveryCU[0].options.length; ++j) {
+							if (doc[0].Category == dataParam.parameters.DeliveryCU[0].options[j].name) doc[0].CatCU = "Delivery";
+              if (doc[0].MIRABusinessUnit == "GTS") doc[0].DeliveryCUObj[dataParam.parameters.DeliveryCU[0].options[j].name] = true;
+						}
+				if (doc[0].MIRABusinessUnit == "GTS") {
+				  doc[0].DeliveryCU = dataParam.parameters.DeliveryCU;
+				}
+					}
+			  if (dataParam.parameters.ProcessCatFIN) {
+				doc[0].ProcessCategory = "OPS";
+						for (var j = 0; j < dataParam.parameters.ProcessCatFIN[0].options.length; ++j) {
+							if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name) doc[0].ProcessCategory = "FIN";
+						}
+					}
+			  if (dataParam.parameters.GBSRollupProcessesOPS) {
+				doc[0].KCProcessOPS = dataParam.parameters.GBSRollupProcessesOPS[0].options;
+					}
+			  if (dataParam.parameters.GBSRollupProcessesFIN) {
+				doc[0].KCProcessFIN = dataParam.parameters.GBSRollupProcessesFIN[0].options;
+					}
+			  if (dataParam.parameters.GTSRollupProcessesOPS) {
+				doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
+					}
+			  if (dataParam.parameters.GTSRollupProcessesFIN) {
+				doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
+					}
+			  if (dataParam.parameters.MargThresholdPercent) {
+				doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
+					}
+			  if (dataParam.parameters.UnsatThresholdPercent) {
+				doc[0].UnsatThresholdPercent = dataParam.parameters.UnsatThresholdPercent[0].options[0].name;
+					}
 
-          // Get Operational Metrics
-          if (dataParam.parameters[opMetricKey]) {
-            opMetric.getOpMetrics(doc,dataParam,opMetricKey,req);
-          }
+			  // Get Operational Metrics
+			  if (dataParam.parameters[opMetricKey]) {
+				opMetric.getOpMetrics(doc,dataParam,opMetricKey,req);
+			  }
 
-          if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
-            doc[0].ShowEA = 1;
-  				// evaluate BusinessUnitOLD formula
-  				if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
-  				if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
-          deferred.resolve(doc);
-
-  			} else {
-          deferred.reject({"status": 500, "error": err.error.reason});
-  			}
-  		}).catch(function(err) {
-        deferred.reject({"status": 500, "error": err.error.reason});
-  		});
-
-    }catch(e){
+			if (doc[0].DocSubType == "Country Process" && dataParam.parameters.EAProcess && doc[0].GPWWBCITKey != undefined && dataParam.parameters.EAProcess.indexOf(doc[0].GPWWBCITKey) != -1 )
+				doc[0].ShowEA = 1;
+					// evaluate BusinessUnitOLD formula
+					if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
+					if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
+			  deferred.resolve(doc);
+				} else {
+			  deferred.reject({"status": 500, "error": err.error.reason});
+				}
+			}).catch(function(err) {
+			deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
 			deferred.reject({"status": 500, "error": e});
 		}
 		return deferred.promise;
@@ -464,19 +472,44 @@ var calculatefield = {
              var asmtsdocs = asmtsdata.body.docs;
             var CUassunits = [];
             var CUauditables = {};
+            var CUCRMables = {};
             var CPauditables = [];
             var CPassmts = {};
+            if (doc[0].MIRABusinessUnit == "GTS") {
+              doc[0].asmtsdocsCRM = [];
+              doc[0].asmtsdocsDelivery = [];
+            }
             for (var i = 0; i < asmtsdocs.length; ++i) {
               if (asmtsdocs[i].key == "Assessment"){
                  doc[0].asmtsdocs.push(asmtsdocs[i]);
                  asmtsdocs[i].Type = "Country Process";
                  CPassmts[asmtsdocs[i].parentid] = asmtsdocs[i];
+                 if (doc[0].MIRABusinessUnit == "GTS") {
+                   if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
+                     asmtsdocs[i].catP = "CRM";
+                     doc[0].asmtsdocsCRM.push(asmtsdocs[i])
+                   }else if(doc[0].DeliveryProcessObj[asmtsdocs[i].GPWWBCITKey]){
+                     asmtsdocs[i].catP = "Delivery";
+                     doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
+                   }else {
+                     doc[0].asmtsdocs.pop();
+                     console.log("GP not found: "+ asmtsdocs[i].GPWWBCITKey);
+                   }
+                 }
                }
                else if (asmtsdocs[i].key == "Assessable Unit"){
                  if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                    CUassunits.push(asmtsdocs[i]);
                    if(asmtsdocs[i].AuditableFlag == "Yes"){
                      CUauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
+                   }
+                   if(doc[0].CRMCUObj[asmtsdocs[i].Category]){
+                     CUCRMables[asmtsdocs[i]["_id"]] = true;
+                   }else if(doc[0].DeliveryCUObj[asmtsdocs[i].Category]){
+                     CUCRMables[asmtsdocs[i]["_id"]] = false;
+                   }else{
+                     CUassunits.pop();
+                     console.log("CU category not found: "+ asmtsdocs[i].Category);
                    }
                  }else{
                    if(asmtsdocs[i].AuditableFlag == "Yes"){
@@ -503,15 +536,22 @@ var calculatefield = {
               }
             };
             db.find(tmpQuery).then(function(asmts) {
-              doc[0].asmtsdocs = asmtsdocs.concat(asmts.body.docs);
+              doc[0].asmtsdocs = doc[0].asmtsdocs.concat(asmts.body.docs);
               for (var i = 0; i < asmts.body.docs.length; i++) {
                 if(CUauditables[asmts.body.docs[i].parentid]){
-                    if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
-                      asmts.body.docs[i].Type = "Portfolio CU";
-                    }else{
-                      asmts.body.docs[i].Type = "Standalone CU";
-                    }
-                    doc[0].AUData.push(asmts.body.docs[i]);
+                  if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
+                    asmts.body.docs[i].Type = "Portfolio CU";
+                  }else{
+                    asmts.body.docs[i].Type = "Standalone CU";
+                  }
+                  doc[0].AUData.push(asmts.body.docs[i]);
+                }
+                if(CUCRMables[asmts.body.docs[i].parentid]) {
+                  asmts.body.docs[i].catP = "CRM";
+                  doc[0].asmtsdocsCRM.push(asmts.body.docs[i]);
+                }else{
+                  asmts.body.docs[i].catP = "Delivery";
+                  doc[0].asmtsdocsDelivery.push(asmts.body.docs[i]);
                 }
               }
               deferred.resolve({"status": 200, "doc": doc});
@@ -1323,53 +1363,52 @@ var calculatefield = {
     }
 	},
 
-  getAccountInheritedFields: function(db, doc) {
-    var deferred = q.defer();
+	getAccountInheritedFields: function(db, doc) {
+		var deferred = q.defer();
 		try {
-      //*** Process Portfolio Value and Percentage
+		  //*** Process Portfolio Value and Percentage
 
-      for (var k = 0; k < doc[0].AccountData.length; k++) {
-        // get account parent assessable unit
-        var parentAU = {
-          selector:{
-            "_id": {"$gt": 0},
-            "$or": [{"_id":doc[0].AccountData[k].parentid}, {"_id":doc[0].AccountData[k].grandparentid}]
-          }
-        };
-        var gpid = doc[0].AccountData[k].grandparentid;
-        db.find(parentAU).then(function(audata) {
-          if(audata.status==200 && !audata.error) {
-            for (var j = 0; j < audata.body.docs.length; j++) {
-              if (gpid == audata.body.docs[j]._id) {
-                doc[0].MetricsValueCU = audata.body.docs[j].MetricsValue;
-              }
-              if (audata.body.docs[j].DocSubType != undefined && audata.body.docs[j].DocSubType == "Account") {
-                for (var i = 0; i < doc[0].AccountData.length; i++) {
-                  if (doc[0].AccountData[i].parentid == audata.body.docs[j]._id) {
-                    doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue;
-                  }
-                }
-              }
-            }
-            deferred.resolve({"status": 200, "doc": doc});
-          }
-          else {
-            deferred.reject({"status": 500, "error": audata.error});
-          }
-        }).catch(function(err) {
-          console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
-          deferred.reject({"status": 500, "error": err.error.reason});
-        });
-      }
-      deferred.resolve({"status": 200, "doc": doc});
-    }
-    catch(e) {
-
-      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-			deferred.reject({"status": 500, "error": e.stack});
-
+		  for (var k = 0; k < doc[0].AccountData.length; k++) {
+			// get account parent assessable unit
+			var parentAU = {
+			  selector:{
+				"_id": {"$gt": 0},
+				"$or": [{"_id":doc[0].AccountData[k].parentid}, {"_id":doc[0].AccountData[k].grandparentid}]
+			  }
+			};
+			var gpid = doc[0].AccountData[k].grandparentid;
+			db.find(parentAU).then(function(audata) {
+			  if(audata.status==200 && !audata.error) {
+				for (var j = 0; j < audata.body.docs.length; j++) {
+				  if (gpid == audata.body.docs[j]._id) {
+					doc[0].MetricsValueCU = audata.body.docs[j].MetricsValue;
+				  }
+				  if (audata.body.docs[j].DocSubType != undefined && audata.body.docs[j].DocSubType == "Account") {
+					for (var i = 0; i < doc[0].AccountData.length; i++) {
+					  if (doc[0].AccountData[i].parentid == audata.body.docs[j]._id) {
+						doc[0].AccountData[i].MetricsValue = audata.body.docs[j].MetricsValue;
+					  }
+					}
+				  }
+				}
+				deferred.resolve({"status": 200, "doc": doc});
+			  }
+			  else {
+				deferred.reject({"status": 500, "error": audata.error});
+			  }
+			}).catch(function(err) {
+			  console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+			  deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		  }
+		  deferred.resolve({"status": 200, "doc": doc});
 		}
+		catch(e) {
 
+		  console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+				deferred.reject({"status": 500, "error": e.stack});
+
+			}
 		return deferred.promise;
 	},
 
@@ -1399,5 +1438,45 @@ var calculatefield = {
   	}
   		return deferred.promise;
   },
+
+	//Get Global Process
+	getGlobalProcess: function(db, MBunit){
+		var deferred = q.defer();
+		try {
+			var gprocess = {
+				"selector":{
+					"_id": {"$gt":0},
+					"key": "Assessable Unit",
+					"DocSubType":"Global Process",
+					"Status": "Active",
+					"MIRABusinessUnit": MBunit
+				},
+				"fields": [
+					"Name","WWBCITKey"
+				]
+			};
+
+			db.find(gprocess).then(function(gpdata) {
+				if(gpdata.status==200 && !gpdata.error){
+					var docs = [];
+					if(gpdata.body.docs.length > 0){
+						docs = gpdata.body.docs;
+					}
+					deferred.resolve({"status": 200, "doc": docs});
+				}
+				else{
+					console.log("[class-fieldcalc][getGlobalProcess]" + gpdata.error);
+					deferred.reject({"status": 500, "error": gpdata.error});
+				}
+			}).catch(function(err) {
+				console.log("[class-fieldcalc][getGlobalProcess] - " + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		} catch(e) {
+			console.log("[class-fieldcalc][getGlobalProcess] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
+		}
+		return deferred.promise;
+	}
 }
 module.exports = calculatefield;
