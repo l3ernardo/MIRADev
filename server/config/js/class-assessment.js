@@ -13,6 +13,8 @@ var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
 var kct = require('./class-keycontrol.js');
 var sct = require('./class-sampledcountrycontrol.js');
+var prt = require('./class-processviews.js');
+var cut = require('./class-controllableunitviews.js');
 var pct = require('./class-processratings.js');
 var art = require('./class-accountratings.js');
 var aar = require('./class-auditsandreviews.js');
@@ -430,7 +432,7 @@ var assessment = {
 							// doc[0].SCTest1Data = doc[0].RCTest1Data;
 							doc[0].SCTest2Data = doc[0].RCTest3Data;
 							doc[0].BUCAsmtDataPRview = [];
-							doc[0].BUCAsmtDataCURview = [];
+							doc[0].BUCAsmtDataCURview = []; 
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
 							doc[0].AUData = [];
@@ -452,21 +454,28 @@ var assessment = {
 
 									// Process Sampled Country Testing Tab
 									sct.processSCTab(doc,defViewRow);
+									
+									//Country Process Ratings tab
+									prt.processProTab(doc,defViewRow);
 
-									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
+									/*if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPRview.length == 0) {
 											doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
 										} else {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
 										}
-									}
-									if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
+									}*/
+									
+									//Controllable Unit Ratings tab
+									cut.processCUTab(doc,defViewRow);								
+									
+									/*if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataCURview.length == 0) {
 											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
 										} else {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataCURview.length));
 										}
-									}
+									}*/
 									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPIview.length == 0) {
 											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);

@@ -372,6 +372,7 @@ var calculatefield = {
           var asmts = {
               selector : {
                 "_id": {"$gt":0},
+				"BusinessUnit": doc[0].BusinessUnit,
                 "$or": [
                   //Getting all country process assessment
                   {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
@@ -469,21 +470,25 @@ var calculatefield = {
         switch (doc[0].ParentDocSubType) {
           case "BU Country":
             doc[0].asmtsdocs = [];
-             var asmtsdocs = asmtsdata.body.docs;
+            var asmtsdocs = asmtsdata.body.docs;
             var CUassunits = [];
             var CUauditables = {};
             var CUCRMables = {};
             var CPauditables = [];
             var CPassmts = {};
+        doc[0].CRMCUObj = {};
+        doc[0].DeliveryCUObj = {};
+		
+		
             if (doc[0].MIRABusinessUnit == "GTS") {
               doc[0].asmtsdocsCRM = [];
               doc[0].asmtsdocsDelivery = [];
-            }
+            } 
             for (var i = 0; i < asmtsdocs.length; ++i) {
               if (asmtsdocs[i].key == "Assessment"){
                  doc[0].asmtsdocs.push(asmtsdocs[i]);
-                 asmtsdocs[i].Type = "Country Process";
-                 CPassmts[asmtsdocs[i].parentid] = asmtsdocs[i];
+				 asmtsdocs[i].Type = "Country Process"; 
+				 CPassmts[asmtsdocs[i].parentid] = asmtsdocs[i];
                  if (doc[0].MIRABusinessUnit == "GTS") {
                    if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
                      asmtsdocs[i].catP = "CRM";
@@ -500,18 +505,21 @@ var calculatefield = {
                else if (asmtsdocs[i].key == "Assessable Unit"){
                  if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                    CUassunits.push(asmtsdocs[i]);
-                   if(asmtsdocs[i].AuditableFlag == "Yes"){
+                   if(asmtsdocs[i].AuditableFlag == "Yes"){ 
                      CUauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                    }
-                   if(doc[0].CRMCUObj[asmtsdocs[i].Category]){
-                     CUCRMables[asmtsdocs[i]["_id"]] = true;
-                   }else if(doc[0].DeliveryCUObj[asmtsdocs[i].Category]){
-                     CUCRMables[asmtsdocs[i]["_id"]] = false;
-                   }else{
-                     CUassunits.pop();
-                     console.log("CU category not found: "+ asmtsdocs[i].Category);
+				  if (doc[0].MIRABusinessUnit == "GTS") {  
+						if(doc[0].CRMCUObj[asmtsdocs[i].Category]){ 
+							CUCRMables[asmtsdocs[i]["_id"]] = true;
+						}else if(doc[0].DeliveryCUObj[asmtsdocs[i].Category]){
+								CUCRMables[asmtsdocs[i]["_id"]] = false;
+						}else{console.log('sim6');
+							CUassunits.pop();
+							console.log("CU category not found: "+ asmtsdocs[i].Category);
                    }
-                 }else{
+				 }
+                 }
+				 else{
                    if(asmtsdocs[i].AuditableFlag == "Yes"){
                      CPauditables.push(asmtsdocs[i]["_id"]);
                    }
@@ -521,9 +529,9 @@ var calculatefield = {
             for (var i = 0; i < CPauditables.length; i++) {
               doc[0].AUData.push(CPassmts[CPauditables[i]]);
             }
-            var $or = [];
+			 var $or = [];
             for(var i = 0; i < CUassunits.length; i++){
-                $or.push({parentid: CUassunits[i]["_id"]});
+               $or.push({parentid: CUassunits[i]["_id"]});
             };
             var tmpQuery = {
               selector : {
@@ -534,14 +542,14 @@ var calculatefield = {
                 "CurrentPeriod": doc[0].CurrentPeriod,
                 $or
               }
-            };
+            };			
             db.find(tmpQuery).then(function(asmts) {
               doc[0].asmtsdocs = doc[0].asmtsdocs.concat(asmts.body.docs);
               for (var i = 0; i < asmts.body.docs.length; i++) {
                 if(CUauditables[asmts.body.docs[i].parentid]){
                   if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
                     asmts.body.docs[i].Type = "Portfolio CU";
-                  }else{
+                  }else{ 
                     asmts.body.docs[i].Type = "Standalone CU";
                   }
                   doc[0].AUData.push(asmts.body.docs[i]);
@@ -914,7 +922,61 @@ var calculatefield = {
             };
             doc[0].BUCAsmtDataPRview.push(toadd);
             // Rating Category Counters for CP
-            switch (doc[0].asmtsdocs[i].RatingCategory) {
+			var count1=0; var count2=0;
+			for(j=0;j<doc[0].KCProcessFIN.length;j++){
+				var tfin= doc[0].KCProcessFIN;
+				var fid=tfin[j].id;
+				if(fid==doc[0].asmtsdocs[i].GPWWBCITKey){
+					 count1=count1+1;
+					 //j=doc[0].KCProcessFIN.length;
+				}	
+			}
+			for(k=0;k<doc[0].KCProcessOPS.length;k++){				
+			    var tops= doc[0].KCProcessOPS;
+				var oid=tops[j].id;
+				if(oid==doc[0].asmtsdocs[i].GPWWBCITKey){
+					 count2=count2+1;
+					// k=doc[0].KCProcessFIN.length;
+				}
+			}
+			switch (doc[0].asmtsdocs[i].RatingCategory) {
+              case "Sat &#9650;":			    
+                if (count1>0) satUpFin = satUpFin + 1;
+                else satUpOps = satUpOps + 1;
+                break;
+              case "Sat &#61;":
+                if (count1>0) satEqFin = satEqFin + 1;
+                else satEqOps = satEqOps + 1;
+                break;
+              case "Marg &#9650;":
+                if (count1>0) margUpFin = margUpFin + 1;
+                else margUpOps = margUpOps + 1;
+                break;
+              case "Marg &#9660;":
+                if (count1>0) margDwnFin = margDwnFin + 1;
+                else margDwnOps = margDwnOps + 1;
+                break;
+              case "Marg &#61;":
+                if (count1>0) margEqFin = margEqFin + 1;
+                else margEqOps = margEqOps + 1;
+                break;
+              case "Unsat &#9660;":
+                if (count1>0) unsatDwnFin = unsatDwnFin + 1;
+                else unsatDwnOps = unsatDwnOps + 1;
+                break;
+              case "Unsat &#61;":
+                if (count1>0) unsatEqFin = unsatEqFin + 1;
+                else unsatEqOps = unsatEqOps + 1;
+                break;
+              case "Exempt":
+                if (count1>0) exemptFin = exemptFin + 1;
+                else exemptOps = exemptOps + 1;
+                break;
+              default:
+                if (count1>0) nrFin = nrFin + 1;
+                else nrOps = nrOps + 1;
+            }
+            /*switch (doc[0].asmtsdocs[i].RatingCategory) {
               case "Sat &#9650;":
                 if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") satUpFin = satUpFin + 1;
                 else satUpOps = satUpOps + 1;
@@ -950,7 +1012,7 @@ var calculatefield = {
               default:
                 if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") nrFin = nrFin + 1;
                 else nrOps = nrOps + 1;
-            }
+            }*/
           }
           if (doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit") {
             // CU Ratings Tab embedded views
@@ -973,6 +1035,62 @@ var calculatefield = {
             doc[0].BUCAsmtDataCURview.push(toadd);
 
             // Rating Category Counters for CU
+			/*var count1=0; var count2=0;
+			for(j=0;j<doc[0].KCProcessFIN.length;j++){
+				var tfin= doc[0].KCProcessFIN;
+				var fid=tfin[j].id;
+				if(fid==doc[0].asmtsdocs[i].GPWWBCITKey){console.log('FIN si');
+					 count1=count1+1;
+					 //j=doc[0].KCProcessFIN.length;
+				}	
+			}
+			for(k=0;k<doc[0].KCProcessOPS.length;k++){				
+			    var tops= doc[0].KCProcessOPS;
+				var oid=tops[j].id;
+				if(oid==doc[0].asmtsdocs[i].GPWWBCITKey){console.log('OPS si');
+					 count2=count2+1;
+					// k=doc[0].KCProcessFIN.length;
+				}
+			}
+			switch (doc[0].asmtsdocs[i].RatingCategory) {
+              case "Sat &#9650;":			    
+                if (count1>0) satUpFin = satUpFin + 1;
+                else satUpOps = satUpOps + 1;
+                break;
+              case "Sat &#61;":
+                if (count1>0) satEqFin = satEqFin + 1;
+                else satEqOps = satEqOps + 1;
+                break;
+              case "Marg &#9650;":
+                if (count1>0) margUpFin = margUpFin + 1;
+                else margUpOps = margUpOps + 1;
+                break;
+              case "Marg &#9660;":
+                if (count1>0) margDwnFin = margDwnFin + 1;
+                else margDwnOps = margDwnOps + 1;
+                break;
+              case "Marg &#61;":
+                if (count1>0) margEqFin = margEqFin + 1;
+                else margEqOps = margEqOps + 1;
+                break;
+              case "Unsat &#9660;":
+                if (count1>0) unsatDwnFin = unsatDwnFin + 1;
+                else unsatDwnOps = unsatDwnOps + 1;
+                break;
+              case "Unsat &#61;":
+                if (count1>0) unsatEqFin = unsatEqFin + 1;
+                else unsatEqOps = unsatEqOps + 1;
+                break;
+              case "Exempt":
+                if (count1>0) exemptFin = exemptFin + 1;
+                else exemptOps = exemptOps + 1;
+                break;
+              default:
+                if (count1>0) nrFin = nrFin + 1;
+                else nrOps = nrOps + 1;
+            }
+			*/
+			
             switch (doc[0].asmtsdocs[i].RatingCategory) {
               case "Sat &#9650;":
                 satUpCU = satUpCU + 1;
