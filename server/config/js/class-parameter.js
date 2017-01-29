@@ -84,7 +84,6 @@ var parameters = {
 					$or
 				}
 			};
-
 			db.find(obj).then(function(data){
 				var parameters = data.body.docs;
 				for (var i = 0; i < parameters.length; ++i) {
