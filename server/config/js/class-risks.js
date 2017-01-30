@@ -269,8 +269,57 @@ var calculateORTab = {
             DeliveryQtdChange3: Math.abs(doc[0].totalRisks.DeliveryPrevQtr3 - doc[0].totalRisks.DeliveryPrevQtr4),
             DeliveryQtdChange4: Math.abs(doc[0].totalRisks.DeliveryPrevQtr4 - doc[0].totalRisks.DeliveryCurrent)
           };
+          //first table
+            var risks = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+            var exportOpenRisks = [];
+            var riskCategory = {};
+            var openrisks = [];
+            risks.sort(function(a, b){
+              var nameA=a.catP.toLowerCase(), nameB=b.catP.toLowerCase()
+              if (nameA > nameB)
+                return -1
+              if (nameA < nameB)
+                return 1
+              var nameA=a.PeriodRating.toLowerCase(), nameB=b.PeriodRating.toLowerCase()
+              if (nameA > nameB)
+                return -1
+              if (nameA < nameB)
+                return 1
+              return 0 //default return value (no sorting)
+            });
+            for(var i = 0; i < risks.length; i++){
+              if(typeof riskCategory[risks[i].catP] === "undefined"){
+                var tmp = {
+                  id:risks[i].catP.replace(/ /g,''),
+                  catName:risks[i].catP
+                };
+                openrisks.push(tmp);
+                riskCategory[risks[i].catP] = true;
+              }
+              var tmp = {};
+              tmp.catName = risks[i].catP || " ";
+              tmp.AssessableUnitName = risks[i].AssessableUnitName || " ";
+              tmp.PeriodRatingPrev1 = risks[i].PeriodRatingPrev1 || " ";
+              tmp.PeriodRating = risks[i].PeriodRating || " ";
+              tmp.originalTargetDate = risks[i].originalTargetDate || " ";
+              tmp.Target2Sat = risks[i].Target2Sat || " ";
+              exportOpenRisks.push(tmp);
+              risks[i].parent = risks[i].catP.replace(/ /g,'');
+              risks[i].id = risks[i]["_id"].replace(/ /g,'');
+              openrisks.push(risks[i]);
+            }
+            doc[0].exportOpenRisks = exportOpenRisks;
+            if (Object.keys(riskCategory).length < defViewRow) {
+              if (openrisks.length == 0) {
+                openrisks = fieldCalc.addTestViewData(10,defViewRow);
+              } else {
+                fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
+              }
+            };
+            doc[0].RiskView1Data = openrisks;
           //second table
           var risks = doc[0].RiskView2Data;
+          var riskCategory1 = {};
           var riskCategory = {};
           var openrisks = [];
           var exportOpenRisks2 = [];
@@ -290,7 +339,7 @@ var calculateORTab = {
           return 0 //default return value (no sorting)
         });
         for(var i = 0; i < risks.length; i++){
-          if(typeof riskCategory[risks[i].catP] === "undefined"){
+          if(typeof riskCategory1[risks[i].catP] === "undefined"){
             var tmp = {
               id:risks[i].catP.replace(/ /g,''),
               catP:risks[i].catP,
@@ -298,7 +347,7 @@ var calculateORTab = {
             };
             openrisks.push(tmp);
             objects[tmp.catP] = tmp;
-            riskCategory[risks[i].catP] = true;
+            riskCategory1[risks[i].catP] = true;
           }
           if(typeof riskCategory[risks[i].catP.replace(/ /g,'')+risks[i].scorecardCategory.replace(/ /g,'')] === "undefined"){
             var tmp = {
@@ -338,11 +387,11 @@ var calculateORTab = {
           openrisks.push(risks[i]);
         }
         doc[0].exportOpenRisks2 = exportOpenRisks2;
-        if (Object.keys(riskCategory).length < defViewRow) {
+        if (Object.keys(riskCategory1).length < defViewRow) {
           if (openrisks.length == 0) {
             openrisks = fieldCalc.addTestViewData(10,defViewRow);
           } else {
-            fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory).length));
+            fieldCalc.addTestViewDataPadding(openrisks,10,(defViewRow-Object.keys(riskCategory1).length));
           }
         };
         doc[0].RiskView2Data = openrisks;
