@@ -421,18 +421,13 @@ var assessment = {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(8,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(11,defViewRow);
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
-								// doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-								// doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
 							}
-							// doc[0].AUData = fieldCalc.addTestViewData(17,defViewRow);
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-							// doc[0].SCTest1Data = doc[0].RCTest1Data;
-							doc[0].SCTest2Data = doc[0].RCTest3Data;
 							doc[0].BUCAsmtDataPRview = [];
-							doc[0].BUCAsmtDataCURview = []; 
+							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
 							doc[0].AUData = [];
@@ -454,7 +449,7 @@ var assessment = {
 
 									// Process Sampled Country Testing Tab
 									sct.processSCTab(doc,defViewRow);
-									
+
 									//Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
 
@@ -465,10 +460,10 @@ var assessment = {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
 										}
 									}*/
-									
+
 									//Controllable Unit Ratings tab
-									cut.processCUTab(doc,defViewRow);								
-									
+									cut.processCUTab(doc,defViewRow);
+
 									/*if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataCURview.length == 0) {
 											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
@@ -557,7 +552,7 @@ var assessment = {
 											if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 												fieldCalc.getGlobalProcess(db, doc[0].MIRABusinessUnit).then(function(dataGP){
 													var gpList = dataGP.doc;
-													
+
 													var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 														var obj = {
 															selector : {
@@ -591,7 +586,7 @@ var assessment = {
 																	}
 																}
 																dataLL[i].body.docs[j].globalProcess = gpKey;
-																
+
 																var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
 																if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
 																	uniques[dataLL[i].body.docs[j]["_id"]] = true;
@@ -649,7 +644,7 @@ var assessment = {
 														console.log("[assessableunit][LessonsList]" + dataLL.error);
 														deferred.reject({"status": 500, "error": err});
 													});
-													
+
 												}).catch(function(err) {
 													console.log("[assessment][getAsmtbyID][getGlobalProcess]" + err.error.reason);
 													deferred.reject({"status": 500, "error": err.error.reason});
@@ -817,7 +812,7 @@ var assessment = {
 							if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 								fieldCalc.getGlobalProcess(db, doc[0].MIRABusinessUnit).then(function(dataGP){
 									var gpList = dataGP.doc;
-								
+
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 									var obj = {
 										selector : {
@@ -852,7 +847,7 @@ var assessment = {
 													}
 												}
 												dataLL[i].body.docs[j].globalProcess = gpKey;
-												
+
 												var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
 												if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
 													uniques[dataLL[i].body.docs[j]["_id"]] = true;
@@ -910,7 +905,7 @@ var assessment = {
 										console.log("[assessableunit][LessonsList]" + dataLL.error);
 										deferred.reject({"status": 500, "error": err});
 									});
-								
+
 								}).catch(function(err) {
 									console.log("[assessment][getAsmtbyID][getGlobalProcess]" + err.error.reason);
 									deferred.reject({"status": 500, "error": err.error.reason});

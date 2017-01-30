@@ -1,7 +1,7 @@
 /**************************************************************************************************
  *
- * MIRA Key Controls Testing Code
- * Date: 16 December 2016
+ * MIRA Key Sanpled Country Testing Tab Codes
+ * Date: 27 January 2017
  * By: genonms@ph.ibm.com
  *
  */
@@ -25,13 +25,18 @@ var calculateSCTab = {
           break;
         case "BU Country":
 
-          //** Calculate for Defect Rate **//
+          //** Calculate for Defect Rate - START **//
+
+          // Calculate for Current Quarter
           for (var i = 0; i < doc[0].SCTest1Data.length; i++) {
+
             // For financial processes
             for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
               if (doc[0].KCProcessFIN[j].id == doc[0].SCTest1Data[i].GPPARENT) {
                 // add all tests
-                if (doc[0].SCTest1Data[i].numtest !== undefined && doc[0].SCTest1Data[i].numtest !== "") {
+
+                if (!isNaN(doc[0].SCTest1Data[i].numtest)) {
+                // if (doc[0].SCTest1Data[i].numtest !== undefined && doc[0].SCTest1Data[i].numtest !== "") {
                   if (doc[0].KCProcessFIN[j].test == undefined) {
                     doc[0].KCProcessFIN[j].test = parseInt(doc[0].SCTest1Data[i].numtest);
                   }else {
@@ -39,7 +44,8 @@ var calculateSCTab = {
                   }
                 }
                 // add all defects
-                if (doc[0].SCTest1Data[i].numDefects !== undefined && doc[0].SCTest1Data[i].numDefects !== "") {
+                if (!isNaN(doc[0].SCTest1Data[i].numDefects)) {
+                // if (doc[0].SCTest1Data[i].numDefects !== undefined && doc[0].SCTest1Data[i].numDefects !== "") {
                   if (doc[0].KCProcessFIN[j].defect == undefined) {
                     doc[0].KCProcessFIN[j].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
                   }else {
@@ -48,10 +54,12 @@ var calculateSCTab = {
                 }
               }
             }
+
             // For operational processes
             for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
               // add all tests
-              if (doc[0].SCTest1Data[i].numtest !== undefined && doc[0].SCTest1Data[i].numtest !== "") {
+              if (!isNaN(doc[0].SCTest1Data[i].numtest)) {
+              // if (doc[0].SCTest1Data[i].numtest !== undefined && doc[0].SCTest1Data[i].numtest !== "") {
                 if (doc[0].KCProcessOPS[j].test == undefined) {
                   doc[0].KCProcessOPS[j].test = parseInt(doc[0].SCTest1Data[i].numtest);
                 }else {
@@ -60,7 +68,8 @@ var calculateSCTab = {
               }
               // add all defects
               if (doc[0].KCProcessOPS[j].id == doc[0].SCTest1Data[i].GPPARENT) {
-                if (doc[0].SCTest1Data[i].numDefects !== undefined && doc[0].SCTest1Data[i].numDefects !== "") {
+                if (!isNaN(doc[0].SCTest1Data[i].numDefects)) {
+                // if (doc[0].SCTest1Data[i].numDefects !== undefined && doc[0].SCTest1Data[i].numDefects !== "") {
                   if (doc[0].KCProcessOPS[j].defect == undefined) {
                     doc[0].KCProcessOPS[j].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
                   }else {
@@ -69,7 +78,9 @@ var calculateSCTab = {
                 }
               }
             }
+
           }
+
           // Financial processes calculate for defect rate
           for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
             if (doc[0].KCProcessFIN[j].test == undefined) {
@@ -102,6 +113,128 @@ var calculateSCTab = {
               }
             }
           }
+
+          // Calculate for Previous 1 Quarter Defect Rates
+          // Calculate for Previous 2 Quarter Defect Rates
+          // Calculate for Previous 3 Quarter Defect Rates
+          // Calculate for Previous 4 Quarter Defect Rates
+
+          //** Calculate for Defect Rate - END **//
+
+          //** Calculate for Unremediated Defects - START **//
+
+          doc[0].SCUnremedDefects = [];
+          for (var i = 0; i < doc[0].SCTest2Data.length; i++) {
+
+            // For financial processes
+            for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
+              if (doc[0].KCProcessFIN[j].id == doc[0].SCTest2Data[i].GPPARENT) {
+                if (!isNaN(doc[0].SCTest2Data[i].numDefects)) {
+                // if (doc[0].SCTest2Data[i].numDefects !== undefined && doc[0].SCTest2Data[i].numDefects !== "") {
+                  // Process all Financial Defects
+                  if (doc[0].SCTest2Data[i].controlType == "KCFR") {
+                    // add all CQF - Current Quarter Financial Defects
+                    if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
+                      if (doc[0].KCProcessFIN[j].cqf == undefined) {
+                        doc[0].KCProcessFIN[j].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessFIN[j].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                    // add all PQF - Previous Quarter Financial Defects
+                    else {
+                      if (doc[0].KCProcessFIN[j].pqf == undefined) {
+                        doc[0].KCProcessFIN[j].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessFIN[j].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                  }
+                  // Process all Operatonal Defects
+                  else {
+                    // add all CQO - Current Quarter Operational Defects
+                    if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
+                      if (doc[0].KCProcessFIN[j].cqo == undefined) {
+                        doc[0].KCProcessFIN[j].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessFIN[j].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                    // add all PQO - Previous Quarter Operational Defects
+                    else {
+                      if (doc[0].KCProcessFIN[j].pqo == undefined) {
+                        doc[0].KCProcessFIN[j].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessFIN[j].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                  }
+
+                }
+              }
+            }
+
+            // For operational processes
+            for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
+              if (doc[0].KCProcessOPS[j].id == doc[0].SCTest2Data[i].GPPARENT) {
+                if (!isNaN(doc[0].SCTest2Data[i].numDefects)) {
+                // if (doc[0].SCTest2Data[i].numDefects !== undefined && doc[0].SCTest2Data[i].numDefects !== "") {
+                  // Process all Financial Defects
+                  if (doc[0].SCTest2Data[i].controlType == "KCFR") {
+                    // add all CQF - Current Quarter Financial Defects
+                    if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
+                      if (doc[0].KCProcessOPS[j].cqf == undefined) {
+                        doc[0].KCProcessOPS[j].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessOPS[j].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                    // add all PQF - Previous Quarter Financial Defects
+                    else {
+                      if (doc[0].KCProcessOPS[j].pqf == undefined) {
+                        doc[0].KCProcessOPS[j].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessOPS[j].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                  }
+                  // Process all Operatonal Defects
+                  else {
+                    // add all CQO - Current Quarter Operational Defects
+                    if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
+                      if (doc[0].KCProcessOPS[j].cqo == undefined) {
+                        doc[0].KCProcessOPS[j].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessOPS[j].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                    // add all PQO - Previous Quarter Operational Defects
+                    else {
+                      if (doc[0].KCProcessOPS[j].pqo == undefined) {
+                        doc[0].KCProcessOPS[j].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }else {
+                        doc[0].KCProcessOPS[j].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                      }
+                    }
+                  }
+
+                }
+              }
+            }
+
+            // List of unremediated defects by sampled Country
+            if (!isNaN(doc[0].SCTest2Data[i].numDefects) && doc[0].SCTest2Data[i].remediationStatus == "Open" && doc[0].SCTest2Data[i].numDefects > 0) {
+              doc[0].SCUnremedDefects.push(doc[0].SCTest2Data[i]);
+            }
+
+          }
+
+          // Calculate for Previous 1 Quarter Unremediated Defect
+          // Calculate for Previous 2 Quarter Unremediated Defect
+          // Calculate for Previous 3 Quarter Unremediated Defect
+          // Calculate for Previous 4 Quarter Unremediated Defect
+
+          //** Calculate for Unremediated Defects - END **//
 
           break;
       }
