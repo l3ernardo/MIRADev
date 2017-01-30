@@ -320,6 +320,8 @@ var getDocs = {
             if (doc[0].MIRABusinessUnit == "GTS") {
               doc[0].RiskView1DataCRM = [];
               doc[0].RiskView1DataDelivery = [];
+      	      doc[0].CountryControlsDataCRM = [];
+              doc[0].CountryControlsDataDelivery = []
             }
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
@@ -344,6 +346,12 @@ var getDocs = {
               }
               else if (comps[i].compntType == "countryControls"){
                	  doc[0].CountryControlsData.push(comps[i]);
+
+		if (doc[0].MIRABusinessUnit == "GTS") {
+                     if(doc[0].CRMProcessObj[comps[i].process]){ doc[0].CountryControlsDataCRM.push(comps[i])
+                     }else{doc[0].CountryControlsDataDelivery.push(comps[i]);}
+                     
+                   }
               }
               else if (comps[i].docType == "setup"){
                	  doc[0].riskCategories = comps[i].value.options;
