@@ -270,7 +270,8 @@ var calculateORTab = {
             DeliveryQtdChange4: Math.abs(doc[0].totalRisks.DeliveryPrevQtr4 - doc[0].totalRisks.DeliveryCurrent)
           };
           //first table
-            var risks = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+            //var risks = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+            var risks = doc[0].AUDataMSAC;
             var exportOpenRisks = [];
             var riskCategory = {};
             var openrisks = [];
