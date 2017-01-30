@@ -421,18 +421,13 @@ var assessment = {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(8,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(11,defViewRow);
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
-								// doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-								// doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
 							}
-							// doc[0].AUData = fieldCalc.addTestViewData(17,defViewRow);
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-							// doc[0].SCTest1Data = doc[0].RCTest1Data;
-							doc[0].SCTest2Data = doc[0].RCTest3Data;
 							doc[0].BUCAsmtDataPRview = [];
-							doc[0].BUCAsmtDataCURview = []; 
+							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
 							doc[0].AUData = [];
@@ -454,7 +449,7 @@ var assessment = {
 
 									// Process Sampled Country Testing Tab
 									sct.processSCTab(doc,defViewRow);
-									
+
 									//Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
 
@@ -465,10 +460,10 @@ var assessment = {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
 										}
 									}*/
-									
+
 									//Controllable Unit Ratings tab
-									cut.processCUTab(doc,defViewRow);								
-									
+									cut.processCUTab(doc,defViewRow);
+
 									/*if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataCURview.length == 0) {
 											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
@@ -557,7 +552,7 @@ var assessment = {
 											if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 												fieldCalc.getGlobalProcess(db, doc[0].MIRABusinessUnit).then(function(dataGP){
 													var gpList = dataGP.doc;
-													
+
 													var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 														var obj = {
 															selector : {
@@ -591,7 +586,7 @@ var assessment = {
 																	}
 																}
 																dataLL[i].body.docs[j].globalProcess = gpKey;
-																
+
 																var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
 																if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
 																	uniques[dataLL[i].body.docs[j]["_id"]] = true;
@@ -649,7 +644,7 @@ var assessment = {
 														console.log("[assessableunit][LessonsList]" + dataLL.error);
 														deferred.reject({"status": 500, "error": err});
 													});
-													
+
 												}).catch(function(err) {
 													console.log("[assessment][getAsmtbyID][getGlobalProcess]" + err.error.reason);
 													deferred.reject({"status": 500, "error": err.error.reason});
@@ -817,7 +812,7 @@ var assessment = {
 							if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 								fieldCalc.getGlobalProcess(db, doc[0].MIRABusinessUnit).then(function(dataGP){
 									var gpList = dataGP.doc;
-								
+
 									var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 									var obj = {
 										selector : {
@@ -852,7 +847,7 @@ var assessment = {
 													}
 												}
 												dataLL[i].body.docs[j].globalProcess = gpKey;
-												
+
 												var current = dataLL[i].body.docs[j].AuditType+" - "+dataLL[i].body.docs[j].AuditCAR+"@"+dataLL[i].body.docs[j].reportingPeriod;
 												if(typeof uniques[dataLL[i].body.docs[j]["_id"]] === "undefined"){
 													uniques[dataLL[i].body.docs[j]["_id"]] = true;
@@ -910,7 +905,7 @@ var assessment = {
 										console.log("[assessableunit][LessonsList]" + dataLL.error);
 										deferred.reject({"status": 500, "error": err});
 									});
-								
+
 								}).catch(function(err) {
 									console.log("[assessment][getAsmtbyID][getGlobalProcess]" + err.error.reason);
 									deferred.reject({"status": 500, "error": err.error.reason});
@@ -979,6 +974,7 @@ var assessment = {
 						"ExcludeGeo": pdoc[0].ExcludeGeo,
 						"BUCountryIOT": pdoc[0].BUCountryIOT,
 						"RGRollup": pdoc[0].RGRollup,
+						"MIRABusinessUnit": pdoc[0].MIRABusinessUnit,
 						"editmode": 1,
 						"RJandT2SEditable": 1,
 						"RatingEditable": 1,
@@ -996,9 +992,7 @@ var assessment = {
 					if (pdoc[0].OpMetricKey == undefined || pdoc[0].OpMetricKey == "") pdoc[0].OpMetricKey = "OMKID0";
 					doc[0].OpMetricKey = pdoc[0].OpMetricKey;
 					doc[0].Category = pdoc[0].Category;
-
 					fieldCalc.getDocParams(req, db, doc).then(function(data){
-
 						/* Get previous 4 quarter assessments to get historical data from:
 								- previous 4 qtrs Ratings
 								- prrevious 4 qtrs target to Status
@@ -1259,7 +1253,7 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
-								doc[0].IOT = pdoc[0].IOT;
+							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
 							doc[0].Country = pdoc[0].Country;
 							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
@@ -1293,7 +1287,6 @@ var assessment = {
 							doc[0].AUDataMSAC = [];
 
 						comp.getCompDocs(db,doc).then(function(dataComp){
-
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
