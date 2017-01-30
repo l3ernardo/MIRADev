@@ -69,8 +69,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="4">Total Financial Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDRFin 0}}{{margCPDRFin}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDRFin 0}}{{unsatCPDRFin}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
@@ -138,8 +138,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="4">Total Operational Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDROps 0}}{{margCPDROps}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDROps 0}}{{unsatCPDROps}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
@@ -239,7 +239,7 @@
 					<tr class="asmt-viewdata">
 						<td>{{processCategory}}</td>
 						<td><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
-						<td class="asmt-viewdata-centered">{{AUTestCount}}</td>
+						<td class="asmt-viewdata-centered">{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
 						<td class="asmt-viewdata-centered">{{AUDefectCount}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td></td>
@@ -274,7 +274,7 @@
 						<td>{{controlName}}</td>
 						<td>{{controllableUnit}}</td>
 						<td><a target="_blank" href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
-						<td>{{originalTargetDate}}</td>
+						<td>{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
 						<td>{{targetClose}}</td>
 						<td class="asmt-viewdata-centered">{{numDefects}}</td>
 						<td>{{defectType}}</td>

@@ -236,6 +236,23 @@ var calculateSCTab = {
 
           //** Calculate for Unremediated Defects - END **//
 
+          // Add padding to Current Quarter Country Process Defect Rate Exceptions in SCT
+          if (doc[0].CPDRException.length < defViewRow) {
+            if (doc[0].CPDRException.length == 0) {
+              doc[0].CPDRException = fieldCalc.addTestViewData(6,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].CPDRException,6,(defViewRow-doc[0].CPDRException.length));
+            }
+          }
+          // Add padding to Unremediated Defects by Quarter in SCT
+          if (doc[0].SCUnremedDefects.length < defViewRow) {
+            if (doc[0].SCUnremedDefects.length == 0) {
+              doc[0].SCUnremedDefects = fieldCalc.addTestViewData(11,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].SCUnremedDefects,11,(defViewRow-doc[0].SCUnremedDefects.length));
+            }
+          }
+
           break;
       }
     }catch(e){
