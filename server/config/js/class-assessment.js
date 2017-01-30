@@ -974,6 +974,7 @@ var assessment = {
 						"ExcludeGeo": pdoc[0].ExcludeGeo,
 						"BUCountryIOT": pdoc[0].BUCountryIOT,
 						"RGRollup": pdoc[0].RGRollup,
+						"MIRABusinessUnit": pdoc[0].MIRABusinessUnit,
 						"editmode": 1,
 						"RJandT2SEditable": 1,
 						"RatingEditable": 1,
@@ -991,9 +992,7 @@ var assessment = {
 					if (pdoc[0].OpMetricKey == undefined || pdoc[0].OpMetricKey == "") pdoc[0].OpMetricKey = "OMKID0";
 					doc[0].OpMetricKey = pdoc[0].OpMetricKey;
 					doc[0].Category = pdoc[0].Category;
-
 					fieldCalc.getDocParams(req, db, doc).then(function(data){
-
 						/* Get previous 4 quarter assessments to get historical data from:
 								- previous 4 qtrs Ratings
 								- prrevious 4 qtrs target to Status
@@ -1254,7 +1253,7 @@ var assessment = {
 							});
 							break;
 						case "BU Country":
-								doc[0].IOT = pdoc[0].IOT;
+							doc[0].IOT = pdoc[0].IOT;
 							doc[0].IMT = pdoc[0].IMT;
 							doc[0].Country = pdoc[0].Country;
 							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
@@ -1288,7 +1287,6 @@ var assessment = {
 							doc[0].AUDataMSAC = [];
 
 						comp.getCompDocs(db,doc).then(function(dataComp){
-
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
