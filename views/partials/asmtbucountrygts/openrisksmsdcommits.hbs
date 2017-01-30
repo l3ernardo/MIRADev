@@ -1,3 +1,5 @@
+<textarea name="textarea" id="OpenRisksDataExport" cols="100" style="display:none">{{valuesToString exportOpenRisks}}</textarea>
+<textarea name="textarea" id="OpenRisks2DataExport" cols="100" style="display:none">{{valuesToString exportOpenRisks2}}</textarea>
 <table id="risk_table" class="ibm-data-table">
 	<tr class="risk-msdcommit-content">
 		<td>
@@ -13,12 +15,12 @@
 					{{#each PrevQtrs}}
 						<th class="kc-test-viewsubheader" width="7%">{{this}}</th>
 					{{/each}}
-					<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>
+					<!--<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>-->
 					<th class="risk-msdcommit-viewheader" width="5%"></th>
 					{{#each PrevQtrs}}
 						<th class="kc-test-viewsubheader" width="7%">{{this}}</th>
 					{{/each}}
-					<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>
+					<!--<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>-->
 				</thead>
 				<tr>
 					<td class="risk-msdcommit-label" colspan="12"><b>Open issues from risk evaluations, deviations, etc.</b></td>
@@ -191,15 +193,15 @@
 				<tr>
 					<td class="risk-msdcommit-label">Qtd Net Change</td>
 					<td class="risk-msdcommit-label"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.CRMQtdChange1}}</td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.CRMQtdChange2}}</td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.CRMQtdChange3}}</td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.CRMQtdChange4}}</td>
 					<td class="risk-msdcommit-label"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
-					<td class="asmt-viewdata"></td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.DeliveryQtdChange1}}</td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.DeliveryQtdChange2}}</td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.DeliveryQtdChange3}}</td>
+					<td class="asmt-viewdata" align="center">{{QtdChangeRisks.DeliveryQtdChange4}}</td>
 				</tr>
 				{{#if editmode}}
 					<tr>
@@ -280,7 +282,12 @@
 	<tr class="risk-msdcommit-content">
 		<td>
 			<span class="risk-msdcommit"><b>Missed Commits</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			{{#if_equal EnteredBU "GTS"}}
+			<a href="javascript:void(0);" value="Export to Excel" name="OpenRisks-link-export" id="OpenRisks-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="OpenRisks-link-export2" id="OpenRisks-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			{{/if_equal}}
+			<table id="open_risks_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%%">Cat</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="40%%">Assessable Unit</th>
@@ -289,28 +296,33 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Missed Target Date</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Current Target Date</th>
 				</thead>
+				<tbody>
 				{{#each RiskView1Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%">{{catName}}</td>
+						<td width="40%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
+						{{{ratingDisplayView PeriodRating 10}}}
+						{{{ratingDisplayView PeriodRating 10}}}
+						<td width="15%">{{originalTargetDate}}</td>
+						<td width="15%">{{currentTargetDate}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 	<tr class="risk-msdcommit-content">
 		<td>
 			<span class="risk-msdcommit"><b>Current Quarter Open Issues</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<span class="risk-msdcommit"><b>Open Issues</b></span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="OpenRisks2-link-export" id="OpenRisks2-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="OpenRisks2-link-export2" id="OpenRisks2-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="open_risks2_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Cat</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Type</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="5%">ID</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Type</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Country</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Process</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%">Status</th>
@@ -326,17 +338,20 @@
 				<tbody>
 				{{#each RiskView2Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="15%" >{{#unless parent}}{{type}}{{/unless}}</td>
-						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
-						<td width="15%">{{status}}</td>
-						<td width="8%">{{originalTargetDate}}</td>
-						<td width="8%">{{currentTargetDate}}</td>
+						<td width="5%" >{{#unless numTasks}}{{catP}}{{/unless}}</td>
+						<td width="5%" >{{#unless numTasks}}{{type}}{{/unless}}</td>
+						<td width="10%">{{#if numTasks}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td width="5%">{{country}}</td>
+						<td width="15%">{{process}}</td>
+						<td width="5%">{{status}}</td>
+						<td width="10%">{{originalTargetDate}}</td>
+						<td width="10%">{{currentTargetDate}}</td>
 						<td width="5%">{{numTasks}}</td>
 						<td width="5%">{{numTasksOpen}}</td>
 						<td width="5%">{{numMissedTasks}}</td>
 						<td width="5%">{{numOpenIssues}}</td>
-						<td width="4%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
-						<td width="20%">{{riskAbstract}}</td>
+						<td width="5%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
+						<td width="10%">{{riskAbstract}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
@@ -344,3 +359,7 @@
 		</td>
 	</tr>
 </table>
+<script>
+	$("#open_risks2_treeview").treetable({expandable: true });
+	$("#open_risks_treeview").treetable({expandable: true });
+</script>
