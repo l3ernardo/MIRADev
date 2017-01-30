@@ -129,6 +129,14 @@ var calculateORTab = {
               exportOpenRisks.push(tmp);
             }
             doc[0].exportOpenRisks = exportOpenRisks;
+            if (risks.length < defViewRow) {
+              if (risks.length == 0) {
+                risks = fieldCalc.addTestViewData(10,defViewRow);
+              } else {
+                fieldCalc.addTestViewDataPadding(risks,10,(defViewRow-risks.length));
+              }
+            };
+            doc[0].RiskView1Data = risks;
             //second table
             var risks = doc[0].RiskView2Data;
             var riskCategory = {};
