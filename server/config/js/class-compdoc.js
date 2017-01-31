@@ -293,7 +293,11 @@ var getDocs = {
                 { "$and": [{"compntType": "sampledCountry"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "sampledCountry"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-                { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+                { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+                // Key Controls Testing Tab
+                {"$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+                {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod}]},
+                {"$and": [{"compntType": "controlSample"},{"reportingCountry": doc[0].Country}, {"status": {"$ne": "Retired"}}] }
               ]
             }
           };
@@ -356,6 +360,17 @@ var getDocs = {
               else if (comps[i].docType == "setup"){
                	  doc[0].riskCategories = comps[i].value.options;
               }
+              // Key Controls Testing Tab
+              if (comps[i].docType == "Assessment") {
+                doc[0].RCTest3Data.push(comps[i]);
+                }
+             if (comps[i].compntType == "controlControl") {
+                doc[0].RCTest3Data.push(comps[i]);
+               }
+              if (comps[i].compntType == "controlSample") {
+                doc[0].RCTest3Data.push(comps[i]);
+              }
+              
               // For Sampled Country Testing Tab
               else if (comps[i].compntType == "sampledCountry"){
                 if (doc[0].MIRABusinessUnit == "GBS") {
