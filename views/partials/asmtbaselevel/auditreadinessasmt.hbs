@@ -1,5 +1,5 @@
 <table id="auditreadyasmt_table" class="ibm-data-table">
-	{{#if_equal EnteredBU "GTS"}}
+	{{#if_not_equal EnteredBU "GBS"}}
 		<tr class="ar-asmt-content">
 			<th class="ar-asmt-content">Analysis to Audit Lessons Learned</th>
 		</tr>
@@ -180,5 +180,5 @@
 				</table>
 			</td>
 		</tr>
-	{{/if_equal}}
+	{{/if_not_equal}}
 </table>

@@ -29,7 +29,7 @@
 						<td class="asmt-viewdata" align="center">{{PrevQtr2}}</td>
 						<td class="asmt-viewdata" align="center">{{PrevQtr3}}</td>
 						<td class="asmt-viewdata" align="center">{{PrevQtr4}}</td>
-						<td class="asmt-viewdata" align="center">{{Current}}</td>
+						<!--<td class="asmt-viewdata" align="center">{{Current}}</td>-->
 						<td class="risk-msdcommit-viewheader"></td>
 						{{#if flagForTextarea}}
 						<td class="asmt-viewdata" rowspan="10">
@@ -197,11 +197,11 @@
 					<tbody>
 					{{#each RiskView1Data}}
 						<tr class="asmt-viewdata">
-							<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
-							<td width="8%">{{status}}</td>
-							<td width="20%">{{PeriodRating}}</td>
-							<td width="10%">{{originalTargetDate}}</td>
-							<td width="10%">{{currentTargetDate}}</td>
+							<td width="50%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+							{{{ratingDisplayView PeriodRatingPrev1 10}}}
+							{{{ratingDisplayView PeriodRating 10}}}
+							<td width="15%">{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
+							<td width="15%">{{currentTargetDate}}</td>
 						</tr>
 					{{/each}}
 				</tbody>
@@ -397,10 +397,10 @@
 					<tbody>
 					{{#each RiskView1Data}}
 						<tr class="asmt-viewdata">
-							<td width="50%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
-							<td width="10%">{{status}}</td>
-							<td width="10%">{{PeriodRating}}</td>
-							<td width="15%">{{originalTargetDate}}</td>
+							<td width="50%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+							{{{ratingDisplayView PeriodRatingPrev1 10}}}
+							{{{ratingDisplayView PeriodRating 10}}}
+							<td width="15%">{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
 							<td width="15%">{{currentTargetDate}}</td>
 						</tr>
 					{{/each}}
@@ -434,7 +434,7 @@
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="15%" >{{#unless parent}}{{type}}{{/unless}}</td>
 						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
-						<td width="15%">{{status}}</td>
+						<td width="15%">{{#if _id}}{{status}}{{else}}&nbsp;{{/if}}</td>
 						<td width="8%">{{originalTargetDate}}</td>
 						<td width="8%">{{currentTargetDate}}</td>
 						<td width="5%">{{numTasks}}</td>
