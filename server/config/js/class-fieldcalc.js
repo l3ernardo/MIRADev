@@ -124,7 +124,9 @@ var calculatefield = {
 
 	getCUMaxScore: function(CUSize) {
 		var CUMaxScore;
-		if (CUSize == "Large") {
+    if (CUSize == "") {
+			CUMaxScore = "";
+		} else if (CUSize == "Large") {
 			CUMaxScore = 9;
 		} else if (CUSize == "Medium") {
 			CUMaxScore = 3;
@@ -137,6 +139,7 @@ var calculatefield = {
 	},
 
 	getCUScore: function(arrating, cumaxscore) {
+    if(cumaxscore == "") return "";
 		var ratingscore;
 		var cuscore;
 		if (arrating == "Sat") {
@@ -441,7 +444,7 @@ var calculatefield = {
                   //Getting all controllable units assessable units
                   {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                   //Getting all Country Process assessable units
-                  {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]}
+                  {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]}
                 ]}
           };
           break;
@@ -536,10 +539,8 @@ var calculatefield = {
             var CUassunits = [];
             var CUauditables = {};
             var CUCRMables = {};
-            var CPauditables = [];
+            var CPauditables = {};
             var CPassmts = {};
-            doc[0].CRMCUObj = {};
-            doc[0].DeliveryCUObj = {};
             // For Current Quarter Country Process Defect Rate Exceptions
             doc[0].CPDRException = [];
             // For CP Financial Process Defect Rates that are Marg counter
@@ -569,7 +570,7 @@ var calculatefield = {
                     doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
                   }else {
                     doc[0].asmtsdocs.pop();
-                    console.log("GP not found: "+ asmtsdocs[i].GPWWBCITKey);
+                    //console.log("GP not found: "+ asmtsdocs[i].GPWWBCITKey);
                   }
                 }
                 // Get Current Quarter Country Process Defect Rate Exceptions
@@ -615,13 +616,13 @@ var calculatefield = {
         							CUCRMables[asmtsdocs[i]["_id"]] = false;
         						}else{
         							CUassunits.pop();
-        							console.log("CU category not found: "+ asmtsdocs[i].Category);
+        							//console.log("CU category not found: "+ asmtsdocs[i].Category);
                     }
         				  }
                 }
 				        else{
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
-                    CPauditables.push(asmtsdocs[i]["_id"]);
+                    CPauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                   }
                 }
               }
@@ -631,9 +632,11 @@ var calculatefield = {
             doc[0].unsatCPDRFin = unsatCPDRFin;
             doc[0].margCPDROps = margCPDROps;
             doc[0].unsatCPDROps = unsatCPDROps;
-            
-            for (var i = 0; i < CPauditables.length; i++) {
-              doc[0].AUData.push(CPassmts[CPauditables[i]]);
+            for(var key in CPauditables){
+              CPassmts[key].CUSize = CPauditables[key].CUSize
+              CPassmts[key].CUMaxScore = calculatefield.getCUMaxScore(CPassmts[key].CUSize);
+              CPassmts[key].CUScore = calculatefield.getCUScore(CPassmts[key].PeriodRating, CPassmts[key].CUMaxScore);
+              doc[0].AUData.push(CPassmts[key]);
             }
   			    var $or = [];
             for(var i = 0; i < CUassunits.length; i++){
@@ -653,6 +656,10 @@ var calculatefield = {
               doc[0].asmtsdocs = doc[0].asmtsdocs.concat(asmts.body.docs);
               for (var i = 0; i < asmts.body.docs.length; i++) {
                 if(CUauditables[asmts.body.docs[i].parentid]){
+                  asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
+                  asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
+                  asmts.body.docs[i].CUScore = calculatefield.getCUScore(CUauditables[asmts.body.docs[i].parentid].PeriodRating, asmts.body.docs[i].CUMaxScore);
+
                   if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
                     asmts.body.docs[i].Type = "Portfolio CU";
                   }else{

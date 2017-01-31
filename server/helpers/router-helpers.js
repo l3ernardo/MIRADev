@@ -176,19 +176,24 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
-		defectRateDisplayView: function(dr, margThreshold, unsatThreshold) {
+		defectRateDisplayView: function(dr, margThreshold, unsatThreshold, percent) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
-				drhtml = '<td class="asmt-viewdata-centered">-</td>';
+				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">-</td>';
+				else drhtml = '<td class="asmt-viewdata-centered">-</td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
-				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
+				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+dr+'</td>';
+				else drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
 			} else {
 				if (dr < margThreshold)
-					drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
+					if (percent) drhtml = '<td class="asmt-viewdata-green" width="'+percent+'%">'+dr+'</td>';
+					else drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
 				else if (dr >= unsatThreshold)
-					drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
+					if(percent) drhtml = '<td class="asmt-viewdata-red" width="'+percent+'%">'+dr+'</td>';
+					else drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
 				else
-					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
+					if(percent) drhtml = '<td class="asmt-viewdata-yellow" width="'+percent+'%">'+dr+'</td>';
+					else drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
 			}
 			return drhtml;
 		},
