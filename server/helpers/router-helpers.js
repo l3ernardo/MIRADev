@@ -458,6 +458,29 @@ var register = function(Handlebars) {
 			if(a == b) return opts.fn(this);
      	else return opts.inverse(this);
 		},
+		
+		if_less: function(a, b, opts) {
+			
+			if(isNaN(a))
+				a = parseInt(a);
+			if(isNaN(b))
+				b = parseInt(b);
+			
+			if(a < b) return opts.fn(this);
+     	else return opts.inverse(this);
+		},
+		
+		if_greater: function(a, b, opts) {
+			
+			if(isNaN(a))
+				a = parseInt(a);
+			if(isNaN(b))
+				b = parseInt(b);
+			
+			if(a > b) return opts.fn(this);
+     	else return opts.inverse(this);
+		},
+		
 		if_not_equal: function(a, b, opts) {
 			if(a != b) return opts.fn(this);
      	else return opts.inverse(this);
