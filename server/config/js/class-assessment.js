@@ -417,6 +417,10 @@ var assessment = {
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
 								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
 								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+								doc[0].BUCAsmtDataPIviewCRM = [];
+								doc[0].BUCAsmtDataPIviewDelivery = [];
+								doc[0].BUCAsmtDataOIviewCRM = [];
+								doc[0].BUCAsmtDataOIviewDelivery = [];
 							} else {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(8,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(11,defViewRow);
@@ -471,6 +475,27 @@ var assessment = {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataCURview.length));
 										}
 									}*/
+									
+									//create a space for performance Tab
+									performanceTab.getKFCRDefectRate(db,doc);
+									performanceTab.getKCODefectRate(db,doc);
+									performanceTab.getMissedRisks(db,doc);
+									performanceTab.getMSACCommitmentsCount(db,doc);
+									
+									
+									if (doc[0].MIRABusinessUnit == "GTS") {
+										performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
+										performanceTab.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
+										
+									} else{
+										
+										performanceTab.getCPANDCUPerformanceIndicators(db,doc);
+										performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+									}
+									
+									
+									
+									
 									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPIview.length == 0) {
 											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
@@ -485,18 +510,19 @@ var assessment = {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 										}
 									}
-									//create a space for performance Tab
-									performanceTab.getKFCRDefectRate(db,doc);
-									performanceTab.getKCODefectRate(db,doc);
-									performanceTab.getMissedRisks(db,doc);
-									performanceTab.getMSACCommitmentsCount(db,doc);
-									performanceTab.getCPANDCUPerformanceIndicators(db,doc);
-									performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
-									//console.log(doc[0].AUDataMSAC);
+									
+									
+									
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
 									//audit universe
 									aut.processAUTab(doc,defViewRow);
+									
+
+									//console.log(doc[0].BUCAsmtDataPIviewCRM);
+									
+									
+									
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 
