@@ -475,27 +475,27 @@ var assessment = {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataCURview.length));
 										}
 									}*/
-									
+
 									//create a space for performance Tab
 									performanceTab.getKFCRDefectRate(db,doc);
 									performanceTab.getKCODefectRate(db,doc);
 									performanceTab.getMissedRisks(db,doc);
 									performanceTab.getMSACCommitmentsCount(db,doc);
-									
-									
+
+
 									if (doc[0].MIRABusinessUnit == "GTS") {
 										performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
-										
+
 									} else{
-										
+
 										performanceTab.getCPANDCUPerformanceIndicators(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
 									}
-									
-									
-									
-									
+
+
+
+
 									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPIview.length == 0) {
 											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
@@ -510,19 +510,19 @@ var assessment = {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 										}
 									}
-									
-									
-									
+
+
+
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
 									//audit universe
 									aut.processAUTab(doc,defViewRow);
-									
+
 
 									//console.log(doc[0].BUCAsmtDataPIviewCRM);
-									
-									
-									
+
+
+
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 
