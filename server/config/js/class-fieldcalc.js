@@ -156,25 +156,21 @@ var calculatefield = {
   getMIRABusinessUnit: function(doctype, doc) {
 		var MIRABusinessUnit;
 		switch (doctype) {
+      case "openIssue":
+      case "sampledCountry":
 			case "controlSample":
-        if ( !((doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") || (doc[0].CUCategory == "GTS TRANSFORMATION" || doc[0].CUCategory == "GTS Transf. Hybrid")) ) {
-          MIRABusinessUnit = "GTS";
-        }
-        else if ((doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") || (doc[0].CUCategory == "GTS TRANSFORMATION" || doc[0].CUCategory == "GTS Transf. Hybrid")) {
-          MIRABusinessUnit = "GTS Transformqtion";
-        } else if (doc[0].BUPARENT == "BSU300000027") {
+        if (doc[0].BUPARENT == "BSU300000027") {
           MIRABusinessUnit = "GBS";
         }
+        else if ((doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") || (doc[0].CUCategory == "GTS TRANSFORMATION" || doc[0].CUCategory == "GTS Transf. Hybrid")) {
+          MIRABusinessUnit = "GTS Transformation";
+        }
+        else {
+          MIRABusinessUnit = "GTS";
+        }
 				break;
-			case "2":
-				prevQtr = current[0]+" Q1";
-				break;
-			case "3":
-				prevQtr = current[0]+" Q2";
-				break;
-			case "4":
-				prevQtr = current[0]+" Q3";
-				break;
+      default:
+        MIRABusinessUnit = "";
 		}
 		return MIRABusinessUnit;
 	},
@@ -1282,7 +1278,7 @@ var calculatefield = {
             	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
 
             	if (doc[0].MIRABusinessUnit == "GTS"){
-            		
+
             		if(doc[0].asmtsdocs[i].catP == "CRM"){
 
 
@@ -1322,14 +1318,14 @@ var calculatefield = {
                                 "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
                                 "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
                               };
-                              
+
                               doc[0].BUCAsmtDataPIviewDelivery.push(toadd);
 
                       	}
 
 
                         doc[0].BUCAsmtDataPIview.push(toadd);
-                        
+
                         // PO tab other indicators view CRM
 
 
@@ -1359,35 +1355,35 @@ var calculatefield = {
                         }
 
                 		if(doc[0].asmtsdocs[i].catP == "CRM"){
-                			
-                			
+
+
                             doc[0].BUCAsmtDataOIviewCRM.push(toadd);
 
                             // Basics of Control Exception Counter
                             if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
                               bocEx = bocEx + 1;
                             }
-                			
-                			
+
+
                 		}
                 		else{
-                			                			
+
                             doc[0].BUCAsmtDataOIviewDelivery.push(toadd);
 
                             // Basics of Control Exception Counter
                             if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
                               bocEx = bocEx + 1;
                             }
-                			
-                			
-                			
+
+
+
                 		}
-                        
-                      
-            		
-            	
+
+
+
+
             	}else{//GBS and GTS Transformation
-            		           	
+
 
                     toadd = {
                       "docid":doc[0].asmtsdocs[i]._id,
@@ -1406,7 +1402,7 @@ var calculatefield = {
                       "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
                     };
 
-            
+
               doc[0].BUCAsmtDataPIview.push(toadd);
 
 
@@ -1445,13 +1441,13 @@ var calculatefield = {
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
                 bocEx = bocEx + 1;
               }
-              
-              
+
+
             	}//else
-            	
+
             }catch(e){
             	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + err.error);
-            	
+
             }
               break;
           // }
