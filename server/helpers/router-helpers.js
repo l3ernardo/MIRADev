@@ -172,15 +172,15 @@ var register = function(Handlebars) {
 				else if (rating == "Unsat")
 					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;" width="'+percent+'%">'+field+'%</td>';
 				else
-					ratinghtml += 'asmt-viewdata-centered" width="'+percent+'%">-</td>';
+					ratinghtml += 'asmt-viewdata-centered" width="'+percent+'%"></td>';
 			}
 			return ratinghtml;
 		},
 		defectRateDisplayView: function(dr, margThreshold, unsatThreshold, percent) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
-				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">-</td>';
-				else drhtml = '<td class="asmt-viewdata-centered">-</td>';
+				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%"></td>';
+				else drhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
 				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+dr+'</td>';
 				else drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
@@ -258,7 +258,7 @@ var register = function(Handlebars) {
 		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
-				trhtml = '<td class="asmt-viewdata-centered">-</td>';
+				trhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else if (margThresholdTR == undefined || unsatThresholdTR ==  undefined) {
 				trhtml = '<td class="asmt-viewdata-centered">'+tr+'</td>';
 			} else {
@@ -293,7 +293,7 @@ var register = function(Handlebars) {
 		UnremedDefectDisplay: function(defect) {
 			var defhtml;
 			if (defect == undefined || defect == "") {
-				defhtml = '<td class="asmt-viewdata-centered">-</td>';
+				defhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else {
 				defhtml = '<td class="asmt-viewdata-centered">'+defect+'</td>';
 			}
@@ -458,29 +458,29 @@ var register = function(Handlebars) {
 			if(a == b) return opts.fn(this);
      	else return opts.inverse(this);
 		},
-		
+
 		if_less: function(a, b, opts) {
-			
+
 			if(isNaN(a))
 				a = parseInt(a);
 			if(isNaN(b))
 				b = parseInt(b);
-			
+
 			if(a < b) return opts.fn(this);
      	else return opts.inverse(this);
 		},
-		
+
 		if_greater: function(a, b, opts) {
-			
+
 			if(isNaN(a))
 				a = parseInt(a);
 			if(isNaN(b))
 				b = parseInt(b);
-			
+
 			if(a > b) return opts.fn(this);
      	else return opts.inverse(this);
 		},
-		
+
 		if_not_equal: function(a, b, opts) {
 			if(a != b) return opts.fn(this);
      	else return opts.inverse(this);

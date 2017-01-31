@@ -50,11 +50,11 @@
 							<td rowspan="{{../length}}" class="kc-test-viewsubheader">{{../lob}}</td>
 							{{/if}}
 							<td>{{name}}</td>
-							{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRateP3 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRateP2 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRateP1 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP4 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP3 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP2 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP1 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRate ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
 							<td></td>
 							<td class="asmt-viewdata-centered">{{pqP4}}</td>
 							<td class="asmt-viewdata-centered">{{cqP4}}</td>
@@ -76,8 +76,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="5">Total Country Financial Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDRFin 0}}{{margCPDRFin}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDRFin 0}}{{unsatCPDRFin}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
@@ -124,11 +124,11 @@
 							<td rowspan="{{../length}}" class="kc-test-viewsubheader">{{../lob}}</td>
 							{{/if}}
 							<td>{{name}}</td>
-							{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRateP3 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRateP2 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRateP1 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-							{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP4 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP3 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP2 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP1 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRate ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
 							<td></td>
 							<td class="asmt-viewdata-centered">{{pqP4}}</td>
 							<td class="asmt-viewdata-centered">{{cqP4}}</td>
@@ -150,8 +150,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="5">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDROps 0}}{{margCPDROps}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDROps 0}}{{unsatCPDROps}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="13" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
