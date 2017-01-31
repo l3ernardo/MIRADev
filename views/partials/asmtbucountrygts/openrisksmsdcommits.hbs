@@ -15,12 +15,12 @@
 					{{#each PrevQtrs}}
 						<th class="kc-test-viewsubheader" width="7%">{{this}}</th>
 					{{/each}}
-					<!--<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>-->
+					<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>
 					<th class="risk-msdcommit-viewheader" width="5%"></th>
 					{{#each PrevQtrs}}
 						<th class="kc-test-viewsubheader" width="7%">{{this}}</th>
 					{{/each}}
-					<!--<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>-->
+					<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>
 				</thead>
 				<tr>
 					<td class="risk-msdcommit-label" colspan="12"><b>Open issues from risk evaluations, deviations, etc.</b></td>
@@ -300,10 +300,10 @@
 				{{#each RiskView1Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%">{{catName}}</td>
-						<td width="40%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						{{{ratingDisplayView PeriodRating 10}}}
 						{{{ratingDisplayView PeriodRating 10}}}
-						<td width="15%">{{originalTargetDate}}</td>
+						<td width="15%">{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%">{{currentTargetDate}}</td>
 					</tr>
 				{{/each}}
@@ -341,7 +341,7 @@
 						<td width="5%" >{{#unless numTasks}}{{catP}}{{/unless}}</td>
 						<td width="5%" >{{#unless numTasks}}{{type}}{{/unless}}</td>
 						<td width="10%">{{#if numTasks}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
-						<td width="5%">{{country}}</td>
+						<td width="5%">{{#if _id}}{{country}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%">{{process}}</td>
 						<td width="5%">{{status}}</td>
 						<td width="10%">{{originalTargetDate}}</td>

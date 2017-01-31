@@ -129,6 +129,14 @@ var calculateORTab = {
               exportOpenRisks.push(tmp);
             }
             doc[0].exportOpenRisks = exportOpenRisks;
+            if (risks.length < defViewRow) {
+              if (risks.length == 0) {
+                risks = fieldCalc.addTestViewData(10,defViewRow);
+              } else {
+                fieldCalc.addTestViewDataPadding(risks,10,(defViewRow-risks.length));
+              }
+            };
+            doc[0].RiskView1Data = risks;
             //second table
             var risks = doc[0].RiskView2Data;
             var riskCategory = {};
@@ -270,7 +278,8 @@ var calculateORTab = {
             DeliveryQtdChange4: Math.abs(doc[0].totalRisks.DeliveryPrevQtr4 - doc[0].totalRisks.DeliveryCurrent)
           };
           //first table
-            var risks = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+            //var risks = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+            var risks = doc[0].AUDataMSAC;
             var exportOpenRisks = [];
             var riskCategory = {};
             var openrisks = [];
