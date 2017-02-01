@@ -12,8 +12,10 @@ var calculateCUTab = {
 
   processCUTab: function(doc, defViewRow) {
     var catList = {};
-    var tmpAccountList = [];
-    var exportList = [];
+	var tmpAccountList = [];
+	var exportList = [];   
+	//tmpAccountList.push({id: "topCategory", counter: audits.length,percent:'100%',name: "Total"});
+	 var objects = {};//object of objects for counting
     //categorization for
     for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
       //to categorize sort
@@ -26,14 +28,14 @@ var calculateCUTab = {
         break;
         case "Unsat &#61;":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 3;
-        doc[0].BUCAsmtDataCURview[i].ratingcategory = "Unsat";
+       // doc[0].BUCAsmtDataCURview[i].ratingcategory = "Unsat";
         break;
         case "Marg &#9660;":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 4;
         break;
         case "Marg &#61;":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 5;
-        doc[0].BUCAsmtDataCURview[i].ratingcategory = "Marg";
+        //doc[0].BUCAsmtDataCURview[i].ratingcategory = "Marg";
         break;
         case "Marg &#9650;":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 6;
@@ -43,7 +45,7 @@ var calculateCUTab = {
         break;
         case "Sat &#61;":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 8;
-        doc[0].BUCAsmtDataCURview[i].ratingcategory = "Sat";
+        //doc[0].BUCAsmtDataCURview[i].ratingcategory = "Sat";
         break;
         case "Exempt;":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 9;
@@ -62,35 +64,49 @@ var calculateCUTab = {
     });
     //categorization for
     for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
-		var category_aux; 
+		var category_aux, id_aux, parent_aux;
 		category_aux = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataCURview[i].ratingCQ,doc[0].BUCAsmtDataCURview[i].ratingPQ1);
-        if(category_aux=='Sat &#61;' || category_aux=='Sat &#9650;' ){
-			category_aux='Sat';
-		}
-		else if(category_aux=='Unsat &#61;' || category_aux=='Unsat &#9660;' ){
-			category_aux='Unsat';			
-		}
-		else if(category_aux=='Marg &#61;' || category_aux=='Marg &#9660;' || category_aux=='Unsat &#9650;'){
-			category_aux='Marg';			
-		}
+		//console.log(category_aux+'  esto:'+doc[0].BUCAsmtDataCURview[i].catP);
+		switch (category_aux) {
+        case "Unsat &#9660;":
+        id_aux = 'Unsat1'; parent_aux='Unsat1';
+        break;
+        case "Unsat &#61;":
+         id_aux = 'Unsat2'; parent_aux='Unsat2';
+        break;
+        case "Marg &#9660;":
+         id_aux = 'Marg1'; parent_aux='Marg1';
+        break;
+        case "Marg &#61;":
+        id_aux = 'Marg2'; parent_aux='Marg2';
+        break;
+        case "Marg &#9650;":
+        id_aux = 'Marg3'; parent_aux='Marg3';
+        break;
+        case "Sat &#9650;":
+        id_aux = 'Sat1'; parent_aux='Sat1';
+        break;
+        case "Sat &#61;":
+        id_aux = 'Sat2'; parent_aux='Sat2';
+        break;
+		default:
+		id_aux=category_aux;parent_aux=category_aux;
+      }
 		
       if(typeof catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] === "undefined"){
         var tmp= {
-          id: category_aux,
+          id: id_aux,
           category:category_aux,
-          count: 0,
-          MetricsValue: 0
-        }
-        tmpAccountList.push(tmp);
-        catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] = tmp;
+          count: 0 ,
+		  maxscore: 0,
+		  cqscore: 0,
+		  pqscore: 0
+        };
+        tmpAccountList.push(tmp);     
+		catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] = tmp;		
       }
-      catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].count++;
-      catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].MetricsValue += parseInt(doc[0].BUCAsmtDataCURview[i].MetricsValue);
-      doc[0].BUCAsmtDataCURview[i].id = doc[0].BUCAsmtDataCURview[i]["docid"];
-      doc[0].BUCAsmtDataCURview[i].parent =category_aux;// doc[0].BUCAsmtDataCURview[i].ratingcategory.replace(/ /g,'');
-
-      tmpAccountList.push(doc[0].BUCAsmtDataCURview[i]);
-      exportList.push({
+	  
+	exportList.push({
         category:doc[0].BUCAsmtDataCURview[i].ratingcategory  || " ",
         name: doc[0].BUCAsmtDataCURview[i].name || " ",
 		country:doc[0].BUCAsmtDataCURview[i].country || " ",
@@ -107,11 +123,20 @@ var calculateCUTab = {
 		pqscore:doc[0].BUCAsmtDataCURview[i].pqscore || " ",
         reviewcomments:doc[0].BUCAsmtDataCURview[i].reviewcomments
       });
+	  
+      catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].count++;	
+      if(doc[0].BUCAsmtDataCURview[i].maxscore!='')	catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+      if(doc[0].BUCAsmtDataCURview[i].cqscore!='') catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);	  
+	  if(doc[0].BUCAsmtDataCURview[i].pqscore!='') catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+      doc[0].BUCAsmtDataCURview[i].id = doc[0].BUCAsmtDataCURview[i]["docid"];
+      doc[0].BUCAsmtDataCURview[i].parent = parent_aux; //doc[0].BUCAsmtDataCURview[i].ratingcategory.replace(/ /g,'');
+      //do counting for category
+      //objects[doc[0].BUCAsmtDataCURview[i].parent].count++ ;
+      tmpAccountList.push(doc[0].BUCAsmtDataCURview[i]);
     }
-    doc[0].exportAccountRatings = exportList;
+    
     for(var category in catList){
       catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataCURview.length*100).toFixed(1);
-      catList[category].MetricsValue = ((catList[category].MetricsValue/parseFloat(doc[0].MetricsValueCU))*100).toFixed(1);
     }
     //Adding padding
     if (Object.keys(catList).length < defViewRow) {
@@ -121,6 +146,7 @@ var calculateCUTab = {
         fieldCalc.addTestViewDataPadding(tmpAccountList,9,(defViewRow-Object.keys(catList).length));
       }
     }
+	doc[0].exportAccountRatings = exportList;
     doc[0].BUCAsmtDataCURview = tmpAccountList;
   }
 }
