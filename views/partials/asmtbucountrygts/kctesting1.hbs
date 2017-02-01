@@ -305,7 +305,10 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest3-link-export" id="RCTest3-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest3-link-export2" id="RCTest3-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="RCTest3_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
@@ -319,14 +322,27 @@
 					<th class="kc-test-viewheader" scope="col" width="5%"># Defects</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
 				</thead>
+				<tbody>
 				{{#each RCTest3Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="5%">{{#if catEntry}}{{originalReportingQuarter}}{{/if}}</td>
+						<td width="5%">{{#if catEntry}}{{testType}}{{/if}}</td>
+						<td width="15%">{{#if catEntry}}{{processSampled}}{{/if}}</td>
+						<td width="10%">{{#if catEntry}}{{sampleCountry}}{{/if}}</td>
+						<td width="10%">{{#if catEntry}}{{controlName}}{{/if}}</td>
+						<td width="20%">{{controllableUnit}}</td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td width="5%">{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
+						<td width="5%">{{targetClose}}</td>
+						<td width="5%">{{count}}</td>
+						<td width="10%">{{defectType}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 </table>
+<script>
+	$("#RCTest3_treeview").treetable({expandable: true });
+</script>
