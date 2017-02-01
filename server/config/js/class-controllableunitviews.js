@@ -27,9 +27,9 @@ var calculateCUTab = {
 	  var objects = {};//object of objects for counting
     //categorization for
     for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
-		var isDel=0; var isCRM=0; var CUType; 	
+		var isDel=0; var isCRM=0; var CUType;
 		if(doc[0].MIRABusinessUnit == "GTS"){//just for GTS
-   	  //Define if assessment is Del / CRM	  
+   	  //Define if assessment is Del / CRM
 	     for(j=0;j<doc[0].asmtsdocsDelivery.length;j++){
 					if(doc[0].asmtsdocsDelivery[j]._id==doc[0].BUCAsmtDataCURview[i].docid) {
       				    isDel=1;
@@ -43,29 +43,29 @@ var calculateCUTab = {
 										j=doc[0].asmtsdocsCRM.length;
 									}
 							}
-				}	
+				}
 				if(isDel>'0')
-				{	
+				{
 						if (doc[0].BUCAsmtDataCURview[i].maxscore !== undefined && doc[0].BUCAsmtDataCURview[i].maxscore !== "") {
 								if (!isNaN(doc[0].BUCAsmtDataCURview[i].maxscore)) {
 									totalmaxscoreDel += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
 									withmaxscoreDel = true;
 								}
-						}	
+						}
 						if (doc[0].BUCAsmtDataCURview[i].cqscore !== undefined && doc[0].BUCAsmtDataCURview[i].cqscore !== "") {
 								if (!isNaN(doc[0].BUCAsmtDataCURview[i].cqscore)) {
 									totalcqscoreDel += parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
 								}
-						}				
+						}
 				}
 				else if(isCRM>'0')
-				{		
+				{
 						if (doc[0].BUCAsmtDataCURview[i].maxscore !== undefined && doc[0].BUCAsmtDataCURview[i].maxscore !== "") {
 							if (!isNaN(doc[0].BUCAsmtDataCURview[i].maxscore)) {
 								totalmaxscoreCrm += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
 								withmaxscoreCrm = true;
 							}
-						}		
+						}
 						if (doc[0].BUCAsmtDataCURview[i].cqscore !== undefined && doc[0].BUCAsmtDataCURview[i].cqscore !== "") {
 							if (!isNaN(doc[0].BUCAsmtDataCURview[i].cqscore)) {
 									totalcqscoreCrm += parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
@@ -74,6 +74,7 @@ var calculateCUTab = {
 				}
 		}
       //to categorize sort
+      doc[0].BUCAsmtDataCURview[i].ratingcategory = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataCURview[i].ratingCQ,doc[0].BUCAsmtDataCURview[i].ratingPQ1);
       switch (doc[0].BUCAsmtDataCURview[i].ratingcategory) {
         case "NR":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 1;
@@ -128,14 +129,14 @@ var calculateCUTab = {
     } else {
       doc[0].WeightedCUScore = 0;
     }
-	
+
     if(doc[0].MIRABusinessUnit == "GTS"){ //just for GTS
 			// CU - Del Weighted Score calculation
 				if (withmaxscoreDel && totalmaxscoreDel !== 0) {
 						doc[0].WeightedCUScoreSOD = ((totalcqscoreDel/totalmaxscoreDel) * 100).toFixed(1)
 				} else {
 						doc[0].WeightedCUScoreSOD = 0;
-				}	
+				}
 			// CU - CRM Weighted Score calculation
 				if (withmaxscoreCrm && totalmaxscoreCrm !== 0) {
 						doc[0].WeightedCUScoreCRM = ((totalcqscoreCrm/totalmaxscoreCrm) * 100).toFixed(1)
@@ -145,6 +146,13 @@ var calculateCUTab = {
 	}
 
     doc[0].BUCAsmtDataCURview.sort(function(a, b){
+      if (doc[0].MIRABusinessUnit == "GTS") {
+        var nameA=a.catP, nameB=b.catP
+        if (nameA > nameB) //sort string descending
+        return -1
+        if (nameA < nameB)
+        return 1
+      }
       var nameA=a.ratingcategorysort, nameB=b.ratingcategorysort
       if (nameA > nameB) //sort string descending
       return -1
@@ -155,7 +163,7 @@ var calculateCUTab = {
     //total level
     var topEntry = {
       id: "topEntry",
-      category: "Total",
+      topName: "Total",
       percent: 100,
       count: 0 ,
       maxscore: 0,
@@ -163,27 +171,11 @@ var calculateCUTab = {
       pqscore: 0
     };
     tmpAccountList.push(topEntry);
-/*
-    if (doc[0].MIRABusinessUnit == "GTS") {
-      for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
-        if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
-          asmtsdocs[i].catP = "CRM";
-          doc[0].asmtsdocsCRM.push(asmtsdocs[i])
-        }else if(doc[0].DeliveryProcessObj[asmtsdocs[i].GPWWBCITKey]){
-          asmtsdocs[i].catP = "Delivery";
-          doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
-        }else {
-          doc[0].asmtsdocs.pop();
-          console.log("GP not found for CU rating asmt: "+ asmtsdocs[i].GPWWBCITKey);
-        }
-      }
-    }*/
     //categorization for
     for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
-    	var category_aux, id_aux, parent_aux;
-    	category_aux = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataCURview[i].ratingCQ,doc[0].BUCAsmtDataCURview[i].ratingPQ1);
+    	var id_aux, parent_aux;
     	//console.log(category_aux+'  esto:'+doc[0].BUCAsmtDataCURview[i].catP);
-    	switch (category_aux) {
+    	switch (doc[0].BUCAsmtDataCURview[i].ratingcategory) {
         case "Unsat &#9660;":
         id_aux = 'Unsat1'; parent_aux='Unsat1';
         break;
@@ -206,56 +198,107 @@ var calculateCUTab = {
         id_aux = 'Sat2'; parent_aux='Sat2';
         break;
       	default:
-      	id_aux=category_aux;parent_aux=category_aux;
+      	id_aux=doc[0].BUCAsmtDataCURview[i].ratingcategory;parent_aux=doc[0].BUCAsmtDataCURview[i].ratingcategory;
       }
 
-      if(typeof catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] === "undefined"){
+      if (doc[0].MIRABusinessUnit == "GTS") {
+        if(typeof catList[doc[0].BUCAsmtDataCURview[i].catP] === "undefined"){
 
-        var tmp= {
-          id: id_aux,
-          parent: "topEntry",
-          category:category_aux,
-          count: 0 ,
-		      maxscore: 0,
-      	  cqscore: 0,
-      	  pqscore: 0
-        };
-        tmpAccountList.push(tmp);
-		    catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] = tmp;
+          var tmp= {
+            id: doc[0].BUCAsmtDataCURview[i].catP,
+            parent: "topEntry",
+            categoryName: doc[0].BUCAsmtDataCURview[i].catP,
+            count: 0 ,
+  		      maxscore: 0,
+        	  cqscore: 0,
+        	  pqscore: 0
+          };
+          tmpAccountList.push(tmp);
+  		    catList[doc[0].BUCAsmtDataCURview[i].catP] = tmp;
+        }
+        if(typeof catList[doc[0].BUCAsmtDataCURview[i].catP+doc[0].BUCAsmtDataCURview[i].ratingcategory] === "undefined"){
+
+          var tmp= {
+            id: id_aux,
+            parent: doc[0].BUCAsmtDataCURview[i].catP,
+            category:doc[0].BUCAsmtDataCURview[i].ratingcategory,
+            count: 0 ,
+  		      maxscore: 0,
+        	  cqscore: 0,
+        	  pqscore: 0
+          };
+          tmpAccountList.push(tmp);
+  		    catList[doc[0].BUCAsmtDataCURview[i].catP+doc[0].BUCAsmtDataCURview[i].ratingcategory] = tmp;
+        }
+      }else{
+        if(typeof catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] === "undefined"){
+
+          var tmp= {
+            id: id_aux,
+            parent: "topEntry",
+            category:doc[0].BUCAsmtDataCURview[i].ratingcategory,
+            count: 0 ,
+  		      maxscore: 0,
+        	  cqscore: 0,
+        	  pqscore: 0
+          };
+          tmpAccountList.push(tmp);
+  		    catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] = tmp;
+        }
       }
-
-      exportList.push({
-        category:doc[0].BUCAsmtDataCURview[i].ratingcategory  || " ",
-        name: doc[0].BUCAsmtDataCURview[i].name || " ",
-        country:doc[0].BUCAsmtDataCURview[i].country || " ",
-        process:doc[0].BUCAsmtDataCURview[i].process || " ",
-        auditprogram:doc[0].BUCAsmtDataCURview[i].auditprogram || " ",
-        ratingcategory:doc[0].BUCAsmtDataCURview[i].ratingcategory || " ",
-        ratingCQ:doc[0].BUCAsmtDataCURview[i].ratingCQ || " ",
-        ratingPQ1:doc[0].BUCAsmtDataCURview[i].ratingPQ1 || " ",
-        targettosat:doc[0].BUCAsmtDataCURview[i].targettosat || " ",
-        targettosatprev:doc[0].BUCAsmtDataCURview[i].targettosatprev || " ",
-      	size:doc[0].BUCAsmtDataCURview[i].size || " ",
-      	maxscore:doc[0].BUCAsmtDataCURview[i].maxscore || " ",
-      	cqscore:doc[0].BUCAsmtDataCURview[i].cqscore || " ",
-      	pqscore:doc[0].BUCAsmtDataCURview[i].pqscore || " ",
-        reviewcomments:doc[0].BUCAsmtDataCURview[i].reviewcomments
-      });
-
-      catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].count++;
+      var exportTmp = {};
+        exportTmp.blank = " ";
+        if (doc[0].MIRABusinessUnit == "GTS") {
+          exportTmp.catP = doc[0].BUCAsmtDataCURview[i].catP  || " ";
+        }
+        exportTmp.ratingcategory = doc[0].BUCAsmtDataCURview[i].ratingcategory || " ";
+        exportTmp.name = doc[0].BUCAsmtDataCURview[i].name || " ";
+        exportTmp.count = doc[0].BUCAsmtDataCURview[i].count || " ";
+        exportTmp.percent = doc[0].BUCAsmtDataCURview[i].percent || " ";
+        exportTmp.ratingPQ1 = doc[0].BUCAsmtDataCURview[i].ratingPQ1 || " ";
+        exportTmp.ratingCQ = doc[0].BUCAsmtDataCURview[i].ratingCQ || " ";
+        exportTmp.targettosatprev = doc[0].BUCAsmtDataCURview[i].targettosatprev || " ";
+        exportTmp.targettosat = doc[0].BUCAsmtDataCURview[i].targettosat || " ";
+        exportTmp.size = doc[0].BUCAsmtDataCURview[i].size || " ";
+        exportTmp.maxscore = doc[0].BUCAsmtDataCURview[i].maxscore || " ";
+        exportTmp.cqscore = doc[0].BUCAsmtDataCURview[i].cqscore || " ";
+        exportTmp.pqscore = doc[0].BUCAsmtDataCURview[i].pqscore || " ";
+        exportTmp.reviewcomments = doc[0].BUCAsmtDataCURview[i].reviewcomments || " ";
+      exportList.push(exportTmp);
+      if (doc[0].MIRABusinessUnit == "GTS") {
+        catList[doc[0].BUCAsmtDataCURview[i].catP].count++;
+        catList[doc[0].BUCAsmtDataCURview[i].catP+doc[0].BUCAsmtDataCURview[i].ratingcategory].count++;
+        if(doc[0].BUCAsmtDataCURview[i].maxscore!=''){
+          catList[doc[0].BUCAsmtDataCURview[i].catP+doc[0].BUCAsmtDataCURview[i].ratingcategory].maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+          topEntry.maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+          catList[doc[0].BUCAsmtDataCURview[i].catP].maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+        }
+        if(doc[0].BUCAsmtDataCURview[i].cqscore!=''){
+           catList[doc[0].BUCAsmtDataCURview[i].catP+doc[0].BUCAsmtDataCURview[i].ratingcategory].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
+           topEntry.cqscore += parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
+           catList[doc[0].BUCAsmtDataCURview[i].catP].cqscore += parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
+         }
+        if(doc[0].BUCAsmtDataCURview[i].pqscore!=''){
+           catList[doc[0].BUCAsmtDataCURview[i].catP+doc[0].BUCAsmtDataCURview[i].ratingcategory].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+           topEntry.pqscore += parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+           catList[doc[0].BUCAsmtDataCURview[i].catP].pqscore += parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+         }
+      }else{
+        catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].count++;
+        if(doc[0].BUCAsmtDataCURview[i].maxscore!=''){
+          catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+          topEntry.maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+        }
+        if(doc[0].BUCAsmtDataCURview[i].cqscore!=''){
+           catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
+           topEntry.cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
+         }
+        if(doc[0].BUCAsmtDataCURview[i].pqscore!=''){
+           catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+           topEntry.pqscore+=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+         }
+      }
       topEntry.count++;
-      if(doc[0].BUCAsmtDataCURview[i].maxscore!=''){
-        catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
-        topEntry.maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
-      }
-      if(doc[0].BUCAsmtDataCURview[i].cqscore!=''){
-         catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
-         topEntry.cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
-       }
-	    if(doc[0].BUCAsmtDataCURview[i].pqscore!=''){
-         catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
-         topEntry.pqscore+=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
-       }
       doc[0].BUCAsmtDataCURview[i].id = doc[0].BUCAsmtDataCURview[i]["docid"];
       doc[0].BUCAsmtDataCURview[i].parent = parent_aux; //doc[0].BUCAsmtDataCURview[i].ratingcategory.replace(/ /g,'');
       //do counting for category
@@ -267,14 +310,14 @@ var calculateCUTab = {
       catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataCURview.length*100).toFixed(1);
     }
     //Adding padding
-    if (Object.keys(catList).length < defViewRow) {
+    if (1 < defViewRow) {
       if (tmpAccountList.length == 0) {
         tmpAccountList = fieldCalc.addTestViewData(9,defViewRow);
       } else {
-        fieldCalc.addTestViewDataPadding(tmpAccountList,9,(defViewRow-Object.keys(catList).length));
+        fieldCalc.addTestViewDataPadding(tmpAccountList,9,(defViewRow-1));
       }
     }
-	  doc[0].exportAccountRatings = exportList;
+	  doc[0].exportCURating = exportList;
     doc[0].BUCAsmtDataCURview = tmpAccountList;
   }
 }

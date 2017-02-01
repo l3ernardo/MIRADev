@@ -1366,6 +1366,15 @@ function tableToReportMultiple(table, nameTable){
 
 /* main */
 $(document).ready(function() {
+	//CU Ratings export buttons
+	$('#CURating-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('curating_treeview', "CURating");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#CURating-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('curating_treeview',"CURating");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
 	//Risks export buttons
 	$("#openrisks_checkbox_tree").click(function(){
 		$(".openrisks_checkbox_tree").prop('checked', $(this).prop('checked'));
