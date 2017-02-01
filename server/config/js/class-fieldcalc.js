@@ -177,7 +177,7 @@ var calculatefield = {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {
-          MIRABusinessUnit = "GTS";            
+          MIRABusinessUnit = "GTS";
         }
         break;
       default:
@@ -548,6 +548,7 @@ var calculatefield = {
             var CUCRMables = {};
             var CPauditables = {};
             var CPassmts = {};
+            doc[0].AUDocs = {};
             // For Current Quarter Country Process Defect Rate Exceptions
             doc[0].CPDRException = [];
             // For CP Financial Process Defect Rates that are Marg counter
@@ -611,6 +612,7 @@ var calculatefield = {
                 }
               }
               else if (asmtsdocs[i].key == "Assessable Unit"){
+                doc[0].AUDocs[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                 if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                   CUassunits.push(asmtsdocs[i]);
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
@@ -665,7 +667,7 @@ var calculatefield = {
                 if(CUauditables[asmts.body.docs[i].parentid]){
                   asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
                   asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
-                  asmts.body.docs[i].CUScore = calculatefield.getCUScore(CUauditables[asmts.body.docs[i].parentid].PeriodRating, asmts.body.docs[i].CUMaxScore);
+                  asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
 
                   if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
                     asmts.body.docs[i].Type = "Portfolio CU";
@@ -1203,7 +1205,7 @@ var calculatefield = {
 					}
 				}
 				}
-					
+
 			switch (doc[0].asmtsdocs[i].RatingCategory) {
               case "Sat &#9650;":
                 if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
@@ -1585,7 +1587,7 @@ var calculatefield = {
           doc[0].CUTotalPctCRM = "0%";
         else
           doc[0].CUTotalPctCRM = "100%";
-	  
+
 // Processing Delivery CU ratings
         doc[0].CUSatEqualCntSOD = satEqCUDel;
         doc[0].CUSatPlusCntSOD = satUpCUDel;
@@ -1637,7 +1639,7 @@ var calculatefield = {
           doc[0].CUTotalPctSOD = "0%";
         else
           doc[0].CUTotalPctSOD = "100%";
-	  
+
 	  // Processing totals of CU Ratings
         satEqCU = satEqCUCrm+satEqCUDel;
         satUpCU = satUpCUCrm+satUpCUDel;
@@ -1701,7 +1703,7 @@ var calculatefield = {
           doc[0].CUTotalPct = "100%";
 		}
 	  else{
-	  
+
         // Processing totals of CU Ratings
         doc[0].CUSatEqualCnt = satEqCU;
         doc[0].CUSatPlusCnt = satUpCU;

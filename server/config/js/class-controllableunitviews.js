@@ -86,6 +86,32 @@ var calculateCUTab = {
       return 1
       return 0 //default return value (no sorting)
     });
+    //total level
+    var topEntry = {
+      id: "topEntry",
+      category: "Total",
+      percent: 100,
+      count: 0 ,
+      maxscore: 0,
+      cqscore: 0,
+      pqscore: 0
+    };
+    tmpAccountList.push(topEntry);
+/*
+    if (doc[0].MIRABusinessUnit == "GTS") {
+      for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
+        if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
+          asmtsdocs[i].catP = "CRM";
+          doc[0].asmtsdocsCRM.push(asmtsdocs[i])
+        }else if(doc[0].DeliveryProcessObj[asmtsdocs[i].GPWWBCITKey]){
+          asmtsdocs[i].catP = "Delivery";
+          doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
+        }else {
+          doc[0].asmtsdocs.pop();
+          console.log("GP not found for CU rating asmt: "+ asmtsdocs[i].GPWWBCITKey);
+        }
+      }
+    }*/
     //categorization for
     for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
     	var category_aux, id_aux, parent_aux;
@@ -118,8 +144,10 @@ var calculateCUTab = {
       }
 
       if(typeof catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] === "undefined"){
+
         var tmp= {
           id: id_aux,
+          parent: "topEntry",
           category:category_aux,
           count: 0 ,
 		      maxscore: 0,
@@ -149,9 +177,19 @@ var calculateCUTab = {
       });
 
       catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].count++;
-      if(doc[0].BUCAsmtDataCURview[i].maxscore!='')	catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
-      if(doc[0].BUCAsmtDataCURview[i].cqscore!='') catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
-	    if(doc[0].BUCAsmtDataCURview[i].pqscore!='') catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+      topEntry.count++;
+      if(doc[0].BUCAsmtDataCURview[i].maxscore!=''){
+        catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+        topEntry.maxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
+      }
+      if(doc[0].BUCAsmtDataCURview[i].cqscore!=''){
+         catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
+         topEntry.cqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
+       }
+	    if(doc[0].BUCAsmtDataCURview[i].pqscore!=''){
+         catList[doc[0].BUCAsmtDataCURview[i].ratingcategory].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+         topEntry.pqscore+=  parseInt(doc[0].BUCAsmtDataCURview[i].pqscore);
+       }
       doc[0].BUCAsmtDataCURview[i].id = doc[0].BUCAsmtDataCURview[i]["docid"];
       doc[0].BUCAsmtDataCURview[i].parent = parent_aux; //doc[0].BUCAsmtDataCURview[i].ratingcategory.replace(/ /g,'');
       //do counting for category
