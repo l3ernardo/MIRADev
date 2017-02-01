@@ -97,6 +97,21 @@ var calculateCUTab = {
       pqscore: 0
     };
     tmpAccountList.push(topEntry);
+/*
+    if (doc[0].MIRABusinessUnit == "GTS") {
+      for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
+        if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
+          asmtsdocs[i].catP = "CRM";
+          doc[0].asmtsdocsCRM.push(asmtsdocs[i])
+        }else if(doc[0].DeliveryProcessObj[asmtsdocs[i].GPWWBCITKey]){
+          asmtsdocs[i].catP = "Delivery";
+          doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
+        }else {
+          doc[0].asmtsdocs.pop();
+          console.log("GP not found for CU rating asmt: "+ asmtsdocs[i].GPWWBCITKey);
+        }
+      }
+    }*/
     //categorization for
     for(var i = 0; i < doc[0].BUCAsmtDataCURview.length; i++){
     	var category_aux, id_aux, parent_aux;
@@ -129,6 +144,7 @@ var calculateCUTab = {
       }
 
       if(typeof catList[doc[0].BUCAsmtDataCURview[i].ratingcategory] === "undefined"){
+
         var tmp= {
           id: id_aux,
           parent: "topEntry",
