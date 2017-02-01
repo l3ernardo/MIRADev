@@ -460,9 +460,9 @@ var assessment = {
 							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 
-							comp.getCompDocs(db,doc).then(function(dataComp){
-								fieldCalc.getAssessments(db, doc, req).then(function(data){
-
+						
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
+								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Get rating profiles
 									fieldCalc.getRatingProfile(doc);
 
@@ -490,7 +490,11 @@ var assessment = {
 											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataCURview.length));
 										}
 									}*/
+									//audit universe
+									aut.processAUTab(doc,defViewRow);
 
+									//Audits & Reviews tab
+									aar.processARTab(doc,defViewRow);
 									// create a space for performance Tab
 									performanceTab.getKFCRDefectRate(db,doc);
 									performanceTab.getKCODefectRate(db,doc);
@@ -572,14 +576,8 @@ var assessment = {
 
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
-									//audit universe
-									aut.processAUTab(doc,defViewRow);
-
 
 									//console.log(doc[0].BUCAsmtDataPIviewCRM);
-
-
-
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 

@@ -254,7 +254,82 @@ var calculateARTab = {
           // *** End of Audits and Reviews embedded view *** //
           break;
         case "BU Country":
+          // *** Start of Audits and Reviews embedded view *** //
+          //View 1 - Internal Audit Data
+          // Begin Sort
+          doc[0].InternalAuditData.sort(function(a, b){
+            var nameA=a.plannedStartDate.toLowerCase(), nameB=b.plannedStartDate.toLowerCase()
+            if (nameA > nameB) //sort string descending
+              return -1
+            if (nameA < nameB)
+              return 1
+            return 0
+          });
+          // End sort
+          var auditInter = doc[0].InternalAuditData;
+          var parentAsmts = doc[0].AUData;
+          console.log("Asmts in AU Data: "+parentAsmts.length);
+          var exportInternalAuditData = [];
+          var totalCUScore = 0;
+          var totalMaxScore = 0;
+          console.log("InternalAuditData number of elements: "+auditInter.length);
+          for(var i = 0; i < auditInter.length; i++) {
+            var tmp = {};
+            tmp.id = auditInter[i]._id;
+            tmp.plannedStartDate = auditInter[i].plannedStartDate;
+            tmp.engagement = auditInter[i].engagement; //To be changed from "id" to "engagement" in the near future
+            for(var j = 0; j < parentAsmts.length; j++) {
+              if (auditInter[i].parentid == parentAsmts[j].id) {
+                console.log("Internal Audit Parent ID "+auditInter[i].parentid+" is equal to parent Asmts ID "+parentAsmts[j].id);
+                var parentAU = doc[0].AUDocs[parentAsmts[j].parentid];
+                tmp.Name = parentAU.Name;
+                console.log("Name: "+tmp.Name);
+                if(parentAU.DocSubType == "Controllable Unit" && parentAU.Portfolio == "Yes") {
+                  tmp.DocSubType = "Portfolio CU";
+                }
+                else if (parentAU.DocSubType == "Controllable Unit" && (parentAU.Portfolio == "No" || parentAU.Portfolio == "" || parentAU.Portfolio == undefined)){
+                  tmp.DocSubType = "Standalone CU";
+                }
+                else {
+                  tmp.DocSubType = parentAU.DocSubType;
+                }
+                console.log("DocSubType: "+tmp.DocSubType);
+                tmp.PeriodRatingPrev = parentAU.PeriodRatingPrev;
+                console.log("PeriodRatingPrev: "+tmp.PeriodRatingPrev);
+                tmp.PeriodRating = parentAsmts[j].PeriodRating;
+                console.log("PeriodRating: "+tmp.PeriodRating);
+                tmp.CUSize = parentAU.CUSize;
+                console.log("CUSize: "+tmp.CUSize);
+                tmp.CUScore = parentAsmts[j].CUScore;
+                console.log("CUScore: "+tmp.CUScore);
+                tmp.CUMaxScore = parentAsmts[j].CUMaxScore;
+                console.log("CUMaxScore: "+tmp.CUMaxScore);
+              }
+            }
+            //Calculate total scores (CU and MAX) for later WeightedAuditScore calculation
+            totalCUScore += tmp.CUScore;
+            console.log("Total CU Score: "+totalCUScore);
+            totalMaxScore += tmp.CUMaxScore;
+            console.log("Total MAX Score: "+totalMaxScore);
+            //Export each internal audit as temporal data
+            exportInternalAuditData.push(tmp);
+          }
+          //Calculate WeightedAuditScore
+          var weightedScore = 0;
+          if(totalMaxScore == 0) {
+            weightedScore = "No MAX Score available!"
+          }
+          else {
+            weightedScore = ((totalCUScore/totalMaxScore)*100).toFixed(1);
+          }
+          console.log("WeightedAuditScore: "+weightedScore);
+
+          //Export Internal Audit data and the Weighted Score to the Handlebars view
+          doc[0].exportInternalAuditData = exportInternalAuditData;
+          doc[0].WeightedAuditScore = weightedScore;
+          // *** End of Audits and Reviews embedded view *** //
           break;
+
         case "Controllable Unit":
 
         // *** Start of Audits and Reviews embedded view 1 *** //
