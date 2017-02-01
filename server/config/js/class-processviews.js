@@ -26,14 +26,14 @@ var calculatePRTab = {
         break;
         case "Unsat &#61;":
         doc[0].BUCAsmtDataPRview[i].ratingcategorysort = 3;
-        doc[0].BUCAsmtDataPRview[i].ratingcategory = "Unsat";
+        //doc[0].BUCAsmtDataPRview[i].ratingcategory = "Unsat";
         break;
         case "Marg &#9660;":
         doc[0].BUCAsmtDataPRview[i].ratingcategorysort = 4;
         break;
         case "Marg &#61;":
         doc[0].BUCAsmtDataPRview[i].ratingcategorysort = 5;
-        doc[0].BUCAsmtDataPRview[i].ratingcategory = "Marg";
+        //doc[0].BUCAsmtDataPRview[i].ratingcategory = "Marg";
         break;
         case "Marg &#9650;":
         doc[0].BUCAsmtDataPRview[i].ratingcategorysort = 6;
@@ -43,7 +43,7 @@ var calculatePRTab = {
         break;
         case "Sat &#61;":
         doc[0].BUCAsmtDataPRview[i].ratingcategorysort = 8;
-        doc[0].BUCAsmtDataPRview[i].ratingcategory = "Sat";
+        //doc[0].BUCAsmtDataPRview[i].ratingcategory = "Sat";
         break;
         case "Exempt;":
         doc[0].BUCAsmtDataPRview[i].ratingcategorysort = 9;
@@ -62,10 +62,37 @@ var calculatePRTab = {
     });
     //categorization for
     for(var i = 0; i < doc[0].BUCAsmtDataPRview.length; i++){
+		var category_aux; var id_aux; var parent_aux;
+		category_aux = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataPRview[i].ratingCQ,doc[0].BUCAsmtDataPRview[i].ratingPQ1);	
+		switch (category_aux) {
+        case "Unsat &#9660;":
+        id_aux = 'Unsat1'; parent_aux='Unsat1';
+        break;
+        case "Unsat &#61;":
+         id_aux = 'Unsat2'; parent_aux='Unsat2';
+        break;
+        case "Marg &#9660;":
+         id_aux = 'Marg1'; parent_aux='Marg1';
+        break;
+        case "Marg &#61;":
+        id_aux = 'Marg2'; parent_aux='Marg2';
+        break;
+        case "Marg &#9650;":
+        id_aux = 'Marg3'; parent_aux='Marg3';
+        break;
+        case "Sat &#9650;":
+        id_aux = 'Sat1'; parent_aux='Sat1';
+        break;
+        case "Sat &#61;":
+        id_aux = 'Sat2'; parent_aux='Sat2';
+        break;
+		default:
+		id_aux=category_aux;parent_aux=category_aux;
+      }
       if(typeof catList[doc[0].BUCAsmtDataPRview[i].ratingcategory] === "undefined"){
         var tmp= {
-          id: doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,''),
-          category: doc[0].BUCAsmtDataPRview[i].ratingcategory,
+          id: id_aux,
+          category: category_aux,
           count: 0,
           MetricsValue: 0
         }
@@ -75,7 +102,8 @@ var calculatePRTab = {
       catList[doc[0].BUCAsmtDataPRview[i].ratingcategory].count++;
       catList[doc[0].BUCAsmtDataPRview[i].ratingcategory].MetricsValue += parseInt(doc[0].BUCAsmtDataPRview[i].MetricsValue);
       doc[0].BUCAsmtDataPRview[i].id = doc[0].BUCAsmtDataPRview[i]["docid"];
-      doc[0].BUCAsmtDataPRview[i].parent = doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'');
+	  
+      doc[0].BUCAsmtDataPRview[i].parent =parent_aux;// doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'');
 
       tmpAccountList.push(doc[0].BUCAsmtDataPRview[i]);
       exportList.push({

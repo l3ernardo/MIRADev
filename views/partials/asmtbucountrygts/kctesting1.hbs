@@ -53,29 +53,29 @@
 							<td rowspan="{{../length}}" class="kc-test-viewsubheader">{{../lob}}</td>
 							{{/if}}
 							<td>{{name}}</td>
+							{{{defectRateDisplayView defectRateP4 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP4}}</td>
+							{{{defectRateDisplayView defectRateP3 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP3}}</td>
+							{{{defectRateDisplayView defectRateP2 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP2}}</td>
+							{{{defectRateDisplayView defectRateP1 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP1}}</td>
+							{{{defectRateDisplayView defectRate ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatio}}</td>
 							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td class="asmt-viewdata-centered">{{pqP4}}</td>
+							<td class="asmt-viewdata-centered">{{cqP4}}</td>
+							<td class="asmt-viewdata-centered">{{pqP3}}</td>
+							<td class="asmt-viewdata-centered">{{cqP3}}</td>
+							<td class="asmt-viewdata-centered">{{pqP2}}</td>
+							<td class="asmt-viewdata-centered">{{cqP2}}</td>
+							<td class="asmt-viewdata-centered">{{pqP1}}</td>
+							<td class="asmt-viewdata-centered">{{cqP1}}</td>
+							<td class="asmt-viewdata-centered">{{pqf}}</td>
+							<td class="asmt-viewdata-centered">{{pqo}}</td>
+							<td class="asmt-viewdata-centered">{{cqf}}</td>
+							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
 				{{/KCProcessFIN}}
@@ -84,8 +84,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="10">Total Country Financial Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDRFin 0}}{{margCPDRFin}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDRFin 0}}{{unsatCPDRFin}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
@@ -137,29 +137,29 @@
 							<td rowspan="{{../length}}" class="kc-test-viewsubheader">{{../lob}}</td>
 							{{/if}}
 							<td>{{name}}</td>
+							{{{defectRateDisplayView defectRateP4 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP4}}</td>
+							{{{defectRateDisplayView defectRateP3 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP3}}</td>
+							{{{defectRateDisplayView defectRateP2 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP2}}</td>
+							{{{defectRateDisplayView defectRateP1 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatioP1}}</td>
+							{{{defectRateDisplayView defectRate ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							<td>{{testingRatio}}</td>
 							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td class="asmt-viewdata-centered">{{pqP4}}</td>
+							<td class="asmt-viewdata-centered">{{cqP4}}</td>
+							<td class="asmt-viewdata-centered">{{pqP3}}</td>
+							<td class="asmt-viewdata-centered">{{cqP3}}</td>
+							<td class="asmt-viewdata-centered">{{pqP2}}</td>
+							<td class="asmt-viewdata-centered">{{cqP2}}</td>
+							<td class="asmt-viewdata-centered">{{pqP1}}</td>
+							<td class="asmt-viewdata-centered">{{cqP1}}</td>
+							<td class="asmt-viewdata-centered">{{pqf}}</td>
+							<td class="asmt-viewdata-centered">{{pqo}}</td>
+							<td class="asmt-viewdata-centered">{{cqf}}</td>
+							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
 				{{/KCProcessOPS}}
@@ -168,8 +168,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="10">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDROps 0}}{{margCPDROps}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDROps 0}}{{unsatCPDROps}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
@@ -258,17 +258,21 @@
 			<span class="kc-test-header"><b>Current Quarter Country Process Defect Rate Exceptions</b></span><br /><br />
 			<table cellspacing="0" cellpadding="0" border="0" width="100%">
 				<thead>
-					<th class="kc-test-viewheader" scope="col" width="50%">Process</th>
+					<th class="kc-test-viewheader" scope="col" width="10%"></th>
+					<th class="kc-test-viewheader" scope="col" width="40%">Process</th>
 					<th class="kc-test-viewheader" scope="col" width="15%"># Tests</th>
 					<th class="kc-test-viewheader" scope="col" width="15%"># Defects</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">DR %</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Count</th>
 				</thead>
-				{{#each RCTest1Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+				{{#each CPDRException}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%">{{category}}</td>
+						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
+						<td width="15%" >{{AUDefectCount}}</td>
+						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
+						<td width="10%">{{count}}</td>
 					</tr>
 				{{/each}}
 			</table>

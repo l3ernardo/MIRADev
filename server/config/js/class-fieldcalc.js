@@ -169,6 +169,17 @@ var calculatefield = {
           MIRABusinessUnit = "GTS";
         }
 				break;
+      case "countryControls":
+        if (doc[0].BUPARENT == "BSU300000027") {
+          MIRABusinessUnit = "GBS";
+        }
+        else if (doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") {
+          MIRABusinessUnit = "GTS Transformation";
+        }
+        else {
+          MIRABusinessUnit = "GTS";            
+        }
+        break;
       default:
         MIRABusinessUnit = "";
 		}
@@ -714,6 +725,8 @@ var calculatefield = {
       var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0, bocEx = 0;
       var satEqFin = 0, satUpFin = 0, margUpFin = 0, margEqFin = 0, margDwnFin = 0, unsatEqFin = 0, unsatDwnFin = 0, exemptFin = 0, nrFin = 0;
       var satEqOps = 0, satUpOps = 0, margUpOps = 0, margEqOps = 0, margDwnOps = 0, unsatEqOps = 0, unsatDwnOps = 0, exemptOps = 0, nrOps = 0;
+	  var satEqCUCrm = 0, satUpCUCrm = 0, margUpCUCrm = 0, margEqCUCrm = 0, margDwnCUCrm = 0, unsatEqCUCrm = 0, unsatDwnCUCrm = 0, exemptCUCrm = 0, nrCUCrm = 0, bocExCUCrm = 0;
+	  var satEqCUDel = 0, satUpCUDel = 0, margUpCUDel = 0, margEqCUDel = 0, margDwnCUDel = 0, unsatEqCUDel = 0, unsatDwnCUDel = 0, exemptCUDel = 0, nrCUDel = 0, bocExCUDel = 0;
       var toadd;
 	 var POCountryFlag = 0, POCUFlag = 0, POBUCFlag  =0, POCountryOtherFlag = 0, POCUOtherFlag = 0, POBUCOtherFlag  =0;
 
@@ -1127,6 +1140,7 @@ var calculatefield = {
           }
           if (doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit") {
             // CU Ratings Tab embedded views
+			var isDel=0; var isCRM=0;
             toadd = {
               "docid":doc[0].asmtsdocs[i]._id,
               "name":doc[0].asmtsdocs[i].AssessableUnitName,
@@ -1144,64 +1158,7 @@ var calculatefield = {
               "reviewcomments":doc[0].asmtsdocs[i].ReviewComments
             };
             doc[0].BUCAsmtDataCURview.push(toadd);
-
-            // Rating Category Counters for CU
-			/*var count1=0; var count2=0;
-			for(j=0;j<doc[0].KCProcessFIN.length;j++){
-				var tfin= doc[0].KCProcessFIN;
-				var fid=tfin[j].id;
-				if(fid==doc[0].asmtsdocs[i].GPWWBCITKey){console.log('FIN si');
-					 count1=count1+1;
-					 //j=doc[0].KCProcessFIN.length;
-				}
-			}
-			for(k=0;k<doc[0].KCProcessOPS.length;k++){
-			    var tops= doc[0].KCProcessOPS;
-				var oid=tops[j].id;
-				if(oid==doc[0].asmtsdocs[i].GPWWBCITKey){console.log('OPS si');
-					 count2=count2+1;
-					// k=doc[0].KCProcessFIN.length;
-				}
-			}
-			switch (doc[0].asmtsdocs[i].RatingCategory) {
-              case "Sat &#9650;":
-                if (count1>0) satUpFin = satUpFin + 1;
-                else satUpOps = satUpOps + 1;
-                break;
-              case "Sat &#61;":
-                if (count1>0) satEqFin = satEqFin + 1;
-                else satEqOps = satEqOps + 1;
-                break;
-              case "Marg &#9650;":
-                if (count1>0) margUpFin = margUpFin + 1;
-                else margUpOps = margUpOps + 1;
-                break;
-              case "Marg &#9660;":
-                if (count1>0) margDwnFin = margDwnFin + 1;
-                else margDwnOps = margDwnOps + 1;
-                break;
-              case "Marg &#61;":
-                if (count1>0) margEqFin = margEqFin + 1;
-                else margEqOps = margEqOps + 1;
-                break;
-              case "Unsat &#9660;":
-                if (count1>0) unsatDwnFin = unsatDwnFin + 1;
-                else unsatDwnOps = unsatDwnOps + 1;
-                break;
-              case "Unsat &#61;":
-                if (count1>0) unsatEqFin = unsatEqFin + 1;
-                else unsatEqOps = unsatEqOps + 1;
-                break;
-              case "Exempt":
-                if (count1>0) exemptFin = exemptFin + 1;
-                else exemptOps = exemptOps + 1;
-                break;
-              default:
-                if (count1>0) nrFin = nrFin + 1;
-                else nrOps = nrOps + 1;
-            }
-			*/
-
+			if(doc[0].MIRABusinessUnit == "GBS"){
             switch (doc[0].asmtsdocs[i].RatingCategory) {
               case "Sat &#9650;":
                 satUpCU = satUpCU + 1;
@@ -1230,6 +1187,61 @@ var calculatefield = {
               default:
                 nrCU = nrCU + 1;
             }
+			}
+			else{
+				for(j=0;j<doc[0].asmtsdocsDelivery.length;j++){
+					if(doc[0].asmtsdocsDelivery[j]._id==doc[0].asmtsdocs[i]._id) {
+      				    isDel=1;
+					    j=doc[0].asmtsdocsDelivery.length;
+					}
+				}
+				if(isDel==0){
+				for(j=0;j<doc[0].asmtsdocsCRM.length;j++){
+					if(doc[0].asmtsdocsCRM[j]._id==doc[0].asmtsdocs[i]._id) {
+      				    isCRM=1;
+					    j=doc[0].asmtsdocsCRM.length;
+					}
+				}
+				}
+					
+			switch (doc[0].asmtsdocs[i].RatingCategory) {
+              case "Sat &#9650;":
+                if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
+                else satUpCUDel = satUpCUDel + 1;
+                break;
+              case "Sat &#61;":
+                if (isCRM>0) satEqCUCrm = satEqCUCrm + 1;
+                else satEqCUDel = satEqCUDel + 1;
+                break;
+              case "Marg &#9650;":
+                if (isCRM>0) margUpCUCrm = margUpCUCrm + 1;
+                else margUpCUDel = margUpCUDel + 1;
+                break;
+              case "Marg &#9660;":
+                if (isCRM>0) margDwnCUCrm = margDwnCUCrm + 1;
+                else margDwnCUDel = margDwnCUDel + 1;
+                break;
+              case "Marg &#61;":
+                if (isCRM>0) margEqCUCrm = margEqCUCrm + 1;
+                else margEqCUDel = margEqCUDel + 1;
+                break;
+              case "Unsat &#9660;":
+                if (isCRM>0) unsatDwnCUCrm = unsatDwnCUCrm + 1;
+                else unsatDwnCUDel = unsatDwnCUDel + 1;
+                break;
+              case "Unsat &#61;":
+                if (isCRM>0) unsatEqCUCrm = unsatEqCUCrm + 1;
+                else unsatEqCUDel = unsatEqCUDel + 1;
+                break;
+              case "Exempt":
+                if (isCRM>0) exemptCUCrm = exemptCUCrm + 1;
+                else exemptCUDel = exemptCUDel + 1;
+                break;
+              default:
+                if (isCRM>0) nrCUCrm = nrCUCrm + 1;
+                else nrCUDel = nrCUDel + 1;
+            }
+			}
           }
 
           switch (doc[0].ParentDocSubType) {
@@ -1272,117 +1284,14 @@ var calculatefield = {
             	// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
 
             try{
-            	//get MSAC missed commitments
-            	doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
-            	//get Open Issue count per child assessment
-            	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
-
-            	if (doc[0].MIRABusinessUnit == "GTS"){
-
-            		if(doc[0].asmtsdocs[i].catP == "CRM"){
 
 
-                        toadd = {
-                          "docid":doc[0].asmtsdocs[i]._id,
-                          "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                          "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                          "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                          "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                          "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-                          "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-                          "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-                          "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-                          "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-                          "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
-                          "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-                          "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
-                          "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-                        };
-                        doc[0].BUCAsmtDataPIviewCRM.push(toadd);
+            	//GBS and GTS Transformation, GTS its been calculated on createTablesData
 
-                      	}else{
-
-                              toadd = {
-                                "docid":doc[0].asmtsdocs[i]._id,
-                                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-                                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-                                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-                                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-                                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-                                "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
-                                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-                                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
-                                "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-                              };
-
-                              doc[0].BUCAsmtDataPIviewDelivery.push(toadd);
-
-                      	}
-
-
-                        doc[0].BUCAsmtDataPIview.push(toadd);
-
-                        // PO tab other indicators view CRM
-
-
-
-                        toadd = {
-                          "docid":doc[0].asmtsdocs[i]._id,
-                          "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                          "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                          "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount,
-                          "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-                        };
-
-
-                        if (doc[0].asmtsdocs[i].OpMetric != undefined) {
-
-                          for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; j++) {
-
-                          	toadd[doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
-                          	toadd["docid"] = doc[0].asmtsdocs[i]._id;
-                          	toadd["name"] = doc[0].asmtsdocs[i].AssessableUnitName;
-                          	toadd["ParentDocSubType"] = doc[0].asmtsdocs[i].ParentDocSubType;
-                          	toadd["bocExCount"] = doc[0].asmtsdocs[i].BOCExceptionCount;
-
-                          }
-
-
-                        }
-
-                		if(doc[0].asmtsdocs[i].catP == "CRM"){
-
-
-                            doc[0].BUCAsmtDataOIviewCRM.push(toadd);
-
-                            // Basics of Control Exception Counter
-                            if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
-                              bocEx = bocEx + 1;
-                            }
-
-
-                		}
-                		else{
-
-                            doc[0].BUCAsmtDataOIviewDelivery.push(toadd);
-
-                            // Basics of Control Exception Counter
-                            if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
-                              bocEx = bocEx + 1;
-                            }
-
-
-
-                		}
-
-
-
-
-            	}else{//GBS and GTS Transformation
+            		//get MSAC missed commitments
+                	doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
+                	//get Open Issue count per child assessment
+                	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
 
 
                     toadd = {
@@ -1443,7 +1352,7 @@ var calculatefield = {
               }
 
 
-            	}//else
+
 
             }catch(e){
             	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + err.error);
@@ -1623,6 +1532,176 @@ var calculatefield = {
         else
           doc[0].CPTotalPct = "100%";
 
+        if(doc[0].MIRABusinessUnit == "GTS"){
+		//CU ratings
+		// Processing CRM CU ratings
+        doc[0].CUSatEqualCntCRM = satEqCUCrm;
+        doc[0].CUSatPlusCntCRM = satUpCUCrm;
+        doc[0].CUMargPlusCntCRM = margUpCUCrm;
+        doc[0].CUMargEqualCntCRM = margEqCUCrm;
+        doc[0].CUMargMinusCntCRM = margDwnCUCrm;
+        doc[0].CUUnsatEqualCntCRM = unsatEqCUCrm;
+        doc[0].CUUnsatMinusCntCRM = unsatDwnCUCrm;
+        doc[0].CUEXEMPTCntCRM = exemptCUCrm;
+        doc[0].CUNRCntCRM = nrCUCrm;
+        doc[0].CUTotalCntCRM = satEqCUCrm + satUpCUCrm + margUpCUCrm + margEqCUCrm + margDwnCUCrm + unsatEqCUCrm + unsatDwnCUCrm + exemptCUCrm + nrCUCrm;
+		if (satEqCUCrm == 0)
+          doc[0].CUSatEqualPctCRM = "0%";
+        else
+          doc[0].CUSatEqualPctCRM = ((satEqCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (satUpCUCrm == 0)
+          doc[0].CUSatPlusPctCRM = "0%";
+        else
+          doc[0].CUSatPlusPctCRM = ((satUpCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (margUpCUCrm == 0)
+          doc[0].CUMargPlusPctCRM = "0%";
+        else
+          doc[0].CUMargPlusPctCRM = ((margUpCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (margEqCUCrm == 0)
+          doc[0].CUMargEqualPctCRM = "0%";
+        else
+          doc[0].CUMargEqualPctCRM = ((margEqCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (margDwnCUCrm == 0)
+          doc[0].CUMargMinusPctCRM = "0%";
+        else
+          doc[0].CUMargMinusPctCRM = ((margDwnCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (unsatEqCUCrm == 0)
+          doc[0].CUUnsatEqualPctCRM = "0%";
+        else
+          doc[0].CUUnsatEqualPctCRM = ((unsatEqCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (unsatDwnCUCrm == 0)
+          doc[0].CUUnsatMinusPctCRM = "0%";
+        else
+          doc[0].CUUnsatMinusPctCRM = ((unsatDwnCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (exemptCUCrm == 0)
+          doc[0].CUEXEMPTPctCRM = "0%";
+        else
+          doc[0].CUEXEMPTPctCRM = ((exemptCUCrm/1) * 100).toFixed() + "%";
+        if (nrCUCrm == 0)
+          doc[0].CUNRPctCRM = "0%";
+        else
+          doc[0].CUNRPctCRM = ((nrCUCrm/doc[0].CUTotalCntCRM) * 100).toFixed() + "%";
+        if (doc[0].CUTotalCntCRM == 0)
+          doc[0].CUTotalPctCRM = "0%";
+        else
+          doc[0].CUTotalPctCRM = "100%";
+	  
+// Processing Delivery CU ratings
+        doc[0].CUSatEqualCntSOD = satEqCUDel;
+        doc[0].CUSatPlusCntSOD = satUpCUDel;
+        doc[0].CUMargPlusCntSOD = margUpCUDel;
+        doc[0].CUMargEqualCntSOD = margEqCUDel
+        doc[0].CUMargMinusCntSOD = margDwnCUDel;
+        doc[0].CUUnsatEqualCntSOD = unsatEqCUDel;
+        doc[0].CUUnsatMinusCntSOD = unsatDwnCUDel;
+        doc[0].CUEXEMPTCntSOD = exemptCUDel;
+        doc[0].CUNRCntSOD = nrCUDel;
+        doc[0].CUTotalCntSOD = satEqCUDel + satUpCUDel + margUpCUDel + margEqCUDel + margDwnCUDel + unsatEqCUDel + unsatDwnCUDel + exemptCUDel + nrCUDel;
+		if (satEqCUDel == 0)
+          doc[0].CUSatEqualPctSOD = "0%";
+        else
+          doc[0].CUSatEqualPctSOD = ((satEqCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (satUpCUDel == 0)
+          doc[0].CUSatPlusPctSOD = "0%";
+        else
+          doc[0].CUSatPlusPctSOD = ((satUpCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (margUpCUDel == 0)
+          doc[0].CUMargPlusPctSOD = "0%";
+        else
+          doc[0].CUMargPlusPctSOD = ((margUpCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (margEqCUDel== 0)
+          doc[0].CUMargEqualPctSOD = "0%";
+        else
+          doc[0].CUMargEqualPctSOD = ((margEqCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (margDwnCUDel == 0)
+          doc[0].CUMargMinusPctSOD = "0%";
+        else
+          doc[0].CUMargMinusPctSOD = ((margDwnCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (unsatEqCUDel == 0)
+          doc[0].CUUnsatEqualPctSOD = "0%";
+        else
+          doc[0].CUUnsatEqualPctSOD = ((unsatEqCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (unsatDwnCUDel == 0)
+          doc[0].CUUnsatMinusPctSOD = "0%";
+        else
+          doc[0].CUUnsatMinusPctSOD = ((unsatDwnCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (exemptCUDel == 0)
+          doc[0].CUEXEMPTPctSOD = "0%";
+        else
+          doc[0].CUEXEMPTPctSOD = ((exemptCUDel/1) * 100).toFixed() + "%";
+        if (nrCUDel == 0)
+          doc[0].CUNRPctSOD = "0%";
+        else
+          doc[0].CUNRPctSOD = ((nrCUDel/doc[0].CUTotalCntSOD) * 100).toFixed() + "%";
+        if (doc[0].CUTotalCntSOD == 0)
+          doc[0].CUTotalPctSOD = "0%";
+        else
+          doc[0].CUTotalPctSOD = "100%";
+	  
+	  // Processing totals of CU Ratings
+        satEqCU = satEqCUCrm+satEqCUDel;
+        satUpCU = satUpCUCrm+satUpCUDel;
+        margUpCU = margUpCUCrm+margUpCUDel;
+        margEqCU = margEqCUCrm+margEqCUDel;
+        margDwnCU = margDwnCUCrm+margDwnCUDel;
+        unsatEqCU = unsatEqCUCrm+unsatEqCUDel;
+        unsatDwnCU = unsatDwnCUCrm+unsatDwnCUDel;
+		exemptCU= exemptCUCrm+exemptCUDel;
+		nrCU = nrCUCrm + nrCUDel;
+        doc[0].CUSatEqualCnt = satEqCU;
+        doc[0].CUSatPlusCnt = satUpCU;
+        doc[0].CUMargPlusCnt = margUpCU;
+        doc[0].CUMargEqualCnt = margEqCU;
+        doc[0].CUMargMinusCnt = margDwnCU;
+        doc[0].CUUnsatEqualCnt = unsatEqCU;
+        doc[0].CUUnsatMinusCnt = unsatDwnCU;
+        doc[0].CUEXEMPTCnt = exemptCU;
+        doc[0].CUNRCnt = nrCU;
+        doc[0].CUTotalCnt = satEqCU + satUpCU + margUpCU + margEqCU + margDwnCU + unsatEqCU + unsatDwnCU + exemptCU + nrCU;
+
+        if (satEqCU == 0)
+          doc[0].CUSatEqualPct = "0%";
+        else
+          doc[0].CUSatEqualPct = ((satEqCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (satUpCU == 0)
+          doc[0].CUSatPlusPct = "0%";
+        else
+          doc[0].CUSatPlusPct = ((satUpCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (margUpCU == 0)
+          doc[0].CUMargPlusPct = "0%";
+        else
+          doc[0].CUMargPlusPct = ((margUpCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (margEqCU == 0)
+          doc[0].CUMargEqualPct = "0%";
+        else
+          doc[0].CUMargEqualPct = ((margEqCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (margDwnCU == 0)
+          doc[0].CUMargMinusPct = "0%";
+        else
+          doc[0].CUMargMinusPct = ((margDwnCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (unsatEqCU == 0)
+          doc[0].CUUnsatEqualPct = "0%";
+        else
+          doc[0].CUUnsatEqualPct = ((unsatEqCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (unsatDwnCU == 0)
+          doc[0].CUUnsatMinusPct = "0%";
+        else
+          doc[0].CUUnsatMinusPct = ((unsatDwnCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (exemptCU == 0)
+          doc[0].CUEXEMPTPct = "0%";
+        else
+          doc[0].CUEXEMPTPct = ((exemptCU/1) * 100).toFixed() + "%";
+        if (nrCU == 0)
+          doc[0].CUNRPct = "0%";
+        else
+          doc[0].CUNRPct = ((nrCU/doc[0].CUTotalCnt) * 100).toFixed() + "%";
+        if (doc[0].CUTotalCnt == 0)
+          doc[0].CUTotalPct = "0%";
+        else
+          doc[0].CUTotalPct = "100%";
+		}
+	  else{
+	  
         // Processing totals of CU Ratings
         doc[0].CUSatEqualCnt = satEqCU;
         doc[0].CUSatPlusCnt = satUpCU;
@@ -1675,6 +1754,7 @@ var calculatefield = {
           doc[0].CUTotalPct = "0%";
         else
           doc[0].CUTotalPct = "100%";
+	  }
 
       }
     } catch(e) {
