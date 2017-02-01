@@ -44,7 +44,7 @@
 	      </tr>
 	      <tr class="content-data">
 	        <td class="curating-label-ar" colspan="10">Weighted Score</td>
-	        <td class="content-data-centered">{{WeightedCUScore}}</td>
+	        <td class="content-data-centered">{{WeightedCUScore}}%</td>
 	      </tr>
 	      <tr class="curating-legend">
 	        <td class="curating-legend" colspan="11">&nbsp;</td>
@@ -230,12 +230,12 @@
 				    <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
 					    <td class="asmt-viewdata"></td>
 						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata">{{category}}
+						<td class="asmt-viewdata">{{{category}}}
 							<!--input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
 							<div id="ratingcategoryDisplay"></div-->
 						</td>
 						{{#if name}}
-							<td class="asmt-viewdata"><a href="/assessment?id={{docid}}">{{name}}</a></td>
+							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{/if}}
