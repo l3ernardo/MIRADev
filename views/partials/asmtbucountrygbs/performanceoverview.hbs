@@ -223,7 +223,7 @@
 			<a href="javascript:void(0);" value="Export to Excel" name="POBU-link-export" id="POBU-link-export" class="ibm-symp-spreadsheet witheanchor" >Export to Excel</a>
 			<span class="ibm-sep"> </span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="POBU-link-export2" id="POBU-link-export2" class="ibm-symp-spreadsheet witheanchor" >Export to Open Office</a>
-			<table width="100%" id="CPCUPerformanceIn_treeview" class="table_with_scroll">
+			<table width="100%" id="CPCUPerformanceIn_treeview" class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="ar-asmt-viewheader" scope="col" width="33%">Assessed Unit</th>
 					<th class="ar-asmt-viewheader" scope="col" width="7%">CQ-4</th>
@@ -247,10 +247,10 @@
 							{{else}}
 								<td class="asmt-viewdata" width="33%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 							{{/if_greater}}
-
+							
 						{{/if_equal}}
-
-
+						
+						
 						{{{ratingDisplayView ratingPQ4 7}}}
 						{{{ratingDisplayView ratingPQ3 7}}}
 						{{{ratingDisplayView ratingPQ2 7}}}
@@ -269,7 +269,7 @@
 			<a href="javascript:void(0);" value="Export to Excel" name="POBUOT-link-export"  class="ibm-symp-spreadsheet witheanchor" id="POBUOT-link-export">Export to Excel</a>
 			<span class="ibm-sep"> </span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="POBUOT-link-export2"  class="ibm-symp-spreadsheet witheanchor" id="POBUOT-link-export2">Export to Open Office</a>
-			<table width="100%" id="CPCUPerformanceInOther_treeview" class="table_with_scroll">
+			<table width="100%" id="CPCUPerformanceInOther_treeview" class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="ar-asmt-viewheader" scope="col" width="37%">Assessed Unit</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Proactive Reviews</th>
@@ -290,9 +290,9 @@
 							{{else}}
 								<td class="asmt-viewdata" width="37%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 							{{/if_greater}}
-
+							
 						{{/if_equal}}
-
+						
 						{{{ratingDisplayView OMID10Rating 9}}}
 						{{{ratingDisplayView OMID11Rating 9}}}
 						{{{ratingDisplayView OMID7Rating 9}}}
@@ -309,9 +309,9 @@
 </table>
 
 <script>
-
+		
 		//load tree tables for Country Process and CU Performance Indicators and others indicators tables at performanceoverview partial
 	$("#CPCUPerformanceIn_treeview").treetable({expandable: true});
-
+	
 	$("#CPCUPerformanceInOther_treeview").treetable({expandable: true});
 </script>

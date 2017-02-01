@@ -1272,118 +1272,15 @@ var calculatefield = {
             	// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
 
             try{
-            	//get MSAC missed commitments
-            	doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
-            	//get Open Issue count per child assessment
-            	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+            	
 
-            	if (doc[0].MIRABusinessUnit == "GTS"){
-
-            		if(doc[0].asmtsdocs[i].catP == "CRM"){
-
-
-                        toadd = {
-                          "docid":doc[0].asmtsdocs[i]._id,
-                          "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                          "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                          "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                          "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                          "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-                          "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-                          "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-                          "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-                          "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-                          "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
-                          "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-                          "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
-                          "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-                        };
-                        doc[0].BUCAsmtDataPIviewCRM.push(toadd);
-
-                      	}else{
-
-                              toadd = {
-                                "docid":doc[0].asmtsdocs[i]._id,
-                                "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                                "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                                "ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-                                "ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-                                "ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-                                "ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-                                "ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-                                "kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-                                "kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-                                "auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
-                                "msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-                                "msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
-                                "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-                              };
-
-                              doc[0].BUCAsmtDataPIviewDelivery.push(toadd);
-
-                      	}
-
-
-                        doc[0].BUCAsmtDataPIview.push(toadd);
-
-                        // PO tab other indicators view CRM
-
-
-
-                        toadd = {
-                          "docid":doc[0].asmtsdocs[i]._id,
-                          "name":doc[0].asmtsdocs[i].AssessableUnitName,
-                          "ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-                          "bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount,
-                          "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-                        };
-
-
-                        if (doc[0].asmtsdocs[i].OpMetric != undefined) {
-
-                          for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; j++) {
-
-                          	toadd[doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
-                          	toadd["docid"] = doc[0].asmtsdocs[i]._id;
-                          	toadd["name"] = doc[0].asmtsdocs[i].AssessableUnitName;
-                          	toadd["ParentDocSubType"] = doc[0].asmtsdocs[i].ParentDocSubType;
-                          	toadd["bocExCount"] = doc[0].asmtsdocs[i].BOCExceptionCount;
-
-                          }
-
-
-                        }
-
-                		if(doc[0].asmtsdocs[i].catP == "CRM"){
-
-
-                            doc[0].BUCAsmtDataOIviewCRM.push(toadd);
-
-                            // Basics of Control Exception Counter
-                            if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
-                              bocEx = bocEx + 1;
-                            }
-
-
-                		}
-                		else{
-
-                            doc[0].BUCAsmtDataOIviewDelivery.push(toadd);
-
-                            // Basics of Control Exception Counter
-                            if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
-                              bocEx = bocEx + 1;
-                            }
-
-
-
-                		}
-
-
-
-
-            	}else{//GBS and GTS Transformation
-
+            	//GBS and GTS Transformation, GTS its been calculated on createTablesData
+            		
+            		//get MSAC missed commitments
+                	doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
+                	//get Open Issue count per child assessment
+                	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+            		           	
 
                     toadd = {
                       "docid":doc[0].asmtsdocs[i]._id,
@@ -1402,7 +1299,7 @@ var calculatefield = {
                       "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
                     };
 
-
+            
               doc[0].BUCAsmtDataPIview.push(toadd);
 
 
@@ -1441,13 +1338,13 @@ var calculatefield = {
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
                 bocEx = bocEx + 1;
               }
-
-
-            	}//else
-
+              
+              
+            
+            	
             }catch(e){
             	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + err.error);
-
+            	
             }
               break;
           // }

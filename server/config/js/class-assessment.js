@@ -62,6 +62,7 @@ var assessment = {
 		});
 		return deferred.promise;
 	},
+
 	preload: function(newdoc,req,db) {
 		var deferred = q.defer();
 		var docid = req.query.id
@@ -339,7 +340,7 @@ var assessment = {
 									}
 								}
 								doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
-								doc[0].Name = req.session.buname + " - " + doc[0].IOT;
+								doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 								var obj = doc[0]; // For Merge
 								deferred.resolve({"status": 200, "doc": obj});
 							}).catch(function(err) {
@@ -401,9 +402,9 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 									}
 								}
-								doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
+								doc[0].BUIOT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
 								doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
-								doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+								doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 								var obj = doc[0]; // For Merge
 								deferred.resolve({"status": 200, "doc": obj});
 							}).catch(function(err) {
@@ -421,6 +422,19 @@ var assessment = {
 								doc[0].BUCAsmtDataPIviewDelivery = [];
 								doc[0].BUCAsmtDataOIviewCRM = [];
 								doc[0].BUCAsmtDataOIviewDelivery = [];
+								
+								doc[0].MissedMSACSatCountDeliveryDoc = 0;
+								doc[0].MissedOpenIssueCountDeliveryDoc =0;
+								doc[0].MissedOpenIssueCountCRMDoc = 0;
+								doc[0].MissedMSACSatCountCRMDoc = 0;
+								
+								doc[0].AUDataMSACCRM = [];
+								doc[0].MissedMSACSatCountCRM = "";
+								doc[0].AUDataMSACSOD = [];
+								doc[0].MissedMSACSatCountSOD = "";
+								
+								doc[0].BOCExceptionCountCRM = 0;
+								doc[0].BOCExceptionCountSOD = 0;
 							} else {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(8,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(11,defViewRow);
@@ -441,9 +455,9 @@ var assessment = {
 
 							doc[0].CountryId = parentdoc[0].Country;
 							doc[0].Country = util.resolveGeo(parentdoc[0].Country,"Country",req);
-							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+							doc[0].BUIMT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-							doc[0].Name = req.session.buname + " - " + doc[0].Country;
+							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 
 							comp.getCompDocs(db,doc).then(function(dataComp){
 								fieldCalc.getAssessments(db, doc, req).then(function(data){
@@ -476,41 +490,83 @@ var assessment = {
 										}
 									}*/
 
-									//create a space for performance Tab
+									// create a space for performance Tab
 									performanceTab.getKFCRDefectRate(db,doc);
 									performanceTab.getKCODefectRate(db,doc);
 									performanceTab.getMissedRisks(db,doc);
 									performanceTab.getMSACCommitmentsCount(db,doc);
-
-
+									
+									
 									if (doc[0].MIRABusinessUnit == "GTS") {
-										performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
+										performanceTab.createTablesData(doc);
+									    performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
+										
+										
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM) < defViewRow) {
+											if (doc[0].BUCAsmtDataPIviewCRM.length == 0) {
+												doc[0].BUCAsmtDataPIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM)));
+											}
+										}
+										
 
-									} else{
-
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery) < defViewRow) {
+											if (doc[0].BUCAsmtDataPIviewDelivery.length == 0) {
+												doc[0].BUCAsmtDataPIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery)));
+											}
+										}
+										
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM) < defViewRow) {
+											if (doc[0].BUCAsmtDataOIviewCRM.length == 0) {
+												doc[0].BUCAsmtDataOIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM)));
+											}
+										}
+										
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery) < defViewRow) {
+											if (doc[0].BUCAsmtDataOIviewDelivery.length == 0) {
+												doc[0].BUCAsmtDataOIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery)));
+											}
+										}
+										
+										
+								
+									
+										
+									} else{// GBS and GTS trans
+										
 										performanceTab.getCPANDCUPerformanceIndicators(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
-									}
-
-
-
-
-									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
-										if (doc[0].BUCAsmtDataPIview.length == 0) {
-											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+										
+										
+										
+		
+										
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
+											if (doc[0].BUCAsmtDataPIview.length == 0) {
+												doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIview)));
+											}
 										}
-									}
-									if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
-										if (doc[0].BUCAsmtDataOIview.length == 0) {
-											doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+										
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIview) < defViewRow) {
+											if (doc[0].BUCAsmtDataOIview.length == 0) {
+												doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIview)));
+											}
 										}
+										
+										
 									}
-
 
 
 									//open risks
