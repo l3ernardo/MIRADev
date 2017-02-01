@@ -279,6 +279,12 @@ var getDocs = {
           });
           break;
         case "BU Country":
+		//Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
+          var $or = [];
+
+          for(var i = 0; i < doc[0].AUData.length; i++){
+            $or.push({parentid: doc[0].AUData[i]["_id"]});
+          }
           var compObj = {
             selector : {
               "_id": {"$gt":0},
@@ -296,7 +302,9 @@ var getDocs = {
                 { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
                 // Key Controls Testing Tab
                 // {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod}]},
-                {"$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] }
+                {"$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
+				        // Audits and Reviews Tab
+                { "$and": [{"compntType": "internalAudit"}, {$or}] }
               ]
             }
           };
@@ -309,7 +317,9 @@ var getDocs = {
           	doc[0].RiskView2Data = [];
             doc[0].RCTest2Data = [];
             doc[0].RCTest3Data = [];
-
+			      // For BU Country Audits & Reviews Tab
+            doc[0].InternalAuditData = [];
+            doc[0].PPRData = [];
             // For Sampled Country Testing Tab
             doc[0].SCTest1Data = [];
             doc[0].SCTestDataPQ1 = [];
@@ -441,6 +451,7 @@ var getDocs = {
                   } else {}
                 }
                 else if (doc[0].MIRABusinessUnit == "GTS") {
+				          comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
                   if (comps[i].MIRABusinessUnit == "GTS") {
                     if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                       doc[0].SCTest1Data.push(comps[i]);
@@ -456,6 +467,7 @@ var getDocs = {
                   }
                 }
                 else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
+					          comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
                     if (comps[i].MIRABusinessUnit == "GTS Transformation") {
                       if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                         doc[0].SCTest1Data.push(comps[i]);
@@ -469,9 +481,21 @@ var getDocs = {
                         doc[0].SCTestDataPQ4.push(comps[i]);
                       } else {}
                     }
-                } else {}
+                }
+				else {}
+              }
+				else if (comps[i].compntType == "internalAudit") {
+                if (typeof comps[i].engagement === "undefined") {
+                  comps[i].engagement = comps[i].id;
+                }
+                doc[0].InternalAuditData.push(comps[i]);
+              }
+			  // For Audits and Reviews Tab - view 2 (Proactive Reviews)
+              else if (comps[i].compntType == "PPR") {
+                doc[0].PPRData.push(comps[i]);
               }
               // For Sampled Country Testing Tab
+
             }
             deferred.resolve({"status": 200, "doc": doc});
 
