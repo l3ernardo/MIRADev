@@ -73,7 +73,7 @@
 						<th class="ar-asmt-label">Summary/Comments</th>
 					</tr>
 					{{#each OpMetric}}
-						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
+						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}" class="mira-field" for="Name Field" >
 						<tr>
 							<td class="ar-asmt-label"><label for="{{commentfield}}">{{name}}</label></td>
 							<td class="content-data">
@@ -132,7 +132,7 @@
 						<td class="ar-asmt-label">Overall Assessment</td>
 						{{{ratingDisplayView PeriodRatingCRM}}}
 						<td class="content-data">
-							<input type="hidden" name="OverallAssessmentCommentsROCRM" value="{{OverallAssessmentCommentsCRM}}">
+							<input type="hidden" name="OverallAssessmentCommentsROCRM" value="{{OverallAssessmentCommentsCRM}}" class="mira-field" for="Overall Assessment Comments" >
 							<div id="OverallAssessmentCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -140,7 +140,7 @@
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCFRTestingCommentsROCRM" value="{{KCFRTestingCommentsCRM}}">
+							<input type="hidden" name="KCFRTestingCommentsROCRM" value="{{KCFRTestingCommentsCRM}}" class="mira-field" for="KCFR Testing Comments" >
 							<div id="KCFRTestingCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -148,7 +148,7 @@
 						<td class="ar-asmt-label">KCO Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCODefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCOTestingCommentsROCRM" value="{{KCOTestingCommentsCRM}}">
+							<input type="hidden" name="KCOTestingCommentsROCRM" value="{{KCOTestingCommentsCRM}}" class="mira-field" for="KCO Testing Comments">
 							<div id="KCOTestingCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -156,7 +156,7 @@
 						<td class="ar-asmt-label">CHQ Internal Audit Score</td>
 						<td class="content-data">{{WeightedAuditScoreCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="CorpIACommentsROCRM" value="{{CorpIACommentsCRM}}">
+							<input type="hidden" name="CorpIACommentsROCRM" value="{{CorpIACommentsCRM}}" class="mira-field" for="CHQ internal audit score">
 							<div id="CorpIACommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -164,7 +164,7 @@
 						<td class="ar-asmt-label">Missed Risk Evaluations</td>
 						<td class="content-data">{{MissedOpenIssueCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedRECommentsROCRM" value="{{MissedRECommentsCRM}}">
+							<input type="hidden" name="MissedRECommentsROCRM" value="{{MissedRECommentsCRM}}" class="mira-field" for="Missed Risk Evaluations">
 							<div id="MissedRECommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -172,7 +172,7 @@
 						<td class="ar-asmt-label">Missed MSAC Commitments</td>
 						<td class="content-data">{{MissedMSACSatCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedMSACCommentsROCRM" value="{{MissedMSACCommentsCRM}}">
+							<input type="hidden" name="MissedMSACCommentsROCRM" value="{{MissedMSACCommentsCRM}}" class="mira-field" for="Missed MSAC comments" >
 							<div id="MissedMSACCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -186,7 +186,7 @@
 							<td class="ar-asmt-label">{{name}}</td>
 							{{{ratingDisplayView rating}}}
 							<td class="content-data">
-								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}">
+								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}" class="mira-field" for="Operational and other indicators">
 								<div id="{{commentfieldReadOnly}}"></div>
 							</td>
 						</tr>
@@ -195,7 +195,7 @@
 						<td class="ar-asmt-label">Basics of Control Exceptions</td>
 						<td class="asmt-viewdata-centered">{{BOCExceptionCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="BoCCommentsROCRM" value="{{BoCCommentsCRM}}">
+							<input type="hidden" name="BoCCommentsROCRM" value="{{BoCCommentsCRM}}" class="mira-field" for="Basic of control exceptions comments">
 							<div id="BoCCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -204,14 +204,14 @@
 					<tr>
 						<td class="ar-asmt-label" width="25%">Other Explanation</td>
 						<td class="content-data" width="75%">
-							<input type="hidden" name="PerfOverviewOtherExplanationROCRM" value="{{PerfOverviewOtherExplanationCRM}}">
+							<input type="hidden" name="PerfOverviewOtherExplanationROCRM" value="{{PerfOverviewOtherExplanationCRM}}" class="mira-field" for="Other explanation">
 							<div id="PerfOverviewOtherExplanationReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Critical Issues</td>
 						<td class="content-data">
-							<input type="hidden" name="PerfOverviewCriticaExplanationROCRM" value="{{PerfOverviewCriticaExplanationCRM}}">
+							<input type="hidden" name="PerfOverviewCriticaExplanationROCRM" value="{{PerfOverviewCriticaExplanationCRM}}" class="mira-field" for="Critical issues">
 							<div id="PerfOverviewCriticaExplanationReadOnlyCRM"></div>
 						</td>
 					</tr>
