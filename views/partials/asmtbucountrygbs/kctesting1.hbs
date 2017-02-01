@@ -85,11 +85,11 @@
 					</tr>
 					<tr class="kc-test-viewsubheader-al">
 						<td class="kc-test-viewsubheader-al" colspan="10">Total Country Financial Processes with Defect Rate &gt; 2% / 4%</td>
-						<td class="marg-bg"></td>
-						<td class="unsat-bg"></td>
-						<td class="kc-test-viewheader-cell"></td>
-						<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
-					</tr>
+					<td class="marg-bg">{{#if_not_equal margCPDRFin 0}}{{margCPDRFin}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDRFin 0}}{{unsatCPDRFin}}{{/if_not_equal}}</td>
+					<td class="kc-test-viewheader-cell"></td>
+					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
+				</tr>
 					<tr class="kc-test-viewheader">
 						<td colspan="13" rowspan="2"></td>
 						<td colspan="12" rowspan="2">
@@ -169,14 +169,14 @@
 					</tr>
 					<tr class="kc-test-viewsubheader-al">
 						<td class="kc-test-viewsubheader-al" colspan="10">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
-						<td class="marg-bg"></td>
-						<td class="unsat-bg"></td>
-						<td class="kc-test-viewheader-cell"></td>
-						<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
-					</tr>
-					<tr class="kc-test-viewheader">
-						<td colspan="13" rowspan="2"></td>
-						<td colspan="12" rowspan="2">
+					<td class="marg-bg">{{#if_not_equal margCPDROps 0}}{{margCPDROps}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDROps 0}}{{unsatCPDROps}}{{/if_not_equal}}</td>
+					<td class="kc-test-viewheader-cell"></td>
+					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
+				</tr>
+				<tr class="kc-test-viewheader">
+					<td colspan="7" rowspan="2"></td>
+					<td colspan="12" rowspan="2">
 							{{#if editmode}}
 								<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="85">{{OpsProcessTestingExplanations}}</textarea><br />
 							{{else}}
@@ -446,10 +446,12 @@
 					<th class="kc-test-viewheader" scope="col" width="10%">Count</th>
 				</thead>
 				{{#each RCTest1Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%">{{category}}</td>
+						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
+						<td width="15%" >{{AUDefectCount}}</td>
+						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
 					</tr>
 				{{/each}}
 			</table>
@@ -471,9 +473,14 @@
 				</thead>
 				{{#each RCTest2Data}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+						<td width="5%">{{originalReportingQuarter}}</td>
+						<td width="5%">{{originalReportingQuarter}}</td>
+						<td width="15%">{{testType}}</td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlShortName}}</a></td>
+						<td width="10%">{{numRequiredTests}}</td>
+						<td width="10%">{{numActualTests}}</td>
+						<td width="20%">{{reasonTested}}</td>
+						<td width="25%">{{actionPlan}}</td>
 					</tr>
 				{{/each}}
 			</table>
@@ -485,22 +492,30 @@
 			<table cellspacing="0" cellpadding="0" border="0" width="100%">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
-					<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Process</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Country</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Control</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Controllable Unit</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Sample</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Type</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Process</th>
+					<th class="kc-test-viewheader" scope="col" width="5%">Country</th>
+					<th class="kc-test-viewheader" scope="col" width="20%">Control</th>
+					<th class="kc-test-viewheader" scope="col" width="20%">Controllable Unit</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Sample</th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Original Target to Close</th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Current Target to Close</th>
 					<th class="kc-test-viewheader" scope="col" width="5%"># Defects</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
+					<th class="kc-test-viewheader" scope="col" width="15%">Defect Type</th>
 				</thead>
 				{{#each RCTest3Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="5%">{{originalReportingQuarter}}</td>
+						<td width="10%">{{testType}}</td>
+						<td width="10%">{{CUCategory}}</td>
+						<td width="5%">{{reportingCountry}}</td>
+						<td width="20%">{{processSampled}}</td>
+						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controllableUnit}}</a></td>
+						<td width="5%">{{IntegrationKeyWWBCIT}}</td>
+						<td width="5%">{{originalTargetDate}}</td>
+						<td width="5%">{{targetClose}}</td>
+						<td width="5%">{{numDefects}}</td>
+						<td width="15%">{{defectType}}</td>
 					</tr>
 				{{/each}}
 			</table>
