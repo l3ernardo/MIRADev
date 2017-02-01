@@ -71,7 +71,7 @@
 						<th class="ar-asmt-label">Summary/Comments</th>
 					</tr>
 					{{#each OpMetric}}
-						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
+						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}" class="mira-field" for="Operational metric name">
 						<tr>
 							<td class="ar-asmt-label">{{name}}</td>
 							<td class="content-data">
@@ -130,7 +130,7 @@
 						<td class="ar-asmt-label">Overall Assessment</td>
 						{{{ratingDisplayView PeriodRating}}}
 						<td class="content-data">
-							<input type="hidden" name="OverallAssessmentCommentsRO" value="{{OverallAssessmentComments}}">
+							<input type="hidden" name="OverallAssessmentCommentsRO" value="{{OverallAssessmentComments}}" class="mira-field" for="Overall Assessment Comments">
 							<div id="OverallAssessmentCommentsReadOnly"></div>
 						</td>
 					</tr>
@@ -138,7 +138,7 @@
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}">
+							<input type="hidden" name="KCFRTestingCommentsRO" value="{{KCFRTestingComments}}" class="mira-field" for="KCFR Defect Rate Comments">
 							<div id="KCFRTestingCommentsReadOnly"></div>
 						</td>
 					</tr>
@@ -146,7 +146,7 @@
 						<td class="ar-asmt-label">KCO Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCODefectRate parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCOTestingCommentsRO" value="{{KCOTestingComments}}">
+							<input type="hidden" name="KCOTestingCommentsRO" value="{{KCOTestingComments}}" class="mira-field" for="KCO defect rate Comments">
 							<div id="KCOTestingCommentsReadOnly"></div>
 						</td>
 					</tr>
@@ -154,7 +154,7 @@
 						<td class="ar-asmt-label">CHQ Internal Audit Score</td>
 						<td class="content-data">{{WeightedAuditScore}}</td>
 						<td class="content-data">
-							<input type="hidden" name="CorpIACommentsRO" value="{{CorpIAComments}}">
+							<input type="hidden" name="CorpIACommentsRO" value="{{CorpIAComments}}" class="mira-field" for="CHQ internal audit score comments">
 							<div id="CorpIACommentsReadOnly"></div>
 						</td>
 					</tr>
@@ -162,7 +162,7 @@
 						<td class="ar-asmt-label">Missed Risk Evaluations</td>
 						<td class="content-data" align="center">{{MissedOpenIssueCount}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedRECommentsRO" value="{{MissedREComments}}">
+							<input type="hidden" name="MissedRECommentsRO" value="{{MissedREComments}}" class="mira-field" for="Missed Risk Evaluations comments">
 							<div id="MissedRECommentsReadOnly"></div>
 						</td>
 					</tr>
@@ -170,7 +170,7 @@
 						<td class="ar-asmt-label">Missed MSAC Commitments</td>
 						<td class="content-data" align="center">{{MissedMSACSatCount}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedMSACCommentsRO" value="{{MissedMSACComments}}">
+							<input type="hidden" name="MissedMSACCommentsRO" value="{{MissedMSACComments}}" class="mira-field" for="Missed MSAC Commitments">
 							<div id="MissedMSACCommentsReadOnly"></div>
 						</td>
 					</tr>
@@ -184,7 +184,7 @@
 							<td class="ar-asmt-label">{{name}}</td>
 							{{{ratingDisplayView rating}}}
 							<td class="content-data">
-								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}">
+								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}" class="mira-field" for="Operational and other indicators">
 								<div id="{{commentfieldReadOnly}}"></div>
 							</td>
 						</tr>
@@ -193,7 +193,7 @@
 						<td class="ar-asmt-label">Basics of Control Exceptions</td>
 						<td class="asmt-viewdata-centered">{{BOCExceptionCount}}</td>
 						<td class="content-data">
-							<input type="hidden" name="BoCCommentsRO" value="{{BoCComments}}">
+							<input type="hidden" name="BoCCommentsRO" value="{{BoCComments}}" class="mira-field" for="Basic control of Exceptions comments">
 							<div id="BoCCommentsReadOnly"></div>
 						</td>
 					</tr>
@@ -209,7 +209,7 @@
 					<tr>
 						<td class="ar-asmt-label">Critical Issues</td>
 						<td class="content-data">
-							<input type="hidden" name="PerfOverviewCriticaExplanationRO" value="{{PerfOverviewCriticaExplanation}}">
+							<input type="hidden" name="PerfOverviewCriticaExplanationRO" value="{{PerfOverviewCriticaExplanation}}" class="mira-field" for="Critical issues">
 							<div id="PerfOverviewCriticaExplanationReadOnly"></div>
 						</td>
 					</tr>
