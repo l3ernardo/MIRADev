@@ -15,7 +15,8 @@ var calculateAUTab = {
     var ratingCategory = {};
     var auditsList = [];
     var exportAudits = [];
-    auditsList.push({id: "topCategory", counter: audits.length,name: "total"});
+    var topEntry = {id: "topCategory", counter: audits.length,name: "total", CUMaxScore: 0, CUScore: 0}
+    auditsList.push(topEntry);
   var objects = {};//object of objects for counting
   audits.sort(function(a, b){
     var nameA=a.PeriodRating.toLowerCase(), nameB=b.PeriodRating.toLowerCase()
@@ -31,12 +32,15 @@ var calculateAUTab = {
           id:audits[i].PeriodRating.replace(/ /g,''),
           name:audits[i].PeriodRating,
           counter: 0,
-          parent: "topCategory"
+          parent: "topCategory",
+          CUMaxScore: 0,
+          CUScore: 0
         };
         auditsList.push(tmp);
         objects[tmp.id] = tmp;
         ratingCategory[audits[i].PeriodRating] = true;
       }
+
       audits[i].counter = 1;
       var tmp = {};
       tmp.cat = audits[i].PeriodRating || " ";
@@ -61,6 +65,14 @@ var calculateAUTab = {
       audits[i].id = audits[i]["_id"];
       //do counting for category
       objects[audits[i].parent].counter++ ;
+      if(audits[i].CUMaxScore != ""){
+        topEntry.CUMaxScore += parseFloat(audits[i].CUMaxScore);
+        objects[audits[i].parent].CUMaxScore += parseFloat(audits[i].CUMaxScore);
+      }
+      if(audits[i].CUScore != ""){
+        topEntry.CUScore += parseFloat(audits[i].CUScore);
+        objects[audits[i].parent].CUScore += parseFloat(audits[i].CUScore);
+      }
       auditsList.push(audits[i]);
     }
     if (Object.keys(ratingCategory).length < defViewRow) {
@@ -72,6 +84,7 @@ var calculateAUTab = {
     };
     doc[0].AUData = auditsList;
     doc[0].exportAUniverse = exportAudits;
+    doc[0].AUWeightedScore = (topEntry.CUScore / topEntry.CUMaxScore * 100).toFixed(1);
 	}
 
 }
