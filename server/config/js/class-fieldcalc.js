@@ -169,6 +169,17 @@ var calculatefield = {
           MIRABusinessUnit = "GTS";
         }
 				break;
+      case "countryControls":
+        if (doc[0].BUPARENT == "BSU300000027") {
+          MIRABusinessUnit = "GBS";
+        }
+        else if (doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") {
+          MIRABusinessUnit = "GTS Transformation";
+        }
+        else {
+          MIRABusinessUnit = "GTS";            
+        }
+        break;
       default:
         MIRABusinessUnit = "";
 		}
@@ -1273,15 +1284,15 @@ var calculatefield = {
             	// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
 
             try{
-            	
+
 
             	//GBS and GTS Transformation, GTS its been calculated on createTablesData
-            		
+
             		//get MSAC missed commitments
                 	doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
                 	//get Open Issue count per child assessment
                 	doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
-            		           	
+
 
                     toadd = {
                       "docid":doc[0].asmtsdocs[i]._id,
@@ -1300,7 +1311,7 @@ var calculatefield = {
                       "treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
                     };
 
-            
+
               doc[0].BUCAsmtDataPIview.push(toadd);
 
 
@@ -1339,13 +1350,13 @@ var calculatefield = {
               if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
                 bocEx = bocEx + 1;
               }
-              
-              
-            
-            	
+
+
+
+
             }catch(e){
             	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + err.error);
-            	
+
             }
               break;
           // }
