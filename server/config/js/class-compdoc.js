@@ -283,8 +283,8 @@ var getDocs = {
             selector : {
               "_id": {"$gt":0},
               "$or": [
-                //Performance Tab
-                { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter": doc[0].CurrentPeriod},{"status": {"$ne": "Retired"}}] },
+                //Performance Tab and Reporting Country Testing Tab
+                { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
                 //Risks Tab
                 {"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] },
                 //Getting open issue categories to displaye
@@ -293,7 +293,10 @@ var getDocs = {
                 { "$and": [{"compntType": "sampledCountry"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "sampledCountry"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-                { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+                { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+                // Key Controls Testing Tab
+                // {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod}]},
+                {"$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] }
               ]
             }
           };
@@ -304,6 +307,8 @@ var getDocs = {
             doc[0].CountryControlsData = [];
           	doc[0].RiskView1Data =  [];
           	doc[0].RiskView2Data = [];
+            doc[0].RCTest2Data = [];
+            doc[0].RCTest3Data = [];
 
             // For Sampled Country Testing Tab
             doc[0].SCTest1Data = [];
@@ -345,19 +350,83 @@ var getDocs = {
                 }
               }
               else if (comps[i].compntType == "countryControls"){
+                comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+                comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+                doc[0].RCTest2Data.push(comps[i]);
+                if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                	  doc[0].CountryControlsData.push(comps[i]);
-
-		                if (doc[0].MIRABusinessUnit == "GTS") {
-                     if(doc[0].CRMProcessObj[comps[i].process]){ doc[0].CountryControlsDataCRM.push(comps[i])
-                     }else{doc[0].CountryControlsDataDelivery.push(comps[i]);}
-
-                   }
+		              if (doc[0].MIRABusinessUnit == "GTS") {
+                    if(doc[0].CRMProcessObj[comps[i].process]){ doc[0].CountryControlsDataCRM.push(comps[i])
+                    }else{doc[0].CountryControlsDataDelivery.push(comps[i]);}
+                  }
+                }
               }
               else if (comps[i].docType == "setup"){
                	  doc[0].riskCategories = comps[i].value.options;
               }
+              // Key Controls Testing Tab
+              // else if (comps[i].docType == "Assessment") {
+              //   doc[0].RCTest3Data.push(comps[i]);
+              // }
+              else if (comps[i].compntType == "controlSample") {
+                // For Key Controls Testing Tab
+                if (comps[i].reportingCountry == doc[0].Country) {
+                  doc[0].RCTest3Data.push(comps[i]);
+                }
+                // For Sampled Country Testing Tab
+                if (comps[i].sampleCountry == doc[0].Country) {
+                  // calculate Control Name
+                  comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+                  comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+
+                  if (doc[0].MIRABusinessUnit == "GBS") {
+                    if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+                      doc[0].SCTest2Data.push(comps[i]);
+                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
+                      doc[0].SCTest2DataPQ1.push(comps[i]);
+                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[1]) {
+                      doc[0].SCTest2DataPQ2.push(comps[i]);
+                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[2]) {
+                      doc[0].SCTest2DataPQ3.push(comps[i]);
+                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[3]) {
+                      doc[0].SCTest2DataPQ4.push(comps[i]);
+                    } else {}
+                  }
+                  else if (doc[0].MIRABusinessUnit == "GTS") {
+                    if (comps[i].MIRABusinessUnit == "GTS") {
+                      if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+                        doc[0].SCTest2Data.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
+                        doc[0].SCTest2DataPQ1.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[1]) {
+                        doc[0].SCTest2DataPQ2.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[2]) {
+                        doc[0].SCTest2DataPQ3.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[3]) {
+                        doc[0].SCTest2DataPQ4.push(comps[i]);
+                      } else {}
+                    }
+                  }
+                  else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
+                    if (comps[i].MIRABusinessUnit == "GTS Transformation") {
+                      if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+                        doc[0].SCTest2Data.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
+                        doc[0].SCTest2DataPQ1.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[1]) {
+                        doc[0].SCTest2DataPQ2.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[2]) {
+                        doc[0].SCTest2DataPQ3.push(comps[i]);
+                      } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[3]) {
+                        doc[0].SCTest2DataPQ4.push(comps[i]);
+                      } else {}
+                    }
+                  } else {}
+                }
+              }
               // For Sampled Country Testing Tab
               else if (comps[i].compntType == "sampledCountry"){
+                comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
                 if (doc[0].MIRABusinessUnit == "GBS") {
                   if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                     doc[0].SCTest1Data.push(comps[i]);
@@ -372,7 +441,6 @@ var getDocs = {
                   } else {}
                 }
                 else if (doc[0].MIRABusinessUnit == "GTS") {
-                  comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
                   if (comps[i].MIRABusinessUnit == "GTS") {
                     if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                       doc[0].SCTest1Data.push(comps[i]);
@@ -386,8 +454,8 @@ var getDocs = {
                       doc[0].SCTestDataPQ4.push(comps[i]);
                     } else {}
                   }
-                } else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
-                    comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
+                }
+                else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
                     if (comps[i].MIRABusinessUnit == "GTS Transformation") {
                       if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                         doc[0].SCTest1Data.push(comps[i]);
@@ -404,60 +472,12 @@ var getDocs = {
                 } else {}
               }
               // For Sampled Country Testing Tab
-              else if (comps[i].compntType == "controlSample" && comps[i].sampleCountry == doc[0].Country) {
-                // calculate Control Name
-                comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-
-                if (doc[0].MIRABusinessUnit == "GBS") {
-                  if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
-                    doc[0].SCTest2Data.push(comps[i]);
-                  } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
-                    doc[0].SCTest2DataPQ1.push(comps[i]);
-                  } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[1]) {
-                    doc[0].SCTest2DataPQ2.push(comps[i]);
-                  } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[2]) {
-                    doc[0].SCTest2DataPQ3.push(comps[i]);
-                  } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[3]) {
-                    doc[0].SCTest2DataPQ4.push(comps[i]);
-                  } else {}
-                } else if (doc[0].MIRABusinessUnit == "GTS") {
-                  comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
-                  if (comps[i].MIRABusinessUnit == "GTS") {
-                    if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
-                      doc[0].SCTest2Data.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
-                      doc[0].SCTest2DataPQ1.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[1]) {
-                      doc[0].SCTest2DataPQ2.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[2]) {
-                      doc[0].SCTest2DataPQ3.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[3]) {
-                      doc[0].SCTest2DataPQ4.push(comps[i]);
-                    } else {}
-                  }
-                } else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
-                  comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
-                  if (comps[i].MIRABusinessUnit == "GTS Transformation") {
-                    if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
-                      doc[0].SCTest2Data.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
-                      doc[0].SCTest2DataPQ1.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[1]) {
-                      doc[0].SCTest2DataPQ2.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[2]) {
-                      doc[0].SCTest2DataPQ3.push(comps[i]);
-                    } else if (comps[i].reportingQuarter == doc[0].PrevQtrs[3]) {
-                      doc[0].SCTest2DataPQ4.push(comps[i]);
-                    } else {}
-                  }
-                } else {}
-              }
             }
             deferred.resolve({"status": 200, "doc": doc});
 
 
           }).catch(function(err) {
-            console.log("[class-compdoc][getCompDocs]4 - " + err.error);
+            console.log("[class-compdoc][getCompDocs] - " + err.error);
             deferred.reject({"status": 500, "error": err.error.reason});
           });
           break;
