@@ -45,7 +45,7 @@
 			<td>
 				<table id="audit_readiness_treeview"  cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating" >
 					<thead>
-						
+
 						{{#if_equal ParentDocSubType "Country Process"}}
 						<th class="ar-asmt-viewheader" scope="col" width="10%">QTR</th>
 						<th class="ar-asmt-viewheader" scope="col" width="10%">ID</th>
@@ -93,7 +93,7 @@
 					{{/each}}
 					{{/if_not_equal}}
 					<tr>
-						<td colspan="6" class="asmt-viewdata"><a href="/auditlessons">Click here</a> to view all audit lessons learned.</td>
+						<td colspan="6" class="asmt-viewdata"><a target="_blank" href="/auditlessons">Click here</a> to view all audit lessons learned.</td>
 					</tr>
 				</table>
 			</td>
@@ -136,7 +136,7 @@
 							<tr class="asmt-viewdata">
 								{{#each col}}
 									{{#if @first}}
-										<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+										<td><a target="_blank" href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
 									{{else}}
 										<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
 									{{/if}}
