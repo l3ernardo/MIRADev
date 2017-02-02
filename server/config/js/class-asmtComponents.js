@@ -250,9 +250,10 @@ var components = {
 		try{
 			var ratingKey = "";
 			if(req.session.BG.indexOf("MIRA-ADMIN") > -1){
-				ratingKey ="NonAdminAuditsRatings";
-			}else{
 				ratingKey ="AdminAuditsRatings";
+			}else{
+				ratingKey ="NonAdminAuditsRatings";
+				
 			}
 			// new document
 			if(typeof req.query.new !== "undefined"){
@@ -261,7 +262,7 @@ var components = {
 				var obj = {
 					"selector" : {
 						"_id": {"$gt":0},
-						"keyName": req.session.businessunit+ratingKey
+						"keyName": req.session.businessunit.replace(" ","")+ratingKey
 				}};
 				db.find(obj).then(function(data2){
 					var tmp = [];
