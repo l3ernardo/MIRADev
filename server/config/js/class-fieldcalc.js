@@ -446,8 +446,8 @@ var calculatefield = {
                 "_id": {"$gt":0},
 				        "BusinessUnit": doc[0].BusinessUnit,
                 "$or": [
-                  //Getting all country process assessment
-                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                  //Getting all country process and controllable unit assessment
+                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": {"$in":["Country Process", "Controllable Unit"]}},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
                   //Getting all controllable units assessable units
                   {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                   //Getting all Country Process assessable units
