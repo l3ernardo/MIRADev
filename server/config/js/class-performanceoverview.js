@@ -715,48 +715,24 @@ var performanceoverviewcountry = {
 
 				}
 
-			} else {
+			}
+			// For GBS
+			else {
 
 				for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
-					if (doc[0].asmtsdocs[i].PeriodRating == "Marg"
-							|| doc[0].asmtsdocs[i].PeriodRating == "Unsat") {
-						if (doc[0].asmtsdocs[i].AUStatus != "Retired") {
-							if (doc[0].asmtsdocs[i].Target2Sat != undefined
-									&& doc[0].asmtsdocs[i].Target2SatPrev != undefined) {
-								if (doc[0].asmtsdocs[i].Target2Sat != ""
-										&& doc[0].asmtsdocs[i].Target2SatPrev != "") {
-									// console.log( "Target2Sat: "+new
-									// Date(doc[0].AUData[i].Target2Sat).getTime());
-									// console.log( "Target2SatPrev: "+new
-									// Date(doc[0].AUData[i].Target2SatPrev).getTime());
-									// console.log("current date: "+new
-									// Date(currentDate ).getTime());
-
-									if ((new Date(
-											doc[0].asmtsdocs[i].Target2Sat)
-											.getTime() > new Date(
-											doc[0].asmtsdocs[i].Target2SatPrev)
-											.getTime())
-											|| (new Date(
-													doc[0].asmtsdocs[i].Target2SatPrev)
-													.getTime() < new Date(
-													currentDate).getTime())) {
+					if (doc[0].asmtsdocs[i].PeriodRating == "Marg" || doc[0].asmtsdocs[i].PeriodRating == "Unsat") {
+						if (doc[0].asmtsdocs[i].Target2Sat != undefined && doc[0].asmtsdocs[i].Target2SatPrev != undefined) {
+								if (doc[0].asmtsdocs[i].Target2Sat != "" && doc[0].asmtsdocs[i].Target2SatPrev != "") {
+									if ((new Date(doc[0].asmtsdocs[i].Target2Sat).getTime() > new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime()) || (new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime())) {
 										count++;
 										AUDataMSAC.push(doc[0].asmtsdocs[i]);
 									}
 								} else if (doc[0].asmtsdocs[i].Target2SatPrev != "") {
-									if ((new Date(
-											doc[0].asmtsdocs[i].Target2SatPrev)
-											.getTime() < new Date(currentDate)
-											.getTime())) {
+									if ((new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime())) {
 										count++;
 										AUDataMSAC.push(doc[0].asmtsdocs[i]);
 									}
-
 								}
-
-							}
-
 						}
 					}
 
