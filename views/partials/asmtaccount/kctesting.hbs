@@ -8,7 +8,7 @@
 		<span class="ibm-sep"> </span>
 		<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
 		{{#unless newunit}}{{#if editor}}
-		<a target="_blank" href="/accountControls?id={{_id}}&new" class="ibm-add1-link">New</a>
+		<a target="_blank" href="/accountControls?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link">New</a>
 		{{/if}}{{/unless}}
 		<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 			<thead class="kc-test-viewheader">
@@ -27,7 +27,7 @@
 				{{#each RCTestData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="15%">{{name}}</td>
-						<td width="18%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{process}}</a></td>
+						<td width="18%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{process}}</a></td>
 						<td width="10%">{{eventDate}}</td>
 						<td width="5%">{{numTestsCompleted}}</td>
 						<td width="5%">{{numProcessDefects}}</td>
