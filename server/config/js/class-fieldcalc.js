@@ -1147,6 +1147,7 @@ var calculatefield = {
               "docid":doc[0].asmtsdocs[i]._id,
               "name":doc[0].asmtsdocs[i].AssessableUnitName,
               "country":doc[0].asmtsdocs[i].Country,
+              "catP":doc[0].asmtsdocs[i].catP,
               "imt":doc[0].asmtsdocs[i].IMT,
               "size":doc[0].asmtsdocs[i].CUSize,
               "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
