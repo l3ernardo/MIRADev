@@ -286,7 +286,7 @@
 					<tr class="asmt-viewdata">
 						<td width="5%">{{controlType}}</td>
 						<td width="5%">{{process}}</td>
-						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
+						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{#if _id}}{{numRequiredTests}}{{else}}&nbsp;{{/if}}</td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{testingRatio}}</td>
@@ -322,7 +322,7 @@
 						<td width="5%">{{reportingCountry}}</td>
 						<td width="20%">{{controlName}}</td>
 						<td width="20%"{{controllableUnit}}></td>
-						<td width="5%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td width="5%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="5%">{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
 						<td width="5%">{{targetClose}}</td>
 						<td width="5%">{{count}}</td>

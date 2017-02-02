@@ -433,7 +433,7 @@
 				{{#each RiskView2Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="15%" >{{#unless parent}}{{type}}{{/unless}}</td>
-						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a>{{/if}}</td>
 						<td width="15%">{{#if _id}}{{status}}{{else}}&nbsp;{{/if}}</td>
 						<td width="8%">{{originalTargetDate}}</td>
 						<td width="8%">{{currentTargetDate}}</td>
