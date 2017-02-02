@@ -1,4 +1,3 @@
-<textarea name="textarea" id="CURatingDataExport" cols="100" style="display:none">{{valuesToString exportCURating}}</textarea>
 <table id="curating_table" class="ibm-data-table">
 	<tr class="curating">
 		<td width="70%" class="curating-legend">
@@ -108,10 +107,7 @@
 	<tr class="curating">
 		<td colspan="3">
 			<span class="curating-header">CUs by Rating</span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="CURating-link-export" id="CURating-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
-			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="CURating-link-export2" id="CURating-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
-			<table id="curating_treeview" width="100%" class="table_with_scroll">
+			<table id="curating_treetable" width="100%" class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
 					<th class="curating-viewheader" scope="col" width="5%">Rating</th>
@@ -130,27 +126,27 @@
 				</thead>
 				{{#each BUCAsmtDataCURview}}
 				    <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
-					  <td class="asmt-viewdata"  width="3%">{{topName}}</td>
-						<td class="asmt-viewdata" width="5%">{{{category}}}
+					    <td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">{{{category}}}
 							<!--input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
 							<div id="ratingcategoryDisplay"></div-->
 						</td>
 						{{#if name}}
-							<td class="asmt-viewdata" width="20%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
-							<td class="asmt-viewdata" width="20%">&nbsp;</td>
+							<td class="asmt-viewdata">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata" width="5%">{{count}}</td>
-						<td class="asmt-viewdata" width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
-						{{{ratingDisplayView ratingPQ1 5}}}
-						{{{ratingDisplayView ratingCQ 5}}}
-						<td class="asmt-viewdata" width="10%">{{targettosatprev}}</td>
-						<td class="asmt-viewdata" width="10%">{{targettosat}}</td>
-						<td class="asmt-viewdata" width="5%">{{size}}</td>
-						<td class="asmt-viewdata" width="5%">{{maxscore}}</td>
-						<td class="asmt-viewdata" width="5%">{{cqscore}}</td>
-						<td class="asmt-viewdata" width="5%">{{pqscore}}</td>
-						<td class="asmt-viewdata" width="12%">{{reviewcomments}}</td>
+						<td class="asmt-viewdata">{{count}}</td>
+						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
+						{{{ratingDisplayView ratingPQ1}}}
+						{{{ratingDisplayView ratingCQ}}}
+						<td class="asmt-viewdata">{{targettosat}}</td>
+						<td class="asmt-viewdata">{{targettosatprev}}</td>
+						<td class="asmt-viewdata">{{size}}</td>
+						<td class="asmt-viewdata">{{maxscore}}</td>
+						<td class="asmt-viewdata">{{cqscore}}</td>
+						<td class="asmt-viewdata">{{pqscore}}</td>
+						<td class="asmt-viewdata">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
 				<tr>

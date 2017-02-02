@@ -31,7 +31,7 @@
 						<td width="6%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
 						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
 						<td width="15%">{{#if auditOrReview}}{{auditOrReview}}{{else}}&nbsp;{{/if}}</td>
-						<td width="10%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{eid}}</a>{{/unless}}</td>
+						<td width="10%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{eid}}</a>{{/unless}}</td>
 						<td width="20%">{{countryProcess}}</td>
 						<td width="5%">{{reportDate}}</td>
 						{{{ratingDisplayView rating 5}}}
@@ -69,7 +69,7 @@
 					<tr class="asmt-viewdata">
 						<td width="6%">{{reportingQuarter}}</td>
 						<td width="15%">{{auditOrReview}}</a></td>
-						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a></td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a></td>
 						<td width="22%">{{#if _id}}{{controllableUnit}}{{else}}&nbsp;{{/if}}</td>
 						<td width="5%">{{reportDate}}</td>
 						{{{ratingDisplayView rating 5}}}
@@ -92,7 +92,7 @@
 			<table id="LocalAudit_treeview" width="100%" class="table_with_scroll">
 			<!--{{#if admin}}-->
 			<!--{{/if}}-->
-				<a target="_blank" href="/localaudit?id={{_id}}&new" class="ibm-add1-link whiteanchor">New</a></td>
+				<a target="_blank" href="/localaudit?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link whiteanchor">New</a></td>
 
 				<br /><br />
 
@@ -114,7 +114,7 @@
 						{{else}}
 							<td width="6%">&nbsp;</td>
 						{{/unless}}
-						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{auditOrReview}}</a></td>
+						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{auditOrReview}}</a></td>
 						<td width="7%">{{reportDate}}</td>
 						{{{ratingDisplayView rating 7}}}
 						<td width="10%">{{numRecommendationsTotal}}</td>
