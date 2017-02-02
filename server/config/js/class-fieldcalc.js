@@ -548,6 +548,7 @@ var calculatefield = {
             var CUCRMables = {};
             var CPauditables = {};
             var CPassmts = {};
+            doc[0].AUDocs = {};
             // For Current Quarter Country Process Defect Rate Exceptions
             doc[0].CPDRException = [];
             // For CP Financial Process Defect Rates that are Marg counter
@@ -611,6 +612,7 @@ var calculatefield = {
                 }
               }
               else if (asmtsdocs[i].key == "Assessable Unit"){
+                doc[0].AUDocs[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                 if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                   CUassunits.push(asmtsdocs[i]);
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
@@ -1145,6 +1147,7 @@ var calculatefield = {
               "docid":doc[0].asmtsdocs[i]._id,
               "name":doc[0].asmtsdocs[i].AssessableUnitName,
               "country":doc[0].asmtsdocs[i].Country,
+              "catP":doc[0].asmtsdocs[i].catP,
               "imt":doc[0].asmtsdocs[i].IMT,
               "size":doc[0].asmtsdocs[i].CUSize,
               "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
