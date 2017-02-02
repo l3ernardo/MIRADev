@@ -28,7 +28,7 @@
 					<tr class="asmt-viewdata">
 						{{#each col}}
 							{{#if @first}}
-								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
+								<td><a target="_blank" href="/asmtcomponents?id={{../docid}}&pid={{../parentid}}">{{this}}</a></td>
 							{{else}}
 								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
 							{{/if}}
