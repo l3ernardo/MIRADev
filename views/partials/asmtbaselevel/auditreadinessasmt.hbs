@@ -67,7 +67,7 @@
 						<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
 
 							<td style="background-color: white !important;" style="white-space:nowrap;">{{name}}</td>
-							<td style="background-color: white !important;" style="white-space:nowrap;">{{#if _id}}<a href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
+							<td style="background-color: white !important;" style="white-space:nowrap;">{{#if _id}}<a target="_blank" href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
 							<td style="background-color: white !important;">{{{summary}}}</td>
 							<td style="background-color: white !important;">{{observationCategory}}</td>
 							{{#if_equal ../ParentDocSubType "Country Process"}}
@@ -84,7 +84,7 @@
 						<tr class="asmt-viewdata">
 							{{#each col}}
 								{{#if @first}}
-									<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+									<td><a target="_blank" href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
 								{{else}}
 									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
 								{{/if}}
