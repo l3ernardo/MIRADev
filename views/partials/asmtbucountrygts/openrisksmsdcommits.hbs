@@ -340,7 +340,7 @@
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%" >{{#unless numTasks}}{{catP}}{{/unless}}</td>
 						<td width="5%" >{{#unless numTasks}}{{type}}{{/unless}}</td>
-						<td width="10%">{{#if numTasks}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td width="10%">{{#if numTasks}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a>{{/if}}</td>
 						<td width="5%">{{#if _id}}{{country}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%">{{process}}</td>
 						<td width="5%">{{status}}</td>

@@ -13,7 +13,7 @@
 				<tbody>
 					{{#each InternalAuditsDataDisp}}
 					<tr>
-						<td><a target="_blank" href="/asmtcomponents?id={{id}}">{{engagement}}</a></td>
+						<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../_id}}">{{engagement}}</a></td>
 						<td>{{addedToAQDB}}</td>
 						{{{ratingDisplayView rating "rating"}}}
 						<td>{{size}}</td>
