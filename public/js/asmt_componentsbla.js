@@ -1433,6 +1433,15 @@ $(document).ready(function() {
 		tableReport = AllTableToReportMultiple('RCTest_treeview',"RCTest");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
+	//Reporting Country tab export buttons
+	$('#RCTest3-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('RCTest3_treeview', "RCTest3");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#RCTest3-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('RCTest3_treeview',"RCTest3");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
 	//SCTestData export buttons
 	$("#SCTest_checkbox_tree").click(function(){
 		$(".SCTest_checkbox_tree").prop('checked', $(this).prop('checked'));
@@ -1443,6 +1452,16 @@ $(document).ready(function() {
 	});
 	$('#SCTest-link-export2').click(function(){
 		tableReport = AllTableToReportMultiple('SCTest_treeview',"SCTest");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+
+	//Reporting Country tab
+	$('#RCControls-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('RCControls_treeview',"Sample");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#RCControls-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('RCControls_treeview',"Sample");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	//SampleData export buttons
