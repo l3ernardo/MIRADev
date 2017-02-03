@@ -268,7 +268,7 @@
 				{{#each CPDRException}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%">{{category}}</td>
-						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%" >{{AUDefectCount}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
@@ -292,11 +292,16 @@
 					<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
 					<th class="kc-test-viewheader" scope="col" width="25%">Action plan to meet full year req'd samples</th>
 				</thead>
-				{{#each RCTest2Data}}
+				{{#each TRExceptionControls}}
 					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+						<td width="5%">{{controlType}}</td>
+						<td width="5%">{{process}}</td>
+						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
+						<td width="10%">{{#if _id}}{{numRequiredTests}}{{else}}&nbsp;{{/if}}</td>
+						<td width="10%">{{numActualTests}}</td>
+						<td width="10%">{{testingRatio}}</td>
+						<td width="20%">{{reasonTested}}</td>
+						<td width="25%">{{actionPlan}}</td>
 					</tr>
 				{{/each}}
 			</table>
