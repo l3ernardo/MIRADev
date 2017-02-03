@@ -151,7 +151,7 @@ var getDocs = {
         case "BU IOT":
           break;
         case "BU IMT":
-        deferred.resolve({"status": 200, "doc": doc});
+          deferred.resolve({"status": 200, "doc": doc});
           break;
         case "Account":
           var compObj = {
@@ -330,6 +330,7 @@ var getDocs = {
             doc[0].SCTest2DataPQ2 = [];
             doc[0].SCTest2DataPQ3 = [];
             doc[0].SCTest2DataPQ4 = [];
+            doc[0].TRExceptionControls = [];
 
             if (doc[0].MIRABusinessUnit == "GTS") {
               doc[0].RiskView1DataCRM = [];
@@ -362,6 +363,8 @@ var getDocs = {
                 comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
                 comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
                 doc[0].RCTest2Data.push(comps[i]);
+                // this is dummy content only while waiting for correct data so that Irving can help work on the treeables
+                doc[0].TRExceptionControls.push(comps[i]);
                 if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                	  doc[0].CountryControlsData.push(comps[i]);
 		              if (doc[0].MIRABusinessUnit == "GTS") {
