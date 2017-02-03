@@ -477,8 +477,10 @@ var assessment = {
 									sct.processSCTab(doc,defViewRow);
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
+									//console.log("before art");
 									// RPTG Country Testing tab									//RPTG Country Testing tab
-									rcc.processRCTab(doc,defViewRow);
+									//rcc.processRCTab(doc,defViewRow);
+									//console.log("after art");
 									// Process CU Ratings tab
 									cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
@@ -488,24 +490,98 @@ var assessment = {
 
 									/////////////////////////////////////////////////////////////
 									//Irving's code for repoting country
-									console.log(1);
-									//console.log(doc[0].RCTest1Data.length);
-									//console.log(2);
-									console.log(doc[0].TRExceptionControls);
-									console.log(2);
-									//console.log(3);
-									console.log(doc[0].RCTest3Data);
+
+									//Sorting for first table is done in the process of Sample Country
+
+									//Second table sorting
+									var sortingElements = doc[0].TRExceptionControls;
+									var exportList = [];
+									var topCategory = 0;
+									var catObjects = {};//object of objects for counting
+									var sortedList = [];
+									sortingElements.sort(function(a, b){
+										var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
+					          if (nameA < nameB) //sort string ascending
+					            return -1
+					          if (nameA > nameB)
+					            return 1
+											var nameA=a.process.toLowerCase(), nameB=b.process.toLowerCase()
+						          if (nameA < nameB) //sort string ascending
+						            return -1
+						          if (nameA > nameB)
+						            return 1
+										return 0
+									});
+									for(var i = 0; i < sortingElements.length; i++){
+										if(typeof catObjects[sortingElements[i].controlType.replace(/ /g,'')] === "undefined"){
+					            topCategory++;
+					            var tmp = {
+					              id:sortingElements[i].controlType.replace(/ /g,''),
+					              controlTypeName:sortingElements[i].controlType,
+					              numRequiredTests: 0,
+												numActualTests: 0
+					            };
+					            sortedList.push(tmp);
+					            catObjects[sortingElements[i].controlType.replace(/ /g,'')] = tmp;
+					          }
+										if(typeof catObjects[sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,'')] === "undefined"){
+					            var tmp = {
+					              parent:sortingElements[i].controlType.replace(/ /g,''),
+												id: sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,''),
+					              processName:sortingElements[i].process,
+												numRequiredTests: 0,
+												numActualTests: 0
+					            };
+					            sortedList.push(tmp);
+					            catObjects[sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,'')] = tmp;
+					          }
+										sortingElements[i].count = 1;
+					          sortingElements[i].parent = sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,'');
+					          sortingElements[i].id = sortingElements[i]["_id"];
+					          //do counting for category
+										if(sortingElements[i].numRequiredTests != ""){
+							        catObjects[sortingElements[i].parent].numRequiredTests += parseFloat(sortingElements[i].numRequiredTests);
+											catObjects[catObjects[sortingElements[i].parent].parent].numRequiredTests += parseFloat(sortingElements[i].numRequiredTests);
+							      }
+										if(sortingElements[i].numActualTests != ""){
+							        catObjects[sortingElements[i].parent].numActualTests += parseFloat(sortingElements[i].numActualTests);
+											catObjects[catObjects[sortingElements[i].parent].parent].numActualTests += parseFloat(sortingElements[i].numActualTests);
+							      }
+					          //catObjects[sortingElements[i].parent].count++ ;
+										var tmp = {};
+										tmp.controlType = sortingElements[i].controlType || " ";
+										tmp.process = sortingElements[i].process || " ";
+										tmp.controlName = sortingElements[i].controlName || " ";
+										tmp.numRequiredTests = sortingElements[i].numRequiredTests || " ";
+										tmp.numActualTests = sortingElements[i].numActualTests || " ";
+										tmp.testingRatio = sortingElements[i].testingRatio || " ";
+										tmp.reasonTested = sortingElements[i].reasonTested || " ";
+										tmp.actionPlan = sortingElements[i].actionPlan || " ";
+
+										exportList.push(tmp);
+										sortedList.push(sortingElements[i]);
+									}
+									doc[0].exportRCTest = exportList;
+
+									// Add padding to Unremediated Defects by Quarter in SCT
+									if (topCategory < defViewRow) {
+										if (sortedList.length == 0) {
+											sortedList = fieldCalc.addTestViewData(11,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(sortedList,11,(defViewRow - topCategory));
+										}
+									}
+									doc[0].TRExceptionControls = sortedList;
+									// END OF SECOND TABLE SORTING*****************
+
 									//start of third treetable
 									var RCTest3 = doc[0].RCTest3Data;
-					        /*var RCTest3Category = {};
+					        var RCTest3Category = {};
 					        var RCTest3List = [];
 					        var exportRCTest3 = [];
 					        var topCategory = 0;
 					        var objects = {};//object of objects for counting
-					        console.log(11);
-					        for (var i = 0; i < RCTest3.length; i++) {
-					          console.log(RCTest3[i].originalReportingQuarter);
-					        }
+
 					        RCTest3.sort(function(a, b){
 					          var nameA=a.originalReportingQuarter.toLowerCase(), nameB=b.originalReportingQuarter.toLowerCase()
 					          if (nameA < nameB) //sort string ascending
@@ -522,19 +598,19 @@ var assessment = {
 					            return -1
 					          if (nameA > nameB)
 					            return 1
-					          var nameA=a.sampleCountry.toLowerCase(), nameB=b.sampleCountry.toLowerCase()
+					          var nameA=a.reportingCountry.toLowerCase(), nameB=b.reportingCountry.toLowerCase()
 					          if (nameA < nameB) //sort string ascending
 					            return -1
 					          if (nameA > nameB)
 					            return 1
-					          var nameA=a.controlShortName.toLowerCase(), nameB=b.controlShortName.toLowerCase()
+					          var nameA=a.controlName.toLowerCase(), nameB=b.controlName.toLowerCase()
 					          if (nameA < nameB) //sort string ascending
 					            return -1
 					          if (nameA > nameB)
 					            return 1
 					          return 0 //default return value (no sorting)
 					        });
-					        console.log(22);
+
 					        for(var i = 0; i < RCTest3.length; i++){
 					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')] === "undefined"){
 					            topCategory++;
@@ -547,7 +623,7 @@ var assessment = {
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
 					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')] = true;
-					            console.log(33);
+
 					          }
 					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
@@ -560,7 +636,7 @@ var assessment = {
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
 					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] = true;
-					            console.log(44);
+
 					          }
 					          if(typeof RCTest3Category[RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
@@ -573,38 +649,38 @@ var assessment = {
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
 					            RCTest3Category[RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] = true;
-					            console.log(55);
+
 					          }
-					          if(typeof RCTest3Category[RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].sampleCountry.replace(/ /g,'')] === "undefined"){
+					          if(typeof RCTest3Category[RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
 					              parent:RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,''),
-					              id:RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].sampleCountry.replace(/ /g,''),
-					              sampleCountry:RCTest3[i].sampleCountry,
+					              id:RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
+					              reportingCountry:RCTest3[i].reportingCountry,
 					              count: 0,
 					              catEntry: true
 					            };
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].sampleCountry.replace(/ /g,'')] = true;
-					            console.log(66);
+					            RCTest3Category[RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] = true;
+
 					          }
-					          if(typeof RCTest3Category[RCTest3[i].sampleCountry.replace(/ /g,'')+RCTest3[i].controlShortName.replace(/ /g,'')] === "undefined"){
+					          if(typeof RCTest3Category[RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
-					              id:RCTest3[i].sampleCountry.replace(/ /g,'')+RCTest3[i].controlShortName.replace(/ /g,''),
-					              parent:RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].sampleCountry.replace(/ /g,''),
-					              controlShortName:RCTest3[i].controlShortName.replace(/ /g,''),
+					              id:RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,''),
+					              parent:RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
+					              controlName:RCTest3[i].controlName.replace(/ /g,''),
 					              count: 0,
 					              catEntry: true
 					            };
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].sampleCountry.replace(/ /g,'')+RCTest3[i].controlShortName.replace(/ /g,'')] = true;
-					            console.log(77);
+					            RCTest3Category[RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] = true;
+
 					          }
 					          RCTest3[i].count = 1;
-					          RCTest3[i].parent = RCTest3[i].sampleCountry.replace(/ /g,'')+RCTest3[i].controlShortName.replace(/ /g,'');
+					          RCTest3[i].parent = RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'');
 					          RCTest3[i].id = RCTest3[i]["_id"];
-					          console.log(88);
+
 					          //do counting for category
 					          objects[RCTest3[i].parent].count++ ;
 					          //do counting for 2nd level category
@@ -615,13 +691,13 @@ var assessment = {
 					          objects[objects[objects[objects[RCTest3[i].parent].parent].parent].parent].count ++;
 					          //do counting for 5th level category
 					          objects[objects[objects[objects[objects[RCTest3[i].parent].parent].parent].parent].parent].count ++;
-					          console.log(99);
+
 					          var tmp = {};
 					          tmp.originalReportingQuarter = RCTest3[i].originalReportingQuarter || " ";
 					          tmp.testType = RCTest3[i].testType || " ";
 					          tmp.processSampled = RCTest3[i].processSampled || " ";
-					          tmp.sampleCountry = RCTest3[i].sampleCountry || " ";
-					          tmp.controlShortName = RCTest3[i].controlShortName || " ";
+					          tmp.reportingCountry = RCTest3[i].reportingCountry || " ";
+					          tmp.controlName = RCTest3[i].controlName || " ";
 					          tmp.controllableUnit = RCTest3[i].controllableUnit || " ";
 					          tmp.sampleUniqueID = RCTest3[i].sampleUniqueID || " ";
 					          tmp.originalTargetDate = RCTest3[i].originalTargetDate || " ";
@@ -631,7 +707,7 @@ var assessment = {
 					          exportRCTest3.push(tmp);
 					          RCTest3List.push(RCTest3[i]);
 					        }
-					        console.log(100);
+
 					        doc[0].exportRCTest3 = exportRCTest3;
 
 					        // Add padding to Unremediated Defects by Quarter in SCT
@@ -643,7 +719,8 @@ var assessment = {
 					          }
 					        }
 					        doc[0].RCTest3Data = RCTest3List;
-*/
+
+									// END OF IRVING'S CODE FOR REPORTING COUNTRY TAB****************
 									///////////////////////////////////////////////////////
 									// create a space for performance Tab
 									performanceTab.getKFCRDefectRate(db,doc);
