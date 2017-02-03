@@ -546,7 +546,7 @@ var calculatefield = {
           case "BU IMT":
             doc[0].AUDocs = asmtsdata.body.docs;
             doc[0].AUDocsObj = {};
-            var AUAuditables = {}:
+            var AUAuditables = {};
             var $or = [];
             for(var i = 0; i < doc[0].AUDocs.length; i++){
               $or.push({parentid: doc[0].AUDocs[i]["_id"]});
