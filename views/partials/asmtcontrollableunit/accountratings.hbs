@@ -25,7 +25,7 @@
 				{{#each AccountData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td class="asmt-viewdata"width="5%">{{{category}}}</td>
-						<td class="asmt-viewdata-al"width="25%"><a href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td class="asmt-viewdata-al"width="25%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td class="asmt-viewdata"width="5%">{{count}}</td>
 						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
 						<td class="asmt-viewdata"width="5%">{{MetricsValue}}{{#if MetricsValue}}%{{/if}}</td>

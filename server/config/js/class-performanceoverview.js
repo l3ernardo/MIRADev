@@ -1,7 +1,7 @@
 /*******************************************************************************
- * 
+ *
  * Assessment code for MIRA Web Developed by : Carlos Ramirez Date: 11 Jan 2017
- * 
+ *
  */
 
 var q = require("q");
@@ -110,38 +110,38 @@ var getOpenIssuePerAssessment = function(RiskView1Data, reviewParam,
  * var getOpenIssuePerAssessment = function (RiskView1Data,AssessableUnitName){
  * var tempProcess = ""; var tempCountry = ""; var tempRiskCountry = ""; var
  * tempRiskProces = "";
- * 
+ *
  * try{
- * 
+ *
  * if(AssessableUnitName != undefined && RiskView1Data != undefined){
  * if(AssessableUnitName.indexOf("-") != -1 ){
- * 
+ *
  * if(AssessableUnitName.split('-').length > 0 ){
- * 
+ *
  * tempCountry = AssessableUnitName.split('-')[0].replace(/ /g,''); //var
  * tempCountry = "USA";
- * 
- * 
+ *
+ *
  * if(AssessableUnitName.split('-').length>2){ tempProcess =
  * AssessableUnitName.split('-')[1]; tempProcess += "-"; tempProcess +=
  * AssessableUnitName.split('-')[2]; } else{ tempProcess =
  * AssessableUnitName.split('-')[1] ; }
- * 
+ *
  * tempProcess = tempProcess.replace(/ /g,''); tempCountry =
  * tempCountry.replace(/ /g,'');
- * 
+ *
  * if(RiskView1Data.country != undefined && RiskView1Data.process != undefined ){
  * tempRiskCountry = RiskView1Data.country.replace(/ /g,''); tempRiskProcess =
  * RiskView1Data.process.replace(/ /g,''); }
- * 
+ *
  * if(tempRiskCountry == tempCountry && tempRiskProcess == tempProcess ) return
  * true; else return false; }
  *  }
  *  }
- * 
+ *
  * }catch (e){ console.log("error at
  * [class-performanceoverview][getOpenIssuePerAssessment]: "+e); return false; }
- * 
+ *
  *  }
  */
 
@@ -177,6 +177,7 @@ var performanceoverviewcountry = {
 
 		try {
 
+			// Calculate for GTS
 			if (doc[0].MIRABusinessUnit == "GTS") {
 
 				// obtain defect and test count from the
@@ -237,14 +238,17 @@ var performanceoverviewcountry = {
 
 				doc[0].KCFRDefectRateSOD = KCFRDefectRateSOD;
 
-			} else {
+			}
+			// Calculate for GBS
+			else {
 
 				// obtain defect and test count from the
 				// components(countryControls)
 				for (var i = 0; i < doc[0].CountryControlsData.length; i++) {
 
 					if (doc[0].CountryControlsData[i].controlType == 'KCFR') {
-
+						// console.log("KCFR numDefects: " + doc[0].CountryControlsData[i].numDefects);
+						// console.log("KCFR numActualTests: " + doc[0].CountryControlsData[i].numActualTests);
 						if (!isNaN(parseInt(doc[0].CountryControlsData[i].numDefects)))
 							KCFRDefectCount += parseInt(doc[0].CountryControlsData[i].numDefects);
 
@@ -711,48 +715,24 @@ var performanceoverviewcountry = {
 
 				}
 
-			} else {
+			}
+			// For GBS
+			else {
 
 				for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
-					if (doc[0].asmtsdocs[i].PeriodRating == "Marg"
-							|| doc[0].asmtsdocs[i].PeriodRating == "Unsat") {
-						if (doc[0].asmtsdocs[i].AUStatus != "Retired") {
-							if (doc[0].asmtsdocs[i].Target2Sat != undefined
-									&& doc[0].asmtsdocs[i].Target2SatPrev != undefined) {
-								if (doc[0].asmtsdocs[i].Target2Sat != ""
-										&& doc[0].asmtsdocs[i].Target2SatPrev != "") {
-									// console.log( "Target2Sat: "+new
-									// Date(doc[0].AUData[i].Target2Sat).getTime());
-									// console.log( "Target2SatPrev: "+new
-									// Date(doc[0].AUData[i].Target2SatPrev).getTime());
-									// console.log("current date: "+new
-									// Date(currentDate ).getTime());
-
-									if ((new Date(
-											doc[0].asmtsdocs[i].Target2Sat)
-											.getTime() > new Date(
-											doc[0].asmtsdocs[i].Target2SatPrev)
-											.getTime())
-											|| (new Date(
-													doc[0].asmtsdocs[i].Target2SatPrev)
-													.getTime() < new Date(
-													currentDate).getTime())) {
+					if (doc[0].asmtsdocs[i].PeriodRating == "Marg" || doc[0].asmtsdocs[i].PeriodRating == "Unsat") {
+						if (doc[0].asmtsdocs[i].Target2Sat != undefined && doc[0].asmtsdocs[i].Target2SatPrev != undefined) {
+								if (doc[0].asmtsdocs[i].Target2Sat != "" && doc[0].asmtsdocs[i].Target2SatPrev != "") {
+									if ((new Date(doc[0].asmtsdocs[i].Target2Sat).getTime() > new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime()) || (new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime())) {
 										count++;
 										AUDataMSAC.push(doc[0].asmtsdocs[i]);
 									}
 								} else if (doc[0].asmtsdocs[i].Target2SatPrev != "") {
-									if ((new Date(
-											doc[0].asmtsdocs[i].Target2SatPrev)
-											.getTime() < new Date(currentDate)
-											.getTime())) {
+									if ((new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime())) {
 										count++;
 										AUDataMSAC.push(doc[0].asmtsdocs[i]);
 									}
-
 								}
-
-							}
-
 						}
 					}
 

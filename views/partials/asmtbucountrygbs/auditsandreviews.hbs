@@ -1,9 +1,13 @@
+<textarea name="textarea" id="InternalAuditDataExport" cols="100" style="display:none">{{valuesToString exportInternalAuditData}}</textarea>
 <table id="auditreview_table" class="ibm-data-table" width="100%">
   {{#if editmode}}
   	<tr class="audit-review-content">
   		<td>
         <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
-  			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+  			<span class="ibm-sep"> </span>
+  			<a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+  			<table id="InternalAudit_table" width="100%" class="table_with_scroll">
   				<thead>
   					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Engagement</th>
@@ -14,15 +18,16 @@
   					<th class="audit-review-viewheader" scope="col" width="7%">Size</th>
   					<th class="audit-review-viewheader" scope="col" width="5%">Score</th>
   				</thead>
-  				{{#each InternalAuditData}}
-  					<tr class="asmt-viewdata">
-  						{{#each col}}
-  							{{#if @first}}
-  								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
-  							{{else}}
-  								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-  							{{/if}}
-  						{{/each}}
+  				{{#each exportInternalAuditData}}
+  					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="10%">{{plannedStartDate}}</td>
+              <td width="8%">{{engagement}}</td>
+              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="20%">{{DocSubType}}</td>
+              {{{ratingDisplayView PeriodRatingPrev 5}}}
+              {{{ratingDisplayView PeriodRating 5}}}
+              <td width="7%">{{CUSize}}</td>
+              <td width="5%">{{CUScore}}</td>
   					</tr>
   				{{/each}}
           <tr class="audit-review-viewheader-ar">
@@ -55,14 +60,14 @@
   					<th class="audit-review-viewheader" scope="col" width="5%">Count</th>
   				</thead>
   				{{#each PPRData}}
-  					<tr class="asmt-viewdata">
-  						{{#each col}}
+  					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+  						<!--{{#each col}}
   							{{#if @first}}
-  								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+  								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
   							{{else}}
   								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
   							{{/if}}
-  						{{/each}}
+  						{{/each}}-->
   					</tr>
   				{{/each}}
   			</table>
@@ -90,14 +95,14 @@
   					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
   				</thead>
   				{{#each OtherAuditsData}}
-  					<tr class="asmt-viewdata">
-  						{{#each col}}
+  					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+  						<!--{{#each col}}
   							{{#if @first}}
-  								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+  								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
   							{{else}}
   								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
   							{{/if}}
-  						{{/each}}
+  						{{/each}}-->
   					</tr>
   				{{/each}}
   			</table>
@@ -123,7 +128,10 @@
     <tr class="audit-review-content">
       <td>
         <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
-        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+  			<span class="ibm-sep"> </span>
+  			<a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+  			<table id="InternalAudit_table" width="100%" class="table_with_scroll">
           <thead>
             <th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
             <th class="audit-review-viewheader" scope="col" width="8%">Engagement</th>
@@ -134,15 +142,23 @@
             <th class="audit-review-viewheader" scope="col" width="7%">Size</th>
             <th class="audit-review-viewheader" scope="col" width="5%">Score</th>
           </thead>
-          {{#each InternalAuditData}}
-            <tr class="asmt-viewdata">
-              {{#each col}}
+          {{#each exportInternalAuditData}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="10%">{{plannedStartDate}}</td>
+              <td width="8%">{{engagement}}</td>
+              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="20%">{{DocSubType}}</td>
+              {{{ratingDisplayView PeriodRatingPrev 5}}}
+              {{{ratingDisplayView PeriodRating 5}}}
+              <td width="7%">{{CUSize}}</td>
+              <td width="5%">{{CUScore}}</td>
+              <!--{{#each col}}
                 {{#if @first}}
-                  <td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
                 {{else}}
                   <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
                 {{/if}}
-              {{/each}}
+              {{/each}}-->
             </tr>
           {{/each}}
           <tr class="audit-review-viewheader-ar">
@@ -175,14 +191,14 @@
             <th class="audit-review-viewheader" scope="col" width="5%">Count</th>
           </thead>
           {{#each PPRData}}
-            <tr class="asmt-viewdata">
-              {{#each col}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <!--{{#each col}}
                 {{#if @first}}
-                  <td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
                 {{else}}
                   <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
                 {{/if}}
-              {{/each}}
+              {{/each}}-->
             </tr>
           {{/each}}
         </table>
@@ -210,14 +226,14 @@
             <th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
           </thead>
           {{#each OtherAuditsData}}
-            <tr class="asmt-viewdata">
-              {{#each col}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <!--{{#each col}}
                 {{#if @first}}
-                  <td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
                 {{else}}
                   <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
                 {{/if}}
-              {{/each}}
+              {{/each}}-->
             </tr>
           {{/each}}
         </table>

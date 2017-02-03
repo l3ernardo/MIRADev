@@ -73,7 +73,7 @@
 						<th class="ar-asmt-label">Summary/Comments</th>
 					</tr>
 					{{#each OpMetricSOD}}
-						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
+						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}" class="mira-field" for="Operational Metrics">
 						<tr>
 							<td class="ar-asmt-label"><label for="{{commentfield}}">{{name}}</label></td>
 							<td class="content-data">
@@ -132,7 +132,7 @@
 						<td class="ar-asmt-label">Overall Assessment</td>
 						{{{ratingDisplayView PeriodRatingSOD}}}
 						<td class="content-data">
-							<input type="hidden" name="OverallAssessmentCommentsROSOD" value="{{OverallAssessmentCommentsSOD}}">
+							<input type="hidden" name="OverallAssessmentCommentsROSOD" value="{{OverallAssessmentCommentsSOD}}" class="mira-field" for="Overall Assessment comments">
 							<div id="OverallAssessmentCommentsReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -140,7 +140,7 @@
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRateSOD parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCFRTestingCommentsROSOD" value="{{KCFRTestingCommentsSOD}}">
+							<input type="hidden" name="KCFRTestingCommentsROSOD" value="{{KCFRTestingCommentsSOD}}" class="mira-field" for="KCFR Defect rate comments">
 							<div id="KCFRTestingCommentsReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -148,7 +148,7 @@
 						<td class="ar-asmt-label">KCO Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCODefectRateSOD parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCOTestingCommentsROSOD" value="{{KCOTestingCommentsSOD}}">
+							<input type="hidden" name="KCOTestingCommentsROSOD" value="{{KCOTestingCommentsSOD}}" class="mira-field" for="KCO Defect Rate comments">
 							<div id="KCOTestingCommentsReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -156,7 +156,7 @@
 						<td class="ar-asmt-label">CHQ Internal Audit Score</td>
 						<td class="content-data">{{WeightedAuditScoreSOD}}</td>
 						<td class="content-data">
-							<input type="hidden" name="CorpIACommentsROSOD" value="{{CorpIACommentsSOD}}">
+							<input type="hidden" name="CorpIACommentsROSOD" value="{{CorpIACommentsSOD}}" class="mira-field" for="CHQ Internal Audit Score">
 							<div id="CorpIACommentsReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -164,7 +164,7 @@
 						<td class="ar-asmt-label">Missed Risk Evaluations</td>
 						<td class="content-data">{{MissedOpenIssueCountSOD}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedRECommentsROSOD" value="{{MissedRECommentsSOD}}">
+							<input type="hidden" name="MissedRECommentsROSOD" value="{{MissedRECommentsSOD}}" class="mira-field" for="Missed Risk Evaluations comments">
 							<div id="MissedRECommentsReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -172,7 +172,7 @@
 						<td class="ar-asmt-label">Missed MSAC Commitments</td>
 						<td class="content-data">{{MissedMSACSatCountSOD}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedMSACCommentsROSOD" value="{{MissedMSACCommentsSOD}}">
+							<input type="hidden" name="MissedMSACCommentsROSOD" value="{{MissedMSACCommentsSOD}}" class="mira-field" for="Missed MSAC commitments comments">
 							<div id="MissedMSACCommentsReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -186,7 +186,7 @@
 							<td class="ar-asmt-label">{{name}}</td>
 							{{{ratingDisplayView rating}}}
 							<td class="content-data">
-								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}">
+								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}" class="mira-field" for="Operational and other indicators comments">
 								<div id="{{commentfieldReadOnly}}"></div>
 							</td>
 						</tr>
@@ -195,7 +195,7 @@
 						<td class="ar-asmt-label">Basics of Control Exceptions</td>
 						<td class="asmt-viewdata-centered">{{BOCExceptionCountSOD}}</td>
 						<td class="content-data">
-							<input type="hidden" name="BoCCommentsROSOD" value="{{BoCCommentsSOD}}">
+							<input type="hidden" name="BoCCommentsROSOD" value="{{BoCCommentsSOD}}" class="mira-field" for="Basic of control exceptions comments">
 							<div id="BoCCommentsReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -204,14 +204,14 @@
 					<tr>
 						<td class="ar-asmt-label" width="25%">Other Explanation</td>
 						<td class="content-data" width="75%">
-							<input type="hidden" name="PerfOverviewOtherExplanationROSOD" value="{{PerfOverviewOtherExplanationSOD}}">
+							<input type="hidden" name="PerfOverviewOtherExplanationROSOD" value="{{PerfOverviewOtherExplanationSOD}}" class="mira-field" for="Other explanation">
 							<div id="PerfOverviewOtherExplanationReadOnlySOD"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Critical Issues</td>
 						<td class="content-data">
-							<input type="hidden" name="PerfOverviewCriticaExplanationROSOD" value="{{PerfOverviewCriticaExplanationSOD}}">
+							<input type="hidden" name="PerfOverviewCriticaExplanationROSOD" value="{{PerfOverviewCriticaExplanationSOD}}" class="mira-field" for="Critical issues">
 							<div id="PerfOverviewCriticaExplanationReadOnlySOD"></div>
 						</td>
 					</tr>
@@ -222,9 +222,9 @@
 	<tr class="ar-asmt-content">
 		<td>
 			<span id="CPCUPerformanceInDelivery_tittle" name = "CPCUPerformanceInDelivery_tittle" class="ar-asmt-header">Performance Indicators</span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="POBUDelivery-link-export" id="POBUDelivery-link-export" class="ibm-symp-spreadsheet witheanchor" >Export to Excel</a>
+			<a href="javascript:void(0);" value="Export to Excel" name="POBUDelivery-link-export" id="POBUDelivery-link-export" class="ibm-symp-spreadsheet whiteanchor" >Export to Excel</a>
 			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="POBUDelivery-link-export2" id="POBUDelivery-link-export2" class="ibm-symp-spreadsheet witheanchor" >Export to Open Office</a>
+			<a href="javascript:void(0);" value="Export to Open Office" name="POBUDelivery-link-export2" id="POBUDelivery-link-export2" class="ibm-symp-spreadsheet whiteanchor" >Export to Open Office</a>
 			
 			<table width="100%" id="CPCUPerformanceInDelivery_treeview" class="other-viewheader table_with_scroll">
 				<thead>
@@ -268,9 +268,9 @@
 			</table>
 			<br />
 			<span id="CPCUPerformanceInOthersDelivery_tittle" name = "CPCUPerformanceInOthersDelivery_tittle" class="ar-asmt-header">Operational and Other Indicators</span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="POBUOTDelivery-link-export"  class="ibm-symp-spreadsheet witheanchor" id="POBUOTDelivery-link-export">Export to Excel</a>
+			<a href="javascript:void(0);" value="Export to Excel" name="POBUOTDelivery-link-export"  class="ibm-symp-spreadsheet whiteanchor" id="POBUOTDelivery-link-export">Export to Excel</a>
 			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="POBUOTDelivery-link-export2"  class="ibm-symp-spreadsheet witheanchor" id="POBUOTDelivery-link-export2">Export to Open Office</a>
+			<a href="javascript:void(0);" value="Export to Open Office" name="POBUOTDelivery-link-export2"  class="ibm-symp-spreadsheet whiteanchor" id="POBUOTDelivery-link-export2">Export to Open Office</a>
 		
 			<table width="100%" width="100%" id="CPCUPerformanceInOtherDelivery_treeview" class="other-viewheader table_with_scroll">
 				<thead>

@@ -177,7 +177,7 @@ var calculatefield = {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {
-          MIRABusinessUnit = "GTS";            
+          MIRABusinessUnit = "GTS";
         }
         break;
       default:
@@ -446,8 +446,8 @@ var calculatefield = {
                 "_id": {"$gt":0},
 				        "BusinessUnit": doc[0].BusinessUnit,
                 "$or": [
-                  //Getting all country process assessment
-                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                  //Getting all country process and controllable unit assessment
+                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": {"$in":["Country Process", "Controllable Unit"]}},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
                   //Getting all controllable units assessable units
                   {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                   //Getting all Country Process assessable units
@@ -459,14 +459,17 @@ var calculatefield = {
           var asmts = {
             selector:{
               "_id": {"$gt":0},
-              "key": "Assessment",
-              "AUStatus": "Active",
-              "ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU Country","BU IMT"]},
+              "key": "Assessable Unit",
               "BusinessUnit": doc[0].BusinessUnit,
               "CurrentPeriod": req.session.quarter,
-              "IMT": doc[0].IMT
-            }
-          };
+              "Status": "Active",
+              "$or":
+               [{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
+                {"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
+                //{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
+
+              ]//or
+          }};
           break;
         case "BU IOT":
           var asmts = {
@@ -540,6 +543,32 @@ var calculatefield = {
       db.find(asmts).then(function(asmtsdata) {
         // Populate View Data
         switch (doc[0].ParentDocSubType) {
+          case "BU IMT":
+            doc[0].AUDocs = asmtsdata.body.docs;
+            console.log("length de assmts");
+            console.log(doc[0].AUDocs.length);
+            var $or = [];
+            $or.push(doc[0]["_id"]);
+            var tmpQuery = {
+              selector : {
+                "_id": {"$gt":0},
+                "key": "Assessment",
+                "AUStatus": "Active",
+                "ParentDocSubType":{"$in":["BU Country","Controllable Unit","IMT","Country Process"]},
+                "CurrentPeriod": doc[0].CurrentPeriod,
+                $or
+              }
+            };
+            db.find(tmpQuery).then(function(asmts) {
+              doc[0].asmtsdocs = asmts.body.docs;
+              console.log("length of assmts");
+              console.log(doc[0].asmtsdocs.length);
+              deferred.resolve({"status": 200, "doc": doc});
+            }).catch(function(err) {
+              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
+            break;
           case "BU Country":
             doc[0].asmtsdocs = [];
             var asmtsdocs = asmtsdata.body.docs;
@@ -548,6 +577,7 @@ var calculatefield = {
             var CUCRMables = {};
             var CPauditables = {};
             var CPassmts = {};
+            doc[0].AUDocs = {};
             // For Current Quarter Country Process Defect Rate Exceptions
             doc[0].CPDRException = [];
             // For CP Financial Process Defect Rates that are Marg counter
@@ -611,6 +641,7 @@ var calculatefield = {
                 }
               }
               else if (asmtsdocs[i].key == "Assessable Unit"){
+                doc[0].AUDocs[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                 if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                   CUassunits.push(asmtsdocs[i]);
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
@@ -665,7 +696,7 @@ var calculatefield = {
                 if(CUauditables[asmts.body.docs[i].parentid]){
                   asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
                   asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
-                  asmts.body.docs[i].CUScore = calculatefield.getCUScore(CUauditables[asmts.body.docs[i].parentid].PeriodRating, asmts.body.docs[i].CUMaxScore);
+                  asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
 
                   if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
                     asmts.body.docs[i].Type = "Portfolio CU";
@@ -1145,6 +1176,7 @@ var calculatefield = {
               "docid":doc[0].asmtsdocs[i]._id,
               "name":doc[0].asmtsdocs[i].AssessableUnitName,
               "country":doc[0].asmtsdocs[i].Country,
+              "catP":doc[0].asmtsdocs[i].catP,
               "imt":doc[0].asmtsdocs[i].IMT,
               "size":doc[0].asmtsdocs[i].CUSize,
               "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
@@ -1203,7 +1235,7 @@ var calculatefield = {
 					}
 				}
 				}
-					
+
 			switch (doc[0].asmtsdocs[i].RatingCategory) {
               case "Sat &#9650;":
                 if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
@@ -1585,7 +1617,7 @@ var calculatefield = {
           doc[0].CUTotalPctCRM = "0%";
         else
           doc[0].CUTotalPctCRM = "100%";
-	  
+
 // Processing Delivery CU ratings
         doc[0].CUSatEqualCntSOD = satEqCUDel;
         doc[0].CUSatPlusCntSOD = satUpCUDel;
@@ -1637,7 +1669,7 @@ var calculatefield = {
           doc[0].CUTotalPctSOD = "0%";
         else
           doc[0].CUTotalPctSOD = "100%";
-	  
+
 	  // Processing totals of CU Ratings
         satEqCU = satEqCUCrm+satEqCUDel;
         satUpCU = satUpCUCrm+satUpCUDel;
@@ -1701,7 +1733,7 @@ var calculatefield = {
           doc[0].CUTotalPct = "100%";
 		}
 	  else{
-	  
+
         // Processing totals of CU Ratings
         doc[0].CUSatEqualCnt = satEqCU;
         doc[0].CUSatPlusCnt = satUpCU;
