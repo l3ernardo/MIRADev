@@ -151,6 +151,7 @@ var getDocs = {
         case "BU IOT":
           break;
         case "BU IMT":
+        deferred.resolve({"status": 200, "doc": doc});
           break;
         case "Account":
           var compObj = {
