@@ -258,7 +258,7 @@
 				{{#each CPDRException}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%">{{category}}</td>
-						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%" >{{AUDefectCount}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
@@ -300,7 +300,10 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest3-link-export" id="RCTest3-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest3-link-export2" id="RCTest3-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="RCTest3_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Type</th>
@@ -333,3 +336,6 @@
 		</td>
 	</tr>
 </table>
+<script>
+	$("#RCTest3_treeview").treetable({expandable: true });
+</script>
