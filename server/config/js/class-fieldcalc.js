@@ -446,8 +446,8 @@ var calculatefield = {
                 "_id": {"$gt":0},
 				        "BusinessUnit": doc[0].BusinessUnit,
                 "$or": [
-                  //Getting all country process assessment
-                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                  //Getting all country process and controllable unit assessment
+                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": {"$in":["Country Process", "Controllable Unit"]}},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
                   //Getting all controllable units assessable units
                   {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                   //Getting all Country Process assessable units
@@ -459,14 +459,17 @@ var calculatefield = {
           var asmts = {
             selector:{
               "_id": {"$gt":0},
-              "key": "Assessment",
-              "AUStatus": "Active",
-              "ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU Country","BU IMT"]},
+              "key": "Assessable Unit",
               "BusinessUnit": doc[0].BusinessUnit,
               "CurrentPeriod": req.session.quarter,
-              "IMT": doc[0].IMT
-            }
-          };
+              "Status": "Active",
+              "$or":
+               [{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
+                {"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
+                //{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
+
+              ]//or
+          }};
           break;
         case "BU IOT":
           var asmts = {
@@ -540,6 +543,32 @@ var calculatefield = {
       db.find(asmts).then(function(asmtsdata) {
         // Populate View Data
         switch (doc[0].ParentDocSubType) {
+          case "BU IMT":
+            doc[0].AUDocs = asmtsdata.body.docs;
+            console.log("length de assmts");
+            console.log(doc[0].AUDocs.length);
+            var $or = [];
+            $or.push(doc[0]["_id"]);
+            var tmpQuery = {
+              selector : {
+                "_id": {"$gt":0},
+                "key": "Assessment",
+                "AUStatus": "Active",
+                "ParentDocSubType":{"$in":["BU Country","Controllable Unit","IMT","Country Process"]},
+                "CurrentPeriod": doc[0].CurrentPeriod,
+                $or
+              }
+            };
+            db.find(tmpQuery).then(function(asmts) {
+              doc[0].asmtsdocs = asmts.body.docs;
+              console.log("length of assmts");
+              console.log(doc[0].asmtsdocs.length);
+              deferred.resolve({"status": 200, "doc": doc});
+            }).catch(function(err) {
+              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
+            break;
           case "BU Country":
             doc[0].asmtsdocs = [];
             var asmtsdocs = asmtsdata.body.docs;
