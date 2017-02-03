@@ -225,9 +225,7 @@ asmtComponents.post('/savecountrycontrols', isAuthenticated, function(req, res) 
 	params = params.split("&")[1];
 	components.saveCountryControls(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			if(req.body.close === "back"){
-					res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
-			}
+			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
 			res.render('error',{errorDescription: data.error});
 			console.log("[routes][countryControls] - " + data.error);
