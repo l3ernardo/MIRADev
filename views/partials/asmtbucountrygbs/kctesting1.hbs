@@ -1,3 +1,5 @@
+<textarea name="textarea" id="RCTestDataExport" cols="100" style="display:none">{{valuesToString exportRCTest}}</textarea>
+<textarea name="textarea" id="RCTest3DataExport" cols="100" style="display:none">{{valuesToString exportRCTest3}}</textarea>
 <table id="kctest_table" class="ibm-data-table" width="100%">
 	<tr class="kc-test-content">
 		<td class="kc-test-cell" colspan="4">
@@ -246,7 +248,10 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Country Process Defect Rate Exceptions</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCControls-link-export" id="RCControls-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCControls-link-export2" id="RCControls-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="RCControls_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="10%"></th>
 					<th class="kc-test-viewheader" scope="col" width="40%">Process</th>
@@ -258,7 +263,7 @@
 				{{#each CPDRException}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%">{{category}}</td>
-						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%" >{{AUDefectCount}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
@@ -271,27 +276,30 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Testing Ratio Exceptions</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Control</th>
+					<th class="kc-test-viewheader" scope="col" width="20%">Control</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Req'd Samples</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Samples Tested</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">TR %</th>
 					<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
-					<th class="kc-test-viewheader" scope="col" width="25%">Action plan to meet full year req'd samples</th>
+					<th class="kc-test-viewheader" scope="col" width="20%">Action plan to meet full year req'd samples</th>
 				</thead>
 				{{#each TRExceptionControls}}
-					<tr class="asmt-viewdata">
-						<td width="5%">{{controlType}}</td>
-						<td width="5%">{{process}}</td>
-						<td width="15%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
-						<td width="10%">{{#if _id}}{{numRequiredTests}}{{else}}&nbsp;{{/if}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="5%">{{controlTypeName}}</td>
+						<td width="5%">{{processName}}</td>
+						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
+						<td width="10%">{{numRequiredTests}}</td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{testingRatio}}</td>
 						<td width="20%">{{reasonTested}}</td>
-						<td width="25%">{{actionPlan}}</td>
+						<td width="20%">{{actionPlan}}</td>
 					</tr>
 				{{/each}}
 			</table>
@@ -300,7 +308,10 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest3-link-export" id="RCTest3-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest3-link-export2" id="RCTest3-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="RCTest3_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Type</th>
@@ -316,14 +327,14 @@
 				</thead>
 				{{#each RCTest3Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%">{{originalReportingQuarter}}</td>
-						<td width="10%">{{testType}}</td>
-						<td width="10%">{{processSampled}}</td>
-						<td width="5%">{{reportingCountry}}</td>
-						<td width="20%">{{controlName}}</td>
-						<td width="20%"{{controllableUnit}}></td>
-						<td width="5%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
-						<td width="5%">{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
+						<td width="5%">{{#if catEntry}}{{originalReportingQuarter}}{{/if}}</td>
+						<td width="10%">{{#if catEntry}}{{testType}}{{/if}}</td>
+						<td width="10%">{{#if catEntry}}{{processSampled}}{{/if}}</td>
+						<td width="5%">{{#if catEntry}}{{reportingCountry}}{{/if}}</td>
+						<td width="20%">{{#if catEntry}}{{controlName}}{{/if}}</td>
+						<td width="20%">{{controllableUnit}}</td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
+						<td width="5%">{{originalTargetDate}}</td>
 						<td width="5%">{{targetClose}}</td>
 						<td width="5%">{{count}}</td>
 						<td width="15%">{{defectType}}</td>
@@ -333,3 +344,8 @@
 		</td>
 	</tr>
 </table>
+<script>
+	$("#RCControls_treeview").treetable({expandable: true });
+	$("#RCTest_treeview").treetable({expandable: true });
+	$("#RCTest3_treeview").treetable({expandable: true });
+</script>
