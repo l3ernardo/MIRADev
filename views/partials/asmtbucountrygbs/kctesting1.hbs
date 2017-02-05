@@ -52,15 +52,15 @@
 					<tr class="asmt-viewdata">
 						<td>{{name}}</td>
 						{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP4}}</td>
+						{{{TestingRatioDisplay testingRatioP4 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRateP3 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP3}}</td>
+						{{{TestingRatioDisplay testingRatioP3 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRateP2 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP2}}</td>
+						{{{TestingRatioDisplay testingRatioP2 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRateP1 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP1}}</td>
+						{{{TestingRatioDisplay testingRatioP1 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatio}}</td>
+						{{{TestingRatioDisplay testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						<td></td>
 						<td class="asmt-viewdata-centered">{{pqP4}}</td>
 						<td class="asmt-viewdata-centered">{{cqP4}}</td>
@@ -131,15 +131,15 @@
 					<tr class="asmt-viewdata">
 						<td>{{name}}</td>
 						{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP4}}</td>
+						{{{TestingRatioDisplay testingRatioP4 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRateP3 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP3}}</td>
+						{{{TestingRatioDisplay testingRatioP3 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRateP2 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP2}}</td>
+						{{{TestingRatioDisplay testingRatioP2 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRateP1 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatioP1}}</td>
+						{{{TestingRatioDisplay testingRatioP1 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td>{{testingRatio}}</td>
+						{{{TestingRatioDisplay testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						<td></td>
 						<td class="asmt-viewdata-centered">{{pqP4}}</td>
 						<td class="asmt-viewdata-centered">{{cqP4}}</td>
@@ -282,22 +282,22 @@
 			<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
-					<th class="kc-test-viewheader" scope="col" width="5%"></th>
+					<th class="kc-test-viewheader" scope="col" width="10%"></th>
 					<th class="kc-test-viewheader" scope="col" width="20%">Control</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Req'd Samples</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Samples Tested</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">TR %</th>
+					<th class="kc-test-viewheader" scope="col" width="5%">TR %</th>
 					<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
 					<th class="kc-test-viewheader" scope="col" width="20%">Action plan to meet full year req'd samples</th>
 				</thead>
 				{{#each TRExceptionControls}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%">{{controlTypeName}}</td>
-						<td width="5%">{{processName}}</td>
+						<td width="10%">{{processName}}</td>
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{numRequiredTests}}</td>
 						<td width="10%">{{numActualTests}}</td>
-						<td width="10%">{{testingRatio}}</td>
+						{{{TestingRatioDisplay testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name 5}}}
 						<td width="20%">{{reasonTested}}</td>
 						<td width="20%">{{actionPlan}}</td>
 					</tr>
@@ -317,13 +317,13 @@
 					<th class="kc-test-viewheader" scope="col" width="10%">Type</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Process</th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Country</th>
-					<th class="kc-test-viewheader" scope="col" width="20%">Control</th>
+					<th class="kc-test-viewheader" scope="col" width="18%">Control</th>
 					<th class="kc-test-viewheader" scope="col" width="20%">Controllable Unit</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Sample</th>
-					<th class="kc-test-viewheader" scope="col" width="5%">Original Target to Close</th>
-					<th class="kc-test-viewheader" scope="col" width="5%">Current Target to Close</th>
+					<th class="kc-test-viewheader" scope="col" width="7%">Original Target to Close</th>
+					<th class="kc-test-viewheader" scope="col" width="7%">Current Target to Close</th>
 					<th class="kc-test-viewheader" scope="col" width="5%"># Defects</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Defect Type</th>
+					<th class="kc-test-viewheader" scope="col" width="13%">Defect Type</th>
 				</thead>
 				{{#each RCTest3Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
@@ -331,13 +331,13 @@
 						<td width="10%">{{#if catEntry}}{{testType}}{{/if}}</td>
 						<td width="10%">{{#if catEntry}}{{processSampled}}{{/if}}</td>
 						<td width="5%">{{#if catEntry}}{{reportingCountry}}{{/if}}</td>
-						<td width="20%">{{#if catEntry}}{{controlName}}{{/if}}</td>
+						<td width="18%">{{#if catEntry}}{{controlName}}{{/if}}</td>
 						<td width="20%">{{controllableUnit}}</td>
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
-						<td width="5%">{{originalTargetDate}}</td>
-						<td width="5%">{{targetClose}}</td>
+						<td width="7%">{{originalTargetDate}}</td>
+						<td width="7%">{{targetClose}}</td>
 						<td width="5%">{{count}}</td>
-						<td width="15%">{{defectType}}</td>
+						<td width="13%">{{defectType}}</td>
 					</tr>
 				{{/each}}
 			</table>

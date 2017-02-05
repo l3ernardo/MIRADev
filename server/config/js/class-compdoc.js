@@ -330,7 +330,7 @@ var getDocs = {
             doc[0].SCTest2DataPQ2 = [];
             doc[0].SCTest2DataPQ3 = [];
             doc[0].SCTest2DataPQ4 = [];
-            doc[0].TRExceptionControls = [];
+            // doc[0].TRExceptionControls = [];
 
             if (doc[0].MIRABusinessUnit == "GTS") {
               doc[0].RiskView1DataCRM = [];

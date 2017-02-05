@@ -350,15 +350,19 @@ var calculatefield = {
   				}
   			  if (dataParam.parameters.GBSRollupProcessesOPS) {
   				  doc[0].KCProcessOPS = dataParam.parameters.GBSRollupProcessesOPS[0].options;
+            // doc[0].KCProcessOPSSCT = dataParam.parameters.GBSRollupProcessesOPS[0].options;
   				}
   			  if (dataParam.parameters.GBSRollupProcessesFIN) {
   				  doc[0].KCProcessFIN = dataParam.parameters.GBSRollupProcessesFIN[0].options;
+            // doc[0].KCProcessFINSCT = dataParam.parameters.GBSRollupProcessesFIN[0].options;
   				}
   			  if (dataParam.parameters.GTSRollupProcessesOPS) {
   				  doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
+            // doc[0].KCProcessOPSSCT = dataParam.parameters.GTSRollupProcessesOPS[0].options;
   				}
   			  if (dataParam.parameters.GTSRollupProcessesFIN) {
   				  doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
+            // doc[0].KCProcessFINSCT = dataParam.parameters.GTSRollupProcessesFIN[0].options;
   				}
           if (dataParam.parameters.MargThresholdPercent) {
   				  doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
