@@ -477,16 +477,17 @@ var assessment = {
 									sct.processSCTab(doc,defViewRow);
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
-									//console.log("before art");
+									console.log("before art");
 									// RPTG Country Testing tab									//RPTG Country Testing tab
-									//rcc.processRCTab(doc,defViewRow);
-									//console.log("after art");
+									rcc.processRCTab(doc,defViewRow);
+									console.log("after art");
 									// Process CU Ratings tab
 									cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
 									// Process Audits & Reviews tab
 									aar.processARTab(doc,defViewRow);
+
 
 									/////////////////////////////////////////////////////////////
 									//Irving's code for repoting country
