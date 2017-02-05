@@ -625,60 +625,60 @@ var assessment = {
 					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')] = true;
 
 					          }
-					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] === "undefined"){
+					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
 					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,''),
-					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,''),
+					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,''),
 					              testType:RCTest3[i].testType,
 					              count: 0,
 					              catEntry: true
 					            };
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] = true;
+					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] = true;
 
 					          }
-					          if(typeof RCTest3Category[RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] === "undefined"){
+					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
-					              id:RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,''),
-					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,''),
+					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,''),
+					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,''),
 					              processSampled:RCTest3[i].processSampled,
 					              count: 0,
 					              catEntry: true
 					            };
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] = true;
+					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] = true;
 
 					          }
-					          if(typeof RCTest3Category[RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] === "undefined"){
+					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
-					              parent:RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,''),
-					              id:RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
+					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,''),
+					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
 					              reportingCountry:RCTest3[i].reportingCountry,
 					              count: 0,
 					              catEntry: true
 					            };
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] = true;
+					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] = true;
 
 					          }
-					          if(typeof RCTest3Category[RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] === "undefined"){
+					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] === "undefined"){
 					            var tmp = {
-					              id:RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,''),
-					              parent:RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
+					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,''),
+					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
 					              controlName:RCTest3[i].controlName.replace(/ /g,''),
 					              count: 0,
 					              catEntry: true
 					            };
 					            RCTest3List.push(tmp);
 					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] = true;
+					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] = true;
 
 					          }
 					          RCTest3[i].count = 1;
-					          RCTest3[i].parent = RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'');
+					          RCTest3[i].parent = RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'');
 					          RCTest3[i].id = RCTest3[i]["_id"];
 
 					          //do counting for category
