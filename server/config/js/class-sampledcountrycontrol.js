@@ -478,7 +478,7 @@ var calculateSCTab = {
           }
           doc[0].CPDRException = samplesList;
           //Start of second treetable
-          var samples = doc[0].SCUnremedDefects;
+          var samples = JSON.parse(JSON.stringify(doc[0].SCUnremedDefects));
           var sampleCategory = {};
           var samplesList = [];
           var exportSamples = [];
@@ -532,56 +532,56 @@ var calculateSCTab = {
               objects[tmp.id] = tmp;
               sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] === "undefined"){
               var tmp = {
                 parent:samples[i].originalReportingQuarter.replace(/ /g,''),
-                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
                 testType:samples[i].testType,
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] === "undefined"){
               var tmp = {
-                id:samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
-                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
+                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
                 processSampled:samples[i].processSampled,
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] === "undefined"){
               var tmp = {
-                parent:samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
-                id:samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
+                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
                 reportingCountry:samples[i].reportingCountry,
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] === "undefined"){
               var tmp = {
-                id:samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,''),
-                parent:samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,''),
+                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
                 controlName:samples[i].controlName.replace(/ /g,''),
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] = true;
             }
             samples[i].count = 1;
-            samples[i].parent = samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'');
+            samples[i].parent = samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'');
             samples[i].id = samples[i]["_id"];
             //do counting for category
             objects[samples[i].parent].count++ ;
