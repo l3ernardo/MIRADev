@@ -364,7 +364,7 @@ var getDocs = {
                 comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
                 doc[0].RCTest2Data.push(comps[i]);
                 // this is dummy content only while waiting for correct data so that Irving can help work on the treeables
-                doc[0].TRExceptionControls.push(comps[i]);
+                // doc[0].TRExceptionControls.push(comps[i]);
                 if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                	  doc[0].CountryControlsData.push(comps[i]);
 		              if (doc[0].MIRABusinessUnit == "GTS") {
@@ -480,9 +480,8 @@ var getDocs = {
                       } else {}
                     }
                 }
-				else {}
               }
-				else if (comps[i].compntType == "internalAudit") {
+				      else if (comps[i].compntType == "internalAudit") {
                 if (typeof comps[i].engagement === "undefined") {
                   comps[i].engagement = comps[i].id;
                 }
