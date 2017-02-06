@@ -340,28 +340,35 @@ var getDocs = {
             }
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
+                comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
-                doc[0].RiskView1Data.push(comps[i]);
-                if(comps[i].reportingQuarter == doc[0].CurrentPeriod ){
+                if(comps[i].reportingQuarter == doc[0].CurrentPeriod && doc[0].MIRABusinessUnit == comps[i].MIRABusinessUnit){
+                  if (comps[i]._id == "9f9577b8a8737ebc401fc724c92fee02") {
+                    console.log("comps[i].MIRABusinessUnit: " + comps[i].MIRABusinessUnit);
+                    console.log("doc[0].MIRABusinessUnit: " + doc[0].MIRABusinessUnit);
+                    console.log("comps[i].reportingQuarter: " + comps[i].reportingQuarter);
+                    console.log("doc[0].CurrentPeriod: " + doc[0].CurrentPeriod);
+                  }
+                  doc[0].RiskView1Data.push(comps[i]);
                   doc[0].RiskView2Data.push(comps[i]);
-                }
-                if (doc[0].MIRABusinessUnit == "GTS") {
-                  comps[i].catP = "(uncategorized)";
-                  if(doc[0].CRMProcessObj[comps[i].GPPARENT]){
-                    comps[i].catP = "CRM/Other";
-                    doc[0].RiskView1DataCRM.push(comps[i]);
-                  }/*else{
-                    comps[i].catP = "Delivery";
-                    doc[0].RiskView1DataDelivery.push(comps[i]);}*/
-                  else if(doc[0].DeliveryProcessObj[comps[i].GPPARENT]){
-                    comps[i].catP = "Delivery";
-                    doc[0].RiskView1DataDelivery.push(comps[i])}
-                  else console.log("Process not found: "+comps[i].GPPARENT);
+                  if (doc[0].MIRABusinessUnit == "GTS") {
+                    comps[i].catP = "(uncategorized)";
+                    if(doc[0].CRMProcessObj[comps[i].GPPARENT]){
+                      comps[i].catP = "CRM/Other";
+                      doc[0].RiskView1DataCRM.push(comps[i]);
+                    }/*else{
+                      comps[i].catP = "Delivery";
+                      doc[0].RiskView1DataDelivery.push(comps[i]);}*/
+                    else if(doc[0].DeliveryProcessObj[comps[i].GPPARENT]){
+                      comps[i].catP = "Delivery";
+                      doc[0].RiskView1DataDelivery.push(comps[i])}
+                    else console.log("Process not found: "+comps[i].GPPARENT);
+                  }
                 }
               }
               else if (comps[i].compntType == "countryControls"){
                 comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-                comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+                comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                 doc[0].RCTest2Data.push(comps[i]);
                 // this is dummy content only while waiting for correct data so that Irving can help work on the treeables
                 // doc[0].TRExceptionControls.push(comps[i]);
@@ -385,7 +392,7 @@ var getDocs = {
                 if (comps[i].sampleCountry == doc[0].Country) {
                   // calculate Control Name
                   comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-                  comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+                  comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 
                   if (doc[0].MIRABusinessUnit == "GBS") {
                     if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
@@ -434,7 +441,7 @@ var getDocs = {
               }
               // For Sampled Country Testing Tab
               else if (comps[i].compntType == "sampledCountry"){
-                comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+                comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                 if (doc[0].MIRABusinessUnit == "GBS") {
                   if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                     doc[0].SCTest1Data.push(comps[i]);
@@ -449,7 +456,7 @@ var getDocs = {
                   } else {}
                 }
                 else if (doc[0].MIRABusinessUnit == "GTS") {
-				          comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
+				          comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                   if (comps[i].MIRABusinessUnit == "GTS") {
                     if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                       doc[0].SCTest1Data.push(comps[i]);
@@ -465,7 +472,7 @@ var getDocs = {
                   }
                 }
                 else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
-					          comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
+					          comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                     if (comps[i].MIRABusinessUnit == "GTS Transformation") {
                       if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                         doc[0].SCTest1Data.push(comps[i]);

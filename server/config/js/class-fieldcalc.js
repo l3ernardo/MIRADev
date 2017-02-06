@@ -153,16 +153,16 @@ var calculatefield = {
 		return cuscore;
 	},
 
-  getMIRABusinessUnit: function(doctype, doc) {
+  getCompMIRABusinessUnit: function(doc) {
 		var MIRABusinessUnit;
-		switch (doctype) {
+		switch (doc.compntType) {
       case "openIssue":
       case "sampledCountry":
 			case "controlSample":
-        if (doc[0].BUPARENT == "BSU300000027") {
+        if (doc.BUPARENT == "BSU300000027") {
           MIRABusinessUnit = "GBS";
         }
-        else if ((doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") || (doc[0].CUCategory == "GTS TRANSFORMATION" || doc[0].CUCategory == "GTS Transf. Hybrid")) {
+        else if ((doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") || (doc.CUCategory == "GTS TRANSFORMATION" || doc.CUCategory == "GTS Transf. Hybrid")) {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {
@@ -170,10 +170,10 @@ var calculatefield = {
         }
 				break;
       case "countryControls":
-        if (doc[0].BUPARENT == "BSU300000027") {
+        if (doc.BUPARENT == "BSU300000027") {
           MIRABusinessUnit = "GBS";
         }
-        else if (doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") {
+        else if (doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {

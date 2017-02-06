@@ -85,10 +85,14 @@ var calculateRCTab = {
                       }else {
                         doc[0].KCProcessFIN[j].members[k].cappedtest += parseInt(cappedtest);
                       }
-                      if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests) || doc[0].RCTest2Data[i].numRequiredTests !== 0) {
-                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
-                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                      if (doc[0].RCTest2Data[i].numRequiredTests == undefined || doc[0].RCTest2Data[i].numRequiredTests == "" || doc[0].RCTest2Data[i].numRequiredTests == 0 || cappedtest == "") {
+                        doc[0].RCTest2Data[i].testingRatio == "";
+                      } else {
+                        if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
+                          doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                          if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                            doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                          }
                         }
                       }
                     }
@@ -149,10 +153,14 @@ var calculateRCTab = {
                       }else {
                         doc[0].KCProcessOPS[j].members[k].cappedtest += parseInt(cappedtest);
                       }
-                      if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests) || doc[0].RCTest2Data[i].numRequiredTests !== 0) {
-                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
-                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                      if (doc[0].RCTest2Data[i].numRequiredTests == undefined || doc[0].RCTest2Data[i].numRequiredTests == "" || doc[0].RCTest2Data[i].numRequiredTests == 0 || cappedtest == "") {
+                        doc[0].RCTest2Data[i].testingRatio == "";
+                      } else {
+                        if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
+                          doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                          if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                            doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                          }
                         }
                       }
                     }
@@ -214,10 +222,14 @@ var calculateRCTab = {
                     }else {
                       doc[0].KCProcessFIN[j].cappedtest += parseInt(cappedtest);
                     }
-                    if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests) || doc[0].RCTest2Data[i].numRequiredTests !== 0) {
-                      doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                      if (doc[0].RCTest2Data[i].testingRatio == 0) {
-                        doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                    if (doc[0].RCTest2Data[i].numRequiredTests == undefined || doc[0].RCTest2Data[i].numRequiredTests == "" || doc[0].RCTest2Data[i].numRequiredTests == 0 || cappedtest == "") {
+                      doc[0].RCTest2Data[i].testingRatio == "";
+                    } else {
+                      if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
+                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                        }
                       }
                     }
                   }
@@ -276,10 +288,14 @@ var calculateRCTab = {
                     }else {
                       doc[0].KCProcessOPS[j].cappedtest += parseInt(cappedtest);
                     }
-                    if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests) || doc[0].RCTest2Data[i].numRequiredTests !== 0) {
-                      doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                      if (doc[0].RCTest2Data[i].testingRatio == 0) {
-                        doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                    if (doc[0].RCTest2Data[i].numRequiredTests == undefined || doc[0].RCTest2Data[i].numRequiredTests == "" || doc[0].RCTest2Data[i].numRequiredTests == 0 || cappedtest == "") {
+                      doc[0].RCTest2Data[i].testingRatio == "";
+                    } else {
+                      if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
+                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                        }
                       }
                     }
                   }
@@ -303,7 +319,7 @@ var calculateRCTab = {
                   doc[0].KCProcessFIN[j].members[k].test = "";
                   doc[0].KCProcessFIN[j].members[k].defectRate = "";
                 } else {
-                  if (doc[0].KCProcessFIN[j].members[k].defect == undefined) {
+                  if (doc[0].KCProcessFIN[j].members[k].defect == undefined || doc[0].KCProcessFIN[j].members[k].test == 0) {
                     doc[0].KCProcessFIN[j].members[k].defectRate = 0;
                   } else {
                     doc[0].KCProcessFIN[j].members[k].defectRate = ((doc[0].KCProcessFIN[j].members[k].defect / doc[0].KCProcessFIN[j].members[k].test) * 100).toFixed(1);
@@ -321,7 +337,7 @@ var calculateRCTab = {
                   doc[0].KCProcessOPS[j].members[k].test = "";
                   doc[0].KCProcessOPS[j].members[k].defectRate = "";
                 } else {
-                  if (doc[0].KCProcessOPS[j].members[k].defect == undefined) {
+                  if (doc[0].KCProcessOPS[j].members[k].defect == undefined || doc[0].KCProcessOPS[j].members[k].test == 0) {
                     doc[0].KCProcessOPS[j].members[k].defectRate = 0;
                   } else {
                     doc[0].KCProcessOPS[j].members[k].defectRate = ((doc[0].KCProcessOPS[j].members[k].defect / doc[0].KCProcessOPS[j].members[k].test) * 100).toFixed(1);
@@ -340,7 +356,7 @@ var calculateRCTab = {
                 doc[0].KCProcessFIN[j].test = "";
                 doc[0].KCProcessFIN[j].defectRate = "";
               } else {
-                if (doc[0].KCProcessFIN[j].defect == undefined) {
+                if (doc[0].KCProcessFIN[j].defect == undefined || doc[0].KCProcessFIN[j].test == 0) {
                   doc[0].KCProcessFIN[j].defectRate = 0;
                 } else {
                   doc[0].KCProcessFIN[j].defectRate = ((doc[0].KCProcessFIN[j].defect / doc[0].KCProcessFIN[j].test) * 100).toFixed(1);
@@ -356,7 +372,7 @@ var calculateRCTab = {
                 doc[0].KCProcessOPS[j].test = "";
                 doc[0].KCProcessOPS[j].defectRate = "";
               } else {
-                if (doc[0].KCProcessOPS[j].defect == undefined) {
+                if (doc[0].KCProcessOPS[j].defect == undefined || doc[0].KCProcessOPS[j].test == 0) {
                   doc[0].KCProcessOPS[j].defectRate = 0;
                 } else {
                   doc[0].KCProcessOPS[j].defectRate = ((doc[0].KCProcessOPS[j].defect / doc[0].KCProcessOPS[j].test) * 100).toFixed(1);
@@ -372,14 +388,14 @@ var calculateRCTab = {
             // Financial processes calculate for testing ratio
             for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
               for (var k = 0; k < doc[0].KCProcessFIN[j].members.length; k++) {
-                if (doc[0].KCProcessFIN[j].members[k].reqtest == undefined) {
+                if (doc[0].KCProcessFIN[j].members[k].reqtest == undefined || doc[0].KCProcessFIN[j].members[k].reqtest == "" || doc[0].KCProcessFIN[j].members[k].reqtest == 0) {
                   doc[0].KCProcessFIN[j].members[k].testingRatio = "";
                 }
                 else {
-                  if (doc[0].KCProcessFIN[j].members[k].cappedtest == undefined) {
-                    doc[0].KCProcessFIN[j].members[k].cappedtest = 0;
+                  if (doc[0].KCProcessFIN[j].members[k].cappedtest == undefined || doc[0].KCProcessFIN[j].members[k].cappedtest == "") {
+                    doc[0].KCProcessFIN[j].members[k].cappedtest = "";
                   } else {
-                    doc[0].KCProcessFIN[j].members[k].testingRatio = ((doc[0].KCProcessFIN[j].members[k].cappedtest / doc[0].KCProcessFIN[j].members[k].reqtest) * 100).toFixed(2);
+                    doc[0].KCProcessFIN[j].members[k].testingRatio = ((doc[0].KCProcessFIN[j].members[k].cappedtest / doc[0].KCProcessFIN[j].members[k].reqtest) * 100).toFixed(1);
                     if (doc[0].KCProcessFIN[j].members[k].testingRatio == 0) {
                       doc[0].KCProcessFIN[j].members[k].testingRatio = parseInt(doc[0].KCProcessFIN[j].members[k].testingRatio).toFixed(0);
                     }
@@ -390,14 +406,14 @@ var calculateRCTab = {
             // operational processes calculate for testing ratio
             for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
               for (var k = 0; k < doc[0].KCProcessOPS[j].members.length; k++) {
-                if (doc[0].KCProcessOPS[j].members[k].reqtest == undefined) {
+                if (doc[0].KCProcessOPS[j].members[k].reqtest == undefined || doc[0].KCProcessOPS[j].members[k].reqtest == "" || doc[0].KCProcessOPS[j].members[k].reqtest == 0) {
                   doc[0].KCProcessOPS[j].members[k].testingRatio = "";
                 }
                 else {
-                  if (doc[0].KCProcessOPS[j].members[k].cappedtest == undefined) {
-                    doc[0].KCProcessOPS[j].members[k].cappedtest = 0;
+                  if (doc[0].KCProcessOPS[j].members[k].cappedtest == undefined || doc[0].KCProcessOPS[j].members[k].cappedtest == "") {
+                    doc[0].KCProcessOPS[j].members[k].cappedtest = "";
                   } else {
-                    doc[0].KCProcessOPS[j].members[k].testingRatio = ((doc[0].KCProcessOPS[j].members[k].cappedtest / doc[0].KCProcessOPS[j].members[k].reqtest) * 100).toFixed(2);
+                    doc[0].KCProcessOPS[j].members[k].testingRatio = ((doc[0].KCProcessOPS[j].members[k].cappedtest / doc[0].KCProcessOPS[j].members[k].reqtest) * 100).toFixed(1);
                     if (doc[0].KCProcessOPS[j].members[k].testingRatio == 0) {
                       doc[0].KCProcessOPS[j].members[k].testingRatio = parseInt(doc[0].KCProcessOPS[j].members[k].testingRatio).toFixed(0);
                     }
@@ -409,13 +425,13 @@ var calculateRCTab = {
           if (doc[0].MIRABusinessUnit == "GBS") {
             // Financial processes calculate for defect rate
             for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-              if (doc[0].KCProcessFIN[j].reqtest == undefined) {
+              if (doc[0].KCProcessFIN[j].reqtest == undefined || doc[0].KCProcessFIN[j].reqtest == "" || doc[0].KCProcessFIN[j].reqtest == 0) {
                 doc[0].KCProcessFIN[j].testingRatio = "";
               } else {
-                if (doc[0].KCProcessFIN[j].cappedtest == undefined) {
-                  doc[0].KCProcessFIN[j].cappedtest = 0;
+                if (doc[0].KCProcessFIN[j].cappedtest == undefined || doc[0].KCProcessFIN[j].cappedtest == "") {
+                  doc[0].KCProcessFIN[j].cappedtest = "";
                 } else {
-                  doc[0].KCProcessFIN[j].testingRatio = ((doc[0].KCProcessFIN[j].cappedtest / doc[0].KCProcessFIN[j].reqtest) * 100).toFixed(2);
+                  doc[0].KCProcessFIN[j].testingRatio = ((doc[0].KCProcessFIN[j].cappedtest / doc[0].KCProcessFIN[j].reqtest) * 100).toFixed(1);
                   if (doc[0].KCProcessFIN[j].testingRatio == 0) {
                     doc[0].KCProcessFIN[j].testingRatio = parseInt(doc[0].KCProcessFIN[j].testingRatio).toFixed(0);
                   }
@@ -424,13 +440,13 @@ var calculateRCTab = {
             }
             // operational processes calculate for defect rate
             for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-              if (doc[0].KCProcessOPS[j].reqtest == undefined) {
+              if (doc[0].KCProcessOPS[j].reqtest == undefined || doc[0].KCProcessOPS[j].reqtest == "" || doc[0].KCProcessOPS[j].reqtest == 0) {
                 doc[0].KCProcessOPS[j].testingRatio = "";
               } else {
-                if (doc[0].KCProcessOPS[j].cappedtest == undefined) {
-                  doc[0].KCProcessOPS[j].cappedtest = 0;
+                if (doc[0].KCProcessOPS[j].cappedtest == undefined || doc[0].KCProcessOPS[j].cappedtest == "") {
+                  doc[0].KCProcessOPS[j].cappedtest = "";
                 } else {
-                  doc[0].KCProcessOPS[j].testingRatio = ((doc[0].KCProcessOPS[j].cappedtest / doc[0].KCProcessOPS[j].reqtest) * 100).toFixed(2);
+                  doc[0].KCProcessOPS[j].testingRatio = ((doc[0].KCProcessOPS[j].cappedtest / doc[0].KCProcessOPS[j].reqtest) * 100).toFixed(1);
                   if (doc[0].KCProcessOPS[j].testingRatio == 0) {
                     doc[0].KCProcessOPS[j].testingRatio = parseInt(doc[0].KCProcessOPS[j].testingRatio).toFixed(0);
                   }
@@ -891,7 +907,7 @@ var calculateRCTab = {
 
           // END OF IRVING'S CODE FOR REPORTING COUNTRY TAB****************
           ///////////////////////////////////////////////////////
-          
+
           break;
       }
     }catch(e){
