@@ -73,7 +73,8 @@ var calculateORTab = {
         doc[0].openrisks = openrisks;
         break;
       case "BU Country":
-        if(req.session.businessunit == "GBS"){
+        // if(req.session.businessunit == "GBS"){
+        if(doc[0].MIRABusinessUnit == "GBS"){
           //count the category issues
           doc[0].totalRisks = {
             PrevQtr1: 0,
@@ -198,7 +199,8 @@ var calculateORTab = {
           };
           doc[0].RiskView2Data = openrisks;
 
-        }else{//no GBS
+        }
+        else{//no GBS
           //count the totals category issues
           doc[0].totalRisks = {
             CRMPrevQtr1: 0,
