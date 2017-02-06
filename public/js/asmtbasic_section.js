@@ -6,7 +6,6 @@ $(document).ready(function() {
 	} else {
 		$(".reviewComments").show();
 		$(".target2Sat").show();
-		$(".ibm-calendar-link").css("background-position","right 0");
 	}
 
 	// on change events

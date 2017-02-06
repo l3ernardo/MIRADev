@@ -317,7 +317,8 @@ var calculateARTab = {
           //Calculate WeightedAuditScore
           var weightedScore = 0;
           if(totalMaxScore == 0) {
-            weightedScore = "No MAX Score available!"
+            // weightedScore = "No MAX Score available!"
+            weightedScore = ""
           }
           else {
             weightedScore = ((totalCUScore/totalMaxScore)*100).toFixed(1);

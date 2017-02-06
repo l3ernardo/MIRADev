@@ -477,7 +477,7 @@ var assessment = {
 									sct.processSCTab(doc,defViewRow);
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
-									// RPTG Country Testing tab									//RPTG Country Testing tab
+									// RPTG Country Testing tab
 									rcc.processRCTab(doc,defViewRow);
 									// Process CU Ratings tab
 									cut.processCUTab(doc,defViewRow);
