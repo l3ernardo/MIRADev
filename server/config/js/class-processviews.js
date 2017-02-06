@@ -17,7 +17,7 @@ var calculatePRTab = {
 			var exportList = [];
 			//categorization for
 			for(var i = 0; i < doc[0].BUCAsmtDataPRview.length; i++){
-				doc[0].BUCAsmtDataPRview[i].ratingcategory = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataPRview[i].ratingCQ, doc[0].BUCAsmtDataPRview[i].ratingPQ1);console.log(doc[0].BUCAsmtDataPRview[i].ratingcategory)
+				doc[0].BUCAsmtDataPRview[i].ratingcategory = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataPRview[i].ratingCQ, doc[0].BUCAsmtDataPRview[i].ratingPQ1);
 				//to categorize sort
 				switch (doc[0].BUCAsmtDataPRview[i].ratingcategory) {
 					case "NR":
@@ -98,7 +98,7 @@ var calculatePRTab = {
 					default:
 						id_aux=doc[0].BUCAsmtDataPRview[i].ratingcategory;parent_aux=doc[0].BUCAsmtDataPRview[i].ratingcategory;
 				}
-				if(typeof catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')] == undefined){
+				if(typeof catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')] === "undefined"){
 					topEntriesCount++;
 					var tmp = {
 						id: id_aux,
@@ -109,7 +109,7 @@ var calculatePRTab = {
 					tmpAccountList.push(tmp);
 					catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')] = tmp;
 				}
-				if(typeof catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'')] == undefined){
+				if(typeof catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'')] === "undefined"){
 					var tmp= {
 						id: doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,''),
 						parent: id_aux,
@@ -119,8 +119,8 @@ var calculatePRTab = {
 					tmpAccountList.push(tmp);
 					catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'')] = tmp;
 				}
-				catList[doc[0].BUCAsmtDataPRview[i].ratingcategory].count++;
-				catList[doc[0].BUCAsmtDataPRview[i].ratingcategory+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'')].count++;
+				catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')].count++;
+				catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'')].count++;
 				//catList[doc[0].BUCAsmtDataPRview[i].ratingcategory].MetricsValue += parseInt(doc[0].BUCAsmtDataPRview[i].MetricsValue);
 				doc[0].BUCAsmtDataPRview[i].id = doc[0].BUCAsmtDataPRview[i]["docid"];
 

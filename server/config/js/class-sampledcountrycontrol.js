@@ -26,29 +26,31 @@ var calculateSCTab = {
         case "BU Country":
 
           //** Calculate for Defect Rate - START **//
+          doc[0].KCProcessFINSCT = JSON.parse(JSON.stringify(doc[0].KCProcessFIN));
+          doc[0].KCProcessOPSSCT = JSON.parse(JSON.stringify(doc[0].KCProcessOPS));
 
           // Calculate for Current Quarter
           for (var i = 0; i < doc[0].SCTest1Data.length; i++) {
             if (doc[0].MIRABusinessUnit == "GTS") {
 
               // For financial processes
-              for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-                for (var k = 0; k < doc[0].KCProcessFIN[j].members.length; k++) {
-                  if (doc[0].KCProcessFIN[j].members[k].id == doc[0].SCTest1Data[i].GPPARENT) {
+              for (var j = 0; j < doc[0].KCProcessFINSCT.length; j++) {
+                for (var k = 0; k < doc[0].KCProcessFINSCT[j].members.length; k++) {
+                  if (doc[0].KCProcessFINSCT[j].members[k].id == doc[0].SCTest1Data[i].GPPARENT) {
                     // add all tests
                     if (!isNaN(doc[0].SCTest1Data[i].numtest)) {
-                      if (doc[0].KCProcessFIN[j].members[k].test == undefined) {
-                        doc[0].KCProcessFIN[j].members[k].test = parseInt(doc[0].SCTest1Data[i].numtest);
+                      if (doc[0].KCProcessFINSCT[j].members[k].test == undefined) {
+                        doc[0].KCProcessFINSCT[j].members[k].test = parseInt(doc[0].SCTest1Data[i].numtest);
                       }else {
-                        doc[0].KCProcessFIN[j].members[k].test += parseInt(doc[0].SCTest1Data[i].numtest);
+                        doc[0].KCProcessFINSCT[j].members[k].test += parseInt(doc[0].SCTest1Data[i].numtest);
                       }
                     }
                     // add all defects
                     if (!isNaN(doc[0].SCTest1Data[i].numDefects)) {
-                      if (doc[0].KCProcessFIN[j].members[k].defect == undefined) {
-                        doc[0].KCProcessFIN[j].members[k].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
+                      if (doc[0].KCProcessFINSCT[j].members[k].defect == undefined) {
+                        doc[0].KCProcessFINSCT[j].members[k].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
                       }else {
-                        doc[0].KCProcessFIN[j].members[k].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
+                        doc[0].KCProcessFINSCT[j].members[k].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
                       }
                     }
                   }
@@ -56,23 +58,23 @@ var calculateSCTab = {
               }
 
               // For operational processes
-              for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-                for (var k = 0; k < doc[0].KCProcessOPS[j].members.length; k++) {
-                  if (doc[0].KCProcessOPS[j].members[k].id == doc[0].SCTest1Data[i].GPPARENT) {
+              for (var j = 0; j < doc[0].KCProcessOPSSCT.length; j++) {
+                for (var k = 0; k < doc[0].KCProcessOPSSCT[j].members.length; k++) {
+                  if (doc[0].KCProcessOPSSCT[j].members[k].id == doc[0].SCTest1Data[i].GPPARENT) {
                     // add all tests
                     if (!isNaN(doc[0].SCTest1Data[i].numtest)) {
-                      if (doc[0].KCProcessOPS[j].members[k].test == undefined) {
-                        doc[0].KCProcessOPS[j].members[k].test = parseInt(doc[0].SCTest1Data[i].numtest);
+                      if (doc[0].KCProcessOPSSCT[j].members[k].test == undefined) {
+                        doc[0].KCProcessOPSSCT[j].members[k].test = parseInt(doc[0].SCTest1Data[i].numtest);
                       }else {
-                        doc[0].KCProcessOPS[j].members[k].test += parseInt(doc[0].SCTest1Data[i].numtest);
+                        doc[0].KCProcessOPSSCT[j].members[k].test += parseInt(doc[0].SCTest1Data[i].numtest);
                       }
                     }
                     // add all defects
                     if (!isNaN(doc[0].SCTest1Data[i].numDefects)) {
-                      if (doc[0].KCProcessOPS[j].members[k].defect == undefined) {
-                        doc[0].KCProcessOPS[j].members[k].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
+                      if (doc[0].KCProcessOPSSCT[j].members[k].defect == undefined) {
+                        doc[0].KCProcessOPSSCT[j].members[k].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
                       }else {
-                        doc[0].KCProcessOPS[j].members[k].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
+                        doc[0].KCProcessOPSSCT[j].members[k].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
                       }
                     }
                   }
@@ -82,46 +84,46 @@ var calculateSCTab = {
             }
             if (doc[0].MIRABusinessUnit == "GBS") {
               // For financial processes
-              for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-                if (doc[0].KCProcessFIN[j].id == doc[0].SCTest1Data[i].GPPARENT) {
+              for (var j = 0; j < doc[0].KCProcessFINSCT.length; j++) {
+                if (doc[0].KCProcessFINSCT[j].id == doc[0].SCTest1Data[i].GPPARENT) {
                   // add all tests
                   if (!isNaN(doc[0].SCTest1Data[i].numtest)) {
-                    if (doc[0].KCProcessFIN[j].test == undefined) {
-                      doc[0].KCProcessFIN[j].test = parseInt(doc[0].SCTest1Data[i].numtest);
+                    if (doc[0].KCProcessFINSCT[j].test == undefined) {
+                      doc[0].KCProcessFINSCT[j].test = parseInt(doc[0].SCTest1Data[i].numtest);
                     }else {
-                      doc[0].KCProcessFIN[j].test += parseInt(doc[0].SCTest1Data[i].numtest);
+                      doc[0].KCProcessFINSCT[j].test += parseInt(doc[0].SCTest1Data[i].numtest);
                     }
                   }
                   // add all defects
                   if (!isNaN(doc[0].SCTest1Data[i].numDefects)) {
-                    if (doc[0].KCProcessFIN[j].defect == undefined) {
-                      doc[0].KCProcessFIN[j].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
+                    if (doc[0].KCProcessFINSCT[j].defect == undefined) {
+                      doc[0].KCProcessFINSCT[j].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
                     }else {
-                      doc[0].KCProcessFIN[j].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
+                      doc[0].KCProcessFINSCT[j].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
                     }
                   }
                 }
               }
 
               // For operational processes
-              for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-                if (doc[0].KCProcessOPS[j].id == doc[0].SCTest1Data[i].GPPARENT) {
+              for (var j = 0; j < doc[0].KCProcessOPSSCT.length; j++) {
+                if (doc[0].KCProcessOPSSCT[j].id == doc[0].SCTest1Data[i].GPPARENT) {
                   // add all tests
                   if (!isNaN(doc[0].SCTest1Data[i].numtest)) {
-                    if (doc[0].KCProcessOPS[j].test == undefined) {
-                      doc[0].KCProcessOPS[j].test = parseInt(doc[0].SCTest1Data[i].numtest);
+                    if (doc[0].KCProcessOPSSCT[j].test == undefined) {
+                      doc[0].KCProcessOPSSCT[j].test = parseInt(doc[0].SCTest1Data[i].numtest);
                     }else {
-                      doc[0].KCProcessOPS[j].test += parseInt(doc[0].SCTest1Data[i].numtest);
+                      doc[0].KCProcessOPSSCT[j].test += parseInt(doc[0].SCTest1Data[i].numtest);
                     }
                   }
                   // add all defects
-                  if (doc[0].KCProcessOPS[j].id == doc[0].SCTest1Data[i].GPPARENT) {
+                  if (doc[0].KCProcessOPSSCT[j].id == doc[0].SCTest1Data[i].GPPARENT) {
                     if (!isNaN(doc[0].SCTest1Data[i].numDefects)) {
                     // if (doc[0].SCTest1Data[i].numDefects !== undefined && doc[0].SCTest1Data[i].numDefects !== "") {
-                      if (doc[0].KCProcessOPS[j].defect == undefined) {
-                        doc[0].KCProcessOPS[j].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
+                      if (doc[0].KCProcessOPSSCT[j].defect == undefined) {
+                        doc[0].KCProcessOPSSCT[j].defect = parseInt(doc[0].SCTest1Data[i].numDefects);
                       }else {
-                        doc[0].KCProcessOPS[j].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
+                        doc[0].KCProcessOPSSCT[j].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
                       }
                     }
                   }
@@ -133,36 +135,36 @@ var calculateSCTab = {
           // Calculate Defect Rates
           if (doc[0].MIRABusinessUnit == "GTS") {
             // Financial processes calculate for defect rate
-            for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-              for (var k = 0; k < doc[0].KCProcessFIN[j].members.length; k++) {
-                if (doc[0].KCProcessFIN[j].members[k].test == undefined) {
-                  doc[0].KCProcessFIN[j].members[k].test = "";
-                  doc[0].KCProcessFIN[j].members[k].defectRate = "";
+            for (var j = 0; j < doc[0].KCProcessFINSCT.length; j++) {
+              for (var k = 0; k < doc[0].KCProcessFINSCT[j].members.length; k++) {
+                if (doc[0].KCProcessFINSCT[j].members[k].test == undefined) {
+                  doc[0].KCProcessFINSCT[j].members[k].test = "";
+                  doc[0].KCProcessFINSCT[j].members[k].defectRate = "";
                 } else {
-                  if (doc[0].KCProcessFIN[j].members[k].defect == undefined) {
-                    doc[0].KCProcessFIN[j].members[k].defectRate = 0;
+                  if (doc[0].KCProcessFINSCT[j].members[k].defect == undefined) {
+                    doc[0].KCProcessFINSCT[j].members[k].defectRate = 0;
                   } else {
-                    doc[0].KCProcessFIN[j].members[k].defectRate = ((doc[0].KCProcessFIN[j].members[k].defect / doc[0].KCProcessFIN[j].members[k].test) * 100).toFixed(1);
-                    if (doc[0].KCProcessFIN[j].members[k].defectRate == 0) {
-                      doc[0].KCProcessFIN[j].members[k].defectRate = parseInt(doc[0].KCProcessFIN[j].members[k].defectRate).toFixed(0);
+                    doc[0].KCProcessFINSCT[j].members[k].defectRate = ((doc[0].KCProcessFINSCT[j].members[k].defect / doc[0].KCProcessFINSCT[j].members[k].test) * 100).toFixed(1);
+                    if (doc[0].KCProcessFINSCT[j].members[k].defectRate == 0) {
+                      doc[0].KCProcessFINSCT[j].members[k].defectRate = parseInt(doc[0].KCProcessFINSCT[j].members[k].defectRate).toFixed(0);
                     }
                   }
                 }
               }
             }
             // operational processes calculate for defect rate
-            for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-              for (var k = 0; k < doc[0].KCProcessOPS[j].members.length; k++) {
-                if (doc[0].KCProcessOPS[j].members[k].test == undefined) {
-                  doc[0].KCProcessOPS[j].members[k].test = "";
-                  doc[0].KCProcessOPS[j].members[k].defectRate = "";
+            for (var j = 0; j < doc[0].KCProcessOPSSCT.length; j++) {
+              for (var k = 0; k < doc[0].KCProcessOPSSCT[j].members.length; k++) {
+                if (doc[0].KCProcessOPSSCT[j].members[k].test == undefined) {
+                  doc[0].KCProcessOPSSCT[j].members[k].test = "";
+                  doc[0].KCProcessOPSSCT[j].members[k].defectRate = "";
                 } else {
-                  if (doc[0].KCProcessOPS[j].members[k].defect == undefined) {
-                    doc[0].KCProcessOPS[j].members[k].defectRate = 0;
+                  if (doc[0].KCProcessOPSSCT[j].members[k].defect == undefined) {
+                    doc[0].KCProcessOPSSCT[j].members[k].defectRate = 0;
                   } else {
-                    doc[0].KCProcessOPS[j].members[k].defectRate = ((doc[0].KCProcessOPS[j].members[k].defect / doc[0].KCProcessOPS[j].members[k].test) * 100).toFixed(1);
-                    if (doc[0].KCProcessOPS[j].members[k].defectRate == 0) {
-                      doc[0].KCProcessOPS[j].members[k].defectRate = parseInt(doc[0].KCProcessOPS[j].members[k].defectRate).toFixed(0);
+                    doc[0].KCProcessOPSSCT[j].members[k].defectRate = ((doc[0].KCProcessOPSSCT[j].members[k].defect / doc[0].KCProcessOPSSCT[j].members[k].test) * 100).toFixed(1);
+                    if (doc[0].KCProcessOPSSCT[j].members[k].defectRate == 0) {
+                      doc[0].KCProcessOPSSCT[j].members[k].defectRate = parseInt(doc[0].KCProcessOPSSCT[j].members[k].defectRate).toFixed(0);
                     }
                   }
                 }
@@ -171,39 +173,38 @@ var calculateSCTab = {
           }
           if (doc[0].MIRABusinessUnit == "GBS") {
             // Financial processes calculate for defect rate
-            for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-              if (doc[0].KCProcessFIN[j].test == undefined) {
-                doc[0].KCProcessFIN[j].test = "";
-                doc[0].KCProcessFIN[j].defectRate = "";
+            for (var j = 0; j < doc[0].KCProcessFINSCT.length; j++) {
+              if (doc[0].KCProcessFINSCT[j].test == undefined) {
+                doc[0].KCProcessFINSCT[j].test = "";
+                doc[0].KCProcessFINSCT[j].defectRate = "";
               } else {
-                if (doc[0].KCProcessFIN[j].defect == undefined) {
-                  doc[0].KCProcessFIN[j].defectRate = 0;
+                if (doc[0].KCProcessFINSCT[j].defect == undefined) {
+                  doc[0].KCProcessFINSCT[j].defectRate = 0;
                 } else {
-                  doc[0].KCProcessFIN[j].defectRate = ((doc[0].KCProcessFIN[j].defect / doc[0].KCProcessFIN[j].test) * 100).toFixed(1);
-                  if (doc[0].KCProcessFIN[j].defectRate == 0) {
-                    doc[0].KCProcessFIN[j].defectRate = parseInt(doc[0].KCProcessFIN[j].defectRate).toFixed(0);
+                  doc[0].KCProcessFINSCT[j].defectRate = ((doc[0].KCProcessFINSCT[j].defect / doc[0].KCProcessFINSCT[j].test) * 100).toFixed(1);
+                  if (doc[0].KCProcessFINSCT[j].defectRate == 0) {
+                    doc[0].KCProcessFINSCT[j].defectRate = parseInt(doc[0].KCProcessFINSCT[j].defectRate).toFixed(0);
                   }
                 }
               }
             }
             // operational processes calculate for defect rate
-            for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-              if (doc[0].KCProcessOPS[j].test == undefined) {
-                doc[0].KCProcessOPS[j].test = "";
-                doc[0].KCProcessOPS[j].defectRate = "";
+            for (var j = 0; j < doc[0].KCProcessOPSSCT.length; j++) {
+              if (doc[0].KCProcessOPSSCT[j].test == undefined) {
+                doc[0].KCProcessOPSSCT[j].test = "";
+                doc[0].KCProcessOPSSCT[j].defectRate = "";
               } else {
-                if (doc[0].KCProcessOPS[j].defect == undefined) {
-                  doc[0].KCProcessOPS[j].defectRate = 0;
+                if (doc[0].KCProcessOPSSCT[j].defect == undefined) {
+                  doc[0].KCProcessOPSSCT[j].defectRate = 0;
                 } else {
-                  doc[0].KCProcessOPS[j].defectRate = ((doc[0].KCProcessOPS[j].defect / doc[0].KCProcessOPS[j].test) * 100).toFixed(1);
-                  if (doc[0].KCProcessOPS[j].defectRate == 0) {
-                    doc[0].KCProcessOPS[j].defectRate = parseInt(doc[0].KCProcessOPS[j].defectRate).toFixed(0);
+                  doc[0].KCProcessOPSSCT[j].defectRate = ((doc[0].KCProcessOPSSCT[j].defect / doc[0].KCProcessOPSSCT[j].test) * 100).toFixed(1);
+                  if (doc[0].KCProcessOPSSCT[j].defectRate == 0) {
+                    doc[0].KCProcessOPSSCT[j].defectRate = parseInt(doc[0].KCProcessOPSSCT[j].defectRate).toFixed(0);
                   }
                 }
               }
             }
           }
-
           // Calculate for Previous 1 Quarter Defect Rates
           // Calculate for Previous 2 Quarter Defect Rates
           // Calculate for Previous 3 Quarter Defect Rates
@@ -217,26 +218,26 @@ var calculateSCTab = {
             if (!isNaN(doc[0].SCTest2Data[i].numDefects) && doc[0].SCTest2Data[i].remediationStatus == "Open" && parseInt(doc[0].SCTest2Data[i].numDefects) > 0) {
               if (doc[0].MIRABusinessUnit == "GTS") {
                 // For financial processes
-                for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-                  for (var k = 0; k < doc[0].KCProcessFIN[j].members.length; k++) {
-                    if (doc[0].KCProcessFIN[j].members[k].id == doc[0].SCTest2Data[i].GPPARENT) {
+                for (var j = 0; j < doc[0].KCProcessFINSCT.length; j++) {
+                  for (var k = 0; k < doc[0].KCProcessFINSCT[j].members.length; k++) {
+                    if (doc[0].KCProcessFINSCT[j].members[k].id == doc[0].SCTest2Data[i].GPPARENT) {
                       if (!isNaN(doc[0].SCTest2Data[i].numDefects)) {
                         // Process all Financial Defects
                         if (doc[0].SCTest2Data[i].controlType == "KCFR") {
                           // add all CQF - Current Quarter Financial Defects
                           if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                            if (doc[0].KCProcessFIN[j].members[k].cqf == undefined) {
-                              doc[0].KCProcessFIN[j].members[k].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessFINSCT[j].members[k].cqf == undefined) {
+                              doc[0].KCProcessFINSCT[j].members[k].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessFIN[j].members[k].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessFINSCT[j].members[k].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                           // add all PQF - Previous Quarter Financial Defects
                           else {
-                            if (doc[0].KCProcessFIN[j].members[k].pqf == undefined) {
-                              doc[0].KCProcessFIN[j].members[k].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessFINSCT[j].members[k].pqf == undefined) {
+                              doc[0].KCProcessFINSCT[j].members[k].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessFIN[j].members[k].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessFINSCT[j].members[k].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                         }
@@ -244,18 +245,18 @@ var calculateSCTab = {
                         else {
                           // add all CQO - Current Quarter Operational Defects
                           if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                            if (doc[0].KCProcessFIN[j].members[k].cqo == undefined) {
-                              doc[0].KCProcessFIN[j].members[k].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessFINSCT[j].members[k].cqo == undefined) {
+                              doc[0].KCProcessFINSCT[j].members[k].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessFIN[j].members[k].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessFINSCT[j].members[k].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                           // add all PQO - Previous Quarter Operational Defects
                           else {
-                            if (doc[0].KCProcessFIN[j].members[k].pqo == undefined) {
-                              doc[0].KCProcessFIN[j].members[k].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessFINSCT[j].members[k].pqo == undefined) {
+                              doc[0].KCProcessFINSCT[j].members[k].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessFIN[j].members[k].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessFINSCT[j].members[k].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                         }
@@ -264,27 +265,27 @@ var calculateSCTab = {
                   }
                 }
                 // For operational processes
-                for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-                  for (var k = 0; k < doc[0].KCProcessOPS[j].members.length; k++) {
-                    if (doc[0].KCProcessOPS[j].members[k].id == doc[0].SCTest2Data[i].GPPARENT) {
+                for (var j = 0; j < doc[0].KCProcessOPSSCT.length; j++) {
+                  for (var k = 0; k < doc[0].KCProcessOPSSCT[j].members.length; k++) {
+                    if (doc[0].KCProcessOPSSCT[j].members[k].id == doc[0].SCTest2Data[i].GPPARENT) {
                       if (!isNaN(doc[0].SCTest2Data[i].numDefects)) {
                       // if (doc[0].SCTest2Data[i].numDefects !== undefined && doc[0].SCTest2Data[i].numDefects !== "") {
                         // Process all Financial Defects
                         if (doc[0].SCTest2Data[i].controlType == "KCFR") {
                           // add all CQF - Current Quarter Financial Defects
                           if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                            if (doc[0].KCProcessOPS[j].members[k].cqf == undefined) {
-                              doc[0].KCProcessOPS[j].members[k].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessOPSSCT[j].members[k].cqf == undefined) {
+                              doc[0].KCProcessOPSSCT[j].members[k].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessOPS[j].members[k].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessOPSSCT[j].members[k].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                           // add all PQF - Previous Quarter Financial Defects
                           else {
-                            if (doc[0].KCProcessOPS[j].members[k].pqf == undefined) {
-                              doc[0].KCProcessOPS[j].members[k].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessOPSSCT[j].members[k].pqf == undefined) {
+                              doc[0].KCProcessOPSSCT[j].members[k].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessOPS[j].members[k].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessOPSSCT[j].members[k].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                         }
@@ -292,18 +293,18 @@ var calculateSCTab = {
                         else {
                           // add all CQO - Current Quarter Operational Defects
                           if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                            if (doc[0].KCProcessOPS[j].members[k].cqo == undefined) {
-                              doc[0].KCProcessOPS[j].members[k].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessOPSSCT[j].members[k].cqo == undefined) {
+                              doc[0].KCProcessOPSSCT[j].members[k].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessOPS[j].members[k].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessOPSSCT[j].members[k].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                           // add all PQO - Previous Quarter Operational Defects
                           else {
-                            if (doc[0].KCProcessOPS[j].members[k].pqo == undefined) {
-                              doc[0].KCProcessOPS[j].members[k].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                            if (doc[0].KCProcessOPSSCT[j].members[k].pqo == undefined) {
+                              doc[0].KCProcessOPSSCT[j].members[k].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                             }else {
-                              doc[0].KCProcessOPS[j].members[k].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                              doc[0].KCProcessOPSSCT[j].members[k].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                             }
                           }
                         }
@@ -316,25 +317,25 @@ var calculateSCTab = {
 
               if (doc[0].MIRABusinessUnit == "GBS") {
                 // For financial processes
-                for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-                  if (doc[0].KCProcessFIN[j].id == doc[0].SCTest2Data[i].GPPARENT) {
+                for (var j = 0; j < doc[0].KCProcessFINSCT.length; j++) {
+                  if (doc[0].KCProcessFINSCT[j].id == doc[0].SCTest2Data[i].GPPARENT) {
                     if (!isNaN(doc[0].SCTest2Data[i].numDefects)) {
                       // Process all Financial Defects
                       if (doc[0].SCTest2Data[i].controlType == "KCFR") {
                         // add all CQF - Current Quarter Financial Defects
                         if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                          if (doc[0].KCProcessFIN[j].cqf == undefined) {
-                            doc[0].KCProcessFIN[j].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessFINSCT[j].cqf == undefined) {
+                            doc[0].KCProcessFINSCT[j].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessFIN[j].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessFINSCT[j].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                         // add all PQF - Previous Quarter Financial Defects
                         else {
-                          if (doc[0].KCProcessFIN[j].pqf == undefined) {
-                            doc[0].KCProcessFIN[j].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessFINSCT[j].pqf == undefined) {
+                            doc[0].KCProcessFINSCT[j].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessFIN[j].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessFINSCT[j].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                       }
@@ -342,18 +343,18 @@ var calculateSCTab = {
                       else {
                         // add all CQO - Current Quarter Operational Defects
                         if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                          if (doc[0].KCProcessFIN[j].cqo == undefined) {
-                            doc[0].KCProcessFIN[j].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessFINSCT[j].cqo == undefined) {
+                            doc[0].KCProcessFINSCT[j].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessFIN[j].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessFINSCT[j].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                         // add all PQO - Previous Quarter Operational Defects
                         else {
-                          if (doc[0].KCProcessFIN[j].pqo == undefined) {
-                            doc[0].KCProcessFIN[j].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessFINSCT[j].pqo == undefined) {
+                            doc[0].KCProcessFINSCT[j].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessFIN[j].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessFINSCT[j].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                       }
@@ -361,25 +362,25 @@ var calculateSCTab = {
                   }
                 }
                 // For operational processes
-                for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-                  if (doc[0].KCProcessOPS[j].id == doc[0].SCTest2Data[i].GPPARENT) {
+                for (var j = 0; j < doc[0].KCProcessOPSSCT.length; j++) {
+                  if (doc[0].KCProcessOPSSCT[j].id == doc[0].SCTest2Data[i].GPPARENT) {
                     if (!isNaN(doc[0].SCTest2Data[i].numDefects)) {
                       // Process all Financial Defects
                       if (doc[0].SCTest2Data[i].controlType == "KCFR") {
                         // add all CQF - Current Quarter Financial Defects
                         if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                          if (doc[0].KCProcessOPS[j].cqf == undefined) {
-                            doc[0].KCProcessOPS[j].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessOPSSCT[j].cqf == undefined) {
+                            doc[0].KCProcessOPSSCT[j].cqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessOPS[j].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessOPSSCT[j].cqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                         // add all PQF - Previous Quarter Financial Defects
                         else {
-                          if (doc[0].KCProcessOPS[j].pqf == undefined) {
-                            doc[0].KCProcessOPS[j].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessOPSSCT[j].pqf == undefined) {
+                            doc[0].KCProcessOPSSCT[j].pqf = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessOPS[j].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessOPSSCT[j].pqf += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                       }
@@ -387,18 +388,18 @@ var calculateSCTab = {
                       else {
                         // add all CQO - Current Quarter Operational Defects
                         if (doc[0].SCTest2Data[i].reportingQuarter == doc[0].SCTest2Data[i].originalReportingQuarter) {
-                          if (doc[0].KCProcessOPS[j].cqo == undefined) {
-                            doc[0].KCProcessOPS[j].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessOPSSCT[j].cqo == undefined) {
+                            doc[0].KCProcessOPSSCT[j].cqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessOPS[j].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessOPSSCT[j].cqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                         // add all PQO - Previous Quarter Operational Defects
                         else {
-                          if (doc[0].KCProcessOPS[j].pqo == undefined) {
-                            doc[0].KCProcessOPS[j].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
+                          if (doc[0].KCProcessOPSSCT[j].pqo == undefined) {
+                            doc[0].KCProcessOPSSCT[j].pqo = parseInt(doc[0].SCTest2Data[i].numDefects);
                           }else {
-                            doc[0].KCProcessOPS[j].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
+                            doc[0].KCProcessOPSSCT[j].pqo += parseInt(doc[0].SCTest2Data[i].numDefects);
                           }
                         }
                       }
@@ -414,7 +415,6 @@ var calculateSCTab = {
             }
 
           }
-
           // Calculate for Previous 1 Quarter Unremediated Defect
           // Calculate for Previous 2 Quarter Unremediated Defect
           // Calculate for Previous 3 Quarter Unremediated Defect
@@ -478,7 +478,7 @@ var calculateSCTab = {
           }
           doc[0].CPDRException = samplesList;
           //Start of second treetable
-          var samples = doc[0].SCUnremedDefects;
+          var samples = JSON.parse(JSON.stringify(doc[0].SCUnremedDefects));
           var sampleCategory = {};
           var samplesList = [];
           var exportSamples = [];
@@ -532,56 +532,56 @@ var calculateSCTab = {
               objects[tmp.id] = tmp;
               sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] === "undefined"){
               var tmp = {
                 parent:samples[i].originalReportingQuarter.replace(/ /g,''),
-                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
                 testType:samples[i].testType,
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] === "undefined"){
               var tmp = {
-                id:samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
-                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
+                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,''),
                 processSampled:samples[i].processSampled,
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] === "undefined"){
               var tmp = {
-                parent:samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
-                id:samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
+                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].testType.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
                 reportingCountry:samples[i].reportingCountry,
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')] = true;
             }
-            if(typeof sampleCategory[samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] === "undefined"){
+            if(typeof sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] === "undefined"){
               var tmp = {
-                id:samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,''),
-                parent:samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
+                id:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,''),
+                parent:samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].processSampled.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,''),
                 controlName:samples[i].controlName.replace(/ /g,''),
                 count: 0,
                 catEntry: true
               };
               samplesList.push(tmp);
               objects[tmp.id] = tmp;
-              sampleCategory[samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] = true;
+              sampleCategory[samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'')] = true;
             }
             samples[i].count = 1;
-            samples[i].parent = samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'');
+            samples[i].parent = samples[i].originalReportingQuarter.replace(/ /g,'')+samples[i].reportingCountry.replace(/ /g,'')+samples[i].controlName.replace(/ /g,'');
             samples[i].id = samples[i]["_id"];
             //do counting for category
             objects[samples[i].parent].count++ ;

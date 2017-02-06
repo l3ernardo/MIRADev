@@ -43,7 +43,7 @@
 					<td class="kc-test-viewsubheader" width="4%">CQF</td>
 					<td class="kc-test-viewsubheader" width="4%">CQO</td>
 				</tr>
-				{{#KCProcessFIN}}
+				{{#KCProcessFINSCT}}
 					<tr class="asmt-viewdata">
 						<td>{{name}}</td>
 						{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
@@ -65,7 +65,7 @@
 						<td class="asmt-viewdata-centered">{{cqf}}</td>
 						<td class="asmt-viewdata-centered">{{cqo}}</td>
 					</tr>
-				{{/KCProcessFIN}}
+				{{/KCProcessFINSCT}}
 				<tr class="kc-test-viewheader">
 					<td colspan="19"></td>
 				</tr>
@@ -112,7 +112,7 @@
 					<td class="kc-test-viewsubheader" width="4%">CQF</td>
 					<td class="kc-test-viewsubheader" width="4%">CQO</td>
 				</tr>
-				{{#each KCProcessOPS}}
+				{{#KCProcessOPSSCT}}
 					<tr class="asmt-viewdata">
 						<td>{{name}}</td>
 						{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
@@ -134,7 +134,7 @@
 						<td class="asmt-viewdata-centered">{{cqf}}</td>
 						<td class="asmt-viewdata-centered">{{cqo}}</td>
 					</tr>
-				{{/each}}
+				{{/KCProcessOPSSCT}}
 				<tr class="kc-test-viewheader">
 					<td colspan="19"></td>
 				</tr>

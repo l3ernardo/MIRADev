@@ -13,6 +13,7 @@ var accessrules = require('./class-accessrules.js');
 var fieldCalc = require('./class-fieldcalc.js');
 var kct = require('./class-keycontrol.js');
 var sct = require('./class-sampledcountrycontrol.js');
+var rcc = require('./class-rptgcountrycontrol.js');
 var prt = require('./class-processviews.js');
 var cut = require('./class-controllableunitviews.js');
 var pct = require('./class-processratings.js');
@@ -476,6 +477,8 @@ var assessment = {
 									sct.processSCTab(doc,defViewRow);
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
+									// RPTG Country Testing tab
+									rcc.processRCTab(doc,defViewRow);
 									// Process CU Ratings tab
 									cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
