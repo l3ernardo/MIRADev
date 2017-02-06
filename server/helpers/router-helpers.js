@@ -255,19 +255,27 @@ var register = function(Handlebars) {
 			return drhtml;
 		},
 		*/
-		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
+		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR, percent) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
-				trhtml = '<td class="asmt-viewdata-centered"></td>';
+				if(percent) trhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%"></td>';
+				else trhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else if (margThresholdTR == undefined || unsatThresholdTR ==  undefined) {
-				trhtml = '<td class="asmt-viewdata-centered">'+tr+'</td>';
+				if(percent) trhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+tr+'</td>';
+				else trhtml = '<td class="asmt-viewdata-centered">'+tr+'</td>';
 			} else {
-				if (tr >= margThresholdTR)
-					trhtml = '<td class="asmt-viewdata-green">'+tr+'</td>';
-				else if (tr < unsatThresholdTR)
-					trhtml = '<td class="asmt-viewdata-red">'+tr+'</td>';
-				else
-					trhtml = '<td class="asmt-viewdata-yellow">'+tr+'</td>';
+				if (tr >= margThresholdTR) {
+					if(percent) trhtml = '<td class="asmt-viewdata-green" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-green">'+tr+'</td>';
+				}
+				else if (tr < unsatThresholdTR) {
+					if(percent) trhtml = '<td class="asmt-viewdata-red" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-red">'+tr+'</td>';
+				}
+				else {
+					if(percent) trhtml = '<td class="asmt-viewdata-yellow" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-yellow">'+tr+'</td>';
+				}
 			}
 			return trhtml;
 		},

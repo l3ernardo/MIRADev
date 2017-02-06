@@ -455,6 +455,7 @@ var performanceoverviewcountry = {
 	},
 
 	getMissedRisks : function(db, doc) {
+		var currentDate = util.getDateTime("", "date")
 		var counterRisks = 0;
 		var counterRisksCRM = 0;
 		var counterRisksDelivery = 0;
@@ -515,18 +516,20 @@ var performanceoverviewcountry = {
 					if (doc[0].RiskView1Data[i].status != "Closed") {
 
 						if (doc[0].RiskView1Data[i].ctrg != "") {
-							if (parseInt(doc[0].RiskView1Data[i].ctrg) > 0
-									|| doc[0].RiskView1Data[i].FlagTodaysDate == "1")
+							if (parseInt(doc[0].RiskView1Data[i].ctrg) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
 								counterRisks++;
 						} else if (doc[0].RiskView1Data[i].numMissedTasks != "") {
-							if (parseInt(doc[0].RiskView1Data[i].numMissedTasks) > 0
-									|| doc[0].RiskView1Data[i].FlagTodaysDate == "1")
+							if (parseInt(doc[0].RiskView1Data[i].numMissedTasks) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
 								counterRisks++;
 						} else if (doc[0].RiskView1Data[i].FlagTodaysDate == "1")
 							counterRisks++;
-
+						// if (new Date(doc[0].RiskView1Data[i].currentTargetDate).getTime() < new Date(currentDate).getTime()) {
+						// 	counterRisks++;
+						// }
 					}
 				}
+
+
 
 				doc[0].MissedOpenIssueCount = counterRisks;
 
@@ -723,7 +726,7 @@ var performanceoverviewcountry = {
 					if (doc[0].asmtsdocs[i].PeriodRating == "Marg" || doc[0].asmtsdocs[i].PeriodRating == "Unsat") {
 						if (doc[0].asmtsdocs[i].Target2Sat != undefined && doc[0].asmtsdocs[i].Target2SatPrev != undefined) {
 								if (doc[0].asmtsdocs[i].Target2Sat != "" && doc[0].asmtsdocs[i].Target2SatPrev != "") {
-									if ((new Date(doc[0].asmtsdocs[i].Target2Sat).getTime() > new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime()) || (new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime())) {
+									if ((new Date(doc[0].asmtsdocs[i].Target2Sat).getTime() > new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime()) || (new Date(doc[0].asmtsdocs[i].Target2SatPrev).getTime() < new Date(currentDate).getTime() )) {
 										count++;
 										AUDataMSAC.push(doc[0].asmtsdocs[i]);
 									}
