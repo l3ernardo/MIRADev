@@ -56,10 +56,12 @@ var assessment = {
 				obj.push(data.doc);
 				deferred.resolve({"status": 200, "doc": obj});
 			}).catch(function(err) {
-				deferred.reject({"status": 500, "error": data.error});
+				console.log("[assessment][getAsmtbyID][preload]" + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
 			});
 		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
+			console.log("[assessment][getAsmtbyID]" + err.error.reason);
+			deferred.reject({"status": 500, "error": err.error.reason});
 		});
 		return deferred.promise;
 	},
@@ -159,7 +161,8 @@ var assessment = {
 								var obj = doc[0]; // For Merge
 								deferred.resolve({"status": 200, "doc": obj});
 							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						case "BU Reporting Group":
@@ -220,7 +223,8 @@ var assessment = {
 								var obj = doc[0]; // For Merge
 								deferred.resolve({"status": 200, "doc": obj});
 							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						case "Business Unit":
@@ -282,7 +286,8 @@ var assessment = {
 								var obj = doc[0]; // For Merge
 								deferred.resolve({"status": 200, "doc": obj});
 							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						case "BU IOT":
@@ -345,7 +350,8 @@ var assessment = {
 								var obj = doc[0]; // For Merge
 								deferred.resolve({"status": 200, "doc": obj});
 							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						case "BU IMT":
@@ -413,10 +419,12 @@ var assessment = {
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
-									deferred.reject({"status": 500, "[]error": err});
+									console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
 								});
 							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						case "BU Country":
@@ -477,10 +485,8 @@ var assessment = {
 									sct.processSCTab(doc,defViewRow);
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
-									//console.log("before art");
-									// RPTG Country Testing tab									//RPTG Country Testing tab
-									//rcc.processRCTab(doc,defViewRow);
-									//console.log("after art");
+									// RPTG Country Testing tab
+									rcc.processRCTab(doc,defViewRow);
 									// Process CU Ratings tab
 									cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
@@ -488,240 +494,6 @@ var assessment = {
 									// Process Audits & Reviews tab
 									aar.processARTab(doc,defViewRow);
 
-									/////////////////////////////////////////////////////////////
-									//Irving's code for repoting country
-
-									//Sorting for first table is done in the process of Sample Country
-
-									//Second table sorting
-									var sortingElements = doc[0].TRExceptionControls;
-									var exportList = [];
-									var topCategory = 0;
-									var catObjects = {};//object of objects for counting
-									var sortedList = [];
-									sortingElements.sort(function(a, b){
-										var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
-					          if (nameA < nameB) //sort string ascending
-					            return -1
-					          if (nameA > nameB)
-					            return 1
-											var nameA=a.process.toLowerCase(), nameB=b.process.toLowerCase()
-						          if (nameA < nameB) //sort string ascending
-						            return -1
-						          if (nameA > nameB)
-						            return 1
-										return 0
-									});
-									for(var i = 0; i < sortingElements.length; i++){
-										if(typeof catObjects[sortingElements[i].controlType.replace(/ /g,'')] === "undefined"){
-					            topCategory++;
-					            var tmp = {
-					              id:sortingElements[i].controlType.replace(/ /g,''),
-					              controlTypeName:sortingElements[i].controlType,
-					              numRequiredTests: 0,
-												numActualTests: 0
-					            };
-					            sortedList.push(tmp);
-					            catObjects[sortingElements[i].controlType.replace(/ /g,'')] = tmp;
-					          }
-										if(typeof catObjects[sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,'')] === "undefined"){
-					            var tmp = {
-					              parent:sortingElements[i].controlType.replace(/ /g,''),
-												id: sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,''),
-					              processName:sortingElements[i].process,
-												numRequiredTests: 0,
-												numActualTests: 0
-					            };
-					            sortedList.push(tmp);
-					            catObjects[sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,'')] = tmp;
-					          }
-										sortingElements[i].count = 1;
-					          sortingElements[i].parent = sortingElements[i].controlType.replace(/ /g,'')+sortingElements[i].process.replace(/ /g,'');
-					          sortingElements[i].id = sortingElements[i]["_id"];
-					          //do counting for category
-										if(sortingElements[i].numRequiredTests != ""){
-							        catObjects[sortingElements[i].parent].numRequiredTests += parseFloat(sortingElements[i].numRequiredTests);
-											catObjects[catObjects[sortingElements[i].parent].parent].numRequiredTests += parseFloat(sortingElements[i].numRequiredTests);
-							      }
-										if(sortingElements[i].numActualTests != ""){
-							        catObjects[sortingElements[i].parent].numActualTests += parseFloat(sortingElements[i].numActualTests);
-											catObjects[catObjects[sortingElements[i].parent].parent].numActualTests += parseFloat(sortingElements[i].numActualTests);
-							      }
-					          //catObjects[sortingElements[i].parent].count++ ;
-										var tmp = {};
-										tmp.controlType = sortingElements[i].controlType || " ";
-										tmp.process = sortingElements[i].process || " ";
-										tmp.controlName = sortingElements[i].controlName || " ";
-										tmp.numRequiredTests = sortingElements[i].numRequiredTests || " ";
-										tmp.numActualTests = sortingElements[i].numActualTests || " ";
-										tmp.testingRatio = sortingElements[i].testingRatio || " ";
-										tmp.reasonTested = sortingElements[i].reasonTested || " ";
-										tmp.actionPlan = sortingElements[i].actionPlan || " ";
-
-										exportList.push(tmp);
-										sortedList.push(sortingElements[i]);
-									}
-									doc[0].exportRCTest = exportList;
-
-									// Add padding to Unremediated Defects by Quarter in SCT
-									if (topCategory < defViewRow) {
-										if (sortedList.length == 0) {
-											sortedList = fieldCalc.addTestViewData(11,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(sortedList,11,(defViewRow - topCategory));
-										}
-									}
-									doc[0].TRExceptionControls = sortedList;
-									// END OF SECOND TABLE SORTING*****************
-
-									//start of third treetable
-									var RCTest3 = doc[0].RCTest3Data;
-					        var RCTest3Category = {};
-					        var RCTest3List = [];
-					        var exportRCTest3 = [];
-					        var topCategory = 0;
-					        var objects = {};//object of objects for counting
-
-					        RCTest3.sort(function(a, b){
-					          var nameA=a.originalReportingQuarter.toLowerCase(), nameB=b.originalReportingQuarter.toLowerCase()
-					          if (nameA < nameB) //sort string ascending
-					            return -1
-					          if (nameA > nameB)
-					            return 1
-					          var nameA=a.testType.toLowerCase(), nameB=b.testType.toLowerCase()
-					          if (nameA < nameB) //sort string ascending
-					            return -1
-					          if (nameA > nameB)
-					            return 1
-					          var nameA=a.processSampled.toLowerCase(), nameB=b.processSampled.toLowerCase()
-					          if (nameA < nameB) //sort string ascending
-					            return -1
-					          if (nameA > nameB)
-					            return 1
-					          var nameA=a.reportingCountry.toLowerCase(), nameB=b.reportingCountry.toLowerCase()
-					          if (nameA < nameB) //sort string ascending
-					            return -1
-					          if (nameA > nameB)
-					            return 1
-					          var nameA=a.controlName.toLowerCase(), nameB=b.controlName.toLowerCase()
-					          if (nameA < nameB) //sort string ascending
-					            return -1
-					          if (nameA > nameB)
-					            return 1
-					          return 0 //default return value (no sorting)
-					        });
-
-					        for(var i = 0; i < RCTest3.length; i++){
-					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')] === "undefined"){
-					            topCategory++;
-					            var tmp = {
-					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,''),
-					              originalReportingQuarter:RCTest3[i].originalReportingQuarter,
-					              count: 0,
-					              catEntry: true
-					            };
-					            RCTest3List.push(tmp);
-					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')] = true;
-
-					          }
-					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] === "undefined"){
-					            var tmp = {
-					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,''),
-					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,''),
-					              testType:RCTest3[i].testType,
-					              count: 0,
-					              catEntry: true
-					            };
-					            RCTest3List.push(tmp);
-					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')] = true;
-
-					          }
-					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] === "undefined"){
-					            var tmp = {
-					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,''),
-					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,''),
-					              processSampled:RCTest3[i].processSampled,
-					              count: 0,
-					              catEntry: true
-					            };
-					            RCTest3List.push(tmp);
-					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')] = true;
-
-					          }
-					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] === "undefined"){
-					            var tmp = {
-					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].testType.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,''),
-					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
-					              reportingCountry:RCTest3[i].reportingCountry,
-					              count: 0,
-					              catEntry: true
-					            };
-					            RCTest3List.push(tmp);
-					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')] = true;
-
-					          }
-					          if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] === "undefined"){
-					            var tmp = {
-					              id:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,''),
-					              parent:RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].processSampled.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,''),
-					              controlName:RCTest3[i].controlName.replace(/ /g,''),
-					              count: 0,
-					              catEntry: true
-					            };
-					            RCTest3List.push(tmp);
-					            objects[tmp.id] = tmp;
-					            RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'')] = true;
-
-					          }
-					          RCTest3[i].count = 1;
-					          RCTest3[i].parent = RCTest3[i].originalReportingQuarter.replace(/ /g,'')+RCTest3[i].reportingCountry.replace(/ /g,'')+RCTest3[i].controlName.replace(/ /g,'');
-					          RCTest3[i].id = RCTest3[i]["_id"];
-
-					          //do counting for category
-					          objects[RCTest3[i].parent].count++ ;
-					          //do counting for 2nd level category
-					          objects[objects[RCTest3[i].parent].parent].count ++;
-					          //do counting for 3rd level category
-					          objects[objects[objects[RCTest3[i].parent].parent].parent].count ++;
-					          //do counting for 4th level category
-					          objects[objects[objects[objects[RCTest3[i].parent].parent].parent].parent].count ++;
-					          //do counting for 5th level category
-					          objects[objects[objects[objects[objects[RCTest3[i].parent].parent].parent].parent].parent].count ++;
-
-					          var tmp = {};
-					          tmp.originalReportingQuarter = RCTest3[i].originalReportingQuarter || " ";
-					          tmp.testType = RCTest3[i].testType || " ";
-					          tmp.processSampled = RCTest3[i].processSampled || " ";
-					          tmp.reportingCountry = RCTest3[i].reportingCountry || " ";
-					          tmp.controlName = RCTest3[i].controlName || " ";
-					          tmp.controllableUnit = RCTest3[i].controllableUnit || " ";
-					          tmp.sampleUniqueID = RCTest3[i].sampleUniqueID || " ";
-					          tmp.originalTargetDate = RCTest3[i].originalTargetDate || " ";
-					          tmp.targetClose = RCTest3[i].targetClose || " ";
-					          tmp.count = RCTest3[i].count || " ";
-					          tmp.defectType = RCTest3[i].defectType || " ";
-					          exportRCTest3.push(tmp);
-					          RCTest3List.push(RCTest3[i]);
-					        }
-
-					        doc[0].exportRCTest3 = exportRCTest3;
-
-					        // Add padding to Unremediated Defects by Quarter in SCT
-					        if (topCategory < defViewRow) {
-					          if (RCTest3List.length == 0) {
-					            RCTest3List = fieldCalc.addTestViewData(11,defViewRow);
-					          } else {
-					            fieldCalc.addTestViewDataPadding(RCTest3List,11,(defViewRow - topCategory));
-					          }
-					        }
-					        doc[0].RCTest3Data = RCTest3List;
-
-									// END OF IRVING'S CODE FOR REPORTING COUNTRY TAB****************
-									///////////////////////////////////////////////////////
 									// create a space for performance Tab
 									performanceTab.getKFCRDefectRate(db,doc);
 									performanceTab.getKCODefectRate(db,doc);
@@ -808,10 +580,12 @@ var assessment = {
 									deferred.resolve({"status": 200, "doc": obj});
 
 								}).catch(function(err) {
-									deferred.reject({"status": 500, "error": err});
+									console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
 								});
 							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						case "Controllable Unit":
@@ -948,8 +722,8 @@ var assessment = {
 														 var obj = doc[0]; // For Merge
 														deferred.resolve({"status": 200, "doc": obj});
 													}).catch(function(err) {
-														console.log("[assessableunit][LessonsList]" + dataLL.error);
-														deferred.reject({"status": 500, "error": err});
+														console.log("[assessment][getAsmtbyID][getALLList]" + err.error.reason);
+														deferred.reject({"status": 500, "error": err.error.reason});
 													});
 
 												}).catch(function(err) {
@@ -962,18 +736,22 @@ var assessment = {
 												deferred.resolve({"status": 200, "doc": obj});
 											}
 										}).catch(function(err) {
-											deferred.reject({"status": 500, "error": err});
+											console.log("[assessment][getAsmtbyID][getOpenIssue]" + err.error.reason);
+											deferred.reject({"status": 500, "error": err.error.reason});
 										});
 
 									}).catch(function(err) {
-										deferred.reject({"status": 500, "error": err});
+										console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error.reason);
+										deferred.reject({"status": 500, "error": err.error.reason});
 									});
 
 								}).catch(function(err) {
-									deferred.reject({"status": 500, "error": err});
+									console.log("[assessment][getAsmtbyID][getAccountInheritedFields]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
 								});
 							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						case "Country Process":
@@ -1070,8 +848,8 @@ var assessment = {
 												var obj = doc[0]; // For Merge
 												deferred.resolve({"status": 200, "doc": obj});
 											}).catch(function(err) {
-												console.log("[assessableunit][LessonsList]" + dataLL.error);
-												deferred.reject({"status": 500, "error": err});
+												console.log("[assessment][getAsmtbyID][getALLList]" + err.error.reason);
+												deferred.reject({"status": 500, "error": err.error.reason});
 											});
 										}//end if GTS
 										else {
@@ -1079,19 +857,19 @@ var assessment = {
 											deferred.resolve({"status": 200, "doc": obj});
 										}
 									}).catch(function(err) {
-										console.log("[assessableunit][openIssueList]" + dataLL.error);
-										deferred.reject({"status": 500, "error": err});
+										console.log("[assessment][getAsmtbyID][getOpenIssue]" + err.error.reason);
+										deferred.reject({"status": 500, "error": err.error.reason});
 									});
 
 									// deferred.resolve({"status": 200, "doc": doc});
 								}).catch(function(err) {
-									console.log("[assessment][getAsmtbyID][getCompDocs]" + dataLL.error);
-									deferred.reject({"status": 500, "error": err});
+									console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
 								});
 
 							}).catch(function(err) {
 								console.log("[assessment][getAsmtbyID][getAssessments]" + dataLL.error);
-								deferred.reject({"status": 500, "error": err});
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 
 							break;
@@ -1209,8 +987,8 @@ var assessment = {
 											var obj = doc[0]; // For Merge
 											deferred.resolve({"status": 200, "doc": obj});
 										}).catch(function(err) {
-											console.log("[assessableunit][LessonsList]" + dataLL.error);
-											deferred.reject({"status": 500, "error": err});
+											console.log("[assessment][getAsmtbyID][getALLList]" + err.error.reason);
+											deferred.reject({"status": 500, "error": err.error.reason});
 										});
 
 									}).catch(function(err) {
@@ -1223,25 +1001,28 @@ var assessment = {
 									deferred.resolve({"status": 200, "doc": obj});
 								}
 							}).catch(function(err) {
-								console.log("[assessment][getAsmtbyID][getCompDocs]" + dataLL.error);
-								deferred.reject({"status": 500, "error": err});
+								console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error.reason);
+								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 							break;
 						default:
 							deferred.resolve({"status": 200, "doc": doc});
 					}
 				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err});
+					console.log("[assessment][getAsmtbyID][getDocParams]" + err.error.reason);
+					deferred.reject({"status": 500, "error": err.error.reason});
 				});
 
 
 			}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
+				console.log("[assessment][getAsmtbyID][getRules]" + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
 			});
 
 
 		}).catch(function(err) {
-			deferred.reject({"status": 500, "error": err});
+			console.log("[assessment][getAsmtbyID]" + err.error.reason);
+			deferred.reject({"status": 500, "error": err.error.reason});
 		});
 		return deferred.promise;
 	},
@@ -1260,410 +1041,418 @@ var assessment = {
 				var peditors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 				accessrules.getRules(req,pid,db,data.body).then(function(result){
 
-				accessrules.rules = result.rules;
-				//accessrules.getRules(req,peditors);
-				var editors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
+					accessrules.rules = result.rules;
+					//accessrules.getRules(req,peditors);
+					var editors = pdoc[0].AdditionalEditors + pdoc[0].Owner + pdoc[0].Focals;
 
-				if (accessrules.rules.editor) {
-					var tmpdoc = {
-						"key": "Assessment",
-						"DocType": "Assessment",
-						"parentid": pid,
-						"ParentDocSubType": pdoc[0].DocSubType,
-						"AssessableUnitName": pdoc[0].Name,
-						"PeriodRating": "NR",
-						"MIRAStatus": "Draft",
-						"AUStatus": "Active",
-						"BusinessUnit": pdoc[0].BusinessUnit,
-						"AllEditors": pdoc[0].AllEditors,
-						"AllReaders": pdoc[0].AllReaders,
-						"Owner": pdoc[0].Owner,
-						"ExcludeGeo": pdoc[0].ExcludeGeo,
-						"BUCountryIOT": pdoc[0].BUCountryIOT,
-						"RGRollup": pdoc[0].RGRollup,
-						"MIRABusinessUnit": pdoc[0].MIRABusinessUnit,
-						"editmode": 1,
-						"RJandT2SEditable": 1,
-						"RatingEditable": 1,
-						"editor": accessrules.rules.editor,
-						"admin": accessrules.rules.admin,
-						"resetstatus": accessrules.rules.resetstatus,
-						"newunit": 1
-					};
-					doc.push(tmpdoc);
-					doc[0].CurrentPeriod = req.session.quarter;
-					doc[0].PrevQtrs = [];
-					doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
-					doc[0].EnteredBU = pdoc[0].MIRABusinessUnit;
-					// Get inherited fields from parent assessable unit
-					if (pdoc[0].OpMetricKey == undefined || pdoc[0].OpMetricKey == "") pdoc[0].OpMetricKey = "OMKID0";
-					doc[0].OpMetricKey = pdoc[0].OpMetricKey;
-					doc[0].Category = pdoc[0].Category;
-					fieldCalc.getDocParams(req, db, doc).then(function(data){
-						/* Get previous 4 quarter assessments to get historical data from:
-								- previous 4 qtrs Ratings
-								- prrevious 4 qtrs target to Status
-								- previous 4 qtrs DR & TR
-								- previous 4 qtrs unremed defects
-						*/
-						// var searchobj = {
-						// 	selector:{
-						// 		"_id": {"$gt":0},
-						// 		"key": "Assessable Unit",
-						// 		"Status": "Active",
-						// 		$or: [
-						// 			{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU IMT"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
-						// 			{$and:[{"DocSubType": "IMT"},{"IOT":doc[0].IOT}]}
-						// 		]
-						// 	}
-						// };
+					if (accessrules.rules.editor) {
+						var tmpdoc = {
+							"key": "Assessment",
+							"DocType": "Assessment",
+							"parentid": pid,
+							"ParentDocSubType": pdoc[0].DocSubType,
+							"AssessableUnitName": pdoc[0].Name,
+							"PeriodRating": "NR",
+							"MIRAStatus": "Draft",
+							"AUStatus": "Active",
+							"BusinessUnit": pdoc[0].BusinessUnit,
+							"AllEditors": pdoc[0].AllEditors,
+							"AllReaders": pdoc[0].AllReaders,
+							"Owner": pdoc[0].Owner,
+							"ExcludeGeo": pdoc[0].ExcludeGeo,
+							"BUCountryIOT": pdoc[0].BUCountryIOT,
+							"RGRollup": pdoc[0].RGRollup,
+							"MIRABusinessUnit": pdoc[0].MIRABusinessUnit,
+							"editmode": 1,
+							"RJandT2SEditable": 1,
+							"RatingEditable": 1,
+							"editor": accessrules.rules.editor,
+							"admin": accessrules.rules.admin,
+							"resetstatus": accessrules.rules.resetstatus,
+							"newunit": 1
+						};
+						doc.push(tmpdoc);
+						doc[0].CurrentPeriod = req.session.quarter;
+						doc[0].PrevQtrs = [];
+						doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
+						doc[0].EnteredBU = pdoc[0].MIRABusinessUnit;
+						// Get inherited fields from parent assessable unit
+						if (pdoc[0].OpMetricKey == undefined || pdoc[0].OpMetricKey == "") pdoc[0].OpMetricKey = "OMKID0";
+						doc[0].OpMetricKey = pdoc[0].OpMetricKey;
+						doc[0].Category = pdoc[0].Category;
+						fieldCalc.getDocParams(req, db, doc).then(function(data){
+							/* Get previous 4 quarter assessments to get historical data from:
+									- previous 4 qtrs Ratings
+									- prrevious 4 qtrs target to Status
+									- previous 4 qtrs DR & TR
+									- previous 4 qtrs unremed defects
+							*/
+							// var searchobj = {
+							// 	selector:{
+							// 		"_id": {"$gt":0},
+							// 		"key": "Assessable Unit",
+							// 		"Status": "Active",
+							// 		$or: [
+							// 			{$and:[{$or:[{"DocSubType": "BU Reporting Group"},{"DocSubType": "BU IMT"}]},{"BusinessUnit":doc[0].BusinessUnit}]},
+							// 			{$and:[{"DocSubType": "IMT"},{"IOT":doc[0].IOT}]}
+							// 		]
+							// 	}
+							// };
 
-					switch (doc[0].ParentDocSubType) {
-						case "Account":
-							doc[0].ALLData = fieldCalc.addTestViewData(7,defViewRow);
-							doc[0].ARCData = fieldCalc.addTestViewData(4,defViewRow);
-							doc[0].RiskData = fieldCalc.addTestViewData(11,defViewRow);
-							doc[0].AuditTrustedData = doc[0].RiskData;
-							doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(9,defViewRow);
-							doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
-							doc[0].DRData = fieldCalc.addTestViewData(5,1);
-							doc[0].RCTestData = fieldCalc.addTestViewData(9,defViewRow);
-							doc[0].SCTestData = doc[0].RCTestData;
-							doc[0].RCTestData = fieldCalc.addTestViewData(9,defViewRow);
-							doc[0].SampleData = doc[0].RiskData;
-							doc[0].EAData = doc[0].ARCData;
-							doc[0].AccountData = doc[0].RiskData;
+						switch (doc[0].ParentDocSubType) {
+							case "Account":
+								doc[0].ALLData = fieldCalc.addTestViewData(7,defViewRow);
+								doc[0].ARCData = fieldCalc.addTestViewData(4,defViewRow);
+								doc[0].RiskData = fieldCalc.addTestViewData(11,defViewRow);
+								doc[0].AuditTrustedData = doc[0].RiskData;
+								doc[0].AuditTrustedRCUData = fieldCalc.addTestViewData(9,defViewRow);
+								doc[0].AuditLocalData = fieldCalc.addTestViewData(8,defViewRow);
+								doc[0].DRData = fieldCalc.addTestViewData(5,1);
+								doc[0].RCTestData = fieldCalc.addTestViewData(9,defViewRow);
+								doc[0].SCTestData = doc[0].RCTestData;
+								doc[0].RCTestData = fieldCalc.addTestViewData(9,defViewRow);
+								doc[0].SampleData = doc[0].RiskData;
+								doc[0].EAData = doc[0].ARCData;
+								doc[0].AccountData = doc[0].RiskData;
 
-							if (pdoc[0].IOT != undefined) {
+								if (pdoc[0].IOT != undefined) {
+									doc[0].IOT = pdoc[0].IOT;
+								}
+								if (pdoc[0].IMT != undefined) {
+									doc[0].IMT = pdoc[0].IMT;
+								}
+								if (pdoc[0].Country != undefined) {
+									doc[0].Country = pdoc[0].Country;
+								}
+
+								doc[0].ControllableUnit = pdoc[0].ControllableUnit;
+								doc[0].Category = pdoc[0].Category;
+								doc[0].AuditProgram = pdoc[0].AuditProgram;
+								doc[0].ReportingGroupList = [];
+								var searchobj = {
+									selector:{
+										"_id": {"$gt":0},
+										"key": "Assessable Unit",
+										"Status": "Active",
+										"BusinessUnit": doc[0].BusinessUnit,
+										"DocSubType": "BU Reporting Group"
+									}
+								};
+
+								db.find(searchobj).then(function(resdata) {
+									var resdocs = resdata.body.docs;
+									for (var i = 0; i < resdocs.length; ++i) {
+										doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
+									}
+									deferred.resolve({"status": 200, "doc": doc});
+								}).catch(function(err) {
+									console.log("[assessment][newAsmtByPID][ReportingGroupList]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
+								});
+								break;
+							case "BU Reporting Group":
+								if (doc[0].EnteredBU == "GTS") {
+									doc[0].PeriodRatingSOD = "NR";
+									doc[0].PeriodRatingCRM = "NR";
+									doc[0].PPRData = fieldCalc.addTestViewData(13,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(16,defViewRow);
+									doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
+								} else {
+									doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(13,defViewRow);
+								}
+								doc[0].InternalAuditData = fieldCalc.addTestViewData(10,defViewRow);
+								doc[0].AUData = fieldCalc.addTestViewData(17,5);
+								doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
+								doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
+								doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
+								doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
+								doc[0].SCTest1Data = doc[0].RCTest1Data;
+								doc[0].SCTest2Data = doc[0].RCTest3Data;
+								doc[0].BUCAsmtDataPRview = [];
+								doc[0].BUCAsmtDataCURview = [];
+								doc[0].BUCAsmtDataPIview = [];
+								doc[0].BUCAsmtDataOIview = [];
+								fieldCalc.getAssessments(db, doc, req).then(function(data){
+									fieldCalc.getRatingProfile(doc);
+									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPRview.length == 0) {
+											doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataCURview.length == 0) {
+											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPIview.length == 0) {
+											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataOIview.length == 0) {
+											doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+										}
+									}
+									deferred.resolve({"status": 200, "doc": doc});
+								}).catch(function(err) {
+									console.log("[assessment][newAsmtByPID][getAssessments]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
+								});
+								break;
+							case "BU IOT":
 								doc[0].IOT = pdoc[0].IOT;
-							}
-							if (pdoc[0].IMT != undefined) {
+								if (doc[0].EnteredBU == "GTS") {
+									doc[0].PeriodRatingSOD = "NR";
+									doc[0].PeriodRatingCRM = "NR";
+									doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+									doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
+								} else {
+									doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(13,defViewRow);
+								}
+								doc[0].AUData = fieldCalc.addTestViewData(17,10);
+								doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
+								doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
+								doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
+								doc[0].SCTest1Data = doc[0].RCTest1Data;
+								doc[0].SCTest2Data = doc[0].RCTest3Data;
+								doc[0].BUCAsmtDataPRview = [];
+								doc[0].BUCAsmtDataCURview = [];
+								doc[0].BUCAsmtDataPIview = [];
+								doc[0].BUCAsmtDataOIview = [];
+								fieldCalc.getAssessments(db, doc, req).then(function(data){
+									fieldCalc.getRatingProfile(doc);
+									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPRview.length == 0) {
+											doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataCURview.length == 0) {
+											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPIview.length == 0) {
+											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataOIview.length == 0) {
+											doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+										}
+									}
+									deferred.resolve({"status": 200, "doc": doc});
+								}).catch(function(err) {
+									console.log("[assessment][newAsmtByPID][getAssessments]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
+								});
+								break;
+							case "BU IMT":
+								doc[0].IOT = pdoc[0].IOT;
 								doc[0].IMT = pdoc[0].IMT;
-							}
-							if (pdoc[0].Country != undefined) {
+								doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
+								if (doc[0].EnteredBU == "GTS") {
+									doc[0].PeriodRatingSOD = "NR";
+									doc[0].PeriodRatingCRM = "NR";
+									doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+									doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
+								} else {
+									doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
+								}
+								doc[0].AUData = fieldCalc.addTestViewData(17,10);
+								doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
+								doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
+								doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
+								doc[0].SCTest1Data = doc[0].RCTest1Data;
+								doc[0].SCTest2Data = doc[0].RCTest3Data;
+								doc[0].BUCAsmtDataPRview = [];
+								doc[0].BUCAsmtDataCURview = [];
+								doc[0].BUCAsmtDataPIview = [];
+								doc[0].BUCAsmtDataOIview = [];
+								fieldCalc.getAssessments(db, doc, req).then(function(data){
+									fieldCalc.getRatingProfile(doc);
+									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPRview.length == 0) {
+											doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataCURview.length == 0) {
+											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPIview.length == 0) {
+											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataOIview.length == 0) {
+											doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+										}
+									}
+									deferred.resolve({"status": 200, "doc": doc});
+								}).catch(function(err) {
+									console.log("[assessment][newAsmtByPID][getAssessments]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
+								});
+								break;
+							case "BU Country":
+								doc[0].IOT = pdoc[0].IOT;
+								doc[0].IMT = pdoc[0].IMT;
 								doc[0].Country = pdoc[0].Country;
-							}
-
-							doc[0].ControllableUnit = pdoc[0].ControllableUnit;
-							doc[0].Category = pdoc[0].Category;
-							doc[0].AuditProgram = pdoc[0].AuditProgram;
-							doc[0].ReportingGroupList = [];
-							var searchobj = {
-								selector:{
-									"_id": {"$gt":0},
-									"key": "Assessable Unit",
-									"Status": "Active",
-									"BusinessUnit": doc[0].BusinessUnit,
-									"DocSubType": "BU Reporting Group"
+								doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+								if (doc[0].EnteredBU == "GTS") {
+									doc[0].PeriodRatingSOD = "NR";
+									doc[0].PeriodRatingCRM = "NR";
+									doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+									doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
+								} else {
+									doc[0].InternalAuditData = fieldCalc.addTestViewData(8,defViewRow);
+									doc[0].PPRData = fieldCalc.addTestViewData(11,defViewRow);
+									doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
+									doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
+									doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
 								}
-							};
+								doc[0].AUData = fieldCalc.addTestViewData(17,5);
+								doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
+								doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
+								doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
+								doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
+								doc[0].SCTest1Data = doc[0].RCTest1Data;
+								doc[0].SCTest2Data = doc[0].RCTest3Data;
+								doc[0].BUCAsmtDataPRview = [];
+								doc[0].BUCAsmtDataCURview = [];
+								doc[0].BUCAsmtDataPIview = [];
+								doc[0].BUCAsmtDataOIview = [];
+								doc[0].AUDataMSAC = [];
 
-							db.find(searchobj).then(function(resdata) {
-								var resdocs = resdata.body.docs;
-								for (var i = 0; i < resdocs.length; ++i) {
-									doc[0].ReportingGroupList.push({"docid":resdocs[i]._id,"name":resdocs[i].Name});
-								}
-								deferred.resolve({"status": 200, "doc": doc});
+							comp.getCompDocs(db,doc).then(function(dataComp){
+								fieldCalc.getAssessments(db, doc, req).then(function(data){
+									fieldCalc.getRatingProfile(doc);
+									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPRview.length == 0) {
+											doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataCURview.length == 0) {
+											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataPIview.length == 0) {
+											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+										}
+									}
+									if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
+										if (doc[0].BUCAsmtDataOIview.length == 0) {
+											doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+										} else {
+											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+										}
+									}
+
+									//create a space for performance Tab
+									performanceTab.getKFCRDefectRate(db,doc);
+									performanceTab.getKCODefectRate(db,doc);
+									performanceTab.getMissedRisks(db,doc);
+									performanceTab.getMSACCommitmentsCount(db,doc);
+									performanceTab.getCPANDCUPerformanceIndicators(db,doc);
+									performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+
+
+									deferred.resolve({"status": 200, "doc": doc});
+								}).catch(function(err) {
+									console.log("[assessment][newAsmtByPID][getAssessments]" + err.error.reason);
+									deferred.reject({"status": 500, "error": err.error.reason});
+								});
+
 							}).catch(function(err) {
-								console.log("[assessableunit][AccountLists][NewAccount]" + resdata.error);
+								console.log("[assessment][newAsmtByPID][getCompDocs]" + err.error.reason);
 								deferred.reject({"status": 500, "error": err.error.reason});
 							});
-							break;
-						case "BU Reporting Group":
-							if (doc[0].EnteredBU == "GTS") {
-								doc[0].PeriodRatingSOD = "NR";
-								doc[0].PeriodRatingCRM = "NR";
-								doc[0].PPRData = fieldCalc.addTestViewData(13,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(16,defViewRow);
-								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
-							} else {
-								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(13,defViewRow);
-							}
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(10,defViewRow);
-							doc[0].AUData = fieldCalc.addTestViewData(17,5);
-							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
-							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
-							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
-							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-							doc[0].SCTest1Data = doc[0].RCTest1Data;
-							doc[0].SCTest2Data = doc[0].RCTest3Data;
-							doc[0].BUCAsmtDataPRview = [];
-							doc[0].BUCAsmtDataCURview = [];
-							doc[0].BUCAsmtDataPIview = [];
-							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc, req).then(function(data){
-								fieldCalc.getRatingProfile(doc);
-								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPRview.length == 0) {
-										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataCURview.length == 0) {
-										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPIview.length == 0) {
-										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataOIview.length == 0) {
-										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
-									}
-								}
-								deferred.resolve({"status": 200, "doc": doc});
-							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
-							});
-							break;
-						case "BU IOT":
-							doc[0].IOT = pdoc[0].IOT;
-							if (doc[0].EnteredBU == "GTS") {
-								doc[0].PeriodRatingSOD = "NR";
-								doc[0].PeriodRatingCRM = "NR";
-								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
-								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
-							} else {
-								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(13,defViewRow);
-							}
-							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
-							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
-							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-							doc[0].SCTest1Data = doc[0].RCTest1Data;
-							doc[0].SCTest2Data = doc[0].RCTest3Data;
-							doc[0].BUCAsmtDataPRview = [];
-							doc[0].BUCAsmtDataCURview = [];
-							doc[0].BUCAsmtDataPIview = [];
-							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc, req).then(function(data){
-								fieldCalc.getRatingProfile(doc);
-								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPRview.length == 0) {
-										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataCURview.length == 0) {
-										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPIview.length == 0) {
-										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataOIview.length == 0) {
-										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
-									}
-								}
-								deferred.resolve({"status": 200, "doc": doc});
-							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
-							});
-							break;
-						case "BU IMT":
-							doc[0].IOT = pdoc[0].IOT;
-							doc[0].IMT = pdoc[0].IMT;
-							doc[0].BUIOT = req.session.buname + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
-							if (doc[0].EnteredBU == "GTS") {
-								doc[0].PeriodRatingSOD = "NR";
-								doc[0].PeriodRatingCRM = "NR";
-								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
-								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
-							} else {
-								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
-							}
-							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
-							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
-							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-							doc[0].SCTest1Data = doc[0].RCTest1Data;
-							doc[0].SCTest2Data = doc[0].RCTest3Data;
-							doc[0].BUCAsmtDataPRview = [];
-							doc[0].BUCAsmtDataCURview = [];
-							doc[0].BUCAsmtDataPIview = [];
-							doc[0].BUCAsmtDataOIview = [];
-							fieldCalc.getAssessments(db, doc, req).then(function(data){
-								fieldCalc.getRatingProfile(doc);
-								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPRview.length == 0) {
-										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataCURview.length == 0) {
-										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPIview.length == 0) {
-										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataOIview.length == 0) {
-										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
-									}
-								}
-								deferred.resolve({"status": 200, "doc": doc});
-							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
-							});
-							break;
-						case "BU Country":
-							doc[0].IOT = pdoc[0].IOT;
-							doc[0].IMT = pdoc[0].IMT;
-							doc[0].Country = pdoc[0].Country;
-							doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
-							if (doc[0].EnteredBU == "GTS") {
-								doc[0].PeriodRatingSOD = "NR";
-								doc[0].PeriodRatingCRM = "NR";
-								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
-								doc[0].RiskView3Data = fieldCalc.addTestViewData(13,defViewRow);
-							} else {
-								doc[0].InternalAuditData = fieldCalc.addTestViewData(8,defViewRow);
-								doc[0].PPRData = fieldCalc.addTestViewData(11,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-								doc[0].RiskView2Data = fieldCalc.addTestViewData(11,defViewRow);
-							}
-							doc[0].AUData = fieldCalc.addTestViewData(17,5);
-							doc[0].AUData2 = fieldCalc.addTestViewData(19,5);
-							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
-							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
-							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-							doc[0].SCTest1Data = doc[0].RCTest1Data;
-							doc[0].SCTest2Data = doc[0].RCTest3Data;
-							doc[0].BUCAsmtDataPRview = [];
-							doc[0].BUCAsmtDataCURview = [];
-							doc[0].BUCAsmtDataPIview = [];
-							doc[0].BUCAsmtDataOIview = [];
-							doc[0].AUDataMSAC = [];
-
-						comp.getCompDocs(db,doc).then(function(dataComp){
-							fieldCalc.getAssessments(db, doc, req).then(function(data){
-								fieldCalc.getRatingProfile(doc);
-								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPRview.length == 0) {
-										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataCURview.length == 0) {
-										doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataPIview.length == 0) {
-										doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
-									}
-								}
-								if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
-									if (doc[0].BUCAsmtDataOIview.length == 0) {
-										doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
-									}
-								}
-
-								//create a space for performance Tab
-								performanceTab.getKFCRDefectRate(db,doc);
-								performanceTab.getKCODefectRate(db,doc);
-								performanceTab.getMissedRisks(db,doc);
-								performanceTab.getMSACCommitmentsCount(db,doc);
-								performanceTab.getCPANDCUPerformanceIndicators(db,doc);
-								performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
-
-
-								deferred.resolve({"status": 200, "doc": doc});
-							}).catch(function(err) {
-								deferred.reject({"status": 500, "error": err});
-							});
-
-						}).catch(function(err) {
-							deferred.reject({"status": 500, "error": err});
-						});
 
 
 
-							break;
+								break;
+						}
+					}).catch(function(err) {
+						console.log("[assessment][newAsmtByPID][getDocParams]" + err.error.reason);
+						deferred.reject({"status": 500, "error": err.error.reason});
+					});
+
+					} else {
+						deferred.reject({"status": 500, "error": "Access denied!"});
 					}
-				}).catch(function(err) {
-					deferred.reject({"status": 500, "error": err.error.reason});
-				});
-
-				} else {
-					deferred.reject({"status": 500, "error": "Access denied!"});
-				}
 
 				}).catch(function(err) {
+					console.log("[assessment][newAsmtByPID][getRules]" + err.error.reason);
 					deferred.reject({"status": 500, "error": err.error.reason});
 				});
 
 			}).catch(function(err) {
+				console.log("[assessment][newAsmtByPID]" + err.error.reason);
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
 		}catch(e){
-			deferred.reject({"status": 500, "error": e});
+			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
 	},
@@ -2426,7 +2215,7 @@ var assessment = {
 				});
 			}
 		}catch(e){
-			deferred.reject({"status": 500, "error": e});
+			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
 	}

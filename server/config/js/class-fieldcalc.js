@@ -153,16 +153,16 @@ var calculatefield = {
 		return cuscore;
 	},
 
-  getMIRABusinessUnit: function(doctype, doc) {
+  getCompMIRABusinessUnit: function(doc) {
 		var MIRABusinessUnit;
-		switch (doctype) {
+		switch (doc.compntType) {
       case "openIssue":
       case "sampledCountry":
 			case "controlSample":
-        if (doc[0].BUPARENT == "BSU300000027") {
+        if (doc.BUPARENT == "BSU300000027") {
           MIRABusinessUnit = "GBS";
         }
-        else if ((doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") || (doc[0].CUCategory == "GTS TRANSFORMATION" || doc[0].CUCategory == "GTS Transf. Hybrid")) {
+        else if ((doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") || (doc.CUCategory == "GTS TRANSFORMATION" || doc.CUCategory == "GTS Transf. Hybrid")) {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {
@@ -170,10 +170,10 @@ var calculatefield = {
         }
 				break;
       case "countryControls":
-        if (doc[0].BUPARENT == "BSU300000027") {
+        if (doc.BUPARENT == "BSU300000027") {
           MIRABusinessUnit = "GBS";
         }
-        else if (doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") {
+        else if (doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {
@@ -350,15 +350,19 @@ var calculatefield = {
   				}
   			  if (dataParam.parameters.GBSRollupProcessesOPS) {
   				  doc[0].KCProcessOPS = dataParam.parameters.GBSRollupProcessesOPS[0].options;
+            // doc[0].KCProcessOPSSCT = dataParam.parameters.GBSRollupProcessesOPS[0].options;
   				}
   			  if (dataParam.parameters.GBSRollupProcessesFIN) {
   				  doc[0].KCProcessFIN = dataParam.parameters.GBSRollupProcessesFIN[0].options;
+            // doc[0].KCProcessFINSCT = dataParam.parameters.GBSRollupProcessesFIN[0].options;
   				}
   			  if (dataParam.parameters.GTSRollupProcessesOPS) {
   				  doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
+            // doc[0].KCProcessOPSSCT = dataParam.parameters.GTSRollupProcessesOPS[0].options;
   				}
   			  if (dataParam.parameters.GTSRollupProcessesFIN) {
   				  doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
+            // doc[0].KCProcessFINSCT = dataParam.parameters.GTSRollupProcessesFIN[0].options;
   				}
           if (dataParam.parameters.MargThresholdPercent) {
   				  doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
@@ -382,13 +386,15 @@ var calculatefield = {
   		    deferred.reject({"status": 500, "error": err.error.reason});
   			}
     	}).catch(function(err) {
-    	  deferred.reject({"status": 500, "error": err.error.reason});
+    	  console.log("[class-fieldcalc][getDocParams][getListParams] - " + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
     	});
     }catch(e){
-    	deferred.reject({"status": 500, "error": e});
+			console.log("[class-fieldcalc][getDocParams] - " + e.stack);
+    	deferred.reject({"status": 500, "error": e.stack});
     }
     return deferred.promise;
-    },
+	},
 
 	getCurrentAsmt: function(db, doc) {
     var deferred = q.defer();
@@ -409,14 +415,14 @@ var calculatefield = {
       db.find(asmt).then(function(asmtdata) {
         deferred.resolve({"status": 200, "doc": asmtdata.body.docs[0]});
       }).catch(function(err) {
-        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error.reason);
         deferred.reject({"status": 500, "error": err.error.reason});
       });
 
     } catch(e) {
 
-      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-			deferred.reject({"status": 500, "error": e});
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 
 		}
 
@@ -597,7 +603,7 @@ var calculatefield = {
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {
-              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
               deferred.reject({"status": 500, "error": err.error.reason});
             });
             break;
@@ -749,7 +755,7 @@ var calculatefield = {
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {
-              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
               deferred.reject({"status": 500, "error": err.error.reason});
             });
             break;
@@ -771,12 +777,12 @@ var calculatefield = {
             deferred.resolve({"status": 200, "doc": doc});
         }
       }).catch(function(err) {
-        console.log("[class-fieldcalc][getAssessments] - " + err.error);
+        console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
         deferred.reject({"status": 500, "error": err.error.reason});
       });
     } catch(e) {
-      console.log("[class-fieldcalc][getAssessments] - " + err.error);
-			deferred.reject({"status": 500, "error": e});
+      console.log("[class-fieldcalc][getAssessments] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
 	},
@@ -1419,7 +1425,7 @@ var calculatefield = {
 
 
             }catch(e){
-            	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + err.error);
+            	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
 
             }
               break;
@@ -1822,7 +1828,7 @@ var calculatefield = {
 
       }
     } catch(e) {
-      console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
+      console.log("[class-fieldcalc][getRatingProfile] - " + e.stack);
     }
 	},
 
@@ -1860,7 +1866,7 @@ var calculatefield = {
 				deferred.reject({"status": 500, "error": audata.error});
 			  }
 			}).catch(function(err) {
-			  console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+			  console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error.reason);
 			  deferred.reject({"status": 500, "error": err.error.reason});
 			});
 		  }
@@ -1868,10 +1874,10 @@ var calculatefield = {
 		}
 		catch(e) {
 
-		  console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-				deferred.reject({"status": 500, "error": e.stack});
+			console.log("[class-fieldcalc][getCurrentAsmt] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 
-			}
+		}
 		return deferred.promise;
 	},
 
@@ -1892,12 +1898,12 @@ var calculatefield = {
   		db.find(accounts).then(function(actdata) {
   			deferred.resolve({"status": 200, "doc": actdata.body.docs});
   		}).catch(function(err) {
-  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error.reason);
   			deferred.reject({"status": 500, "error": err.error.reason});
   		});
   	} catch(e) {
-  		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
-  		deferred.reject({"status": 500, "error": e});
+  		console.log("[class-fieldcalc][getAccountsCU] - " + e.stack);
+  		deferred.reject({"status": 500, "error": e.stack});
   	}
   		return deferred.promise;
   },
