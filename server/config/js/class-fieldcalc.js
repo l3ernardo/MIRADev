@@ -153,16 +153,16 @@ var calculatefield = {
 		return cuscore;
 	},
 
-  getMIRABusinessUnit: function(doctype, doc) {
+  getCompMIRABusinessUnit: function(doc) {
 		var MIRABusinessUnit;
-		switch (doctype) {
+		switch (doc.compntType) {
       case "openIssue":
       case "sampledCountry":
 			case "controlSample":
-        if (doc[0].BUPARENT == "BSU300000027") {
+        if (doc.BUPARENT == "BSU300000027") {
           MIRABusinessUnit = "GBS";
         }
-        else if ((doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") || (doc[0].CUCategory == "GTS TRANSFORMATION" || doc[0].CUCategory == "GTS Transf. Hybrid")) {
+        else if ((doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") || (doc.CUCategory == "GTS TRANSFORMATION" || doc.CUCategory == "GTS Transf. Hybrid")) {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {
@@ -170,10 +170,10 @@ var calculatefield = {
         }
 				break;
       case "countryControls":
-        if (doc[0].BUPARENT == "BSU300000027") {
+        if (doc.BUPARENT == "BSU300000027") {
           MIRABusinessUnit = "GBS";
         }
-        else if (doc[0].BUPARENT == "BSU300000028" && doc[0].GPPARENT == "GPC100000114") {
+        else if (doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") {
           MIRABusinessUnit = "GTS Transformation";
         }
         else {
@@ -245,7 +245,7 @@ var calculatefield = {
   				} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
   					doc[0].CatP = "";
   					lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-  				} else if (doc[0].DocSubType == "BU Country") {
+  				} else if (doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT") {
     				lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
     			} else {
   					lParams = ['GTSInstanceDesign'];
@@ -267,7 +267,7 @@ var calculatefield = {
 					} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-					} else if (doc[0].ParentDocSubType == "BU Country") {
+					} else if (doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT") {
     				lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
     			} else {
 						lParams = ['GTSInstanceDesign'];
@@ -350,15 +350,19 @@ var calculatefield = {
   				}
   			  if (dataParam.parameters.GBSRollupProcessesOPS) {
   				  doc[0].KCProcessOPS = dataParam.parameters.GBSRollupProcessesOPS[0].options;
+            // doc[0].KCProcessOPSSCT = dataParam.parameters.GBSRollupProcessesOPS[0].options;
   				}
   			  if (dataParam.parameters.GBSRollupProcessesFIN) {
   				  doc[0].KCProcessFIN = dataParam.parameters.GBSRollupProcessesFIN[0].options;
+            // doc[0].KCProcessFINSCT = dataParam.parameters.GBSRollupProcessesFIN[0].options;
   				}
   			  if (dataParam.parameters.GTSRollupProcessesOPS) {
   				  doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
+            // doc[0].KCProcessOPSSCT = dataParam.parameters.GTSRollupProcessesOPS[0].options;
   				}
   			  if (dataParam.parameters.GTSRollupProcessesFIN) {
   				  doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
+            // doc[0].KCProcessFINSCT = dataParam.parameters.GTSRollupProcessesFIN[0].options;
   				}
           if (dataParam.parameters.MargThresholdPercent) {
   				  doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
@@ -382,13 +386,15 @@ var calculatefield = {
   		    deferred.reject({"status": 500, "error": err.error.reason});
   			}
     	}).catch(function(err) {
-    	  deferred.reject({"status": 500, "error": err.error.reason});
+    	  console.log("[class-fieldcalc][getDocParams][getListParams] - " + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
     	});
     }catch(e){
-    	deferred.reject({"status": 500, "error": e});
+			console.log("[class-fieldcalc][getDocParams] - " + e.stack);
+    	deferred.reject({"status": 500, "error": e.stack});
     }
     return deferred.promise;
-    },
+	},
 
 	getCurrentAsmt: function(db, doc) {
     var deferred = q.defer();
@@ -409,14 +415,14 @@ var calculatefield = {
       db.find(asmt).then(function(asmtdata) {
         deferred.resolve({"status": 200, "doc": asmtdata.body.docs[0]});
       }).catch(function(err) {
-        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error.reason);
         deferred.reject({"status": 500, "error": err.error.reason});
       });
 
     } catch(e) {
 
-      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-			deferred.reject({"status": 500, "error": e});
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 
 		}
 
@@ -446,8 +452,8 @@ var calculatefield = {
                 "_id": {"$gt":0},
 				        "BusinessUnit": doc[0].BusinessUnit,
                 "$or": [
-                  //Getting all country process assessment
-                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
+                  //Getting all country process and controllable unit assessment
+                  {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": {"$in":["Country Process", "Controllable Unit"]}},{"CurrentPeriod": doc[0].CurrentPeriod},{"Country": doc[0].Country} ]},
                   //Getting all controllable units assessable units
                   {"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"parentid":doc[0].parentid} ]},
                   //Getting all Country Process assessable units
@@ -459,14 +465,17 @@ var calculatefield = {
           var asmts = {
             selector:{
               "_id": {"$gt":0},
-              "key": "Assessment",
-              "AUStatus": "Active",
-              "ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU Country","BU IMT"]},
+              "key": "Assessable Unit",
               "BusinessUnit": doc[0].BusinessUnit,
               "CurrentPeriod": req.session.quarter,
-              "IMT": doc[0].IMT
-            }
-          };
+              "Status": "Active",
+              "$or":
+               [{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
+                {"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
+                //{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
+
+              ]//or
+          }};
           break;
         case "BU IOT":
           var asmts = {
@@ -540,8 +549,67 @@ var calculatefield = {
       db.find(asmts).then(function(asmtsdata) {
         // Populate View Data
         switch (doc[0].ParentDocSubType) {
+          case "BU IMT":
+            doc[0].AUDocs = asmtsdata.body.docs;
+            doc[0].AUDocsObj = {};
+            var AUAuditables = {};
+            var $or = [];
+            for(var i = 0; i < doc[0].AUDocs.length; i++){
+              $or.push({parentid: doc[0].AUDocs[i]["_id"]});
+              doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+              if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
+                AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+              }
+              /*if (doc[0].MIRABusinessUnit == "GTS") {
+                if(doc[0].CRMCUObj[asmtsdocs[i].Category]){
+                  CUCRMables[asmtsdocs[i]["_id"]] = true;
+                }else if(doc[0].DeliveryCUObj[asmtsdocs[i].Category]){
+                  CUCRMables[asmtsdocs[i]["_id"]] = false;
+                }else{
+                  CUassunits.pop();
+                  //console.log("CU category not found: "+ asmtsdocs[i].Category);
+                }
+              }*/
+            }
+            //$or.push(doc[0]["_id"]);
+            var tmpQuery = {
+              selector : {
+                "_id": {"$gt":0},
+                "key": "Assessment",
+                "AUStatus": "Active",
+                "ParentDocSubType":{"$in":["BU Country","Controllable Unit","Country Process"]},
+                "CurrentPeriod": doc[0].CurrentPeriod,
+                $or
+              }
+            };
+            db.find(tmpQuery).then(function(asmts) {
+              doc[0].asmtsdocs = asmts.body.docs;
+              doc[0].asmtsdocsObj = {};
+              for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+                doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
+                /*//check for CP Process at GTS
+                if (doc[0].MIRABusinessUnit == "GTS") {
+                  if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
+                    asmtsdocs[i].catP = "CRM";
+                    doc[0].asmtsdocsCRM.push(asmtsdocs[i])
+                  }else if(doc[0].DeliveryProcessObj[asmtsdocs[i].GPWWBCITKey]){
+                    asmtsdocs[i].catP = "Delivery";
+                    doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
+                  }else {
+                    console.log("GP not found: "+ asmtsdocs[i].GPWWBCITKey);
+                  }
+                }*/
+
+              }
+              deferred.resolve({"status": 200, "doc": doc});
+            }).catch(function(err) {
+              console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
+              deferred.reject({"status": 500, "error": err.error.reason});
+            });
+            break;
           case "BU Country":
             doc[0].asmtsdocs = [];
+            doc[0].auditableAUIds = [];
             var asmtsdocs = asmtsdata.body.docs;
             var CUassunits = [];
             var CUauditables = {};
@@ -616,6 +684,7 @@ var calculatefield = {
                 if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                   CUassunits.push(asmtsdocs[i]);
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
+                    doc[0].auditableAUIds.push(asmtsdocs[i]._id);
                     CUauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                   }
         				  if (doc[0].MIRABusinessUnit == "GTS") {
@@ -631,6 +700,7 @@ var calculatefield = {
                 }
 				        else{
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
+                    doc[0].auditableAUIds.push(asmtsdocs[i]._id);
                     CPauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                   }
                 }
@@ -688,7 +758,7 @@ var calculatefield = {
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {
-              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
               deferred.reject({"status": 500, "error": err.error.reason});
             });
             break;
@@ -710,12 +780,12 @@ var calculatefield = {
             deferred.resolve({"status": 200, "doc": doc});
         }
       }).catch(function(err) {
-        console.log("[class-fieldcalc][getAssessments] - " + err.error);
+        console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
         deferred.reject({"status": 500, "error": err.error.reason});
       });
     } catch(e) {
-      console.log("[class-fieldcalc][getAssessments] - " + err.error);
-			deferred.reject({"status": 500, "error": e});
+      console.log("[class-fieldcalc][getAssessments] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
 	},
@@ -1147,6 +1217,7 @@ var calculatefield = {
               "docid":doc[0].asmtsdocs[i]._id,
               "name":doc[0].asmtsdocs[i].AssessableUnitName,
               "country":doc[0].asmtsdocs[i].Country,
+              "catP":doc[0].asmtsdocs[i].catP,
               "imt":doc[0].asmtsdocs[i].IMT,
               "size":doc[0].asmtsdocs[i].CUSize,
               "maxscore":doc[0].asmtsdocs[i].CUMaxScore,
@@ -1357,7 +1428,7 @@ var calculatefield = {
 
 
             }catch(e){
-            	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + err.error);
+            	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
 
             }
               break;
@@ -1760,7 +1831,7 @@ var calculatefield = {
 
       }
     } catch(e) {
-      console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
+      console.log("[class-fieldcalc][getRatingProfile] - " + e.stack);
     }
 	},
 
@@ -1798,7 +1869,7 @@ var calculatefield = {
 				deferred.reject({"status": 500, "error": audata.error});
 			  }
 			}).catch(function(err) {
-			  console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+			  console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error.reason);
 			  deferred.reject({"status": 500, "error": err.error.reason});
 			});
 		  }
@@ -1806,10 +1877,10 @@ var calculatefield = {
 		}
 		catch(e) {
 
-		  console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-				deferred.reject({"status": 500, "error": e.stack});
+			console.log("[class-fieldcalc][getCurrentAsmt] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 
-			}
+		}
 		return deferred.promise;
 	},
 
@@ -1830,12 +1901,12 @@ var calculatefield = {
   		db.find(accounts).then(function(actdata) {
   			deferred.resolve({"status": 200, "doc": actdata.body.docs});
   		}).catch(function(err) {
-  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error.reason);
   			deferred.reject({"status": 500, "error": err.error.reason});
   		});
   	} catch(e) {
-  		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
-  		deferred.reject({"status": 500, "error": e});
+  		console.log("[class-fieldcalc][getAccountsCU] - " + e.stack);
+  		deferred.reject({"status": 500, "error": e.stack});
   	}
   		return deferred.promise;
   },

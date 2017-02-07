@@ -151,6 +151,7 @@ var getDocs = {
         case "BU IOT":
           break;
         case "BU IMT":
+          deferred.resolve({"status": 200, "doc": doc});
           break;
         case "Account":
           var compObj = {
@@ -279,9 +280,9 @@ var getDocs = {
           });
           break;
         case "BU Country":
-		//Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
+		      //Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
           var $or = [];
-
+          // For CHQ Internal Audits - Local
           for(var i = 0; i < doc[0].AUData.length; i++){
             $or.push({parentid: doc[0].AUData[i]["_id"]});
           }
@@ -298,13 +299,16 @@ var getDocs = {
                 // Sampled Country Testing tab
                 { "$and": [{"compntType": "sampledCountry"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "sampledCountry"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+                // Sampled Country Testing tab and reporting country testing tab
                 { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
-                // Key Controls Testing Tab
-                // {"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod}]},
-                {"$and": [{"compntType": "countryControls"}, {"ParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
 				        // Audits and Reviews Tab
-                { "$and": [{"compntType": "internalAudit"}, {$or}] }
+                // For CHQ Internal Audits - from Audit DB
+                { "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
+                // For proactive reviews (PPR)
+                { "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}] },
+                // For Local Audits
+                { "$and": [{"compntType": "localAudit"}, {$or}] }
               ]
             }
           };
@@ -320,6 +324,7 @@ var getDocs = {
 			      // For BU Country Audits & Reviews Tab
             doc[0].InternalAuditData = [];
             doc[0].PPRData = [];
+            doc[0].OtherAuditsData = [];
             // For Sampled Country Testing Tab
             doc[0].SCTest1Data = [];
             doc[0].SCTestDataPQ1 = [];
@@ -331,6 +336,7 @@ var getDocs = {
             doc[0].SCTest2DataPQ2 = [];
             doc[0].SCTest2DataPQ3 = [];
             doc[0].SCTest2DataPQ4 = [];
+            // doc[0].TRExceptionControls = [];
 
             if (doc[0].MIRABusinessUnit == "GTS") {
               doc[0].RiskView1DataCRM = [];
@@ -340,29 +346,32 @@ var getDocs = {
             }
             for(var i = 0; i < comps.length; i++) {
               if (comps[i].compntType == "openIssue") {
+                comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
-                doc[0].RiskView1Data.push(comps[i]);
-                if(comps[i].reportingQuarter == doc[0].CurrentPeriod ){
+                if(comps[i].reportingQuarter == doc[0].CurrentPeriod && doc[0].MIRABusinessUnit == comps[i].MIRABusinessUnit){
+                  doc[0].RiskView1Data.push(comps[i]);
                   doc[0].RiskView2Data.push(comps[i]);
-                }
-                if (doc[0].MIRABusinessUnit == "GTS") {
-                  comps[i].catP = "(uncategorized)";
-                  if(doc[0].CRMProcessObj[comps[i].GPPARENT]){
-                    comps[i].catP = "CRM/Other";
-                    doc[0].RiskView1DataCRM.push(comps[i]);
-                  }/*else{
-                    comps[i].catP = "Delivery";
-                    doc[0].RiskView1DataDelivery.push(comps[i]);}*/
-                  else if(doc[0].DeliveryProcessObj[comps[i].GPPARENT]){
-                    comps[i].catP = "Delivery";
-                    doc[0].RiskView1DataDelivery.push(comps[i])}
-                  else console.log("Process not found: "+comps[i].GPPARENT);
+                  if (doc[0].MIRABusinessUnit == "GTS") {
+                    comps[i].catP = "(uncategorized)";
+                    if(doc[0].CRMProcessObj[comps[i].GPPARENT]){
+                      comps[i].catP = "CRM/Other";
+                      doc[0].RiskView1DataCRM.push(comps[i]);
+                    }/*else{
+                      comps[i].catP = "Delivery";
+                      doc[0].RiskView1DataDelivery.push(comps[i]);}*/
+                    else if(doc[0].DeliveryProcessObj[comps[i].GPPARENT]){
+                      comps[i].catP = "Delivery";
+                      doc[0].RiskView1DataDelivery.push(comps[i])}
+                    else console.log("Process not found: "+comps[i].GPPARENT);
+                  }
                 }
               }
               else if (comps[i].compntType == "countryControls"){
                 comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-                comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+                comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                 doc[0].RCTest2Data.push(comps[i]);
+                // this is dummy content only while waiting for correct data so that Irving can help work on the treeables
+                // doc[0].TRExceptionControls.push(comps[i]);
                 if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                	  doc[0].CountryControlsData.push(comps[i]);
 		              if (doc[0].MIRABusinessUnit == "GTS") {
@@ -374,10 +383,6 @@ var getDocs = {
               else if (comps[i].docType == "setup"){
                	  doc[0].riskCategories = comps[i].value.options;
               }
-              // Key Controls Testing Tab
-              // else if (comps[i].docType == "Assessment") {
-              //   doc[0].RCTest3Data.push(comps[i]);
-              // }
               else if (comps[i].compntType == "controlSample") {
                 // For Key Controls Testing Tab
                 if (comps[i].reportingCountry == doc[0].Country) {
@@ -387,7 +392,7 @@ var getDocs = {
                 if (comps[i].sampleCountry == doc[0].Country) {
                   // calculate Control Name
                   comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-                  comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+                  comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 
                   if (doc[0].MIRABusinessUnit == "GBS") {
                     if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
@@ -436,7 +441,7 @@ var getDocs = {
               }
               // For Sampled Country Testing Tab
               else if (comps[i].compntType == "sampledCountry"){
-                comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit(comps[i].compntType,doc);
+                comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                 if (doc[0].MIRABusinessUnit == "GBS") {
                   if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                     doc[0].SCTest1Data.push(comps[i]);
@@ -451,7 +456,7 @@ var getDocs = {
                   } else {}
                 }
                 else if (doc[0].MIRABusinessUnit == "GTS") {
-				          comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
+				          comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                   if (comps[i].MIRABusinessUnit == "GTS") {
                     if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                       doc[0].SCTest1Data.push(comps[i]);
@@ -467,7 +472,7 @@ var getDocs = {
                   }
                 }
                 else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
-					          comps[i].MIRABusinessUnit = fieldCalc.getMIRABusinessUnit("sampledCountry",doc);
+					          comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                     if (comps[i].MIRABusinessUnit == "GTS Transformation") {
                       if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
                         doc[0].SCTest1Data.push(comps[i]);
@@ -482,21 +487,30 @@ var getDocs = {
                       } else {}
                     }
                 }
-				else {}
               }
-				else if (comps[i].compntType == "internalAudit") {
+				      else if (comps[i].compntType == "internalAudit") {
                 if (typeof comps[i].engagement === "undefined") {
                   comps[i].engagement = comps[i].id;
                 }
+                if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
+                  comps[i].plannedStartDate = comps[i].ClosedDate;
+                  // comps[i].plannedStartDate = comps[i].ClosedDate.substr(0, 4) + "-" + comps[i].ClosedDate.substr(4, 2) + "-" + comps[i].ClosedDate.substr(6, 2);
+                }
                 doc[0].InternalAuditData.push(comps[i]);
               }
-			  // For Audits and Reviews Tab - view 2 (Proactive Reviews)
+              // For Audits and Reviews Tab - view 2 (Proactive Reviews)
               else if (comps[i].compntType == "PPR") {
                 doc[0].PPRData.push(comps[i]);
               }
-              // For Sampled Country Testing Tab
-
+              // For Local Audits
+              else if (comps[i].compntType == "localAudit") {
+                if (comps[i].auditOrReview == "CHQ Internal Audit") {
+                  doc[0].InternalAuditData.push(comps[i]);
+                }
+                doc[0].OtherAuditsData.push(comps[i]);
+              }
             }
+            // console.log("PPRData: " + doc[0].PPRData.length);
             deferred.resolve({"status": 200, "doc": doc});
 
 

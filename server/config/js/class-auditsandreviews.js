@@ -268,22 +268,19 @@ var calculateARTab = {
           // End sort
           var auditInter = doc[0].InternalAuditData;
           var parentAsmts = doc[0].AUData;
-          console.log("Asmts in AU Data: "+parentAsmts.length);
           var exportInternalAuditData = [];
-          var totalCUScore = 0;
-          var totalMaxScore = 0;
-          console.log("InternalAuditData number of elements: "+auditInter.length);
+          var totalCUScore = "";
+          var totalMaxScore = "";
           for(var i = 0; i < auditInter.length; i++) {
             var tmp = {};
             tmp.id = auditInter[i]._id;
             tmp.plannedStartDate = auditInter[i].plannedStartDate;
             tmp.engagement = auditInter[i].engagement; //To be changed from "id" to "engagement" in the near future
             for(var j = 0; j < parentAsmts.length; j++) {
-              if (auditInter[i].parentid == parentAsmts[j].id) {
-                console.log("Internal Audit Parent ID "+auditInter[i].parentid+" is equal to parent Asmts ID "+parentAsmts[j].id);
+              if (auditInter[i].parentid == parentAsmts[j].id || auditInter[i].parentid == parentAsmts[j].parentid) {
+              // if (auditInter[i].parentid == parentAsmts[j].id) {
                 var parentAU = doc[0].AUDocs[parentAsmts[j].parentid];
                 tmp.Name = parentAU.Name;
-                console.log("Name: "+tmp.Name);
                 if(parentAU.DocSubType == "Controllable Unit" && parentAU.Portfolio == "Yes") {
                   tmp.DocSubType = "Portfolio CU";
                 }
@@ -293,36 +290,35 @@ var calculateARTab = {
                 else {
                   tmp.DocSubType = parentAU.DocSubType;
                 }
-                console.log("DocSubType: "+tmp.DocSubType);
                 tmp.PeriodRatingPrev = parentAU.PeriodRatingPrev;
-                console.log("PeriodRatingPrev: "+tmp.PeriodRatingPrev);
                 tmp.PeriodRating = parentAsmts[j].PeriodRating;
-                console.log("PeriodRating: "+tmp.PeriodRating);
-                tmp.CUSize = parentAU.CUSize;
-                console.log("CUSize: "+tmp.CUSize);
-                tmp.CUScore = parentAsmts[j].CUScore;
-                console.log("CUScore: "+tmp.CUScore);
-                tmp.CUMaxScore = parentAsmts[j].CUMaxScore;
-                console.log("CUMaxScore: "+tmp.CUMaxScore);
+                // tmp.CUSize = parentAU.CUSize;
+                // tmp.CUScore = parentAsmts[j].CUScore;
+                // tmp.CUMaxScore = parentAsmts[j].CUMaxScore;
+                if (auditInter[i].CUSize == undefined || auditInter[i].CUSize == "") {
+                  tmp.CUSize = parentAU.CUSize;
+                } else {
+                  tmp.CUSize = auditInter[i].CUSize;
+                }
+                tmp.CUMaxScore = fieldCalc.getCUMaxScore(tmp.CUSize);
+                tmp.CUScore = fieldCalc.getCUScore(tmp.PeriodRating,tmp.CUMaxScore);
               }
             }
             //Calculate total scores (CU and MAX) for later WeightedAuditScore calculation
-            totalCUScore += tmp.CUScore;
-            console.log("Total CU Score: "+totalCUScore);
-            totalMaxScore += tmp.CUMaxScore;
-            console.log("Total MAX Score: "+totalMaxScore);
+            if (!isNaN(tmp.CUScore)) totalCUScore += tmp.CUScore;
+            if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
             //Export each internal audit as temporal data
             exportInternalAuditData.push(tmp);
           }
           //Calculate WeightedAuditScore
           var weightedScore = 0;
-          if(totalMaxScore == 0) {
-            weightedScore = "No MAX Score available!"
+          if(totalMaxScore == 0 || totalMaxScore == "" || totalCUScore == "") {
+            // weightedScore = "No MAX Score available!"
+            weightedScore = ""
           }
           else {
             weightedScore = ((totalCUScore/totalMaxScore)*100).toFixed(1);
           }
-          console.log("WeightedAuditScore: "+weightedScore);
 
           //Export Internal Audit data and the Weighted Score to the Handlebars view
           doc[0].exportInternalAuditData = exportInternalAuditData;

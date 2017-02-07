@@ -21,20 +21,13 @@
   				{{#each exportInternalAuditData}}
   					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
               <td width="10%">{{plannedStartDate}}</td>
-              <td width="8%">{{engagement}}</td>
-              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{Name}}</a></td>
+              <td width="8%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{engagement}}</a></td>
+              <td width="40%">{{Name}}</td>
               <td width="20%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               {{{ratingDisplayView PeriodRating 5}}}
               <td width="7%">{{CUSize}}</td>
               <td width="5%">{{CUScore}}</td>
-  						<!--{{#each col}}
-  							{{#if @first}}
-  								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
-  							{{else}}
-  								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-  							{{/if}}
-  						{{/each}}-->
   					</tr>
   				{{/each}}
           <tr class="audit-review-viewheader-ar">
@@ -70,7 +63,7 @@
   					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
   						<!--{{#each col}}
   							{{#if @first}}
-  								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+  								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
   							{{else}}
   								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
   							{{/if}}
@@ -105,7 +98,7 @@
   					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
   						<!--{{#each col}}
   							{{#if @first}}
-  								<td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+  								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
   							{{else}}
   								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
   							{{/if}}
@@ -153,7 +146,7 @@
             <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
               <td width="10%">{{plannedStartDate}}</td>
               <td width="8%">{{engagement}}</td>
-              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{Name}}</a></td>
+              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
               <td width="20%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               {{{ratingDisplayView PeriodRating 5}}}
@@ -161,7 +154,7 @@
               <td width="5%">{{CUScore}}</td>
               <!--{{#each col}}
                 {{#if @first}}
-                  <td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
                 {{else}}
                   <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
                 {{/if}}
@@ -201,7 +194,7 @@
             <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
               <!--{{#each col}}
                 {{#if @first}}
-                  <td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
                 {{else}}
                   <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
                 {{/if}}
@@ -236,7 +229,7 @@
             <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
               <!--{{#each col}}
                 {{#if @first}}
-                  <td><a href="/audittrusted?id={{../docid}}">{{this}}</a></td>
+                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
                 {{else}}
                   <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
                 {{/if}}

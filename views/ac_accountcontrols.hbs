@@ -44,7 +44,7 @@
 	</tr>
 	<tr>
 	  <td>Event date:</td><td>
-	    <input type="text" id="eventDate" name="eventDate" value="{{eventDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+	    <input type="text" id="eventDate" name="eventDate" value="{{eventDate}}" class="ibm-calendar-link">
 	  </td>
 	</tr>
 	</table>
@@ -243,7 +243,7 @@ $('#btn_save').click(function(evt) {
   $("#asmtcomponentform").submit();
 });
 $('#btn_cancel').click(function() {
-  window.location.href = "/assessment?id="+$('#parentid').val();
+  window.close();
 });
 });
 </script>

@@ -22,8 +22,7 @@
 							</td>
 							<td class="content-data">
 								<span id="colARALLTarget2Sat">
-									<input type="date" name="ARALLTarget2Sat" id="ARALLTarget2Sat" value="{{ARALLTarget2Sat}}" size="10">
-									<span for="ARALLTarget2Sat" class="ibm-calendar-link"></span>
+									<input type="date" name="ARALLTarget2Sat" id="ARALLTarget2Sat" value="{{ARALLTarget2Sat}}" size="10" class="ibm-calendar-link">
 								</span>
 							</td>
 							<td class="content-data">
@@ -58,7 +57,7 @@
 						<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
 
 							<td style="background-color: white !important;" style="width:25%;white-space:nowrap;">{{name}}</td>
-							<td style="background-color: white !important;" style="width:10%;white-space:nowrap;">{{#if _id}}<a href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
+							<td style="background-color: white !important;" style="width:10%;white-space:nowrap;">{{#if _id}}<a target="_blank" href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
 							<td style="background-color: white !important;" style="width:35%;">{{summary}}</td>
 							<td style="background-color: white !important;" style="width:10%;">{{observationCategory}}</td>
 							<td style="background-color: white !important;" style="width:10%;">{{process}}</td>
@@ -71,7 +70,7 @@
 						<tr class="asmt-viewdata">
 							{{#each col}}
 								{{#if @first}}
-									<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+									<td><a target="_blank" href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
 								{{else}}
 									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
 								{{/if}}
@@ -123,7 +122,7 @@
 							<tr class="asmt-viewdata">
 								{{#each col}}
 									{{#if @first}}
-										<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+										<td><a target="_blank" href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
 									{{else}}
 										<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
 									{{/if}}
