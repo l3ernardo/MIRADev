@@ -558,7 +558,7 @@ var calculatefield = {
               $or.push({parentid: doc[0].AUDocs[i]["_id"]});
               doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
               if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
-                AUAuditables[asmtsdocs[i]["_id"]] = doc[0].AUDocs[i];
+                AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
               }
               /*if (doc[0].MIRABusinessUnit == "GTS") {
                 if(doc[0].CRMCUObj[asmtsdocs[i].Category]){
