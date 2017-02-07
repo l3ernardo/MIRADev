@@ -15,6 +15,15 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="3%">Type</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">Status</th>
+					{{#if_equal ParentDocSubType "Country Process"}}
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Issue Target Date (Orig)</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Issue Target Date (Current)</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="6%"># Tasks</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="6%"># Open Tasks</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="6%"># Overdue Tasks</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="4%">Missed</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="35%">Risk Abstract</th>
+					{{else}}
 					<th class="risk-msdcommit-viewheader" scope="col" width="20%">Process</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Issue Target Date (Orig)</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="10%">Issue Target Date (Current)</th>
@@ -23,6 +32,7 @@
 					<th class="risk-msdcommit-viewheader" scope="col" width="6%"># Overdue Tasks</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="4%">Missed</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Risk Abstract</th>
+					{{/if_equal}}
 				</thead>
 
 				<tbody>
@@ -32,6 +42,15 @@
 						<td width="3%" >{{#unless parent}}{{name}}{{/unless}}</td>
 						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a>{{/if}}</td>
 						<td width="8%">{{status}}</td>
+						{{#if_equal ../ParentDocSubType "Country Process"}}
+						<td width="10%">{{originalTargetDate}}</td>
+						<td width="10%">{{currentTargetDate}}</td>
+						<td width="6%">{{numTasks}}</td>
+						<td width="6%">{{numTasksOpen}}</td>
+						<td width="6%">{{numMissedTasks}}</td>
+						<td width="4%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
+						<td width="35%">{{riskAbstract}}</td>
+						{{else}}
 						<td width="20%">{{process}}</td>
 						<td width="10%">{{originalTargetDate}}</td>
 						<td width="10%">{{currentTargetDate}}</td>
@@ -40,6 +59,7 @@
 						<td width="6%">{{numMissedTasks}}</td>
 						<td width="4%">{{#if missedFlag}}<a class="ibm-error-link"></a>{{/if}}</td>
 						<td width="15%">{{riskAbstract}}</td>
+						{{/if_equal}}
 					</tr>
 				{{/each}}
 				</tbody>

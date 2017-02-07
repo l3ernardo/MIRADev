@@ -386,13 +386,15 @@ var calculatefield = {
   		    deferred.reject({"status": 500, "error": err.error.reason});
   			}
     	}).catch(function(err) {
-    	  deferred.reject({"status": 500, "error": err.error.reason});
+    	  console.log("[class-fieldcalc][getDocParams][getListParams] - " + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
     	});
     }catch(e){
-    	deferred.reject({"status": 500, "error": e});
+			console.log("[class-fieldcalc][getDocParams] - " + e.stack);
+    	deferred.reject({"status": 500, "error": e.stack});
     }
     return deferred.promise;
-    },
+	},
 
 	getCurrentAsmt: function(db, doc) {
     var deferred = q.defer();
@@ -413,14 +415,14 @@ var calculatefield = {
       db.find(asmt).then(function(asmtdata) {
         deferred.resolve({"status": 200, "doc": asmtdata.body.docs[0]});
       }).catch(function(err) {
-        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
+        console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error.reason);
         deferred.reject({"status": 500, "error": err.error.reason});
       });
 
     } catch(e) {
 
-      console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-			deferred.reject({"status": 500, "error": e});
+      console.log("[class-fieldcalc][getCurrentAsmt] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 
 		}
 
@@ -601,7 +603,7 @@ var calculatefield = {
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {
-              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
               deferred.reject({"status": 500, "error": err.error.reason});
             });
             break;
@@ -753,7 +755,7 @@ var calculatefield = {
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {
-              console.log("[class-fieldcalc][getAssessments] - " + err.error);
+              console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
               deferred.reject({"status": 500, "error": err.error.reason});
             });
             break;
@@ -775,12 +777,12 @@ var calculatefield = {
             deferred.resolve({"status": 200, "doc": doc});
         }
       }).catch(function(err) {
-        console.log("[class-fieldcalc][getAssessments] - " + err.error);
+        console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
         deferred.reject({"status": 500, "error": err.error.reason});
       });
     } catch(e) {
-      console.log("[class-fieldcalc][getAssessments] - " + err.error);
-			deferred.reject({"status": 500, "error": e});
+      console.log("[class-fieldcalc][getAssessments] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
 	},
@@ -1423,7 +1425,7 @@ var calculatefield = {
 
 
             }catch(e){
-            	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + err.error);
+            	 console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
 
             }
               break;
@@ -1826,7 +1828,7 @@ var calculatefield = {
 
       }
     } catch(e) {
-      console.log("[class-fieldcalc][getRatingProfile] - " + err.error);
+      console.log("[class-fieldcalc][getRatingProfile] - " + e.stack);
     }
 	},
 
@@ -1864,7 +1866,7 @@ var calculatefield = {
 				deferred.reject({"status": 500, "error": audata.error});
 			  }
 			}).catch(function(err) {
-			  console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error);
+			  console.log("[class-fieldcalc][getAccountInheritedFields] - " + err.error.reason);
 			  deferred.reject({"status": 500, "error": err.error.reason});
 			});
 		  }
@@ -1872,10 +1874,10 @@ var calculatefield = {
 		}
 		catch(e) {
 
-		  console.log("[class-fieldcalc][getCurrentAsmt] - " + err.error);
-				deferred.reject({"status": 500, "error": e.stack});
+			console.log("[class-fieldcalc][getCurrentAsmt] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 
-			}
+		}
 		return deferred.promise;
 	},
 
@@ -1896,12 +1898,12 @@ var calculatefield = {
   		db.find(accounts).then(function(actdata) {
   			deferred.resolve({"status": 200, "doc": actdata.body.docs});
   		}).catch(function(err) {
-  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
+  			console.log("[class-fieldcalc][getAccountsCU] - " + err.error.reason);
   			deferred.reject({"status": 500, "error": err.error.reason});
   		});
   	} catch(e) {
-  		console.log("[class-fieldcalc][getAccountsCU] - " + err.error);
-  		deferred.reject({"status": 500, "error": e});
+  		console.log("[class-fieldcalc][getAccountsCU] - " + e.stack);
+  		deferred.reject({"status": 500, "error": e.stack});
   	}
   		return deferred.promise;
   },
