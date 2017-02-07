@@ -34,7 +34,7 @@ interface.get('/wwbcitdata', isAuthenticated, function(req, res) {
 				dataList: rawDataList,
 				viewname: '',
 				quarter: '',
-				alldata: JSON.stringify(data, 'utf8'),
+				alldata: JSON.stringify(data, 'utf8').replace(/[`~!#$%^&*|+\-=?';<>]/gi, ''),
 				onedoc: ''
 			})
 		}

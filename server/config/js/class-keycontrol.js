@@ -76,6 +76,7 @@ var calculateKCTab = {
           }
           break;
         case "Country Process":
+          console.log("doc[0].AUDefectRate: " + doc[0].AUDefectRate);
           doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
           if (doc[0].AUDefectRate == 0) {
             doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(0);

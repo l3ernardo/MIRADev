@@ -21,8 +21,8 @@
   				{{#each exportInternalAuditData}}
   					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
               <td width="10%">{{plannedStartDate}}</td>
-              <td width="8%">{{engagement}}</td>
-              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="8%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{engagement}}</a></td>
+              <td width="40%">{{Name}}</td>
               <td width="20%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               {{{ratingDisplayView PeriodRating 5}}}

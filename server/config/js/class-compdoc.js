@@ -282,10 +282,10 @@ var getDocs = {
         case "BU Country":
 		      //Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
           var $or = [];
+          // For CHQ Internal Audits - Local
           for(var i = 0; i < doc[0].AUData.length; i++){
             $or.push({parentid: doc[0].AUData[i]["_id"]});
           }
-
           var compObj = {
             selector : {
               "_id": {"$gt":0},
@@ -303,7 +303,12 @@ var getDocs = {
                 { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
                 { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 				        // Audits and Reviews Tab
-                { "$and": [{"compntType": "internalAudit"}, {$or}] }
+                // For CHQ Internal Audits - from Audit DB
+                { "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
+                // For proactive reviews (PPR)
+                { "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}] },
+                // For Local Audits
+                { "$and": [{"compntType": "localAudit"}, {$or}] }
               ]
             }
           };
@@ -319,6 +324,7 @@ var getDocs = {
 			      // For BU Country Audits & Reviews Tab
             doc[0].InternalAuditData = [];
             doc[0].PPRData = [];
+            doc[0].OtherAuditsData = [];
             // For Sampled Country Testing Tab
             doc[0].SCTest1Data = [];
             doc[0].SCTestDataPQ1 = [];
@@ -343,12 +349,6 @@ var getDocs = {
                 comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
                 comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
                 if(comps[i].reportingQuarter == doc[0].CurrentPeriod && doc[0].MIRABusinessUnit == comps[i].MIRABusinessUnit){
-                  if (comps[i]._id == "9f9577b8a8737ebc401fc724c92fee02") {
-                    console.log("comps[i].MIRABusinessUnit: " + comps[i].MIRABusinessUnit);
-                    console.log("doc[0].MIRABusinessUnit: " + doc[0].MIRABusinessUnit);
-                    console.log("comps[i].reportingQuarter: " + comps[i].reportingQuarter);
-                    console.log("doc[0].CurrentPeriod: " + doc[0].CurrentPeriod);
-                  }
                   doc[0].RiskView1Data.push(comps[i]);
                   doc[0].RiskView2Data.push(comps[i]);
                   if (doc[0].MIRABusinessUnit == "GTS") {
@@ -492,15 +492,25 @@ var getDocs = {
                 if (typeof comps[i].engagement === "undefined") {
                   comps[i].engagement = comps[i].id;
                 }
+                if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
+                  comps[i].plannedStartDate = comps[i].ClosedDate;
+                  // comps[i].plannedStartDate = comps[i].ClosedDate.substr(0, 4) + "-" + comps[i].ClosedDate.substr(4, 2) + "-" + comps[i].ClosedDate.substr(6, 2);
+                }
                 doc[0].InternalAuditData.push(comps[i]);
               }
-			  // For Audits and Reviews Tab - view 2 (Proactive Reviews)
+              // For Audits and Reviews Tab - view 2 (Proactive Reviews)
               else if (comps[i].compntType == "PPR") {
                 doc[0].PPRData.push(comps[i]);
               }
-              // For Sampled Country Testing Tab
-
+              // For Local Audits
+              else if (comps[i].compntType == "localAudit") {
+                if (comps[i].auditOrReview == "CHQ Internal Audit") {
+                  doc[0].InternalAuditData.push(comps[i]);
+                }
+                doc[0].OtherAuditsData.push(comps[i]);
+              }
             }
+            // console.log("PPRData: " + doc[0].PPRData.length);
             deferred.resolve({"status": 200, "doc": doc});
 
 
