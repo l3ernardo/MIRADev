@@ -92,8 +92,8 @@
 				<tr class="WWBCITRatingJustification"><td>Rating Justification:</td><td>{{WWBCITRatingJustification}}</td></tr>
 			{{/if_not_equal}}
 		</tr>
-		<tr class="reviewComments"><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
-		<tr class="target2Sat"><td>Target to Sat</td><td>{{Target2Sat}}</td></tr>
+		<!-- <tr class="reviewComments"><td>Review Explanation/Comment:</td><td>{{ReviewComments}}</td></tr>
+		<tr class="target2Sat"><td>Target to Sat</td><td>{{Target2Sat}}</td></tr> -->
 		<tr>
 			<td>MIRA Status:</td>
 			<td>
@@ -114,3 +114,8 @@
 		</tr>
 	{{/if}}
 </table>
+
+<!--Script to disable past days selection on Target to sat calender-->
+<script>
+$("#Target2Sat").datepicker({ minDate: 0 });
+</script>

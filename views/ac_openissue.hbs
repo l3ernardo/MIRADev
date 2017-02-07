@@ -109,7 +109,7 @@
 </div>
 <script>
 $('#btn_edit').click(function() {
-  window.location.href = "openissue?id="+$("input[name='_id']").val()+"&edit";
+  window.location.href = window.location.href+"&edit";
 });
 $('#btn_save_close').click(function() {
 	$('#close').val("back");
@@ -119,6 +119,6 @@ $('#btn_save').click(function(evt) {
     $("#openissueform").submit();
 });
 $('#btn_cancel').click(function() {
-	window.location.href = "/assessment?id="+$('#parentid').val();
+	window.close();
 });
 </script>

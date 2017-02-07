@@ -37,7 +37,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       </tr>
       <tr>
         <td>Report date:</td><td>
-          <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+          <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link">
         </td>
       </tr>
       {{#if procesDisplay}}
@@ -53,9 +53,9 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       </tr>
       <tr>
         <td>Target to close:</td><td>Original:
-          {{#if new}}<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+          {{#if new}}<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
           {{else}}<input type="hidden" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">
-          <br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+          <br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}" class="ibm-calendar-link">
           {{/if}}
         </td>
         </tr>
@@ -139,7 +139,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       $("#asmtcomponentform").submit();
     });
     $('#btn_cancel').click(function() {
-      window.location.href = "/assessment?id="+$('#parentid').val();
+      window.close();
     })
 
   });

@@ -39,85 +39,97 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
     <input type="hidden" name="editmode" value="{{editmode}}">
     <input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
     <input type="hidden" name="docType" id="docType" value="localaudit">
+    <input type="hidden" name="quarter" id="quarter" value="{{reportingQuarter}}">
+    <input type="hidden" id="AssessableUnitName" name="AssessableUnitName" value="{{AssessableUnitName}}">
     <table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
       <caption class="mira-caption"><em>Basics</em></caption>
+      <tr>
+        <td width="20%">{{parentType}}:</td><td width="80%"><b>{{AssessableUnitName}}</b></td>
+      </tr>
       {{#if editmode}}
+        <tr>
+          <td>Audit or Review<span class="ibm-required">*</span>:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
+        </tr>
 
-      <tr>
-        <td width="25%">{{parentType}}:</td><td><b><input type="text" id="AssessableUnitName" name="AssessableUnitName" value="{{AssessableUnitName}}" readonly></b></td>
-      </tr>
-      <tr>
-        <td>Audit or Review<span class="ibm-required">*</span>:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
-      </tr>
+        <tr id="auditIDTD2">
+          <div ><td >ID:</td><td ><input type="text" name="auditID" value="{{auditID}}" ></td></div>
+        </tr>
 
-      <tr id="auditIDTD2">
-        <div ><td >ID:</td><td ><input type="text" name="auditID" value="{{auditID}}" ></td></div>
-      </tr>
-
-      <tr>
-        <td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td><td>
-          <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
-        </td>
-      </tr>
-      {{#if procesDisplay}}
-      <tr>
-        <td>Process(es):</td><td><input type="text" name="process" value="{{process}}" ></td>
-      </tr>
-      {{/if}}
-      <tr>
-        <td>Status/Rating<span class="ibm-required">*</span>:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
-      </tr>
-      <tr>
-        <td># Recommendations<span class="ibm-required">*</span>:</td><td>
-        Total:
-        <input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}"><br/>
-        Open:
-        <input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
-      </tr>
-      <tr>
-        <td>Target to close:</td><td>
-        Original:
+        <tr>
+          <td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td><td>
+            <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link">
+          </td>
+        </tr>
+        <tr>
+          <td>Process(es):</td>
+          <td>
+            {{#if_equal parentType "Controllable Unit"}}
+              {{#each process}}{{#unless @last}}{{this}}<br />{{else}}{{this}}{{/unless}}{{/each}}
+            {{else}}
+              {{process}}
+            {{/if_equal}}
+          </td>
+        </tr>
+        <tr>
+          <td>Status/Rating<span class="ibm-required">*</span>:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
+        </tr>
+        <tr>
+          <td># Recommendations<span class="ibm-required">*</span>:</td><td>
+          <span style="display: inline-block; width: 75px;">Total:</span><input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}"><br/>
+          <span style="display: inline-block; width: 75px;">Open:</span><input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+        </tr>
+        <tr>
+          <td>Target to close:</td><td>
+          <span style="display: inline-block; width: 72px;">Original:</span>
           {{#if new}}
-              <input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
-        Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+            <input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
           {{else}}
-              <input type="hidden" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">
-              <br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
+              {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}
           {{/if}}
-        </td>
-      </tr>
-      <tr>
-        <td>Comments:</td><td><input type="text" name="comments" value="{{comments}}" ></td>
-      </tr>
+          <br /><span style="display: inline-block; width: 72px;">Current:</span> <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}"class="ibm-calendar-link">
+          </td>
+        </tr>
+        <tr>
+          <td>Comments:</td><td><textarea name="comments" cols="100">{{comments}}</textarea></td>
+        </tr>
       {{else}}
-      <tr>
-        <td>Country Process:</td><td><b>{{AssessableUnitName}}</b></td>
-      </tr>
-      <tr>
-        <td>Audit or Review:</td><td>{{auditOrReview}}</td>
-      </tr>
-      <tr>
-        <td>Report date:</td><td>{{reportDate}}</td>
-      </tr>
-      {{#if procesDisplay}}
-      <tr>
-        <td>Process(es):</td><td>{{process}}</td>
-      </tr>
-      {{/if}}
-      <tr>
-        <td>Status/Rating:</td><td>{{{statusRatingLclAdt rating}}}</td>
-      </tr>
-      <tr>
-        <td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
-      </tr>
-      <tr>
-        <td>Target to close:</td><td>
-        Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
-       <!-- Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>-->
-      </tr>
-      <tr>
-        <td>Comments:</td><td>{{comments}}</td>
-      </tr>
+        <tr>
+          <td>Audit or Review:</td><td>{{auditOrReview}}</td>
+        </tr>
+        <tr>
+          <td>Report date:</td><td>{{reportDate}}</td>
+        </tr>
+        <tr>
+          <td>Process(es):</td>
+          <td>
+            {{#if_equal parentType "Controllable Unit"}}
+              {{#each process}}{{#unless @last}}{{this}}<br />{{else}}{{this}}{{/unless}}{{/each}}
+            {{else}}
+              {{process}}
+            {{/if_equal}}
+          </td>
+        </tr>
+        <tr>
+          <td>Status/Rating:</td><td>{{{statusRatingLclAdt rating}}}</td>
+        </tr>
+        <tr>
+          <td># Recommendations:</td>
+          <td>
+            <span style="display: inline-block; width: 75px;">Total:</span>{{numRecommendationsTotal}}<br/>
+            <span style="display: inline-block; width: 75px;">Open:</span>{{numRecommendationsOpen}}
+            <input type="hidden" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}">
+          </td>
+        </tr>
+        <tr>
+          <td>Target to close:</td>
+          <td>
+            <span style="display: inline-block; width: 72px;">Original:</span> {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
+            <span id="targetCloseCurrentSpan"><span style="display: inline-block; width: 72px;">Current:</span> {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td>Comments:</td><td>{{comments}}</td>
+        </tr>
       {{/if}}
       <!-- NOTES & LINKS SECTION -->
       {{>comments}}
@@ -142,12 +154,20 @@ $(document).ready(function(){
     $( "#reportDate2" ).datepicker( "option", "dateFormat", "M dd, yy" );
   });
   $('#reportDate3').datepicker({
-    changeMonth: true
+    changeMonth: true,
+    minDate: 0
   });
   $( "#reportDate3" ).on( "change", function() {
     $( "#reportDate3" ).datepicker( "option", "dateFormat", "M dd, yy" );
   });
 
+  if ($("#editmode").val() == undefined) {
+    if ($("#numRecommendationsOpen").val() !== undefined && $("#numRecommendationsOpen").val() !== "" && $("#numRecommendationsOpen").val() < 1) {
+      $("#targetCloseCurrentSpan").hide();
+    } else {
+      $("#targetCloseCurrentSpan").show();
+    }
+  }
   var val = $("#auditOrReview").val();
   var tmpList = JSON.parse($("#ratingList").val());
   $("#rating").html($("#rating").html()+tmpList[val]);

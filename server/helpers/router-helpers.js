@@ -156,35 +156,44 @@ var register = function(Handlebars) {
 			}
 			return ratinghtml;
 		},
-		compDocDRDisplayView: function(rating, field) {
-			var ratinghtml;
+		compDocDRDisplayView: function(rating, field, percent) {
+			var ratinghtml = '<td class="';
 			if (rating == undefined) {
-					ratinghtml = '<td class="asmt-viewdata"></td>';
+					ratinghtml += 'asmt-viewdata"';
+					if(!isNaN(percent)) {
+						ratinghtml += ' width="'+percent+'%"';
+					}
+					ratinghtml += '></td>';
 			} else {
 				if (rating == "Sat")
-					ratinghtml = '<td class="asmt-viewdata-green" style="background-color: #00FF00 !important;">'+field+'%</td>';
+					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00 !important;" width="'+percent+'%">'+field+'%</td>';
 				else if (rating == "Marg")
-					ratinghtml = '<td class="asmt-viewdata-yellow"  style="background-color: yellow !important;">'+field+'%</td>';
+					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow !important;" width="'+percent+'%">'+field+'%</td>';
 				else if (rating == "Unsat")
-					ratinghtml = '<td class="asmt-viewdata-red"  style="background-color: red !important;">'+field+'%</td>';
+					ratinghtml += 'asmt-viewdata-red"  style="background-color: red !important;" width="'+percent+'%">'+field+'%</td>';
 				else
-					ratinghtml = '<td class="asmt-viewdata-centered">-</td>';
+					ratinghtml += 'asmt-viewdata-centered" width="'+percent+'%"></td>';
 			}
 			return ratinghtml;
 		},
-		defectRateDisplayView: function(dr, margThreshold, unsatThreshold) {
+		defectRateDisplayView: function(dr, margThreshold, unsatThreshold, percent) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
-				drhtml = '<td class="asmt-viewdata-centered">-</td>';
+				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%"></td>';
+				else drhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
-				drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
+				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+dr+'</td>';
+				else drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
 			} else {
 				if (dr < margThreshold)
-					drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
+					if (percent) drhtml = '<td class="asmt-viewdata-green" width="'+percent+'%">'+dr+'</td>';
+					else drhtml = '<td class="asmt-viewdata-green">'+dr+'</td>';
 				else if (dr >= unsatThreshold)
-					drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
+					if(percent) drhtml = '<td class="asmt-viewdata-red" width="'+percent+'%">'+dr+'</td>';
+					else drhtml = '<td class="asmt-viewdata-red">'+dr+'</td>';
 				else
-					drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
+					if(percent) drhtml = '<td class="asmt-viewdata-yellow" width="'+percent+'%">'+dr+'</td>';
+					else drhtml = '<td class="asmt-viewdata-yellow">'+dr+'</td>';
 			}
 			return drhtml;
 		},
@@ -246,19 +255,27 @@ var register = function(Handlebars) {
 			return drhtml;
 		},
 		*/
-		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR) {
+		TestingRatioDisplay: function(tr, margThresholdTR, unsatThresholdTR, percent) {
 			var trhtml;
 			if (tr == undefined || tr == "") {
-				trhtml = '<td class="asmt-viewdata-centered">-</td>';
+				if(percent) trhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%"></td>';
+				else trhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else if (margThresholdTR == undefined || unsatThresholdTR ==  undefined) {
-				trhtml = '<td class="asmt-viewdata-centered">'+tr+'</td>';
+				if(percent) trhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+tr+'</td>';
+				else trhtml = '<td class="asmt-viewdata-centered">'+tr+'</td>';
 			} else {
-				if (tr >= margThresholdTR)
-					trhtml = '<td class="asmt-viewdata-green">'+tr+'</td>';
-				else if (tr < unsatThresholdTR)
-					trhtml = '<td class="asmt-viewdata-red">'+tr+'</td>';
-				else
-					trhtml = '<td class="asmt-viewdata-yellow">'+tr+'</td>';
+				if (tr >= margThresholdTR) {
+					if(percent) trhtml = '<td class="asmt-viewdata-green" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-green">'+tr+'</td>';
+				}
+				else if (tr < unsatThresholdTR) {
+					if(percent) trhtml = '<td class="asmt-viewdata-red" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-red">'+tr+'</td>';
+				}
+				else {
+					if(percent) trhtml = '<td class="asmt-viewdata-yellow" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-yellow">'+tr+'</td>';
+				}
 			}
 			return trhtml;
 		},
@@ -284,7 +301,7 @@ var register = function(Handlebars) {
 		UnremedDefectDisplay: function(defect) {
 			var defhtml;
 			if (defect == undefined || defect == "") {
-				defhtml = '<td class="asmt-viewdata-centered">-</td>';
+				defhtml = '<td class="asmt-viewdata-centered"></td>';
 			} else {
 				defhtml = '<td class="asmt-viewdata-centered">'+defect+'</td>';
 			}
@@ -393,7 +410,7 @@ var register = function(Handlebars) {
 					if(dateval < currdate)
 						datehtml = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+date+'</span>';
 					else
-						datehtml = '<span style="padding-right:1em">'+date+'</span>';
+						datehtml = '<span style="padding-left:1em; padding-right:1em;">'+date+'</span>';
 					}
 				}
 			return datehtml;
@@ -401,7 +418,7 @@ var register = function(Handlebars) {
 		statusRatingLclAdt: function(rating) {
 				var rateHTML;
 			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Qualified") {
-				rateHTML = '<span style="background-color: #00ff00; padding-left:1em; padding-right:1em; color: #ffffff">'+rating+'</span>';
+				rateHTML = '<span style="background-color: #00ff00; padding-left:1em; padding-right:1em">'+rating+'</span>';
 			} else {
 				if (rating == "Unsatisfactory" || rating == "unsat" || rating == "Unfavorable" || rating == "Negative" || rating == "Unqualified") {
 					rateHTML = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+rating+'</span>';
@@ -449,6 +466,29 @@ var register = function(Handlebars) {
 			if(a == b) return opts.fn(this);
      	else return opts.inverse(this);
 		},
+
+		if_less: function(a, b, opts) {
+
+			if(isNaN(a))
+				a = parseInt(a);
+			if(isNaN(b))
+				b = parseInt(b);
+
+			if(a < b) return opts.fn(this);
+     	else return opts.inverse(this);
+		},
+
+		if_greater: function(a, b, opts) {
+
+			if(isNaN(a))
+				a = parseInt(a);
+			if(isNaN(b))
+				b = parseInt(b);
+
+			if(a > b) return opts.fn(this);
+     	else return opts.inverse(this);
+		},
+
 		if_not_equal: function(a, b, opts) {
 			if(a != b) return opts.fn(this);
      	else return opts.inverse(this);

@@ -22,118 +22,41 @@
 						<td class="risk-msdcommit-label"></td>
 						<td class="risk-msdcommit-label"><b>Explanations for current quarter entries</b></td>
 					</tr>
+					{{#each riskCategories}}
 					<tr>
-						<td class="risk-msdcommit-label">Self Assessment Issues - prior year</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="risk-msdcommit-label">{{name}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr1}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr2}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr3}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr4}}</td>
+						<!--<td class="asmt-viewdata" align="center">{{Current}}</td>-->
 						<td class="risk-msdcommit-viewheader"></td>
+						{{#if flagForTextarea}}
 						<td class="asmt-viewdata" rowspan="10">
 							<span><textarea id="GCSSection1Explanations" type="text" name="GCSSection1Explanations" rows="18" cols="53">{{GCSSection1Explanations}}</textarea></span>
 						</td>
+						{{/if}}
 					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Self Assessment Issues - current year</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Deviations from Corp. Directives – high/medium</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Deviations from Corp. Directives – low</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">PWC Recommendations</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">PWC Deficiencies</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">SSAE 16 / SOC Open Reports</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">FIN 162 (Financial &amp; HR Applications)</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">ASCA Incs</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Unsat Audits</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
+					{{/each}}
 					<tr>
 						<td class="risk-msdcommit-label" colspan="8"><b>Totals</b></td>
 					</tr>
 					<tr>
 						<td class="risk-msdcommit-label">Total Open Issues</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr1}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr2}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr3}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr4}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.Current}}</td>
 						<td class="risk-msdcommit-viewheader" colspan="2"></td>
 					</tr>
 					<tr>
 						<td class="risk-msdcommit-label">Qtd Net Change</td>
 						<td class="risk-msdcommit-label"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange1}}</td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange2}}</td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange3}}</td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange4}}</td>
 						<td class="risk-msdcommit-viewheader" colspan="2"></td>
 					</tr>
 					<tr>
@@ -180,11 +103,11 @@
 					<tbody>
 					{{#each RiskView1Data}}
 						<tr class="asmt-viewdata">
-							<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
-							<td width="8%">{{status}}</td>
-							<td width="20%">{{PeriodRating}}</td>
-							<td width="10%">{{originalTargetDate}}</td>
-							<td width="10%">{{currentTargetDate}}</td>
+							<td width="50%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+							{{{ratingDisplayView PeriodRatingPrev1 10}}}
+							{{{ratingDisplayView PeriodRating 10}}}
+							<td width="15%" class="asmt-viewdata-centered">{{#if _id}}{{Target2SatPrev}}{{else}}&nbsp;{{/if}}</td>
+							<td width="15%" class="asmt-viewdata-centered">{{Target2Sat}}</td>
 						</tr>
 					{{/each}}
 				</tbody>
@@ -200,7 +123,7 @@
 						{{#each PrevQtrs}}
 							<th class="kc-test-viewsubheader" width="7%">{{this}}</th>
 						{{/each}}
-						<th class="risk-msdcommit-viewheader" width="7%">{{CurrentPeriod}}</th>
+						<th width="7%">{{CurrentPeriod}}</th>
 						<th class="risk-msdcommit-viewheader" width="2%"></th>
 						<th class="risk-msdcommit-viewheader" width="33%"></th>
 					</thead>
@@ -209,120 +132,39 @@
 						<td class="risk-msdcommit-label"></td>
 						<td class="risk-msdcommit-label"><b>Explanations for current quarter entries</b></td>
 					</tr>
+					{{#each riskCategories}}
 					<tr>
-						<td class="risk-msdcommit-label">Self Assessment Issues - prior year</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="risk-msdcommit-label">{{name}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr1}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr2}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr3}}</td>
+						<td class="asmt-viewdata" align="center">{{PrevQtr4}}</td>
+						<td class="asmt-viewdata" align="center">{{Current}}</td>
 						<td class="risk-msdcommit-viewheader"></td>
-						<td class="asmt-viewdata" rowspan="10">{{GCSSection1Explanations}}
-							<!-- <div class='yui-skin-sam'>
-								<span><textarea id="GCSSection1Explanations" type="text" name="GCSSection1Explanations">{{GCSSection1Explanations}}</textarea></span>
-							</div> -->
-						</td>
+						{{#if flagForTextarea}}
+						<td class="asmt-viewdata" rowspan="10">{{GCSSection1Explanations}}</td>
+						{{/if}}
 					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Self Assessment Issues - current year</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Deviations from Corp. Directives – high/medium</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Deviations from Corp. Directives – low</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">PWC Recommendations</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">PWC Deficiencies</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">SSAE 16 / SOC Open Reports</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">FIN 162 (Financial &amp; HR Applications)</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">ASCA Incs</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
-					<tr>
-						<td class="risk-msdcommit-label">Unsat Audits</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="risk-msdcommit-viewheader"></td>
-					</tr>
+					{{/each}}
 					<tr>
 						<td class="risk-msdcommit-label" colspan="8"><b>Totals</b></td>
 					</tr>
 					<tr>
 						<td class="risk-msdcommit-label">Total Open Issues</td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr1}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr2}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr3}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.PrevQtr4}}</td>
+						<td class="asmt-viewdata" align="center">{{totalRisks.Current}}</td>
 						<td class="risk-msdcommit-viewheader" colspan="2"></td>
 					</tr>
 					<tr>
 						<td class="risk-msdcommit-label">Qtd Net Change</td>
 						<td class="risk-msdcommit-label"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange1}}</td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange2}}</td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange3}}</td>
+						<td class="asmt-viewdata" align="center">{{QtdChangeRisks.QtdChange4}}</td>
 						<td class="risk-msdcommit-viewheader" colspan="2"></td>
 					</tr>
 					<tr>
@@ -366,11 +208,11 @@
 					<tbody>
 					{{#each RiskView1Data}}
 						<tr class="asmt-viewdata">
-							<td width="50%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{AssessableUnitName}}</a></td>
-							<td width="10%">{{status}}</td>
-							<td width="10%">{{PeriodRating}}</td>
-							<td width="15%">{{originalTargetDate}}</td>
-							<td width="15%">{{currentTargetDate}}</td>
+							<td width="50%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+							{{{ratingDisplayView PeriodRatingPrev1 10}}}
+							{{{ratingDisplayView PeriodRating 10}}}
+							<td width="15%" class="asmt-viewdata-centered">{{#if _id}}{{Target2SatPrev}}{{else}}&nbsp;{{/if}}</td>
+							<td width="15%" class="asmt-viewdata-centered">{{Target2Sat}}</td>
 						</tr>
 					{{/each}}
 				</tbody>
@@ -402,8 +244,8 @@
 				{{#each RiskView2Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="15%" >{{#unless parent}}{{type}}{{/unless}}</td>
-						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
-						<td width="15%">{{status}}</td>
+						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a>{{/if}}</td>
+						<td width="15%">{{#if _id}}{{status}}{{else}}&nbsp;{{/if}}</td>
 						<td width="8%">{{originalTargetDate}}</td>
 						<td width="8%">{{currentTargetDate}}</td>
 						<td width="5%">{{numTasks}}</td>

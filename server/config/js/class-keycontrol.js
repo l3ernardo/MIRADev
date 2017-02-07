@@ -280,7 +280,7 @@ var calculateKCTab = {
               reportingQuarter:sct[i].reportingQuarter || "",
               controlType:sct[i].controlType || "",
               controlName:sct[i].controlName || "",
-              reportingCountry:sct[i].reportingCountry || "",
+              sampleCountry:sct[i].sampleCountry || "",
               numtest:sct[i].numtest || "",
               numDefects:sct[i].numDefects || "",
               defectRate:sct[i].defectRate || ""
@@ -537,6 +537,7 @@ var calculateKCTab = {
         case "BU IMT":
           break;
         case "BU Country":
+
           break;
         case "Controllable Unit":
         // *** Start of Reporting Country Testing Data (1st embedded view in Testing tab) *** //
@@ -887,7 +888,8 @@ var calculateKCTab = {
             fieldCalc.addTestViewDataPadding(doc[0].SampleData2,10,(defViewRow-Object.keys(periodList).length));
           }
         }
-        // *** End of Sample2 Data (4th embedded view in Testing tab) *** //          break;
+        // *** End of Sample2 Data (4th embedded view in Testing tab) *** //
+        break;
       }
     }catch(e){
       console.log("[class-keycontrol][calcDefectRate] - " + err.error);

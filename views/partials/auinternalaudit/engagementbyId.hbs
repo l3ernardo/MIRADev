@@ -48,6 +48,7 @@
 		if($("#btn_okIntAudId").length > 0){
 			$("#btn_okIntAudId").click(function() {
 				//Update data
+				var auid = $("#docid").val();
 				var p_id=$("input[name='IntAud']:checked").attr("idintaud");
 				var pEngagement = $("input[name='IntAud']:checked").attr("value");
 				var paddedToAQDB = $("input[name='IntAud']:checked").attr("addedToAQDB");
@@ -72,7 +73,7 @@
 				var CUScore = getCUMaxScore(CUSize);
 				var finalscore = getCUScore(pRating,CUScore);
 				var pScore = finalscore; //$("input[name='IntAud']:checked").attr("rating");
-				var adding='<tr id="'+p_id+'"><td p_id="'+p_id+'"><a href="/assessment?id='+p_id+'">'+pEngagement+'</a></td><td>'+paddedToAQDB+'</td>'+ratinghtml+'<td>'+pSize+'</td><td>'+pScore+'</td><td><a href="javascript:void(0);" value="Remove'+p_id+'"  id="btn_remove'+p_id+'" class="ibm-delete-link">Remove</a></td></tr>';
+				var adding='<tr id="'+p_id+'"><td p_id="'+p_id+'"><a target="_blank" href="/asmtcomponents?id='+p_id+'&pid='+auid+'">'+pEngagement+'</a></td><td>'+paddedToAQDB+'</td>'+ratinghtml+'<td>'+pSize+'</td><td>'+pScore+'</td><td><a href="javascript:void(0);" value="Remove'+p_id+'"  id="btn_remove'+p_id+'" class="ibm-delete-link">Remove</a></td></tr>';
 				var flagIntAud='1';
 				$('#flagIntAud').val(flagIntAud);
 				$('#InternalAudits').val(adding);

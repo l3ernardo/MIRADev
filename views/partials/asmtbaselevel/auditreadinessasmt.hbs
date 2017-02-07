@@ -1,5 +1,5 @@
 <table id="auditreadyasmt_table" class="ibm-data-table">
-	{{#if_equal EnteredBU "GTS"}}
+	{{#if_not_equal EnteredBU "GBS"}}
 		<tr class="ar-asmt-content">
 			<th class="ar-asmt-content">Analysis to Audit Lessons Learned</th>
 		</tr>
@@ -22,8 +22,7 @@
 							</td>
 							<td class="content-data">
 								<span id="colARALLTarget2Sat">
-									<input type="date" name="ARALLTarget2Sat" id="ARALLTarget2Sat" value="{{ARALLTarget2Sat}}" size="10">
-									<span for="ARALLTarget2Sat" class="ibm-calendar-link"></span>
+									<input type="date" name="ARALLTarget2Sat" id="ARALLTarget2Sat" value="{{ARALLTarget2Sat}}" size="10" class="ibm-calendar-link">
 								</span>
 							</td>
 							<td class="content-data">
@@ -45,13 +44,18 @@
 			<td>
 				<table id="audit_readiness_treeview"  cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating" >
 					<thead>
-						<th class="ar-asmt-viewheader" scope="col" width="25%">Qtr-Type</th>
-						<th class="ar-asmt-viewheader" scope="col" width="10%">ID</th>
-						<th class="ar-asmt-viewheader" scope="col" width="35%">Summary of Issue/Recommendation</th>
-						<th class="ar-asmt-viewheader" scope="col" width="10%">Observation Category</th>
+
 						{{#if_equal ParentDocSubType "Country Process"}}
+						<th class="ar-asmt-viewheader" scope="col" width="10%">QTR</th>
+						<th class="ar-asmt-viewheader" scope="col" width="10%">ID</th>
+						<th class="ar-asmt-viewheader" scope="col" width="60%">Summary of Issue/Recommendation</th>
+						<th class="ar-asmt-viewheader" scope="col" width="10%">Observation Category</th>
 						<th class="ar-asmt-viewheader" scope="col" width="10%">Audit/CAR</th>
 						{{else}}
+						<th class="ar-asmt-viewheader" scope="col" width="30%">Qtr-Type</th>
+						<th class="ar-asmt-viewheader" scope="col" width="10%">ID</th>
+						<th class="ar-asmt-viewheader" scope="col" width="40%">Summary of Issue/Recommendation</th>
+						<th class="ar-asmt-viewheader" scope="col" width="10%">Observation Category</th>
 						<th class="ar-asmt-viewheader" scope="col" width="10%">Process</th>
 						{{/if_equal}}
 						<th class="ar-asmt-viewheader" scope="col" width="10%">Subprocess</th>
@@ -61,16 +65,16 @@
 					{{#each list}}
 						<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
 
-							<td style="background-color: white !important;" style="width:25%;white-space:nowrap;">{{name}}</td>
-							<td style="background-color: white !important;" style="width:10%;white-space:nowrap;">{{#if _id}}<a href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
-							<td style="background-color: white !important;" style="width:35%;">{{{summary}}}</td>
-							<td style="background-color: white !important;" style="width:10%;">{{observationCategory}}</td>
+							<td style="background-color: white !important;" style="white-space:nowrap;">{{name}}</td>
+							<td style="background-color: white !important;" style="white-space:nowrap;">{{#if _id}}<a target="_blank" href="/auditlessonlearned?id={{_id}}">{{engagementID}}</a>{{/if}}</td>
+							<td style="background-color: white !important;">{{{summary}}}</td>
+							<td style="background-color: white !important;">{{observationCategory}}</td>
 							{{#if_equal ../ParentDocSubType "Country Process"}}
-							<td style="background-color: white !important;" style="width:10%;">{{AuditCAR}}</td>
+							<td style="background-color: white !important;">{{AuditCAR}}</td>
 							{{else}}
-							<td style="background-color: white !important;" style="width:10%;">{{process}}</td>
+							<td style="background-color: white !important;">{{process}}</td>
 							{{/if_equal}}
-							<td style="background-color: white !important;" style="width:10%;">{{subprocess}}</td>
+							<td style="background-color: white !important;">{{subprocess}}</td>
 						</tr>
 					{{/each}}
 					</tbody>
@@ -79,7 +83,7 @@
 						<tr class="asmt-viewdata">
 							{{#each col}}
 								{{#if @first}}
-									<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+									<td><a target="_blank" href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
 								{{else}}
 									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
 								{{/if}}
@@ -88,7 +92,7 @@
 					{{/each}}
 					{{/if_not_equal}}
 					<tr>
-						<td colspan="6" class="asmt-viewdata"><a href="/auditlessons">Click here</a> to view all audit lessons learned.</td>
+						<td colspan="6" class="asmt-viewdata"><a target="_blank" href="/auditlessons">Click here</a> to view all audit lessons learned.</td>
 					</tr>
 				</table>
 			</td>
@@ -131,7 +135,7 @@
 							<tr class="asmt-viewdata">
 								{{#each col}}
 									{{#if @first}}
-										<td><a href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
+										<td><a target="_blank" href="/auditlessonlearned?id={{../docid}}">{{this}}</a></td>
 									{{else}}
 										<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
 									{{/if}}
@@ -175,5 +179,5 @@
 				</table>
 			</td>
 		</tr>
-	{{/if_equal}}
+	{{/if_not_equal}}
 </table>

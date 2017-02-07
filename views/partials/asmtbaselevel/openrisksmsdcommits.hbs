@@ -30,7 +30,7 @@
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<!--<th width="2%" scope="row" class="ibm-table-row">{{#if parent}}<input type="checkbox" class="openrisks_checkbox_tree"/>{{/if}}</th>-->
 						<td width="3%" >{{#unless parent}}{{name}}{{/unless}}</td>
-						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}">{{id}}</a>{{/if}}</td>
+						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a>{{/if}}</td>
 						<td width="8%">{{status}}</td>
 						<td width="20%">{{process}}</td>
 						<td width="10%">{{originalTargetDate}}</td>
@@ -43,17 +43,6 @@
 					</tr>
 				{{/each}}
 				</tbody>
-				<!--{{#each RiskData}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a href="/risk?id={{../docid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
-					</tr>
-				{{/each}}-->
 			</table>
 		</td>
 	</tr>

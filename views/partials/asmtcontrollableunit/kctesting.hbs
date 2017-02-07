@@ -58,7 +58,7 @@
 							<td width="5%"></td>
 							<td width="20%"></td>
 						{{/if}}
-						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{controlName}}</a></td>
+						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{numTests}}</td>
 						<td width="10%">{{DefectCount}}</td>
 						<td width="10%">{{defectRate}}</td>
@@ -103,7 +103,7 @@
 							<td width="5%"></td>
 						{{/if}}
 						<td width="16%">{{controlName}}</td>
-						<td width="7%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
+						<td width="7%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{IntegrationKeyWWBCIT}}</a></td>
 						<td width="10%">{{defectType}}</td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="10%">{{remediationStatus}}</td>
@@ -151,7 +151,7 @@
 							<td width="5%"></td>
 						{{/if}}
 						<td width="18%">{{controlName}}</td>
-						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}">{{IntegrationKeyWWBCIT}}</a></td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{IntegrationKeyWWBCIT}}</a></td>
 						<td width="15%">{{processSampled}}</td>
 						<td width="5%">{{numDefects}}</td>
 						<td width="5%">{{defectType}}</td>
