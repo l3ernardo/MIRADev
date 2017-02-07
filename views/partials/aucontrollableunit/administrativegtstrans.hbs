@@ -35,7 +35,14 @@
 					{{{multiSelect "lessonsList" lessonsList "id" "option" "scopeLessonsList"}}}
 				</td>
 			</tr>
-			
+			<tr>
+				<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+						{{{uniqueSelect "OpMetricKey" parameters.GTSOpMetricKeys.0.options "id" "name" OpMetricKey}}}
+					</span>
+				</td>
+			</tr>
 			<tr>
 				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
@@ -76,8 +83,18 @@
 			<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 			<tr><td>Subprocess Key:</td><td>{{SubprocessDisp}}</td></tr>
 			<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
-			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+			<tr>
+				<td>Operational Metric Key:</td>
+				<td>
+					{{#each parameters.GTSOpMetricKeys.0.options}}
+						{{#if_equal id ../OpMetricKey}}
+							{{name}}
+						{{/if_equal}}
+					{{/each}}
+				</td>
+			</tr>
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 			{{#if_equal showARCFreq 1}}
 				<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 			{{/if_equal}}
@@ -92,8 +109,18 @@
 		<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 		<tr><td>Subprocess Key:</td><td>{{SubprocessDisp}}</td></tr>
 		<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
-		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+		<tr>
+				<td>Operational Metric Key:</td>
+				<td>
+					{{#each parameters.GTSOpMetricKeys.0.options}}
+						{{#if_equal id ../OpMetricKey}}
+							{{name}}
+						{{/if_equal}}
+					{{/each}}
+				</td>
+			</tr>
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
+		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
 		{{#if_equal showARCFreq 1}}
 			<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 		{{/if_equal}}

@@ -57,7 +57,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 
         <tr>
           <td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td><td>
-            <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+            <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link">
           </td>
         </tr>
         <tr>
@@ -82,15 +82,15 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
           <td>Target to close:</td><td>
           <span style="display: inline-block; width: 72px;">Original:</span>
           {{#if new}}
-            <input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+            <input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
           {{else}}
               {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}
           {{/if}}
-          <br /><span style="display: inline-block; width: 72px;">Current:</span> <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}">&nbsp;<span for="startDate" class="ibm-calendar-link"></span>
+          <br /><span style="display: inline-block; width: 72px;">Current:</span> <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}"class="ibm-calendar-link">
           </td>
         </tr>
         <tr>
-          <td>Comments:</td><td><input type="text" name="comments" value="{{comments}}"  size="137"></td>
+          <td>Comments:</td><td><textarea name="comments" cols="100">{{comments}}</textarea></td>
         </tr>
       {{else}}
         <tr>
