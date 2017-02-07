@@ -609,6 +609,7 @@ var calculatefield = {
             break;
           case "BU Country":
             doc[0].asmtsdocs = [];
+            doc[0].auditableAUIds = [];
             var asmtsdocs = asmtsdata.body.docs;
             var CUassunits = [];
             var CUauditables = {};
@@ -683,6 +684,7 @@ var calculatefield = {
                 if (asmtsdocs[i].DocSubType == "Controllable Unit") {
                   CUassunits.push(asmtsdocs[i]);
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
+                    doc[0].auditableAUIds.push(asmtsdocs[i]._id);
                     CUauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                   }
         				  if (doc[0].MIRABusinessUnit == "GTS") {
@@ -698,6 +700,7 @@ var calculatefield = {
                 }
 				        else{
                   if(asmtsdocs[i].AuditableFlag == "Yes"){
+                    doc[0].auditableAUIds.push(asmtsdocs[i]._id);
                     CPauditables[asmtsdocs[i]["_id"]] = asmtsdocs[i];
                   }
                 }
