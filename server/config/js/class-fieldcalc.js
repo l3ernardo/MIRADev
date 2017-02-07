@@ -546,26 +546,49 @@ var calculatefield = {
           case "BU IMT":
             doc[0].AUDocs = asmtsdata.body.docs;
             doc[0].AUDocsObj = {};
-            var AUAuditables = {};
+            doc[0].AUAuditables = {};
+            doc[0].AUCountries = [];
+            doc[0].AsmtCountries = [];
+            doc[0].asmtsdocsObj = {};
+            doc[0].asmtsdocsDelivery = [];
+            doc[0].asmtsdocsCRM = [];
+            var CRMables = {};
+            var Deliveryables = {};
             var $or = [];
             for(var i = 0; i < doc[0].AUDocs.length; i++){
               $or.push({parentid: doc[0].AUDocs[i]["_id"]});
               doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
-              if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
-                AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
-              }
-              /*if (doc[0].MIRABusinessUnit == "GTS") {
-                if(doc[0].CRMCUObj[asmtsdocs[i].Category]){
-                  CUCRMables[asmtsdocs[i]["_id"]] = true;
-                }else if(doc[0].DeliveryCUObj[asmtsdocs[i].Category]){
-                  CUCRMables[asmtsdocs[i]["_id"]] = false;
-                }else{
-                  CUassunits.pop();
-                  //console.log("CU category not found: "+ asmtsdocs[i].Category);
+              if(doc[0].AUDocs[i].DocSubType == "Country Process" || doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
+                if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
+                  doc[0].AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
                 }
-              }*/
+              }
+              if (doc[0].MIRABusinessUnit == "GTS") {
+                if(doc[0].AUDocs[i].DocSubType == "Country Process"){
+                  if(doc[0].CRMProcessObj[doc[0].AUDocs[i].GPPARENT]){
+                    CRMables[doc[0].AUDocs[i]["_id"]] = true;
+                  }else if(doc[0].DeliveryProcessObj[doc[0].AUDocs[i].GPPARENT]){
+                    Deliveryables[doc[0].AUDocs[i]["_id"]] = true;
+                  }else{
+                    $or.pop();
+                    delete doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]];
+                    console.log("CP category not found: "+ doc[0].AUDocs[i].GPPARENT);
+                  }
+                }else if(doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
+                  if(doc[0].CRMCUObj[doc[0].AUDocs[i].Category]){
+                    CRMables[doc[0].AUDocs[i]["_id"]] = true;
+                  }else if(doc[0].DeliveryCUObj[doc[0].AUDocs[i].Category]){
+                    Deliveryables[doc[0].AUDocs[i]["_id"]] = true;
+                  }else{
+                    $or.pop();
+                    delete doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]];
+                    console.log("CU category not found: "+ doc[0].AUDocs[i].Category);
+                  }
+                }else if(doc[0].AUDocs[i].DocSubType == "BU Country"){
+                  doc[0].AUCountries.push(doc[0].AUDocs[i]);
+                }
+              }
             }
-            //$or.push(doc[0]["_id"]);
             var tmpQuery = {
               selector : {
                 "_id": {"$gt":0},
@@ -578,22 +601,24 @@ var calculatefield = {
             };
             db.find(tmpQuery).then(function(asmts) {
               doc[0].asmtsdocs = asmts.body.docs;
-              doc[0].asmtsdocsObj = {};
               for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
                 doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
-                /*//check for CP Process at GTS
+                if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
+                  doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
+                  doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
+                  doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
+                  doc[0].AUData.push(doc[0].asmtsdocs[i]);
+                }
                 if (doc[0].MIRABusinessUnit == "GTS") {
-                  if(doc[0].CRMProcessObj[asmtsdocs[i].GPWWBCITKey]){
-                    asmtsdocs[i].catP = "CRM";
-                    doc[0].asmtsdocsCRM.push(asmtsdocs[i])
-                  }else if(doc[0].DeliveryProcessObj[asmtsdocs[i].GPWWBCITKey]){
-                    asmtsdocs[i].catP = "Delivery";
-                    doc[0].asmtsdocsDelivery.push(asmtsdocs[i])
-                  }else {
-                    console.log("GP not found: "+ asmtsdocs[i].GPWWBCITKey);
+                  if(CRMables[doc[0].asmtsdocs[i].parentid]){
+                    doc[0].asmtsdocs[i].catP = "CRM";
+                    doc[0].asmtsdocsCRM.push(doc[0].asmtsdocs[i]);
                   }
-                }*/
-
+                  if(Deliveryables[doc[0].asmtsdocs[i].parentid]){
+                    doc[0].asmtsdocs[i].catP = "Delivery";
+                    doc[0].asmtsdocsDelivery.push(doc[0].asmtsdocs[i]);
+                  }
+                }
               }
               deferred.resolve({"status": 200, "doc": doc});
             }).catch(function(err) {

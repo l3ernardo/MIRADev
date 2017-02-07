@@ -1,13 +1,16 @@
+<textarea name="textarea" id="AUniverseDataExport" cols="100" style="display:none">{{valuesToString exportAUniverse}}</textarea>
 <table id="audit_universe_table" class="ibm-data-table">
 	<thead class="other">
-		<th class="other">Weighted Score:</th>
+		<th class="other">Weighted Score: {{AUWeightedScore}}%</th>
 	</thead>
 	<tr class="other">
 		<td>
-			<table width="100%" class="other-viewheader">
+			<a href="javascript:void(0);" value="Export to Excel" name="AUniverse-link-export" id="AUniverse-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="AUniverse-link-export2" id="AUniverse-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="AUniverse_treeview" width="100%" class="other-viewheader table_with_scroll">
 				<thead>
-					<th class="other-viewheader" scope="col" width="3%"></th>
-					<th class="other-viewheader" scope="col" width="3%"></th>
+					<th class="other-viewheader" scope="col" width="6%"></th>
 					<th class="other-viewheader" scope="col" width="15%">Audit Universe</th>
 					<th class="other-viewheader" scope="col" width="5%">Count</th>
 					<th class="other-viewheader" scope="col" width="8%">Type</th>
@@ -24,18 +27,32 @@
 					<th class="other-viewheader" scope="col" width="5%">CQ Score</th>
 					<th class="other-viewheader" scope="col" width="10%">Explanation</th>
 				</thead>
+				<tbody>
 				{{#each AUData}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-							{{#if @first}}
-								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
-							{{else}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/if}}
-						{{/each}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="6%">{{name}}</td>
+						<td width="15%" style="text-align:left; !important;"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="5%">{{counter}}</td>
+						<td width="8%">{{Type}}</td>
+						<td width="8%">{{ARRGATTStatus}}</td>
+						{{{ratingDisplayView PeriodRatingPrev4 5}}}
+						{{{ratingDisplayView PeriodRatingPrev3 5}}}
+						{{{ratingDisplayView PeriodRatingPrev2 5}}}
+						{{{ratingDisplayView PeriodRatingPrev1 5}}}
+						{{{ratingDisplayView PeriodRating 5}}}
+						{{{ratingDisplayView NextQtrRating 5}}}
+						<td width="5%">{{Target2Sat}}</td>
+						<td width="4%">{{CUSize}}</td>
+						<td width="4%">{{CUMaxScore}}</td>
+						<td width="5%">{{CUScore}}</td>
+						<td width="10%">{{ReviewComments}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 </table>
+<script>
+	$("#AUniverse_treeview").treetable({expandable: true });
+</script>

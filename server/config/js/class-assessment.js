@@ -368,7 +368,7 @@ var assessment = {
 								doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
 								doc[0].RiskView2Data = fieldCalc.addTestViewData(12,defViewRow);
 							}
-							doc[0].AUData = fieldCalc.addTestViewData(17,10);
+							doc[0].AUData = [];
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
@@ -386,6 +386,8 @@ var assessment = {
 
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
+									// Process Audit Universe Tab
+									aut.processAUTab(doc,defViewRow);
 									/*fieldCalc.getRatingProfile(doc);
 									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPRview.length == 0) {
