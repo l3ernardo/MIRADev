@@ -467,7 +467,7 @@ var calculatefield = {
 							"CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or":
-							[{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
+							[{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
 							{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
 
@@ -599,6 +599,7 @@ var calculatefield = {
 								"AUStatus": "Active",
 								"ParentDocSubType":{"$in":["BU Country","Controllable Unit","Country Process"]},
 								"CurrentPeriod": doc[0].CurrentPeriod,
+								"ExcludeGeo":{"$ne": "Yes"},
 								$or
 							}
 						};
@@ -1906,7 +1907,7 @@ var calculatefield = {
 		}
 		return deferred.promise;
 	},
-	
+
 	getAccountsCU: function(db, doc) {
 		var deferred = q.defer();
 		try {
