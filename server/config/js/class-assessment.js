@@ -381,6 +381,7 @@ var assessment = {
 
 							doc[0].IMTName = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].BUIOT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
+							doc[0].BUIMT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
 
@@ -388,6 +389,8 @@ var assessment = {
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
+									//open risks
+									//ort.processORTab(doc,defViewRow,req);
 									/*fieldCalc.getRatingProfile(doc);
 									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPRview.length == 0) {
