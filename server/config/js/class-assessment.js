@@ -1310,36 +1310,41 @@ var assessment = {
 								doc[0].BUCAsmtDataPIview = [];
 								doc[0].BUCAsmtDataOIview = [];
 								fieldCalc.getAssessments(db, doc, req).then(function(data){
-									fieldCalc.getRatingProfile(doc);
-									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
-										if (doc[0].BUCAsmtDataPRview.length == 0) {
-											doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+									comp.getCompDocs(db,doc).then(function(dataComp){
+										fieldCalc.getRatingProfile(doc);
+										if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
+											if (doc[0].BUCAsmtDataPRview.length == 0) {
+												doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPRview,10,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+											}
 										}
-									}
-									if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
-										if (doc[0].BUCAsmtDataCURview.length == 0) {
-											doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+										if (doc[0].BUCAsmtDataCURview.length < defViewRow) {
+											if (doc[0].BUCAsmtDataCURview.length == 0) {
+												doc[0].BUCAsmtDataCURview = fieldCalc.addTestViewData(14,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataCURview,14,(defViewRow-doc[0].BUCAsmtDataPRview.length));
+											}
 										}
-									}
-									if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
-										if (doc[0].BUCAsmtDataPIview.length == 0) {
-											doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+										if (doc[0].BUCAsmtDataPIview.length < defViewRow) {
+											if (doc[0].BUCAsmtDataPIview.length == 0) {
+												doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-doc[0].BUCAsmtDataPIview.length));
+											}
 										}
-									}
-									if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
-										if (doc[0].BUCAsmtDataOIview.length == 0) {
-											doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-										} else {
-											fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+										if (doc[0].BUCAsmtDataOIview.length < defViewRow) {
+											if (doc[0].BUCAsmtDataOIview.length == 0) {
+												doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
+											}
 										}
-									}
-									deferred.resolve({"status": 200, "doc": doc});
+										deferred.resolve({"status": 200, "doc": doc});
+									}).catch(function(err) {
+										console.log("[assessment][newAsmtByPID][getCompDocs]" + err.error.reason);
+										deferred.reject({"status": 500, "error": err.error.reason});
+									});
 								}).catch(function(err) {
 									console.log("[assessment][newAsmtByPID][getAssessments]" + err.error.reason);
 									deferred.reject({"status": 500, "error": err.error.reason});
@@ -1350,6 +1355,9 @@ var assessment = {
 								doc[0].IMT = pdoc[0].IMT;
 								doc[0].Country = pdoc[0].Country;
 								doc[0].BUIMT = req.session.buname + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+								doc[0].CountryId = doc[0].Country;
+								doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+								doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
 								if (doc[0].EnteredBU == "GTS") {
 									doc[0].PeriodRatingSOD = "NR";
 									doc[0].PeriodRatingCRM = "NR";
@@ -1381,6 +1389,8 @@ var assessment = {
 
 							comp.getCompDocs(db,doc).then(function(dataComp){
 								fieldCalc.getAssessments(db, doc, req).then(function(data){
+									//open risks
+									ort.processORTab(doc,defViewRow,req);
 									fieldCalc.getRatingProfile(doc);
 									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPRview.length == 0) {
