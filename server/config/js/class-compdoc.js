@@ -151,7 +151,37 @@ var getDocs = {
 				case "BU IOT":
 					break;
 				case "BU IMT":
-					deferred.resolve({"status": 200, "doc": doc});
+			        var compObj = {
+			            selector : {
+			              "_id": {"$gt":0},
+			              "$or": [
+			                { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
+			                { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+			               ]
+			            }
+			         };
+			         db.find(compObj).then(function(compdata) {
+			            var comps = compdata.body.docs;
+
+			            // For Reporting Country Testing Tab
+			            doc[0].CPDRException = [];
+			            doc[0].TRExceptionControls = [];
+			            doc[0].RCTest3Data = [];
+			                if (comps[i].compntType == "countryControls"){
+			                      comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+			                      comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+			                      doc[0].TRExceptionControls.push(comps[i]);
+			                }
+			                if (comps[i].compntType == "controlSample") {
+			                    if (comps[i].reportingCountry == doc[0].Country) {
+			                      doc[0].RCTest3Data.push(comps[i]);
+			                    }
+			                }
+			            deferred.resolve({"status": 200, "doc": doc});
+			        }).catch(function(err) {
+			            console.log("[class-compdoc][getCompDocs] - " + err.error.reason);
+			           deferred.reject({"status": 500, "error": err.error.reason});
+			        });
 					break;
 				case "Account":
 					var compObj = {
