@@ -36,11 +36,16 @@ var calculateARTab = {
           var auditRList = [];
 
           for(var i = 0; i < auditR.length; i++){
-            if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && reportingQuarter == doc[0].CurrentPeriod){
+            if (auditR[i].compntType == "PPR" && auditR[i].originalReportingQuarter == auditR[i].reportingQuarter) {
+              auditR[i].COFlag = true;
+            } else {
               auditR[i].COFlag = false;
-            }else{
-            auditR[i].COFlag = true;
             }
+            // if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && reportingQuarter == doc[0].CurrentPeriod){
+            //   auditR[i].COFlag = false;
+            // }else{
+            // auditR[i].COFlag = true;
+            // }
             if(auditR[i].compntType == "PPR"){
               auditR[i].compntType = "Proactive Reviews";
             }else{
@@ -103,11 +108,16 @@ var calculateARTab = {
           var auditInt = doc[0].AuditTrustedRCUData;
           var AuditTrustedRCUData = auditInt;
           for(var i = 0; i < auditInt.length; i++){
-            if(auditInt[i].REVIEW_TYPE == "CHQ Internal Audit"||auditInt[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+            if (auditInt[i].compntType == "PPR" && auditInt[i].originalReportingQuarter == auditInt[i].reportingQuarter) {
+              auditInt[i].COFlag = true;
+            } else {
               auditInt[i].COFlag = false;
-            }else{
-            auditInt[i].COFlag = true;
             }
+            // if(auditInt[i].REVIEW_TYPE == "CHQ Internal Audit"||auditInt[i].REVIEW_TYPE == "" && ORIG_RPTG_QTR == doc[0].CurrentPeriod){
+            //   auditInt[i].COFlag = false;
+            // }else{
+            // auditInt[i].COFlag = true;
+            // }
           }
           // add padding
           if (Object.keys(AuditTrustedRCUData).length < defViewRow) {
@@ -138,11 +148,11 @@ var calculateARTab = {
           var localAuditsList = [];
           var exportLocalAuditsList = [];
           for(var i = 0; i < auditLoc.length; i++){
-            if(auditLoc[i].auditOrReview == "CHQ Internal Audit"||auditLoc[i].auditOrReview == "" && auditLoc[i].reportingQuarter == doc[0].CurrentPeriod){
-              auditLoc[i].COFlag = false;
-            }else {
-              auditLoc[i].COFlag = true;
-            }
+            // if(auditLoc[i].auditOrReview == "CHQ Internal Audit"||auditLoc[i].auditOrReview == "" && auditLoc[i].reportingQuarter == doc[0].CurrentPeriod){
+            //   auditLoc[i].COFlag = false;
+            // }else {
+            //   auditLoc[i].COFlag = true;
+            // }
             if(typeof quartersList[auditLoc[i].reportingQuarter] === "undefined"){
               localAuditsList.push({id:auditLoc[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditLoc[i].reportingQuarter });
               quartersList[auditLoc[i].reportingQuarter] = true;
@@ -214,11 +224,11 @@ var calculateARTab = {
           var localAuditsList = [];
           var exportLocalAuditsList = [];
           for(var i = 0; i < auditLoc.length; i++){
-            if(auditLoc[i].auditOrReview == "CHQ Internal Audit"||auditLoc[i].auditOrReview == "" && auditLoc[i].reportingQuarter == doc[0].CurrentPeriod){
-              auditLoc[i].COFlag = false;
-            }else {
-              auditLoc[i].COFlag = true;
-            }
+            // if(auditLoc[i].auditOrReview == "CHQ Internal Audit"||auditLoc[i].auditOrReview == "" && auditLoc[i].reportingQuarter == doc[0].CurrentPeriod){
+            //   auditLoc[i].COFlag = false;
+            // }else {
+            //   auditLoc[i].COFlag = true;
+            // }
             if(typeof quartersList[auditLoc[i].reportingQuarter] === "undefined"){
               localAuditsList.push({id:auditLoc[i].reportingQuarter.replace(/ /g,''), reportingQuarter:auditLoc[i].reportingQuarter });
               quartersList[auditLoc[i].reportingQuarter] = true;
@@ -349,11 +359,16 @@ var calculateARTab = {
         var auditRList = [];
 
         for(var i = 0; i < auditR.length; i++){
-          if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && reportingQuarter == doc[0].CurrentPeriod){
+          if (auditR[i].compntType == "PPR" && auditR[i].originalReportingQuarter == auditR[i].reportingQuarter) {
+            auditR[i].COFlag = true;
+          } else {
             auditR[i].COFlag = false;
-          }else{
-          auditR[i].COFlag = true;
           }
+          // if(auditR[i].REVIEW_TYPE == "CHQ Internal Audit"||auditR[i].REVIEW_TYPE == "" && reportingQuarter == doc[0].CurrentPeriod){
+          //   auditR[i].COFlag = false;
+          // }else{
+          // auditR[i].COFlag = true;
+          // }
           if(auditR[i].compntType == "PPR"){
             auditR[i].compntType = "Proactive Reviews";
           }else{
