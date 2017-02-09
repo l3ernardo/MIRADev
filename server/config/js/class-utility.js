@@ -553,7 +553,7 @@ var util = {
 		var deferred = q.defer();
 		var bg = [];
 		try{
-			db.view('userBG', 'Area', {include_docs: true}).then(function(data) {
+			db.view('bluegroups', 'view-bluegroups', {include_docs: true}).then(function(data) {
 				for(var i=0;i<data.body.rows[0].doc.area[req.session.businessunit][req.query.group].length;i++) {
 					bg.push({"member": data.body.rows[0].doc.area[req.session.businessunit][req.query.group][i].name + " (" + data.body.rows[0].doc.area[req.session.businessunit][req.query.group][i].id+ ")","uid":data.body.rows[0].doc.area[req.session.businessunit][req.query.group][i].uid})
 				}
