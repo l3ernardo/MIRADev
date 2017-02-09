@@ -330,9 +330,9 @@ var getDocs = {
 					//Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
 					var $or = [];
 					// For CHQ Internal Audits - Local
-					for(var i = 0; i < doc[0].AUData.length; i++){
-						$or.push({parentid: doc[0].AUData[i]["_id"]});
-					}
+					for(var i = 0; i < doc[0].asmtsdocs.length; i++){
+            $or.push({parentid: doc[0].asmtsdocs[i]["_id"]});
+          }
 					var compObj = {
 						selector : {
 							"_id": {"$gt":0},
@@ -533,7 +533,7 @@ var getDocs = {
 									}
 								}
 							}
-              // For Audits and Reviews tab - Internal Audits
+              // For Audits and Reviews Tab - view 1 (Internal Audits)
 							else if (comps[i].compntType == "internalAudit" && doc[0].CurrentPeriod.substr(0, 4) == ( "20" + comps[i].engagement.substr(0, 2))) {
                 // audits and reviews tab only displays audits that has the same year as the asmt
 								if (typeof comps[i].engagement === "undefined") {
@@ -548,12 +548,14 @@ var getDocs = {
 							else if (comps[i].compntType == "PPR") {
 								doc[0].PPRData.push(comps[i]);
 							}
-							// For Local Audits
+							// Local Audits (used by the view 1 and view 3 for Audits & Reviews)
 							else if (comps[i].compntType == "localAudit") {
 								if (comps[i].auditOrReview == "CHQ Internal Audit") {
 									doc[0].InternalAuditData.push(comps[i]);
 								}
-								doc[0].OtherAuditsData.push(comps[i]);
+								else {
+									doc[0].OtherAuditsData.push(comps[i]);
+								}
 							}
 						}
 						deferred.resolve({"status": 200, "doc": doc});

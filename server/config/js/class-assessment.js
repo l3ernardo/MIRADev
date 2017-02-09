@@ -509,8 +509,6 @@ var assessment = {
 										performanceTab.createTablesData(doc);
 									  performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
-
-
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM) < defViewRow) {
 											if (doc[0].BUCAsmtDataPIviewCRM.length == 0) {
 												doc[0].BUCAsmtDataPIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
@@ -518,8 +516,6 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM)));
 											}
 										}
-
-
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery) < defViewRow) {
 											if (doc[0].BUCAsmtDataPIviewDelivery.length == 0) {
 												doc[0].BUCAsmtDataPIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
@@ -527,7 +523,6 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery)));
 											}
 										}
-
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM) < defViewRow) {
 											if (doc[0].BUCAsmtDataOIviewCRM.length == 0) {
 												doc[0].BUCAsmtDataOIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
@@ -535,7 +530,6 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM)));
 											}
 										}
-
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery) < defViewRow) {
 											if (doc[0].BUCAsmtDataOIviewDelivery.length == 0) {
 												doc[0].BUCAsmtDataOIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
@@ -543,20 +537,9 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery)));
 											}
 										}
-
-
-
-
-
 									} else{// GBS and GTS trans
-
 										performanceTab.getCPANDCUPerformanceIndicators(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
-
-
-
-
-
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
 											if (doc[0].BUCAsmtDataPIview.length == 0) {
 												doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
@@ -564,7 +547,6 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIview)));
 											}
 										}
-
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIview) < defViewRow) {
 											if (doc[0].BUCAsmtDataOIview.length == 0) {
 												doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
@@ -572,10 +554,7 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIview)));
 											}
 										}
-
-
 									}
-
 
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
@@ -618,7 +597,6 @@ var assessment = {
 							doc[0].AuditLocalData = [];
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
-
 								fieldCalc.getAccountInheritedFields(db, doc).then(function(accdata){
 									// Get Component Docs
 									comp.getCompDocs(db,doc).then(function(dataComp){
@@ -628,17 +606,14 @@ var assessment = {
 										kct.processKCTab(doc,defViewRow);
 										// Audits and Reviews Tab
 										aar.processARTab(doc,defViewRow);
-
 										//Process rating tab
 										pct.processPRTab(doc,defViewRow);
-
 										//Open issue
 										comp.getOpenIssue(db,doc,defViewRow).then(function(){
 											//AuditKey - GTS & GTS Transformation
 											if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 												fieldCalc.getGlobalProcess(db, doc[0].MIRABusinessUnit).then(function(dataGP){
 													var gpList = dataGP.doc;
-
 													var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 														var obj = {
 															selector : {
