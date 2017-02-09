@@ -779,6 +779,11 @@ var calculatefield = {
 									}
 								}
 							}
+							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
+              doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+              //Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
+              doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
+              //Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
