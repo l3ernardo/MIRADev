@@ -86,7 +86,7 @@ var calculatePRTab = {
     }
     doc[0].exportProcessRatings = exportList;
     for(var category in catList){
-      catList[category].percent = catList[category].count/doc[0].CUAsmtDataPR1view.length*100;
+      catList[category].percent = (catList[category].count/doc[0].CUAsmtDataPR1view.length*100).toFixed(0);
     }
     //Adding padding
     if (Object.keys(catList).length < defViewRow) {
@@ -156,10 +156,10 @@ var calculatePRTab = {
     }
     doc[0].exportProcessRatings2 = exportList;
     for(var category in catList){
-      catList[category].percent = catList[category].count/countryList[catList[category].parent].count*100;
+      catList[category].percent = (catList[category].count/countryList[catList[category].parent].count*100).toFixed(0);
     }
     for(var country in countryList){
-      countryList[country].percent = countryList[country].count/doc[0].CUAsmtDataPR1view2.length*100;
+      countryList[country].percent = (countryList[country].count/doc[0].CUAsmtDataPR1view2.length*100).toFixed(0);
     }
     //Adding padding
     if (Object.keys(catList).length < defViewRow) {
