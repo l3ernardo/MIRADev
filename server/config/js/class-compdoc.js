@@ -151,7 +151,54 @@ var getDocs = {
 				case "BU IOT":
 					break;
 				case "BU IMT":
-					deferred.resolve({"status": 200, "doc": doc});
+			        var compObj = {
+			            selector : {
+			              "_id": {"$gt":0},
+			              "$or": [
+											//Risks Tab
+											//{"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] },
+											//Getting open issue categories to displaye
+											{"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] },
+			                { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
+			                { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+			               ]
+			            }
+			         };
+			         db.find(compObj).then(function(compdata) {
+			            var comps = compdata.body.docs;
+									doc[0].riskCategories = [];
+									doc[0].RiskView1Data =  [];
+									doc[0].RiskView2Data = [];
+
+			            // For Reporting Country Testing Tab
+			            doc[0].CPDRException = [];
+			            doc[0].TRExceptionControls = [];
+			            doc[0].RCTest3Data = [];
+									for(var i = 0; i < comps.length; i++) {
+			                if (comps[i].compntType == "countryControls"){
+			                      comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+			                      comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+			                      doc[0].TRExceptionControls.push(comps[i]);
+			                }
+			                else if (comps[i].compntType == "controlSample") {
+			                    if (comps[i].reportingCountry == doc[0].Country) {
+			                      doc[0].RCTest3Data.push(comps[i]);
+			                    }
+			                }else if (comps[i].compntType == "openIssue") {
+												comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
+												doc[0].RiskView1Data.push(comps[i]);
+												if(comps[i].reportingQuarter == doc[0].CurrentPeriod){
+													doc[0].RiskView2Data.push(comps[i]);
+												}
+											}else if (comps[i].docType == "setup"){
+												doc[0].riskCategories = comps[i].value.options;
+											}
+										}
+			            deferred.resolve({"status": 200, "doc": doc});
+			        }).catch(function(err) {
+			            console.log("[class-compdoc][getCompDocs] - " + err.error.reason);
+			           deferred.reject({"status": 500, "error": err.error.reason});
+			        });
 					break;
 				case "Account":
 					var compObj = {
