@@ -197,6 +197,7 @@
 					<th class="processrating-viewheader" scope="col" width="10%">Target to Sat</th>
 					<th class="processrating-viewheader" scope="col" width="20%">Explanations</th>
 				</thead>
+				<tbody>
 				{{#each CUAsmtDataPR1view}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td class="asmt-viewdata"width="10%">{{#unless name}}{{{ratingcategory}}}{{/unless}}</td>
@@ -207,14 +208,14 @@
 						{{/if}}
 						<td class="asmt-viewdata"width="5%">{{count}}</td>
 						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
-						{{{ratingDisplayView ratingPQ1}}}
-						{{{ratingDisplayView ratingCQ}}}
+						{{{ratingDisplayView ratingPQ1 10}}}
+						{{{ratingDisplayView ratingCQ 10}}}
 						<td class="asmt-viewdata"width="10%">{{targettosat}}</td>
 						<td class="asmt-viewdata"width="10%">{{targettosatprev}}</td>
 						<td class="asmt-viewdata"width="20%">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
-				<tr>
+				</tbody>
 			</table>
 		</td>
 	</tr>
@@ -234,26 +235,28 @@
 					<th class="processrating-viewheader" scope="col" width="10%">Prior Q</th>
 					<th class="processrating-viewheader" scope="col" width="10%">Curr Q</th>
 					<th class="processrating-viewheader" scope="col" width="10%">Target to Sat</th>
-					<th class="processrating-viewheader" scope="col" width="20%">Explanations</th>
+					<th class="processrating-viewheader" scope="col" width="20%">Explanationss</th>
 				</thead>
+				<tbody>
 				{{#each CUAsmtDataPR1view2}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td class="asmt-viewdata"width="10%">{{#unless name}}{{country}}{{/unless}}</td>
-						<td class="asmt-viewdata"width="10%">{{#unless name}}{{ratingcategory}}{{/unless}}</td>
+						<td class="asmt-viewdata" width="10%">{{#unless name}}{{country}}{{/unless}}</td>
+						<td class="asmt-viewdata" width="10%">{{#unless name}}{{ratingcategory}}{{/unless}}</td>
 						{{#if name}}
-							<td class="asmt-viewdata-al"width="20%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							<td class="asmt-viewdata-al" width="20%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
-							<td class="asmt-viewdata"width="20%">&nbsp;</td>
+							<td class="asmt-viewdata" width="20%">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"width="5%">{{count}}</td>
-						<td class="asmt-viewdata"width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
-						{{{ratingDisplayView ratingPQ1}}}
-						{{{ratingDisplayView ratingCQ}}}
-						<td class="asmt-viewdata"width="10%">{{targettosat}}</td>
-						<td class="asmt-viewdata"width="20%">{{reviewcomments}}</td>
+						<td class="asmt-viewdata" width="5%">{{count}}</td>
+						<td class="asmt-viewdata" width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
+						{{{ratingDisplayView ratingPQ1 10}}}
+						{{{ratingDisplayView ratingCQ 10}}}
+						<td class="asmt-viewdata" width="10%">{{targettosat}}</td>
+						<td class="asmt-viewdata" width="20%">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
-				<tr>
+				</tbody>
+				
 			</table>
 		</td>
 	</tr>
