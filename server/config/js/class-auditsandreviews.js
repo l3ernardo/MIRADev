@@ -368,7 +368,6 @@ var calculateARTab = {
             }
             for(var key in parentAUs) {
               if (auditPPR[i].CU == parentAUs[key].Name) {
-                tmp.parentid = parentAUs[key]._id;
                 tmp.Name = parentAUs[key].Name;
                 if(parentAUs[key].DocSubType == "Controllable Unit" && parentAUs[key].Portfolio == "Yes") {
                   tmp.DocSubType = "Portfolio CU";
