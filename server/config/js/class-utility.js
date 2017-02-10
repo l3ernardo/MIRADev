@@ -838,6 +838,32 @@ var util = {
 		return deferred.promise;
 	},
 
+	// Created by Carlos Takata - used in Dashboards
+	getAllUserDocs : function(db,user){
+		var deferred = q.defer();
+		try{
+			var query = "(?i)" + user
+			var selector = {
+				selector : {
+					"_id": {"$gt":0},
+					key: "AccessList",
+					"$or": [
+						{"AllEditors":{"$elemMatch":{"$regex":query}}},
+						{"AllReaders":{"$elemMatch":{"$regex":query}}}
+					]
+			}};
+			db.find(selector).then(function(data){
+				var doc = data.body.docs;
+				deferred.resolve({"status": 200, "result": doc});
+			}).catch(function(error){
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		}catch(e){
+			deferred.reject({"status": 500, "error": e});
+		}
+		return deferred.promise;
+	},
+	
 	// Load manifest.yml to identify ORG
 	getOrg: function() {
 		var data = (fs.readFileSync('manifest.info', 'utf8'));
