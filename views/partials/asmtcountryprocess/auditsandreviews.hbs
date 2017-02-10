@@ -29,7 +29,7 @@
 				<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 					<!--<th width="2%">{{#if countryProcess}}<input type="checkbox" class="ppr_checkbox_tree"/>{{/if}}</th>-->
 						<td width="6%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
-						<td width="3%">{{#if COFlag}}<a class="ibm-check-link"></a>{{/if}}</td>
+						<td width="3%">{{#if COFlag}}<span class="ibm-check-link"></span>{{/if}}</td>
 						<td width="15%">{{#if auditOrReview}}{{auditOrReview}}{{else}}&nbsp;{{/if}}</td>
 						<td width="10%">{{#unless catEntry}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{eid}}</a>{{/unless}}</td>
 						<td width="20%">{{countryProcess}}</td>
@@ -110,9 +110,9 @@
 				{{#each AuditLocalData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						{{#unless parent}}
-							<td width="6%">{{reportingQuarter}}</td>
+							<td width="7%">{{reportingQuarter}}</td>
 						{{else}}
-							<td width="6%">&nbsp;</td>
+							<td width="7%">&nbsp;</td>
 						{{/unless}}
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{auditOrReview}}</a></td>
 						<td width="7%">{{reportDate}}</td>
