@@ -22,10 +22,10 @@
   					<th class="audit-review-viewheader" scope="col" width="5%">Score</th>
   				</thead>
   				{{#each exportInternalAuditData}}
-  					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+  					<tr data-tt-id={{id}} data-tt-parent-id="{{parentid}}" class="asmt-viewdata">
               <td width="10%">{{plannedStartDate}}</td>
               <td width="8%">{{engagement}}</td>
-              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{Name}}</a></td>
+              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{parentid}}">{{Name}}</a></td>
               <td width="20%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               {{{ratingDisplayView PeriodRating 5}}}
@@ -66,12 +66,12 @@
   					<th class="audit-review-viewheader" scope="col" width="5%">Count</th>
   				</thead>
   				{{#each exportPPRData}}
-  					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+  					<tr data-tt-id={{id}} data-tt-parent-id="{{parentid}}" class="asmt-viewdata">
               <td width="7%">{{auditOrReview}}</td>
               <td width="5%">{{reportingQuarter}}</td>
               <td width="5%">{{status}}</td>
               <td width="8%">{{reviewID}}</td>
-              <td width="35%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{Name}}</a></td>
+              <td width="35%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{parentid}}">{{Name}}</a></td>
               <td width="10%">{{DocSubType}}</td>
               <td width="10%">{{reportDate}}</td>
               {{{ratingDisplayView rating 5}}}
@@ -108,12 +108,12 @@
   					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
   				</thead>
   				{{#each exportOtherAuditsData}}
-  					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+  					<tr data-tt-id={{id}} data-tt-parent-id="{{parentid}}" class="asmt-viewdata">
               <td width="8%">{{auditOrReview}}</td>
               {{{ratingDisplayView PeriodRating 8}}}
               <td width="8%">{{imt}}</td>
               <td width="8%">{{reportDate}}</td>
-              <td width="30%">{{Name}}</td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{parentid}}">{{Name}}</a></td>
               <td width="8%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               <td width="5%">{{CUSize}}</td>
@@ -158,10 +158,10 @@
             <th class="audit-review-viewheader" scope="col" width="5%">Score</th>
           </thead>
           {{#each exportInternalAuditData}}
-            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parentid}}" class="asmt-viewdata">
               <td width="10%">{{plannedStartDate}}</td>
               <td width="8%">{{engagement}}</td>
-              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{Name}}</a></td>
+              <td width="40%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{parentid}}">{{Name}}</a></td>
               <td width="20%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               {{{ratingDisplayView PeriodRating 5}}}
@@ -202,12 +202,12 @@
             <th class="audit-review-viewheader" scope="col" width="5%">Count</th>
           </thead>
           {{#each exportPPRData}}
-            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parentid}}" class="asmt-viewdata">
               <td width="7%">{{auditOrReview}}</td>
               <td width="5%">{{reportingQuarter}}</td>
               <td width="5%">{{status}}</td>
               <td width="8%">{{reviewID}}</td>
-              <td width="35%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{Name}}</a></td>
+              <td width="35%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{parentid}}">{{Name}}</a></td>
               <td width="10%">{{DocSubType}}</td>
               <td width="10%">{{reportDate}}</td>
               {{{ratingDisplayView rating 5}}}
@@ -251,12 +251,12 @@
             <th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
           </thead>
           {{#each exportOtherAuditsData}}
-            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parentid}}" class="asmt-viewdata">
               <td width="8%">{{auditOrReview}}</td>
               {{{ratingDisplayView PeriodRating 8}}}
               <td width="8%">{{imt}}</td>
               <td width="8%">{{reportDate}}</td>
-              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}">{{Name}}</a></td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{parentid}}">{{Name}}</a></td>
               <td width="8%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               <td width="5%">{{CUSize}}</td>
