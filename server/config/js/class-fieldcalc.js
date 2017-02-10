@@ -189,19 +189,42 @@ var calculatefield = {
 	getProcessCategory: function(processName, doc) {
 		var processCategory = "Operational";
 		try{
+			
 			if (doc[0].KCProcessOPS !== undefined) {
 				for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
-					if (processName.indexOf(doc[0].KCProcessOPS[j].name)>=0) {
-						processCategory = "Operational";
-						break;
+					if(doc[0].KCProcessOPS[j].name == undefined){
+						for(var y= 0; y<doc[0].KCProcessOPS[j].members.length; y++){
+							if (processName.indexOf(doc[0].KCProcessOPS[j].members[y].name)>=0) {
+								processCategory = "Operational";
+								break;
+							}
+						}
+						if (doc[0].processCategory !== undefined) break;
+					}
+					else{
+						if (processName.indexOf(doc[0].KCProcessOPS[j].name)>=0) {
+							processCategory = "Operational";
+							break;
+						}
 					}
 				}
 			}
 			if (doc[0].processCategory == undefined && doc[0].KCProcessFIN !== undefined) {
 				for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
-					if (processName.indexOf(doc[0].KCProcessFIN[j].name)>= 0) {
-						processCategory = "Financial";
-						break;
+					if(doc[0].KCProcessFIN[j].name == undefined){
+						for(var y= 0; y<doc[0].KCProcessFIN[j].members.length; y++){
+							if (processName.indexOf(doc[0].KCProcessFIN[j].members[y].name)>=0) {
+								processCategory = "Operational";
+								break;
+							}
+						}
+						if (doc[0].processCategory !== undefined) break;
+					}
+					else{
+						if (processName.indexOf(doc[0].KCProcessFIN[j].name)>= 0) {
+							processCategory = "Financial";
+							break;
+						}
 					}
 				}
 			}
@@ -342,26 +365,10 @@ var calculatefield = {
 						doc[0].KCProcessFIN = dataParam.parameters.GBSRollupProcessesFIN[0].options;
 					}
 					if (dataParam.parameters.GTSRollupProcessesOPS) {
-						//doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
-						var arrKCProc = dataParam.parameters.GTSRollupProcessesOPS[0].options;
-						var arrObj = [];
-						for(var i= 0; i<arrKCProc.length; i++){
-							for(var j= 0; j<arrKCProc[i].members.length; j++){
-								arrObj.push(arrKCProc[i].members[j])
-							}
-						}
-						doc[0].KCProcessOPS = arrObj;
+						doc[0].KCProcessOPS = dataParam.parameters.GTSRollupProcessesOPS[0].options;
 					}
 					if (dataParam.parameters.GTSRollupProcessesFIN) {
-						//doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
-						var arrKCProc = dataParam.parameters.GTSRollupProcessesFIN[0].options;
-						var arrObj = [];
-						for(var i= 0; i<arrKCProc.length; i++){
-							for(var j= 0; j<arrKCProc[i].members.length; j++){
-								arrObj.push(arrKCProc[i].members[j])
-							}
-						}
-						doc[0].KCProcessFIN = arrObj;
+						doc[0].KCProcessFIN = dataParam.parameters.GTSRollupProcessesFIN[0].options;
 					}
 					if (dataParam.parameters.MargThresholdPercent) {
 						doc[0].MargThresholdPercent = dataParam.parameters.MargThresholdPercent[0].options[0].name;
