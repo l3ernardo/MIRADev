@@ -214,7 +214,7 @@ var calculatefield = {
 					if(doc[0].KCProcessFIN[j].name == undefined){
 						for(var y= 0; y<doc[0].KCProcessFIN[j].members.length; y++){
 							if (processName.indexOf(doc[0].KCProcessFIN[j].members[y].name)>=0) {
-								processCategory = "Operational";
+								processCategory = "Financial";
 								break;
 							}
 						}
@@ -1213,59 +1213,43 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-							// Rating Category Counters for CP
-							var count1=0; var count2=0;
-							for(j=0;j<doc[0].KCProcessFIN.length;j++){
-								var tfin= doc[0].KCProcessFIN;
-								var fid=tfin[j].id;
-								if(fid==doc[0].asmtsdocs[i].GPWWBCITKey){
-									count1=count1+1;
-									//j=doc[0].KCProcessFIN.length;
-								}
-							}
-							for(k=0;k<doc[0].KCProcessOPS.length;k++){
-								var tops= doc[0].KCProcessOPS;
-								var oid=tops[j].id;
-								if(oid==doc[0].asmtsdocs[i].GPWWBCITKey){
-									count2=count2+1;
-									// k=doc[0].KCProcessFIN.length;
-								}
-							}
+							
+							// Rating Category Counters
 							switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
-								if (count1>0) satUpFin = satUpFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
 								break;
 								case "Sat &#61;":
-								if (count1>0) satEqFin = satEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") satEqFin = satEqFin + 1;
 								else satEqOps = satEqOps + 1;
 								break;
 								case "Marg &#9650;":
-								if (count1>0) margUpFin = margUpFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margUpFin = margUpFin + 1;
 								else margUpOps = margUpOps + 1;
 								break;
 								case "Marg &#9660;":
-								if (count1>0) margDwnFin = margDwnFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margDwnFin = margDwnFin + 1;
 								else margDwnOps = margDwnOps + 1;
 								break;
 								case "Marg &#61;":
-								if (count1>0) margEqFin = margEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margEqFin = margEqFin + 1;
 								else margEqOps = margEqOps + 1;
 								break;
 								case "Unsat &#9660;":
-								if (count1>0) unsatDwnFin = unsatDwnFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") unsatDwnFin = unsatDwnFin + 1;
 								else unsatDwnOps = unsatDwnOps + 1;
 								break;
 								case "Unsat &#61;":
-								if (count1>0) unsatEqFin = unsatEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") unsatEqFin = unsatEqFin + 1;
 								else unsatEqOps = unsatEqOps + 1;
 								break;
 								case "Exempt":
-								if (count1>0) exemptFin = exemptFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") exemptFin = exemptFin + 1;
 								else exemptOps = exemptOps + 1;
 								break;
 								default:
-								if (count1>0) nrFin = nrFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") nrFin = nrFin + 1;
 								else nrOps = nrOps + 1;
 							}
 					}
