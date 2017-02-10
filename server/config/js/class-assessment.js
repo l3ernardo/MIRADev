@@ -86,7 +86,7 @@ var assessment = {
 			accessrules.getRules(req,doc[0].parentid,db,parentdoc[0]).then(function(result){
 
 				accessrules.rules = result.rules;
-
+				//console.log(result.rules);
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
@@ -361,6 +361,25 @@ var assessment = {
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
 								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
 								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+								
+								doc[0].BUCAsmtDataPIviewCRM = [];
+								doc[0].BUCAsmtDataPIviewDelivery = [];
+								doc[0].BUCAsmtDataOIviewCRM = [];
+								doc[0].BUCAsmtDataOIviewDelivery = [];
+
+								doc[0].MissedMSACSatCountDeliveryDoc = 0;
+								doc[0].MissedOpenIssueCountDeliveryDoc =0;
+								doc[0].MissedOpenIssueCountCRMDoc = 0;
+								doc[0].MissedMSACSatCountCRMDoc = 0;
+
+								doc[0].AUDataMSACCRM = [];
+								doc[0].MissedMSACSatCountCRM = "";
+								doc[0].AUDataMSACSOD = [];
+								doc[0].MissedMSACSatCountSOD = "";
+
+								doc[0].BOCExceptionCountCRM = 0;
+								doc[0].BOCExceptionCountSOD = 0;
+								
 							} else {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
@@ -387,8 +406,90 @@ var assessment = {
 
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
+									// Get rating profiles
+									fieldCalc.getRatingProfile(doc);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
+									
+									
+									//Performance tab
+								
+									
+									performanceTab.getKFCRDefectRate(db,doc);
+									performanceTab.getKCODefectRate(db,doc);
+									performanceTab.getMissedRisks(db,doc);
+									performanceTab.getMSACCommitmentsCount(db,doc);
+									
+									if (doc[0].MIRABusinessUnit == "GTS") {
+										performanceTab.createTablesData(doc);
+									  performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
+										performanceTab.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
+
+
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM) < defViewRow) {
+											if (doc[0].BUCAsmtDataPIviewCRM.length == 0) {
+												doc[0].BUCAsmtDataPIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM)));
+											}
+										}
+
+
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery) < defViewRow) {
+											if (doc[0].BUCAsmtDataPIviewDelivery.length == 0) {
+												doc[0].BUCAsmtDataPIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery)));
+											}
+										}
+
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM) < defViewRow) {
+											if (doc[0].BUCAsmtDataOIviewCRM.length == 0) {
+												doc[0].BUCAsmtDataOIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM)));
+											}
+										}
+
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery) < defViewRow) {
+											if (doc[0].BUCAsmtDataOIviewDelivery.length == 0) {
+												doc[0].BUCAsmtDataOIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery)));
+											}
+										}
+
+
+
+
+
+									} else{// GBS and GTS trans
+
+										performanceTab.getCPANDCUPerformanceIndicators(db,doc);
+										performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+
+
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
+											if (doc[0].BUCAsmtDataPIview.length == 0) {
+												doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIview)));
+											}
+										}
+
+										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIview) < defViewRow) {
+											if (doc[0].BUCAsmtDataOIview.length == 0) {
+												doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+											} else {
+												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIview)));
+											}
+										}
+
+
+									}
+									
+									
+									
 									//open risks
 									//ort.processORTab(doc,defViewRow,req);
 									/*fieldCalc.getRatingProfile(doc);
@@ -509,6 +610,8 @@ var assessment = {
 										performanceTab.createTablesData(doc);
 									  performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
+
+
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM) < defViewRow) {
 											if (doc[0].BUCAsmtDataPIviewCRM.length == 0) {
 												doc[0].BUCAsmtDataPIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
@@ -516,6 +619,8 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewCRM)));
 											}
 										}
+
+
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery) < defViewRow) {
 											if (doc[0].BUCAsmtDataPIviewDelivery.length == 0) {
 												doc[0].BUCAsmtDataPIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
@@ -523,6 +628,7 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIviewDelivery)));
 											}
 										}
+
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM) < defViewRow) {
 											if (doc[0].BUCAsmtDataOIviewCRM.length == 0) {
 												doc[0].BUCAsmtDataOIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
@@ -530,6 +636,7 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewCRM,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewCRM)));
 											}
 										}
+
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery) < defViewRow) {
 											if (doc[0].BUCAsmtDataOIviewDelivery.length == 0) {
 												doc[0].BUCAsmtDataOIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
@@ -537,9 +644,17 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewDelivery,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIviewDelivery)));
 											}
 										}
+
+
+
+
+
 									} else{// GBS and GTS trans
+
 										performanceTab.getCPANDCUPerformanceIndicators(db,doc);
 										performanceTab.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+
+
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
 											if (doc[0].BUCAsmtDataPIview.length == 0) {
 												doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
@@ -547,6 +662,7 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataPIview)));
 											}
 										}
+
 										if (performanceTab.getCatSize(doc[0].BUCAsmtDataOIview) < defViewRow) {
 											if (doc[0].BUCAsmtDataOIview.length == 0) {
 												doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
@@ -554,7 +670,10 @@ var assessment = {
 												fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-performanceTab.getCatSize(doc[0].BUCAsmtDataOIview)));
 											}
 										}
+
+
 									}
+
 
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
@@ -597,6 +716,7 @@ var assessment = {
 							doc[0].AuditLocalData = [];
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
+
 								fieldCalc.getAccountInheritedFields(db, doc).then(function(accdata){
 									// Get Component Docs
 									comp.getCompDocs(db,doc).then(function(dataComp){
@@ -606,14 +726,17 @@ var assessment = {
 										kct.processKCTab(doc,defViewRow);
 										// Audits and Reviews Tab
 										aar.processARTab(doc,defViewRow);
+
 										//Process rating tab
 										pct.processPRTab(doc,defViewRow);
+
 										//Open issue
 										comp.getOpenIssue(db,doc,defViewRow).then(function(){
 											//AuditKey - GTS & GTS Transformation
 											if(doc[0].MIRABusinessUnit != "GBS" && (parentdoc[0].AuditLessonsKey != null)){
 												fieldCalc.getGlobalProcess(db, doc[0].MIRABusinessUnit).then(function(dataGP){
 													var gpList = dataGP.doc;
+
 													var promises = parentdoc[0].AuditLessonsKey.split(",").map(function(id){
 														var obj = {
 															selector : {
