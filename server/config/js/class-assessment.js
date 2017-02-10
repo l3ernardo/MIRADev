@@ -361,7 +361,7 @@ var assessment = {
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
 								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
 								doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
-								
+
 								doc[0].BUCAsmtDataPIviewCRM = [];
 								doc[0].BUCAsmtDataPIviewDelivery = [];
 								doc[0].BUCAsmtDataOIviewCRM = [];
@@ -379,7 +379,7 @@ var assessment = {
 
 								doc[0].BOCExceptionCountCRM = 0;
 								doc[0].BOCExceptionCountSOD = 0;
-								
+
 							} else {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
@@ -388,6 +388,7 @@ var assessment = {
 								doc[0].RiskView2Data = fieldCalc.addTestViewData(12,defViewRow);
 							}
 							doc[0].AUData = [];
+							doc[0].AUDataMSAC = [];
 							doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
 							doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
 							doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
@@ -410,16 +411,17 @@ var assessment = {
 									fieldCalc.getRatingProfile(doc);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
-									
-									
+									//open risks
+									ort.processORTab(doc,defViewRow,req);
+
 									//Performance tab
-								
-									
+
+
 									performanceTab.getKFCRDefectRate(db,doc);
 									performanceTab.getKCODefectRate(db,doc);
 									performanceTab.getMissedRisks(db,doc);
 									performanceTab.getMSACCommitmentsCount(db,doc);
-									
+
 									if (doc[0].MIRABusinessUnit == "GTS") {
 										performanceTab.createTablesData(doc);
 									  performanceTab.getCPANDCUPerformanceIndicatorsGTS(db,doc);
@@ -487,11 +489,10 @@ var assessment = {
 
 
 									}
-									
-									
-									
-									//open risks
-									//ort.processORTab(doc,defViewRow,req);
+
+
+
+
 									/*fieldCalc.getRatingProfile(doc);
 									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPRview.length == 0) {
