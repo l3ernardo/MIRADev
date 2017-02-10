@@ -148,9 +148,14 @@ var components = {
 			};
 			db.find(obj).then(function(data){
 				var output = data.body.docs[0];
+				
 				output.subtitle = output.reportingCountry +" - "+output.controlShortName;
 				if(typeof req.query.edit !== "undefined"){
 					output.editmode = 1;
+				}
+				//Add gpid for samples documents
+				if(typeof req.query.pid !== "undefined"){
+					output.parentid = req.query.pid
 				}
 				var obj = {
 					"selector" : {

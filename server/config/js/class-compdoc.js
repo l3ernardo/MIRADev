@@ -151,7 +151,96 @@ var getDocs = {
 				case "BU IOT":
 					break;
 				case "BU IMT":
-					deferred.resolve({"status": 200, "doc": doc});
+			        var compObj = {
+			            selector : {
+			              "_id": {"$gt":0},
+			              "$or": [
+											//Risks Tab
+											//{"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$ne": "Closed"}}] },
+											//Getting open issue categories to displaye
+											{"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] },
+											 //Performance Tab and Reporting Country Testing Tab
+											{ "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"IMT": util.resolveGeo( doc[0].IMT,"IMT")}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
+											//Risks Tab
+											{"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"IMT" : util.resolveGeo( doc[0].IMT,"IMT")}, {"status": {"$ne": "Closed"}}] },
+											
+			             //   { "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
+			                { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+			               ]
+			            }
+			         };
+			        
+					
+			         db.find(compObj).then(function(compdata) {
+			            var comps = compdata.body.docs;
+									doc[0].riskCategories = [];
+									doc[0].RiskView1Data =  [];
+									doc[0].RiskView2Data = [];
+									doc[0].CountryControlsData = [];
+
+			            // For Reporting Country Testing Tab
+			            doc[0].CPDRException = [];
+			            doc[0].TRExceptionControls = [];
+			            doc[0].RCTest3Data = [];
+			            doc[0].RCTest2Data = [];
+			            
+			            if (doc[0].MIRABusinessUnit == "GTS") {
+							doc[0].RiskView1DataCRM = [];
+							doc[0].RiskView1DataDelivery = [];
+							doc[0].CountryControlsDataCRM = [];
+							doc[0].CountryControlsDataDelivery = []
+						}
+			            
+			         		            
+									for(var i = 0; i < comps.length; i++) {
+			                if (comps[i].compntType == "countryControls"){
+			                      comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+			                      comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+			                      doc[0].TRExceptionControls.push(comps[i]);
+			                      doc[0].RCTest2Data.push(comps[i]);
+			                      
+			                      if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+										doc[0].CountryControlsData.push(comps[i]);
+										if (doc[0].MIRABusinessUnit == "GTS") {
+											if(doc[0].CRMProcessObj[comps[i].process]){ doc[0].CountryControlsDataCRM.push(comps[i])
+											}else{doc[0].CountryControlsDataDelivery.push(comps[i]);}
+										}
+									}
+			                      
+			                }
+			                else if (comps[i].compntType == "controlSample") {
+			                    if (comps[i].reportingCountry == doc[0].Country) {
+			                      doc[0].RCTest3Data.push(comps[i]);
+			                    }
+			                }else if (comps[i].compntType == "openIssue") {
+												comps[i].AssessableUnitName = comps[i].businessUnit + " - " + comps[i].country;
+												doc[0].RiskView1Data.push(comps[i]);
+												if(comps[i].reportingQuarter == doc[0].CurrentPeriod){
+													doc[0].RiskView2Data.push(comps[i]);
+													if (doc[0].MIRABusinessUnit == "GTS") {
+														comps[i].catP = "(uncategorized)";
+														if(doc[0].CRMProcessObj[comps[i].GPPARENT]){
+															comps[i].catP = "CRM/Other";
+															doc[0].RiskView1DataCRM.push(comps[i]);
+														}
+														else if(doc[0].DeliveryProcessObj[comps[i].GPPARENT]){
+															comps[i].catP = "Delivery";
+															doc[0].RiskView1DataDelivery.push(comps[i])
+														}
+														else console.log("Process not found: "+comps[i].GPPARENT);
+													}
+												}
+											}else if (comps[i].docType == "setup"){
+												doc[0].riskCategories = comps[i].value.options;
+											}
+										}
+									
+									
+			            deferred.resolve({"status": 200, "doc": doc});
+			        }).catch(function(err) {
+			            console.log("[class-compdoc][getCompDocs] - " + err.error.reason);
+			           deferred.reject({"status": 500, "error": err.error.reason});
+			        });
 					break;
 				case "Account":
 					var compObj = {
@@ -283,9 +372,9 @@ var getDocs = {
 					//Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
 					var $or = [];
 					// For CHQ Internal Audits - Local
-					for(var i = 0; i < doc[0].AUData.length; i++){
-						$or.push({parentid: doc[0].AUData[i]["_id"]});
-					}
+					for(var i = 0; i < doc[0].asmtsdocs.length; i++){
+            $or.push({parentid: doc[0].asmtsdocs[i]["_id"]});
+          }
 					var compObj = {
 						selector : {
 							"_id": {"$gt":0},
@@ -486,7 +575,7 @@ var getDocs = {
 									}
 								}
 							}
-              // For Audits and Reviews tab - Internal Audits
+              // For Audits and Reviews Tab - view 1 (Internal Audits)
 							else if (comps[i].compntType == "internalAudit" && doc[0].CurrentPeriod.substr(0, 4) == ( "20" + comps[i].engagement.substr(0, 2))) {
                 // audits and reviews tab only displays audits that has the same year as the asmt
 								if (typeof comps[i].engagement === "undefined") {
@@ -501,12 +590,14 @@ var getDocs = {
 							else if (comps[i].compntType == "PPR") {
 								doc[0].PPRData.push(comps[i]);
 							}
-							// For Local Audits
+							// Local Audits (used by the view 1 and view 3 for Audits & Reviews)
 							else if (comps[i].compntType == "localAudit") {
 								if (comps[i].auditOrReview == "CHQ Internal Audit") {
 									doc[0].InternalAuditData.push(comps[i]);
 								}
-								doc[0].OtherAuditsData.push(comps[i]);
+								else {
+									doc[0].OtherAuditsData.push(comps[i]);
+								}
 							}
 						}
 						deferred.resolve({"status": 200, "doc": doc});

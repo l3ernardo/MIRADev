@@ -72,6 +72,7 @@ var calculateORTab = {
         };
         doc[0].openrisks = openrisks;
         break;
+      case "BU IMT":
       case "BU Country":
         // if(req.session.businessunit == "GBS"){
         if(doc[0].MIRABusinessUnit == "GBS"){
@@ -86,8 +87,8 @@ var calculateORTab = {
           doc[0].riskCategories[0].flagForTextarea = true;
           for (var i = 0; i < doc[0].RiskView1Data.length; i++) {
             for (var j = 0; j < doc[0].riskCategories.length; j++) {
-              if(doc[0].RiskView2Data[i].scorecardCategory == doc[0].riskCategories[j].name){
-                if (doc[0].RiskView2Data[i].reportingQuarter == doc[0].CurrentPeriod) {
+              if(doc[0].RiskView1Data[i].scorecardCategory == doc[0].riskCategories[j].name){
+                if (doc[0].RiskView1Data[i].reportingQuarter == doc[0].CurrentPeriod) {
                   doc[0].totalRisks.Current++;
                   if(doc[0].riskCategories[j]["Current"] == undefined){
                     doc[0].riskCategories[j]["Current"] = 1;
@@ -97,7 +98,7 @@ var calculateORTab = {
                 }
                 else{
                   for (var k = 0; k < doc[0].PrevQtrs.length; k++) {
-                    if(doc[0].RiskView2Data[i].reportingQuarter == doc[0].PrevQtrs[k]){
+                    if(doc[0].RiskView1Data[i].reportingQuarter == doc[0].PrevQtrs[k]){
                       doc[0].totalRisks["PrevQtr"+(k+1)]++;
                       if(doc[0].riskCategories[j]["PrevQtr"+(k+1)] == undefined){
                         doc[0].riskCategories[j]["PrevQtr"+(k+1)] = 1;

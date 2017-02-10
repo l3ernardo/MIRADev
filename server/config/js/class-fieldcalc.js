@@ -187,41 +187,50 @@ var calculatefield = {
 	},
 
 	getProcessCategory: function(processName, doc) {
-		var processCategory;
-		if (doc[0].GBSRollupProcessesOPS !== undefined) {
-			for (var j = 0; j < doc[0].GBSRollupProcessesOPS.length; j++) {
-				if (processName == doc[0].GBSRollupProcessesOPS[j].name) {
-					processCategory = "Operational";
-					break;
+		var processCategory = "Operational";
+		try{
+			
+			if (doc[0].KCProcessOPS !== undefined) {
+				for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
+					if(doc[0].KCProcessOPS[j].name == undefined){
+						for(var y= 0; y<doc[0].KCProcessOPS[j].members.length; y++){
+							if (processName.indexOf(doc[0].KCProcessOPS[j].members[y].name)>=0) {
+								processCategory = "Operational";
+								break;
+							}
+						}
+						if (doc[0].processCategory !== undefined) break;
+					}
+					else{
+						if (processName.indexOf(doc[0].KCProcessOPS[j].name)>=0) {
+							processCategory = "Operational";
+							break;
+						}
+					}
+				}
+			}
+			if (doc[0].processCategory == undefined && doc[0].KCProcessFIN !== undefined) {
+				for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
+					if(doc[0].KCProcessFIN[j].name == undefined){
+						for(var y= 0; y<doc[0].KCProcessFIN[j].members.length; y++){
+							if (processName.indexOf(doc[0].KCProcessFIN[j].members[y].name)>=0) {
+								processCategory = "Financial";
+								break;
+							}
+						}
+						if (doc[0].processCategory !== undefined) break;
+					}
+					else{
+						if (processName.indexOf(doc[0].KCProcessFIN[j].name)>= 0) {
+							processCategory = "Financial";
+							break;
+						}
+					}
 				}
 			}
 		}
-		if (doc[0].processCategory == undefined && doc[0].GBSRollupProcessesFIN !== undefined) {
-			for (var j = 0; j < doc[0].GBSRollupProcessesFIN.length; j++) {
-				if (processName== doc[0].GBSRollupProcessesFIN[j].name) {
-					processCategory = "Financial";
-					break;
-				}
-			}
-		}
-		if (doc[0].processCategory == undefined && doc[0].GTSRollupProcessesOPS !== undefined) {
-			for (var j = 0; j < doc[0].GTSRollupProcessesOPS.length; j++) {
-				if (processName == doc[0].GTSRollupProcessesOPS[j].name) {
-					processCategory = "Operational";
-					break;
-				}
-			}
-		}
-		if (doc[0].processCategory == undefined && doc[0].GTSRollupProcessesFIN !== undefined) {
-			for (var j = 0; j < doc[0].GTSRollupProcessesFIN.length; j++) {
-				if (processName == doc[0].GTSRollupProcessesFIN[j].name) {
-					processCategory = "Financial";
-					break;
-				}
-			}
-		}
-		if (doc[0].processCategory == undefined) {
-			processCategory = "Operational";
+		catch(e){
+			console.log("[fieldcalc][getProcessCategory] - " + e.stack)
 		}
 		return processCategory;
 
@@ -272,7 +281,7 @@ var calculatefield = {
 					} else {
 						lParams = ['GTSInstanceDesign'];
 					}
-					if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
+					if (doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
 						// For Testing Tab Dynamic tables in the Rollup Assessments
 						lParams.push('GTSRollupProcessesOPS');
 						lParams.push('GTSRollupProcessesFIN');
@@ -281,7 +290,7 @@ var calculatefield = {
 				else if (doc[0].MIRABusinessUnit == "GBS") {
 					// GBS Assessment Doc Parameters
 					lParams.push('GBSInstanceDesign');
-					if (doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
+					if (doc[0].ParentDocSubType == "Controllable Unit" || doc[0].ParentDocSubType == "Business Unit" || doc[0].ParentDocSubType == "BU Reporting Group" || doc[0].ParentDocSubType == "BU IOT" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Account") {
 						// For Testing Tab Dynamic tables in the Rollup Assessments
 						lParams.push('GBSRollupProcessesOPS');
 						lParams.push('GBSRollupProcessesFIN');
@@ -345,7 +354,8 @@ var calculatefield = {
 					if (dataParam.parameters.ProcessCatFIN) {
 						doc[0].ProcessCategory = "OPS";
 						for (var j = 0; j < dataParam.parameters.ProcessCatFIN[0].options.length; ++j) {
-							if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name) doc[0].ProcessCategory = "FIN";
+							if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name) 
+								doc[0].ProcessCategory = "FIN";
 						}
 					}
 					if (dataParam.parameters.GBSRollupProcessesOPS) {
@@ -467,7 +477,7 @@ var calculatefield = {
 							"CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or":
-							[{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
+							[{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
 							{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
 
@@ -599,6 +609,7 @@ var calculatefield = {
 								"AUStatus": "Active",
 								"ParentDocSubType":{"$in":["BU Country","Controllable Unit","Country Process"]},
 								"CurrentPeriod": doc[0].CurrentPeriod,
+								"ExcludeGeo":{"$ne": "Yes"},
 								$or
 							}
 						};
@@ -778,6 +789,11 @@ var calculatefield = {
 									}
 								}
 							}
+							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
+              doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+              //Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
+              doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
+              //Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
@@ -797,9 +813,66 @@ var calculatefield = {
 						}
 						deferred.resolve({"status": 200, "doc": doc});
 						break;
+						case "Controllable Unit":
+							
+							doc[0].asmtsdocs = [];
+							// For Current Quarter Country Process Defect Rate Exceptions
+							doc[0].CPDRException = [];
+							// For CP Financial Process Defect Rates that are Marg counter
+							var margCPDRFin = 0;
+							// For CP Financial Process Defect Rates that are Unsat counter
+							var unsatCPDRFin = 0;
+							// For CP Operational Process Defect Rates that are Marg counter
+							var margCPDROps = 0;
+							// For CP Operationa Process Defect Rates that are Unsat counter
+							var unsatCPDROps = 0;
+							
+							var asmtsdocs = asmtsdata.body.docs;
+							for (var i = 0; i < asmtsdocs.length; ++i) {
+								if (asmtsdocs[i].key == "Assessment"){
+									doc[0].asmtsdocs.push(asmtsdocs[i]);
+									
+									// Get Current Quarter Country Process Defect Rate Exceptions
+									if ( asmtsdocs[i].ParentDocSubType == "Country Process") {
+										// Format Defect Rate
+										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
+										if (asmtsdocs[i].AUDefectRate == 0) {
+											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+										}
+										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
+										asmtsdocs[i].processCategory = module.exports.getProcessCategory(asmtsdocs[i].GlobalProcess, doc);
+										if (asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+											asmtsdocs[i].RAGStatus = "Unsat";
+											doc[0].CPDRException.push(asmtsdocs[i]);
+											if (asmtsdocs[i].processCategory == "Financial") {
+												unsatCPDRFin += 1;
+											}else {
+												unsatCPDROps += 1;
+											}
+										} else if (asmtsdocs[i].AUDefectRate < doc[0].MargThresholdPercent) {
+											asmtsdocs[i].RAGStatus = "Sat";
+										} else {
+											asmtsdocs[i].RAGStatus = "Marg";
+											doc[0].CPDRException.push(asmtsdocs[i]);
+											if (asmtsdocs[i].processCategory == "Financial") {
+												margCPDRFin += 1;
+											}else {
+												margCPDROps += 1;
+											}
+										}
+									}
+								}
+							}
+							// For CP Defect Rate Exceptions
+							doc[0].margCPDRFin = margCPDRFin;
+							doc[0].unsatCPDRFin = unsatCPDRFin;
+							doc[0].margCPDROps = margCPDROps;
+							doc[0].unsatCPDROps = unsatCPDROps;
+							deferred.resolve({"status": 200, "doc": doc});
+							break;
 						default:
-						doc[0].asmtsdocs = asmtsdata.body.docs;
-						deferred.resolve({"status": 200, "doc": doc});
+							doc[0].asmtsdocs = asmtsdata.body.docs;
+							deferred.resolve({"status": 200, "doc": doc});
 					}
 				}).catch(function(err) {
 					console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
@@ -813,7 +886,7 @@ var calculatefield = {
 		},
 
 		/* Populates the Rating Profile table */
-		getRatingProfile: function(doc) {
+	getRatingProfile: function(doc) {
 			try {
 				var satEqCU = 0, satUpCU = 0, margUpCU = 0, margEqCU = 0, margDwnCU = 0, unsatEqCU = 0, unsatDwnCU = 0, exemptCU = 0, nrCU = 0, bocExCU = 0;
 				var satEq = 0, satUp = 0, margUp = 0, margEq = 0, margDwn = 0, unsatEq = 0, unsatDwn = 0, exempt = 0, nr = 0, bocEx = 0;
@@ -904,43 +977,44 @@ var calculatefield = {
 							}
 							break;
 						}
+						
 						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
 							// Rating Category Counters
 							switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") satUpFin = satUpFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
 								break;
 								case "Sat &#61;":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") satEqFin = satEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") satEqFin = satEqFin + 1;
 								else satEqOps = satEqOps + 1;
 								break;
 								case "Marg &#9650;":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") margUpFin = margUpFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margUpFin = margUpFin + 1;
 								else margUpOps = margUpOps + 1;
 								break;
 								case "Marg &#9660;":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") margDwnFin = margDwnFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margDwnFin = margDwnFin + 1;
 								else margDwnOps = margDwnOps + 1;
 								break;
 								case "Marg &#61;":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") margEqFin = margEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margEqFin = margEqFin + 1;
 								else margEqOps = margEqOps + 1;
 								break;
 								case "Unsat &#9660;":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") unsatDwnFin = unsatDwnFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") unsatDwnFin = unsatDwnFin + 1;
 								else unsatDwnOps = unsatDwnOps + 1;
 								break;
 								case "Unsat &#61;":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") unsatEqFin = unsatEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") unsatEqFin = unsatEqFin + 1;
 								else unsatEqOps = unsatEqOps + 1;
 								break;
 								case "Exempt":
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") exemptFin = exemptFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") exemptFin = exemptFin + 1;
 								else exemptOps = exemptOps + 1;
 								break;
 								default:
-								if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") nrFin = nrFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") nrFin = nrFin + 1;
 								else nrOps = nrOps + 1;
 							}
 						}
@@ -1139,98 +1213,45 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-							// Rating Category Counters for CP
-							var count1=0; var count2=0;
-							for(j=0;j<doc[0].KCProcessFIN.length;j++){
-								var tfin= doc[0].KCProcessFIN;
-								var fid=tfin[j].id;
-								if(fid==doc[0].asmtsdocs[i].GPWWBCITKey){
-									count1=count1+1;
-									//j=doc[0].KCProcessFIN.length;
-								}
-							}
-							for(k=0;k<doc[0].KCProcessOPS.length;k++){
-								var tops= doc[0].KCProcessOPS;
-								var oid=tops[j].id;
-								if(oid==doc[0].asmtsdocs[i].GPWWBCITKey){
-									count2=count2+1;
-									// k=doc[0].KCProcessFIN.length;
-								}
-							}
+							
+							// Rating Category Counters
 							switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
-								if (count1>0) satUpFin = satUpFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
 								break;
 								case "Sat &#61;":
-								if (count1>0) satEqFin = satEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") satEqFin = satEqFin + 1;
 								else satEqOps = satEqOps + 1;
 								break;
 								case "Marg &#9650;":
-								if (count1>0) margUpFin = margUpFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margUpFin = margUpFin + 1;
 								else margUpOps = margUpOps + 1;
 								break;
 								case "Marg &#9660;":
-								if (count1>0) margDwnFin = margDwnFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margDwnFin = margDwnFin + 1;
 								else margDwnOps = margDwnOps + 1;
 								break;
 								case "Marg &#61;":
-								if (count1>0) margEqFin = margEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") margEqFin = margEqFin + 1;
 								else margEqOps = margEqOps + 1;
 								break;
 								case "Unsat &#9660;":
-								if (count1>0) unsatDwnFin = unsatDwnFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") unsatDwnFin = unsatDwnFin + 1;
 								else unsatDwnOps = unsatDwnOps + 1;
 								break;
 								case "Unsat &#61;":
-								if (count1>0) unsatEqFin = unsatEqFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") unsatEqFin = unsatEqFin + 1;
 								else unsatEqOps = unsatEqOps + 1;
 								break;
 								case "Exempt":
-								if (count1>0) exemptFin = exemptFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") exemptFin = exemptFin + 1;
 								else exemptOps = exemptOps + 1;
 								break;
 								default:
-								if (count1>0) nrFin = nrFin + 1;
+								if (doc[0].asmtsdocs[i].processCategory == "Financial") nrFin = nrFin + 1;
 								else nrOps = nrOps + 1;
 							}
-							/*switch (doc[0].asmtsdocs[i].RatingCategory) {
-							case "Sat &#9650;":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") satUpFin = satUpFin + 1;
-							else satUpOps = satUpOps + 1;
-							break;
-							case "Sat &#61;":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") satEqFin = satEqFin + 1;
-							else satEqOps = satEqOps + 1;
-							break;
-							case "Marg &#9650;":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") margUpFin = margUpFin + 1;
-							else margUpOps = margUpOps + 1;
-							break;
-							case "Marg &#9660;":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") margDwnFin = margDwnFin + 1;
-							else margDwnOps = margDwnOps + 1;
-							break;
-							case "Marg &#61;":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") margEqFin = margEqFin + 1;
-							else margEqOps = margEqOps + 1;
-							break;
-							case "Unsat &#9660;":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") unsatDwnFin = unsatDwnFin + 1;
-							else unsatDwnOps = unsatDwnOps + 1;
-							break;
-							case "Unsat &#61;":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") unsatEqFin = unsatEqFin + 1;
-							else unsatEqOps = unsatEqOps + 1;
-							break;
-							case "Exempt":
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") exemptFin = exemptFin + 1;
-							else exemptOps = exemptOps + 1;
-							break;
-							default:
-							if (doc[0].asmtsdocs[i].ProcessCategory == "FIN") nrFin = nrFin + 1;
-							else nrOps = nrOps + 1;
-						}*/
 					}
 					if (doc[0].asmtsdocs[i].ParentDocSubType == "Controllable Unit") {
 						// CU Ratings Tab embedded views
@@ -1906,7 +1927,7 @@ var calculatefield = {
 		}
 		return deferred.promise;
 	},
-	
+
 	getAccountsCU: function(db, doc) {
 		var deferred = q.defer();
 		try {
