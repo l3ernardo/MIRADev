@@ -283,6 +283,7 @@ var calculateARTab = {
           var parentAUs = doc[0].BUCountryAssessableUnits;
           //List that will export all Internal Audits. Currently empty; to be populated below.
           var exportInternalAuditData = [];
+          doc[0].exportInternalAuditData = [];
           //Total Score (CU and Max) variables. To be calculated below.
           var totalCUScore = "";
           var totalMaxScore = "";
@@ -326,6 +327,17 @@ var calculateARTab = {
             if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
             //Add all the Internal Audits to the list
             exportInternalAuditData.push(tmp);
+            var tmp2 = {
+              plannedStartDate: tmp.plannedStartDate || " ",
+              engagement: tmp.engagement || " ",
+              Name: tmp.Name || " ",
+              DocSubType: tmp.DocSubType || " ",
+              PeriodRatingPrev: tmp.PeriodRatingPrev || " ",
+              PeriodRating: tmp.PeriodRating || " ",
+              CUSize: tmp.CUSize || " ",
+              CUScore: tmp.CUScore || " "
+            };
+            doc[0].exportInternalAuditData.push(tmp2);
           }
           //Calculate WeightedAuditScore
           var weightedScore = 0;
@@ -336,7 +348,16 @@ var calculateARTab = {
             weightedScore = ((totalCUScore/totalMaxScore)*100).toFixed(1);
           }
           //Export Internal Audit data and the Weighted Score to the Handlebars view
-          doc[0].exportInternalAuditData = exportInternalAuditData;
+
+          doc[0].InternalAuditData = exportInternalAuditData;
+          //padding
+          /*if (doc[0].InternalAuditData.length < defViewRow) {
+            if (doc[0].InternalAuditData.length == 0) {
+              doc[0].InternalAuditData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].InternalAuditData,10,(defViewRow-doc[0].InternalAuditData.length));
+            }
+          };*/
           doc[0].WeightedAuditScore = weightedScore;
           //End of view 1
 
@@ -356,8 +377,45 @@ var calculateARTab = {
           //List that will export all PPRs. Currently empty; to be populated below.
           var exportPPRData = [];
           var pprCount = 0;
+          var categoryList = {};
+          doc[0].PPRData = [];
+          var topCounter = 0;
           for(var i = 0; i < auditPPR.length; i++) {
+            if(typeof categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')] === "undefined"){
+              topCounter++;
+              var tmp ={
+                id: auditPPR[i].auditOrReview.replace(/ /g,''),
+                auditOrReview:auditPPR[i].auditOrReview,
+                catEntry: true,
+                count: 0
+              }
+              doc[0].PPRData.push(tmp);
+              categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')] = tmp;
+            }
+            if(typeof categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
+              var tmp ={
+                parent: auditPPR[i].auditOrReview.replace(/ /g,''),
+                id:auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,''),
+                reportingQuarter:auditPPR[i].reportingQuarter,
+                catEntry: true,
+                count: 0
+              }
+              doc[0].PPRData.push(tmp);
+              categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,'')] = tmp;
+            }
+            if(typeof categoryList[auditPPR[i].reportingQuarter.replace(/ /g,'')+auditPPR[i].status.replace(/ /g,'')] === "undefined"){
+              var tmp ={
+                id: auditPPR[i].reportingQuarter.replace(/ /g,'')+auditPPR[i].status.replace(/ /g,''),
+                parent: auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,''),
+                status:auditPPR[i].status,
+                catEntry: true,
+                count: 0
+              }
+              doc[0].PPRData.push(tmp);
+              categoryList[auditPPR[i].reportingQuarter.replace(/ /g,'')+auditPPR[i].status.replace(/ /g,'')] = tmp;
+            }
             var tmp={};
+            tmp.count = 1;
             tmp.id = auditPPR[i]._id;
             tmp.auditOrReview = auditPPR[i].auditOrReview;
             tmp.reportingQuarter = auditPPR[i].reportingQuarter;
@@ -384,11 +442,37 @@ var calculateARTab = {
             tmp.rating = auditPPR[i].rating;
             tmp.numRecommendationsTotal = auditPPR[i].numRecommendationsTotal;
             tmp.numRecommendationsOpen = auditPPR[i].numRecommendationsOpen;
-            //Add all the PPRs to the emply list
-            exportPPRData.push(tmp);
+            tmp.parent = auditPPR[i].reportingQuarter.replace(/ /g,'')+auditPPR[i].status.replace(/ /g,'');
+            //adding counts
+            categoryList[tmp.parent].count++;
+            categoryList[categoryList[tmp.parent].parent].count++;
+            categoryList[categoryList[categoryList[tmp.parent].parent].parent].count++;
+            doc[0].PPRData.push(tmp)
+            var tmp2 = {
+              auditOrReview: tmp.auditOrReview || " ",
+              reportingQuarter: tmp.reportingQuarter || " ",
+              status: tmp.status || " ",
+              reviewID: tmp.reviewID || " ",
+              Name: tmp.Name || " ",
+              DocSubType: tmp.DocSubType || " ",
+              reportDate: tmp.reportDate || " ",
+              rating: tmp.rating || " ",
+              numRecommendationsTotal: tmp.numRecommendationsTotal || " ",
+              numRecommendationsOpen: tmp.numRecommendationsOpen || " ",
+              count: tmp.count || " "
+            };
+            exportPPRData.push(tmp2);
           }
           //Export Proactive Reviews data to the Handlebars view
           doc[0].exportPPRData = exportPPRData;
+          //Adding padding
+          if (topCounter < defViewRow) {
+            if (doc[0].PPRData.length == 0) {
+              doc[0].PPRData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].PPRData,10,(defViewRow- topCounter));
+            }
+          };
           //End of view 2
 
           //VIEW 3 - Other Audits
@@ -406,7 +490,17 @@ var calculateARTab = {
           var auditOther = doc[0].OtherAuditsData;
           //List that will export all local audits. Currently empty; to be populated below.
           var exportOtherAuditsData = [];
+          doc[0].exportOtherAuditsData = [];
+          var categoryList = {};
           for (var i = 0; i < auditOther.length; i++) {
+            if(typeof categoryList[auditOther[i].auditOrReview.replace(/ /g,'')] === "undefined"){
+              var tmp ={
+                id: auditOther[i].auditOrReview.replace(/ /g,''),
+                auditOrReviewName:auditOther[i].auditOrReview
+              }
+              exportOtherAuditsData.push(tmp);
+              categoryList[auditOther[i].auditOrReview.replace(/ /g,'')] = tmp;
+            }
             var tmp = {};
             tmp.id = auditOther[i]._id;
             tmp.auditOrReview = auditOther[i].auditOrReview;
@@ -431,12 +525,31 @@ var calculateARTab = {
             }
             tmp.reportDate = auditOther[i].reportDate;
             tmp.comments = auditOther[i].comments;
-
+            tmp.parent = auditOther[i].auditOrReview.replace(/ /g,'');
             //Add all the local audits to the Other Audits list
             exportOtherAuditsData.push(tmp);
+            var tmp2 = {
+              auditOrReview: tmp.auditOrReview || "",
+              PeriodRating: tmp.PeriodRating || "",
+              imt: tmp.imt || "",
+              reportDate: tmp.reportDate || "",
+              Name: tmp.Name || "",
+              DocSubType: tmp.DocSubType || "",
+              PeriodRatingPrev: tmp.PeriodRatingPrev || "",
+              CUSize: tmp.CUSize || "",
+              comments: tmp.comments || ""
+            };
+            doc[0].exportOtherAuditsData.push(tmp2);
           }
           //Export Proactive Reviews data to the Handlebars view
-          doc[0].exportOtherAuditsData = exportOtherAuditsData;
+          doc[0].OtherAuditsData = exportOtherAuditsData;
+          if (Object.keys(categoryList).length < defViewRow) {
+            if (doc[0].OtherAuditsData.length == 0) {
+              doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].OtherAuditsData,10,(defViewRow-Object.keys(categoryList).length));
+            }
+          };
           //End of view 3
 
           // *** End of Audits and Reviews embedded view *** //
