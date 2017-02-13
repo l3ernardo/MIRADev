@@ -70,9 +70,15 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
       <tr>
         <td>Added to AQ DB:</td><td>{{addedToAQDB}}</td>
       </tr>
+	  {{#if RatingEditable}}
+	  <tr>
+        <td>Rating:</td><td >{{{uniqueSelect "rating" parameters.PeriodRatingIntAudit.0.options "name" "name" rating}}}</td>
+      </tr>
+	  {{else}}
       <tr>
         <td>Rating:</td><td >{{{ratingDisplay rating}}}</td>
       </tr>
+	  {{/if}}
       <tr>
         <td>Distribution (to):</td><td>{{distributionTo}}</td>
       </tr>

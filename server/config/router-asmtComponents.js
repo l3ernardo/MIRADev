@@ -3,6 +3,7 @@ var asmtComponents = express.Router();
 var isAuthenticated = require('./router-authentication.js');
 var db = require('./js/class-conn.js');
 var components = require('./js/class-asmtComponents.js');
+var parameter = require('./js/class-parameter.js');
 
 /* Get components */
 asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
@@ -17,7 +18,19 @@ asmtComponents.get('/asmtcomponents', isAuthenticated, function(req, res) {
 				res.render('ac_cusummarysample', data.data );
 				break;
 			case "internalAudit":
-				res.render('ac_internalaudit', data.data );
+				var lParams = ['PeriodRatingIntAudit'];
+				parameter.getListParams(db, lParams).then(function(dataParam) {
+					if(dataParam.status==200 & !dataParam.error) {
+						data.data.parameters = dataParam.parameters;
+						res.render('ac_internalaudit', data.data );
+					} else {
+						res.render('error',{errorDescription: data.error});
+						console.log("[router][asmtComponents][internalAudit] - " + dataParam.error);
+					}
+				}).catch(function(err) {
+					res.render('error',{errorDescription: err.error});
+					console.log("[router][asmtComponents][internalAudit] - " + err.error);
+				});
 				break;
 			case "localAudit":
 				res.render('ac_localaudit', data.data );

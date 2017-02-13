@@ -496,6 +496,10 @@ var components = {
 						internal.parentname = pdoc.Name;
 						// ** Edit Mode **//
 						if(typeof req.query.edit !== "undefined"){
+							//Validate rating
+							if(internal.rating != "Sat" && internal.rating != "Unsat" && internal.rating != "Marg")
+								internal.RatingEditable = true;
+							
 							internal.editmode = 1;
 							obj = {
 								"selector" : {
@@ -1066,7 +1070,7 @@ var components = {
 					obj.comments = req.body.comments;
 					obj.Notes = req.body.Notes;
 					obj.Links = req.body.attachIDs;
-
+					obj.rating = req.body.rating;
 					db.save(obj).then(function(data){
 						deferred.resolve({"status": 200, "data": data.body});
 					}).catch(function(err){
