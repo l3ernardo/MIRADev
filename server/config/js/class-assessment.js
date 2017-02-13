@@ -316,7 +316,7 @@ var assessment = {
 							doc[0].BUCAsmtDataOIview = [];
 
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
-								fieldCalc.getRatingProfile(doc);
+								/*fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
 										doc[0].BUCAsmtDataPRview = fieldCalc.addTestViewData(10,defViewRow);
@@ -344,7 +344,7 @@ var assessment = {
 									} else {
 										fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-doc[0].BUCAsmtDataOIview.length));
 									}
-								}
+								}*/
 								doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 								doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
 								var obj = doc[0]; // For Merge
