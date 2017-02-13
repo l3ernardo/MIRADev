@@ -477,8 +477,10 @@ var calculatefield = {
 							"CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or":
-							[{"$and": [{"DocSubType":{"$in":["BU Country","Controllable Unit"]}},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
-							{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
+							[
+								{"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
+								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid}]},
+								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
 
 						]//or
@@ -486,6 +488,21 @@ var calculatefield = {
 					break;
 					case "BU IOT":
 					var asmts = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"BusinessUnit": doc[0].BusinessUnit,
+							"CurrentPeriod": req.session.quarter,
+							"Status": "Active",
+							"$or":
+							[
+								{"$and": [{"DocSubType":{"$in":["BU IMT","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
+								{"$and": [{"DocSubType":"Country Process"},{"IOT":util.resolveGeo(doc[0].IOT, "IOT",req)}]},
+								{"$and": [{"DocSubType":"BU Reporting Group"},{"_id":{"$in":doc[0].RGRollup.split(",")}}]},
+								{"$and": [{"DocSubType":"BU Country"},{"_id":{"$in":doc[0].BUCountryIOT.split(",")}},{"ExcludeGeo":{"$ne": "Yes"}}]}
+						]//or
+					}};
+					/*var asmts = {
 						selector:{
 							"_id": {"$gt":0},
 							"key": "Assessment",
@@ -497,7 +514,7 @@ var calculatefield = {
 								{ "$and": [{"ParentDocSubType": "BU Reporting Group"},{"_id": doc[0].RGRollup}] },
 							]
 						}
-					};
+					};*/
 					break;
 					case "BU Reporting Group":
 					var asmts = {
@@ -556,6 +573,26 @@ var calculatefield = {
 				db.find(asmts).then(function(asmtsdata) {
 					// Populate View Data
 					switch (doc[0].ParentDocSubType) {
+						case "BU IOT":
+						doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].AUDocsObj = {};
+						doc[0].AUAuditables = {};
+						doc[0].asmtsdocsObj = {};
+						doc[0].asmtsdocsDelivery = [];
+						doc[0].asmtsdocsCRM = [];
+						var $or = [];
+						for(var i = 0; i < doc[0].AUDocs.length; i++){
+							console.log(doc[0].AUDocs[i].DocSubType);
+							$or.push({parentid: doc[0].AUDocs[i]["_id"]});
+							doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+						}
+						deferred.resolve({"status": 200, "doc": doc});
+						/*}).catch(function(err) {
+							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
+							deferred.reject({"status": 500, "error": err.error.reason});
+						});*/
+						break;
 						case "BU IMT":
 						doc[0].AUDocs = asmtsdata.body.docs;
 						doc[0].AUDocsObj = {};
