@@ -618,16 +618,16 @@ var calculatefield = {
 								"_id": {"$gt":0},
 								"key": "Assessment",
 								"AUStatus": "Active",
-								"ParentDocSubType":{"$in":["BU Country","Controllable Unit","Country Process"]},
+								"ParentDocSubType":{"$in":["Country Process","Controllable Unit","BU Country"]},
 								"CurrentPeriod": doc[0].CurrentPeriod,
-								"ExcludeGeo":{"$ne": "Yes"},
 								$or
 							}
 						};
 						db.find(tmpQuery).then(function(asmts) {
 							doc[0].asmtsdocs = asmts.body.docs;
+
 							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
-								//DATA FOR REPORTING COUNTRY
+								//DATA RPTG Country Testing
 								if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
 									// Format Defect Rate
 									doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
@@ -647,16 +647,19 @@ var calculatefield = {
 									}
 								} else if (doc[0].asmtsdocs[i].AUDefectRate < doc[0].MargThresholdPercent) {
 									doc[0].asmtsdocs[i].RAGStatus = "Sat";
+									doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
 								} else {
 									doc[0].asmtsdocs[i].RAGStatus = "Marg";
 									doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
 									if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+										console.log("002");
 										margCPDRFin += 1;
 									}else {
+										console.log("0");
 										margCPDROps += 1;
 									}
 								}
-								//END OF DATA POR REPORTING COUNTRY
+								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
 									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
