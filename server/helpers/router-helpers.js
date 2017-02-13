@@ -146,9 +146,9 @@ var register = function(Handlebars) {
 				else if (rating == "Marg" || rating == "Marginal")
 					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow; text-align: center; !important;"';
 				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative")
-					ratinghtml += 'asmt-viewdata-red"  style="background-color: red; color: #ffffff; text-align: center; !important;"';
+					ratinghtml += 'asmt-viewdata-red" style="background-color: red; color: #ffffff; text-align: center; !important;"';
 				else
-					ratinghtml += 'asmt-viewdata-centered"';
+					ratinghtml += 'asmt-viewdata-centered" style="text-align: center; !important;"';
 				if(!isNaN(percent)){
 					ratinghtml += ' width="'+percent+'%"';
 				}

@@ -24,7 +24,7 @@
 				</thead>
 				{{#each AuditTrustedData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="6%" color="red">{{#unless reportDate}}{{reportingQuarter}}{{/unless}}</td>
+						<td width="6%" color="red">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
 						<td width="6%">
 							{{#if COFlag}}<span class="ibm-check-link"></span>{{/if}}
 						</td>
