@@ -1,0 +1,38 @@
+<script src="./js/database.js"/></script>
+<div class="ibm-container-body">
+	<div class="ibm-columns">
+		<div class="ibm-col-1-1">
+			<br/>
+			<h1 class="ibm-small">MIRA database selection</h1>
+			<div class="ibm-rule"><hr/></div>
+			<br/>
+			<p>
+			Please select the MIRA database and click Submit to continue. Required fields are marked with an asterisk (
+			<span class="ibm-required">*</span>
+			).
+			</p>
+			<br/><br/>
+			<form id="form" class="ibm-column-form" name="form" method="POST" action="/dbselect">
+				<div style="text-align:left" class="ibm-form-elem-grp">
+					<label id="BULabel" style="font-size: 1.3em;" for="username">
+						Database:
+						<span class="ibm-required">*</span>
+					</label>
+					<span>
+						<!-- <input type="hidden" id="selectedBU" name="selectedBU"> -->
+						<span>
+						{{{uniqueSelect "selectedDB" dbs "name" "alias" ""}}}
+						</span>
+					</span>
+				</div>
+				<br/><br/>
+				<div class="ibm-buttons-row">
+					<p>
+					
+						<input id="btn_submit" class="ibm-btn-arrow-pri" type="button" style="font-size: 1.3em;" tabindex="5" value="Submit" name="btn_submit">
+					</p>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
