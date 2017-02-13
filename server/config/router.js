@@ -7,6 +7,7 @@ var db = require('./js/class-conn.js');
 // Add functionalities from other JS files
 var dialog = require('./js/class-dialog.js');
 var businessunit = require('./js/class-businessunit.js');
+var database = require('./js/class-database.js');
 var submenu = require('./js/class-submenu.js');
 var utility = require('./js/class-utility.js');
 var isAuthenticated = require('./router-authentication.js');
@@ -66,6 +67,39 @@ router.get('/disclosure', function(req, res) {
 		console.log("[routes][disclosure] - " + err.error);
 	})
 });
+
+/**************************************************************
+DATABASE FUNCTIONALITY
+***************************************************************/
+/* Disclosure screen */
+router.get('/database', function(req, res) {
+	database.listDB(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.render('database', data );
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][database] - " + data.error);
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][database] - " + err.error);
+	})
+});
+/* Save Database selection */
+router.post('/dbselect', isAuthenticated, function(req, res){
+	database.saveDB(req, db).then(function(data) {
+		if(data.status==200 & !data.error) {
+			res.redirect('businessunit');
+		} else {
+			res.render('error',{errorDescription: data.error});
+			console.log("[routes][database] - " + data.error);			
+		}
+	}).catch(function(err) {
+		res.render('error',{errorDescription: err.error});
+		console.log("[routes][database] - " + err.error);
+	})
+});
+
 /**************************************************************
 BUSINESS UNIT FUNCTIONALITY
 ***************************************************************/
