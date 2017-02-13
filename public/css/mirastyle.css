@@ -1024,6 +1024,10 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sor
   font-size:12px;
 }
 
+.ibm-asmt-links:link, .ibm-asmt-links:hover, .ibm-asmt-links:visited , .ibm-asmt-links:active {
+    color: #ffffff;
+}
+
 /*table for dashboard*/
 caption {
   text-align: left;
