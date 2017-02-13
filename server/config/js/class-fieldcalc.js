@@ -189,7 +189,7 @@ var calculatefield = {
 	getProcessCategory: function(processName, doc) {
 		var processCategory = "Operational";
 		try{
-			
+
 			if (doc[0].KCProcessOPS !== undefined) {
 				for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
 					if(doc[0].KCProcessOPS[j].name == undefined){
@@ -354,7 +354,7 @@ var calculatefield = {
 					if (dataParam.parameters.ProcessCatFIN) {
 						doc[0].ProcessCategory = "OPS";
 						for (var j = 0; j < dataParam.parameters.ProcessCatFIN[0].options.length; ++j) {
-							if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name) 
+							if (doc[0].GPWWBCITKey == dataParam.parameters.ProcessCatFIN[0].options[j].name)
 								doc[0].ProcessCategory = "FIN";
 						}
 					}
@@ -814,7 +814,7 @@ var calculatefield = {
 						deferred.resolve({"status": 200, "doc": doc});
 						break;
 						case "Controllable Unit":
-							
+
 							doc[0].asmtsdocs = [];
 							// For Current Quarter Country Process Defect Rate Exceptions
 							doc[0].CPDRException = [];
@@ -826,12 +826,12 @@ var calculatefield = {
 							var margCPDROps = 0;
 							// For CP Operationa Process Defect Rates that are Unsat counter
 							var unsatCPDROps = 0;
-							
+
 							var asmtsdocs = asmtsdata.body.docs;
 							for (var i = 0; i < asmtsdocs.length; ++i) {
 								if (asmtsdocs[i].key == "Assessment"){
 									doc[0].asmtsdocs.push(asmtsdocs[i]);
-									
+
 									// Get Current Quarter Country Process Defect Rate Exceptions
 									if ( asmtsdocs[i].ParentDocSubType == "Country Process") {
 										// Format Defect Rate
@@ -977,7 +977,7 @@ var calculatefield = {
 							}
 							break;
 						}
-						
+
 						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
 							// Rating Category Counters
 							switch (doc[0].asmtsdocs[i].RatingCategory) {
@@ -1213,7 +1213,7 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-							
+
 							// Rating Category Counters
 							switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
@@ -1368,7 +1368,7 @@ var calculatefield = {
 							// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
 
 							try{
-								
+
 								//GBS and GTS Transformation, GTS its been calculated on createTablesData
 
 								//get MSAC missed commitments
