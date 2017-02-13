@@ -1506,7 +1506,15 @@ $(document).ready(function() {
 		tableReport = AllTableToReportMultiple('InternalAudit_table',"InternalAudit");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
-
+	//Other Audit export buttons
+	$('#OtherAudits-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('OtherAudits_treeview', "OtherAudits");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#OtherAudits-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('OtherAudits_treeview',"OtherAudits");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
 	//Process Ratings export buttons
 	$('#ProcessRatings-link-export').click(function(){
 		tableReport = AllTableToReportMultiple('ProcessRatings_treeview', "ProcessRatings");
