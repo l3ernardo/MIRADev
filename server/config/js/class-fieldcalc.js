@@ -565,6 +565,17 @@ var calculatefield = {
 						doc[0].asmtsdocsObj = {};
 						doc[0].asmtsdocsDelivery = [];
 						doc[0].asmtsdocsCRM = [];
+						// For Current Quarter Country Process Defect Rate Exceptions
+						doc[0].CPDRException = [];
+						// For CP Financial Process Defect Rates that are Marg counter
+						var margCPDRFin = 0;
+						// For CP Financial Process Defect Rates that are Unsat counter
+						var unsatCPDRFin = 0;
+						// For CP Operational Process Defect Rates that are Marg counter
+						var margCPDROps = 0;
+						// For CP Operationa Process Defect Rates that are Unsat counter
+						var unsatCPDROps = 0;
+
 						var CRMables = {};
 						var Deliveryables = {};
 						var $or = [];
@@ -616,6 +627,36 @@ var calculatefield = {
 						db.find(tmpQuery).then(function(asmts) {
 							doc[0].asmtsdocs = asmts.body.docs;
 							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+								//DATA FOR REPORTING COUNTRY
+								if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+									// Format Defect Rate
+									doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
+									if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
+										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
+									}
+								}
+								// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
+								doc[0].asmtsdocs[i].processCategory = module.exports.getProcessCategory(doc[0].asmtsdocs[i].GlobalProcess, doc);
+								if (doc[0].asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+									doc[0].asmtsdocs[i].RAGStatus = "Unsat";
+									doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+									if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+										unsatCPDRFin += 1;
+									}else {
+										unsatCPDROps += 1;
+									}
+								} else if (doc[0].asmtsdocs[i].AUDefectRate < doc[0].MargThresholdPercent) {
+									doc[0].asmtsdocs[i].RAGStatus = "Sat";
+								} else {
+									doc[0].asmtsdocs[i].RAGStatus = "Marg";
+									doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+									if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+										margCPDRFin += 1;
+									}else {
+										margCPDROps += 1;
+									}
+								}
+								//END OF DATA POR REPORTING COUNTRY
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
 									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
@@ -634,6 +675,11 @@ var calculatefield = {
 									}
 								}
 							}
+							// For CP Defect Rate Exceptions
+							doc[0].margCPDRFin = margCPDRFin;
+							doc[0].unsatCPDRFin = unsatCPDRFin;
+							doc[0].margCPDROps = margCPDROps;
+							doc[0].unsatCPDROps = unsatCPDROps;
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
