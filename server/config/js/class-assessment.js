@@ -315,6 +315,8 @@ var assessment = {
 							doc[0].BUCAsmtDataPIview = [];
 							doc[0].BUCAsmtDataOIview = [];
 
+							doc[0].AUData = [];
+							doc[0].AUDataMSAC = [];
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								/*fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {

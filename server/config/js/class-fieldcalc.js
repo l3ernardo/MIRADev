@@ -254,7 +254,7 @@ var calculatefield = {
 					} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-					} else if (doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT") {
+					} else if (doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT") {
 						lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
 					} else {
 						lParams = ['GTSInstanceDesign'];
@@ -276,7 +276,7 @@ var calculatefield = {
 					} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
-					} else if (doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT") {
+					} else if (doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
 						lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
 					} else {
 						lParams = ['GTSInstanceDesign'];
@@ -583,15 +583,40 @@ var calculatefield = {
 						doc[0].asmtsdocsCRM = [];
 						var $or = [];
 						for(var i = 0; i < doc[0].AUDocs.length; i++){
-							console.log(doc[0].AUDocs[i].DocSubType);
 							$or.push({parentid: doc[0].AUDocs[i]["_id"]});
 							doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+							if(doc[0].AUDocs[i].DocSubType == "Country Process" || doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
+								if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
+									doc[0].AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+								}
+							}
 						}
-						deferred.resolve({"status": 200, "doc": doc});
-						/*}).catch(function(err) {
+						var tmpQuery = {
+							selector : {
+								"_id": {"$gt":0},
+								"key": "Assessment",
+								"AUStatus": "Active",
+								"ParentDocSubType":{"$in":["Country Process","Controllable Unit","BU Country"]},
+								"CurrentPeriod": doc[0].CurrentPeriod,
+								$or
+							}
+						};
+						db.find(tmpQuery).then(function(asmts) {
+							doc[0].asmtsdocs = asmts.body.docs;
+							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
+								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
+									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
+									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
+									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
+									doc[0].AUData.push(doc[0].asmtsdocs[i]);
+								}
+							}
+							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
 							deferred.reject({"status": 500, "error": err.error.reason});
-						});*/
+						});
 						break;
 						case "BU IMT":
 						doc[0].AUDocs = asmtsdata.body.docs;
