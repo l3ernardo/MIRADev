@@ -1,8 +1,8 @@
 $(document).ready(function() { 
 	hide_divs();
 	$('#bOK').click(function() {
-		//window.location.href ='./businessunit';
-		window.location.href ='./database';
+		window.location.href ='./businessunit';
+		//window.location.href ='./database';
 	});
 	$('#bCancel').click(function() {
 		window.location.href='/logout';
