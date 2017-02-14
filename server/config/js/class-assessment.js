@@ -49,10 +49,10 @@ var assessment = {
 				doc[0].Links = JSON.stringify(doc[0].Links);
 				doc[0].EnteredBU = req.session.businessunit;
 			} catch(e) {
+				console.log("[assessment][getAsmtbyID]" + e.stack);
 				console.log(e.stack);
 			}
 			assessment.preload(global.doc1,req,db).then(function(data) {
-				console.log("onde")
 				var obj = [];
 				obj.push(data.doc);
 				deferred.resolve({"status": 200, "doc": obj});
