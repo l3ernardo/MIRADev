@@ -688,7 +688,6 @@ var calculatefield = {
 						db.find(tmpQuery).then(function(asmts) {
 							doc[0].asmtsdocs = asmts.body.docs;
 							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
-								console.log("for");
 								//DATA RPTG Country Testing
 								if (doc[0].asmtsdocs.key == "Assessment"){
 									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
