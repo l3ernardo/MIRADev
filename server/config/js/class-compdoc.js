@@ -612,87 +612,95 @@ var getDocs = {
 						}
 					};
 					db.find(compObj).then(function(compdata) {
-						var comps = compdata.body.docs;
-						doc[0].RCTestData = [];
-						doc[0].SampleData = [];
-						doc[0].SampleData2 = [];
-						var controlCtr = 0;
-						var sampleCtr = 0;
-						var sampleCtrPQ = 0;
-						var ctrlname;
-						var processCat;
-						var numTestsTotal = 0;
-						var DefectCountTotal = 0;
-						for(var i = 0; i < comps.length; i++) {
-							if (comps[i].compntType == "openIssue") {
-								doc[0].risks.push(comps[i]);
-							}
-							else if (comps[i].compntType == "CUSummarySample") {
-								doc[0].RCTestData.push(comps[i]);
-								// Calculate for Defect Rate of Control doc
-								if (doc[0].RCTestData[controlCtr].numTests ==  undefined || doc[0].RCTestData[controlCtr].numTests == "" || doc[0].RCTestData[controlCtr].numTests == 0 || doc[0].RCTestData[controlCtr].DefectCount == undefined || doc[0].RCTestData[controlCtr].DefectCount == "") {
-									doc[0].RCTestData[controlCtr].defectRate = "";
-								} else {
-									doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].DefectCount/doc[0].RCTestData[controlCtr].numTests) * 100).toFixed(1);
+						try{
+							var comps = compdata.body.docs;
+							doc[0].RCTestData = [];
+							doc[0].SampleData = [];
+							doc[0].SampleData2 = [];
+							var controlCtr = 0;
+							var sampleCtr = 0;
+							var sampleCtrPQ = 0;
+							var ctrlname;
+							var processCat;
+							var numTestsTotal = 0;
+							var DefectCountTotal = 0;
+							for(var i = 0; i < comps.length; i++) {
+								if (comps[i].compntType == "openIssue") {
+									doc[0].risks.push(comps[i]);
 								}
-								// Calculate for ControlName
-								doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
-								// Calculate for Defect Rate
-								numTestsTotal = numTestsTotal + comps[i].numTests;
-								DefectCountTotal = DefectCountTotal + comps[i].DefectCount;
+								else if (comps[i].compntType == "CUSummarySample") {
+									console.log(comps[i])
+									doc[0].RCTestData.push(comps[i]);
+									// Calculate for Defect Rate of Control doc
+									if (doc[0].RCTestData[controlCtr].numTests ==  undefined || doc[0].RCTestData[controlCtr].numTests == "" || doc[0].RCTestData[controlCtr].numTests == 0 || doc[0].RCTestData[controlCtr].DefectCount == undefined || doc[0].RCTestData[controlCtr].DefectCount == "") {
+										doc[0].RCTestData[controlCtr].defectRate = "";
+									} else {
+										doc[0].RCTestData[controlCtr].defectRate = ((doc[0].RCTestData[controlCtr].DefectCount/doc[0].RCTestData[controlCtr].numTests) * 100).toFixed(1);
+									}
+									// Calculate for ControlName
+									doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
+									// Calculate for Defect Rate
+									numTestsTotal = numTestsTotal + comps[i].numTests;
+									DefectCountTotal = DefectCountTotal + comps[i].DefectCount;
 
-								controlCtr++;
-							}
-							else if (comps[i].compntType == "controlSample") {
-								doc[0].SampleData.push(JSON.parse(JSON.stringify(comps[i])));
-								// calculate Process Category
-								if (comps[i].controlType == "KCO") {
-									processCat = "Operational";
-								} else {
-									processCat = "Financial";
+									controlCtr++;
 								}
-								doc[0].SampleData[sampleCtr].processCategory = processCat;
+								else if (comps[i].compntType == "controlSample") {
+									doc[0].SampleData.push(JSON.parse(JSON.stringify(comps[i])));
+									console.log(comps[i])
+									// calculate Process Category
+									if (comps[i].controlType == "KCO") {
+										processCat = "Operational";
+									} else {
+										processCat = "Financial";
+									}
+									doc[0].SampleData[sampleCtr].processCategory = processCat;
 
-								// calculate Control Name
-								ctrlname = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-								doc[0].SampleData[sampleCtr].controlName = ctrlname;
+									// calculate Control Name
+									ctrlname = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+									doc[0].SampleData[sampleCtr].controlName = ctrlname;
 
-								// Calculate for unremedPriorSample - Samples from prior quarters with unremediated defects. It will be used as a flag to alert that the asmt has an exception in it skey controls testing
-								// this will also be displayed in the Unremediated Samples from Prior Periods
-								if (comps[i].status != "Retired" && comps[i].reportingQuarter > comps[i].originalReportingQuarter && comps[i].remediationStatus == "Open" && comps[i].numDefects > 0) {
-									doc[0].unremedPriorSample = true;
-									doc[0].SampleData2.push(comps[i]);
-									doc[0].SampleData2[sampleCtrPQ].processCategory = processCat;
-									doc[0].SampleData2[sampleCtrPQ].controlName = ctrlname;
-									sampleCtrPQ++;
+									// Calculate for unremedPriorSample - Samples from prior quarters with unremediated defects. It will be used as a flag to alert that the asmt has an exception in it skey controls testing
+									// this will also be displayed in the Unremediated Samples from Prior Periods
+									if (comps[i].status != "Retired" && comps[i].reportingQuarter > comps[i].originalReportingQuarter && comps[i].remediationStatus == "Open" && comps[i].numDefects > 0) {
+										doc[0].unremedPriorSample = true;
+										doc[0].SampleData2.push(comps[i]);
+										doc[0].SampleData2[sampleCtrPQ].processCategory = processCat;
+										doc[0].SampleData2[sampleCtrPQ].controlName = ctrlname;
+										sampleCtrPQ++;
+									}
+									sampleCtr++;
 								}
-								sampleCtr++;
-							}
-							// For Audits and Reviews Tab - view 1
-							else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
-								if (comps[i].compntType == "internalAudit") {
-									comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
-									comps[i].auditOrReview = "CHQ Internal Audit";
-									comps[i].id = comps[i].engagement;
-									comps[i].reportDate = comps[i].addedToAQDB;
+								// For Audits and Reviews Tab - view 1
+								else if (comps[i].compntType == "PPR" || comps[i].compntType == "internalAudit") {
+									if (comps[i].compntType == "internalAudit") {
+										comps[i].reportingQuarter = "20"+comps[i].engagement.split("-")[0]+" Q"+doc[0].CurrentPeriod.split(" Q")[1];
+										comps[i].auditOrReview = "CHQ Internal Audit";
+										comps[i].id = comps[i].engagement;
+										comps[i].reportDate = comps[i].addedToAQDB;
+									}
+									doc[0].AuditTrustedData.push(comps[i]);
 								}
-								doc[0].AuditTrustedData.push(comps[i]);
-							}
-							// For Audits and Reviews Tab - view 2
-							else if (comps[i].compntType == "localAudit") {
-								doc[0].AuditLocalData.push(comps[i]);
-							}
-							else {
+								// For Audits and Reviews Tab - view 2
+								else if (comps[i].compntType == "localAudit") {
+									doc[0].AuditLocalData.push(comps[i]);
+								}
+								else {
 
+								}
 							}
+							// Calculate for Defect Rate
+							if (numTestsTotal == 0) {
+								doc[0].AUDefectRate = "";
+							} else {
+								doc[0].AUDefectRate = ((DefectCountTotal/numTestsTotal) * 100).toFixed(1);
+							}
+							deferred.resolve({"status": 200, "doc": doc});
+							}
+						catch(e){
+							console.log("[class-compdoc][getCompDocs][CU] - " + e.stack);
+							deferred.reject({"status": 500, "error": e.stack});
 						}
-						// Calculate for Defect Rate
-						if (numTestsTotal == 0) {
-							doc[0].AUDefectRate = "";
-						} else {
-							doc[0].AUDefectRate = ((DefectCountTotal/numTestsTotal) * 100).toFixed(1);
-						}
-						deferred.resolve({"status": 200, "doc": doc});
 					}).catch(function(err) {
 						console.log("[class-compdoc][getCompDocs]5 - " + err.error.reason);
 						deferred.reject({"status": 500, "error": err.error.reason});

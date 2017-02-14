@@ -460,16 +460,24 @@ var util = {
 		};
 		try {
 			require('request').get(options, process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0", function(error, res, body) {
+				//console.log(res)
 				if (error) {
 					console.log('There was an error: '+ error);
 					deferred.reject({"status": 500, "error": error});
 				} else {
-					console.log('Http request ran');
-					try {
-						deferred.resolve({"status": 200, "doc": JSON.parse(body)});
-					} catch(e) {
-						deferred.resolve({"status": 200, "doc": body});
+					if(res.statusCode == 200){
+						try {
+							deferred.resolve({"status": 200, "doc": JSON.parse(body)});
+						} catch(e) {
+							deferred.resolve({"status": 200, "doc": body});
+						}
 					}
+					else{
+						deferred.reject({"status": res.statusCode, "error": res.body});
+						
+					}
+					
+					
 				}
 			});
 		} catch(e) {
