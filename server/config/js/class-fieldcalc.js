@@ -687,16 +687,19 @@ var calculatefield = {
 						};
 						db.find(tmpQuery).then(function(asmts) {
 							doc[0].asmtsdocs = asmts.body.docs;
-
 							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+								console.log("for");
 								//DATA RPTG Country Testing
-								if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
-									// Format Defect Rate
-									doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
-									if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
-										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
+								if (doc[0].asmtsdocs.key == "Assessment"){
+									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+										// Format Defect Rate
+										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
+										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
+											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
+										}
 									}
 								}
+
 								// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
 								doc[0].asmtsdocs[i].processCategory = module.exports.getProcessCategory(doc[0].asmtsdocs[i].GlobalProcess, doc);
 								if (doc[0].asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
