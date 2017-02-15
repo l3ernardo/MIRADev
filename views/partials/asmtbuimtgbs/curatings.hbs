@@ -107,7 +107,7 @@
 	<tr class="curating">
 		<td colspan="3">
 			<span class="curating-header">CUs by Rating</span><br /><br />
-			<table width="100%">
+			<table id="curating_treetable" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
 					<th class="curating-viewheader" scope="col" width="5%">Rating</th>
@@ -127,17 +127,14 @@
 				{{#each BUCAsmtDataCURview}}
 					<tr class="asmt-viewdata">
 						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata">
-							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
-							<div id="ratingcategoryDisplay"></div>
-						</td>
+						<td class="asmt-viewdata" width="10%">{{{category}}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">{{count}}</td>
+						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
 						<td class="asmt-viewdata">{{targettosat}}</td>
@@ -156,7 +153,7 @@
 	<tr class="curating">
 		<td colspan="3">
 			<span class="curating-header">CUs by Country</span><br /><br />
-			<table width="100%">
+				<table id="curating_treetable2" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
 					<th class="curating-viewheader" scope="col" width="10%">Country</th>
@@ -173,21 +170,18 @@
 					<th class="curating-viewheader" scope="col" width="5%">PQ Score</th>
 					<th class="curating-viewheader" scope="col" width="12%">Explanations</th>
 				</thead>
-				{{#each BUCAsmtDataCURview}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata"></td>
+				{{#each BUCAsmtDataCURview2}}
+					 <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
+					   	<td class="asmt-viewdata" width="3%">{{topName}}</td>						
 						<td class="asmt-viewdata">{{country}}</td>
-						<td class="asmt-viewdata">
-							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
-							<div id="ratingcategoryDisplay"></div>
-						</td>
+						<td class="asmt-viewdata" width="5%">{{category2}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">{{count}}</td>
+						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
 						<td class="asmt-viewdata">{{targettosat}}</td>
