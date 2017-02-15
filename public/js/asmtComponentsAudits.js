@@ -27,4 +27,9 @@ $(document).ready(function(){
 	$('#btn_cancel').click(function() {
 		window.close();
 	});
+	
+	if(window.opener.location.href.indexOf("&edit")== -1){
+		$('#btn_edit').next().remove();
+		$('#btn_edit').remove();
+	}
 });
