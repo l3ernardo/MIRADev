@@ -605,6 +605,38 @@ var calculatefield = {
 						db.find(tmpQuery).then(function(asmts) {
 							doc[0].asmtsdocs = asmts.body.docs;
 							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+									//DATA RPTG Country Testing
+								if (doc[0].asmtsdocs[i].key == "Assessment"){
+									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+										// Format Defect Rate
+										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
+										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
+											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
+										}
+										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
+										doc[0].asmtsdocs[i].processCategory = calculatefield.getProcessCategory(doc[0].asmtsdocs[i].GPWWBCITKey, doc);
+										if (doc[0].asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+											doc[0].asmtsdocs[i].RAGStatus = "Unsat";
+											doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+											if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+												unsatCPDRFin += 1;
+											}else {
+												unsatCPDROps += 1;
+											}
+										} else if (doc[0].asmtsdocs[i].AUDefectRate < doc[0].MargThresholdPercent) {
+											doc[0].asmtsdocs[i].RAGStatus = "Sat";
+										} else {
+											doc[0].asmtsdocs[i].RAGStatus = "Marg";
+											doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+											if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+												margCPDRFin += 1;
+											}else {
+												margCPDROps += 1;
+											}
+										}
+									}
+								}
+								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
 									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
@@ -737,8 +769,6 @@ var calculatefield = {
 										}
 									}
 								}
-
-
 								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
