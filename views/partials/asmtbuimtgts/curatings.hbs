@@ -208,7 +208,7 @@
 	<tr class="curating">
 		<td colspan="3">
 			<span class="curating-header">CUs by Rating</span><br /><br />
-			<table width="100%">
+			<table id="curating_treetable" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
 					<th class="curating-viewheader" scope="col" width="2%"></th>
@@ -227,24 +227,70 @@
 					<th class="curating-viewheader" scope="col" width="10%">Explanations</th>
 				</thead>
 				{{#each BUCAsmtDataCURview}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata">
-							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
-							<div id="ratingcategoryDisplay"></div>
-						</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
+						<td class="asmt-viewdata">{{topName}}</td>
+						<td class="asmt-viewdata">{{categoryName}}</td>
+						<td class="asmt-viewdata" width="10%">{{{category}}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">{{count}}</td>
+						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
 						<td class="asmt-viewdata">{{targettosat}}</td>
 						<td class="asmt-viewdata">{{targettosatprev}}</td>
+						<td class="asmt-viewdata">{{size}}</td>
+						<td class="asmt-viewdata">{{maxscore}}</td>
+						<td class="asmt-viewdata">{{cqscore}}</td>
+						<td class="asmt-viewdata">{{pqscore}}</td>
+						<td class="asmt-viewdata">{{reviewcomments}}</td>
+					</tr>
+				{{/each}}
+				<tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="curating">
+		<td colspan="3">
+			<span class="curating-header">CUs by Country</span><br /><br />
+				<table id="curating_treetable2" width="100%"  class="other-viewheader table_with_scroll">
+				<thead>
+					<th class="curating-viewheader" scope="col" width="3%"></th>
+					<th class="curating-viewheader" scope="col" width="10%">Country</th>
+					<th class="curating-viewheader" scope="col" width="3%"></th>
+					<th class="curating-viewheader" scope="col" width="5%">Rating</th>
+					<th class="curating-viewheader" scope="col" width="20%">Controllable Unit</th>
+					<th class="curating-viewheader" scope="col" width="5%">Count</th>
+					<th class="curating-viewheader" scope="col" width="5%">Percent</th>
+					<th class="curating-viewheader" scope="col" width="5%">Prior Q</th>
+					<th class="curating-viewheader" scope="col" width="5%">Curr Q</th>
+					<th class="curating-viewheader" scope="col" width="10%">Target to Sat</th>
+					<th class="curating-viewheader" scope="col" width="5%">Size</th>
+					<th class="curating-viewheader" scope="col" width="5%">Max Score</th>
+					<th class="curating-viewheader" scope="col" width="5%">CQ Score</th>
+					<th class="curating-viewheader" scope="col" width="5%">PQ Score</th>
+					<th class="curating-viewheader" scope="col" width="12%">Explanations</th>
+				</thead>
+				{{#each BUCAsmtDataCURview2}}
+					 <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
+					   	<td class="asmt-viewdata" width="3%">{{topName}}</td>						
+						<td class="asmt-viewdata">{{country}}</td>
+						<td class="asmt-viewdata" width="2%">{{categoryName}}</td>
+						<td class="asmt-viewdata" width="5%">{{category2}}</td>
+						{{#if name}}
+							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+						{{else}}
+							<td class="asmt-viewdata">&nbsp;</td>
+						{{/if}}
+						<td class="asmt-viewdata">{{count}}
+						</td>
+						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
+						{{{ratingDisplayView ratingPQ1}}}
+						{{{ratingDisplayView ratingCQ}}}
+						<td class="asmt-viewdata">{{targettosat}}</td>
 						<td class="asmt-viewdata">{{size}}</td>
 						<td class="asmt-viewdata">{{maxscore}}</td>
 						<td class="asmt-viewdata">{{cqscore}}</td>
