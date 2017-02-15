@@ -478,7 +478,8 @@ var calculatefield = {
 							"Status": "Active",
 							"$or":
 							[
-								{"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
+								// {"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
+								{"$and": [{"DocSubType":"BU Country"}]},
 								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid}]},
 								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
@@ -619,7 +620,11 @@ var calculatefield = {
 						});
 						break;
 					case "BU IMT":
-						doc[0].AUDocs = asmtsdata.body.docs;
+					// doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].AUDocs = [];
+						var unitdocs = asmtsdata.body.docs;
+						doc[0].ExcludedCountryNames = [];
+						doc[0].ExcludedCountryIDs = [];
 						doc[0].AUDocsObj = {};
 						doc[0].AUAuditables = {};
 						doc[0].AUCountries = [];
@@ -641,37 +646,50 @@ var calculatefield = {
 						var CRMables = {};
 						var Deliveryables = {};
 						var $or = [];
-						for(var i = 0; i < doc[0].AUDocs.length; i++){
-							$or.push({parentid: doc[0].AUDocs[i]["_id"]});
-							doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
-							if(doc[0].AUDocs[i].DocSubType == "Country Process" || doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
-								if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
-									doc[0].AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+						for(var i = 0; i < unitdocs.length; i++){
+							if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].ExcludeGeo !== undefined  && unitdocs[i].ExcludeGeo ==  "Yes") {
+								doc[0].ExcludedCountryNames.push(util.resolveGeo(unitdocs[i].Country,"Country",req));
+								doc[0].ExcludedCountryIDs.push(unitdocs[i].Country);
+							} else {
+								if (unitdocs[i].DocSubType != "BU Country") {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+								if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].parentid == doc[0].parentid) {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+							}
+							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
+								if(unitdocs[i].AuditableFlag !== undefined && unitdocs[i].AuditableFlag == "Yes"){
+									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
 								}
 							}
 							if (doc[0].MIRABusinessUnit == "GTS") {
-								if(doc[0].AUDocs[i].DocSubType == "Country Process"){
-									if(doc[0].CRMProcessObj[doc[0].AUDocs[i].GPPARENT]){
-										CRMables[doc[0].AUDocs[i]["_id"]] = true;
-									}else if(doc[0].DeliveryProcessObj[doc[0].AUDocs[i].GPPARENT]){
-										Deliveryables[doc[0].AUDocs[i]["_id"]] = true;
+								if(unitdocs[i].DocSubType == "Country Process"){
+									if(doc[0].CRMProcessObj[unitdocs[i].GPPARENT]){
+										CRMables[unitdocs[i]["_id"]] = true;
+									}else if(doc[0].DeliveryProcessObj[unitdocs[i].GPPARENT]){
+										Deliveryables[unitdocs[i]["_id"]] = true;
 									}else{
 										$or.pop();
-										delete doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]];
-										console.log("CP category not found: "+ doc[0].AUDocs[i].GPPARENT);
+										delete doc[0].AUDocsObj[unitdocs[i]["_id"]];
+										console.log("CP category not found: "+ unitdocs[i].GPPARENT);
 									}
-								}else if(doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
-									if(doc[0].CRMCUObj[doc[0].AUDocs[i].Category]){
-										CRMables[doc[0].AUDocs[i]["_id"]] = true;
-									}else if(doc[0].DeliveryCUObj[doc[0].AUDocs[i].Category]){
-										Deliveryables[doc[0].AUDocs[i]["_id"]] = true;
+								}else if(unitdocs[i].DocSubType == "Controllable Unit"){
+									if(doc[0].CRMCUObj[unitdocs[i].Category]){
+										CRMables[unitdocs[i]["_id"]] = true;
+									}else if(doc[0].DeliveryCUObj[unitdocs[i].Category]){
+										Deliveryables[unitdocs[i]["_id"]] = true;
 									}else{
 										$or.pop();
-										delete doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]];
-										console.log("CU category not found: "+ doc[0].AUDocs[i].Category);
+										delete doc[0].AUDocsObj[unitdocs[i]["_id"]];
+										console.log("CU category not found: "+ unitdocs[i].Category);
 									}
-								}else if(doc[0].AUDocs[i].DocSubType == "BU Country"){
-									doc[0].AUCountries.push(doc[0].AUDocs[i]);
+								}else if(unitdocs[i].DocSubType == "BU Country" && unitdocs[i].parentid == doc[0].parentid && unitdocs[i].ExcludeGeo !== undefined  && unitdocs[i].ExcludeGeo !=  "Yes"){
+									doc[0].AUCountries.push(unitdocs[i]);
 								}
 							}
 						}
@@ -720,7 +738,7 @@ var calculatefield = {
 									}
 								}
 
-								
+
 								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){

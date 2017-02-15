@@ -73,7 +73,6 @@ var assessment = {
 		var defViewRow = 10;
 		var doc = [];
 		doc.push(newdoc);
-
 		/* Format Links */
 		doc[0].Links = JSON.stringify(doc[0].Links);
 		doc[0].EnteredBU = doc[0].MIRABusinessUnit;
@@ -96,7 +95,6 @@ var assessment = {
 				// OMKID0 - Operational Metric ID for Other Metrics as a default metric
 				doc[0].OpMetricKey = parentdoc[0].OpMetricKey;
 				doc[0].Category = parentdoc[0].Category;
-
 				fieldCalc.getDocParams(req, db, doc).then(function(data){
 					doc[0].PrevQtrs = [];
 					doc[0].PrevQtrs = fieldCalc.getPrev4Qtrs(doc[0].CurrentPeriod);
@@ -405,22 +403,23 @@ var assessment = {
 							doc[0].IMTName = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].BUIOT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IOT,"IOT",req);
 							doc[0].BUIMT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
+							doc[0].IMTid = doc[0].IMT;
 							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
-
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Get rating profiles
 									fieldCalc.getRatingProfile(doc);
 									// Process Country Process Ratings tab
-									prt.processProTab(doc,defViewRow);	
-                                    // Process CU Ratings tab					
-                                    cut.processCUTab(doc,defViewRow);		
+									prt.processProTab(doc,defViewRow);
+                  // Process CU Ratings tab
+                  cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
-
+									// Process Sampled Country Testing Tab
+									sct.processSCTab(doc,defViewRow);
 									//Performance tab
 									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
 
@@ -574,7 +573,7 @@ var assessment = {
 							doc[0].AuditTrustedData = [];
 							doc[0].CUAsmtDataPR1view = [];
 							doc[0].AuditLocalData = [];
-							
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
 								fieldCalc.getAccountInheritedFields(db, doc).then(function(accdata){
@@ -702,7 +701,7 @@ var assessment = {
 										});
 
 									}).catch(function(err) {
-										
+
 										console.log("[assessment][getAsmtbyID][getCompDocs] - " + err.error);
 										deferred.reject({"status": 500, "error": err.error});
 										deferred.promise
