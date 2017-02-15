@@ -22,7 +22,6 @@ var calculateSCTab = {
         case "BU IOT":
           break;
         case "BU IMT":
-          break;
         case "BU Country":
 
           //** Calculate for Defect Rate - START **//
