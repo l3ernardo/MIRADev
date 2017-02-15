@@ -1,3 +1,5 @@
+<script src="/public/js/bucountry_performanceoverview.js"></script>
+<script src='/public/js/utility.js'></script>
 <table id="po_table" class="ibm-data-table">
 	<input type="hidden" name="opMetricIDs" id="opMetricIDs" value="{{opMetricIDs}}">
 	{{#if editmode}}
@@ -71,7 +73,7 @@
 						<th class="ar-asmt-label">Summary/Comments</th>
 					</tr>
 					{{#each OpMetric}}
-						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}">
+						<input type="hidden" name="{{namefield}}" id="{{namefield}}" value="{{name}}"  class="mira-field" for="Name Field">
 						<tr>
 							<td class="ar-asmt-label"><label for="{{commentfield}}">{{name}}</label></td>
 							<td class="content-data">
@@ -130,7 +132,7 @@
 						<td class="ar-asmt-label">Overall Assessment</td>
 						{{{ratingDisplayView PeriodRatingCRM}}}
 						<td class="content-data">
-							<input type="hidden" name="OverallAssessmentCommentsROCRM" value="{{OverallAssessmentCommentsCRM}}">
+							<input type="hidden" name="OverallAssessmentCommentsROCRM" value="{{OverallAssessmentCommentsCRM}}"  class="mira-field" for="Overall Assessment Comments">
 							<div id="OverallAssessmentCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -138,7 +140,7 @@
 						<td class="ar-asmt-label">KCFR Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCFRDefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCFRTestingCommentsROCRM" value="{{KCFRTestingCommentsCRM}}">
+							<input type="hidden" name="KCFRTestingCommentsROCRM" value="{{KCFRTestingCommentsCRM}}" class="mira-field" for="KCFR Testing Comments">
 							<div id="KCFRTestingCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -146,31 +148,31 @@
 						<td class="ar-asmt-label">KCO Defect Rate</td>
 						{{{defectRateDisplayViewWpercent KCODefectRateCRM parameters.MargThresholdPercent.0.options.0.name parameters.UnsatThresholdPercent.0.options.0.name}}}
 						<td class="content-data">
-							<input type="hidden" name="KCOTestingCommentsROCRM" value="{{KCOTestingCommentsCRM}}">
+							<input type="hidden" name="KCOTestingCommentsROCRM" value="{{KCOTestingCommentsCRM}}" class="mira-field" for="KCO Testing Comments">
 							<div id="KCOTestingCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">CHQ Internal Audit Score</td>
-						<td class="content-data">{{WeightedAuditScoreCRM}}</td>
+						<td class="content-data-centered">{{WeightedAuditScoreCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="CorpIACommentsROCRM" value="{{CorpIACommentsCRM}}">
+							<input type="hidden" name="CorpIACommentsROCRM" value="{{CorpIACommentsCRM}}" class="mira-field" for="CHQ internal audit score">
 							<div id="CorpIACommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Missed Risk Evaluations</td>
-						<td class="content-data">{{MissedOpenIssueCountCRM}}</td>
+						<td class="content-data-centered">{{MissedOpenIssueCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedRECommentsROCRM" value="{{MissedRECommentsCRM}}">
+							<input type="hidden" name="MissedRECommentsROCRM" value="{{MissedRECommentsCRM}}" class="mira-field" for="Missed Risk Evaluations">
 							<div id="MissedRECommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Missed MSAC Commitments</td>
-						<td class="content-data">{{MissedMSACSatCountCRM}}</td>
+						<td class="content-data-centered">{{MissedMSACSatCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="MissedMSACCommentsROCRM" value="{{MissedMSACCommentsCRM}}">
+							<input type="hidden" name="MissedMSACCommentsROCRM" value="{{MissedMSACCommentsCRM}}" class="mira-field" for="Missed MSAC comments">
 							<div id="MissedMSACCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -184,7 +186,7 @@
 							<td class="ar-asmt-label">{{name}}</td>
 							{{{ratingDisplayView rating}}}
 							<td class="content-data">
-								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}">
+								<input type="hidden" name="{{commentfieldRO}}" value="{{action}}" class="mira-field" for="Operational and other indicators">
 								<div id="{{commentfieldReadOnly}}"></div>
 							</td>
 						</tr>
@@ -193,7 +195,7 @@
 						<td class="ar-asmt-label">Basics of Control Exceptions</td>
 						<td class="asmt-viewdata-centered">{{BOCExceptionCountCRM}}</td>
 						<td class="content-data">
-							<input type="hidden" name="BoCCommentsROCRM" value="{{BoCCommentsCRM}}">
+							<input type="hidden" name="BoCCommentsROCRM" value="{{BoCCommentsCRM}}" class="mira-field" for="Basic of control exceptions comments">
 							<div id="BoCCommentsReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -202,14 +204,14 @@
 					<tr>
 						<td class="ar-asmt-label" width="25%">Other Explanation</td>
 						<td class="content-data" width="75%">
-							<input type="hidden" name="PerfOverviewOtherExplanationROCRM" value="{{PerfOverviewOtherExplanationCRM}}">
+							<input type="hidden" name="PerfOverviewOtherExplanationROCRM" value="{{PerfOverviewOtherExplanationCRM}}"  class="mira-field" for="Other explanation">
 							<div id="PerfOverviewOtherExplanationReadOnlyCRM"></div>
 						</td>
 					</tr>
 					<tr>
 						<td class="ar-asmt-label">Critical Issues</td>
 						<td class="content-data">
-							<input type="hidden" name="PerfOverviewCriticaExplanationROCRM" value="{{PerfOverviewCriticaExplanationCRM}}">
+							<input type="hidden" name="PerfOverviewCriticaExplanationROCRM" value="{{PerfOverviewCriticaExplanationCRM}}" class="mira-field" for="Critical issues">
 							<div id="PerfOverviewCriticaExplanationReadOnlyCRM"></div>
 						</td>
 					</tr>
@@ -219,10 +221,14 @@
 	{{/if}}
 	<tr class="ar-asmt-content">
 		<td>
-			<span class="ar-asmt-header">Performance Indicators</span><br /><br />
-			<table width="100%">
+			<span id="CPCUPerformanceInCRM_tittle" name = "CPCUPerformanceInCRM_tittle"  class="ar-asmt-header" >Performance Indicators</span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="POBUCRM-link-export" id="POBUCRM-link-export" class="ibm-symp-spreadsheet whiteanchor" >Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="POBUCRM-link-export2" id="POBUCRM-link-export2" class="ibm-symp-spreadsheet whiteanchor" >Export to Open Office</a>
+
+			<table width="100%" id="CPCUPerformanceInCRM_treeview" class="other-viewheader table_with_scroll">
 				<thead>
-					<th class="ar-asmt-viewheader" scope="col" width="10%"></th>
+					
 					<th class="ar-asmt-viewheader" scope="col" width="30%">Assessed Unit</th>
 					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-4</th>
 					<th class="ar-asmt-viewheader" scope="col" width="5%">CQ-3</th>
@@ -235,34 +241,41 @@
 					<th class="ar-asmt-viewheader" scope="col" width="7%">Missed Risk Evaluations</th>
 					<th class="ar-asmt-viewheader" scope="col" width="7%">Missed MSAC Commitments</th>
 				</thead>
-				{{#each BUCAsmtDataPIview}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">{{ParentDocSubType}}</td>
+				{{#each BUCAsmtDataPIviewCRM}}
+					 <tr class="asmt-viewdata" data-tt-id={{docid}} data-tt-parent-id="{{treeParent}}">
 						{{#if_equal name ""}}
-							<td class="asmt-viewdata">&nbsp;</td>
+							<td class="asmt-viewdata" width="30%">&nbsp;</td>
 						{{else}}
-							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{#if_greater treeParent "-1"}}
+								<td class="asmt-viewdata" width="30%">{{name}}</td>
+							{{else}}
+								<td class="asmt-viewdata" width="30%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{/if_greater}}
+
 						{{/if_equal}}
-						{{{ratingDisplayView ratingPQ4}}}
-						{{{ratingDisplayView ratingPQ3}}}
-						{{{ratingDisplayView ratingPQ2}}}
-						{{{ratingDisplayView ratingPQ1}}}
-						{{{ratingDisplayView ratingCQ}}}
-						{{{defectRateDisplayViewNoDash kcfrDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						{{{defectRateDisplayViewNoDash kcoDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						<td class="asmt-viewdata">{{auditScore}}</td>
-						<td class="asmt-viewdata">{{msdRisk}}</td>
-						<td class="asmt-viewdata">{{msdMSAC}}</td>
+						{{{ratingDisplayView ratingPQ4 5}}}
+						{{{ratingDisplayView ratingPQ3 5}}}
+						{{{ratingDisplayView ratingPQ2 5}}}
+						{{{ratingDisplayView ratingPQ1 5}}}
+						{{{ratingDisplayView ratingCQ 5}}}
+						{{{defectRateDisplayViewNoDash kcfrDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 7}}}
+						{{{defectRateDisplayViewNoDash kcoDR ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 7}}}
+						<td class="asmt-viewdata" width="6%">{{auditScore}}</td>
+						<td class="asmt-viewdata" width="7%">{{msdRisk}}</td>
+						<td class="asmt-viewdata" width="7%">{{msdMSAC}}</td>
 					</tr>
 				{{/each}}
 				<tr>
 			</table>
 			<br />
-			<span class="ar-asmt-header">Operational and Other Indicators</span><br /><br />
-			<table width="100%">
+			<span id="CPCUPerformanceInOthersCRM_tittle" name = "CPCUPerformanceInOthersCRM_tittle" class="ar-asmt-header">Operational and Other Indicators</span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="POBUOTCRM-link-export"  class="ibm-symp-spreadsheet whiteanchor" id="POBUOTCRM-link-export">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="POBUOTCRM-link-export2"  class="ibm-symp-spreadsheet whiteanchor" id="POBUOTCRM-link-export2">Export to Open Office</a>
+			<table width="100%" id="CPCUPerformanceInOtherCRM_treeview" class="other-viewheader table_with_scroll">
 				<thead>
-					<th class="ar-asmt-viewheader" scope="col" width="5%"></th>
-					<th class="ar-asmt-viewheader" scope="col" width="23%">Assessed Unit</th>
+					
+					<th class="ar-asmt-viewheader" scope="col" width="33%">Assessed Unit</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Proactive Reviews</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Procurement Bypass (YTD)</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Labour Claiming</th>
@@ -272,22 +285,26 @@
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Basics of Controls Exceptions</th>
 					<th class="ar-asmt-viewheader" scope="col" width="9%">Other Metrics</th>
 				</thead>
-				{{#each BUCAsmtDataOIview}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata">{{ParentDocSubType}}</td>
+				{{#each BUCAsmtDataOIviewCRM}}
+					<tr class="asmt-viewdata" data-tt-id={{docid}} data-tt-parent-id="{{treeParent}}">
 						{{#if_equal name ""}}
-							<td class="asmt-viewdata">&nbsp;</td>
+							<td class="asmt-viewdata" width="33%">&nbsp;</td>
 						{{else}}
-							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{#if_greater treeParent "-1"}}
+								<td class="asmt-viewdata" width="33%">{{name}}</td>
+							{{else}}
+								<td class="asmt-viewdata" width="33%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							{{/if_greater}}
+
 						{{/if_equal}}
-						{{{ratingDisplayView opmetric12Rating}}}
-						{{{ratingDisplayView opmetric13Rating}}}
-						{{{ratingDisplayView opmetric9Rating}}}
-						{{{ratingDisplayView opmetric17Rating}}}
-						{{{ratingDisplayView opmetric16Rating}}}
-						{{{ratingDisplayView opmetric15Rating}}}
-						<td class="asmt-viewdata-centered">{{bocExCount}}</td>
-						{{{ratingDisplayView opmetric11Rating}}}
+						{{{ratingDisplayView OMID17Rating 9}}}
+						{{{ratingDisplayView OMID3Rating 9}}}
+						{{{ratingDisplayView OMID4Rating 9}}}
+						{{{ratingDisplayView OMID5Rating 9}}}
+						{{{ratingDisplayView OMID6Rating 9}}}
+						{{{ratingDisplayView OMID7Rating 9}}}
+						<td class="asmt-viewdata-centered" width="9%">{{bocExCount}}</td>
+						{{{ratingDisplayView OMID16Rating 9}}}
 					</tr>
 				{{/each}}
 				<tr>
@@ -295,3 +312,12 @@
 		</td>
 	</tr>
 </table>
+<script>
+
+		//load tree tables for Country Process and CU Performance Indicators and others indicators tables at performanceoverview partial
+	$("#CPCUPerformanceInCRM_treeview").treetable({expandable: true});
+	$("#CPCUPerformanceInOtherCRM_treeview").treetable({expandable: true});
+
+
+
+</script>

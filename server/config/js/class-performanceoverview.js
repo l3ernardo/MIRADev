@@ -4,10 +4,31 @@
  *
  */
 
-var q = require("q");
-var forEach = require('async-foreach').forEach;
+
+
 var util = require('./class-utility.js');
-var moment = require('moment');
+//var fieldCalc = require('./class-fieldcalc.js');
+
+
+var calculateWeightedAuditScore =function (CUMaxScore, CUScore){
+	var WeightedAuditScore = 0;
+	
+	if (isNaN(CUMaxScore))
+		CUMaxScore = parseInt(CUMaxScore);
+	
+	if (isNaN(CUScore))
+		CUScore = parseInt(CUScore);
+	
+	if(CUMaxScore == 0 || CUMaxScore == "" || totalCUScore == "") {
+		weightedScore = "";
+	}
+	else
+		WeightedAuditScore = ((CUScore /CUMaxScore)*100).toFixed(1);
+	
+	
+	
+	return WeightedAuditScore.toString();
+}
 
 var getCatSumbocEx = function(view, Type) {
 	var count = 0;
@@ -106,44 +127,6 @@ var getOpenIssuePerAssessment = function(RiskView1Data, reviewParam,
 
 }
 
-/*
- * var getOpenIssuePerAssessment = function (RiskView1Data,AssessableUnitName){
- * var tempProcess = ""; var tempCountry = ""; var tempRiskCountry = ""; var
- * tempRiskProces = "";
- *
- * try{
- *
- * if(AssessableUnitName != undefined && RiskView1Data != undefined){
- * if(AssessableUnitName.indexOf("-") != -1 ){
- *
- * if(AssessableUnitName.split('-').length > 0 ){
- *
- * tempCountry = AssessableUnitName.split('-')[0].replace(/ /g,''); //var
- * tempCountry = "USA";
- *
- *
- * if(AssessableUnitName.split('-').length>2){ tempProcess =
- * AssessableUnitName.split('-')[1]; tempProcess += "-"; tempProcess +=
- * AssessableUnitName.split('-')[2]; } else{ tempProcess =
- * AssessableUnitName.split('-')[1] ; }
- *
- * tempProcess = tempProcess.replace(/ /g,''); tempCountry =
- * tempCountry.replace(/ /g,'');
- *
- * if(RiskView1Data.country != undefined && RiskView1Data.process != undefined ){
- * tempRiskCountry = RiskView1Data.country.replace(/ /g,''); tempRiskProcess =
- * RiskView1Data.process.replace(/ /g,''); }
- *
- * if(tempRiskCountry == tempCountry && tempRiskProcess == tempProcess ) return
- * true; else return false; }
- *  }
- *  }
- *
- * }catch (e){ console.log("error at
- * [class-performanceoverview][getOpenIssuePerAssessment]: "+e); return false; }
- *
- *  }
- */
 
 var performanceoverviewcountry = {
 
@@ -157,6 +140,89 @@ var performanceoverviewcountry = {
 		}
 
 		return count;
+	},
+	
+  buildPerformanceTab : function(db, doc,defViewRow,fieldCalc) {
+		
+
+		performanceoverviewcountry.getKFCRDefectRate(db,doc);
+		performanceoverviewcountry.getKCODefectRate(db,doc);
+		performanceoverviewcountry.getMissedRisks(db,doc);
+		performanceoverviewcountry.getMSACCommitmentsCount(db,doc);
+		
+		
+		if (doc[0].MIRABusinessUnit == "GTS") {
+			performanceoverviewcountry.createTablesData(doc);
+			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsGTS(db,doc);
+			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
+
+
+			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIviewCRM) < defViewRow) {
+				if (doc[0].BUCAsmtDataPIviewCRM.length == 0) {
+					doc[0].BUCAsmtDataPIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
+				} else {
+					fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewCRM,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIviewCRM)));
+				}
+			}
+
+
+			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIviewDelivery) < defViewRow) {
+				if (doc[0].BUCAsmtDataPIviewDelivery.length == 0) {
+					doc[0].BUCAsmtDataPIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
+				} else {
+					fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIviewDelivery,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIviewDelivery)));
+				}
+			}
+
+			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIviewCRM) < defViewRow) {
+				if (doc[0].BUCAsmtDataOIviewCRM.length == 0) {
+					doc[0].BUCAsmtDataOIviewCRM = fieldCalc.addTestViewData(8,defViewRow);
+				} else {
+					fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewCRM,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIviewCRM)));
+				}
+			}
+
+			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIviewDelivery) < defViewRow) {
+				if (doc[0].BUCAsmtDataOIviewDelivery.length == 0) {
+					doc[0].BUCAsmtDataOIviewDelivery = fieldCalc.addTestViewData(8,defViewRow);
+				} else {
+					fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIviewDelivery,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIviewDelivery)));
+				}
+			}
+
+
+
+
+
+		} else{// GBS and GTS trans
+
+			performanceoverviewcountry.getCPANDCUPerformanceIndicators(db,doc);
+			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+
+			
+			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
+			
+				if (doc[0].BUCAsmtDataPIview.length == 0) {
+					doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+				} else {  	
+					
+					fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIview)));
+				  
+				}
+			}
+			
+			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIview) < defViewRow) {
+				if (doc[0].BUCAsmtDataOIview.length == 0) {
+					doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+				} else {
+					fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIview)));
+				}
+			}
+
+
+		}
+		
+		
 	},
 
 	getKFCRDefectRate : function(db, doc) {
@@ -245,7 +311,7 @@ var performanceoverviewcountry = {
 				// obtain defect and test count from the
 				// components(countryControls)
 				for (var i = 0; i < doc[0].CountryControlsData.length; i++) {
-
+					//  console.log(doc[0].CountryControlsData[i]);
 					if (doc[0].CountryControlsData[i].controlType == 'KCFR') {
 						// console.log("KCFR numDefects: " + doc[0].CountryControlsData[i].numDefects);
 						// console.log("KCFR numActualTests: " + doc[0].CountryControlsData[i].numActualTests);
@@ -258,8 +324,8 @@ var performanceoverviewcountry = {
 						}
 					}
 				}
-				// console.log(KCFRDefectCount);
-				// console.log(KCFRTestCount);
+			//	 console.log("KCFRDefectCount: "+KCFRDefectCount);
+		//		 console.log("KCFRTestCount: "+KCFRTestCount);
 				if (testPerformed == true) {
 					if (KCFRTestCount > 0) {
 						KFCRDefectRate = ((KCFRDefectCount / KCFRTestCount) * 100).toFixed(1).toString();
@@ -375,8 +441,7 @@ var performanceoverviewcountry = {
 						}
 					}
 				}
-				// console.log(KCODefectCount);
-				// console.log(KCOTestCount);
+				
 
 				if (testPerformed == true) {
 					if (KCOTestCount > 0) {
@@ -392,9 +457,7 @@ var performanceoverviewcountry = {
 			}// end else
 
 		} catch (e) {
-			console
-					.log("error at [class-performanceoverview][getKCODefectRate]: "
-							+ e);
+			console.log("error at [class-performanceoverview][getKCODefectRate]: "+ e);
 		}
 
 	},
@@ -722,7 +785,7 @@ var performanceoverviewcountry = {
 			// For GBS
 			else {
 
-				for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+				for (var i = 0; i < doc[0].asmtsdocs.length; i++) {   
 					if (doc[0].asmtsdocs[i].PeriodRating == "Marg" || doc[0].asmtsdocs[i].PeriodRating == "Unsat") {
 						if (doc[0].asmtsdocs[i].Target2Sat != undefined && doc[0].asmtsdocs[i].Target2SatPrev != undefined) {
 								if (doc[0].asmtsdocs[i].Target2Sat != "" && doc[0].asmtsdocs[i].Target2SatPrev != "") {
@@ -918,7 +981,7 @@ var performanceoverviewcountry = {
 
 	getCPANDCUPerformanceIndicatorsGTS : function(db, doc) {
 		// Sort for correct display
-		var POCountryFlag = 0, POCUFlag = 0, POBUCFlag = 0;
+		var POCountryFlag = 0, POCUFlag = 0, POBUCFlag = 0, POIMTFlag=0, POIOTFlag =0;
 		var tempArray = [];
 		var head = {};
 
@@ -987,6 +1050,57 @@ var performanceoverviewcountry = {
 
 			// Create the treetable array for CRM
 			for (var i = 0; i < doc[0].BUCAsmtDataPIviewCRM.length; i++) {
+				
+				if (doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType == "BU IMT"
+					&& POIMTFlag == 0) {
+				head = {
+					"docid" : doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType
+							.replace(/ /g, ''),
+					"name" : doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType,
+					"ParentDocSubType" : doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType,
+					"ratingCQ" : "",
+					"ratingPQ1" : "",
+					"ratingPQ2" : "",
+					"ratingPQ3" : "",
+					"ratingPQ4" : "",
+					"kcfrDR" : "",
+					"kcoDR" : "",
+					"auditScore" : "",
+					"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIviewCRM,
+							doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
+					"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIviewCRM,
+							doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
+					"treeParent" : i
+				};
+				POIMTFlag = 1;
+				tempArray.push(head);
+			}
+				
+				if (doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType == "BU IOT"
+					&& POIOTFlag == 0) {
+				head = {
+					"docid" : doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType
+							.replace(/ /g, ''),
+					"name" : doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType,
+					"ParentDocSubType" : doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType,
+					"ratingCQ" : "",
+					"ratingPQ1" : "",
+					"ratingPQ2" : "",
+					"ratingPQ3" : "",
+					"ratingPQ4" : "",
+					"kcfrDR" : "",
+					"kcoDR" : "",
+					"auditScore" : "",
+					"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIviewCRM,
+							doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
+					"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIviewCRM,
+							doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
+					"treeParent" : i
+				};
+				POIOTFlag = 1;
+				tempArray.push(head);
+			}
+				
 
 				if (doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType == "Country Process"
 						&& POCountryFlag == 0) {
@@ -1073,9 +1187,65 @@ var performanceoverviewcountry = {
 			POCountryFlag = 0;
 			POCUFlag = 0;
 			POBUCFlag = 0;
+			POIMTFlag = 0;
+			POIOTFlag = 0;
 
 			// Create the treetable array for Delivery
 			for (var i = 0; i < doc[0].BUCAsmtDataPIviewDelivery.length; i++) {
+				
+				if (doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType == "BU IMT"
+					&& POIMTFlag == 0) {
+				head = {
+					"docid" : doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType
+							.replace(/ /g, ''),
+					"name" : doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType,
+					"ParentDocSubType" : doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType,
+					"ratingCQ" : "",
+					"ratingPQ1" : "",
+					"ratingPQ2" : "",
+					"ratingPQ3" : "",
+					"ratingPQ4" : "",
+					"kcfrDR" : "",
+					"kcoDR" : "",
+					"auditScore" : "",
+					"msdRisk" : getCatSumRisk(
+							doc[0].BUCAsmtDataPIviewDelivery,
+							doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
+					"msdMSAC" : getCatSumMSAC(
+							doc[0].BUCAsmtDataPIviewDelivery,
+							doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
+					"treeParent" : i
+				};
+				POIMTFlag = 1;
+				tempArray.push(head);
+			}
+				
+				if (doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType == "BU IOT"
+					&& POIOTFlag == 0) {
+				head = {
+					"docid" : doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType
+							.replace(/ /g, ''),
+					"name" : doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType,
+					"ParentDocSubType" : doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType,
+					"ratingCQ" : "",
+					"ratingPQ1" : "",
+					"ratingPQ2" : "",
+					"ratingPQ3" : "",
+					"ratingPQ4" : "",
+					"kcfrDR" : "",
+					"kcoDR" : "",
+					"auditScore" : "",
+					"msdRisk" : getCatSumRisk(
+							doc[0].BUCAsmtDataPIviewDelivery,
+							doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
+					"msdMSAC" : getCatSumMSAC(
+							doc[0].BUCAsmtDataPIviewDelivery,
+							doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
+					"treeParent" : i
+				};
+				POIOTFlag = 1;
+				tempArray.push(head);
+			}
 
 				if (doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType == "Country Process"
 						&& POCountryFlag == 0) {
@@ -1164,6 +1334,8 @@ var performanceoverviewcountry = {
 
 			doc[0].BUCAsmtDataPIviewDelivery = tempArray;
 
+			
+			
 		} catch (e) {
 			console
 					.log("error at [class-performanceoverview][getCPANDCUPerformanceIndicators]: "
@@ -1181,7 +1353,7 @@ var performanceoverviewcountry = {
 
 	getCPANDCUPerformanceIndicators : function(db, doc) {
 		// Sort for correct display
-		var POCountryFlag = 0, POCUFlag = 0, POBUCFlag = 0;
+		var POCountryFlag = 0, POCUFlag = 0, POBUCFlag = 0, POIMTFlag = 0, POIOTFlag = 0;
 		var tempArray = [];
 		var head = {};
 
@@ -1221,6 +1393,56 @@ var performanceoverviewcountry = {
 
 			// Create the treetable array
 			for (var i = 0; i < doc[0].BUCAsmtDataPIview.length; i++) {
+				
+				if (doc[0].BUCAsmtDataPIview[i].ParentDocSubType == "BU IMT"
+					&& POIMTFlag == 0) {
+				head = {
+					"docid" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType
+							.replace(/ /g, ''),
+					"name" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType,
+					"ParentDocSubType" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType,
+					"ratingCQ" : "",
+					"ratingPQ1" : "",
+					"ratingPQ2" : "",
+					"ratingPQ3" : "",
+					"ratingPQ4" : "",
+					"kcfrDR" : "",
+					"kcoDR" : "",
+					"auditScore" : "",
+					"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
+							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
+					"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
+							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
+					"treeParent" : i
+				};
+				POIMTFlag = 1;
+				tempArray.push(head);
+			}
+				
+				if (doc[0].BUCAsmtDataPIview[i].ParentDocSubType == "BU IOT"
+					&& POIOTFlag == 0) {
+				head = {
+					"docid" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType
+							.replace(/ /g, ''),
+					"name" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType,
+					"ParentDocSubType" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType,
+					"ratingCQ" : "",
+					"ratingPQ1" : "",
+					"ratingPQ2" : "",
+					"ratingPQ3" : "",
+					"ratingPQ4" : "",
+					"kcfrDR" : "",
+					"kcoDR" : "",
+					"auditScore" : "",
+					"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
+							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
+					"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
+							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
+					"treeParent" : i
+				};
+				POIOTFlag = 1;
+				tempArray.push(head);
+			}
 
 				if (doc[0].BUCAsmtDataPIview[i].ParentDocSubType == "Country Process"
 						&& POCountryFlag == 0) {
@@ -1471,6 +1693,24 @@ var performanceoverviewcountry = {
 
 			// Create the treetable array
 			for (var i = 0; i < doc[0].BUCAsmtDataOIview.length; i++) {
+
+				if (doc[0].BUCAsmtDataOIview[i].ParentDocSubType == "BU Country"
+						&& POBUCOtherFlag == 0 ) {
+					head = {
+						"docid" : doc[0].BUCAsmtDataOIview[i].ParentDocSubType
+								.replace(/ /g, ''),
+						"name" : doc[0].BUCAsmtDataOIview[i].ParentDocSubType,
+						"ParentDocSubType" : doc[0].BUCAsmtDataOIview[i].ParentDocSubType,
+						"bocExCount" : getCatSumbocEx(doc[0].BUCAsmtDataOIview,
+								doc[0].BUCAsmtDataOIview[i].ParentDocSubType),
+						"treeParent" : i
+					};
+					tempArray.push(head);
+					POBUCOtherFlag = 1;
+				}
+				
+				
+				
 
 				if (doc[0].BUCAsmtDataOIview[i].ParentDocSubType == "Country Process"
 						&& POCountryOtherFlag == 0) {
