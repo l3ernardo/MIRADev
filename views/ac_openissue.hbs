@@ -16,109 +16,109 @@
 		{{/unless}}
 	</p>
 
-<table id="imported_summary" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <caption class="mira-caption"><em>Imported summary information</em></caption>
-<tr>
-  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
-</tr>
-<tr>
-  <td>Enterprise item:</td><td>{{enterpriseItem}}</td>
-</tr>
-<tr>
-  <td>Type:</td><td>{{type}}</td>
-</tr>
-<tr>
-  <td>Status:</td><td>{{status}}</td>
-</tr>
-<tr>
-  <td>URL:</td><td><a href="{{url}}">{{url}}</a></td>
-</tr>
-<tr>
-  <td>Business Unit:</td><td>{{businessUnit}}</td>
-</tr>
-<tr>
-  <td>Process:</td><td>{{process}}</td>
-</tr>
-<tr>
-  <td>Executing business unit:</td><td>{{executingBusinessUnit}}</td>
-</tr>
-<tr>
-  <td>Country:</td><td>{{country}}</td>
-</tr>
-<tr>
-  <td>Controllable unit:</td><td>{{controllableUnit}}</td>
-</tr>
-<tr>
-  <td>Process type:</td><td>{{processType}}</td>
-</tr>
-<tr>
-  <td>Risk Abstract:</td><td>{{riskAbstract}}</td>
-</tr>
-<tr>
-  <td>Original issue target date:</td><td>{{originalTargetDate}}</td>
-</tr>
-<tr>
-  <td>current issue target date:</td><td>{{currentTargetDate}}</td>
-</tr>
-<tr>
-  <td>Reasons target date extended:</td><td>{{reasons}}</td>
-</tr>
-<tr>
-  <td>Number of tasks:</td><td>{{numTasks}}</td>
-</tr>
-<tr>
-  <td>Number of tasks open:</td><td>{{numTasksOpen}}</td>
-</tr>
-<tr>
-  <td>Number of missed tasks:</td><td>{{numMissedTasks}}</td>
-</tr>
-<tr>
-  <td>Number of missed tasks override:</td>
-  <form id="openissueform" class="ibm-column-form" name="form" method="POST" action="/saveopenissue">
-    <input type="hidden" name="_id" value="{{_id}}">
-		<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
-    <td>
-{{#if editmode}}
-  <input type="text" name="numMissedTasksOverride" value="{{numMissedTasksOverride}}" size="3" maxlength="3">
-{{else}}
-  {{numMissedTasksOverride}}
-{{/if}}
-</td>
-</tr>
-</form>
-<tr>
-  <td>Measure:</td><td>{{measure}}</td>
-</tr>
-</table>
-
-<table id="derived_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <caption class="mira-caption"><em>Derived information</em></caption>
-<tr>
-  <td>Scorecard category:</td><td>{{scorecardCategory}}</td>
-</tr>
-<tr>
-  <td>BU IMT:</td><td>{{IMT}}</td>
-</tr>
-<tr>
-  <td>BU IOT:</td><td>{{IOT}}</td>
-</tr>
-</table>
-
-<!-- BUTTONS AREA -->
-{{>buttons}}
+	<table id="imported_summary" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Imported summary information</em></caption>
+		<tr>
+			<td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
+		</tr>
+		<tr>
+			<td>Enterprise item:</td><td>{{enterpriseItem}}</td>
+		</tr>
+		<tr>
+			<td>Type:</td><td>{{type}}</td>
+		</tr>
+		<tr>
+			<td>Status:</td><td>{{status}}</td>
+		</tr>
+		<tr>
+			<td>URL:</td><td><a href="{{url}}">{{url}}</a></td>
+		</tr>
+		<tr>
+			<td>Business Unit:</td><td>{{businessUnit}}</td>
+		</tr>
+		<tr>
+			<td>Process:</td><td>{{process}}</td>
+		</tr>
+		<tr>
+			<td>Executing business unit:</td><td>{{executingBusinessUnit}}</td>
+		</tr>
+		<tr>
+			<td>Country:</td><td>{{country}}</td>
+		</tr>
+		<tr>
+			<td>Controllable unit:</td><td>{{controllableUnit}}</td>
+		</tr>
+		<tr>
+			<td>Process type:</td><td>{{processType}}</td>
+		</tr>
+		<tr>
+			<td>Risk Abstract:</td><td>{{riskAbstract}}</td>
+		</tr>
+		<tr>
+			<td>Original issue target date:</td><td>{{originalTargetDate}}</td>
+		</tr>
+		<tr>
+			<td>current issue target date:</td><td>{{currentTargetDate}}</td>
+		</tr>
+		<tr>
+			<td>Reasons target date extended:</td><td>{{reasons}}</td>
+		</tr>
+		<tr>
+			<td>Number of tasks:</td><td>{{numTasks}}</td>
+		</tr>
+		<tr>
+			<td>Number of tasks open:</td><td>{{numTasksOpen}}</td>
+		</tr>
+		<tr>
+			<td>Number of missed tasks:</td><td>{{numMissedTasks}}</td>
+		</tr>
+		<tr>
+			<td>Number of missed tasks override:</td>
+			<form id="openissueform" class="ibm-column-form" name="form" method="POST" action="/saveopenissue">
+				<input type="hidden" name="_id" value="{{_id}}">
+				<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+				<td>
+				{{#if editmode}}
+					<input type="text" name="numMissedTasksOverride" value="{{numMissedTasksOverride}}" size="3" maxlength="3">
+				{{else}}
+					{{numMissedTasksOverride}}
+				{{/if}}
+				</td>
+			</form>
+		</tr>
+		<tr>
+			<td>Measure:</td><td>{{measure}}</td>
+		</tr>
+	</table>
+	<table id="derived_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Derived information</em></caption>
+		<tr>
+			<td>Scorecard category:</td><td>{{scorecardCategory}}</td>
+		</tr>
+		<tr>
+			<td>BU IMT:</td><td>{{IMT}}</td>
+		</tr>
+		<tr>
+			<td>BU IOT:</td><td>{{IOT}}</td>
+		</tr>
+	</table>
+	<!-- BUTTONS AREA -->
+	{{>buttons}}
 </div>
 <script>
-$('#btn_edit').click(function() {
-  window.location.href = window.location.href+"&edit";
-});
-$('#btn_save_close').click(function() {
-	$('#close').val("back");
-	$("#localauditform").submit();
-});
-$('#btn_save').click(function(evt) {
-    $("#openissueform").submit();
-});
-$('#btn_cancel').click(function() {
-	window.close();
+$(document).ready(function(){
+	$('#btn_edit').click(function() {
+	  window.location.href = window.location.href+"&edit";
+	});
+	$('#btn_save').click(function(evt) {
+		$("#openissueform").submit();
+	});
+	$('#btn_cancel').click(function() {
+		window.close();
+	});
+	if(window.opener.location.href.indexOf("&edit")== -1){
+		$('#btn_edit').next().remove();
+		$('#btn_edit').remove();
+	}
 });
 </script>
