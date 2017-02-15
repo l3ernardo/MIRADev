@@ -317,6 +317,8 @@ var assessment = {
 							doc[0].AUData = [];
 							doc[0].AUDataMSAC = [];
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
+								// Rptg Country Testing tab
+								sct.processSCTab(doc,defViewRow);
 								/*fieldCalc.getRatingProfile(doc);
 								if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 									if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -412,8 +414,8 @@ var assessment = {
 									fieldCalc.getRatingProfile(doc);
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
-                  // Process CU Ratings tab
-                  cut.processCUTab(doc,defViewRow);
+					                // Process CU Ratings tab
+					                cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
 									//open risks
@@ -422,7 +424,8 @@ var assessment = {
 									sct.processSCTab(doc,defViewRow);
 									//Performance tab
 									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
-
+									//Rptg Country Testing Tab
+									rcc.processRCTab(doc,defViewRow)
 
 									/*fieldCalc.getRatingProfile(doc);
 									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
