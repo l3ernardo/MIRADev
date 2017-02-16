@@ -683,11 +683,12 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sor
   background-color: #00c1c2;
 }
 .ibm-data-table .processrating {
-  background-color: #00c1c2;
+	background-color: #00c1c2;
 	border: 20px solid #00c1c2;
 }
 .ibm-data-table .processrating-header {
-  background-color: #00c1c2;
+	color: #ffffff;
+	background-color: #00c1c2;
 	border: #00c1c2;
 	font-weight: bold;
 }
@@ -710,7 +711,8 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sor
 	border: 20px solid #9f9fe0;
 }
 .ibm-data-table .curating-header {
-  background-color: #9f9fe0;
+	color: #ffffff;
+	background-color: #9f9fe0;
 	border: #9f9fe0;
 	font-weight: bold;
 }
@@ -1024,9 +1026,6 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sor
   font-size:12px;
 }
 
-.ibm-asmt-links:link, .ibm-asmt-links:hover, .ibm-asmt-links:visited , .ibm-asmt-links:active {
-    color: #ffffff;
-}
 
 /*table for dashboard*/
 caption {
@@ -1236,10 +1235,7 @@ table.table_with_scroll thead{
 	 width: -webkit-calc(100% - 15px);
 
 }
-a.whiteanchor:link { color:white; text-decoration: none; }
-a.whiteanchor:visited { color:white; text-decoration: none; }
-a.whiteanchor:hover { color:white; text-decoration: none; }
-a.whiteanchor:active { color:white; text-decoration: underline; }
+a.whiteanchor:link, a.whiteanchor:visited, a.whiteanchor:hover, a.whiteanchor:active  { color:white; }
 
 .ibm-calendar-link {
     background-position: right 0;
