@@ -28,116 +28,115 @@
 $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</b> Audit / Review");
 </script>
 <div class="ibm-container" style="width:80%">
-  <p style="text-align:right">
-    {{#unless newunit}}
-    <span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
-    {{/unless}}
-  </p>
-  <form id="asmtcomponentform" class="ibm-column-form" name="form" onsubmit="return CheckAuditReviewLocalFields()" method="POST" action="/savelocalaudit">
-    <input type="hidden" name="_id" value="{{_id}}">
-    <input type="hidden" name="docid" id="docid" value="{{_id}}">
-    <input type="hidden" name="editmode" value="{{editmode}}">
-    <input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
-    <input type="hidden" name="docType" id="docType" value="localaudit">
-    <input type="hidden" name="quarter" id="quarter" value="{{reportingQuarter}}">
-    <input type="hidden" id="AssessableUnitName" name="AssessableUnitName" value="{{AssessableUnitName}}">
-    <table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-      <caption class="mira-caption"><em>Basics</em></caption>
-      <tr>
-        <td width="20%">{{parentType}}:</td><td width="80%"><b>{{AssessableUnitName}}</b></td>
-      </tr>
-      {{#if editmode}}
-        <tr>
-          <td>Audit or Review<span class="ibm-required">*</span>:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
-        </tr>
-
-        <tr id="auditIDTD2">
-          <div ><td >ID:</td><td ><input type="text" name="auditID" value="{{auditID}}" ></td></div>
-        </tr>
-
-        <tr>
-          <td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td><td>
-            <input type="text" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link">
-          </td>
-        </tr>
-        <tr>
-          <td>Process(es):</td>
-          <td>
-            {{#if_equal parentType "Controllable Unit"}}
-              {{#each process}}{{#unless @last}}{{this}}<br />{{else}}{{this}}{{/unless}}{{/each}}
-            {{else}}
-              {{process}}
-            {{/if_equal}}
-          </td>
-        </tr>
-        <tr>
-          <td>Status/Rating<span class="ibm-required">*</span>:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
-        </tr>
-        <tr>
-          <td># Recommendations<span class="ibm-required">*</span>:</td><td>
-          <span style="display: inline-block; width: 75px;">Total:</span><input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}"><br/>
-          <span style="display: inline-block; width: 75px;">Open:</span><input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
-        </tr>
-        <tr>
-          <td>Target to close:</td><td>
-          <span style="display: inline-block; width: 72px;">Original:</span>
-          {{#if new}}
-            <input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
-          {{else}}
-              {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}
-          {{/if}}
-          <br /><span style="display: inline-block; width: 72px;">Current:</span> <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}"class="ibm-calendar-link">
-          </td>
-        </tr>
-        <tr>
-          <td>Comments:</td><td><textarea name="comments" cols="100">{{comments}}</textarea></td>
-        </tr>
-      {{else}}
-        <tr>
-          <td>Audit or Review:</td><td>{{auditOrReview}}</td>
-        </tr>
-        <tr>
-          <td>Report date:</td><td>{{reportDate}}</td>
-        </tr>
-        <tr>
-          <td>Process(es):</td>
-          <td>
-            {{#if_equal parentType "Controllable Unit"}}
-              {{#each process}}{{#unless @last}}{{this}}<br />{{else}}{{this}}{{/unless}}{{/each}}
-            {{else}}
-              {{process}}
-            {{/if_equal}}
-          </td>
-        </tr>
-        <tr>
-          <td>Status/Rating:</td><td>{{{statusRatingLclAdt rating}}}</td>
-        </tr>
-        <tr>
-          <td># Recommendations:</td>
-          <td>
-            <span style="display: inline-block; width: 75px;">Total:</span>{{numRecommendationsTotal}}<br/>
-            <span style="display: inline-block; width: 75px;">Open:</span>{{numRecommendationsOpen}}
-            <input type="hidden" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}">
-          </td>
-        </tr>
-        <tr>
-          <td>Target to close:</td>
-          <td>
-            <span style="display: inline-block; width: 72px;">Original:</span> {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
-            <span id="targetCloseCurrentSpan"><span style="display: inline-block; width: 72px;">Current:</span> {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</span>
-          </td>
-        </tr>
-        <tr>
-          <td>Comments:</td><td>{{comments}}</td>
-        </tr>
-      {{/if}}
-      <!-- NOTES & LINKS SECTION -->
-      {{>comments}}
-    </table>
-
-    <!-- BUTTONS AREA -->
-    {{>buttons}}
-  </form>
+	<p style="text-align:right">
+		{{#unless newunit}}
+		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+		{{/unless}}
+	</p>
+	<form id="asmtcomponentform" class="ibm-column-form" name="form" onsubmit="return CheckAuditReviewLocalFields()" method="POST" action="/savelocalaudit">
+		<input type="hidden" name="_id" value="{{_id}}">
+		<input type="hidden" name="docid" id="docid" value="{{_id}}">
+		<input type="hidden" name="editmode" value="{{editmode}}">
+		<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+		<input type="hidden" name="docType" id="docType" value="localaudit">
+		<input type="hidden" name="quarter" id="quarter" value="{{reportingQuarter}}">
+		<input type="hidden" id="AssessableUnitName" name="AssessableUnitName" value="{{AssessableUnitName}}">
+		<table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+			<caption class="mira-caption"><em>Basics</em></caption>
+			<tr>
+				<td width="20%">{{parentType}}:</td><td width="80%"><b>{{AssessableUnitName}}</b></td>
+			</tr>
+			{{#if editmode}}
+			<tr>
+				<td>Audit or Review<span class="ibm-required">*</span>:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
+			</tr>
+			<tr id="auditIDTD2">
+				<div ><td >ID:</td><td ><input type="text" name="auditID" value="{{auditID}}" ></td></div>
+			</tr>
+			<tr>
+				<td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td><td>
+					<input type="text" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link">
+				</td>
+			</tr>
+			<tr>
+				<td>Process(es):</td>
+				<td>
+					{{#if_equal parentType "Controllable Unit"}}
+						{{#each process}}{{#unless @last}}{{this}}<br />{{else}}{{this}}{{/unless}}{{/each}}
+					{{else}}
+						{{process}}
+					{{/if_equal}}
+				</td>
+			</tr>
+			<tr>
+				<td>Status/Rating<span class="ibm-required">*</span>:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
+			</tr>
+			<tr>
+				<td># Recommendations<span class="ibm-required">*</span>:</td><td>
+				<span style="display: inline-block; width: 75px;">Total:</span><input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}"><br/>
+				<span style="display: inline-block; width: 75px;">Open:</span><input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+			</tr>
+			<tr>
+				<td>Target to close:</td><td>
+					<span style="display: inline-block; width: 72px;">Original:</span>
+					{{#if new}}
+						<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
+					{{else}}
+						{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}
+					{{/if}}
+					<br /><span style="display: inline-block; width: 72px;">Current:</span> <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}"class="ibm-calendar-link">
+				</td>
+			</tr>
+			<tr>
+				<td>Comments:</td><td><textarea name="comments" cols="100">{{comments}}</textarea></td>
+			</tr>
+			{{else}}
+			<tr>
+				<td>Audit or Review:</td><td>{{auditOrReview}}</td>
+			</tr>
+			<tr>
+				<td>Report date:</td><td>{{reportDate}}</td>
+			</tr>
+			<tr>
+				<td>Process(es):</td>
+				<td>
+					{{#if_equal parentType "Controllable Unit"}}
+						{{#each process}}{{#unless @last}}{{this}}<br />{{else}}{{this}}{{/unless}}{{/each}}
+					{{else}}
+						{{process}}
+					{{/if_equal}}
+				</td>
+			</tr>
+			<tr>
+				<td>Status/Rating:</td><td>{{{statusRatingLclAdt rating}}}</td>
+			</tr>
+			<tr>
+				<td># Recommendations:</td>
+				<td>
+					<span style="display: inline-block; width: 75px;">Total:</span>{{numRecommendationsTotal}}<br/>
+					<span style="display: inline-block; width: 75px;">Open:</span>{{numRecommendationsOpen}}
+					<input type="hidden" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}">
+				</td>
+			</tr>
+			<tr>
+				<td>Target to close:</td>
+				<td>
+					<span style="display: inline-block; width: 72px;">Original:</span>
+					{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
+					<span id="targetCloseCurrentSpan"><span style="display: inline-block; width: 72px;">Current:</span>
+					{{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td>Comments:</td><td>{{comments}}</td>
+			</tr>
+			{{/if}}
+		</table>
+		<!-- NOTES & LINKS SECTION -->
+		{{>comments}}
+		<!-- BUTTONS AREA -->
+		{{>buttons}}
+	</form>
 </div>
 <script>
 $(document).ready(function(){
@@ -192,7 +191,10 @@ $(document).ready(function(){
       $("#reportDateSpan").text("Report date");
     }
   });
-
+	if(window.opener.location.href.indexOf("&edit")== -1){
+		$('#btn_edit').next().remove();
+		$('#btn_edit').remove();
+	}
 });
 
 </script>
