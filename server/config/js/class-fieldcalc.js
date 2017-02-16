@@ -498,24 +498,12 @@ var calculatefield = {
 							"$or":
 							[
 								{"$and": [{"DocSubType":{"$in":["BU IMT","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
-								{"$and": [{"DocSubType":"Country Process"},{"IOT":util.resolveGeo(doc[0].IOT, "IOT",req)}]},
+								{"$and": [{"DocSubType":"Country Process"},{"IOT":doc[0].IOT}]},
 								{"$and": [{"DocSubType":"BU Reporting Group"},{"_id":{"$in":doc[0].RGRollup.split(",")}}]},
-								{"$and": [{"DocSubType":"BU Country"},{"_id":{"$in":doc[0].BUCountryIOT.split(",")}},{"ExcludeGeo":{"$ne": "Yes"}}]}
+								// {"$and": [{"DocSubType":"BU Country"},{"_id":{"$in":doc[0].BUCountryIOT.split(",")}},{"ExcludeGeo":{"$ne": "Yes"}}]}
+								{"$and": [{"DocSubType":"BU Country"}]}
 						]//or
 					}};
-					/*var asmts = {
-						selector:{
-							"_id": {"$gt":0},
-							"key": "Assessment",
-							"AUStatus": "Active",
-							"CurrentPeriod": req.session.quarter,
-							"$or": [
-								{ "$and": [{"BusinessUnit": doc[0].BusinessUnit},{"IOT": doc[0].IOT},{"ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU IMT","BU IOT"]}}] },
-								{ "$and": [{"ParentDocSubType": "BU Country"},{"_id": doc[0].BUCountryIOT}] },
-								{ "$and": [{"ParentDocSubType": "BU Reporting Group"},{"_id": doc[0].RGRollup}] },
-							]
-						}
-					};*/
 					break;
 					case "BU Reporting Group":
 					var asmts = {
@@ -550,9 +538,7 @@ var calculatefield = {
 							"CurrentPeriod": req.session.quarter,
 							"$or": [
 								{ "$and": [{"ParentDocSubType": "Country Process"},{"AssessableUnitName":{"$in":doc[0].RelevantCPs}}] },
-								// { "$and": [{"ParentDocSubType": "Country Process"},{"Country":"Poland"}] },
 								{ "$and": [{"ParentDocSubType": "Account"}, {"grandparentid": doc[0].parentid}] }
-								// { "$and": [{"ParentDocSubType": "Account"},{"CUWWBCITKey":doc[0].WWBCITKey}] }
 							]
 						}
 					};
@@ -575,20 +561,53 @@ var calculatefield = {
 				// Populate View Data
 				switch (doc[0].ParentDocSubType) {
 					case "BU IOT":
-						doc[0].AUDocs = asmtsdata.body.docs;
-						doc[0].AUDocs = asmtsdata.body.docs;
+						// doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].AUDocs = [];
+						var unitdocs = asmtsdata.body.docs;
+						doc[0].ExcludedCountryNames = [];
+						doc[0].ExcludedCountryIDs = [];
 						doc[0].AUDocsObj = {};
 						doc[0].AUAuditables = {};
+						doc[0].AUCountries = [];
+						doc[0].AsmtCountries = [];
 						doc[0].asmtsdocsObj = {};
 						doc[0].asmtsdocsDelivery = [];
 						doc[0].asmtsdocsCRM = [];
+						// For Current Quarter Country Process Defect Rate Exceptions
+						doc[0].CPDRException = [];
+						// For CP Financial Process Defect Rates that are Marg counter
+						var margCPDRFin = 0;
+						// For CP Financial Process Defect Rates that are Unsat counter
+						var unsatCPDRFin = 0;
+						// For CP Operational Process Defect Rates that are Marg counter
+						var margCPDROps = 0;
+						// For CP Operationa Process Defect Rates that are Unsat counter
+						var unsatCPDROps = 0;
+
+						var CRMables = {};
+						var Deliveryables = {};
 						var $or = [];
-						for(var i = 0; i < doc[0].AUDocs.length; i++){
-							$or.push({parentid: doc[0].AUDocs[i]["_id"]});
-							doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
-							if(doc[0].AUDocs[i].DocSubType == "Country Process" || doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
-								if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
-									doc[0].AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+						for(var i = 0; i < unitdocs.length; i++){
+							// $or.push({parentid: doc[0].AUDocs[i]["_id"]});
+							// doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+							if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].ExcludeGeo !== undefined  && unitdocs[i].ExcludeGeo ==  "Yes") {
+								doc[0].ExcludedCountryNames.push(util.resolveGeo(unitdocs[i].Country,"Country",req));
+								doc[0].ExcludedCountryIDs.push(unitdocs[i].Country);
+							} else {
+								if (unitdocs[i].DocSubType != "BU Country") {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+								if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].parentid == doc[0].parentid) {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+							}
+							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
+								if(unitdocs[i].AuditableFlag == "Yes"){
+									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
 								}
 							}
 						}
