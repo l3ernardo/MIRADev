@@ -129,7 +129,6 @@ return correctID;
 		var uri = varConf.mirainterfaces + "/showAlldata2?designdoc=wwbcitdocs&viewname=hierarchy";
 		try{
 			util.callhttp(uri).then(function(data){
-				console.log(data.status)
 				if(data.status==200 & !data.error) {
 					var json = data.doc;
 					if(json != undefined || json != ""){
