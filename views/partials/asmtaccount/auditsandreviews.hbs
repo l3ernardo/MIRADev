@@ -4,13 +4,14 @@
 		<td>
 			<span class="audit-review"><b>Audits &amp; Reviews (data managed locally)</b></span><br /><br />
 			<a href="javascript:void(0);" value="Export to Excel" name="LocalAudit-link-export" id="LocalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-			<span class="ibm-sep"> </span>
+			<span class="ibm-sep">&nbsp;</span>
 			<a  href="javascript:void(0);" value="Export to Open Office" name="LocalAudit-link-export2" id="LocalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
-			<table id="LocalAudit_treeview" width="100%" class="table_with_scroll">
-{{#unless newunit}}{{#if editor}}
-			<a target="_blank" href="/accountAudit?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link whiteanchor">New</a></td>
+			{{#unless newunit}}{{#if editmode}}
+			<span class="ibm-sep">&nbsp;</span>
+			<a target="_blank" href="/accountAudit?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link whiteanchor">New</a>
 			{{/if}}{{/unless}}
-				<br /><br />
+			<br/><br/>
+			<table id="LocalAudit_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="audit-review-viewheader" width="7%">Period</th>
 					<th class="audit-review-viewheader" width="20%">Audit or Review</th>
