@@ -2,6 +2,7 @@
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
+<script src='/js/asmtComponentsNonAudits.js'></script>
 
 <input type="hidden" id="docTitle" value="Country Process Key Control">
 <input type="hidden" id="docSubTitle" value="{{subtitle}}">
@@ -125,18 +126,5 @@
 <script>
 $(document).ready(function(){
 	$("#country_controls_treeview").treetable({expandable: true });
-	$('#btn_edit').click(function() {
-		window.location.href = window.location.href+"&edit";
-	});
-	$('#btn_save').click(function(evt) {
-		$("#asmtcomponentform").submit();
-	});
-	$('#btn_cancel').click(function() {
-		window.close();
-	});
-	if(window.opener.location.href.indexOf("&edit")== -1){
-		$('#btn_edit').next().remove();
-		$('#btn_edit').remove();
-	}
 });
 </script>
