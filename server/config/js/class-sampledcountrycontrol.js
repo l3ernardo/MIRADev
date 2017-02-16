@@ -20,10 +20,8 @@ var calculateSCTab = {
         case "Business Unit":
           break;
         case "BU IOT":
-          break;
         case "BU IMT":
         case "BU Country":
-
           //** Calculate for Defect Rate - START **//
           doc[0].KCProcessFINSCT = JSON.parse(JSON.stringify(doc[0].KCProcessFIN));
           doc[0].KCProcessOPSSCT = JSON.parse(JSON.stringify(doc[0].KCProcessOPS));
@@ -619,6 +617,7 @@ var calculateSCTab = {
           }
           doc[0].SCUnremedDefects = samplesList;
           break;
+
       }
     }catch(e){
       console.log("[class-sampledcountrycontrol][processSCTab] - " + err.error);
