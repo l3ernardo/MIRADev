@@ -639,7 +639,6 @@ var calculatefield = {
 							doc[0].asmtsdocs = asmts.body.docs;
 							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
 									//DATA RPTG Country Testing
-								if (doc[0].asmtsdocs[i].key == "Assessment"){
 									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
 										// Format Defect Rate
 										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
@@ -668,7 +667,7 @@ var calculatefield = {
 											}
 										}
 									}
-								}
+
 								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
