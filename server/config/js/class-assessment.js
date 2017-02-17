@@ -509,11 +509,10 @@ var assessment = {
 									cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
-									// Process Audits & Reviews tab
-									aar.processARTab(doc,defViewRow);
-
 									// create a space for performance Tab
 									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
+									// Process Audits & Reviews tab
+									aar.processARTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
 
