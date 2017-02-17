@@ -10,6 +10,7 @@
     "body-parser": "^1.15.1",
     "cfenv": "1.0.x",
     "client-sessions": "^0.7.0",
+    "clone": "^2.1.0",
     "cloudant": "^1.4.1",
     "connect-flash": "^0.1.1",
     "connect-multiparty": "^2.0.0",

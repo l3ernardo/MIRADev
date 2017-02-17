@@ -20,65 +20,64 @@
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
 		{{/unless}}
 	</p>
-
-
-<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <caption class="mira-caption"><em>Control information</em></caption>
-<tr>
-  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
-</tr>
-<tr>
-<td># Actual tests (excludes PwC and IA testing):</td><td>{{numtest}}</td>
-</tr>
-<tr>
-<td># Defects (excludes PwC and IA testing):</td><td>{{numDefects}}</td>
-</tr>
-<tr>
-<td># Unremediated CQ Defects:</td><td>{{numCQDefects}}</td>
-</tr>
-<tr>
-<td># Unremediated PQ Defects:</td><td>{{numPQDefects}}</td>
-</tr>
-<tr>
-  <td>Sampled Country:</td><td>{{sampleCountry}}</td>
-</tr>
-<tr>
-  <td>Reporting Country:</td><td>{{reportingCountry}}</td>
-</tr>
-<tr>
-  <td>Process:</td><td>{{process}}</td>
-</tr>
-<tr>
-  <td>Controllable Unit:</td><td>{{controllableUnit}}</td>
-</tr>
-<tr>
-  <td>Control Type:</td><td>{{controlType}}</td>
-</tr>
-<tr>
-  <td>Control reference number:</td><td>{{controlReferenceNumber}}</td>
-</tr>
-<tr>
-  <td>Control short name:</td><td>{{controlShortName}}</td>
-</tr>
-<tr>
-  <td>Owning business unit:</td><td>{{owningBusinessUnit}}</td>
-</tr>
-<tr>
-  <td>BU IMT:</td><td>{{IMT}}</td>
-</tr>
-<tr>
-  <td>BU IOT:</td><td>{{IOT}}</td>
-</tr>
-</table>
-
-		<div class="ibm-buttons-row">
-			<p>
-				<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
-			</p>
-		</div>
+	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		 <caption class="mira-caption"><em>Control information</em></caption>
+		<tr>
+			<td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
+		</tr>
+		<tr>
+			<td># Actual tests (excludes PwC and IA testing):</td><td>{{numtest}}</td>
+		</tr>
+		<tr>
+			<td># Defects (excludes PwC and IA testing):</td><td>{{numDefects}}</td>
+		</tr>
+		<tr>
+			<td># Unremediated CQ Defects:</td><td>{{numCQDefects}}</td>
+		</tr>
+		<tr>
+			<td># Unremediated PQ Defects:</td><td>{{numPQDefects}}</td>
+		</tr>
+		<tr>
+			<td>Sampled Country:</td><td>{{sampleCountry}}</td>
+		</tr>
+		<tr>
+			<td>Reporting Country:</td><td>{{reportingCountry}}</td>
+		</tr>
+		<tr>
+			<td>Process:</td><td>{{process}}</td>
+		</tr>
+		<tr>
+			<td>Controllable Unit:</td><td>{{controllableUnit}}</td>
+		</tr>
+		<tr>
+			<td>Control Type:</td><td>{{controlType}}</td>
+		</tr>
+		<tr>
+			<td>Control reference number:</td><td>{{controlReferenceNumber}}</td>
+		</tr>
+		<tr>
+			<td>Control short name:</td><td>{{controlShortName}}</td>
+		</tr>
+		<tr>
+			<td>Owning business unit:</td><td>{{owningBusinessUnit}}</td>
+		</tr>
+		<tr>
+			<td>BU IMT:</td><td>{{IMT}}</td>
+		</tr>
+		<tr>
+			<td>BU IOT:</td><td>{{IOT}}</td>
+		</tr>
+	</table>
+	<!-- BUTTONS AREA -->
+	{{>buttons}}
 </div>
 <script>
-$('#btn_cancel').click(function() {
-	window.close();
+$(document).ready(function(){
+	//SC doesn't have edit mode
+	$('#btn_edit').next().remove();
+	$('#btn_edit').remove();
+	$('#btn_cancel').click(function() {
+		window.close();
+	});
 });
 </script>

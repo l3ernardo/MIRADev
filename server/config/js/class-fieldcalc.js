@@ -186,15 +186,14 @@ var calculatefield = {
 		return MIRABusinessUnit;
 	},
 
-	getProcessCategory: function(processName, doc) {
+	getProcessCategory: function(processID, doc) {
 		var processCategory = "Operational";
 		try{
-
-			if (doc[0].KCProcessOPS !== undefined) {
+			if(doc[0].KCProcessOPS !== undefined) {
 				for (var j = 0; j < doc[0].KCProcessOPS.length; j++) {
 					if(doc[0].KCProcessOPS[j].name == undefined){
 						for(var y= 0; y<doc[0].KCProcessOPS[j].members.length; y++){
-							if (processName.indexOf(doc[0].KCProcessOPS[j].members[y].name)>=0) {
+							if(processID == doc[0].KCProcessOPS[j].members[y].id) {
 								processCategory = "Operational";
 								break;
 							}
@@ -202,18 +201,18 @@ var calculatefield = {
 						if (doc[0].processCategory !== undefined) break;
 					}
 					else{
-						if (processName.indexOf(doc[0].KCProcessOPS[j].name)>=0) {
+						if(processID == doc[0].KCProcessOPS[j].id) {
 							processCategory = "Operational";
 							break;
 						}
 					}
 				}
 			}
-			if (doc[0].processCategory == undefined && doc[0].KCProcessFIN !== undefined) {
+			if(doc[0].processCategory == undefined && doc[0].KCProcessFIN !== undefined) {
 				for (var j = 0; j < doc[0].KCProcessFIN.length; j++) {
 					if(doc[0].KCProcessFIN[j].name == undefined){
 						for(var y= 0; y<doc[0].KCProcessFIN[j].members.length; y++){
-							if (processName.indexOf(doc[0].KCProcessFIN[j].members[y].name)>=0) {
+							if(processID == doc[0].KCProcessFIN[j].members[y].id) {
 								processCategory = "Financial";
 								break;
 							}
@@ -221,7 +220,7 @@ var calculatefield = {
 						if (doc[0].processCategory !== undefined) break;
 					}
 					else{
-						if (processName.indexOf(doc[0].KCProcessFIN[j].name)>= 0) {
+						if (processID == doc[0].KCProcessFIN[j].id) {
 							processCategory = "Financial";
 							break;
 						}
@@ -232,8 +231,9 @@ var calculatefield = {
 		catch(e){
 			console.log("[fieldcalc][getProcessCategory] - " + e.stack)
 		}
-		return processCategory;
-
+		finally{
+			return processCategory;
+		}
 	},
 
 	/* Calculates CatP, CatCU, BusinessUnitOLD, ShowEA ... etc */
@@ -250,15 +250,19 @@ var calculatefield = {
 					// GTS Assessable Unit Doc Parameters
 					if (doc[0].DocSubType == "Controllable Unit") {
 						doc[0].CatCU = "";
-						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+						lParams = ['CRMCU','GTSInstanceDesign'];
 					} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
 					} else if (doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT") {
-						lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
+						lParams = ['CRMProcess','DeliveryProcess','CRMCU'];
 					} else {
 						lParams = ['GTSInstanceDesign'];
 					}
+					//Pushing these parameters so they can be used as attributes
+					lParams.push('DeliveryCU');
+					lParams.push('AuditCUIS');
+					lParams.push('AuditCUOTHER');
 				} else if (doc[0].MIRABusinessUnit == "GBS") {
 					// GBS Assessable Unit Doc Parameters
 					lParams.push('GBSInstanceDesign');
@@ -272,12 +276,12 @@ var calculatefield = {
 					// GTS Assessment Doc Parameters
 					if (doc[0].ParentDocSubType == "Controllable Unit") {
 						doc[0].CatCU = "";
-						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+						lParams = ['CRMCU','GTSInstanceDesign'];
 					} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
 					} else if (doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
-						lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
+						lParams = ['CRMProcess','DeliveryProcess','CRMCU'];
 					} else {
 						lParams = ['GTSInstanceDesign'];
 					}
@@ -286,6 +290,10 @@ var calculatefield = {
 						lParams.push('GTSRollupProcessesOPS');
 						lParams.push('GTSRollupProcessesFIN');
 					}
+					//Pushing these parameters so they can be used as attributes
+					lParams.push('DeliveryCU');
+					lParams.push('AuditCUIS');
+					lParams.push('AuditCUOTHER');
 				}
 				else if (doc[0].MIRABusinessUnit == "GBS") {
 					// GBS Assessment Doc Parameters
@@ -350,6 +358,12 @@ var calculatefield = {
 						if (doc[0].MIRABusinessUnit == "GTS") {
 							doc[0].DeliveryCU = dataParam.parameters.DeliveryCU;
 						}
+					}
+					if (dataParam.parameters.AuditCUIS){
+						doc[0].AuditCUIS = dataParam.parameters.AuditCUIS;
+					}
+					if (dataParam.parameters.AuditCUOTHER) {
+						doc[0].AuditCUOTHER = dataParam.parameters.AuditCUOTHER;
 					}
 					if (dataParam.parameters.ProcessCatFIN) {
 						doc[0].ProcessCategory = "OPS";
@@ -478,7 +492,8 @@ var calculatefield = {
 							"Status": "Active",
 							"$or":
 							[
-								{"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
+								// {"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
+								{"$and": [{"DocSubType":"BU Country"}]},
 								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid}]},
 								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
@@ -497,24 +512,12 @@ var calculatefield = {
 							"$or":
 							[
 								{"$and": [{"DocSubType":{"$in":["BU IMT","Controllable Unit"]}},{"parentid":doc[0].parentid}]},
-								{"$and": [{"DocSubType":"Country Process"},{"IOT":util.resolveGeo(doc[0].IOT, "IOT",req)}]},
+								{"$and": [{"DocSubType":"Country Process"},{"IOT":doc[0].IOT}]},
 								{"$and": [{"DocSubType":"BU Reporting Group"},{"_id":{"$in":doc[0].RGRollup.split(",")}}]},
-								{"$and": [{"DocSubType":"BU Country"},{"_id":{"$in":doc[0].BUCountryIOT.split(",")}},{"ExcludeGeo":{"$ne": "Yes"}}]}
+								// {"$and": [{"DocSubType":"BU Country"},{"_id":{"$in":doc[0].BUCountryIOT.split(",")}},{"ExcludeGeo":{"$ne": "Yes"}}]}
+								{"$and": [{"DocSubType":"BU Country"}]}
 						]//or
 					}};
-					/*var asmts = {
-						selector:{
-							"_id": {"$gt":0},
-							"key": "Assessment",
-							"AUStatus": "Active",
-							"CurrentPeriod": req.session.quarter,
-							"$or": [
-								{ "$and": [{"BusinessUnit": doc[0].BusinessUnit},{"IOT": doc[0].IOT},{"ParentDocSubType":{"$in":["Controllable Unit","Country Process","BU IMT","BU IOT"]}}] },
-								{ "$and": [{"ParentDocSubType": "BU Country"},{"_id": doc[0].BUCountryIOT}] },
-								{ "$and": [{"ParentDocSubType": "BU Reporting Group"},{"_id": doc[0].RGRollup}] },
-							]
-						}
-					};*/
 					break;
 					case "BU Reporting Group":
 					var asmts = {
@@ -549,9 +552,7 @@ var calculatefield = {
 							"CurrentPeriod": req.session.quarter,
 							"$or": [
 								{ "$and": [{"ParentDocSubType": "Country Process"},{"AssessableUnitName":{"$in":doc[0].RelevantCPs}}] },
-								// { "$and": [{"ParentDocSubType": "Country Process"},{"Country":"Poland"}] },
 								{ "$and": [{"ParentDocSubType": "Account"}, {"grandparentid": doc[0].parentid}] }
-								// { "$and": [{"ParentDocSubType": "Account"},{"CUWWBCITKey":doc[0].WWBCITKey}] }
 							]
 						}
 					};
@@ -569,57 +570,16 @@ var calculatefield = {
 						}
 					};
 					break;
-				}
-				db.find(asmts).then(function(asmtsdata) {
-					// Populate View Data
-					switch (doc[0].ParentDocSubType) {
-						case "BU IOT":
-						doc[0].AUDocs = asmtsdata.body.docs;
-						doc[0].AUDocs = asmtsdata.body.docs;
-						doc[0].AUDocsObj = {};
-						doc[0].AUAuditables = {};
-						doc[0].asmtsdocsObj = {};
-						doc[0].asmtsdocsDelivery = [];
-						doc[0].asmtsdocsCRM = [];
-						var $or = [];
-						for(var i = 0; i < doc[0].AUDocs.length; i++){
-							$or.push({parentid: doc[0].AUDocs[i]["_id"]});
-							doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
-							if(doc[0].AUDocs[i].DocSubType == "Country Process" || doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
-								if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
-									doc[0].AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
-								}
-							}
-						}
-						var tmpQuery = {
-							selector : {
-								"_id": {"$gt":0},
-								"key": "Assessment",
-								"AUStatus": "Active",
-								"ParentDocSubType":{"$in":["Country Process","Controllable Unit","BU Country"]},
-								"CurrentPeriod": doc[0].CurrentPeriod,
-								$or
-							}
-						};
-						db.find(tmpQuery).then(function(asmts) {
-							doc[0].asmtsdocs = asmts.body.docs;
-							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
-								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
-								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
-									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
-									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
-									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
-									doc[0].AUData.push(doc[0].asmtsdocs[i]);
-								}
-							}
-							deferred.resolve({"status": 200, "doc": doc});
-						}).catch(function(err) {
-							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
-							deferred.reject({"status": 500, "error": err.error.reason});
-						});
-						break;
-						case "BU IMT":
-						doc[0].AUDocs = asmtsdata.body.docs;
+			}
+			db.find(asmts).then(function(asmtsdata) {
+				// Populate View Data
+				switch (doc[0].ParentDocSubType) {
+					case "BU IOT":
+						// doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].AUDocs = [];
+						var unitdocs = asmtsdata.body.docs;
+						doc[0].ExcludedCountryNames = [];
+						doc[0].ExcludedCountryIDs = [];
 						doc[0].AUDocsObj = {};
 						doc[0].AUAuditables = {};
 						doc[0].AUCountries = [];
@@ -641,37 +601,160 @@ var calculatefield = {
 						var CRMables = {};
 						var Deliveryables = {};
 						var $or = [];
-						for(var i = 0; i < doc[0].AUDocs.length; i++){
-							$or.push({parentid: doc[0].AUDocs[i]["_id"]});
-							doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
-							if(doc[0].AUDocs[i].DocSubType == "Country Process" || doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
-								if(doc[0].AUDocs[i].AuditableFlag == "Yes"){
-									doc[0].AUAuditables[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+						for(var i = 0; i < unitdocs.length; i++){
+							// $or.push({parentid: doc[0].AUDocs[i]["_id"]});
+							// doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]] = doc[0].AUDocs[i];
+							if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].ExcludeGeo !== undefined  && unitdocs[i].ExcludeGeo ==  "Yes") {
+								doc[0].ExcludedCountryNames.push(util.resolveGeo(unitdocs[i].Country,"Country",req));
+								doc[0].ExcludedCountryIDs.push(unitdocs[i].Country);
+							} else {
+								if (unitdocs[i].DocSubType != "BU Country") {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+								if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].parentid == doc[0].parentid) {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+							}
+							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
+								if(unitdocs[i].AuditableFlag == "Yes"){
+									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
+								}
+							}
+						}
+						var tmpQuery = {
+							selector : {
+								"_id": {"$gt":0},
+								"key": "Assessment",
+								"AUStatus": "Active",
+								"ParentDocSubType":{"$in":["Country Process","Controllable Unit","BU Country"]},
+								"CurrentPeriod": doc[0].CurrentPeriod,
+								$or
+							}
+						};
+						db.find(tmpQuery).then(function(asmts) {
+							doc[0].asmtsdocs = asmts.body.docs;
+							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+									//DATA RPTG Country Testing
+								if (doc[0].asmtsdocs[i].key == "Assessment"){
+									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+										// Format Defect Rate
+										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
+										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
+											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
+										}
+										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
+										doc[0].asmtsdocs[i].processCategory = calculatefield.getProcessCategory(doc[0].asmtsdocs[i].GPWWBCITKey, doc);
+										if (doc[0].asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+											doc[0].asmtsdocs[i].RAGStatus = "Unsat";
+											doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+											if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+												unsatCPDRFin += 1;
+											}else {
+												unsatCPDROps += 1;
+											}
+										} else if (doc[0].asmtsdocs[i].AUDefectRate < doc[0].MargThresholdPercent) {
+											doc[0].asmtsdocs[i].RAGStatus = "Sat";
+										} else {
+											doc[0].asmtsdocs[i].RAGStatus = "Marg";
+											doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+											if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+												margCPDRFin += 1;
+											}else {
+												margCPDROps += 1;
+											}
+										}
+									}
+								}
+								//END OF DATA RPTG Country Testing
+								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
+								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
+									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
+									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
+									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
+									doc[0].AUData.push(doc[0].asmtsdocs[i]);
+								}
+							}
+							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
+							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
+							deferred.reject({"status": 500, "error": err.error.reason});
+						});
+						break;
+					case "BU IMT":
+					// doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].AUDocs = [];
+						var unitdocs = asmtsdata.body.docs;
+						doc[0].ExcludedCountryNames = [];
+						doc[0].ExcludedCountryIDs = [];
+						doc[0].AUDocsObj = {};
+						doc[0].AUAuditables = {};
+						doc[0].AUCountries = [];
+						doc[0].AsmtCountries = [];
+						doc[0].asmtsdocsObj = {};
+						doc[0].asmtsdocsDelivery = [];
+						doc[0].asmtsdocsCRM = [];
+						// For Current Quarter Country Process Defect Rate Exceptions
+						doc[0].CPDRException = [];
+						// For CP Financial Process Defect Rates that are Marg counter
+						var margCPDRFin = 0;
+						// For CP Financial Process Defect Rates that are Unsat counter
+						var unsatCPDRFin = 0;
+						// For CP Operational Process Defect Rates that are Marg counter
+						var margCPDROps = 0;
+						// For CP Operationa Process Defect Rates that are Unsat counter
+						var unsatCPDROps = 0;
+
+						var CRMables = {};
+						var Deliveryables = {};
+						var $or = [];
+						for(var i = 0; i < unitdocs.length; i++){
+							if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].ExcludeGeo !== undefined  && unitdocs[i].ExcludeGeo ==  "Yes") {
+								doc[0].ExcludedCountryNames.push(util.resolveGeo(unitdocs[i].Country,"Country",req));
+								doc[0].ExcludedCountryIDs.push(unitdocs[i].Country);
+							} else {
+								if (unitdocs[i].DocSubType != "BU Country") {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+								if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].parentid == doc[0].parentid) {
+									$or.push({parentid: unitdocs[i]["_id"]});
+									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+									doc[0].AUDocs.push(unitdocs[i]);
+								}
+							}
+							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
+								if(unitdocs[i].AuditableFlag !== undefined && unitdocs[i].AuditableFlag == "Yes"){
+									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
 								}
 							}
 							if (doc[0].MIRABusinessUnit == "GTS") {
-								if(doc[0].AUDocs[i].DocSubType == "Country Process"){
-									if(doc[0].CRMProcessObj[doc[0].AUDocs[i].GPPARENT]){
-										CRMables[doc[0].AUDocs[i]["_id"]] = true;
-									}else if(doc[0].DeliveryProcessObj[doc[0].AUDocs[i].GPPARENT]){
-										Deliveryables[doc[0].AUDocs[i]["_id"]] = true;
+								if(unitdocs[i].DocSubType == "Country Process"){
+									if(doc[0].CRMProcessObj[unitdocs[i].GPPARENT]){
+										CRMables[unitdocs[i]["_id"]] = true;
+									}else if(doc[0].DeliveryProcessObj[unitdocs[i].GPPARENT]){
+										Deliveryables[unitdocs[i]["_id"]] = true;
 									}else{
 										$or.pop();
-										delete doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]];
-										console.log("CP category not found: "+ doc[0].AUDocs[i].GPPARENT);
+										delete doc[0].AUDocsObj[unitdocs[i]["_id"]];
+										console.log("CP category not found: "+ unitdocs[i].GPPARENT);
 									}
-								}else if(doc[0].AUDocs[i].DocSubType == "Controllable Unit"){
-									if(doc[0].CRMCUObj[doc[0].AUDocs[i].Category]){
-										CRMables[doc[0].AUDocs[i]["_id"]] = true;
-									}else if(doc[0].DeliveryCUObj[doc[0].AUDocs[i].Category]){
-										Deliveryables[doc[0].AUDocs[i]["_id"]] = true;
+								}else if(unitdocs[i].DocSubType == "Controllable Unit"){
+									if(doc[0].CRMCUObj[unitdocs[i].Category]){
+										CRMables[unitdocs[i]["_id"]] = true;
+									}else if(doc[0].DeliveryCUObj[unitdocs[i].Category]){
+										Deliveryables[unitdocs[i]["_id"]] = true;
 									}else{
 										$or.pop();
-										delete doc[0].AUDocsObj[doc[0].AUDocs[i]["_id"]];
-										console.log("CU category not found: "+ doc[0].AUDocs[i].Category);
+										delete doc[0].AUDocsObj[unitdocs[i]["_id"]];
+										console.log("CU category not found: "+ unitdocs[i].Category);
 									}
-								}else if(doc[0].AUDocs[i].DocSubType == "BU Country"){
-									doc[0].AUCountries.push(doc[0].AUDocs[i]);
+								}else if(unitdocs[i].DocSubType == "BU Country" && unitdocs[i].parentid == doc[0].parentid && unitdocs[i].ExcludeGeo !== undefined  && unitdocs[i].ExcludeGeo !=  "Yes"){
+									doc[0].AUCountries.push(unitdocs[i]);
 								}
 							}
 						}
@@ -696,28 +779,27 @@ var calculatefield = {
 										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
 											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
 										}
-									}
-								}
-
-								// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
-								doc[0].asmtsdocs[i].processCategory = module.exports.getProcessCategory(doc[0].asmtsdocs[i].GlobalProcess, doc);
-								if (doc[0].asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
-									doc[0].asmtsdocs[i].RAGStatus = "Unsat";
-									doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
-									if (doc[0].asmtsdocs[i].processCategory == "Financial") {
-										unsatCPDRFin += 1;
-									}else {
-										unsatCPDROps += 1;
-									}
-								} else if (doc[0].asmtsdocs[i].AUDefectRate < doc[0].MargThresholdPercent) {
-									doc[0].asmtsdocs[i].RAGStatus = "Sat";
-								} else {
-									doc[0].asmtsdocs[i].RAGStatus = "Marg";
-									doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
-									if (doc[0].asmtsdocs[i].processCategory == "Financial") {
-										margCPDRFin += 1;
-									}else {
-										margCPDROps += 1;
+										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
+										doc[0].asmtsdocs[i].processCategory = calculatefield.getProcessCategory(doc[0].asmtsdocs[i].GPWWBCITKey, doc);
+										if (doc[0].asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+											doc[0].asmtsdocs[i].RAGStatus = "Unsat";
+											doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+											if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+												unsatCPDRFin += 1;
+											}else {
+												unsatCPDROps += 1;
+											}
+										} else if (doc[0].asmtsdocs[i].AUDefectRate < doc[0].MargThresholdPercent) {
+											doc[0].asmtsdocs[i].RAGStatus = "Sat";
+										} else {
+											doc[0].asmtsdocs[i].RAGStatus = "Marg";
+											doc[0].CPDRException.push(doc[0].asmtsdocs[i]);
+											if (doc[0].asmtsdocs[i].processCategory == "Financial") {
+												margCPDRFin += 1;
+											}else {
+												margCPDROps += 1;
+											}
+										}
 									}
 								}
 								//END OF DATA RPTG Country Testing
@@ -750,7 +832,7 @@ var calculatefield = {
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});
 						break;
-						case "BU Country":
+					case "BU Country":
 						doc[0].asmtsdocs = [];
 						doc[0].auditableAUIds = [];
 						var asmtsdocs = asmtsdata.body.docs;
@@ -771,7 +853,7 @@ var calculatefield = {
 						// For CP Operationa Process Defect Rates that are Unsat counter
 						var unsatCPDROps = 0;
 
-						if (doc[0].MIRABusinessUnit == "GTS") {
+						if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
 							doc[0].asmtsdocsCRM = [];
 							doc[0].asmtsdocsDelivery = [];
 						}
@@ -800,7 +882,7 @@ var calculatefield = {
 										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
 									}
 									// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
-									asmtsdocs[i].processCategory = module.exports.getProcessCategory(asmtsdocs[i].GlobalProcess, doc);
+									asmtsdocs[i].processCategory = calculatefield.getProcessCategory(asmtsdocs[i].GPWWBCITKey, doc);
 									if (asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
 										asmtsdocs[i].RAGStatus = "Unsat";
 										doc[0].CPDRException.push(asmtsdocs[i]);
@@ -878,10 +960,10 @@ var calculatefield = {
 							doc[0].asmtsdocs = doc[0].asmtsdocs.concat(asmts.body.docs);
 							for (var i = 0; i < asmts.body.docs.length; i++) {
 								if(CUauditables[asmts.body.docs[i].parentid]){
+
 									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
 									asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
 									asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
-
 									if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
 										asmts.body.docs[i].Type = "Portfolio CU";
 									}else{
@@ -899,18 +981,25 @@ var calculatefield = {
 									}
 								}
 							}
+							//** Additional calculations for BU Country's asmt Audits & Reviews tab
 							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
-              doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
-              //Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
-              doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
-              //Successful resolve
+							doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+							//Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
+							doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
+							if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
+								//Create a copy of the asmt CRM docs (GTS use only) for BU Country
+								doc[0].BUCountryCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
+								//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
+								doc[0].BUCountryISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
+							}
+							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});
 						break;
-						case "Country Process":
+					case "Country Process":
 						doc[0].CURelevantAU = [];
 						doc[0].CURelevantAUID = [];
 						for (var i = 0; i < asmtsdata.body.docs.length; ++i) {
@@ -923,8 +1012,7 @@ var calculatefield = {
 						}
 						deferred.resolve({"status": 200, "doc": doc});
 						break;
-						case "Controllable Unit":
-
+					case "Controllable Unit":
 							doc[0].asmtsdocs = [];
 							// For Current Quarter Country Process Defect Rate Exceptions
 							doc[0].CPDRException = [];
@@ -950,7 +1038,7 @@ var calculatefield = {
 											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
 										}
 										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
-										asmtsdocs[i].processCategory = module.exports.getProcessCategory(asmtsdocs[i].GlobalProcess, doc);
+										asmtsdocs[i].processCategory = calculatefield.getProcessCategory(asmtsdocs[i].GPWWBCITKey, doc);
 										if (asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
 											asmtsdocs[i].RAGStatus = "Unsat";
 											doc[0].CPDRException.push(asmtsdocs[i]);
@@ -983,17 +1071,17 @@ var calculatefield = {
 						default:
 							doc[0].asmtsdocs = asmtsdata.body.docs;
 							deferred.resolve({"status": 200, "doc": doc});
-					}
-				}).catch(function(err) {
-					console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
-					deferred.reject({"status": 500, "error": err.error.reason});
-				});
-			} catch(e) {
-				console.log("[class-fieldcalc][getAssessments] - " + e.stack);
-				deferred.reject({"status": 500, "error": e.stack});
-			}
-			return deferred.promise;
-		},
+				}
+			}).catch(function(err) {
+				console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
+				deferred.reject({"status": 500, "error": err.error.reason});
+			});
+		} catch(e) {
+			console.log("[class-fieldcalc][getAssessments] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
+		}
+		return deferred.promise;
+	},
 
 		/* Populates the Rating Profile table */
 	getRatingProfile: function(doc) {
