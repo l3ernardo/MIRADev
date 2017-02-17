@@ -138,113 +138,120 @@ asmtComponents.get('/cusummarysample', isAuthenticated, function(req, res) {
 });
 /* Save Open Issue in cloudant */
 asmtComponents.post('/saveopenissue', isAuthenticated, function(req, res) {
-	var params = res.req.headers.referer;
-	params = params.split("&")[1];
+	// var params = res.req.headers.referer;
+	// params = params.split("&")[1];
 	components.saveOverride(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
+			res.send(data);
+			//res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
-			res.render('error',{errorDescription: data.error});
+			//res.render('error',{errorDescription: data.error});
 			console.log("[routes][openissue] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
+		//res.render('error',{errorDescription: err.error});
 		console.log("[routes][openissue] - " + err.error);
 	});
 });
 /* Save Account Key Controls Testing */
 asmtComponents.post('/saveaccountcontrols', isAuthenticated, function(req, res) {
-	var params = res.req.headers.referer;
-	params = params.split("&")[1];
+	// var params = res.req.headers.referer;
+	// params = params.split("&")[1];
 	components.saveAccountControls(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
+			res.send(data);
+			//res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
-			res.render('error',{errorDescription: data.error});
+			//res.render('error',{errorDescription: data.error});
 			console.log("[routes][accountcontrols] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
+		//res.render('error',{errorDescription: err.error});
 		console.log("[routes][accountcontrols] - " + err.error);
 	});
 });
 /* Save PPR in cloudant */
 asmtComponents.post('/saveppr', isAuthenticated, function(req, res) {
-	var params = res.req.headers.referer;
-	params = params.split("&")[1];
+	// var params = res.req.headers.referer;
+	// params = params.split("&")[1];
 	components.savePPR(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
+			res.send(data);
+			//res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
-			res.render('error',{errorDescription: data.error});
+			//res.render('error',{errorDescription: data.error});
 			console.log("[routes][ppr] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
+		//res.render('error',{errorDescription: err.error});
 		console.log("[routes][ppr] - " + err.error);
 	});
 });
 /* Save Local Audit in cloudant */
 asmtComponents.post('/savelocalaudit', isAuthenticated, function(req, res) {
-	var params = res.req.headers.referer;
-	params = params.split("&")[1];
+	// var params = res.req.headers.referer;
+	// params = params.split("&")[1];
 	components.saveLocalAudit(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
+			res.send(data);
+			//res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
-			res.render('error',{errorDescription: data.error});
+			//res.render('error',{errorDescription: data.error});
 			console.log("[routes][localaudit] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
+		//res.render('error',{errorDescription: err.error});
 		console.log("[routes][localaudit] - " + err.error);
 	});
 });
 /* Save Account Audit in cloudant */
 asmtComponents.post('/saveaccountaudit', isAuthenticated, function(req, res) {
-	var params = res.req.headers.referer;
-	params = params.split("&")[1];
+	// var params = res.req.headers.referer;
+	// params = params.split("&")[1];
 	components.saveAccountAudit(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
+			res.send(data);
+			//res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
-			res.render('error',{errorDescription: data.error});
+			//res.render('error',{errorDescription: data.error});
 			console.log("[routes][accountAudit] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
+		//res.render('error',{errorDescription: err.error});
 		console.log("[routes][accountAudit] - " + err.error);
 	});
 });
 /* Save Internal Audit in cloudant */
 asmtComponents.post('/saveinternalaudit', isAuthenticated, function(req, res) {
-	var params = res.req.headers.referer;
-	params = params.split("&")[1];
+	// var params = res.req.headers.referer;
+	// params = params.split("&")[1];
 	components.saveInternalAudit(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
+			res.send(data);
+			//res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
-			res.render('error',{errorDescription: data.error});
+			//res.render('error',{errorDescription: data.error});
 			console.log("[routes][internalAudit] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
+		//res.render('error',{errorDescription: err.error});
 		console.log("[routes][internalAudit] - " + err.error);
 	});
 });
 /* Save Country Controls in cloudant */
 asmtComponents.post('/savecountrycontrols', isAuthenticated, function(req, res) {
-	var params = res.req.headers.referer;
-	params = params.split("&")[1];
+	// var params = res.req.headers.referer;
+	// params = params.split("&")[1];
 	components.saveCountryControls(req, db).then(function(data) {
 		if(data.status==200 & !data.error) {
-			res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
+			res.send(data);
+			//res.redirect('/asmtcomponents?id='+data.data.id+"&"+params);
 		} else {
-			res.render('error',{errorDescription: data.error});
+			//res.render('error',{errorDescription: data.error});
 			console.log("[routes][countryControls] - " + data.error);
 		}
 	}).catch(function(err) {
-		res.render('error',{errorDescription: err.error});
+		//res.render('error',{errorDescription: err.error});
 		console.log("[routes][countryControls] - " + err.error);
 	});
 });
