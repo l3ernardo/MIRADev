@@ -189,18 +189,21 @@ return correctID;
 						deferred.resolve({"status": 200, "response": response});
 					}
 					else{
-						console.log(e);
+						console.log("[geohierarchy][createGEOHierarchy] - " + "Geo Hierarchy is empty");
 						deferred.reject({"status": 500, "error": "Geo Hierarchy is empty"});
 					}
 				}
 				else{
+					console.log("[geohierarchy][createGEOHierarchy] - " + data.error);
 					deferred.reject({"status": 500, "error": data.error});
 				}
 			}).catch(function(err){ //end util.callhttp
-				deferred.reject({"status": 500, "error": err.error.reason});
+				console.log("[geohierarchy][createGEOHierarchy][callhttp] - " + err.error);
+				deferred.reject({"status": 500, "error": err.error});
 			});
 		}catch(e){
-			deferred.reject({"status": 500, "error": e});
+			console.log("[geohierarchy][createGEOHierarchy] - " + e.stack);
+			deferred.reject({"status": 500, "error": e.stack});
 		}
 		return deferred.promise;
 	},

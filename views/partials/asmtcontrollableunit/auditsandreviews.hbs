@@ -3,11 +3,12 @@
 <textarea name="textarea" id="InternalAuditDataExport" cols="100" style="display:none">{{valuesToString AuditTrustedRCUData}}</textarea>
 <table id="auditreview_table" class="ibm-data-table">
 	<tr class="audit-review-content">
-		<a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
-		<span class="ibm-sep"> </span>
-		<a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+		
 		<td>
 			<span class="audit-review"><b>Audits & Reviews (data from trusted sources)</b></span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a><br /><br />
 			<!--<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">-->
 			<table id="ppr_treeview" width="100%" class="table_with_scroll">
 				<thead>
@@ -45,15 +46,17 @@
 	<tr class="audit-review-content">
 		<td>
 			<span class="audit-review"><b>Audits &amp; Reviews (data managed locally)</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="LocalAudit-link-export" id="LocalAudit-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
-			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="LocalAudit-link-export2" id="LocalAudit-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<a href="javascript:void(0);" value="Export to Excel" name="LocalAudit-link-export" id="LocalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+			<span class="ibm-sep">&nbsp;</span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="LocalAudit-link-export2" id="LocalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+			{{#if editmode}}
+			<span class="ibm-sep">&nbsp;</span>
+			<a target="_blank" href="/localaudit?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link whiteanchor">New</a>
+			{{/if}}
+			<br /><br />
 			<table id="LocalAudit_treeview" width="100%" class="table_with_scroll">
 			<!--{{#if admin}}-->
 			<!--{{/if}}-->
-				<a target="_blank" href="/localaudit?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link">New</a></td>
-
-				<br /><br />
 				<thead>
 					<th class="audit-review-viewheader" width="7%">Period</th>
 					<th class="audit-review-viewheader" width="20%">Audit or Review</th>
