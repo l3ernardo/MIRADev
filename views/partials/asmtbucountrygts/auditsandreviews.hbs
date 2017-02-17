@@ -66,7 +66,7 @@
   				</thead>
   				{{#each InternalAuditData}}
   					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-    					<td width="5%">{{cat}}</td>
+    					<td width="5%">{{#unless parent}}{{cat}}{{/unless}}</td>
     					<td width="10%">{{plannedStartDate}}</td>
     					<td width="10%">{{engagement}}</td>
     					<td width="34%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
@@ -211,7 +211,7 @@
   				</thead>
           {{#each InternalAuditData}}
             <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-              <td width="5%">{{cat}}</td>
+              <td width="5%">{{#unless parent}}{{cat}}{{/unless}}</td>
               <td width="10%">{{plannedStartDate}}</td>
               <td width="10%">{{engagement}}</td>
               <td width="34%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
