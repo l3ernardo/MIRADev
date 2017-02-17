@@ -272,50 +272,33 @@ var calculateARTab = {
           //Then all BU Country's constituent asmts and AUs are stored
           var parentAsmts = doc[0].BUCountryAssessments;
           var parentAUs = doc[0].BUCountryAssessableUnits;
-
           //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-            var parentISDeliveryDocs = doc[0].BUCountryISDeliveryDocs;
-            var parentCRMDocs = doc[0].BUCountryCRMDocs;
-            //FOR GTS AND GTS TRANSFORM ONLY - summary objects of all Internal Audits
-            var summaryISDeliveryAllCounts,
-                summaryCRMISAllCounts,
-                summaryCRMOtherAllCounts,
-                summaryTotalAllCounts = {
-                  countComplete: 0,
-                  countSAT: 0,
-                  countUNSAT: 0,
-                  countScore: 0
-                };
-                //for weighted scores:
-            var totalISDeliveryCUScore, totalISDeliveryMaxScore,
-                totalCRMISCUScore, totalCRMISMaxScore,
-                totalCRMOtherCUScore, totalCRMOtherMaxScore = 0;
-          }
+          var parentISDeliveryDocs = doc[0].BUCountryISDeliveryDocs;
+          var parentCRMDocs = doc[0].BUCountryCRMDocs;
+          //FOR GTS AND GTS TRANSFORM ONLY - summary objects of all Internal Audits
+          var summaryISDeliveryAllCounts,
+              summaryCRMISAllCounts,
+              summaryCRMOtherAllCounts,
+              summaryTotalAllCounts = {
+                countComplete: 0,
+                countSAT: 0,
+                countUNSAT: 0,
+                countScore: 0
+              };
+              //for weighted scores:
+          var totalISDeliveryCUScore, totalISDeliveryMaxScore,
+              totalCRMISCUScore, totalCRMISMaxScore,
+              totalCRMOtherCUScore, totalCRMOtherMaxScore = 0;
 
-          //List that will export all Internal Audits. Currently empty; to be populated below.
-          var exportInternalAuditData = [];
+          //List that will export all Internal Audits. Pointing to empty memory so it can be recreated.
           doc[0].InternalAuditData = [];
 
           //Total Score (CU and Max) variables. To be calculated below.
           var totalCUScore = "";
           var totalMaxScore = "";
-          //Category list for treetable
-          var categoryList = {};
 
           //Iterate over found Internal Audits
           for(var i = 0; i < auditInter.length; i++) {
-            //Treetable will only be created if GTS or GTS Transform
-            if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-              if(typeof categoryList[auditInter[i].cat.replace(/ /g,'')] === "undefined"){
-                var tmp ={
-                  id: auditInter[i].cat.replace(/ /g,''),
-                  cat:auditInter[i].cat
-                }
-                doc[0].InternalAuditData.push(tmp);
-                categoryList[auditInter[i].cat.replace(/ /g,'')] = tmp;
-              }
-            }
             var tmp = {};
             tmp.id = auditInter[i]._id;
             if (auditInter[i].auditOrReview == "CHQ Internal Audit") {
@@ -340,12 +323,14 @@ var calculateARTab = {
                       if(auditInter[i].auditOrReview == "CHQ Internal Audit") {
                         if (parentAsmts[j]._id == parentISDeliveryDocs[k]._id) {
                           tmp.cat = "IS Delivery";
+                          break;
                         }
                       }
                       //Else it's an Internal Audit, then a comparison must be made with asmtsdocsDelivery parentid
                       else {
                         if (parentAU._id == parentISDeliveryDocs[k].parentid) {
                           tmp.cat = "IS Delivery"; //Still an IS Delivery cat since it matches parentISDeliveryDocs
+                          break;
                         }
                       }
                     }
@@ -354,27 +339,35 @@ var calculateARTab = {
                       //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsCRM parentid
                       if(auditInter[i].auditOrReview == "CHQ Internal Audit") {
                         if (parentAsmts[j]._id == parentCRMDocs[k].parentid) {
-                          //If the assessment has "IS", "SO", and "ITS" as its categories, then it's "IS" (HARDCODED, CHANGE TO USE CLOUDANT DOC "AuditCUIS" as soon as possible)
-                          if (parentAU.Category == "IS" || parentAU.Category == "SO" || parentAU.Category == "ITS") {
-                            tmp.cat = "IS";
+                          //If the assessment has "IS", "SO", and "ITS" as its categories, then it's "IS"
+                          for(var key in doc[0].AuditCUIS.options){
+                            if (parentAU.Category == doc[0].AuditCUIS.options[key]) {
+                              tmp.cat = "IS";
+                              break;
+                            }
+                            //Else it can be considered "Other"
+                            else {
+                              tmp.cat = "Other";
+                            }
                           }
-                          //Else it can be considered "Other"
-                          else {
-                            tmp.cat = "Other";
-                          }
+                          break;
                         }
                       }
                       //Else it's an Internal Audit, then a comparison must be made with amstsdocsCRM parentid
                       else {
                         if (parentAU._id == parentCRMDocs[k].parentid) {
-                          //If the assessment has "IS", "SO", and "ITS" as its categories, then it's "IS" (HARDCODED, CHANGE TO USE CLOUDANT DOC "AuditCUIS" as soon as possible)
-                          if (parentAU.Category == "IS" || parentAU.Category == "SO" || parentAU.Category == "ITS") {
-                            tmp.cat = "IS";
+                          //If the assessment has "IS", "SO", and "ITS" as its categories, then it's "IS"
+                          for(var key in doc[0].AuditCUIS.options){
+                            if (parentAU.Category == doc[0].AuditCUIS.options[key]) {
+                              tmp.cat = "IS";
+                              break;
+                            }
+                            //Else it can be considered "Other"
+                            else {
+                              tmp.cat = "Other";
+                            }
                           }
-                          //Else it can be considered "Other"
-                          else {
-                            tmp.cat = "Other";
-                          }
+                          break;
                         }
                       }
                     }
@@ -390,12 +383,14 @@ var calculateARTab = {
                       if(auditInter[i].auditOrReview == "CHQ Internal Audit") {
                         if (parentAsmts[j]._id == parentISDeliveryDocs[k]._id) {
                           tmp.cat = "IS Delivery";
+                          break;
                         }
                       }
                       //Else it's an Internal Audit, then a comparison must be made with asmtsdocsDelivery parentid
                       else {
                         if (parentAU[i]._id == parentISDeliveryDocs[k].parentid) {
                           tmp.cat = "IS Delivery"; //Still an IS Delivery cat since it matches parentISDeliveryDocs
+                          break;
                         }
                       }
                     }
@@ -406,23 +401,16 @@ var calculateARTab = {
                         for (var key in doc[0].AuditCUIS.options) {
                           if (parentAU.Category == doc[0].AuditCUIS.options[key]) {
                             tmp.cat = "IS";
+                            break;
                           }
                         }
                         //Review Other categories
                         for (var key in doc[0].AuditCUOTHER.options) {
                           if (parentAU.Category == doc[0].AuditCUOTHER.options[key]) {
                             tmp.cat = "Other";
+                            break;
                           }
                         }
-                        /*
-                        //If the assessment has "IS", "SO", and "ITS" as its categories, then it's "IS" (HARDCODED, CHANGE TO USE CLOUDANT DOC "AuditCUIS" as soon as possible)
-                        if (parentAU.Category == "IS" || parentAU.Category == "SO" || parentAU.Category == "ITS") {
-                          tmp.cat = "IS";
-                        }
-                        //Else it can be considered "Other"
-                        else {
-                          tmp.cat = "Other";
-                        }*/
                       }
                     }
                   }
@@ -437,18 +425,21 @@ var calculateARTab = {
                       for(var key in doc[0].AuditCUIS.options){
                         if (parentAU.Category == doc[0].AuditCUIS.options[key]) {
                           tmp.cat = "IS";
+                          break;
                         }
                       }
                       //Review Other categories
                       for (var key in doc[0].AuditCUOTHER.options) {
                         if (parentAU.Category == doc[0].AuditCUOTHER.options[key]) {
                           tmp.cat = "Other";
+                          break;
                         }
                       }
                       //Review Delivery categories
                       for (var key in doc[0].DeliveryCU.options) {
                         if (parentAU.Category == doc[0].AuditCUOTHER.options[key]) {
                           tmp.cat = "IS Delivery";
+                          break;
                         }
                       }
                     }
@@ -456,6 +447,7 @@ var calculateARTab = {
                     else {
                       tmp.cat = "(uncategorized)";
                     }
+                    break;
                   }
                 }
                 tmp.PeriodRatingPrev = parentAU.PeriodRatingPrev;
@@ -514,49 +506,74 @@ var calculateARTab = {
                 if (!isNaN(tmp.CUScore)) totalCRMOtherCUScore += tmp.CUScore;
                 if (!isNaN(tmp.CUMaxScore)) totalCRMOtherMaxScore += tmp.CUMaxScore;
               }
-              //This is for uncategorized audits, which do not get counted in the summary
-              else {}
             }
-            //For treeview
+            //For treeview's parent (have to ask Irving how this actually works)
             if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
               tmp.parent = auditInter[i].cat.replace(/ /g,'');
             }
-            //Begin sort
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-              doc[0].InternalAuditData.sort(function(a,b) {
-                var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase()
-                if (nameA < nameB) //sort string ascending
-                  return -1
-                if (nameA > nameB)
-                  return 1
-                return 0
-              });
-            }
-            else {
-              doc[0].InternalAuditData.sort(function(a,b) {
-                var nameA=a.plannedStartDate.toLowerCase(), nameB=b.plannedStartDate.toLowerCase()
-                if (nameA < nameB) //sort string ascending
-                  return -1
-                if (nameA > nameB)
-                  return 1
-                return 0
-              });
-            }
-            //End sort
-            //Add all the Internal Audits to the list
+            //Add all the tmp fields to InternalAuditData
             doc[0].InternalAuditData.push(tmp);
+          }
+          // Begin sort
+          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            doc[0].InternalAuditData.sort(function(a,b) {
+              var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase()
+              if (nameA < nameB) //sort string ascending
+                return -1
+              if (nameA > nameB)
+                return 1
+              return 0
+            });
+          }
+          else {
+            doc[0].InternalAuditData.sort(function(a,b) {
+              var nameA=a.plannedStartDate.toLowerCase(), nameB=b.plannedStartDate.toLowerCase()
+              if (nameA < nameB) //sort string ascending
+                return -1
+              if (nameA > nameB)
+                return 1
+              return 0
+            });
+          }
+          // End sort
+
+          //Category list for treetable
+          var categoryList = {};
+          var tmpList = doc[0].InternalAuditData;
+          //Create list for view, and another one for Excel and ODS export
+          doc[0].InternalAuditData = [];
+          var exportInternalAuditData = [];
+
+          //Populate the Internal Audits. Also, create treetable structure
+          for (var i = 0; i < tmpList.length; i++) {
+            console.log("Report Date: "+tmpList[i].plannedStartDate);
+            //Treetable will only be created if GTS or GTS Transform
+            if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+              if(typeof categoryList[tmpList[i].cat.replace(/ /g,'')] === "undefined"){
+                var tmp2 ={
+                  id: tmpList[i].cat.replace(/ /g,''),
+                  cat:tmpList[i].cat
+                }
+                doc[0].InternalAuditData.push(tmp2);
+                categoryList[tmpList[i].cat.replace(/ /g,'')] = tmp2;
+              }
+            }
+            //Add all Internal Audits to list
+            doc[0].InternalAuditData.push(tmpList[i]);
+            //For Excel and ODS export
             var tmp2 = {
-              plannedStartDate: tmp.plannedStartDate || " ",
-              engagement: tmp.engagement || " ",
-              Name: tmp.Name || " ",
-              DocSubType: tmp.DocSubType || " ",
-              PeriodRatingPrev: tmp.PeriodRatingPrev || " ",
-              PeriodRating: tmp.PeriodRating || " ",
-              CUSize: tmp.CUSize || " ",
-              CUScore: tmp.CUScore || " "
+              plannedStartDate: tmpList[i].plannedStartDate || " ",
+              engagement: tmpList[i].engagement || " ",
+              Name: tmpList[i].Name || " ",
+              DocSubType: tmpList[i].DocSubType || " ",
+              PeriodRatingPrev: tmpList[i].PeriodRatingPrev || " ",
+              PeriodRating: tmpList[i].PeriodRating || " ",
+              CUSize: tmpList[i].CUSize || " ",
+              CUScore: tmpList[i].CUScore || " "
             };
             exportInternalAuditData.push(tmp2);
           }
+
           //Calculate WeightedAuditScore
           var weightedScore = 0;
           //GTS and GTS Transform need to calculate WeightedAuditScore per category
@@ -631,104 +648,13 @@ var calculateARTab = {
 
           //PPRData is populated on class-compdoc.js after querying all BU Country's Proactive Reviews
           var auditPPR = doc[0].PPRData;
-          // Begin sort
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-            auditPPR.sort(function(a, b){
-              var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase()
-              if (nameA < nameB) //sort string ascending
-                return -1
-              if (nameA > nameB)
-                return 1
-              return 0
-            });
-          }
-          else {
-            auditPPR.sort(function(a, b){
-              var nameA=a.auditOrReview.toLowerCase(), nameB=b.auditOrReview.toLowerCase()
-              if (nameA < nameB) //sort string ascending
-                return -1
-              if (nameA > nameB)
-                return 1
-              return 0
-            });
-          }
-          // End sort
+
           //List that will export all PPRs. Currently empty; to be populated below.
-          var exportPPRData = [];
-          var categoryList = {};
           doc[0].PPRData = [];
-          var topCounter = 0;
+
           for(var i = 0; i < auditPPR.length; i++) {
-            //Categorization exclusive to GTS adds a new layer to the treetable
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-              if(typeof categoryList[auditPPR[i].cat.replace(/ /g,'')] === "undefined") {
-                topCounter++;
-                var tmp ={
-                  id: auditPPR[i].cat.replace(/ /g,''),
-                  cat: auditPPR[i].cat,
-                  catEntry: true,
-                  count: 0
-                }
-                doc[0].PPRData.push(tmp);
-                categoryList[auditPPR[i].cat.replace(/ /g,'')] = tmp;
-              }
-              if(typeof categoryList[auditPPR[i].cat.replace(/ /g,'')+auditPPR[i].auditOrReview.replace(/ /g,'')] === "undefined"){
-                var tmp ={
-                  parent: auditPPR[i].cat.replace(/ /g,''),
-                  id:auditPPR[i].cat.replace(/ /g,'')+auditPPR[i].auditOrReview.replace(/ /g,''),
-                  auditOrReview:auditPPR[i].auditOrReview,
-                  catEntry: true,
-                  count: 0
-                }
-                doc[0].PPRData.push(tmp);
-                categoryList[auditPPR[i].cat.replace(/ /g,'')+auditPPR[i].auditOrReview.replace(/ /g,'')] = tmp;
-              }
-            }
-            //If it's GBS, then categorization is missing and instead starts with the audit or review type
-            else {
-              if(typeof categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')] === "undefined"){
-                topCounter++;
-                var tmp ={
-                  id: auditPPR[i].auditOrReview.replace(/ /g,''),
-                  auditOrReview:auditPPR[i].auditOrReview,
-                  catEntry: true,
-                  count: 0
-                }
-                doc[0].PPRData.push(tmp);
-                categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')] = tmp;
-              }
-            }
-            //Rest of the treetable continues as usual.
-            if(typeof categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
-              var tmp ={
-                parent: auditPPR[i].auditOrReview.replace(/ /g,''),
-                id:auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,''),
-                reportingQuarter:auditPPR[i].reportingQuarter,
-                catEntry: true,
-                count: 0
-              }
-              doc[0].PPRData.push(tmp);
-              categoryList[auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,'')] = tmp;
-            }
-            if(typeof categoryList[auditPPR[i].reportingQuarter.replace(/ /g,'')+auditPPR[i].status.replace(/ /g,'')] === "undefined"){
-              var tmp ={
-                id: auditPPR[i].reportingQuarter.replace(/ /g,'')+auditPPR[i].status.replace(/ /g,''),
-                parent: auditPPR[i].auditOrReview.replace(/ /g,'')+auditPPR[i].reportingQuarter.replace(/ /g,''),
-                status:auditPPR[i].status,
-                catEntry: true,
-                count: 0
-              }
-              doc[0].PPRData.push(tmp);
-              categoryList[auditPPR[i].reportingQuarter.replace(/ /g,'')+auditPPR[i].status.replace(/ /g,'')] = tmp;
-            }
-
             var tmp={};
-
             tmp.count = 1;
-            //Categorization for GTS: will cycle through all the IS Delivery and CRM docs to select one of those as category.
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-
-            }
             tmp.id = auditPPR[i]._id;
             tmp.auditOrReview = auditPPR[i].auditOrReview;
             tmp.reportingQuarter = auditPPR[i].reportingQuarter;
@@ -746,29 +672,36 @@ var calculateARTab = {
                   for(var j = 0; j < parentISDeliveryDocs.length; j++) {
                     if (parentAUs[key]._id == parentISDeliveryDocs[j].parentid) {
                       tmp.cat = "IS Delivery";
+                      break;
                     }
                   }
                   //If the assessment matches the parentid of the asmtsdocsCRM, then its category is "CRM/Other"
                   for(var j = 0; j < parentCRMDocs.length; j++) {
                     if (parentAUs[key]._id == parentCRMDocs[j].parentid) {
                       tmp.cat = "CRM/Other";
+                      break;
                     }
                   }
                   //If there's no category after cycling both asmtsdocsDelivery and asmtsdocsCRM, then it should be labeled as uncategorized
                   if (typeof tmp.cat === "undefined" || tmp.cat == "") {
                     tmp.cat = "(uncategorized)";
+                    break;
                   }
                 }
                 //Doc Type
                 if(parentAUs[key].DocSubType == "Controllable Unit" && parentAUs[key].Portfolio == "Yes") {
                   tmp.DocSubType = "Portfolio CU";
+                  break;
                 }
                 else if (parentAUs[key].DocSubType == "Controllable Unit" && (parentAUs[key].Portfolio == "No" || parentAUs[key].Portfolio == "" || parentAUs[key].Portfolio == undefined)){
                   tmp.DocSubType = "Standalone CU";
+                  break;
                 }
                 else {
                   tmp.DocSubType = parentAUs[key].DocSubType;
+                  break;
                 }
+                break;
               }
             }
             tmp.reportDate = auditPPR[i].reportDate;
@@ -793,7 +726,103 @@ var calculateARTab = {
 
             //Push all the data to the PPRData list.
             doc[0].PPRData.push(tmp);
-            //TMP2 is for Excel and ODS export
+
+          }
+          // Begin sort
+          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            doc[0].PPRData.sort(function(a, b){
+              var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase()
+              if (nameA < nameB) //sort string ascending
+                return -1
+              if (nameA > nameB)
+                return 1
+              return 0
+            });
+          }
+          else {
+            doc[0].PPRData.sort(function(a, b){
+              var nameA=a.auditOrReview.toLowerCase(), nameB=b.auditOrReview.toLowerCase()
+              if (nameA < nameB) //sort string ascending
+                return -1
+              if (nameA > nameB)
+                return 1
+              return 0
+            });
+          }
+          // End sort
+
+          var categoryList = {};
+          var tmpList = doc[0].PPRData;
+          doc[0].PPRData = [];
+          var exportPPRData = [];
+          var topCounter = 0;
+
+          for (var i = 0; i < tmpList.length; i++) {
+            //Categorization exclusive to GTS adds a new layer to the treetable
+            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+              if(typeof categoryList[tmpList[i].cat.replace(/ /g,'')] === "undefined") {
+                topCounter++;
+                var tmp2 ={
+                  id: tmpList[i].cat.replace(/ /g,''),
+                  cat: tmpList[i].cat,
+                  catEntry: true,
+                  count: 0
+                }
+                doc[0].PPRData.push(tmp2);
+                categoryList[tmpList[i].cat.replace(/ /g,'')] = tmp2;
+              }
+              if(typeof categoryList[tmpList[i].cat.replace(/ /g,'')+tmpList[i].auditOrReview.replace(/ /g,'')] === "undefined"){
+                var tmp2 ={
+                  parent: tmpList[i].cat.replace(/ /g,''),
+                  id:tmpList[i].cat.replace(/ /g,'')+tmpList[i].auditOrReview.replace(/ /g,''),
+                  auditOrReview:tmpList[i].auditOrReview,
+                  catEntry: true,
+                  count: 0
+                }
+                doc[0].PPRData.push(tmp2);
+                categoryList[tmpList[i].cat.replace(/ /g,'')+tmpList[i].auditOrReview.replace(/ /g,'')] = tmp2;
+              }
+            }
+            //If it's GBS, then categorization is missing and instead starts with the audit or review type
+            else {
+              if(typeof categoryList[tmpList[i].auditOrReview.replace(/ /g,'')] === "undefined"){
+                topCounter++;
+                var tmp2 ={
+                  id: tmpList[i].auditOrReview.replace(/ /g,''),
+                  auditOrReview:tmpList[i].auditOrReview,
+                  catEntry: true,
+                  count: 0
+                }
+                doc[0].PPRData.push(tmp2);
+                categoryList[tmpList[i].auditOrReview.replace(/ /g,'')] = tmp2;
+              }
+            }
+            //Rest of the treetable continues as usual.
+            if(typeof categoryList[tmpList[i].auditOrReview.replace(/ /g,'')+tmpList[i].reportingQuarter.replace(/ /g,'')] === "undefined"){
+              var tmp2 ={
+                parent: tmpList[i].auditOrReview.replace(/ /g,''),
+                id:tmpList[i].auditOrReview.replace(/ /g,'')+tmpList[i].reportingQuarter.replace(/ /g,''),
+                reportingQuarter:tmpList[i].reportingQuarter,
+                catEntry: true,
+                count: 0
+              }
+              doc[0].PPRData.push(tmp2);
+              categoryList[tmpList[i].auditOrReview.replace(/ /g,'')+tmpList[i].reportingQuarter.replace(/ /g,'')] = tmp2;
+            }
+            if(typeof categoryList[tmpList[i].reportingQuarter.replace(/ /g,'')+tmpList[i].status.replace(/ /g,'')] === "undefined"){
+              var tmp2 ={
+                id: tmpList[i].reportingQuarter.replace(/ /g,'')+tmpList[i].status.replace(/ /g,''),
+                parent: tmpList[i].auditOrReview.replace(/ /g,'')+tmpList[i].reportingQuarter.replace(/ /g,''),
+                status:tmpList[i].status,
+                catEntry: true,
+                count: 0
+              }
+              doc[0].PPRData.push(tmp2);
+              categoryList[tmpList[i].reportingQuarter.replace(/ /g,'')+tmpList[i].status.replace(/ /g,'')] = tmp2;
+            }
+            //Add all the Internal Audits to the list
+            doc[0].PPRData.push(tmpList[i]);
+            ////TMP2 is for Excel and ODS export
             var tmp2 = {};
             if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
               tmp2 = {
