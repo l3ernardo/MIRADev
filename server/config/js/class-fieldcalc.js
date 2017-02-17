@@ -250,15 +250,19 @@ var calculatefield = {
 					// GTS Assessable Unit Doc Parameters
 					if (doc[0].DocSubType == "Controllable Unit") {
 						doc[0].CatCU = "";
-						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+						lParams = ['CRMCU','GTSInstanceDesign'];
 					} else if (doc[0].DocSubType == "Country Process" || doc[0].DocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
 					} else if (doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT") {
-						lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
+						lParams = ['CRMProcess','DeliveryProcess','CRMCU'];
 					} else {
 						lParams = ['GTSInstanceDesign'];
 					}
+					//Pushing these parameters so they can be used as attributes
+					lParams.push('DeliveryCU');
+					lParams.push('AuditCUIS');
+					lParams.push('AuditCUOTHER');
 				} else if (doc[0].MIRABusinessUnit == "GBS") {
 					// GBS Assessable Unit Doc Parameters
 					lParams.push('GBSInstanceDesign');
@@ -272,12 +276,12 @@ var calculatefield = {
 					// GTS Assessment Doc Parameters
 					if (doc[0].ParentDocSubType == "Controllable Unit") {
 						doc[0].CatCU = "";
-						lParams = ['CRMCU','DeliveryCU','GTSInstanceDesign'];
+						lParams = ['CRMCU','GTSInstanceDesign'];
 					} else if (doc[0].ParentDocSubType == "Country Process" || doc[0].ParentDocSubType == "Global Process") {
 						doc[0].CatP = "";
 						lParams = ['CRMProcess','DeliveryProcess','GTSInstanceDesign','EAProcess'];
 					} else if (doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "BU IMT" || doc[0].ParentDocSubType == "BU IOT") {
-						lParams = ['CRMProcess','DeliveryProcess','CRMCU','DeliveryCU'];
+						lParams = ['CRMProcess','DeliveryProcess','CRMCU'];
 					} else {
 						lParams = ['GTSInstanceDesign'];
 					}
@@ -286,6 +290,10 @@ var calculatefield = {
 						lParams.push('GTSRollupProcessesOPS');
 						lParams.push('GTSRollupProcessesFIN');
 					}
+					//Pushing these parameters so they can be used as attributes
+					lParams.push('DeliveryCU');
+					lParams.push('AuditCUIS');
+					lParams.push('AuditCUOTHER');
 				}
 				else if (doc[0].MIRABusinessUnit == "GBS") {
 					// GBS Assessment Doc Parameters
@@ -350,6 +358,12 @@ var calculatefield = {
 						if (doc[0].MIRABusinessUnit == "GTS") {
 							doc[0].DeliveryCU = dataParam.parameters.DeliveryCU;
 						}
+					}
+					if (dataParam.parameters.AuditCUIS){
+						doc[0].AuditCUIS = dataParam.parameters.AuditCUIS;
+					}
+					if (dataParam.parameters.AuditCUOTHER) {
+						doc[0].AuditCUOTHER = dataParam.parameters.AuditCUOTHER;
 					}
 					if (dataParam.parameters.ProcessCatFIN) {
 						doc[0].ProcessCategory = "OPS";
@@ -839,7 +853,7 @@ var calculatefield = {
 						// For CP Operationa Process Defect Rates that are Unsat counter
 						var unsatCPDROps = 0;
 
-						if (doc[0].MIRABusinessUnit == "GTS") {
+						if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
 							doc[0].asmtsdocsCRM = [];
 							doc[0].asmtsdocsDelivery = [];
 						}
@@ -946,10 +960,10 @@ var calculatefield = {
 							doc[0].asmtsdocs = doc[0].asmtsdocs.concat(asmts.body.docs);
 							for (var i = 0; i < asmts.body.docs.length; i++) {
 								if(CUauditables[asmts.body.docs[i].parentid]){
+
 									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
 									asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
 									asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
-
 									if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
 										asmts.body.docs[i].Type = "Portfolio CU";
 									}else{
@@ -967,10 +981,17 @@ var calculatefield = {
 									}
 								}
 							}
+							//** Additional calculations for BU Country's asmt Audits & Reviews tab
 							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
 							doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
 							//Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
 							doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
+							if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
+								//Create a copy of the asmt CRM docs (GTS use only) for BU Country
+								doc[0].BUCountryCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
+								//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
+								doc[0].BUCountryISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
+							}
 							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
