@@ -319,6 +319,7 @@ var assessment = {
 							doc[0].IOTid = doc[0].IOT;
 							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
+							
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Rptg Country Testing tab
