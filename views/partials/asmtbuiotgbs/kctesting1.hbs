@@ -317,7 +317,7 @@
 			<a href="javascript:void(0);" value="Export to Excel" name="RCTest3-link-export" id="RCTest3-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
 			<span class="ibm-sep"> </span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest3-link-export2" id="RCTest3-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
-			<table id="RCTest3_treeview" width="100%" class="table_with_scroll">
+			<table id="Rptg2_treeview" width="100%" class="table_with_scroll">
 				<thead>
 				<th class="kc-test-viewheader" scope="col" width="5%"></th>
 				<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
@@ -333,11 +333,11 @@
 			</thead>
 				{{#each RCTest3Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%">{{#if catEntry}}{{originalReportingQuarter}}{{/if}}</td>
-						<td width="10%">{{#if catEntry}}{{testType}}{{/if}}</td>
-						<td width="10%">{{#if catEntry}}{{processSampled}}{{/if}}</td>
-						<td width="5%">{{#if catEntry}}{{reportingCountry}}{{/if}}</td>
-						<td width="18%">{{#if catEntry}}{{controlName}}{{/if}}</td>
+						<td width="5%">{{originalReportingQuarter}}</td>
+						<td width="10%">{{testType}}</td>
+						<td width="10%">{{processSampled}}</td>
+						<td width="5%">{{reportingCountry}}</td>
+						<td width="18%">{{controlShortName}}</td>
 						<td width="20%">{{controllableUnit}}</td>
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="7%">{{originalTargetDate}}</td>
@@ -350,3 +350,8 @@
 	</td>
 </tr>
 </table>
+<script>
+	$("#Rptg_treeview").treetable({expandable: true });
+	$("#Rptg2_treeview").treetable({expandable: true });
+</script>
+
