@@ -4,6 +4,7 @@
 <script src='./lib/fullcalendar.min.js'></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/style.css">
+<script src='/js/asmtComponentsNonAudits.js'></script>
 
 <input type="hidden" id="docTitle" value="{{reportingQuarter}}">
 <input type="hidden" id="ratingList" value="{{valuesToString ratingList}}">
@@ -124,21 +125,5 @@ $(document).ready(function(){
 		var tmpList = JSON.parse($("#ratingList").val());
 		$("#rating").html(tmpList[val]);
 	});
-
-	$('#btn_edit').click(function() {
-		window.location.href = window.location.href+"&edit";
-	});
-	
-	$('#btn_save').click(function(evt) {
-		$("#asmtcomponentform").submit();
-	});
-	
-	$('#btn_cancel').click(function() {
-		window.close();
-	});
-	if(window.opener.location.href.indexOf("&edit")== -1){
-		$('#btn_edit').next().remove();
-		$('#btn_edit').remove();
-	}
 });
  </script>

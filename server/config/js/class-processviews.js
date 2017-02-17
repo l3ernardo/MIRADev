@@ -19,9 +19,9 @@ var calculatePRTab = {
 			doc[0].BUCAsmtDataPRview2 = clone(doc[0].BUCAsmtDataPRview);
 						if(doc[0].ParentDocSubType=='BU IMT'){
 			var catList2 = {};
-			var tmpAccountList2 = []; 
-			var exportList2 = []; 
-			//table categorized by country	
+			var tmpAccountList2 = [];
+			var exportList2 = [];
+			//table categorized by country
 			for(var j = 0; j < doc[0].BUCAsmtDataPRview2.length; j++){
 				doc[0].BUCAsmtDataPRview2[j].ratingcategory = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataPRview2[j].ratingCQ, doc[0].BUCAsmtDataPRview2[j].ratingPQ1);
 				//to categorize sort
@@ -65,12 +65,12 @@ var calculatePRTab = {
 				if (nameA > nameB) //sort string descending
 					return -1;
 				if (nameA < nameB)
-					return 1;		
+					return 1;
 				var nameA=a.ratingcategorysort, nameB=b.ratingcategorysort
 				if (nameA > nameB) //sort string descending
 					return -1;
 				if (nameA < nameB)
-					return 1;				
+					return 1;
 				else
 					return 0; //default return value (no sorting)
 			});
@@ -102,13 +102,13 @@ var calculatePRTab = {
 						break;
 					default:
 						id_aux2=doc[0].BUCAsmtDataPRview2[j].ratingcategory;parent_aux2=doc[0].BUCAsmtDataPRview2[j].ratingcategory;
-				}			
-                				
+				}
+
 				if(typeof catList2[doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')] === "undefined"){
 					topEntriesCount2++;
 					var tmp2 = {
 						id: doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,''),
-						country: doc[0].BUCAsmtDataPRview2[j].country,						
+						country: doc[0].BUCAsmtDataPRview2[j].country,
 						count: 0,
 						MetricsValue: 0
 					}
@@ -124,11 +124,11 @@ var calculatePRTab = {
 					}
 					tmpAccountList2.push(tmp2);
 					catList2[doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'')] = tmp2;
-				}			
+				}
 				catList2[doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')].count++;
 				catList2[doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'')].count++;
 				doc[0].BUCAsmtDataPRview2[j].id = doc[0].BUCAsmtDataPRview2[j]["docid"];
-				doc[0].BUCAsmtDataPRview2[j].parent =doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'');// 
+				doc[0].BUCAsmtDataPRview2[j].parent =doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'');//
 				tmpAccountList2.push(doc[0].BUCAsmtDataPRview2[j]);
 				exportList2.push({
 					country:doc[0].BUCAsmtDataPRview2[j].country || " ",
@@ -142,11 +142,11 @@ var calculatePRTab = {
 					targettosat:doc[0].BUCAsmtDataPRview2[j].targettosat || " ",
 					targettosatprev:doc[0].BUCAsmtDataPRview2[j].targettosatprev || " ",
 					reviewcomments:doc[0].BUCAsmtDataPRview2[j].reviewcomments
-				});		 		    
+				});
 			}
 			doc[0].exportAccountRatings2 = exportList2;
 			for(var category in catList2){
-				catList2[category].percent = (catList2[category].count/doc[0].BUCAsmtDataPRview2.length*100).toFixed(1);
+				catList2[category].percent = (catList2[category].count/doc[0].BUCAsmtDataPRview2.length*100).toFixed(0);
 			}
 			//Adding padding
 			if (topEntriesCount2 < defViewRow) {
@@ -158,7 +158,7 @@ var calculatePRTab = {
 			}
 			doc[0].BUCAsmtDataPRview2 = tmpAccountList2;
 	}
-			
+
 			//categorization for
 			for(var i = 0; i < doc[0].BUCAsmtDataPRview.length; i++){
 				doc[0].BUCAsmtDataPRview[i].ratingcategory = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataPRview[i].ratingCQ, doc[0].BUCAsmtDataPRview[i].ratingPQ1);
@@ -287,7 +287,7 @@ var calculatePRTab = {
 			}
 			doc[0].exportAccountRatings = exportList;
 			for(var category in catList){
-				catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataPRview.length*100).toFixed(1);
+				catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataPRview.length*100).toFixed(0);
 			}
 			//Adding padding
 			if (topEntriesCount < defViewRow) {

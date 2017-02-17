@@ -490,13 +490,11 @@ var assessment = {
 							doc[0].RiskView1Data = [];
 							doc[0].RiskView2Data = [];
 							doc[0].AUDataMSAC = [];
-
 							doc[0].CountryId = parentdoc[0].Country;
 							doc[0].Country = util.resolveGeo(parentdoc[0].Country,"Country",req);
 							doc[0].BUIMT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
-
 
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
@@ -512,11 +510,10 @@ var assessment = {
 									cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
-									// Process Audits & Reviews tab
-									aar.processARTab(doc,defViewRow);
-
 									// create a space for performance Tab
 									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
+									// Process Audits & Reviews tab
+									aar.processARTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
 
