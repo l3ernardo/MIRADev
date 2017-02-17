@@ -276,9 +276,24 @@ var calculateARTab = {
           var parentISDeliveryDocs = doc[0].BUCountryISDeliveryDocs;
           var parentCRMDocs = doc[0].BUCountryCRMDocs;
           //FOR GTS AND GTS TRANSFORM ONLY - summary objects of all Internal Audits
-          var summaryISDeliveryAllCounts,
-              summaryCRMISAllCounts,
-              summaryCRMOtherAllCounts,
+          var summaryISDeliveryAllCounts = {
+            countComplete: 0,
+            countSAT: 0,
+            countUNSAT: 0,
+            countScore: 0
+          };
+              summaryCRMISAllCounts = {
+                countComplete: 0,
+                countSAT: 0,
+                countUNSAT: 0,
+                countScore: 0
+              };
+              summaryCRMOtherAllCounts = {
+                countComplete: 0,
+                countSAT: 0,
+                countUNSAT: 0,
+                countScore: 0
+              };
               summaryTotalAllCounts = {
                 countComplete: 0,
                 countSAT: 0,
@@ -509,7 +524,8 @@ var calculateARTab = {
             }
             //For treeview's parent (have to ask Irving how this actually works)
             if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-              tmp.parent = auditInter[i].cat.replace(/ /g,'');
+              if(!tmp.cat) tmp.cat = "(uncategorized)";
+              tmp.parent = tmp.cat.replace(/ /g,'');
             }
             //Add all the tmp fields to InternalAuditData
             doc[0].InternalAuditData.push(tmp);
@@ -518,10 +534,18 @@ var calculateARTab = {
           if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
             doc[0].InternalAuditData.sort(function(a,b) {
               var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase()
-              if (nameA < nameB) //sort string ascending
+              if (nameA < nameB){ //sort string ascending
+                if (nameA == "(uncategorized)") {
+                  return 1;
+                }
                 return -1
-              if (nameA > nameB)
+              }
+              if (nameA > nameB){
+                if (nameB =="(uncategorized)") {
+                  return -1
+                }
                 return 1
+              }
               return 0
             });
           }
