@@ -322,7 +322,7 @@ var assessment = {
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Rptg Country Testing tab
-									// sct.processSCTab(doc,defViewRow);
+									rcc.processRCTab(doc,defViewRow);
 									// Process Sampled Country Testing Tab
 									sct.processSCTab(doc,defViewRow);
 									var obj = doc[0]; // For Merge
