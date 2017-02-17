@@ -328,6 +328,8 @@ var assessment = {
 									sct.processSCTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
+									//open risks
+									ort.processORTab(doc,defViewRow,req);
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
