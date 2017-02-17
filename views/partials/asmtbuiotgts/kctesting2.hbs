@@ -1,3 +1,5 @@
+<textarea name="textarea" id="SampleDataExport" cols="100" style="display:none">{{valuesToString exportSample}}</textarea>
+<textarea name="textarea" id="Sample2DataExport" cols="100" style="display:none">{{valuesToString exportSample2}}</textarea>
 <table id="kctest_table" class="ibm-data-table" width="100%">
 	<tr class="kc-test-content">
 		<td class="kc-test-cell" colspan="4">
@@ -48,24 +50,24 @@
 							<td rowspan="{{../length}}" class="kc-test-viewsubheader">{{../lob}}</td>
 							{{/if}}
 							<td>{{name}}</td>
+							{{{defectRateDisplayView defectRateP4 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP3 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP2 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP1 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRate ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
 							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td class="asmt-viewdata-centered">{{pqP4}}</td>
+							<td class="asmt-viewdata-centered">{{cqP4}}</td>
+							<td class="asmt-viewdata-centered">{{pqP3}}</td>
+							<td class="asmt-viewdata-centered">{{cqP3}}</td>
+							<td class="asmt-viewdata-centered">{{pqP2}}</td>
+							<td class="asmt-viewdata-centered">{{cqP2}}</td>
+							<td class="asmt-viewdata-centered">{{pqP1}}</td>
+							<td class="asmt-viewdata-centered">{{cqP1}}</td>
+							<td class="asmt-viewdata-centered">{{pqf}}</td>
+							<td class="asmt-viewdata-centered">{{pqo}}</td>
+							<td class="asmt-viewdata-centered">{{cqf}}</td>
+							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
 				{{/KCProcessFIN}}
@@ -74,8 +76,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="5">Total Country Financial Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDRFin 0}}{{margCPDRFin}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDRFin 0}}{{unsatCPDRFin}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
@@ -122,24 +124,24 @@
 							<td rowspan="{{../length}}" class="kc-test-viewsubheader">{{../lob}}</td>
 							{{/if}}
 							<td>{{name}}</td>
+							{{{defectRateDisplayView defectRateP4 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP3 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP2 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRateP1 ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
+							{{{defectRateDisplayView defectRate ../../parameters.MargThresholdPercent.0.options.0.name ../../parameters.UnsatThresholdPercent.0.options.0.name}}}
 							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td class="asmt-viewdata-centered">{{pqP4}}</td>
+							<td class="asmt-viewdata-centered">{{cqP4}}</td>
+							<td class="asmt-viewdata-centered">{{pqP3}}</td>
+							<td class="asmt-viewdata-centered">{{cqP3}}</td>
+							<td class="asmt-viewdata-centered">{{pqP2}}</td>
+							<td class="asmt-viewdata-centered">{{cqP2}}</td>
+							<td class="asmt-viewdata-centered">{{pqP1}}</td>
+							<td class="asmt-viewdata-centered">{{cqP1}}</td>
+							<td class="asmt-viewdata-centered">{{pqf}}</td>
+							<td class="asmt-viewdata-centered">{{pqo}}</td>
+							<td class="asmt-viewdata-centered">{{cqf}}</td>
+							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
 				{{/KCProcessOPS}}
@@ -148,8 +150,8 @@
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
 					<td class="kc-test-viewsubheader-al" colspan="5">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
-					<td class="marg-bg"></td>
-					<td class="unsat-bg"></td>
+					<td class="marg-bg">{{#if_not_equal margCPDROps 0}}{{margCPDROps}}{{/if_not_equal}}</td>
+					<td class="unsat-bg">{{#if_not_equal unsatCPDROps 0}}{{unsatCPDROps}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="13" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
@@ -236,49 +238,75 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Country Process Defect Rate Exceptions</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="Sample-link-export" id="Sample-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="Sample-link-export2" id="Sample-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="Sample_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" scope="col" width="50%">Process</th>
+					<th class="kc-test-viewheader" scope="col" width="10%"></th>
+					<th class="kc-test-viewheader" scope="col" width="40%">Process</th>
 					<th class="kc-test-viewheader" scope="col" width="15%"># Tests</th>
 					<th class="kc-test-viewheader" scope="col" width="15%"># Defects</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">DR %</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Count</th>
 				</thead>
-				{{#each SCTest1Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+				<tbody>
+				{{#each CPDRException}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%">{{category}}</td>
+						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
+						<td width="15%" >{{AUDefectCount}}</td>
+						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
+						<td width="10%">{{count}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="Sample2-link-export" id="Sample2-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="Sample2-link-export2" id="Sample2-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="Sample2_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
 					<th class="kc-test-viewheader" scope="col" width="15%">Process</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Reporting Country</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Control</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Controllable Unit</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Sample</th>
+					<th class="kc-test-viewheader" scope="col" width="20%">Controllable Unit</th>
+					<th class="kc-test-viewheader" scope="col" width="10%">Sample</th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Original Target to Close</th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Current Target to Close</th>
 					<th class="kc-test-viewheader" scope="col" width="5%"># Defects</th>
 					<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
 				</thead>
-				{{#each SCTest2Data}}
-					<tr class="asmt-viewdata">
-						{{#each col}}
-								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-						{{/each}}
+				<tbody>
+				{{#each SCUnremedDefects}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="5%">{{#if catEntry}}{{originalReportingQuarter}}{{/if}}</td>
+						<td width="5%">{{#if catEntry}}{{testType}}{{/if}}</td>
+						<td width="15%">{{#if catEntry}}{{processSampled}}{{/if}}</td>
+						<td width="10%">{{#if catEntry}}{{reportingCountry}}{{/if}}</td>
+						<td width="10%">{{#if catEntry}}{{controlName}}{{/if}}</td>
+						<td width="20%">{{controllableUnit}}</td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
+						<td width="5%">{{#if _id}}{{originalTargetDate}}{{else}}&nbsp;{{/if}}</td>
+						<td width="5%">{{targetClose}}</td>
+						<td width="5%">{{count}}</td>
+						<td width="10%">{{defectType}}</td>
 					</tr>
 				{{/each}}
+			</tbody>
 			</table>
 		</td>
 	</tr>
 </table>
+<script>
+	$("#Sample_treeview").treetable({expandable: true });
+	$("#Sample2_treeview").treetable({expandable: true });
+</script>

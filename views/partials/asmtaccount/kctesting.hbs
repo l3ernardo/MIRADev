@@ -4,12 +4,14 @@
 	<tr class="kc-test-content">
 		<td class="kc-test-content">
 		<span class="kc-test-header"><b>Key Controls Testing</b></span><br /><br />
-		<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
-		<span class="ibm-sep"> </span>
-		<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
-		{{#unless newunit}}{{#if editor}}
-		<a target="_blank" href="/accountControls?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link">New</a>
+		<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+		<span class="ibm-sep">&nbsp;</span>
+		<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+		{{#unless newunit}}{{#if editmode}}
+		<span class="ibm-sep">&nbsp;</span>
+		<a target="_blank" href="/accountControls?id={{_id}}&pid={{parentid}}&new" class="ibm-add1-link whiteanchor">New</a>
 		{{/if}}{{/unless}}
+		<br /><br />
 		<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 			<thead class="kc-test-viewheader">
 				<th class="kc-test-viewheader" width="15%"></th>

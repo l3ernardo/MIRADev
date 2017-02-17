@@ -2,6 +2,7 @@
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
+<script src='/js/asmtComponentsNonAudits.js'></script>
 
 <input type="hidden" id="docTitle" value="Country Process Key Control">
 <input type="hidden" id="docSubTitle" value="{{subtitle}}">
@@ -17,128 +18,113 @@
 
 </script>
 <div class="ibm-container" style="width:80%">
-  <div class="ibm-container-body">
-	<p style="text-align:right">
-		{{#unless newunit}}
-		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
-		{{/unless}}
-	</p>
-
-
-<form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/savecountrycontrols">
-  <input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
-  <input type="hidden" name="_id" id="parentid" value="{{_id}}">
-<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-  <caption class="mira-caption"><em>Control information</em></caption>
-<tr>
-  <td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
-</tr>
-<tr>
-  <td># Required tests:</td><td>{{numRequiredTests}}</td>
-</tr>
-<tr>
-<td># Actual tests (excludes PwC and IA testing):</td><td>{{numActualTests}}</td>
-</tr>
-<tr>
-<td># Defects (excludes PwC and IA testing):</td><td>{{numDefects}}</td>
-</tr>
-<tr>
-<td># Unremediated CQ Defects:</td><td>{{numCQDefects}}</td>
-</tr>
-<tr>
-<td># Unremediated PQ Defects:</td><td>{{numPQDefects}}</td>
-</tr>
-<tr>
-  <td>Reporting Country:</td><td>{{reportingCountry}}</td>
-</tr>
-<tr>
-  <td>Process:</td><td>{{process}}</td>
-</tr>
-<tr>
-  <td>Control reference number:</td><td>{{controlReferenceNumber}}</td>
-</tr>
-<tr>
-  <td>Control short name:</td><td>{{controlShortName}}</td>
-</tr>
-<tr>
-  <td>Owning business unit:</td><td>{{owningBusinessUnit}}</td>
-</tr>
-<tr>
-  <td>BU IMT:</td><td>{{IMT}}</td>
-</tr>
-<tr>
-  <td>BU IOT:</td><td>{{IOT}}</td>
-</tr>
-{{#if editmode}}
-<input type="hidden" name="close" id="close" value="0">
-<tr>
-  <td>Reason Under Tested:</td><td><input type="text" name="reasonTested" value="{{reasonTested}}" size="130"></td>
-</tr>
-<tr>
-  <td>Action plan required to meed full year required samples:</td><td><input type="text" name="actionPlan" value="{{actionPlan}}" size="130"></td>
-</tr>
-</form>
-{{else}}
-<tr>
-  <td>Reason Under Tested:</td><td>{{reasonTested}}</td>
-</tr>
-<tr>
-  <td>Action plan required to meet full year required samples:</td><td>{{actionPlan}}</td>
-</tr>
-{{/if}}
-</table>
-<br/>
-<br/>
-<div>
-	<table id="country_controls_treeview"  cellspacing="0" cellpadding="0" border="0"  class="ibm-data-table" >
-	  <caption class="mira-caption"><em>Samples with Defects (includes all test types)</em></caption>
-	  <thead bgcolor="#ff3300" style="color:#FFFFFF;">
-	    <tr>
-	      <th style="width:8%;">Period</th>
-	      <th style="width:10%;">Sample ID</th>
-	      <th style="width:18%;">Controllable Unit</th>
-	      <th style="width:3%;">Tests</th>
-	      <th style="width:3%;">Defects</th>
-				<th style="width:5%;">Defect Rate</th>
-	      <th style="width:8%;">Remed. Status</th>
-	      <th style="width:45%;">Defect Absctract</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-			{{#each samples}}
-			<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
-			  <td style="width:8%;"><b class="ibm-important">{{period}}</b></td>
-			  <td style="width:10%;"><a href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
-			  <td style="width:18%;">{{controllableUnit}}</td>
-			  <td style="width:3%;">{{numTests}}</td>
-			  <td style="width:3%;">{{numDefects}}</td>
-				<td {{#if defectRate}} bgcolor="#ff0000" style="color:#FFFFFF;width:5%;"{{/if}}>{{defectRate}}</td>
-			  <td style="width:8%;">{{remediationStatus}}</td>
-			  <td style="width:45%;">{{defectsAbstract}}</td>
-			</tr>
-			{{/each}}
-		</tbody>
-	</table>
-</div>
-<!-- BUTTONS AREA -->
-{{>buttons}}
-</div>
+	<div class="ibm-container-body">
+		<p style="text-align:right">
+			{{#unless newunit}}
+			<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
+			{{/unless}}
+		</p>
+		<form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/savecountrycontrols">
+			<input type="hidden" name="parentid" id="parentid" value="{{parentid}}">
+			<input type="hidden" name="_id" id="parentid" value="{{_id}}">
+			<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+				<caption class="mira-caption"><em>Control information</em></caption>
+				<tr>
+					<td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
+				</tr>
+				<tr>
+					<td># Required tests:</td><td>{{numRequiredTests}}</td>
+				</tr>
+				<tr>
+					<td># Actual tests (excludes PwC and IA testing):</td><td>{{numActualTests}}</td>
+				</tr>
+				<tr>
+					<td># Defects (excludes PwC and IA testing):</td><td>{{numDefects}}</td>
+				</tr>
+				<tr>
+					<td># Unremediated CQ Defects:</td><td>{{numCQDefects}}</td>
+				</tr>
+				<tr>
+					<td># Unremediated PQ Defects:</td><td>{{numPQDefects}}</td>
+				</tr>
+				<tr>
+					<td>Reporting Country:</td><td>{{reportingCountry}}</td>
+				</tr>
+				<tr>
+					<td>Process:</td><td>{{process}}</td>
+				</tr>
+				<tr>
+					<td>Control reference number:</td><td>{{controlReferenceNumber}}</td>
+				</tr>
+				<tr>
+					<td>Control short name:</td><td>{{controlShortName}}</td>
+				</tr>
+				<tr>
+					<td>Owning business unit:</td><td>{{owningBusinessUnit}}</td>
+				</tr>
+				<tr>
+					<td>BU IMT:</td><td>{{IMT}}</td>
+				</tr>
+				<tr>
+					<td>BU IOT:</td><td>{{IOT}}</td>
+				</tr>
+				{{#if editmode}}
+				<input type="hidden" name="close" id="close" value="0">
+				<tr>
+					<td>Reason Under Tested:</td><td><input type="text" name="reasonTested" value="{{reasonTested}}" size="130"></td>
+				</tr>
+				<tr>
+					<td>Action plan required to meed full year required samples:</td><td><input type="text" name="actionPlan" value="{{actionPlan}}" size="130"></td>
+				</tr>
+				{{else}}
+				<tr>
+					<td>Reason Under Tested:</td><td>{{reasonTested}}</td>
+				</tr>
+				<tr>
+					<td>Action plan required to meet full year required samples:</td><td>{{actionPlan}}</td>
+				</tr>
+				{{/if}}
+			</table>
+		</form>
+		<br/>
+		<br/>
+		<div>
+			<table id="country_controls_treeview"  cellspacing="0" cellpadding="0" border="0"  class="ibm-data-table" >
+			  <caption class="mira-caption"><em>Samples with Defects (includes all test types)</em></caption>
+			  <thead bgcolor="#ff3300" style="color:#FFFFFF;">
+				<tr>
+				  <th style="width:8%;">Period</th>
+				  <th style="width:10%;">Sample ID</th>
+				  <th style="width:18%;">Controllable Unit</th>
+				  <th style="width:3%;">Tests</th>
+				  <th style="width:3%;">Defects</th>
+						<th style="width:5%;">Defect Rate</th>
+				  <th style="width:8%;">Remed. Status</th>
+				  <th style="width:45%;">Defect Absctract</th>
+				</tr>
+			  </thead>
+			  <tbody>
+					{{#each samples}}
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}">
+					  <td style="width:8%;"><b class="ibm-important">{{period}}</b></td>
+					  <td style="width:10%;"><a href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
+					  <td style="width:18%;">{{controllableUnit}}</td>
+					  <td style="width:3%;">{{numTests}}</td>
+					  <td style="width:3%;">{{numDefects}}</td>
+						<td {{#if defectRate}} bgcolor="#ff0000" style="color:#FFFFFF;width:5%;"{{/if}}>{{defectRate}}</td>
+					  <td style="width:8%;">{{remediationStatus}}</td>
+					  <td style="width:45%;">{{defectsAbstract}}</td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+		</div>
+		<!-- BUTTONS AREA -->
+		{{>buttons}}
+	</div>
 </div>
 <script>
-$("#country_controls_treeview").treetable({expandable: true });
-$('#btn_edit').click(function() {
-  window.location.href = window.location.href+"&edit";
+$(document).ready(function(){
+	$("#country_controls_treeview").treetable({expandable: true });
 });
-$('#btn_save_close').click(function() {
-  $('#close').val("back");
-
-  $("#internalauditform").submit();
-});
-$('#btn_save').click(function(evt) {
-  $("#asmtcomponentform").submit();
-});
-$('#btn_cancel').click(function() {
-  window.close();
-});
-
 </script>
