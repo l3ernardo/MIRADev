@@ -76,6 +76,7 @@ var assessment = {
 		/* Format Links */
 		doc[0].Links = JSON.stringify(doc[0].Links);
 		doc[0].EnteredBU = req.session.businessunit;
+		doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 		db.get(doc[0].parentid).then(function(pdata){
 			var parentdoc = [];
 			parentdoc.push(pdata.body);
