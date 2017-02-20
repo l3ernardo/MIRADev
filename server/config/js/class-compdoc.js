@@ -149,8 +149,6 @@ var getDocs = {
 				case "Business Unit":
 					break;
 				case "BU IOT":
-					// console.log("compdoc ");
-					// console.log("doc[0].IOTid: " + doc[0].IOTid);
 					var countrynames = [];
 					var imts = util.getIOTChildren(doc[0].IOTid, "IOT");
 					var countries;
@@ -161,11 +159,12 @@ var getDocs = {
 							countrynames.push(countries[j].name);
 						}
 					}
-					// console.log("contries: " + JSON.stringify(countrynames));
 					var compObj = {
 						selector : {
 							"_id": {"$gt":0},
 							"$or": [
+								//Getting open issue categories to displaye
+								{"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] },
 								 //Performance Tab and Reporting Country Testing Tab
 								{ "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"IOT": doc[0].IOT}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
 								//Risks Tab
@@ -175,8 +174,7 @@ var getDocs = {
 								{ "$and": [{"compntType": "sampledCountry"}, {"IOT": doc[0].IOT}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								// Sampled Country Testing tab and reporting country testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
-								// { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+								{ "$and": [{"compntType": "controlSample"}, {"IOT": doc[0].IOT}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
 							 ]
 						}
 					};
@@ -209,7 +207,6 @@ var getDocs = {
 							doc[0].CountryControlsDataCRM = [];
 							doc[0].CountryControlsDataDelivery = []
 						}
-
 						for(var i = 0; i < comps.length; i++) {
 							if (comps[i].compntType == "countryControls"){
 								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
@@ -226,7 +223,8 @@ var getDocs = {
 							}
 							else if (comps[i].compntType == "controlSample") {
 								// For Key Controls Testing Tab
-								if (comps[i].reportingCountry == doc[0].Country) {
+								//if (comps[i].reportingCountry == doc[0].Country) {
+								if (comps[i].remediationStatus == "Open") {
 									doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab
@@ -379,8 +377,7 @@ var getDocs = {
 								{ "$and": [{"compntType": "sampledCountry"}, {"IMT": doc[0].IMTName}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								// Sampled Country Testing tab and reporting country testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
-								// { "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+								{ "$and": [{"compntType": "controlSample"}, {"IMT": doc[0].IMTName}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
 						   ]
 						}
 					};
@@ -430,7 +427,8 @@ var getDocs = {
 							}
 							else if (comps[i].compntType == "controlSample") {
 								// For Key Controls Testing Tab
-								if (comps[i].reportingCountry == doc[0].Country) {
+								//if (comps[i].reportingCountry == doc[0].Country) {
+								if (comps[i].remediationStatus == "Open") {
 									doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab

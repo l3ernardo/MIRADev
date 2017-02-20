@@ -319,12 +319,23 @@ var assessment = {
 							doc[0].IOTid = doc[0].IOT;
 							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
+									// Get rating profiles
+									fieldCalc.getRatingProfile(doc);
+									// Process Country Process Ratings tab
+									prt.processProTab(doc,defViewRow);
+									// Process CU Ratings tab
+									cut.processCUTab(doc,defViewRow);
 									// Rptg Country Testing tab
-									// sct.processSCTab(doc,defViewRow);
+									rcc.processRCTab(doc,defViewRow);
 									// Process Sampled Country Testing Tab
 									sct.processSCTab(doc,defViewRow);
+									// Process Audit Universe Tab
+									aut.processAUTab(doc,defViewRow);
+									//open risks
+									ort.processORTab(doc,defViewRow,req);
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
@@ -509,11 +520,10 @@ var assessment = {
 									cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
-									// Process Audits & Reviews tab
-									aar.processARTab(doc,defViewRow);
-
 									// create a space for performance Tab
 									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
+									// Process Audits & Reviews tab
+									aar.processARTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
 
