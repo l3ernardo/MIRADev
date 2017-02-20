@@ -12,21 +12,21 @@ var util = require('./class-utility.js');
 
 var calculateWeightedAuditScore =function (CUMaxScore, CUScore){
 	var WeightedAuditScore = 0;
-
+	
 	if (isNaN(CUMaxScore))
 		CUMaxScore = parseInt(CUMaxScore);
-
+	
 	if (isNaN(CUScore))
 		CUScore = parseInt(CUScore);
-
+	
 	if(CUMaxScore == 0 || CUMaxScore == "" || totalCUScore == "") {
 		weightedScore = "";
 	}
 	else
 		WeightedAuditScore = ((CUScore /CUMaxScore)*100).toFixed(1);
-
-
-
+	
+	
+	
 	return WeightedAuditScore.toString();
 }
 
@@ -141,16 +141,16 @@ var performanceoverviewcountry = {
 
 		return count;
 	},
-
+	
   buildPerformanceTab : function(db, doc,defViewRow,fieldCalc) {
-
+		
 
 		performanceoverviewcountry.getKFCRDefectRate(db,doc);
 		performanceoverviewcountry.getKCODefectRate(db,doc);
 		performanceoverviewcountry.getMissedRisks(db,doc);
 		performanceoverviewcountry.getMSACCommitmentsCount(db,doc);
-
-
+		
+		
 		if (doc[0].MIRABusinessUnit == "GTS") {
 			performanceoverviewcountry.createTablesData(doc);
 			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsGTS(db,doc);
@@ -199,18 +199,18 @@ var performanceoverviewcountry = {
 			performanceoverviewcountry.getCPANDCUPerformanceIndicators(db,doc);
 			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
 
-
+			
 			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
-
+			
 				if (doc[0].BUCAsmtDataPIview.length == 0) {
 					doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
-				} else {
-
+				} else {  	
+					
 					fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIview)));
-
+				  
 				}
 			}
-
+			
 			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIview) < defViewRow) {
 				if (doc[0].BUCAsmtDataOIview.length == 0) {
 					doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
@@ -221,8 +221,8 @@ var performanceoverviewcountry = {
 
 
 		}
-
-
+		
+		
 	},
 
 	getKFCRDefectRate : function(db, doc) {
@@ -441,7 +441,7 @@ var performanceoverviewcountry = {
 						}
 					}
 				}
-
+				
 
 				if (testPerformed == true) {
 					if (KCOTestCount > 0) {
@@ -534,78 +534,67 @@ var performanceoverviewcountry = {
 				// for CRM
 				for (var i = 0; i < doc[0].RiskView1DataCRM.length; i++) {
 					if (doc[0].RiskView1DataCRM[i].status != "Closed") {
-						if ((doc[0].RiskView1DataCRM[i].ctrg != "" && parseInt(doc[0].RiskView1DataCRM[i].ctrg) > 0) || doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
-							counterRisksCRM++;
 
-						// if (doc[0].RiskView1DataCRM[i].ctrg != "") {
-						// 	if (parseInt(doc[0].RiskView1DataCRM[i].ctrg) > 0
-						// 			|| doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
-						// 		counterRisksCRM++;
-						// } else if (doc[0].RiskView1DataCRM[i].numMissedTasks != "") {
-						// 	if (parseInt(doc[0].RiskView1DataCRM[i].numMissedTasks) > 0
-						// 			|| doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
-						// 		counterRisksCRM++;
-						// } else if (doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
-						// 	counterRisksCRM++;
+						if (doc[0].RiskView1DataCRM[i].ctrg != "") {
+							if (parseInt(doc[0].RiskView1DataCRM[i].ctrg) > 0
+									|| doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
+								counterRisksCRM++;
+						} else if (doc[0].RiskView1DataCRM[i].numMissedTasks != "") {
+							if (parseInt(doc[0].RiskView1DataCRM[i].numMissedTasks) > 0
+									|| doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
+								counterRisksCRM++;
+						} else if (doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
+							counterRisksCRM++;
 
 					}
 				}
 
-				doc[0].MissedOpenIssueCountCRM = counterRisksCRM.toString();
+				doc[0].MissedOpenIssueCountCRM = counterRisksCRM;
 
 				// obtain defect and test count from the components(Open issue)
 				// for CRM
 				for (var i = 0; i < doc[0].RiskView1DataDelivery.length; i++) {
 					if (doc[0].RiskView1DataDelivery[i].status != "Closed") {
-						if ((doc[0].RiskView1DataDelivery[i].ctrg != "" && parseInt(doc[0].RiskView1DataDelivery[i].ctrg) > 0) || doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
-							counterRisksDelivery++;
 
-						// if (doc[0].RiskView1DataDelivery[i].ctrg != "") {
-						// 	if (parseInt(doc[0].RiskView1DataDelivery[i].ctrg) > 0
-						// 			|| doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
-						// 		counterRisksDelivery++;
-						// } else if (doc[0].RiskView1DataDelivery[i].numMissedTasks != "") {
-						// 	if (parseInt(doc[0].RiskView1DataDelivery[i].numMissedTasks) > 0
-						// 			|| doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
-						// 		counterRisksDelivery++;
-						// } else if (doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
-						// 	counterRisksDelivery++;
+						if (doc[0].RiskView1DataDelivery[i].ctrg != "") {
+							if (parseInt(doc[0].RiskView1DataDelivery[i].ctrg) > 0
+									|| doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
+								counterRisksDelivery++;
+						} else if (doc[0].RiskView1DataDelivery[i].numMissedTasks != "") {
+							if (parseInt(doc[0].RiskView1DataDelivery[i].numMissedTasks) > 0
+									|| doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
+								counterRisksDelivery++;
+						} else if (doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
+							counterRisksDelivery++;
 
 					}
 				}
 
-				doc[0].MissedOpenIssueCountSOD = counterRisksDelivery.toString();
+				doc[0].MissedOpenIssueCountSOD = counterRisksDelivery;
 
-			}
-			else {
-
+			} else {
+            
 				// obtain defect and test count from the components(Open issue)
 				for (var i = 0; i < doc[0].RiskView1Data.length; i++) {
 					if (doc[0].RiskView1Data[i].status != "Closed") {
-						if ((doc[0].RiskView1Data[i].ctrg != "" && parseInt(doc[0].RiskView1Data[i].ctrg) > 0) || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
-							counterRisks++;
 
-						// if (doc[0].RiskView1Data[i].ctrg != "") {
-						// 	if (parseInt(doc[0].RiskView1Data[i].ctrg) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1") {
-						// 		counterRisks++;
-						// 		console.log("1");
-						// 	}
-						// } else if (doc[0].RiskView1Data[i].numMissedTasks != "") {
-						// 	if (parseInt(doc[0].RiskView1Data[i].numMissedTasks) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1") {
-						// 		counterRisks++;
-						// 		console.log("2");
-						// 	}
-						// } else if (doc[0].RiskView1Data[i].FlagTodaysDate == "1") {
-						// 	counterRisks++;
-						// 	console.log("3");
-						// }
+						if (doc[0].RiskView1Data[i].ctrg != "") {
+							if (parseInt(doc[0].RiskView1Data[i].ctrg) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
+								counterRisks++;
+						} else if (doc[0].RiskView1Data[i].numMissedTasks != "") {
+							if (parseInt(doc[0].RiskView1Data[i].numMissedTasks) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
+								counterRisks++;
+						} else if (doc[0].RiskView1Data[i].FlagTodaysDate == "1")
+							counterRisks++;
 						// if (new Date(doc[0].RiskView1Data[i].currentTargetDate).getTime() < new Date(currentDate).getTime()) {
 						// 	counterRisks++;
 						// }
 					}
 				}
 
-				doc[0].MissedOpenIssueCount = counterRisks.toString();
+
+
+				doc[0].MissedOpenIssueCount = counterRisks;
 
 			}
 
@@ -796,7 +785,7 @@ var performanceoverviewcountry = {
 			// For GBS
 			else {
 
-				for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
+				for (var i = 0; i < doc[0].asmtsdocs.length; i++) {   
 					if (doc[0].asmtsdocs[i].PeriodRating == "Marg" || doc[0].asmtsdocs[i].PeriodRating == "Unsat") {
 						if (doc[0].asmtsdocs[i].Target2Sat != undefined && doc[0].asmtsdocs[i].Target2SatPrev != undefined) {
 								if (doc[0].asmtsdocs[i].Target2Sat != "" && doc[0].asmtsdocs[i].Target2SatPrev != "") {
@@ -1061,7 +1050,7 @@ var performanceoverviewcountry = {
 
 			// Create the treetable array for CRM
 			for (var i = 0; i < doc[0].BUCAsmtDataPIviewCRM.length; i++) {
-
+				
 				if (doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType == "BU IMT"
 					&& POIMTFlag == 0) {
 				head = {
@@ -1086,7 +1075,7 @@ var performanceoverviewcountry = {
 				POIMTFlag = 1;
 				tempArray.push(head);
 			}
-
+				
 				if (doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType == "BU IOT"
 					&& POIOTFlag == 0) {
 				head = {
@@ -1111,7 +1100,7 @@ var performanceoverviewcountry = {
 				POIOTFlag = 1;
 				tempArray.push(head);
 			}
-
+				
 
 				if (doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType == "Country Process"
 						&& POCountryFlag == 0) {
@@ -1203,7 +1192,7 @@ var performanceoverviewcountry = {
 
 			// Create the treetable array for Delivery
 			for (var i = 0; i < doc[0].BUCAsmtDataPIviewDelivery.length; i++) {
-
+				
 				if (doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType == "BU IMT"
 					&& POIMTFlag == 0) {
 				head = {
@@ -1230,7 +1219,7 @@ var performanceoverviewcountry = {
 				POIMTFlag = 1;
 				tempArray.push(head);
 			}
-
+				
 				if (doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType == "BU IOT"
 					&& POIOTFlag == 0) {
 				head = {
@@ -1345,8 +1334,8 @@ var performanceoverviewcountry = {
 
 			doc[0].BUCAsmtDataPIviewDelivery = tempArray;
 
-
-
+			
+			
 		} catch (e) {
 			console
 					.log("error at [class-performanceoverview][getCPANDCUPerformanceIndicators]: "
@@ -1404,7 +1393,7 @@ var performanceoverviewcountry = {
 
 			// Create the treetable array
 			for (var i = 0; i < doc[0].BUCAsmtDataPIview.length; i++) {
-
+				
 				if (doc[0].BUCAsmtDataPIview[i].ParentDocSubType == "BU IMT"
 					&& POIMTFlag == 0) {
 				head = {
@@ -1429,7 +1418,7 @@ var performanceoverviewcountry = {
 				POIMTFlag = 1;
 				tempArray.push(head);
 			}
-
+				
 				if (doc[0].BUCAsmtDataPIview[i].ParentDocSubType == "BU IOT"
 					&& POIOTFlag == 0) {
 				head = {
@@ -1719,9 +1708,9 @@ var performanceoverviewcountry = {
 					tempArray.push(head);
 					POBUCOtherFlag = 1;
 				}
-
-
-
+				
+				
+				
 
 				if (doc[0].BUCAsmtDataOIview[i].ParentDocSubType == "Country Process"
 						&& POCountryOtherFlag == 0) {

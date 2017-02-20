@@ -217,7 +217,7 @@ var getDocs = {
 									doc[0].CountryControlsData.push(comps[i]);
 									if (doc[0].MIRABusinessUnit == "GTS") {
 										if(doc[0].CRMProcessObj[comps[i].process]) doc[0].CountryControlsDataCRM.push(comps[i])
-										elsedoc[0].CountryControlsDataDelivery.push(comps[i]);
+										else doc[0].CountryControlsDataDelivery.push(comps[i]);
 									}
 								}
 							}

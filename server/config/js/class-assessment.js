@@ -296,6 +296,24 @@ var assessment = {
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
 								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
 								doc[0].RiskView2Data = fieldCalc.addTestViewData(15,defViewRow);
+
+								doc[0].BUCAsmtDataPIviewCRM = [];
+								doc[0].BUCAsmtDataPIviewDelivery = [];
+								doc[0].BUCAsmtDataOIviewCRM = [];
+								doc[0].BUCAsmtDataOIviewDelivery = [];
+
+								doc[0].MissedMSACSatCountDeliveryDoc = 0;
+								doc[0].MissedOpenIssueCountDeliveryDoc =0;
+								doc[0].MissedOpenIssueCountCRMDoc = 0;
+								doc[0].MissedMSACSatCountCRMDoc = 0;
+
+								doc[0].AUDataMSACCRM = [];
+								doc[0].MissedMSACSatCountCRM = "";
+								doc[0].AUDataMSACSOD = [];
+								doc[0].MissedMSACSatCountSOD = "";
+
+								doc[0].BOCExceptionCountCRM = 0;
+								doc[0].BOCExceptionCountSOD = 0;
 							} else {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
@@ -336,6 +354,8 @@ var assessment = {
 									aut.processAUTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
+									//Performance tab
+									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
