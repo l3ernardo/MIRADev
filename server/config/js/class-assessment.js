@@ -322,6 +322,12 @@ var assessment = {
 
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
+									// Get rating profiles
+									fieldCalc.getRatingProfile(doc);
+									// Process Country Process Ratings tab
+									prt.processProTab(doc,defViewRow);
+									// Process CU Ratings tab
+									cut.processCUTab(doc,defViewRow);
 									// Rptg Country Testing tab
 									rcc.processRCTab(doc,defViewRow);
 									// Process Sampled Country Testing Tab
