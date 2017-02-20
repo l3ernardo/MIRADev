@@ -413,7 +413,12 @@ var getDocs = {
 
 						for(var i = 0; i < comps.length; i++) {
 							if (comps[i].compntType == "countryControls"){
-								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+
+								if (comps[i].controlReferenceNumber != undefined && comps[i].controlShortName != undefined) {
+									comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+								}else {
+
+								}
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								doc[0].TRExceptionControls.push(comps[i]);
 
@@ -421,7 +426,7 @@ var getDocs = {
 									doc[0].CountryControlsData.push(comps[i]);
 									if (doc[0].MIRABusinessUnit == "GTS") {
 										if(doc[0].CRMProcessObj[comps[i].process]) doc[0].CountryControlsDataCRM.push(comps[i])
-										elsedoc[0].CountryControlsDataDelivery.push(comps[i]);
+										else doc[0].CountryControlsDataDelivery.push(comps[i]);
 									}
 								}
 							}
