@@ -970,7 +970,6 @@ var getDocs = {
 									doc[0].risks.push(comps[i]);
 								}
 								else if (comps[i].compntType == "CUSummarySample") {
-									console.log(comps[i])
 									doc[0].RCTestData.push(comps[i]);
 									// Calculate for Defect Rate of Control doc
 									if (doc[0].RCTestData[controlCtr].numTests ==  undefined || doc[0].RCTestData[controlCtr].numTests == "" || doc[0].RCTestData[controlCtr].numTests == 0 || doc[0].RCTestData[controlCtr].DefectCount == undefined || doc[0].RCTestData[controlCtr].DefectCount == "") {
