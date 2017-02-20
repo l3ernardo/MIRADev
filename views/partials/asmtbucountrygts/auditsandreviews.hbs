@@ -39,7 +39,7 @@
           <td class="asmt-viewdata" width="20%">{{SummaryTotal.countComplete}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryTotal.countSAT}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryTotal.countUNSAT}}</td>
-          <td class="asmt-viewdata" width="20%">{{SummaryTotal.countScore}}</td>
+          <td class="asmt-viewdata" width="20%">{{WeightedAuditScore}}</td>
         </tr>
       </table>
     </td>
@@ -66,7 +66,7 @@
   				</thead>
   				{{#each InternalAuditData}}
   					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-    					<td width="5%">{{cat}}</td>
+    					<td width="5%">{{#unless parent}}{{cat}}{{/unless}}</td>
     					<td width="10%">{{plannedStartDate}}</td>
     					<td width="10%">{{engagement}}</td>
     					<td width="34%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
@@ -211,7 +211,7 @@
   				</thead>
           {{#each InternalAuditData}}
             <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-              <td width="5%">{{cat}}</td>
+              <td width="5%">{{#unless parent}}{{cat}}{{/unless}}</td>
               <td width="10%">{{plannedStartDate}}</td>
               <td width="10%">{{engagement}}</td>
               <td width="34%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
@@ -288,7 +288,7 @@
     		<span class="ibm-sep">&nbsp;</span>
     		<a href="javascript:void(0);" value="Export to Open Office" name="OtherAudits-link-export2" id="OtherAudits-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
 			<br /><br />
-  			<table id="OtherAudits_table" width="100%" class="table_with_scroll">
+  			<table id="OtherAudits_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Type</th>

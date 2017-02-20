@@ -491,7 +491,7 @@ assessments.post('/saveasmt', isAuthenticated, function(req, res){
 				if(close=='1') {
 					res.redirect('/assessableunit?id='+ data.parentid);
 				} else {
-					res.redirect('/assessment?id=' + data.id);
+					res.redirect('/assessment?id=' + data.id + "&edit");
 				}
 			} else {
 				res.render('error',{errorDescription: data.error});

@@ -163,6 +163,8 @@ var getDocs = {
 						selector : {
 							"_id": {"$gt":0},
 							"$or": [
+								//Getting open issue categories to displaye
+								{"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] },
 								 //Performance Tab and Reporting Country Testing Tab
 								{ "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"IOT": doc[0].IOT}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
 								//Risks Tab
