@@ -350,12 +350,13 @@ var assessment = {
 									rcc.processRCTab(doc,defViewRow);
 									// Process Sampled Country Testing Tab
 									sct.processSCTab(doc,defViewRow);
+									//Performance tab
+									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
-									//Performance tab
-									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
+									
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
