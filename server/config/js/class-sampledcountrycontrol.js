@@ -10,7 +10,7 @@ var fieldCalc = require('./class-fieldcalc.js');
 
 var calculateSCTab = {
 
-  processSCTab: function(doc, defViewRow) {
+  processSCTab: function(doc, defViewRow, req) {
 		try {
       switch (doc[0].ParentDocSubType) {
         case "Global Process":
@@ -23,8 +23,16 @@ var calculateSCTab = {
         case "BU IMT":
         case "BU Country":
           //** Calculate for Defect Rate - START **//
-          doc[0].KCProcessFINSCT = JSON.parse(JSON.stringify(doc[0].KCProcessFIN));
-          doc[0].KCProcessOPSSCT = JSON.parse(JSON.stringify(doc[0].KCProcessOPS));
+          if(doc[0].KCProcessFIN != undefined){
+            doc[0].KCProcessFINSCT = JSON.parse(JSON.stringify(doc[0].KCProcessFIN));
+          }else{
+            doc[0].KCProcessFINSCT = [];
+          }
+        if(doc[0].KCProcessOPS != undefined){
+           doc[0].KCProcessOPSSCT = JSON.parse(JSON.stringify(doc[0].KCProcessOPS));
+         }else {
+           doc[0].KCProcessOPSSCT = [];
+         }
 
           // Calculate for Current Quarter
           for (var i = 0; i < doc[0].SCTest1Data.length; i++) {
