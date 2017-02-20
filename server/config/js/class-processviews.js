@@ -112,6 +112,7 @@ var calculatePRTab = {
 						id: doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,''),
 						country: doc[0].BUCAsmtDataPRview2[j].country,						
 						count: 0,
+						percent: 100,
 						MetricsValue: 0
 					}
 					tmpAccountList2.push(tmp2);
@@ -273,6 +274,7 @@ var calculatePRTab = {
 						id: doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,''),
 						imt: doc[0].BUCAsmtDataPRview2[j].imt,						
 						count: 0,
+						percent: 100,
 						MetricsValue: 0
 					}
 					tmpAccountList2.push(tmp2);
