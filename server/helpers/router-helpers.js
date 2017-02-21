@@ -281,7 +281,7 @@ var register = function(Handlebars) {
 		},
 		MissedDataDisplay: function(field, bgcolor) {
 			var fieldhtml;
-			if (field == undefined || field == "") {
+			if (field == undefined ) {
 				field = "";
 			}
 			if (bgcolor == undefined || bgcolor ==  undefined) {
