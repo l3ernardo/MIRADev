@@ -75,7 +75,8 @@ var assessment = {
 		doc.push(newdoc);
 		/* Format Links */
 		doc[0].Links = JSON.stringify(doc[0].Links);
-		doc[0].EnteredBU = doc[0].MIRABusinessUnit;
+		doc[0].EnteredBU = req.session.businessunit;
+		doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 		db.get(doc[0].parentid).then(function(pdata){
 			var parentdoc = [];
 			parentdoc.push(pdata.body);
@@ -296,6 +297,24 @@ var assessment = {
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
 								doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
 								doc[0].RiskView2Data = fieldCalc.addTestViewData(15,defViewRow);
+
+								doc[0].BUCAsmtDataPIviewCRM = [];
+								doc[0].BUCAsmtDataPIviewDelivery = [];
+								doc[0].BUCAsmtDataOIviewCRM = [];
+								doc[0].BUCAsmtDataOIviewDelivery = [];
+
+								doc[0].MissedMSACSatCountDeliveryDoc = 0;
+								doc[0].MissedOpenIssueCountDeliveryDoc =0;
+								doc[0].MissedOpenIssueCountCRMDoc = 0;
+								doc[0].MissedMSACSatCountCRMDoc = 0;
+
+								doc[0].AUDataMSACCRM = [];
+								doc[0].MissedMSACSatCountCRM = "";
+								doc[0].AUDataMSACSOD = [];
+								doc[0].MissedMSACSatCountSOD = "";
+
+								doc[0].BOCExceptionCountCRM = 0;
+								doc[0].BOCExceptionCountSOD = 0;
 							} else {
 								doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
@@ -319,12 +338,26 @@ var assessment = {
 							doc[0].IOTid = doc[0].IOT;
 							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
+							doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
+									// Get rating profiles
+									fieldCalc.getRatingProfile(doc);
+									// Process Country Process Ratings tab
+									prt.processProTab(doc,defViewRow);
+									// Process CU Ratings tab
+									cut.processCUTab(doc,defViewRow);
 									// Rptg Country Testing tab
-									// sct.processSCTab(doc,defViewRow);
+									rcc.processRCTab(doc,defViewRow);
 									// Process Sampled Country Testing Tab
 									sct.processSCTab(doc,defViewRow);
+									//Performance tab
+									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
+									// Process Audit Universe Tab
+									aut.processAUTab(doc,defViewRow);
+									//open risks
+									ort.processORTab(doc,defViewRow,req);
+									
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
@@ -387,14 +420,15 @@ var assessment = {
 							doc[0].IMTid = doc[0].IMT;
 							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
+							doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Get rating profiles
 									fieldCalc.getRatingProfile(doc);
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
-					                // Process CU Ratings tab
-					                cut.processCUTab(doc,defViewRow);
+	                // Process CU Ratings tab
+	                cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
 									//open risks
@@ -405,7 +439,6 @@ var assessment = {
 									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
 									//Rptg Country Testing Tab
 									rcc.processRCTab(doc,defViewRow)
-
 									/*fieldCalc.getRatingProfile(doc);
 									if (doc[0].BUCAsmtDataPRview.length < defViewRow) {
 										if (doc[0].BUCAsmtDataPRview.length == 0) {
@@ -494,7 +527,7 @@ var assessment = {
 							doc[0].BUIMT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
-
+							doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Get rating profiles
