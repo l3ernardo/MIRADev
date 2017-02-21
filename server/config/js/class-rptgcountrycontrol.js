@@ -64,7 +64,7 @@ var calculateRCTab = {
                     // calculate for capped test
                     if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                        if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                        if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                           cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                         } else {
                           cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -88,7 +88,7 @@ var calculateRCTab = {
                       } else {
                         if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                           doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                          if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                          if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                             doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                           }
                         }
@@ -132,7 +132,7 @@ var calculateRCTab = {
                     // calculate for capped test
                     if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                        if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                        if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                           cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                         } else {
                           cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -156,7 +156,7 @@ var calculateRCTab = {
                       } else {
                         if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                           doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                          if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                          if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                             doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                           }
                         }
@@ -201,7 +201,7 @@ var calculateRCTab = {
                   // calculate for capped test
                   if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                     if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                      if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                      if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                         cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                       } else {
                         cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -225,7 +225,7 @@ var calculateRCTab = {
                     } else {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                         doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                        if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                           doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                         }
                       }
@@ -267,7 +267,7 @@ var calculateRCTab = {
                   // calculate for capped test
                   if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                     if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                      if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                      if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                         cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                       } else {
                         cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -291,7 +291,7 @@ var calculateRCTab = {
                     } else {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                         doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                        if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                           doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                         }
                       }
@@ -394,7 +394,7 @@ var calculateRCTab = {
                     doc[0].KCProcessFIN[j].members[k].cappedtest = "";
                   } else {
                     doc[0].KCProcessFIN[j].members[k].testingRatio = ((doc[0].KCProcessFIN[j].members[k].cappedtest / doc[0].KCProcessFIN[j].members[k].reqtest) * 100).toFixed(1);
-                    if (doc[0].KCProcessFIN[j].members[k].testingRatio == 0) {
+                    if (doc[0].KCProcessFIN[j].members[k].testingRatio == 0 || doc[0].KCProcessFIN[j].members[k].testingRatio == 100) {
                       doc[0].KCProcessFIN[j].members[k].testingRatio = parseInt(doc[0].KCProcessFIN[j].members[k].testingRatio).toFixed(0);
                     }
                   }
@@ -412,7 +412,7 @@ var calculateRCTab = {
                     doc[0].KCProcessOPS[j].members[k].cappedtest = "";
                   } else {
                     doc[0].KCProcessOPS[j].members[k].testingRatio = ((doc[0].KCProcessOPS[j].members[k].cappedtest / doc[0].KCProcessOPS[j].members[k].reqtest) * 100).toFixed(1);
-                    if (doc[0].KCProcessOPS[j].members[k].testingRatio == 0) {
+                    if (doc[0].KCProcessOPS[j].members[k].testingRatio == 0 || doc[0].KCProcessOPS[j].members[k].testingRatio == 100) {
                       doc[0].KCProcessOPS[j].members[k].testingRatio = parseInt(doc[0].KCProcessOPS[j].members[k].testingRatio).toFixed(0);
                     }
                   }
@@ -430,7 +430,7 @@ var calculateRCTab = {
                   doc[0].KCProcessFIN[j].cappedtest = "";
                 } else {
                   doc[0].KCProcessFIN[j].testingRatio = ((doc[0].KCProcessFIN[j].cappedtest / doc[0].KCProcessFIN[j].reqtest) * 100).toFixed(1);
-                  if (doc[0].KCProcessFIN[j].testingRatio == 0) {
+                  if (doc[0].KCProcessFIN[j].testingRatio == 0 || doc[0].KCProcessFIN[j].testingRatio == 100) {
                     doc[0].KCProcessFIN[j].testingRatio = parseInt(doc[0].KCProcessFIN[j].testingRatio).toFixed(0);
                   }
                 }
@@ -445,7 +445,7 @@ var calculateRCTab = {
                   doc[0].KCProcessOPS[j].cappedtest = "";
                 } else {
                   doc[0].KCProcessOPS[j].testingRatio = ((doc[0].KCProcessOPS[j].cappedtest / doc[0].KCProcessOPS[j].reqtest) * 100).toFixed(1);
-                  if (doc[0].KCProcessOPS[j].testingRatio == 0) {
+                  if (doc[0].KCProcessOPS[j].testingRatio == 0 || doc[0].KCProcessOPS[j].testingRatio == 100) {
                     doc[0].KCProcessOPS[j].testingRatio = parseInt(doc[0].KCProcessOPS[j].testingRatio).toFixed(0);
                   }
                 }
@@ -959,7 +959,7 @@ var calculateRCTab = {
                     // calculate for capped test
                     if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                        if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                        if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                           cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                         } else {
                           cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -983,7 +983,7 @@ var calculateRCTab = {
                       } else {
                         if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                           doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                          if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                          if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                             doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                           }
                         }
@@ -1027,7 +1027,7 @@ var calculateRCTab = {
                     // calculate for capped test
                     if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                        if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                        if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                           cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                         } else {
                           cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -1051,7 +1051,7 @@ var calculateRCTab = {
                       } else {
                         if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                           doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                          if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                          if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                             doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                           }
                         }
@@ -1096,7 +1096,7 @@ var calculateRCTab = {
                   // calculate for capped test
                   if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                     if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                      if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                      if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                         cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                       } else {
                         cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -1120,7 +1120,7 @@ var calculateRCTab = {
                     } else {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                         doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                        if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                           doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                         }
                       }
@@ -1162,7 +1162,7 @@ var calculateRCTab = {
                   // calculate for capped test
                   if (!isNaN(doc[0].RCTest2Data[i].numActualTests)) {
                     if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                      if (doc[0].RCTest2Data[i].numActualTests > doc[0].RCTest2Data[i].numRequiredTests) {
+                      if (parseInt(doc[0].RCTest2Data[i].numActualTests) > parseInt(doc[0].RCTest2Data[i].numRequiredTests)) {
                         cappedtest = doc[0].RCTest2Data[i].numRequiredTests;
                       } else {
                         cappedtest = doc[0].RCTest2Data[i].numActualTests;
@@ -1186,7 +1186,7 @@ var calculateRCTab = {
                     } else {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
                         doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
-                        if (doc[0].RCTest2Data[i].testingRatio == 0) {
+                        if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
                           doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
                         }
                       }
@@ -1289,7 +1289,7 @@ var calculateRCTab = {
                     doc[0].KCProcessFIN[j].members[k].cappedtest = "";
                   } else {
                     doc[0].KCProcessFIN[j].members[k].testingRatio = ((doc[0].KCProcessFIN[j].members[k].cappedtest / doc[0].KCProcessFIN[j].members[k].reqtest) * 100).toFixed(1);
-                    if (doc[0].KCProcessFIN[j].members[k].testingRatio == 0) {
+                    if (doc[0].KCProcessFIN[j].members[k].testingRatio == 0 || doc[0].KCProcessFIN[j].members[k].testingRatio == 100) {
                       doc[0].KCProcessFIN[j].members[k].testingRatio = parseInt(doc[0].KCProcessFIN[j].members[k].testingRatio).toFixed(0);
                     }
                   }
@@ -1307,7 +1307,7 @@ var calculateRCTab = {
                     doc[0].KCProcessOPS[j].members[k].cappedtest = "";
                   } else {
                     doc[0].KCProcessOPS[j].members[k].testingRatio = ((doc[0].KCProcessOPS[j].members[k].cappedtest / doc[0].KCProcessOPS[j].members[k].reqtest) * 100).toFixed(1);
-                    if (doc[0].KCProcessOPS[j].members[k].testingRatio == 0) {
+                    if (doc[0].KCProcessOPS[j].members[k].testingRatio == 0 || doc[0].KCProcessOPS[j].members[k].testingRatio == 100) {
                       doc[0].KCProcessOPS[j].members[k].testingRatio = parseInt(doc[0].KCProcessOPS[j].members[k].testingRatio).toFixed(0);
                     }
                   }
@@ -1325,7 +1325,7 @@ var calculateRCTab = {
                   doc[0].KCProcessFIN[j].cappedtest = "";
                 } else {
                   doc[0].KCProcessFIN[j].testingRatio = ((doc[0].KCProcessFIN[j].cappedtest / doc[0].KCProcessFIN[j].reqtest) * 100).toFixed(1);
-                  if (doc[0].KCProcessFIN[j].testingRatio == 0) {
+                  if (doc[0].KCProcessFIN[j].testingRatio == 0 || doc[0].KCProcessFIN[j].testingRatio == 100) {
                     doc[0].KCProcessFIN[j].testingRatio = parseInt(doc[0].KCProcessFIN[j].testingRatio).toFixed(0);
                   }
                 }
@@ -1340,7 +1340,7 @@ var calculateRCTab = {
                   doc[0].KCProcessOPS[j].cappedtest = "";
                 } else {
                   doc[0].KCProcessOPS[j].testingRatio = ((doc[0].KCProcessOPS[j].cappedtest / doc[0].KCProcessOPS[j].reqtest) * 100).toFixed(1);
-                  if (doc[0].KCProcessOPS[j].testingRatio == 0) {
+                  if (doc[0].KCProcessOPS[j].testingRatio == 0 || doc[0].KCProcessOPS[j].testingRatio == 100) {
                     doc[0].KCProcessOPS[j].testingRatio = parseInt(doc[0].KCProcessOPS[j].testingRatio).toFixed(0);
                   }
                 }
