@@ -180,7 +180,7 @@
 	<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Rating</span><br /><br />
-			<table id="processrating_treetable" width="100%"  class="other-viewheader table_with_scroll">
+			<table id="processrating_treeview" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
 					<th class="processrating-viewheader" scope="col" width="20%">Process</th>
@@ -195,7 +195,7 @@
 				</thead>
 				{{#each BUCAsmtDataPRview}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
-						<td class="asmt-viewdata" width="10%">{{category}}</td>
+						<td class="asmt-viewdata" width="10%">{{{category}}}</td>
 						<td class="asmt-viewdata" width="20%">{{processName}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata" width="20%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
@@ -218,7 +218,7 @@
 			<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Country</span><br /><br />
-			<table id="processrating_treetable2" width="100%"  class="other-viewheader table_with_scroll">
+			<table id="processrating_treeview2" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="20%">Country</th>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
