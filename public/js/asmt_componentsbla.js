@@ -1376,11 +1376,28 @@ $(document).ready(function() {
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	$('#CURating-link-export3').click(function(){
-		tableReport = AllTableToReportMultiple('curating_treeview2', "CURating");
+		tableReport = AllTableToReportMultiple('curating_treeview2', "CURating2");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 	});
 	$('#CURating-link-export4').click(function(){
-		tableReport = AllTableToReportMultiple('curating_treeview2',"CURating");
+		tableReport = AllTableToReportMultiple('curating_treeview2',"CURating2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	//Process Ratings export buttons
+	$('#PRRating-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('processrating_treeview', "PRRating");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#PRRating-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('processrating_treeview',"PRRating");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	$('#PRRating-link-export3').click(function(){
+		tableReport = AllTableToReportMultiple('processrating_treeview2', "PRRating2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#PRRating-link-export4').click(function(){
+		tableReport = AllTableToReportMultiple('processrating_treeview2',"PRRating2");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
 	//Risks export buttons
