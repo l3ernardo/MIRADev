@@ -486,16 +486,15 @@ var calculatefield = {
 					var asmts = {
 						selector:{
 							"_id": {"$gt":0},
-							"key": "Assessable Unit",
 							"BusinessUnit": doc[0].BusinessUnit,
 							"CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or":
 							[
 								// {"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
-								{"$and": [{"DocSubType":"BU Country"}]},
-								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid}]},
-								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
+								{"$and": [{"DocSubType":"BU Country"},{"key": "Assessable Unit"}]},
+								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid},{"key": "Assessable Unit"}]},
+								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName},{"key": "Assessable Unit"}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
 
 						]//or
