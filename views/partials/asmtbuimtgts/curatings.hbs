@@ -1,5 +1,5 @@
 <textarea name="textarea" id="CURatingDataExport" cols="100" style="display:none">{{valuesToString exportCURating}}</textarea>
-<textarea name="textarea" id="CURatingDataExport2" cols="100" style="display:none">{{valuesToString exportCURating2}}</textarea>
+<textarea name="textarea" id="CURating2DataExport" cols="100" style="display:none">{{valuesToString exportCURating2}}</textarea>
 <table id="curating_table" class="ibm-data-table">
 	<tr class="curating">
 	  <td width="70%" class="curating-legend">
@@ -263,7 +263,7 @@
 			<span class="curating-header">CUs by Country</span><br /><br />
 			<a href="javascript:void(0);" value="Export to Excel" name="CURating-link-export3" id="CURating-link-export3" class="whiteanchor ibm-symp-spreadsheet">Export to Excel</a>
 			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="CURating-link-export3" id="CURating-link-export4" class="whiteanchor ibm-symp-spreadsheet">Export to Open Office</a>
+			<a href="javascript:void(0);" value="Export to Open Office" name="CURating-link-export4" id="CURating-link-export4" class="whiteanchor ibm-symp-spreadsheet">Export to Open Office</a>
 				<table id="curating_treeview2" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
@@ -287,7 +287,7 @@
 					   	<td class="asmt-viewdata" width="3%">{{topName}}</td>						
 						<td class="asmt-viewdata">{{country}}</td>
 						<td class="asmt-viewdata" width="2%">{{categoryName}}</td>
-						<td class="asmt-viewdata" width="5%">{{category2}}</td>
+						<td class="asmt-viewdata" width="5%">{{{category2}}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
