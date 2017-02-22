@@ -15,8 +15,10 @@ var calculateAUTab = {
     var ratingCategory = {};
     var auditsList = [];
     var exportAudits = [];
-    var topEntry = {id: "topCategory", counter: audits.length,name: "total", CUMaxScore: 0, CUScore: 0}
-    auditsList.push(topEntry);
+    var topEntry = {id: "topCategory", counter: audits.length,name: "total", CUMaxScore: 0, CUScore: 0};
+    if (audits.length > 0) {
+      auditsList.push(topEntry);
+    }
   var objects = {};//object of objects for counting
   audits.sort(function(a, b){
     var nameA=a.PeriodRating.toLowerCase(), nameB=b.PeriodRating.toLowerCase()
@@ -84,7 +86,7 @@ var calculateAUTab = {
     };
     doc[0].AUData = auditsList;
     doc[0].exportAUniverse = exportAudits;
-    doc[0].AUWeightedScore = (topEntry.CUScore / topEntry.CUMaxScore * 100).toFixed(1);
+    if(topEntry.CUScore > 0 && topEntry.CUMaxScore > 0 )  doc[0].AUWeightedScore = (topEntry.CUScore / topEntry.CUMaxScore * 100).toFixed(1)+"%";
 	}
 
 }
