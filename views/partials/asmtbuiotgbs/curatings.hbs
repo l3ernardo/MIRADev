@@ -1,3 +1,5 @@
+<textarea name="textarea" id="CURatingDataExport" cols="100" style="display:none">{{valuesToString exportCURating}}</textarea>
+<textarea name="textarea" id="CURating2DataExport" cols="100" style="display:none">{{valuesToString exportCURating2}}</textarea>
 <table id="curating_table" class="ibm-data-table">
 	<tr class="curating">
 		<td width="70%" class="curating-legend">
@@ -61,7 +63,7 @@
 		<td width="28%" class="curating-legend">
 			<table width="100%">
 				<thead>
-					<th class="curating-header" colspan="3">Key/Comments</th>
+					<th class="curating-legend" colspan="3">Key/Comments</th>
 				</thead>
 				<tr>
 					<td class="sat-bg" width="3%"></td>
@@ -107,7 +109,10 @@
 	<tr class="curating">
 		<td colspan="3">
 			<span class="curating-header">CUs by Rating</span><br /><br />
-			<table width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="CURating-link-export" id="CURating-link-export" class="whiteanchor ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="CURating-link-export2" id="CURating-link-export2" class="whiteanchor ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="curating_treeview" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
 					<th class="curating-viewheader" scope="col" width="5%">Rating</th>
@@ -125,19 +130,16 @@
 					<th class="curating-viewheader" scope="col" width="12%">Explanations</th>
 				</thead>
 				{{#each BUCAsmtDataCURview}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata">
-							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
-							<div id="ratingcategoryDisplay"></div>
-						</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
+						<td class="asmt-viewdata">{{topName}}</td>
+						<td class="asmt-viewdata" width="10%">{{{category}}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">{{count}}</td>
+						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
 						<td class="asmt-viewdata">{{targettosat}}</td>
@@ -156,7 +158,10 @@
 	<tr class="curating">
 		<td colspan="3">
 			<span class="curating-header">CUs by IMT</span><br /><br />
-			<table width="100%">
+			<a href="javascript:void(0);" value="Export to Excel" name="CURating-link-export3" id="CURating-link-export3" class="whiteanchor ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="CURating-link-export4" id="CURating-link-export4" class="whiteanchor ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="curating_treeview2" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="curating-viewheader" scope="col" width="3%"></th>
 					<th class="curating-viewheader" scope="col" width="10%">IMT</th>
@@ -173,21 +178,18 @@
 					<th class="curating-viewheader" scope="col" width="5%">PQ Score</th>
 					<th class="curating-viewheader" scope="col" width="12%">Explanations</th>
 				</thead>
-				{{#each BUCAsmtDataCURview}}
-					<tr class="asmt-viewdata">
-						<td class="asmt-viewdata"></td>
+				{{#each BUCAsmtDataCURview2}}
+					 <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
+					   	<td class="asmt-viewdata" width="3%">{{topName}}</td>						
 						<td class="asmt-viewdata">{{imt}}</td>
-						<td class="asmt-viewdata">
-							<input type="hidden" id="ratingcategory" name="ratingcategory" value="{{ratingcategory}}">
-							<div id="ratingcategoryDisplay"></div>
-						</td>
+						<td class="asmt-viewdata" width="5%">{{{category2}}}</td>
 						{{#if name}}
 							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
 							<td class="asmt-viewdata">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata"></td>
-						<td class="asmt-viewdata"></td>
+						<td class="asmt-viewdata">{{count}}</td>
+						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
 						{{{ratingDisplayView ratingPQ1}}}
 						{{{ratingDisplayView ratingCQ}}}
 						<td class="asmt-viewdata">{{targettosat}}</td>

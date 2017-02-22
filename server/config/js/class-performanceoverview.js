@@ -492,16 +492,21 @@ var performanceoverviewcountry = {
 
 					if (RiskView1Data[i].status != "Closed") {
 
-						if (RiskView1Data[i].ctrg != "") {
-							if (parseInt(RiskView1Data[i].ctrg) > 0
-									|| RiskView1Data[i].FlagTodaysDate == "1")
-								counterRisks++;
-						} else if (RiskView1Data[i].numMissedTasks != "") {
-							if (parseInt(RiskView1Data[i].numMissedTasks) > 0
-									|| RiskView1Data[i].FlagTodaysDate == "1")
-								counterRisks++;
-						} else if (RiskView1Data[i].FlagTodaysDate == "1")
+						if (RiskView1Data[i].ctrg != "" && parseInt(RiskView1Data[i].ctrg) > 0) {
 							counterRisks++;
+						} else if (RiskView1Data[i].FlagTodaysDate == "1") {
+							counterRisks++;
+						}
+						// if (RiskView1Data[i].ctrg != "") {
+						// 	if (parseInt(RiskView1Data[i].ctrg) > 0
+						// 			|| RiskView1Data[i].FlagTodaysDate == "1")
+						// 		counterRisks++;
+						// } else if (RiskView1Data[i].numMissedTasks != "") {
+						// 	if (parseInt(RiskView1Data[i].numMissedTasks) > 0
+						// 			|| RiskView1Data[i].FlagTodaysDate == "1")
+						// 		counterRisks++;
+						// } else if (RiskView1Data[i].FlagTodaysDate == "1")
+						// 	counterRisks++;
 					}
 
 				}
@@ -534,8 +539,12 @@ var performanceoverviewcountry = {
 				// for CRM
 				for (var i = 0; i < doc[0].RiskView1DataCRM.length; i++) {
 					if (doc[0].RiskView1DataCRM[i].status != "Closed") {
-						if ((doc[0].RiskView1DataCRM[i].ctrg != "" && parseInt(doc[0].RiskView1DataCRM[i].ctrg) > 0) || doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1")
+
+						if (doc[0].RiskView1DataCRM[i].ctrg != "" && parseInt(doc[0].RiskView1DataCRM[i].ctrg) > 0) {
 							counterRisksCRM++;
+						} else if (doc[0].RiskView1DataCRM[i].FlagTodaysDate == "1") {
+							counterRisksCRM++;
+						}
 
 						// if (doc[0].RiskView1DataCRM[i].ctrg != "") {
 						// 	if (parseInt(doc[0].RiskView1DataCRM[i].ctrg) > 0
@@ -557,8 +566,12 @@ var performanceoverviewcountry = {
 				// for CRM
 				for (var i = 0; i < doc[0].RiskView1DataDelivery.length; i++) {
 					if (doc[0].RiskView1DataDelivery[i].status != "Closed") {
-						if ((doc[0].RiskView1DataDelivery[i].ctrg != "" && parseInt(doc[0].RiskView1DataDelivery[i].ctrg) > 0) || doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1")
+
+						if (doc[0].RiskView1DataDelivery[i].ctrg != "" && parseInt(doc[0].RiskView1DataDelivery[i].ctrg) > 0) {
 							counterRisksDelivery++;
+						} else if (doc[0].RiskView1DataDelivery[i].FlagTodaysDate == "1") {
+							counterRisksDelivery++;
+						}
 
 						// if (doc[0].RiskView1DataDelivery[i].ctrg != "") {
 						// 	if (parseInt(doc[0].RiskView1DataDelivery[i].ctrg) > 0
@@ -576,34 +589,32 @@ var performanceoverviewcountry = {
 
 				doc[0].MissedOpenIssueCountSOD = counterRisksDelivery.toString();
 
-			}
-			else {
+			} else {
 
 				// obtain defect and test count from the components(Open issue)
 				for (var i = 0; i < doc[0].RiskView1Data.length; i++) {
 					if (doc[0].RiskView1Data[i].status != "Closed") {
-						if ((doc[0].RiskView1Data[i].ctrg != "" && parseInt(doc[0].RiskView1Data[i].ctrg) > 0) || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
-							counterRisks++;
 
+						if (doc[0].RiskView1Data[i].ctrg != "" && parseInt(doc[0].RiskView1Data[i].ctrg) > 0) {
+							counterRisks++;
+						} else if (doc[0].RiskView1Data[i].FlagTodaysDate == "1") {
+							counterRisks++;
+						}
 						// if (doc[0].RiskView1Data[i].ctrg != "") {
-						// 	if (parseInt(doc[0].RiskView1Data[i].ctrg) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1") {
+						// 	if (parseInt(doc[0].RiskView1Data[i].ctrg) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
 						// 		counterRisks++;
-						// 		console.log("1");
-						// 	}
 						// } else if (doc[0].RiskView1Data[i].numMissedTasks != "") {
-						// 	if (parseInt(doc[0].RiskView1Data[i].numMissedTasks) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1") {
+						// 	if (parseInt(doc[0].RiskView1Data[i].numMissedTasks) > 0 || doc[0].RiskView1Data[i].FlagTodaysDate == "1")
 						// 		counterRisks++;
-						// 		console.log("2");
-						// 	}
-						// } else if (doc[0].RiskView1Data[i].FlagTodaysDate == "1") {
+						// } else if (doc[0].RiskView1Data[i].FlagTodaysDate == "1")
 						// 	counterRisks++;
-						// 	console.log("3");
-						// }
 						// if (new Date(doc[0].RiskView1Data[i].currentTargetDate).getTime() < new Date(currentDate).getTime()) {
 						// 	counterRisks++;
 						// }
 					}
 				}
+
+
 
 				doc[0].MissedOpenIssueCount = counterRisks.toString();
 
@@ -615,17 +626,7 @@ var performanceoverviewcountry = {
 							+ e);
 		}
 
-		/*
-		 * okay for the missed risks 9:47:56 AM: genonms@ph.ibm.com - Minerva S
-		 * Genon/Philippines/IBM: get all risks (compntType="openIssue") with
-		 * this criteria => status != "Closed" and (ctrg > 0 | FlagTodaysDate =
-		 * "1" | (numMissedTasks != "" & numMissedTasks > 0) 9:48:23 AM:
-		 * genonms@ph.ibm.com - Minerva S Genon/Philippines/IBM: and
-		 * country(openIssue) = country(assessment) 9:48:32 AM:
-		 * genonms@ph.ibm.com - Minerva S Genon/Philippines/IBM: and same
-		 * business unit 9:48:36 AM: genonms@ph.ibm.com - Minerva S
-		 * Genon/Philippines/IBM: and same reporting quarter
-		 */
+
 	},
 
 	getMSACCOmmitmentsIndividual : function(AUData) {
@@ -640,12 +641,6 @@ var performanceoverviewcountry = {
 							&& AUData.Target2SatPrev != undefined) {
 						if (AUData.Target2Sat != ""
 								&& AUData.Target2SatPrev != "") {
-							// console.log( "Target2Sat: "+new
-							// Date(doc[0].AUData[i].Target2Sat).getTime());
-							// console.log( "Target2SatPrev: "+new
-							// Date(doc[0].AUData[i].Target2SatPrev).getTime());
-							// console.log("current date: "+new Date(currentDate
-							// ).getTime());
 
 							if ((new Date(AUData.Target2Sat).getTime() > new Date(
 									AUData.Target2SatPrev).getTime())
@@ -693,12 +688,6 @@ var performanceoverviewcountry = {
 									&& doc[0].RiskView1DataCRM[i].Target2SatPrev != undefined) {
 								if (doc[0].RiskView1DataCRM[i].Target2Sat != ""
 										&& doc[0].RiskView1DataCRM[i].Target2SatPrev != "") {
-									// console.log( "Target2Sat: "+new
-									// Date(doc[0].AUData[i].Target2Sat).getTime());
-									// console.log( "Target2SatPrev: "+new
-									// Date(doc[0].AUData[i].Target2SatPrev).getTime());
-									// console.log("current date: "+new
-									// Date(currentDate ).getTime());
 
 									if ((new Date(
 											doc[0].RiskView1DataCRM[i].Target2Sat)
@@ -747,12 +736,6 @@ var performanceoverviewcountry = {
 									&& doc[0].RiskView1DataDelivery[i].Target2SatPrev != undefined) {
 								if (doc[0].RiskView1DataDelivery[i].Target2Sat != ""
 										&& doc[0].RiskView1DataDelivery[i].Target2SatPrev != "") {
-									// console.log( "Target2Sat: "+new
-									// Date(doc[0].AUData[i].Target2Sat).getTime());
-									// console.log( "Target2SatPrev: "+new
-									// Date(doc[0].AUData[i].Target2SatPrev).getTime());
-									// console.log("current date: "+new
-									// Date(currentDate ).getTime());
 
 									if ((new Date(
 											doc[0].RiskView1DataDelivery[i].Target2Sat)
@@ -823,14 +806,6 @@ var performanceoverviewcountry = {
 							+ e);
 		}
 
-		/*
-		 * all assessments under the BU Country, where reportign quarter is the
-		 * same, business unit is the same, and country is the same target ,
-		 * including Country Process, Controllable Unit and BU Country ,
-		 * PeriodRating = "Marg" or "Unsat" , AUStatus != "Retired" AND (
-		 * (Target2Sat != "" & Target2SatPrev != "" & Target2Sat >
-		 * Target2SatPrev ) | (Target2SatPrev < currentdate) )
-		 */
 
 	},
 
@@ -1352,14 +1327,7 @@ var performanceoverviewcountry = {
 					.log("error at [class-performanceoverview][getCPANDCUPerformanceIndicators]: "
 							+ e);
 		}
-		// fieldCalc.getAssessments check if brings all documents
-		/*
-		 * criteria ==> all assessments under the BU Country, where reportign
-		 * quarter is the same, business unit is the same, and country is the
-		 * same , including Country Process, Controllable Unit and BU Country
-		 * AND AUStatus != "Retired" PeriodRatingPrev1 PeriodRatingPrev2
-		 * PeriodRatingPrev3 PeriodRatingPrev4
-		 */
+
 	},
 
 	getCPANDCUPerformanceIndicators : function(db, doc) {
@@ -1541,14 +1509,7 @@ var performanceoverviewcountry = {
 					.log("error at [class-performanceoverview][getCPANDCUPerformanceIndicators]: "
 							+ e);
 		}
-		// fieldCalc.getAssessments check if brings all documents
-		/*
-		 * criteria ==> all assessments under the BU Country, where reportign
-		 * quarter is the same, business unit is the same, and country is the
-		 * same , including Country Process, Controllable Unit and BU Country
-		 * AND AUStatus != "Retired" PeriodRatingPrev1 PeriodRatingPrev2
-		 * PeriodRatingPrev3 PeriodRatingPrev4
-		 */
+
 	},
 
 	getCPANDCUPerformanceIndicatorsAndOthersGTS : function(db, doc) {
@@ -1676,12 +1637,7 @@ var performanceoverviewcountry = {
 					.log("error at [class-performanceoverview][getCPANDCUPerformanceIndicatorsAndOthersGTS]: "
 							+ e);
 		}
-		// fieldCalc.getAssessments check if brings all documents
-		/*
-		 * it has the same criteria as the last table, table 3, minus the BU
-		 * Country 10:21:30 AM: genonms@ph.ibm.com - Minerva S
-		 * Genon/Philippines/IBM: adn they also differ in the data displayed
-		 */
+
 	},
 
 	getCPANDCUPerformanceIndicatorsAndOthers : function(db, doc) {
@@ -1765,12 +1721,7 @@ var performanceoverviewcountry = {
 					.log("error at [class-performanceoverview][getCPANDCUPerformanceIndicatorsAndOthers]: "
 							+ e);
 		}
-		// fieldCalc.getAssessments check if brings all documents
-		/*
-		 * it has the same criteria as the last table, table 3, minus the BU
-		 * Country 10:21:30 AM: genonms@ph.ibm.com - Minerva S
-		 * Genon/Philippines/IBM: adn they also differ in the data displayed
-		 */
+
 	},
 
 };

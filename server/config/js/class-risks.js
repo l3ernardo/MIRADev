@@ -33,7 +33,8 @@ var calculateORTab = {
             objects[tmp.id] = tmp;
             riskCategory[risks[i].scorecardCategory] = true;
           }
-          if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
+          // if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
+          if((risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0) && risks[i].status != "Closed"){
             risks[i].missedFlag = true;
             doc[0].ORMCMissedRisks = 1;
           }else {
@@ -72,10 +73,10 @@ var calculateORTab = {
         };
         doc[0].openrisks = openrisks;
         break;
+      case "BU IOT":
       case "BU IMT":
       case "BU Country":
-        // if(req.session.businessunit == "GBS"){
-        if(doc[0].MIRABusinessUnit == "GBS"){
+         if(doc[0].MIRABusinessUnit == "GBS"){
           //count the category issues
           doc[0].totalRisks = {
             PrevQtr1: 0,
@@ -165,7 +166,8 @@ var calculateORTab = {
               objects[tmp.id] = tmp;
               riskCategory[risks[i].scorecardCategory] = true;
             }
-            if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
+            if((risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0) && risks[i].status != "Closed"){
+            // if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
               risks[i].missedFlag = true;
               doc[0].ORMCMissedRisks = 1;
             }else {
@@ -372,7 +374,8 @@ var calculateORTab = {
             objects[tmp.id] = tmp;
             riskCategory[risks[i].catP.replace(/ /g,'')+risks[i].scorecardCategory.replace(/ /g,'')] = true;
           };
-          if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
+          if((risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0) && risks[i].status != "Closed"){
+          // if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
             risks[i].missedFlag = true;
             doc[0].ORMCMissedRisks = 1;
           }else {

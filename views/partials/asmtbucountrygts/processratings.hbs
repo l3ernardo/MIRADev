@@ -1,3 +1,4 @@
+<textarea name="textarea" id="PRRatingDataExport" cols="100" style="display:none">{{valuesToString exportAccountRatings}}</textarea>
 <table id="processrating_table" class="ibm-data-table">
 	<tr class="processrating">
 		<td width="70%" class="processrating-legend">
@@ -180,7 +181,10 @@
 	<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Rating</span><br /><br />
-			<table id="processrating_treetable" width="100%" class="other-viewheader table_with_scroll">
+			<a href="javascript:void(0);" value="Export to Excel" name="PRRating-link-export" id="PRRating-link-export" class="whiteanchor ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="PRRRating-link-export2" id="PRRating-link-export2" class="whiteanchor ibm-symp-spreadsheet">Export to Open Office</a>
+			<table id="processrating_treeview" width="100%" class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
 					<th class="processrating-viewheader" scope="col" width="20%">Process</th>
