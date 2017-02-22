@@ -1213,8 +1213,10 @@ var calculatefield = {
 						}
 
 						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {	
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1447,9 +1449,10 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1509,7 +1512,9 @@ var calculatefield = {
 						};
 						doc[0].BUCAsmtDataCURview.push(toadd);
 						if(doc[0].MIRABusinessUnit == "GBS"){
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								satUpCU = satUpCU + 1;
 								break;
@@ -1553,8 +1558,9 @@ var calculatefield = {
 									}
 								}
 							}
-
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
 								else satUpCUDel = satUpCUDel + 1;
