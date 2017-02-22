@@ -980,14 +980,18 @@ var getDocs = {
 									// Calculate for ControlName
 									doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
 									// Calculate for Defect Rate
-									numTestsTotal = numTestsTotal + comps[i].numTests;
-									DefectCountTotal = DefectCountTotal + comps[i].DefectCount;
+									if (comps[i].numTests != undefined && comps[i].numTests != "") {
+										numTestsTotal = numTestsTotal + parseFloat(comps[i].numTests);
+									}
+
+									if (comps[i].DefectCount != undefined && comps[i].DefectCount != "") {
+										DefectCountTotal = DefectCountTotal + parseFloat(comps[i].DefectCount);
+									}
 
 									controlCtr++;
 								}
 								else if (comps[i].compntType == "controlSample") {
 									doc[0].SampleData.push(JSON.parse(JSON.stringify(comps[i])));
-									console.log(comps[i])
 									// calculate Process Category
 									if (comps[i].controlType == "KCO") {
 										processCat = "Operational";
