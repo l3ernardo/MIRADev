@@ -474,10 +474,10 @@ var util = {
 					}
 					else{
 						deferred.reject({"status": res.statusCode, "error": res.body});
-						
+
 					}
-					
-					
+
+
 				}
 			});
 		} catch(e) {
@@ -871,7 +871,7 @@ var util = {
 		}
 		return deferred.promise;
 	},
-	
+
 	// Load manifest.yml to identify ORG
 	getOrg: function() {
 		var data = (fs.readFileSync('manifest.info', 'utf8'));
