@@ -369,7 +369,7 @@ var getDocs = {
 							}
 							// For Audits and Reviews Tab - view 1 (Internal Audits)
 							else if (comps[i].compntType == "internalAudit" && doc[0].CurrentPeriod.substr(0, 4) == ( "20" + comps[i].engagement.substr(0, 2))) {
-								
+
 								// audits and reviews tab only displays audits that has the same year as the asmt
 								if (typeof comps[i].engagement === "undefined") {
 									comps[i].engagement = comps[i].id;
@@ -424,7 +424,7 @@ var getDocs = {
 								{ "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"IMT": util.resolveGeo( doc[0].IMT,"IMT")}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
 								//Risks Tab
 								{"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"IMT" : doc[0].IMT}, {"status": {"$ne": "Closed"}}] },
-								
+
 								// Audits and Reviews Tab
 								// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}] },
@@ -624,7 +624,7 @@ var getDocs = {
 
 							// For Audits and Reviews Tab - view 1 (Internal Audits)
 							else if (comps[i].compntType == "internalAudit" && doc[0].CurrentPeriod.substr(0, 4) == ( "20" + comps[i].engagement.substr(0, 2))) {
-								
+
 								// audits and reviews tab only displays audits that has the same year as the asmt
 								if (typeof comps[i].engagement === "undefined") {
 									comps[i].engagement = comps[i].id;
@@ -880,8 +880,13 @@ var getDocs = {
 								if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
 									doc[0].CountryControlsData.push(comps[i]);
 									if (doc[0].MIRABusinessUnit == "GTS") {
-										if(doc[0].CRMProcessObj[comps[i].process]){ doc[0].CountryControlsDataCRM.push(comps[i])
-										}else{doc[0].CountryControlsDataDelivery.push(comps[i]);}
+										if(doc[0].CRMProcessObj[comps[i].process]){
+											doc[0].CountryControlsDataCRM.push(comps[i]);
+											// console.log("crm,"+ comps[i].controlType + "," + comps[i].IntegrationKeyWWBCIT + ","+comps[i].numActualTests+","+comps[i].numDefects);
+										}else{
+											doc[0].CountryControlsDataDelivery.push(comps[i]);
+											// console.log("del,"+ comps[i].controlType + "," + comps[i].IntegrationKeyWWBCIT + ","+comps[i].numActualTests+","+comps[i].numDefects);
+										}
 									}
 								}
 							}
