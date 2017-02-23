@@ -76,7 +76,6 @@ var calculateKCTab = {
           }
           break;
         case "Country Process":
-          console.log("doc[0].AUDefectRate: " + doc[0].AUDefectRate);
           doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
           if (doc[0].AUDefectRate == 0) {
             doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(0);
@@ -153,13 +152,21 @@ var calculateKCTab = {
             rct[i].parent = rct[i].reportingQuarter.replace(/ /g,'')+rct[i].controlType.replace(/ /g,'');
             rct[i].id = rct[i]["_id"];
             //do counting for category
-            objects[rct[i].parent].numActualTests += parseFloat(rct[i].numActualTests);
-            objects[rct[i].parent].numDefects += parseFloat(rct[i].numDefects);
-            objects[rct[i].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
-            //do counting for 2nd level category
-            objects[objects[rct[i].parent].parent].numActualTests += parseFloat(rct[i].numActualTests);
-            objects[objects[rct[i].parent].parent].numDefects += parseFloat(rct[i].numDefects);
-            objects[objects[rct[i].parent].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
+            if (rct[i].numActualTests != undefined && rct[i].numActualTests != ""  ) {
+                objects[rct[i].parent].numActualTests += parseFloat(rct[i].numActualTests);
+                objects[objects[rct[i].parent].parent].numActualTests += parseFloat(rct[i].numActualTests);
+            }
+
+            if (rct[i].numDefects != undefined && rct[i].numDefects != ""  ) {
+                objects[rct[i].parent].numDefects += parseFloat(rct[i].numDefects);
+                objects[objects[rct[i].parent].parent].numDefects += parseFloat(rct[i].numDefects);
+            }
+
+            if (rct[i].remFinImpact != undefined && rct[i].remFinImpact != ""  ) {
+              objects[rct[i].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
+              objects[objects[rct[i].parent].parent].remFinImpact += parseFloat(rct[i].remFinImpact);
+            }
+
             exportRCTest.push({
               reportingQuarter:rct[i].reportingQuarter || "",
               controlType:rct[i].controlType || "",

@@ -486,16 +486,15 @@ var calculatefield = {
 					var asmts = {
 						selector:{
 							"_id": {"$gt":0},
-							"key": "Assessable Unit",
 							"BusinessUnit": doc[0].BusinessUnit,
 							"CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or":
 							[
 								// {"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
-								{"$and": [{"DocSubType":"BU Country"}]},
-								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid}]},
-								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
+								{"$and": [{"DocSubType":"BU Country"},{"key": "Assessable Unit"}]},
+								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid},{"key": "Assessable Unit"}]},
+								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName},{"key": "Assessable Unit"}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
 
 						]//or
@@ -1214,8 +1213,10 @@ var calculatefield = {
 						}
 
 						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {	
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1448,9 +1449,10 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1510,7 +1512,9 @@ var calculatefield = {
 						};
 						doc[0].BUCAsmtDataCURview.push(toadd);
 						if(doc[0].MIRABusinessUnit == "GBS"){
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								satUpCU = satUpCU + 1;
 								break;
@@ -1554,8 +1558,9 @@ var calculatefield = {
 									}
 								}
 							}
-
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
 								else satUpCUDel = satUpCUDel + 1;

@@ -970,7 +970,6 @@ var getDocs = {
 									doc[0].risks.push(comps[i]);
 								}
 								else if (comps[i].compntType == "CUSummarySample") {
-									console.log(comps[i])
 									doc[0].RCTestData.push(comps[i]);
 									// Calculate for Defect Rate of Control doc
 									if (doc[0].RCTestData[controlCtr].numTests ==  undefined || doc[0].RCTestData[controlCtr].numTests == "" || doc[0].RCTestData[controlCtr].numTests == 0 || doc[0].RCTestData[controlCtr].DefectCount == undefined || doc[0].RCTestData[controlCtr].DefectCount == "") {
@@ -981,14 +980,18 @@ var getDocs = {
 									// Calculate for ControlName
 									doc[0].RCTestData[controlCtr].controlName = doc[0].RCTestData[controlCtr].controlReferenceNumber.split("-")[2] + " - " + doc[0].RCTestData[controlCtr].controlShortName;
 									// Calculate for Defect Rate
-									numTestsTotal = numTestsTotal + comps[i].numTests;
-									DefectCountTotal = DefectCountTotal + comps[i].DefectCount;
+									if (comps[i].numTests != undefined && comps[i].numTests != "") {
+										numTestsTotal = numTestsTotal + parseFloat(comps[i].numTests);
+									}
+
+									if (comps[i].DefectCount != undefined && comps[i].DefectCount != "") {
+										DefectCountTotal = DefectCountTotal + parseFloat(comps[i].DefectCount);
+									}
 
 									controlCtr++;
 								}
 								else if (comps[i].compntType == "controlSample") {
 									doc[0].SampleData.push(JSON.parse(JSON.stringify(comps[i])));
-									console.log(comps[i])
 									// calculate Process Category
 									if (comps[i].controlType == "KCO") {
 										processCat = "Operational";
@@ -1113,7 +1116,8 @@ var getDocs = {
 						objects[tmp.id] = tmp;
 						riskCategory[risks[i].scorecardCategory] = true;
 					}
-					if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
+					// if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
+					if((risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0) && risks[i].status != "Closed"){
 						risks[i].missedFlag = true;
 						doc[0].ORMCMissedRisks = 1;
 					}else {
