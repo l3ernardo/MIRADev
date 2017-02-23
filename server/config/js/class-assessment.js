@@ -76,7 +76,7 @@ var assessment = {
 		/* Format Links */
 		doc[0].Links = JSON.stringify(doc[0].Links);
 		doc[0].EnteredBU = req.session.businessunit;
-		doc[0].MIRABusinessUnit = doc[0].EnteredBU;
+		//doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 		db.get(doc[0].parentid).then(function(pdata){
 			var parentdoc = [];
 			parentdoc.push(pdata.body);
@@ -338,7 +338,6 @@ var assessment = {
 							doc[0].IOTid = doc[0].IOT;
 							doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IOT;
-							doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Get rating profiles
@@ -357,7 +356,7 @@ var assessment = {
 									aut.processAUTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
-									
+
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
@@ -420,7 +419,6 @@ var assessment = {
 							doc[0].IMTid = doc[0].IMT;
 							doc[0].IMT = util.resolveGeo(doc[0].IMT,"IMT",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].IMT;
-							doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Get rating profiles
@@ -527,7 +525,6 @@ var assessment = {
 							doc[0].BUIMT = doc[0].BusinessUnit + " - " + util.resolveGeo(doc[0].IMT,"IMT",req);
 							// doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
 							doc[0].Name = doc[0].BusinessUnit + " - " + doc[0].Country;
-							doc[0].MIRABusinessUnit = doc[0].EnteredBU;
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									// Get rating profiles

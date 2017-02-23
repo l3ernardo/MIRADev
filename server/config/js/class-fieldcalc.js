@@ -1213,8 +1213,10 @@ var calculatefield = {
 						}
 
 						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {	
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1447,9 +1449,10 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1509,7 +1512,9 @@ var calculatefield = {
 						};
 						doc[0].BUCAsmtDataCURview.push(toadd);
 						if(doc[0].MIRABusinessUnit == "GBS"){
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								satUpCU = satUpCU + 1;
 								break;
@@ -1553,8 +1558,9 @@ var calculatefield = {
 									}
 								}
 							}
-
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
 								else satUpCUDel = satUpCUDel + 1;
@@ -1606,6 +1612,14 @@ var calculatefield = {
 								doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
 								//get Open Issue count per child assessment
 								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+								//get AuditScore per assessment
+								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
+								
+								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+								
+								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
 
 
 								toadd = {
@@ -1669,7 +1683,7 @@ var calculatefield = {
 
 
 							}catch(e){
-								console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
+								console.log("[class-fieldcalc][getRatingProfile][BU IOT Performance Tab] - " + e.stack);
 
 							}
 							break;
@@ -1684,8 +1698,14 @@ var calculatefield = {
 								//get MSAC missed commitments
 								doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
 								//get Open Issue count per child assessment
-								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);						//get AuditScore per assessment
+								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
 
+								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+								
+								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
 
 								toadd = {
 									"docid":doc[0].asmtsdocs[i]._id,
@@ -1748,7 +1768,7 @@ var calculatefield = {
 
 
 							}catch(e){
-								console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
+								console.log("[class-fieldcalc][getRatingProfile][BU IMT Performance Tab] - " + e.stack);
 
 							}
 							break;
@@ -1765,6 +1785,12 @@ var calculatefield = {
 							//get Open Issue count per child assessment
 							doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
 
+
+							if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+								doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+							
+							if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+								doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
 
 							toadd = {
 								"docid":doc[0].asmtsdocs[i]._id,
