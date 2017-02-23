@@ -120,7 +120,7 @@ var calculatePRTab = {
 				}
 				if(typeof catList2[doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'')] === "undefined"){
 					var tmp2= {
-						id: doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,''),
+						id: doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+id_aux2,
 						parent: doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,''),
 						category: doc[0].BUCAsmtDataPRview2[j].ratingcategory,
 						count: 0
@@ -131,7 +131,7 @@ var calculatePRTab = {
 				catList2[doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')].count++;
 				catList2[doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'')].count++;
 				doc[0].BUCAsmtDataPRview2[j].id = doc[0].BUCAsmtDataPRview2[j]["docid"];
-				doc[0].BUCAsmtDataPRview2[j].parent =doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'');//
+				doc[0].BUCAsmtDataPRview2[j].parent =doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,'')+id_aux2;//
 				tmpAccountList2.push(doc[0].BUCAsmtDataPRview2[j]);
 				exportList2.push({
 					country:doc[0].BUCAsmtDataPRview2[j].country || " ",
@@ -282,7 +282,7 @@ var calculatePRTab = {
 				}
 				if(typeof catList2[doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'')] === "undefined"){
 					var tmp2= {
-						id: doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,''),
+						id: doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,'')+id_aux2,
 						parent: doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,''),
 						category: doc[0].BUCAsmtDataPRview2[j].ratingcategory,
 						count: 0
@@ -293,7 +293,7 @@ var calculatePRTab = {
 				catList2[doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,'')].count++;
 				catList2[doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'')].count++;
 				doc[0].BUCAsmtDataPRview2[j].id = doc[0].BUCAsmtDataPRview2[j]["docid"];
-				doc[0].BUCAsmtDataPRview2[j].parent =doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,'')+doc[0].BUCAsmtDataPRview2[j].ratingcategory.replace(/ /g,'');//
+				doc[0].BUCAsmtDataPRview2[j].parent =doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,'')+id_aux2;//
 				tmpAccountList2.push(doc[0].BUCAsmtDataPRview2[j]);
 				exportList2.push({
 					imt:doc[0].BUCAsmtDataPRview2[j].imt || " ",
@@ -439,7 +439,7 @@ var calculatePRTab = {
 				}
 				if(typeof catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'')] === "undefined"){
 					var tmp= {
-						id: doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,''),
+						id: id_aux+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,''),
 						parent: id_aux,
 						processName: doc[0].BUCAsmtDataPRview[i].process,
 						count: 0
@@ -450,7 +450,7 @@ var calculatePRTab = {
 				catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')].count++;
 				catList[doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'')].count++;
 				doc[0].BUCAsmtDataPRview[i].id = doc[0].BUCAsmtDataPRview[i]["docid"];
-				doc[0].BUCAsmtDataPRview[i].parent =doc[0].BUCAsmtDataPRview[i].ratingcategory.replace(/ /g,'')+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'');
+				doc[0].BUCAsmtDataPRview[i].parent =id_aux+doc[0].BUCAsmtDataPRview[i].process.replace(/ /g,'');
 
 				tmpAccountList.push(doc[0].BUCAsmtDataPRview[i]);
 				exportList.push({
