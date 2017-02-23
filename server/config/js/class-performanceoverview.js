@@ -30,6 +30,25 @@ var calculateWeightedAuditScore =function (CUMaxScore, CUScore){
 	return WeightedAuditScore.toString();
 }
 
+var getCatSumAuditSc = function(view, Type) {
+	var count = 0;
+	try {
+		for (var i = 0; i < view.length; i++) {
+
+			if (view[i].ParentDocSubType ==  Type) {
+				count += parseFloat(view[i].auditScore);
+
+			}
+		}
+		return count.toFixed(1).toString();
+
+	} catch (e) {
+		console.log("error at [class-performanceoverview][getCatSumbocEx]: "+ e);
+		return 0;
+	}
+
+}
+
 var getCatSumbocEx = function(view, Type) {
 	var count = 0;
 	try {
@@ -140,6 +159,62 @@ var performanceoverviewcountry = {
 		}
 
 		return count;
+	},
+
+	calculateCHQInternalAuditScoreAssessmentLevel: function(doc,assessment,fieldCalc){
+		var result = 0;
+		var CUScore = 0;
+		var MaxScore = 0;
+		var auditScoreArray = [];
+			//get the corresponding audits record per assessment
+			if(assessment.ParentDocSubType == "Country Process" || assessment.ParentDocSubType == "Controllable Unit"){
+				for(var i=0;i<doc[0].InternalAuditData.length;i++){
+					//for internal audit comparation
+					if(assessment.parentid == doc[0].InternalAuditData[i].parentid)
+						auditScoreArray.push(doc[0].InternalAuditData[i]);
+					//for local audit comparation
+					if(assessment._id == doc[0].InternalAuditData[i].parentid)
+						auditScoreArray.push(doc[0].InternalAuditData[i]);
+				}
+				
+			}
+			
+			
+			
+			
+			for(var j=0;j<auditScoreArray.length;j++){
+				if(!isNaN(fieldCalc.getCUMaxScore(auditScoreArray[j].size)) && auditScoreArray[j].rating !== undefined )
+					if(auditScoreArray[j].rating == "Sat" || auditScoreArray[j].rating == "Marg" || auditScoreArray[j].rating == "Unsat"){
+						var tempMaxScore =  fieldCalc.getCUMaxScore(auditScoreArray[j].size);
+						var tempCUScore =	fieldCalc.getCUScore(auditScoreArray[j].rating,tempMaxScore);
+					//	console.log("tempMax "+tempMaxScore);
+					//	console.log("tempScore "+tempCUScore);
+						CUScore += tempCUScore;
+						MaxScore += tempMaxScore;
+						
+					}
+				
+			}
+			
+		/*	if(assessment._id == "4c18f7bb2a46282782b6e84e90e8e235"){
+				
+				console.log(assessment.parentid );
+				console.log(auditScoreArray);
+				console.log("CUSCORE "+CUScore);
+				console.log("MAXScore"+MaxScore);
+				console.log("array size "+auditScoreArray.length);
+			}
+			*/
+		
+			
+			if(MaxScore != 0)
+				result = (CUScore/MaxScore)
+				else 
+					result = 0;
+			//total score / total max score
+		
+		
+		return result.toFixed(1).toString();
 	},
 
   buildPerformanceTab : function(db, doc,defViewRow,fieldCalc) {
@@ -1102,7 +1177,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIviewCRM,
+								doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIviewCRM,
 								doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
 						"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIviewCRM,
@@ -1127,7 +1203,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIviewCRM,
+								doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIviewCRM,
 								doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
 						"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIviewCRM,
@@ -1152,7 +1229,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIviewCRM,
+								doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIviewCRM,
 								doc[0].BUCAsmtDataPIviewCRM[i].ParentDocSubType),
 						"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIviewCRM,
@@ -1247,7 +1325,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIviewDelivery,
+								doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(
 								doc[0].BUCAsmtDataPIviewDelivery,
 								doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
@@ -1274,7 +1353,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIviewDelivery,
+								doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(
 								doc[0].BUCAsmtDataPIviewDelivery,
 								doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
@@ -1301,7 +1381,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIviewDelivery,
+								doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(
 								doc[0].BUCAsmtDataPIviewDelivery,
 								doc[0].BUCAsmtDataPIviewDelivery[i].ParentDocSubType),
@@ -1387,7 +1468,7 @@ var performanceoverviewcountry = {
 					"ratingPQ4" : "",
 					"kcfrDR" : "",
 					"kcoDR" : "",
-					"auditScore" : "",
+					"auditScore" : doc[0].WeightedAuditScore,
 					"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
 							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 					"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
@@ -1412,7 +1493,7 @@ var performanceoverviewcountry = {
 					"ratingPQ4" : "",
 					"kcfrDR" : "",
 					"kcoDR" : "",
-					"auditScore" : "",
+					"auditScore" : doc[0].WeightedAuditScore,
 					"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
 							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 					"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
@@ -1437,7 +1518,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIview,
+								doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
 								doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 						"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
@@ -1462,7 +1544,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIview,
+								doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
 								doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 						"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
@@ -1487,7 +1570,8 @@ var performanceoverviewcountry = {
 						"ratingPQ4" : "",
 						"kcfrDR" : "",
 						"kcoDR" : "",
-						"auditScore" : "",
+						"auditScore" : getCatSumAuditSc(doc[0].BUCAsmtDataPIview,
+								doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 						"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
 								doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
 						"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
