@@ -47,6 +47,14 @@
 					</span>
 				</td>
 			</tr>
+			<tr class="CUCategory">
+				<td><label for="CUCat">Controllable Unit Category:<span class="ibm-required">*</span></label></td>
+				<td>
+					<span>
+					{{{uniqueSelect "CUCat" CUCatList "name" "name" CUCat}}}
+					</span>
+				</td>
+			</tr>
 			<tr>
 				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
@@ -71,6 +79,7 @@
 			<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
 			{{#if SizeFlag}}
 				<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+				<tr><td>Controllable Unit Category:</td><td>{{CUCat}}</td></tr>
 			{{/if}}
 			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
 			<tr>
@@ -94,6 +103,7 @@
 		<tr><td>Controllable Unit?:</td><td>{{CUFlag}}</td></tr>
 		{{#if SizeFlag}}
 			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+			<tr><td>Controllable Unit Category:</td><td>{{CUCat}}</td></tr>
 		{{/if}}
 		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
 		<tr>
