@@ -281,16 +281,16 @@ var calculatefield = {
 					} else {
 						lParams = ['GTSInstanceDesign'];
 					}
-					//Pushing these parameters so they can be used as attributes
-					lParams.push('DeliveryCU');
-					lParams.push('AuditCUIS');
-					lParams.push('AuditCUOTHER');
 				} else if (doc[0].MIRABusinessUnit == "GBS") {
 					// GBS Assessable Unit Doc Parameters
 					lParams.push('GBSInstanceDesign');
 				} else {
 					// GTS Transformation Assessable Unit Doc Parameters
 				}
+				//Pushing these parameters so they can be used as attributes
+				lParams.push('DeliveryCU');
+				lParams.push('AuditCUIS');
+				lParams.push('AuditCUOTHER');
 			}
 			// Get Parameters for Assessments
 			else {
@@ -380,12 +380,27 @@ var calculatefield = {
 						if (doc[0].MIRABusinessUnit == "GTS") {
 							doc[0].DeliveryCU = dataParam.parameters.DeliveryCU;
 						}
+						doc[0].CUCatList = dataParam.parameters.DeliveryCU[0].options;
 					}
 					if (dataParam.parameters.AuditCUIS){
 						doc[0].AuditCUIS = dataParam.parameters.AuditCUIS;
+						for (var j = 0; j < dataParam.parameters.AuditCUIS[0].options.length; ++j) {
+							doc[0].CUCatList.push(dataParam.parameters.AuditCUIS[0].options[j]);
+						}
 					}
 					if (dataParam.parameters.AuditCUOTHER) {
 						doc[0].AuditCUOTHER = dataParam.parameters.AuditCUOTHER;
+						for (var j = 0; j < dataParam.parameters.AuditCUOTHER[0].options.length; ++j) {
+							doc[0].CUCatList.push(dataParam.parameters.AuditCUOTHER[0].options[j]);
+						}
+						doc[0].CUCatList.sort(function(a, b){
+					    var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase()
+					    if (nameA < nameB) //sort string ascending
+					      return -1
+					    if (nameA > nameB)
+					      return 1
+					    return 0 //default return value (no sorting)
+					  });
 					}
 					if (dataParam.parameters.ProcessCatFIN) {
 						doc[0].ProcessCategory = "OPS";
@@ -1252,7 +1267,7 @@ var calculatefield = {
 						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
 							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (calculatedRatingCategory) {	
+							switch (calculatedRatingCategory) {
 							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
@@ -1549,7 +1564,7 @@ var calculatefield = {
 						};
 						doc[0].BUCAsmtDataCURview.push(toadd);
 						if(doc[0].MIRABusinessUnit == "GBS"){
-							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							switch (calculatedRatingCategory) {
 							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
@@ -1595,7 +1610,7 @@ var calculatefield = {
 									}
 								}
 							}
-                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							switch (calculatedRatingCategory) {
 							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
@@ -1651,12 +1666,12 @@ var calculatefield = {
 								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
 								//get AuditScore per assessment
 								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
-								
+
 								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
 									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
-								
+
 								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
+									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
 
 
 								toadd = {
@@ -1740,9 +1755,9 @@ var calculatefield = {
 
 								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
 									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
-								
+
 								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
+									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
 
 								toadd = {
 									"docid":doc[0].asmtsdocs[i]._id,
@@ -1825,9 +1840,9 @@ var calculatefield = {
 
 							if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
 								doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
-							
+
 							if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-								doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
+								doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
 
 							toadd = {
 								"docid":doc[0].asmtsdocs[i]._id,
