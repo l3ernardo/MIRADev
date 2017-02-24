@@ -59,16 +59,52 @@ var calculateARTab = {
 		}
   },
 
+  //Auxiliar function that sets the plannedStartDate for Internal Audits
+  setInternalAuditPlannedStartDate: function(auditInter, tmp) {
+    try {
+      //CHQ Internal Local audit: uses report date
+      if (auditInter.auditOrReview == "CHQ Internal Audit") {
+        if (typeof auditInter.reportDate === "undefined" || auditInter.reportDate == "" || auditInter.reportDate == undefined) {
+          tmp.plannedStartDate = "";
+        }
+        else {
+          tmp.plannedStartDate = auditInter.reportDate;
+        }
+        tmp.engagement = auditInter.auditID;
+      }
+      //Internal audit: Get Report Date through addedToAQDB field. If empty, use plannedStartDate. If that's also empty, leave it blank.
+      else {
+        if (typeof auditInter.addedToAQDB !== "undefined" || auditInter.addedToAQDB != "" || auditInter.addedToAQDB != undefined) {
+          tmp.plannedStartDate = auditInter.addedToAQDB;
+        }
+        else if (typeof auditInter.plannedStartDate !== "undefined" || auditInter.plannedStartDate != "" || auditInter.plannedStartDate != undefined) {
+          tmp.plannedStartDate = auditInter.plannedStartDate;
+        }
+        else {
+          tmp.plannedStartDate = "";
+        }
+        tmp.engagement = auditInter.engagement;
+      }
+      return tmp;
+    }
+    catch(e){
+      console.log("[class-auditsandreviews][setInternalAuditPlannedStartDate] - " + e.stack);
+		}
+  },
+
   //Function that iterates over parent assessments for Internal Audits
   categorizeInternalAudits: function(doc, auditInter, parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs) {
     try {
+      //console.log("Audit ID: "+tmp.id);
+      //Iterate all over the AU children assessments to find the children AUs, thus the correct parent of the Internal Audit
       for(var j = 0; j < parentAsmts.length; j++) {
+        //If the audit's parent is found, get all the info from it
         if (auditInter.parentid == parentAsmts[j]._id || auditInter.parentid == parentAsmts[j].parentid) {
-          console.log("Found parent, ID: "+auditInter.parentid);
+          //console.log("Found parent, ID: "+auditInter.parentid);
           var parentAU = parentAUs[parentAsmts[j].parentid];
-          console.log("Parent AU exists: "+parentAU);
+          //console.log("Parent AU exists: "+parentAU);
           tmp.Name = parentAU.Name;
-          console.log("Name: "+tmp.Name);
+          //console.log("Name: "+tmp.Name);
           //Country
           tmp.country = parentAU.Country;
           if(parentAU.DocSubType == "Controllable Unit" && parentAU.Portfolio == "Yes") {
@@ -205,7 +241,7 @@ var calculateARTab = {
               else {
                 tmp.cat = "(uncategorized)";
               }
-              break;
+              //break;
             }
           }
           tmp.PeriodRatingPrev = parentAU.PeriodRatingPrev;
@@ -217,6 +253,10 @@ var calculateARTab = {
           }
           tmp.CUMaxScore = fieldCalc.getCUMaxScore(tmp.CUSize);
           tmp.CUScore = fieldCalc.getCUScore(tmp.PeriodRating,tmp.CUMaxScore);
+          break;
+        }
+        else {
+          //console.log("PARENT NOT FOUND, here's the ID: "+auditInter.parentid);
         }
       }
       return tmp;
@@ -922,12 +962,12 @@ var calculateARTab = {
         case "BU IMT":
           // *** Start of Audits and Reviews embedded view *** //
           //View 1 - Internal Audit Data
-          //InternalAuditData is populated on class-compdoc.js after querying all BU Country's Internal Audits
+          //InternalAuditData is populated on class-compdoc.js after querying all BU IMT's Internal Audits
           var auditInter = doc[0].InternalAuditData;
-          //Then all BU Country's constituent asmts and AUs are stored
+          //Then all BU IMT's constituent asmts and AUs are stored
           var parentAsmts = doc[0].AuditsReviewsAssessments;
           var parentAUs = doc[0].AuditsReviewsAssessableUnits;
-          console.log("Number of parentAUs: "+parentAUs.length);
+          //console.log("Number of parentAUs: "+Object.keys(parentAUs).length);
           //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
           var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
           var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
@@ -949,18 +989,13 @@ var calculateARTab = {
           var totalMaxScore = "";
 
           //Iterate over found Internal Audits
-
+          //console.log("Number of intenal audits: "+auditInter.length);
           for(var i = 0; i < auditInter.length; i++) {
             var tmp = {};
             tmp.id = auditInter[i]._id;
-            if (auditInter[i].auditOrReview == "CHQ Internal Audit") {
-              tmp.plannedStartDate = auditInter[i].reportDate;
-              tmp.engagement = auditInter[i].auditID;
-            }
-            else {
-              tmp.plannedStartDate = auditInter[i].plannedStartDate;
-              tmp.engagement = auditInter[i].engagement;
-            }
+            //Set the plannedStartDate
+            tmp = calculateARTab.setInternalAuditPlannedStartDate(auditInter[i], tmp);
+
             //Add the rest of the Internal Audit parent fields through the categorizeInternalAudits function
             tmp = calculateARTab.categorizeInternalAudits(doc, auditInter[i], parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
 
@@ -1057,7 +1092,7 @@ var calculateARTab = {
 
           //VIEW 2 - Proactive Reviews
 
-          //PPRData is populated on class-compdoc.js after querying all BU Country's Proactive Reviews
+          //PPRData is populated on class-compdoc.js after querying all BU IMT's Proactive Reviews
           var auditPPR = doc[0].PPRData;
           //List that will export all PPRs. Currently empty; to be populated below.
           doc[0].PPRData = [];
@@ -1119,7 +1154,7 @@ var calculateARTab = {
 
           //VIEW 3 - Other Audits
 
-          //OtherAuditsData is populated on class-compdoc.js after querying all BU Country's local Audits that aren't Internal.
+          //OtherAuditsData is populated on class-compdoc.js after querying all BU IMT's local Audits that aren't Internal.
           var auditOther = doc[0].OtherAuditsData;
           //List that will export all local audits. Currently empty; to be populated below.
           doc[0].OtherAuditsData = [];
@@ -1232,7 +1267,7 @@ var calculateARTab = {
           //Then all BU Country's constituent asmts and AUs are stored
           var parentAsmts = doc[0].AuditsReviewsAssessments;
           var parentAUs = doc[0].AuditsReviewsAssessableUnits;
-          console.log("Number of parentAUs: "+parentAUs.length);
+          //console.log("Number of parentAUs: "+Object.keys(parentAUs).length);
           //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
           var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
           var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
@@ -1257,14 +1292,8 @@ var calculateARTab = {
           for(var i = 0; i < auditInter.length; i++) {
             var tmp = {};
             tmp.id = auditInter[i]._id;
-            if (auditInter[i].auditOrReview == "CHQ Internal Audit") {
-              tmp.plannedStartDate = auditInter[i].reportDate;
-              tmp.engagement = auditInter[i].auditID;
-            }
-            else {
-              tmp.plannedStartDate = auditInter[i].plannedStartDate;
-              tmp.engagement = auditInter[i].engagement;
-            }
+            //Set the plannedStartDate
+            tmp = calculateARTab.setInternalAuditPlannedStartDate(auditInter[i], tmp);
             //Add the rest of the Internal Audit parent fields through the categorizeInternalAudits function
             tmp = calculateARTab.categorizeInternalAudits(doc, auditInter[i], parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
 
