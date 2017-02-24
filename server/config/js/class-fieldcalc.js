@@ -528,8 +528,8 @@ var calculatefield = {
 							"Status": "Active",
 							"$or":
 							[
-								{"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
-								//{"$and": [{"DocSubType":"BU Country"},{"key": "Assessable Unit"}]},
+								//{"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
+								{"$and": [{"DocSubType":"BU Country"},{"key": "Assessable Unit"}]},
 								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid},{"key": "Assessable Unit"}]},
 								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName},{"key": "Assessable Unit"}]}
 								//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
@@ -788,6 +788,7 @@ var calculatefield = {
 						var CRMables = {};
 						var Deliveryables = {};
 						var $or = [];
+						var countriesID = [];
 						for(var i = 0; i < unitdocs.length; i++){
 							//Used to find all IMT's Auditable Units ID
 							if (unitdocs[i].key == "Assessable Unit"){
@@ -808,10 +809,11 @@ var calculatefield = {
 									$or.push({parentid: unitdocs[i]["_id"]});
 									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
 									doc[0].AUDocs.push(unitdocs[i]);
+									countriesID.push(unitdocs[i]["_id"]);
 								}
 							}
 							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
-								if(unitdocs[i].AuditableFlag !== undefined && unitdocs[i].AuditableFlag == "Yes"){
+								if(unitdocs[i].AuditableFlag != undefined && unitdocs[i].AuditableFlag == "Yes"){
 									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
 								}
 							}
@@ -841,6 +843,40 @@ var calculatefield = {
 								}
 							}
 						}
+						//Bringing second level - Roll Up
+						var tmpQuery = {
+						selector:{
+							"_id": {"$gt":0},
+							"key": "Assessable Unit",
+							"CurrentPeriod": doc[0].CurrentPeriod,
+							"Status": "Active",
+							"DocSubType":"Controllable Unit",
+							"parentid":{"$in":countriesID}
+					}
+				};
+						db.find(tmpQuery).then(function(asmts) {
+							var unitdocs = asmts.body.docs;
+							for (var i = 0; i < unitdocs.length; i++) {
+								$or.push({parentid: unitdocs[i]["_id"]});
+								doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
+								doc[0].AUDocs.push(unitdocs[i]);
+								if(unitdocs[i].AuditableFlag != undefined && unitdocs[i].AuditableFlag == "Yes"){
+									doc[0].auditableAUIds.push(unitdocs[i]._id);
+									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
+								}
+								if (doc[0].MIRABusinessUnit == "GTS") {
+									if(doc[0].CRMCUObj[unitdocs[i].Category]){
+										CRMables[unitdocs[i]["_id"]] = true;
+									}else if(doc[0].DeliveryCUObj[unitdocs[i].Category]){
+										Deliveryables[unitdocs[i]["_id"]] = true;
+									}else{
+										$or.pop();
+										delete doc[0].AUDocsObj[unitdocs[i]["_id"]];
+										console.log("CU category not found: "+ unitdocs[i].Category);
+									}
+								}
+							}
+						//END OF SECOND LEVEL DATA - ROLL UP
 						var tmpQuery = {
 							selector : {
 								"_id": {"$gt":0},
@@ -913,6 +949,10 @@ var calculatefield = {
 							calculatefield.createAuditsReviewsSupportDocs(doc);
 							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
+						}).catch(function(err) {
+							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
+							deferred.reject({"status": 500, "error": err.error.reason});
+						});
 						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
 							deferred.reject({"status": 500, "error": err.error.reason});
