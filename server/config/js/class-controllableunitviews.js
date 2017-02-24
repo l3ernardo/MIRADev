@@ -172,6 +172,7 @@ var calculateCUTab = {
 	    var countryaux;
 	    if(doc[0].BUCAsmtDataCURview2[i].country=="" ){
 			countryaux='(Not Categorized)';
+      doc[0].BUCAsmtDataCURview2[i].country = countryaux;
 		}
 		else
 		{  countryaux=doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'');}
@@ -201,7 +202,6 @@ var calculateCUTab = {
       	default:
       	id_aux2=doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'');parent_aux2=doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'');
       }
-
       if (doc[0].MIRABusinessUnit == "GTS") {
         if(typeof catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')] === "undefined"){
           var tmp2= {
@@ -281,7 +281,8 @@ var calculateCUTab = {
         }
         exportTmp2.ratingcategory = doc[0].BUCAsmtDataCURview2[i].ratingcategory || " ";
         exportTmp2.name = doc[0].BUCAsmtDataCURview2[i].name || " ";
-		exportTmp2.country = doc[0].BUCAsmtDataPRview2[i].country || " ",
+		    exportTmp2.country = doc[0].BUCAsmtDataCURview2[i].country || " ";
+        //exportTmp2.country = doc[0].BUCAsmtDataPRview2[i].country || " ";
         exportTmp2.count = doc[0].BUCAsmtDataCURview2[i].count || " ";
         exportTmp2.percent = doc[0].BUCAsmtDataCURview2[i].percent || " ";
         exportTmp2.ratingPQ1 = doc[0].BUCAsmtDataCURview2[i].ratingPQ1 || " ";
@@ -616,7 +617,8 @@ var calculateCUTab = {
         }
         exportTmp2.ratingcategory = doc[0].BUCAsmtDataCURview2[i].ratingcategory || " ";
         exportTmp2.name = doc[0].BUCAsmtDataCURview2[i].name || " ";
-		exportTmp2.imt = doc[0].BUCAsmtDataPRview2[i].imt || " ",
+        exportTmp2.country = doc[0].BUCAsmtDataCURview2[i].country || " ";
+		    //exportTmp2.imt = doc[0].BUCAsmtDataPRview2[i].imt || " ",
         exportTmp2.count = doc[0].BUCAsmtDataCURview2[i].count || " ";
         exportTmp2.percent = doc[0].BUCAsmtDataCURview2[i].percent || " ";
         exportTmp2.ratingPQ1 = doc[0].BUCAsmtDataCURview2[i].ratingPQ1 || " ";
