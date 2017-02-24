@@ -409,6 +409,9 @@ var getDocs = {
 							$or.push({parentid: doc[0].asmtsdocs[i]["_id"]});
 						}
 					}
+					else{ //If there is no assessments documents (New assessment)
+						$or.push({parentid: "0"});
+					}
 					var countrynames = [];
 					var countries = util.getIOTChildren(doc[0].IMTid, "IMT");
 					for (var i = 0; i < countries.length; i++) {
@@ -435,7 +438,14 @@ var getDocs = {
 								{ "$and": [{"compntType": "sampledCountry"}, {"IMT": doc[0].IMTName}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								// Sampled Country Testing tab and reporting country testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								{ "$and": [{"compntType": "controlSample"}, {"IMT": doc[0].IMTName}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+								{ "$and": [{"compntType": "controlSample"}, {"IMT": doc[0].IMTName}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+								// Audits and Reviews Tab
+								// For CHQ Internal Audits - from Audit DB
+								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
+								// For proactive reviews (PPR)
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IMT": doc[0].IMTid}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								// For Local Audits
+								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 						   ]
 						}
 					};
@@ -450,7 +460,7 @@ var getDocs = {
 						doc[0].TRExceptionControls = [];
 						doc[0].RCTest3Data = [];
 
-						//Audit data
+						// For BU Country Audits & Reviews Tab
 						doc[0].InternalAuditData = [];
 						doc[0].PPRData = [];
 						doc[0].OtherAuditsData = [];
