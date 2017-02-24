@@ -1,3 +1,5 @@
+<textarea name="textarea" id="PRRatingDataExport" cols="100" style="display:none">{{valuesToString exportAccountRatings}}</textarea>
+<textarea name="textarea" id="PRRating2DataExport" cols="100" style="display:none">{{valuesToString exportAccountRatings2}}</textarea>
 <table id="processrating_table" class="ibm-data-table">
 	<tr class="processrating">
 		<td width="70%" class="processrating-legend">
@@ -134,7 +136,7 @@
 		<td width="28%" class="processrating-legend">
 			<table width="100%">
 				<thead>
-					<th class="processrating-legend" colspan="3">Key/Comments</th>
+					<th class="processrating-header" colspan="3">Key/Comments</th>
 				</thead>
 				<tr>
 					<td class="sat-bg" width="3%"></td>
@@ -180,6 +182,10 @@
 	<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Rating</span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="PRRating-link-export" id="PRRating-link-export" class="whiteanchor ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="PRRRating-link-export2" id="PRRating-link-export2" class="whiteanchor ibm-symp-spreadsheet">Export to Open Office</a>
+			<br /><br />
 			<table id="processrating_treeview" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="10%">Rating</th>
@@ -218,6 +224,10 @@
 			<tr class="processrating">
 		<td colspan="3">
 			<span class="processrating-header">Processes by Country</span><br /><br />
+			<a href="javascript:void(0);" value="Export to Excel" name="PRRating-link-export3" id="PRRating-link-export3" class="whiteanchor ibm-symp-spreadsheet">Export to Excel</a>
+			<span class="ibm-sep"> </span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="PRRRating-link-export4" id="PRRating-link-export4" class="whiteanchor ibm-symp-spreadsheet">Export to Open Office</a>
+			<br /><br />
 			<table id="processrating_treeview2" width="100%"  class="other-viewheader table_with_scroll">
 				<thead>
 					<th class="processrating-viewheader" scope="col" width="20%">Country</th>

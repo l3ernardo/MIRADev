@@ -13,7 +13,29 @@ var q  = require("q");
 var performanceTab = require('./class-performanceoverview.js');
 
 var calculatefield = {
-
+	//** Additional calculations for asmt Audits & Reviews tab (BU Country, IMT, IOT)
+	createAuditsReviewsSupportDocs: function(doc) {
+		try {
+			//Create a copy of asmtsdocs so other processes that change it won't interfere with AU's list of Assessments
+			doc[0].AuditsReviewsAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
+			//Create a copy of AU Docs so other processes that change it won't interfere with AU's list of Assessable Units
+			if (doc[0].ParentDocSubType == "BU Country") {
+				doc[0].AuditsReviewsAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
+			}
+			else {
+				doc[0].AuditsReviewsAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocsObj));
+			}
+			if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transform") {
+				//Create a copy of the asmt CRM docs (GTS use only) for BU Country
+				doc[0].AuditsReviewsCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
+				//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
+				doc[0].AuditsReviewsISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
+			}
+		}
+		catch(e){
+      console.log("[class-fieldcalc][createAuditsReviewsSupportDocs] - " + e.stack);
+		}
+	},
 	// adding empty Test View Data Only
 	addTestViewData: function(colnum, rownum) {
 		var vwData = [];
@@ -486,16 +508,15 @@ var calculatefield = {
 					var asmts = {
 						selector:{
 							"_id": {"$gt":0},
-							"key": "Assessable Unit",
 							"BusinessUnit": doc[0].BusinessUnit,
 							"CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or":
 							[
 								// {"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
-								{"$and": [{"DocSubType":"BU Country"}]},
-								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid}]},
-								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName}]}
+								{"$and": [{"DocSubType":"BU Country"},{"key": "Assessable Unit"}]},
+								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid},{"key": "Assessable Unit"}]},
+								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName},{"key": "Assessable Unit"}]}
 							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
 
 						]//or
@@ -715,6 +736,9 @@ var calculatefield = {
 									}
 								}
 							}
+							//For Audits & Reviews
+							calculatefield.createAuditsReviewsSupportDocs(doc);
+							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
@@ -723,6 +747,7 @@ var calculatefield = {
 						break;
 					case "BU IMT":
 					// doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].auditableAUIds = [];
 						doc[0].AUDocs = [];
 						var unitdocs = asmtsdata.body.docs;
 						doc[0].ExcludedCountryNames = [];
@@ -749,6 +774,12 @@ var calculatefield = {
 						var Deliveryables = {};
 						var $or = [];
 						for(var i = 0; i < unitdocs.length; i++){
+							//Used to find all IMT's Auditable Units ID
+							if (unitdocs[i].key == "Assessable Unit"){
+								if(unitdocs[i].AuditableFlag == "Yes"){
+										doc[0].auditableAUIds.push(unitdocs[i]._id);
+								}
+							}
 							if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].ExcludeGeo !== undefined  && unitdocs[i].ExcludeGeo ==  "Yes") {
 								doc[0].ExcludedCountryNames.push(util.resolveGeo(unitdocs[i].Country,"Country",req));
 								doc[0].ExcludedCountryIDs.push(unitdocs[i].Country);
@@ -863,6 +894,9 @@ var calculatefield = {
 							doc[0].unsatCPDRFin = unsatCPDRFin;
 							doc[0].margCPDROps = margCPDROps;
 							doc[0].unsatCPDROps = unsatCPDROps;
+							//For Audits & Reviews
+							calculatefield.createAuditsReviewsSupportDocs(doc);
+							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
@@ -1029,6 +1063,8 @@ var calculatefield = {
 								//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
 								doc[0].BUCountryISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
 							}
+							//For Audits & Reviews
+							calculatefield.createAuditsReviewsSupportDocs(doc);
 							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
@@ -1214,8 +1250,10 @@ var calculatefield = {
 						}
 
 						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {	
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1448,9 +1486,10 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1510,7 +1549,9 @@ var calculatefield = {
 						};
 						doc[0].BUCAsmtDataCURview.push(toadd);
 						if(doc[0].MIRABusinessUnit == "GBS"){
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+							var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								satUpCU = satUpCU + 1;
 								break;
@@ -1554,8 +1595,9 @@ var calculatefield = {
 									}
 								}
 							}
-
-							switch (doc[0].asmtsdocs[i].RatingCategory) {
+                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);						
+							switch (calculatedRatingCategory) {
+							//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
 								else satUpCUDel = satUpCUDel + 1;
@@ -1607,6 +1649,14 @@ var calculatefield = {
 								doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
 								//get Open Issue count per child assessment
 								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+								//get AuditScore per assessment
+								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
+								
+								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+								
+								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
 
 
 								toadd = {
@@ -1670,7 +1720,7 @@ var calculatefield = {
 
 
 							}catch(e){
-								console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
+								console.log("[class-fieldcalc][getRatingProfile][BU IOT Performance Tab] - " + e.stack);
 
 							}
 							break;
@@ -1685,8 +1735,14 @@ var calculatefield = {
 								//get MSAC missed commitments
 								doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
 								//get Open Issue count per child assessment
-								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);						//get AuditScore per assessment
+								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
 
+								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+								
+								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
 
 								toadd = {
 									"docid":doc[0].asmtsdocs[i]._id,
@@ -1749,7 +1805,7 @@ var calculatefield = {
 
 
 							}catch(e){
-								console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
+								console.log("[class-fieldcalc][getRatingProfile][BU IMT Performance Tab] - " + e.stack);
 
 							}
 							break;
@@ -1766,6 +1822,12 @@ var calculatefield = {
 							//get Open Issue count per child assessment
 							doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
 
+
+							if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+								doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+							
+							if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+								doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString(); 
 
 							toadd = {
 								"docid":doc[0].asmtsdocs[i]._id,
