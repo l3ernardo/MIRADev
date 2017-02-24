@@ -528,11 +528,11 @@ var calculatefield = {
 							"Status": "Active",
 							"$or":
 							[
-								// {"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
-								{"$and": [{"DocSubType":"BU Country"},{"key": "Assessable Unit"}]},
+								{"$and": [{"DocSubType":"BU Country"},{"parentid":doc[0].parentid},{"ExcludeGeo":{"$ne": "Yes"}}]},
+								//{"$and": [{"DocSubType":"BU Country"},{"key": "Assessable Unit"}]},
 								{"$and": [{"DocSubType":"Controllable Unit"},{"parentid":doc[0].parentid},{"key": "Assessable Unit"}]},
 								{"$and": [{"DocSubType":"Country Process"},{"IMT":doc[0].IMTName},{"key": "Assessable Unit"}]}
-							//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
+								//{"$and": [{"DocSubType": "Controllable Unit"},{"ParentDocSubType": "BU IMT"}{"parentid":doc[0].parentid}]},
 
 						]//or
 					}};

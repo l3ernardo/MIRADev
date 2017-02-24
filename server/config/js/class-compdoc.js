@@ -400,7 +400,6 @@ var getDocs = {
 					});
 					break;
 				case "BU IMT":
-
 					//Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
 					var $or = [];
 					// For CHQ Internal Audits - Local
@@ -430,7 +429,7 @@ var getDocs = {
 
 								// Audits and Reviews Tab
 								// For CHQ Internal Audits - from Audit DB
-								{ "$and": [{"compntType": "internalAudit"}] },
+								//{ "$and": [{"compntType": "internalAudit"}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] },
 								// Sampled Country Testing tab
@@ -449,6 +448,7 @@ var getDocs = {
 						   ]
 						}
 					};
+					//console.log(JSON.stringify(compObj));
 					db.find(compObj).then(function(compdata) {
 						var comps = compdata.body.docs;
 						doc[0].riskCategories = [];
@@ -631,17 +631,15 @@ var getDocs = {
 							else if (comps[i].docType == "setup"){
 								doc[0].riskCategories = comps[i].value.options;
 							}
-
 							// For Audits and Reviews Tab - view 1 (Internal Audits)
 							else if (comps[i].compntType == "internalAudit" && doc[0].CurrentPeriod.substr(0, 4) == ( "20" + comps[i].engagement.substr(0, 2))) {
-
 								// audits and reviews tab only displays audits that has the same year as the asmt
 								if (typeof comps[i].engagement === "undefined") {
 									comps[i].engagement = comps[i].id;
 								}
-								if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
+								/*if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
 									comps[i].plannedStartDate = comps[i].ClosedDate;
-								}
+								}*/
 								doc[0].InternalAuditData.push(comps[i]);
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)
@@ -1014,9 +1012,9 @@ var getDocs = {
 								if (typeof comps[i].engagement === "undefined") {
 									comps[i].engagement = comps[i].id;
 								}
-								if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
+								/*if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
 									comps[i].plannedStartDate = comps[i].ClosedDate;
-								}
+								}*/
 								doc[0].InternalAuditData.push(comps[i]);
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)
