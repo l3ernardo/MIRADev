@@ -255,9 +255,10 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Country Process Defect Rate Exceptions</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="RCControls-link-export" id="RCControls-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
-			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="RCControls-link-export2" id="RCControls-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<a href="javascript:void(0);" value="Export to Excel" name="RCControls-link-export" id="RCControls-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+			<span class="ibm-sep">&nbsp;</span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCControls-link-export2" id="RCControls-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+			<br/><br/>
 			<table id="RCControls_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="50%">Process</th>
@@ -282,9 +283,10 @@
 		<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Testing Ratio Exceptions</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
-			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+			<span class="ibm-sep">&nbsp;</span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+			<br /><br />
 			<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
@@ -314,10 +316,11 @@
 <tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="RCTest3-link-export" id="RCTest3-link-export" class="ibm-symp-spreadsheet">Export to Excel</a>
-			<span class="ibm-sep"> </span>
-			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest3-link-export2" id="RCTest3-link-export2" class="ibm-symp-spreadsheet">Export to Open Office</a>
-			<table id="Rptg2_treeview" width="100%" class="table_with_scroll">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest3-link-export" id="RCTest3-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+			<span class="ibm-sep">&nbsp;</span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest3-link-export2" id="RCTest3-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+			<br /><br />
+			<table id="RCTest3_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
 					<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
@@ -351,6 +354,7 @@
 	</tr>
 </table>
 <script>
-	$("#Rptg_treeview").treetable({expandable: true });
-	$("#Rptg2_treeview").treetable({expandable: true });
+	$("#RCControls_treeview").treetable({expandable: true });
+	$("#RCTest_treeview").treetable({expandable: true });
+	$("#RCTest3_treeview").treetable({expandable: true });
 </script>
