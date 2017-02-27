@@ -176,10 +176,10 @@ var getDocs = {
 								{"$and": [{"docType": "setup"},{"keyName": "OpenIssuesCategories"}, {"active": "true"}] },
 								 //Performance Tab and Reporting Country Testing Tab
 								{ "$and": [{"docType": "asmtComponent"},{"compntType": "countryControls"}, {"IOT": doc[0].IOT}, {"owningBusinessUnit": doc[0].BusinessUnit},{"status": {"$ne": "Retired"}}] },
-								// For CHQ Internal Audits - from Audit DB
+								/*// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}] },
 								// For Local Audits
-								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] },
+								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] },*/
 
 								//Risks Tab
 								{"$and": [{"docType": "asmtComponent"},{"compntType": "openIssue"}, {"businessUnit": doc[0].BusinessUnit}, {"IOT" : doc[0].IOT}, {"status": {"$ne": "Closed"}}] },
@@ -188,7 +188,13 @@ var getDocs = {
 								{ "$and": [{"compntType": "sampledCountry"}, {"IOT": doc[0].IOT}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								// Sampled Country Testing tab and reporting country testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								{ "$and": [{"compntType": "controlSample"}, {"IOT": doc[0].IOT}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+								{ "$and": [{"compntType": "controlSample"}, {"IOT": doc[0].IOT}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },								// Audits and Reviews Tab
+								// For CHQ Internal Audits - from Audit DB
+								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
+								// For proactive reviews (PPR)
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IOT": doc[0].IOTid}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								// For Local Audits
+								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 							 ]
 						}
 					};
@@ -374,9 +380,9 @@ var getDocs = {
 								if (typeof comps[i].engagement === "undefined") {
 									comps[i].engagement = comps[i].id;
 								}
-								if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
+								/*if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
 									comps[i].plannedStartDate = comps[i].ClosedDate;
-								}
+								}*/
 								doc[0].InternalAuditData.push(comps[i]);
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)
@@ -416,7 +422,7 @@ var getDocs = {
 					for (var i = 0; i < countries.length; i++) {
 						countrynames.push(countries[i].name);
 					}
-					var imt = util.getIMTNameByCountry("USA");
+					// var imt = util.getIMTNameByCountry("USA");
 					var compObj = {
 						selector : {
 							"_id": {"$gt":0},
@@ -447,7 +453,7 @@ var getDocs = {
 								// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
 								// For proactive reviews (PPR)
-								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IMT": doc[0].IMTid}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IMT": doc[0].IMT}, {"reportingQuarter": doc[0].CurrentPeriod}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 						   ]
@@ -583,9 +589,9 @@ var getDocs = {
 									} else {}
 								}
 								else if (doc[0].MIRABusinessUnit == "GTS") {
-									comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 									if (comps[i].MIRABusinessUnit == "GTS") {
 										if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+											// console.log(comps[i].MIRABusinessUnit + "," + comps[i].GPPARENT + "," + comps[i].IMT + "," + comps[i].numtest + "," + comps[i].numDefects + "," + comps[i]._id);
 											doc[0].SCTest1Data.push(comps[i]);
 										} else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
 											doc[0].SCTestDataPQ1.push(comps[i]);
@@ -599,7 +605,6 @@ var getDocs = {
 									}
 								}
 								else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
-									comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 									if (comps[i].MIRABusinessUnit == "GTS Transformation") {
 										if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
 											doc[0].SCTest1Data.push(comps[i]);

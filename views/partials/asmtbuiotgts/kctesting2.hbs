@@ -43,7 +43,7 @@
 					<td class="kc-test-viewsubheader" width="4%">CQF</td>
 					<td class="kc-test-viewsubheader" width="4%">CQO</td>
 				</tr>
-				{{#KCProcessFIN}}
+				{{#KCProcessFINSCT}}
 					{{#members}}
 						<tr class="asmt-viewdata">
 							{{#if @first}}
@@ -70,7 +70,7 @@
 							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
-				{{/KCProcessFIN}}
+				{{/KCProcessFINSCT}}
 				<tr class="kc-test-viewheader">
 					<td colspan="20"></td>
 				</tr>
@@ -117,7 +117,7 @@
 					<td class="kc-test-viewsubheader" width="4%">CQF</td>
 					<td class="kc-test-viewsubheader" width="4%">CQO</td>
 				</tr>
-				{{#KCProcessOPS}}
+				{{#KCProcessOPSSCT}}
 					{{#members}}
 						<tr class="asmt-viewdata">
 							{{#if @first}}
@@ -144,7 +144,7 @@
 							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
-				{{/KCProcessOPS}}
+				{{/KCProcessOPSSCT}}
 				<tr class="kc-test-viewheader">
 					<td colspan="20"></td>
 				</tr>

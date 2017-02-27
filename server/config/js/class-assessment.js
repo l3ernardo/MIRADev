@@ -356,6 +356,8 @@ var assessment = {
 									aut.processAUTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
+									// Process Audits & Reviews tab
+									aar.processARTab(doc,defViewRow);
 
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
@@ -426,7 +428,7 @@ var assessment = {
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
 	                // Process CU Ratings tab
-	                cut.processCUTab(doc,defViewRow);
+	                //cut.processCUTab(doc,defViewRow);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
 									//open risks
