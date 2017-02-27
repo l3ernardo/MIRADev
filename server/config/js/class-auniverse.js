@@ -77,11 +77,13 @@ var calculateAUTab = {
       }
       auditsList.push(audits[i]);
     }
-    if (Object.keys(ratingCategory).length < defViewRow) {
+//    if (Object.keys(ratingCategory).length < defViewRow) {
+    if (1 < defViewRow) {
       if (auditsList.length == 0) {
         auditsList = fieldCalc.addTestViewData(10,defViewRow);
       } else {
-        fieldCalc.addTestViewDataPadding(auditsList,10,(defViewRow-Object.keys(ratingCategory).length));
+        fieldCalc.addTestViewDataPadding(auditsList,10,(defViewRow-1));
+        //fieldCalc.addTestViewDataPadding(auditsList,10,(defViewRow-Object.keys(ratingCategory).length));
       }
     };
     doc[0].AUData = auditsList;

@@ -326,7 +326,7 @@ var calculateCUTab = {
           if(doc[0].BUCAsmtDataCURview2[i].cqscore!=''){
             catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
             topEntry2.cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
-  		      catList[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+  		      catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
           }
           if(doc[0].BUCAsmtDataCURview2[i].pqscore!=''){
              catList2[doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
@@ -348,7 +348,11 @@ var calculateCUTab = {
         tmpAccountList2.push(doc[0].BUCAsmtDataCURview2[i]);
       }
   	  for(var category2 in catList2){
-        catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+        if(catList2[category2].parent && catList2[category2].parent != "topEntry2"){
+          catList2[category2].percent = (catList2[category2].count/ catList2[catList2[category2].parent].count *100).toFixed(0);
+        }else{
+            catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+        }
       }
       //Adding padding
       if (1 < defViewRow) {
@@ -508,9 +512,11 @@ var calculateCUTab = {
 	    var countryaux;
 	    if(doc[0].BUCAsmtDataCURview2[i].imt=="" ){
 			countryaux='(Not Categorized)';
+      doc[0].BUCAsmtDataCURview2[i].imt= countryaux;
 		}
 		else
-		{  countryaux=doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'');}
+		{
+      countryaux=doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'');}
     	var id_aux2, parent_aux2;
     	switch (doc[0].BUCAsmtDataCURview2[i].ratingcategory) {
         case "Unsat &#9660;":
@@ -664,7 +670,7 @@ var calculateCUTab = {
         if(doc[0].BUCAsmtDataCURview2[i].cqscore!=''){
            catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
            topEntry2.cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
-		   catList[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+		       catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
          }
         if(doc[0].BUCAsmtDataCURview2[i].pqscore!=''){
            catList2[doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
@@ -686,7 +692,11 @@ var calculateCUTab = {
       tmpAccountList2.push(doc[0].BUCAsmtDataCURview2[i]);
     }
 	 for(var category2 in catList2){
-      catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+     if(catList2[category2].parent && catList2[category2].parent != "topEntry2"){
+       catList2[category2].percent = (catList2[category2].count/ catList2[catList2[category2].parent].count *100).toFixed(0);
+     }else{
+         catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+     }
     }
     //Adding padding
     if (1 < defViewRow) {
@@ -990,7 +1000,11 @@ var calculateCUTab = {
       tmpAccountList.push(doc[0].BUCAsmtDataCURview[i]);
     }
     for(var category in catList){
-      catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataCURview.length*100).toFixed(0);
+      if(catList[category].parent && catList[category].parent != "topEntry"){
+        catList[category].percent = (catList[category].count/ catList[catList[category].parent].count *100).toFixed(0);
+      }else{
+          catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataCURview.length*100).toFixed(0);
+      }
       catList[category].cqscore = catList[category].cqscore.toFixed(1);
     }
 
