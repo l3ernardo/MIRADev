@@ -326,7 +326,7 @@ var calculateCUTab = {
           if(doc[0].BUCAsmtDataCURview2[i].cqscore!=''){
             catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
             topEntry2.cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
-  		      catList[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+  		      catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
           }
           if(doc[0].BUCAsmtDataCURview2[i].pqscore!=''){
              catList2[doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
@@ -512,9 +512,11 @@ var calculateCUTab = {
 	    var countryaux;
 	    if(doc[0].BUCAsmtDataCURview2[i].imt=="" ){
 			countryaux='(Not Categorized)';
+      doc[0].BUCAsmtDataCURview2[i].imt= countryaux;
 		}
 		else
-		{  countryaux=doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'');}
+		{
+      countryaux=doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'');}
     	var id_aux2, parent_aux2;
     	switch (doc[0].BUCAsmtDataCURview2[i].ratingcategory) {
         case "Unsat &#9660;":
@@ -668,7 +670,7 @@ var calculateCUTab = {
         if(doc[0].BUCAsmtDataCURview2[i].cqscore!=''){
            catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
            topEntry2.cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
-		   catList[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+		       catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
          }
         if(doc[0].BUCAsmtDataCURview2[i].pqscore!=''){
            catList2[doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
