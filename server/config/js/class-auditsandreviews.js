@@ -105,7 +105,8 @@ var calculateARTab = {
           //console.log("Parent AU exists: "+parentAU);
           tmp.Name = parentAU.Name;
           //console.log("Name: "+tmp.Name);
-          //Country
+          //IMT & Country
+          tmp.imp = parentAU.IMT;
           tmp.country = parentAU.Country;
           if(parentAU.DocSubType == "Controllable Unit" && parentAU.Portfolio == "Yes") {
             tmp.DocSubType = "Portfolio CU";
@@ -354,7 +355,8 @@ var calculateARTab = {
       for(var key in parentAUs) {
         if (auditPPR.CU == parentAUs[key].Name) {
           tmp.Name = parentAUs[key].Name;
-          //Country
+          //IMT and Country
+          tmp.imt = parentAUs[key].IMT;
           tmp.country = parentAUs[key].Country;
           //Categorization for GTS: will cycle through all the IS Delivery and CRM docs to select one of those as category.
           if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
@@ -958,6 +960,246 @@ var calculateARTab = {
         case "Business Unit":
           break;
         case "BU IOT":
+          // *** Start of Audits and Reviews embedded view *** //
+          //View 1 - Internal Audit Data
+          //InternalAuditData is populated on class-compdoc.js after querying all BU IOT's Internal Audits
+          var auditInter = doc[0].InternalAuditData;
+          //Then all BU IOT's constituent asmts and AUs are stored
+          var parentAsmts = doc[0].AuditsReviewsAssessments;
+          var parentAUs = doc[0].AuditsReviewsAssessableUnits;
+          //console.log("Number of parentAUs: "+Object.keys(parentAUs).length);
+          //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
+          var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
+          var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
+          //FOR GTS AND GTS TRANSFORM ONLY - summary objects of all Internal Audits
+          var summaryISDeliveryAllCounts = calculateARTab.createSummaryCountObject();
+              summaryCRMISAllCounts = calculateARTab.createSummaryCountObject();
+              summaryCRMOtherAllCounts = calculateARTab.createSummaryCountObject();
+              summaryTotalAllCounts = calculateARTab.createSummaryCountObject();
+          //For weighted scores:
+          var totalISDeliveryCUScore = 0; totalISDeliveryMaxScore = 0;
+              totalCRMISCUScore = 0; totalCRMISMaxScore = 0;
+              totalCRMOtherCUScore = 0; totalCRMOtherMaxScore = 0;
+
+          //List that will export all Internal Audits. Pointing to empty memory so it can be recreated.
+          doc[0].InternalAuditData = [];
+
+          //Total Score (CU and Max) variables. To be calculated below.
+          var totalCUScore = "";
+          var totalMaxScore = "";
+
+          //Iterate over found Internal Audits
+          //console.log("Number of intenal audits: "+auditInter.length);
+          for(var i = 0; i < auditInter.length; i++) {
+            var tmp = {};
+            tmp.id = auditInter[i]._id;
+            //Set the plannedStartDate
+            tmp = calculateARTab.setInternalAuditPlannedStartDate(auditInter[i], tmp);
+
+            //Add the rest of the Internal Audit parent fields through the categorizeInternalAudits function
+            tmp = calculateARTab.categorizeInternalAudits(doc, auditInter[i], parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
+
+            //Calculate total scores (CU and MAX) for later WeightedAuditScore calculation
+            if (!isNaN(tmp.CUScore)) totalCUScore += tmp.CUScore;
+            if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
+            //Summary count
+            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+              if (tmp.cat == "IS Delivery") {
+                summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
+                //For IS Delivery WeightedAuditScore
+                if (!isNaN(tmp.CUScore)) totalISDeliveryCUScore += tmp.CUScore;
+                if (!isNaN(tmp.CUMaxScore)) totalISDeliveryMaxScore += tmp.CUMaxScore;
+              }
+              else if (tmp.cat == "IS") {
+                summaryCRMISAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMISAllCounts, tmp);
+                //For CRM IS WeightedAuditScore
+                if (!isNaN(tmp.CUScore)) totalCRMISCUScore += tmp.CUScore;
+                if (!isNaN(tmp.CUMaxScore)) totalCRMISMaxScore += tmp.CUMaxScore;
+              }
+              else if (tmp.cat == "Other") {
+                summaryCRMOtherAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMOtherAllCounts, tmp);
+                //For CRM Other WeightedAuditScore
+                if (!isNaN(tmp.CUScore)) totalCRMOtherCUScore += tmp.CUScore;
+                if (!isNaN(tmp.CUMaxScore)) totalCRMOtherMaxScore += tmp.CUMaxScore;
+              }
+              else {
+                totalISDeliveryMaxScore, totalCRMISMaxScore, totalCRMOtherMaxScore = 0;
+              }
+            }
+            //For treeview's parent (have to ask Irving how this actually works)
+            if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+              if(!tmp.cat) tmp.cat = "(uncategorized)";
+              tmp.parent = tmp.cat.replace(/ /g,'');
+            }
+            //Add all the tmp fields to InternalAuditData
+            doc[0].InternalAuditData.push(tmp);
+          }
+          // Begin sort
+          calculateARTab.sortInternalAuditList(doc);
+          // End sort
+
+          //Category list for treetable
+          var categoryList = {};
+          var tmpList = doc[0].InternalAuditData;
+          //Create list for view, and another one for Excel and ODS export
+          doc[0].InternalAuditData = [];
+          var exportInternalAuditData = [];
+          //Create treetable using the createCategoryListInternalAudits function
+          exportInternalAuditData = calculateARTab.createCategoryListInternalAudits(doc, categoryList, tmpList, exportInternalAuditData);
+
+          //Calculate WeightedAuditScore using the calculateWeightedAuditScore function
+          //GTS and GTS Transform need to calculate WeightedAuditScore per category
+          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            //IS Delivery
+            summaryISDeliveryAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalISDeliveryCUScore, totalISDeliveryMaxScore);
+            //CRM IS
+            summaryCRMISAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalCRMISCUScore, totalCRMISMaxScore);
+            //CRM Other
+            summaryCRMOtherAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalCRMOtherCUScore, totalCRMOtherMaxScore);
+          }
+          //WeightedAuditScore for all audits
+          var weightedScore = calculateARTab.calculateWeightedAuditScore(totalCUScore, totalMaxScore);
+
+          //Export Internal Audit data and the Weighted Score to the Handlebars view
+          doc[0].exportInternalAuditData = exportInternalAuditData;
+          doc[0].WeightedAuditScore = weightedScore;
+
+          //If GTS or GTS Transform, calculate all summary counts
+          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            //Complete: sum of all SAT and UNSAT audits.
+            summaryISDeliveryAllCounts.countComplete = summaryISDeliveryAllCounts.countSAT + summaryISDeliveryAllCounts.countUNSAT;
+            summaryCRMISAllCounts.countComplete = summaryCRMISAllCounts.countSAT + summaryCRMISAllCounts.countUNSAT;
+            summaryCRMOtherAllCounts.countComplete = summaryCRMOtherAllCounts.countSAT + summaryCRMOtherAllCounts.countUNSAT;
+            //Total: add all the categories:
+            summaryTotalAllCounts.countComplete = summaryISDeliveryAllCounts.countComplete + summaryCRMISAllCounts.countComplete + summaryCRMOtherAllCounts.countComplete;
+            summaryTotalAllCounts.countSAT = summaryISDeliveryAllCounts.countSAT + summaryCRMISAllCounts.countSAT + summaryCRMOtherAllCounts.countSAT;
+            summaryTotalAllCounts.countUNSAT = summaryISDeliveryAllCounts.countUNSAT + summaryCRMISAllCounts.countUNSAT + summaryCRMOtherAllCounts.countUNSAT;
+            //Export all summary to Handlebars view
+            doc[0].SummaryISDelivery = summaryISDeliveryAllCounts;
+            doc[0].SummaryCRMIS = summaryCRMISAllCounts;
+            doc[0].SummaryCRMOther = summaryCRMOtherAllCounts;
+            doc[0].SummaryTotal = summaryTotalAllCounts;
+          }
+          //Add padding
+          if (Object.keys(categoryList).length < defViewRow) {
+            if (doc[0].InternalAuditData.length == 0) {
+              doc[0].InternalAuditData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].InternalAuditData,10,(defViewRow-Object.keys(categoryList).length));
+            }
+          };
+          //End of view 1
+
+          //VIEW 2 - Proactive Reviews
+
+          //PPRData is populated on class-compdoc.js after querying all BU IOT's Proactive Reviews
+          var auditPPR = doc[0].PPRData;
+          //List that will export all PPRs. Currently empty; to be populated below.
+          doc[0].PPRData = [];
+
+          //Iterate over found PPRs
+          for(var i = 0; i < auditPPR.length; i++) {
+            console.log("IMT: "+auditPPR[i].IMT);
+            var tmp={};
+            tmp.id = auditPPR[i]._id;
+            tmp.auditOrReview = auditPPR[i].auditOrReview;
+            tmp.reportingQuarter = auditPPR[i].reportingQuarter;
+            tmp.status = auditPPR[i].status;
+            tmp.reviewID = auditPPR[i].id;
+            if ((typeof auditPPR[i].CU === "undefined" || auditPPR[i].CU == "" || auditPPR[i].CU == "Not Applicable" || auditPPR[i].CU == undefined)
+            && (typeof auditPPR[i].countryProcess !== "undefined" || auditPPR[i].countryProcess != "" || auditPPR[i].countryProcess != "Not Applicable" || auditPPR[i].countryProcess != undefined)) {
+              auditPPR[i].CU = auditPPR[i].countryProcess;
+            }
+            else {
+              auditPPR[i].CU = "PARENT ASSESSABLE UNIT NOT FOUND";
+            }
+            //Add the rest of the PPR parent fields through the categorizePPRAudits function
+            tmp = calculateARTab.categorizePPRAudits(doc, auditPPR[i], parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
+
+            if((typeof tmp.Name === "undefined" || tmp.Name == "")&&(typeof tmp.cat === "undefined" || tmp.cat == "")) {
+              tmp.Name = auditPPR[i].CU;
+              tmp.cat = "(uncategorized)";
+            }
+            tmp.reportDate = auditPPR[i].reportDate;
+            tmp.rating = auditPPR[i].rating;
+            tmp.numRecommendationsTotal = auditPPR[i].numRecommendationsTotal;
+            tmp.numRecommendationsOpen = auditPPR[i].numRecommendationsOpen;
+            //Push all the data to the PPRData list.
+            doc[0].PPRData.push(tmp);
+          }
+          // Begin sort
+          calculateARTab.sortPPRAuditList(doc);
+          // End sort
+
+          //Category list for treetable
+          var categoryList = {};
+          var tmpList = doc[0].PPRData;
+          doc[0].PPRData = [];
+          var exportPPRData = [];
+          var topCounter = 0;
+          //Create treetable using the createCategoryListPPRs function
+          exportPPRData = calculateARTab.createCategoryListPPRs(doc, categoryList, tmpList, exportPPRData, topCounter);
+
+          //Export Proactive Reviews data to the Handlebars view
+          doc[0].exportPPRData = exportPPRData;
+
+          //Adding padding
+          if (topCounter < defViewRow) {
+            if (doc[0].PPRData.length == 0) {
+              doc[0].PPRData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].PPRData,10,(defViewRow- topCounter));
+            }
+          };
+          //End of view 2
+
+          //VIEW 3 - Other Audits
+
+          //OtherAuditsData is populated on class-compdoc.js after querying all BU IOT's local Audits that aren't Internal.
+          var auditOther = doc[0].OtherAuditsData;
+          //List that will export all local audits. Currently empty; to be populated below.
+          doc[0].OtherAuditsData = [];
+
+          //Iterate over the Other Audit list
+          for (var i = 0; i < auditOther.length; i++) {
+            var tmp = {};
+            tmp.id = auditOther[i]._id;
+            tmp.auditOrReview = auditOther[i].auditOrReview;
+            //Add the rest of the Other Audit parent fields through the categorizeOtherAudits function
+            tmp = calculateARTab.categorizeOtherAudits(doc, auditOther[i], parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
+
+            tmp.reportDate = auditOther[i].reportDate;
+            tmp.comments = auditOther[i].comments;
+            //Push all the data to the OtherAuditsData
+            doc[0].OtherAuditsData.push(tmp);
+          }
+          // Begin sort
+          calculateARTab.sortOtherAuditList(doc);
+          // EndSort
+
+          //Category list for treetable
+          var exportOtherAuditsData = [];
+          var tmpList = doc[0].OtherAuditsData;
+          doc[0].OtherAuditsData = [];
+          var categoryList = {};
+          var topCounter = 0;
+          //Create treetable using the createCategoryListOtherAudits function
+          exportOtherAuditsData = calculateARTab.createCategoryListOtherAudits(doc, categoryList, tmpList, exportOtherAuditsData, topCounter);
+
+          //Export Proactive Reviews data to the Handlebars view
+          doc[0].exportOtherAuditsData = exportOtherAuditsData;
+
+          //Add padding
+          if (topCounter < defViewRow) {
+            if (doc[0].OtherAuditsData.length == 0) {
+              doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].OtherAuditsData,10,(defViewRow- topCounter));
+            }
+          };
+          //End of view 3
+
+          // *** End of Audits and Reviews embedded view *** //
           break;
         case "BU IMT":
           // *** Start of Audits and Reviews embedded view *** //

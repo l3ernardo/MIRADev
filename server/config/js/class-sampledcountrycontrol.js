@@ -82,6 +82,9 @@ var calculateSCTab = {
                         doc[0].KCProcessOPSSCT[j].members[k].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
                       }
                     }
+                    // if (doc[0].SCTest1Data[i].GPPARENT == "GPC300000142") {
+                      // console.log(doc[0].SCTest1Data[i].numtest + "," + doc[0].SCTest1Data[i].numDefects + "," + doc[0].SCTest1Data[i]._id);
+                    // }
                   }
                 }
               }
