@@ -687,7 +687,7 @@ var util = {
 						iterator = global.hierarchy.IOT;
 						for (var key in iterator){
 							if(iterator.hasOwnProperty(key)){
-								if(iterator[key].name==entityName){ console.log("getimtids")
+								if(iterator[key].name==entityName){
 									return util.getIMTIDs(req,iterator[key].IMTs);
 								}
 							}
