@@ -2,30 +2,30 @@ $(document).ready(function() {
 
 	if( $('#CFYes').is(':checked') ) {
 		$(".size").show();
+		$(".CUCategory").show();
 	} else {
-		if( !$('#AFYes').is(':checked')) {
+		if( !$('#CFYes').is(':checked')) {
 			$(".size").hide();
+			$(".CUCategory").hide();
 		}
 	}
 
 	if( $('#AFYes').is(':checked')) {
-		$(".size").show();
 		$(".internal-audits").show();
 	} else {
 		$(".internal-audits").hide();
-		if( !$('#CFYes').is(':checked')) {
-			$(".size").hide();
+		if( !$('#AFYes').is(':checked')) {
+			$(".internal-audits").hide();
 		}
 	}
 
 	$("input[name='AuditableFlag']").click(function(){
 		if($('#AFYes').is(':checked')) {
-			$(".size").show();
 			$(".internal-audits").show();
 		} else {
 			$(".internal-audits").hide();
-			if( !$('#CFYes').is(':checked')) {
-				$(".size").hide();
+			if( !$('#AFYes').is(':checked')) {
+				$(".internal-audits").hide();
 			}
 		}
 	});
@@ -33,9 +33,11 @@ $(document).ready(function() {
 	$("input[name='CUFlag']").click(function(){
 		if($('#CFYes').is(':checked')) {
 			$(".size").show();
+			$(".CUCategory").show();
 		} else {
-			if( !$('#AFYes').is(':checked')) {
+			if( !$('#CFYes').is(':checked')) {
 				$(".size").hide();
+				$(".CUCategory").hide();
 			}
 		}
 	});
