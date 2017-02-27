@@ -234,25 +234,25 @@
 				</thead>
 				{{#each BUCAsmtDataCURview}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
-						<td class="asmt-viewdata">{{topName}}</td>
-						<td class="asmt-viewdata">{{categoryName}}</td>
-						<td class="asmt-viewdata" width="10%">{{{category}}}</td>
+						<td class="asmt-viewdata" width="3%">{{topName}}</td>
+						<td class="asmt-viewdata" width="2%">{{categoryName}}</td>
+						<td class="asmt-viewdata" width="5%">{{{category}}}</td>
 						{{#if name}}
-							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							<td class="asmt-viewdata" width="20%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
-							<td class="asmt-viewdata">&nbsp;</td>
+							<td class="asmt-viewdata" width="20%">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata">{{count}}</td>
-						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
-						{{{ratingDisplayView ratingPQ1}}}
-						{{{ratingDisplayView ratingCQ}}}
-						<td class="asmt-viewdata">{{targettosat}}</td>
-						<td class="asmt-viewdata">{{targettosatprev}}</td>
-						<td class="asmt-viewdata">{{size}}</td>
-						<td class="asmt-viewdata">{{maxscore}}</td>
-						<td class="asmt-viewdata">{{cqscore}}</td>
-						<td class="asmt-viewdata">{{pqscore}}</td>
-						<td class="asmt-viewdata">{{reviewcomments}}</td>
+						<td class="asmt-viewdata" width="5%">{{count}}</td>
+						<td class="asmt-viewdata" width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
+						{{{ratingDisplayView ratingPQ1 5}}}
+						{{{ratingDisplayView ratingCQ 5}}}
+						<td class="asmt-viewdata" width="10%">{{targettosat}}</td>
+						<td class="asmt-viewdata" width="10%">{{targettosatprev}}</td>
+						<td class="asmt-viewdata" width="5%">{{size}}</td>
+						<td class="asmt-viewdata" width="5%">{{maxscore}}</td>
+						<td class="asmt-viewdata" width="5%">{{cqscore}}</td>
+						<td class="asmt-viewdata" width="5%">{{pqscore}}</td>
+						<td class="asmt-viewdata" width="10%">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
 				<tr>
@@ -286,26 +286,26 @@
 				</thead>
 				{{#each BUCAsmtDataCURview2}}
 					 <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
-					   	<td class="asmt-viewdata" width="3%">{{topName}}</td>						
-						<td class="asmt-viewdata">{{country}}</td>
-						<td class="asmt-viewdata" width="2%">{{categoryName}}</td>
+					   	<td class="asmt-viewdata" width="3%">{{topName}}</td>
+						<td class="asmt-viewdata" width="10%">{{country}}</td>
+						<td class="asmt-viewdata" width="3%">{{categoryName}}</td>
 						<td class="asmt-viewdata" width="5%">{{{category2}}}</td>
 						{{#if name}}
-							<td class="asmt-viewdata"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+							<td class="asmt-viewdata" width="20%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 						{{else}}
-							<td class="asmt-viewdata">&nbsp;</td>
+							<td class="asmt-viewdata" width="20%">&nbsp;</td>
 						{{/if}}
-						<td class="asmt-viewdata">{{count}}
+						<td class="asmt-viewdata" width="5%">{{count}}
 						</td>
-						<td class="asmt-viewdata">{{percent}}{{#if percent}}%{{/if}}</td>
-						{{{ratingDisplayView ratingPQ1}}}
-						{{{ratingDisplayView ratingCQ}}}
-						<td class="asmt-viewdata">{{targettosat}}</td>
-						<td class="asmt-viewdata">{{size}}</td>
-						<td class="asmt-viewdata">{{maxscore}}</td>
-						<td class="asmt-viewdata">{{cqscore}}</td>
-						<td class="asmt-viewdata">{{pqscore}}</td>
-						<td class="asmt-viewdata">{{reviewcomments}}</td>
+						<td class="asmt-viewdata" width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
+						{{{ratingDisplayView ratingPQ1 5}}}
+						{{{ratingDisplayView ratingCQ 5}}}
+						<td class="asmt-viewdata" width="10%">{{targettosat}}</td>
+						<td class="asmt-viewdata" width="5%">{{size}}</td>
+						<td class="asmt-viewdata" width="5%">{{maxscore}}</td>
+						<td class="asmt-viewdata" width="5%">{{cqscore}}</td>
+						<td class="asmt-viewdata" width="5%">{{pqscore}}</td>
+						<td class="asmt-viewdata" width="12%">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
 				<tr>

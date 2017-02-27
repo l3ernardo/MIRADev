@@ -1,6 +1,6 @@
 applications:
 - path: .
-  memory: 256M
+  memory: 200M
   instances: 1
   domain: w3ibm.mybluemix.net
   name: mira-dev

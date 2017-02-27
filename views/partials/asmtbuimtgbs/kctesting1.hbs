@@ -5,13 +5,13 @@
 		<td class="kc-test-cell" colspan="4">
 			<table width="100%" class="ibm-data-table">
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader"></th>
+					<th class="kc-test-viewheader" colspan="2"></th>
 					<th colspan="10" class="kc-test-viewheader">Defect Rates &amp; Testing Ratios (%) for Prior and Current Quarters</th>
 					<th class="kc-test-viewheader"></th>
 					<th colspan="12" class="kc-test-viewheader"># Unremed. Defects @ QE for Prior and Current Quarters</th>
 				</thead>
 				<thead class="kc-test-viewheader">
-					<th class="kc-test-viewheader"></th>
+					<th class="kc-test-viewheader" colspan="2"></th>
 					{{#each PrevQtrs}}
 						<th colspan="2" class="kc-test-viewsubheader">{{this}}</th>
 					{{/each}}
@@ -23,7 +23,7 @@
 					<th colspan="4" class="asmt-viewdata-centered">{{CurrentPeriod}}</th>
 				</thead>
 				<tr class="kc-test-viewheader">
-					<td class="kc-test-viewheader" width="21%">Financial Processes</td>
+					<td class="kc-test-viewheader" width="21%" colspan="2" colspan="2">Financial Process</td>
 					<td class="kc-test-viewsubheader" width="4%">DR</td>
 					<td class="kc-test-viewsubheader" width="4%">TR</td>
 					<td class="kc-test-viewsubheader" width="4%">DR</td>
@@ -48,7 +48,7 @@
 					<td class="kc-test-viewsubheader" width="4%">CQF</td>
 					<td class="kc-test-viewsubheader" width="4%">CQO</td>
 				</tr>
-					{{#KCProcessFIN}}
+				{{#KCProcessFIN}}
 							<tr class="asmt-viewdata">
 								<td>{{name}}</td>
 								{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
@@ -108,7 +108,7 @@
 				<tr class="kc-test-viewheader">
 					<td colspan="25"></td>
 				</tr>
-					<tr class="kc-test-viewheader">
+				<tr class="kc-test-viewheader">
 						<td class="kc-test-viewheader" width="21%">Operational Process</td>
 						<td class="kc-test-viewsubheader" width="4%">DR</td>
 						<td class="kc-test-viewsubheader" width="4%">TR</td>
@@ -162,111 +162,111 @@
 								<td class="asmt-viewdata-centered">{{cqo}}</td>
 							</tr>
 						{{/each}}
-					<tr class="kc-test-viewheader">
-						<td colspan="25"></td>
-					</tr>
-					<tr class="kc-test-viewsubheader-al">
-						<td class="kc-test-viewsubheader-al" colspan="10">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
+				<tr class="kc-test-viewheader">
+					<td colspan="25"></td>
+				</tr>
+				<tr class="kc-test-viewsubheader-al">
+					<td class="kc-test-viewsubheader-al" colspan="10">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
 						<td class="marg-bg">{{#if_not_equal margCPDROps 0}}{{margCPDROps}}{{/if_not_equal}}</td>
 						<td class="unsat-bg">{{#if_not_equal unsatCPDROps 0}}{{unsatCPDROps}}{{/if_not_equal}}</td>
-						<td class="kc-test-viewheader-cell"></td>
-						<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
-					</tr>
-					<tr class="kc-test-viewheader">
-						<td colspan="13" rowspan="2"></td>
-						<td colspan="12" rowspan="2">
-							{{#if editmode}}
-								<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="85">{{OpsProcessTestingExplanations}}</textarea><br />
-							{{else}}
-								<textarea rows="2" cols="85" disabled>{{OpsProcessTestingExplanations}}</textarea><br />
-							{{/if}}
-						</td>
-					</tr>
-					<tr class="kc-test-viewheader">
-					</tr>
-					<tr class="kc-test-viewheader">
-						<td colspan="25"></td>
-					</tr>
-				</table>   
+					<td class="kc-test-viewheader-cell"></td>
+					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
+				</tr>
+				<tr class="kc-test-viewheader">
+					<td colspan="13" rowspan="2"></td>
+					<td colspan="12" rowspan="2">
+						{{#if editmode}}
+							<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="85">{{OpsProcessTestingExplanations}}</textarea><br />
+						{{else}}
+							<textarea rows="2" cols="85" disabled>{{OpsProcessTestingExplanations}}</textarea><br />
+						{{/if}}
+					</td>
+				</tr>
+				<tr class="kc-test-viewheader">
+				</tr>
+				<tr class="kc-test-viewheader">
+					<td colspan="25"></td>
+				</tr>
+			</table> 
 			<table width="100%" class="ibm-data-table">
 				<tr class="kc-test-cell">
 					<td class="kc-test-cell" width="65%">
 						<table width="100%" class="ibm-data-table">
 							<tr class="kc-test-cell">
 								<th class="kc-test-label" colspan="4">Focus items, key changes, open items, comments for current &amp; next quarter</th>
-							</tr>
-							<tr class="kc-test-cell">
-								<td class="asmt-viewdata" colspan="4">
-									{{#if editmode}}
-										<textarea name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" rows="4" cols="130">{{ProcessTestingFocusItems}}</textarea>
-									{{else}}
-										<textarea rows="4" cols="130" disabled>{{ProcessTestingFocusItems}}</textarea><br />
-									{{/if}}
-								</td>
-							</tr>
-						</table>
-					</td>
-					<td class="kc-test-cell" width="5%"></td>
-					<td class="kc-test-cell" width="30%">
-						<table width="100%" class="ibm-data-table">
-							<tr class="asmt-viewdata">
-								<td colspan="4"><b>Key:</b></td>
-							</tr>
-							<tr class="asmt-viewdata">
-							<td colspan="2"><span class="mira-subdata2"><u>DR: Defect Rate456</u></span></td>
+						</tr>
+						<tr class="kc-test-cell">
+							<td class="asmt-viewdata" colspan="4">
+								{{#if editmode}}
+									<textarea name="ProcessTestingFocusItems" id="ProcessTestingFocusItems" rows="4" cols="130">{{ProcessTestingFocusItems}}</textarea>
+								{{else}}
+									<textarea rows="4" cols="130" disabled>{{ProcessTestingFocusItems}}</textarea><br />
+								{{/if}}
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="kc-test-cell" width="5%"></td>
+				<td class="kc-test-cell" width="30%">
+					<table width="100%" class="ibm-data-table">
+						<tr class="asmt-viewdata">
+							<td colspan="4"><b>Key:</b></td>
+						</tr>
+						<tr class="asmt-viewdata">
+							<td colspan="2"><span class="mira-subdata2"><u>DR: Defect Rate</u></span></td>
 							<td colspan="2"><span class="mira-subdata2"><u>TR: Testing Ratio</u></span></td>
-							</tr>
-							<tr class="asmt-viewdata">
-								<td width="10%">
-									{{{ratingBGDisplay "Sat" ""}}}<br />
-									{{{ratingBGDisplay "Marg" ""}}}<br />
-									{{{ratingBGDisplay "Unsat" ""}}}<br />
-									"-"
-								</td>
-								<td width="40%">
-									<span class="mira-subdata2">
-										DR &lt; 2%<br />
-										2% &le;  DR &lt; 4%<br />
-										DR &ge; 4%<br />
-										Not Applicable
-									</span>
-								</td>
-								<td width="10%">
-									{{{ratingBGDisplay "Sat" ""}}}<br />
-									{{{ratingBGDisplay "Marg" ""}}}<br />
-									{{{ratingBGDisplay "Unsat" ""}}}<br />
-									"-"
-								</td>
-								<td width="40%">
-									<span class="mira-subdata2">
-										TR &ge; 98%<br />
-										95% &le; TR &lt; 98%<br />
-										TR &lt; 95%<br />
-										Not Applicable
-									</span>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr class="kc-test-content">
-		<td colspan="4">
+						</tr>
+						<tr class="asmt-viewdata">
+							<td width="10%">
+								{{{ratingBGDisplay "Sat" ""}}}<br />
+								{{{ratingBGDisplay "Marg" ""}}}<br />
+								{{{ratingBGDisplay "Unsat" ""}}}<br />
+								"-"
+							</td>
+							<td width="40%">
+								<span class="mira-subdata2">
+									DR &lt; 2%<br />
+									2% &le;  DR &lt; 4%<br />
+									DR &ge; 4%<br />
+									Not Applicable
+								</span>
+							</td>
+							<td width="10%">
+								{{{ratingBGDisplay "Sat" ""}}}<br />
+								{{{ratingBGDisplay "Marg" ""}}}<br />
+								{{{ratingBGDisplay "Unsat" ""}}}<br />
+								"-"
+							</td>
+							<td width="40%">
+								<span class="mira-subdata2">
+									TR &ge; 98%<br />
+									95% &le; TR &lt; 98%<br />
+									TR &lt; 95%<br />
+									Not Applicable
+								</span>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+<tr class="kc-test-content">
+	<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Country Process Defect Rate Exceptions</b></span><br /><br />
 			<a href="javascript:void(0);" value="Export to Excel" name="RCControls-link-export" id="RCControls-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-			<span class="ibm-sep"> </span>
+			<span class="ibm-sep">&nbsp;</span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="RCControls-link-export2" id="RCControls-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
 			<br /><br />
 			<table id="RCControls_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" scope="col" width="50%">Process</th>
-					<th class="kc-test-viewheader" scope="col" width="15%"># Tests</th>
-					<th class="kc-test-viewheader" scope="col" width="15%"># Defects</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">DR %</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Count</th>
-				</thead>
+				<th class="kc-test-viewheader" scope="col" width="50%">Process</th>
+				<th class="kc-test-viewheader" scope="col" width="15%"># Tests</th>
+				<th class="kc-test-viewheader" scope="col" width="15%"># Defects</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">DR %</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">Count</th>
+			</thead>
 				{{#each CPDRException}}   <!--RCTest1Data-->
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%">{{category}}</td>
@@ -277,27 +277,27 @@
 						<td width="10%">{{count}}</td>
 					</tr>
 				{{/each}}
-			</table>
-		</td>
-	</tr>
-		<tr class="kc-test-content">
-		<td colspan="4">
+		</table>
+	</td>
+</tr>
+<tr class="kc-test-content">
+	<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Testing Ratio Exceptions</b></span><br /><br />
 			<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-			<span class="ibm-sep"> </span>
+			<span class="ibm-sep">&nbsp;</span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
 			<br /><br />
 			<table id="RCTest_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" scope="col" width="5%"></th>
-					<th class="kc-test-viewheader" scope="col" width="5%"></th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Control</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Req'd Samples</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Samples Tested</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">TR %</th>
-					<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
-					<th class="kc-test-viewheader" scope="col" width="25%">Action plan to meet full year req'd samples</th>
-				</thead>
+				<th class="kc-test-viewheader" scope="col" width="5%"></th>
+				<th class="kc-test-viewheader" scope="col" width="5%"></th>
+				<th class="kc-test-viewheader" scope="col" width="15%">Control</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">Req'd Samples</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">Samples Tested</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">TR %</th>
+				<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
+				<th class="kc-test-viewheader" scope="col" width="25%">Action plan to meet full year req'd samples</th>
+			</thead>
 				{{#each TRExceptionControls}}   <!--RCTest2Data-->
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%">{{controlTypeName}}</td>
@@ -310,30 +310,30 @@
 						<td width="20%">{{actionPlan}}</td>
 					</tr>
 				{{/each}}
-			</table>
-		</td>
-	</tr>
+		</table>
+	</td>
+</tr>
 <tr class="kc-test-content">
-		<td colspan="4">
+	<td colspan="4">
 			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
 			<a href="javascript:void(0);" value="Export to Excel" name="RCTest3-link-export" id="RCTest3-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-			<span class="ibm-sep"> </span>
+			<span class="ibm-sep">&nbsp;</span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest3-link-export2" id="RCTest3-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
 			<br /><br />
 			<table id="Rptg2_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" scope="col" width="5%"></th>
-					<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Process</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Country</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Control</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Controllable Unit</th>
-					<th class="kc-test-viewheader" scope="col" width="15%">Sample</th>
-					<th class="kc-test-viewheader" scope="col" width="5%">Original Target to Close</th>
-					<th class="kc-test-viewheader" scope="col" width="5%">Current Target to Close</th>
-					<th class="kc-test-viewheader" scope="col" width="5%"># Defects</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
-				</thead>
+				<th class="kc-test-viewheader" scope="col" width="5%"></th>
+				<th class="kc-test-viewheader" scope="col" width="5%">Type</th>
+				<th class="kc-test-viewheader" scope="col" width="15%">Process</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">Country</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">Control</th>
+				<th class="kc-test-viewheader" scope="col" width="15%">Controllable Unit</th>
+				<th class="kc-test-viewheader" scope="col" width="15%">Sample</th>
+				<th class="kc-test-viewheader" scope="col" width="5%">Original Target to Close</th>
+				<th class="kc-test-viewheader" scope="col" width="5%">Current Target to Close</th>
+				<th class="kc-test-viewheader" scope="col" width="5%"># Defects</th>
+				<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
+			</thead>
 				{{#each RCTest3Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%">{{originalReportingQuarter}}</td>
@@ -349,11 +349,14 @@
 						<td width="13%">{{defectType}}</td>
 					</tr>
 				{{/each}}
-			</table>
-		</td>
-	</tr>
+		</table>
+	</td>
+</tr>
 </table>
 <script>
-	$("#Rptg_treeview").treetable({expandable: true });
-	$("#Rptg2_treeview").treetable({expandable: true });
+	$("#RCControls_treeview").treetable({expandable: true });
+	$("#RCTest_treeview").treetable({expandable: true });
+	$("#RCTest3_treeview").treetable({expandable: true });
 </script>
+
+

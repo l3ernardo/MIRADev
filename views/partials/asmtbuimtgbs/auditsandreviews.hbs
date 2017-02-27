@@ -1,9 +1,17 @@
+<textarea name="textarea" id="InternalAuditDataExport" cols="100" style="display:none">{{valuesToString exportInternalAuditData}}</textarea>
+<textarea name="textarea" id="PPRDataExport" cols="100" style="display:none">{{valuesToString exportPPRData}}</textarea>
+<textarea name="textarea" id="OtherAuditsDataExport" cols="100" style="display:none">{{valuesToString exportOtherAuditsData}}</textarea>
+
 <table id="auditreview_table" class="ibm-data-table" width="100%">
   {{#if editmode}}
   	<tr class="audit-review-content">
   		<td>
         <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
-  			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+      	<span class="ibm-sep">&nbsp;</span>
+      	<a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+    		<br /><br />
+  			<table id="InternalAudit_table" width="100%" class="table_with_scroll">
   				<thead>
   					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
             <th class="audit-review-viewheader" scope="col" width="10%">Country</th>
@@ -16,15 +24,17 @@
   					<th class="audit-review-viewheader" scope="col" width="5%">Score</th>
   				</thead>
   				{{#each InternalAuditData}}
-  					<tr class="asmt-viewdata">
-  						{{#each col}}
-  							{{#if @first}}
-  								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
-  							{{else}}
-  								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-  							{{/if}}
-  						{{/each}}
-  					</tr>
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="10%">{{plannedStartDate}}</td>
+              <td width="10%">{{country}}</td>
+              <td width="8%">{{engagement}}</td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="16%">{{DocSubType}}</td>
+              {{{ratingDisplayView PeriodRatingPrev 7}}}
+              {{{ratingDisplayView PeriodRating 7}}}
+              <td width="7%">{{CUSize}}</td>
+              <td width="5%">{{CUScore}}</td>
+            </tr>
   				{{/each}}
           <tr class="audit-review-viewheader-ar">
             <td class="audit-review-viewheader-ar" colspan="9"><b>Weighted Score: {{WeightedAuditScore}}</b></td>
@@ -41,7 +51,11 @@
   	<tr class="audit-review-content">
   		<td>
         <span class="audit-review-header"><b>Proactive Reviews - Quarterly Recommendation Status</b></span><br /><br />
-  			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="ppr_treeview" width="100%" class="table_with_scroll">
   				<thead>
             <th class="audit-review-viewheader" scope="col" width="7%">Type</th>
             <th class="audit-review-viewheader" scope="col" width="5%">Pd</th>
@@ -56,17 +70,22 @@
             <th class="audit-review-viewheader" scope="col" width="5%">Open Recs</th>
             <th class="audit-review-viewheader" scope="col" width="5%">Count</th>
   				</thead>
-  				{{#each PPRData}}
-  					<tr class="asmt-viewdata">
-  						{{#each col}}
-  							{{#if @first}}
-  								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
-  							{{else}}
-  								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-  							{{/if}}
-  						{{/each}}
-  					</tr>
-  				{{/each}}
+          {{#each PPRData}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
+              <td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
+              <td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
+              <td width="5%">{{country}}</td>
+              <td width="8%">{{reviewID}}</td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="10%">{{DocSubType}}</td>
+              <td width="10%">{{reportDate}}</td>
+              {{{ratingDisplayView rating 5}}}
+              <td width="5%">{{numRecommendationsTotal}}</td>
+              <td width="5%">{{numRecommendationsOpen}}</td>
+              <td width="5%">{{count}}</td>
+            </tr>
+          {{/each}}
   			</table>
         <table width="100%" class="ibm-data-table">
 					<tr>
@@ -79,7 +98,11 @@
   	<tr class="audit-review-content">
   		<td>
         <span class="audit-review-header"><b>Other Audits and Reviews</b></span><br /><br />
-  			<table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="OtherAudits-link-export" id="OtherAudits-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="OtherAudits-link-export2" id="OtherAudits-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="OtherAudits_treeview" width="100%" class="table_with_scroll">
   				<thead>
   					<th class="audit-review-viewheader" scope="col" width="8%">Type</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Rating/Status</th>
@@ -91,17 +114,19 @@
   					<th class="audit-review-viewheader" scope="col" width="5%">Size</th>
   					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
   				</thead>
-  				{{#each OtherAuditsData}}
-  					<tr class="asmt-viewdata">
-  						{{#each col}}
-  							{{#if @first}}
-  								<td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
-  							{{else}}
-  								<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-  							{{/if}}
-  						{{/each}}
-  					</tr>
-  				{{/each}}
+          {{#each OtherAuditsData}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="8%">{{#if catEntry}}{{auditOrReviewName}}{{/if}}</td>
+              {{{ratingDisplayView PeriodRating 8}}}
+              <td width="8%">{{imt}}</td>
+              <td width="8%">{{reportDate}}</td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="8%">{{DocSubType}}</td>
+              {{{ratingDisplayView PeriodRatingPrev 5}}}
+              <td width="5%">{{CUSize}}</td>
+              <td width="20%">{{comments}}</td>
+            </tr>
+          {{/each}}
   			</table>
         <table width="100%" class="ibm-data-table">
 					<tr>
@@ -125,7 +150,11 @@
     <tr class="audit-review-content">
       <td>
         <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
-        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+    		<br /><br />
+    		<table id="InternalAudit_table" width="100%" class="table_with_scroll">
           <thead>
             <th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
             <th class="audit-review-viewheader" scope="col" width="10%">Country</th>
@@ -138,16 +167,18 @@
   					<th class="audit-review-viewheader" scope="col" width="5%">Score</th>
           </thead>
           {{#each InternalAuditData}}
-            <tr class="asmt-viewdata">
-              {{#each col}}
-                {{#if @first}}
-                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
-                {{else}}
-                  <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-                {{/if}}
-              {{/each}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="10%">{{plannedStartDate}}</td>
+              <td width="10%">{{country}}</td>
+              <td width="8%">{{engagement}}</td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="16%">{{DocSubType}}</td>
+              {{{ratingDisplayView PeriodRatingPrev 7}}}
+              {{{ratingDisplayView PeriodRating 7}}}
+              <td width="7%">{{CUSize}}</td>
+              <td width="5%">{{CUScore}}</td>
             </tr>
-          {{/each}}
+  				{{/each}}
           <tr class="audit-review-viewheader-ar">
             <td class="audit-review-viewheader-ar" colspan="9"><b>Weighted Score: {{WeightedAuditScore}}</b></td>
           </tr>
@@ -163,7 +194,11 @@
     <tr class="audit-review-content">
       <td>
         <span class="audit-review-header"><b>Proactive Reviews - Quarterly Recommendation Status</b></span><br /><br />
-        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="ppr_treeview" width="100%" class="table_with_scroll">
           <thead>
             <th class="audit-review-viewheader" scope="col" width="7%">Type</th>
             <th class="audit-review-viewheader" scope="col" width="5%">Pd</th>
@@ -179,14 +214,19 @@
             <th class="audit-review-viewheader" scope="col" width="5%">Count</th>
           </thead>
           {{#each PPRData}}
-            <tr class="asmt-viewdata">
-              {{#each col}}
-                {{#if @first}}
-                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
-                {{else}}
-                  <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-                {{/if}}
-              {{/each}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
+              <td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
+              <td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
+              <td width="5%">{{country}}</td>
+              <td width="8%">{{reviewID}}</td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="10%">{{DocSubType}}</td>
+              <td width="10%">{{reportDate}}</td>
+              {{{ratingDisplayView rating 5}}}
+              <td width="5%">{{numRecommendationsTotal}}</td>
+              <td width="5%">{{numRecommendationsOpen}}</td>
+              <td width="5%">{{count}}</td>
             </tr>
           {{/each}}
         </table>
@@ -201,7 +241,11 @@
     <tr class="audit-review-content">
       <td>
         <span class="audit-review-header"><b>Other Audits and Reviews</b></span><br /><br />
-        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <a href="javascript:void(0);" value="Export to Excel" name="OtherAudits-link-export" id="OtherAudits-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="OtherAudits-link-export2" id="OtherAudits-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="OtherAudits_treeview" width="100%" class="table_with_scroll">
           <thead>
             <th class="audit-review-viewheader" scope="col" width="8%">Type</th>
             <th class="audit-review-viewheader" scope="col" width="8%">Rating/Status</th>
@@ -214,14 +258,16 @@
             <th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
           </thead>
           {{#each OtherAuditsData}}
-            <tr class="asmt-viewdata">
-              {{#each col}}
-                {{#if @first}}
-                  <td><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{this}}</a></td>
-                {{else}}
-                  <td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-                {{/if}}
-              {{/each}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="8%">{{#if catEntry}}{{auditOrReviewName}}{{/if}}</td>
+              {{{ratingDisplayView PeriodRating 8}}}
+              <td width="8%">{{imt}}</td>
+              <td width="8%">{{reportDate}}</td>
+              <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="8%">{{DocSubType}}</td>
+              {{{ratingDisplayView PeriodRatingPrev 5}}}
+              <td width="5%">{{CUSize}}</td>
+              <td width="20%">{{comments}}</td>
             </tr>
           {{/each}}
         </table>
@@ -245,3 +291,7 @@
     </tr>
   {{/if}}
 </table>
+<script>
+	$("#ppr_treeview").treetable({expandable: true });
+  $("#OtherAudits_treeview").treetable({expandable: true });
+</script>
