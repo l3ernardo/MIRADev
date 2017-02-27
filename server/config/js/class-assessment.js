@@ -586,6 +586,20 @@ var assessment = {
 							doc[0].AuditTrustedData = [];
 							doc[0].CUAsmtDataPR1view = [];
 							doc[0].AuditLocalData = [];
+							//FOR GTS TRANSFORM ONLY: CTRT calculations
+							if(doc[0].MIRABusinessUnit == "GTS Transformation") {
+								console.log("Entered a GTS Transformation CU");
+								var ctrtValues = {
+									reportingQuarter: doc[0].CurrentPeriod,
+									geo: parentdoc[0].Geo,
+									process: parentdoc[0].ControllableUnit,
+									rating: parentdoc[0].PeriodRating,
+									totalTests: parentdoc[0].TotalTests,
+									defects: parentdoc[0].Defects,
+									defectsRate: parentdoc[0].DefectsRate
+								};								
+								doc[0].CTRT = ctrtValues;
+							}
 
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);
