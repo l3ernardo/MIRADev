@@ -400,7 +400,6 @@ var getDocs = {
 					});
 					break;
 				case "BU IMT":
-
 					//Create the $or selector for the query. Will be saving all the BU Country's Auditable Units
 					var $or = [];
 					// For CHQ Internal Audits - Local
@@ -408,6 +407,9 @@ var getDocs = {
 						for(var i = 0; i < doc[0].asmtsdocs.length; i++){
 							$or.push({parentid: doc[0].asmtsdocs[i]["_id"]});
 						}
+					}
+					else{ //If there is no assessments documents (New assessment)
+						$or.push({parentid: "0"});
 					}
 					var countrynames = [];
 					var countries = util.getIOTChildren(doc[0].IMTid, "IMT");
@@ -427,7 +429,7 @@ var getDocs = {
 
 								// Audits and Reviews Tab
 								// For CHQ Internal Audits - from Audit DB
-								{ "$and": [{"compntType": "internalAudit"}] },
+								//{ "$and": [{"compntType": "internalAudit"}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] },
 								// Sampled Country Testing tab
@@ -435,10 +437,18 @@ var getDocs = {
 								{ "$and": [{"compntType": "sampledCountry"}, {"IMT": doc[0].IMTName}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								// Sampled Country Testing tab and reporting country testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								{ "$and": [{"compntType": "controlSample"}, {"IMT": doc[0].IMTName}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] }
+								{ "$and": [{"compntType": "controlSample"}, {"IMT": doc[0].IMTName}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+								// Audits and Reviews Tab
+								// For CHQ Internal Audits - from Audit DB
+								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
+								// For proactive reviews (PPR)
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IMT": doc[0].IMTid}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								// For Local Audits
+								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 						   ]
 						}
 					};
+					//console.log(JSON.stringify(compObj));
 					db.find(compObj).then(function(compdata) {
 						var comps = compdata.body.docs;
 						doc[0].riskCategories = [];
@@ -450,7 +460,7 @@ var getDocs = {
 						doc[0].TRExceptionControls = [];
 						doc[0].RCTest3Data = [];
 
-						//Audit data
+						// For BU Country Audits & Reviews Tab
 						doc[0].InternalAuditData = [];
 						doc[0].PPRData = [];
 						doc[0].OtherAuditsData = [];
@@ -621,17 +631,15 @@ var getDocs = {
 							else if (comps[i].docType == "setup"){
 								doc[0].riskCategories = comps[i].value.options;
 							}
-
 							// For Audits and Reviews Tab - view 1 (Internal Audits)
 							else if (comps[i].compntType == "internalAudit" && doc[0].CurrentPeriod.substr(0, 4) == ( "20" + comps[i].engagement.substr(0, 2))) {
-
 								// audits and reviews tab only displays audits that has the same year as the asmt
 								if (typeof comps[i].engagement === "undefined") {
 									comps[i].engagement = comps[i].id;
 								}
-								if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
+								/*if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
 									comps[i].plannedStartDate = comps[i].ClosedDate;
-								}
+								}*/
 								doc[0].InternalAuditData.push(comps[i]);
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)
@@ -1004,9 +1012,9 @@ var getDocs = {
 								if (typeof comps[i].engagement === "undefined") {
 									comps[i].engagement = comps[i].id;
 								}
-								if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
+								/*if (comps[i].ClosedDate !== undefined || comps[i].ClosedDate !== "") {
 									comps[i].plannedStartDate = comps[i].ClosedDate;
-								}
+								}*/
 								doc[0].InternalAuditData.push(comps[i]);
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)

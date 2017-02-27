@@ -46,15 +46,15 @@
   </tr>
   {{#if editmode}}
   	<tr class="audit-review-content">
-  		<td>
-			<span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-  			<span class="ibm-sep">&nbsp;</span>
-  			<a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
-			<br /><br />
-  			<table id="InternalAudit_treeview" width="100%" class="table_with_scroll">
-  				<thead>
-					<th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
+      <td>
+        <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
+        <a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="InternalAudit_treeview" width="100%" class="table_with_scroll">
+          <thead>
+            <th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
   					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
   					<th class="audit-review-viewheader" scope="col" width="10%">Engagement</th>
   					<th class="audit-review-viewheader" scope="col" width="34%">Audited Unit</th>
@@ -90,41 +90,41 @@
   		</td>
   	</tr>
   	<tr class="audit-review-content">
-  		<td>
-			<span class="audit-review-header"><b>Proactive Reviews - Quarterly Recommendation Status</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-    		<span class="ibm-sep">&nbsp;</span>
-    		<a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
-			<br /><br />
-  			<table id="ppr_treeview" width="100%" class="table_with_scroll">
-  				<thead>
-					<th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Type</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Pd</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Sts</th>
-					<th class="audit-review-viewheader" scope="col" width="8%">Review ID</th>
-					<th class="audit-review-viewheader" scope="col" width="25%">Assessable Unit</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">Type</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
-					<th class="audit-review-viewheader" scope="col" width="6%">Rating</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Total Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Open Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Count</th>
+      <td>
+        <span class="audit-review-header"><b>Proactive Reviews - Quarterly Recommendation Status</b></span><br /><br />
+        <a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="ppr_treeview" width="100%" class="table_with_scroll">
+          <thead>
+  					<th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
+  					<th class="audit-review-viewheader" scope="col" width="7%">Type</th>
+  					<th class="audit-review-viewheader" scope="col" width="5%">Pd</th>
+  					<th class="audit-review-viewheader" scope="col" width="5%">Sts</th>
+  					<th class="audit-review-viewheader" scope="col" width="8%">Review ID</th>
+  					<th class="audit-review-viewheader" scope="col" width="25%">Assessable Unit</th>
+  					<th class="audit-review-viewheader" scope="col" width="10%">Type</th>
+  					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
+  					<th class="audit-review-viewheader" scope="col" width="6%">Rating</th>
+  					<th class="audit-review-viewheader" scope="col" width="7%">Total Recs</th>
+  					<th class="audit-review-viewheader" scope="col" width="7%">Open Recs</th>
+  					<th class="audit-review-viewheader" scope="col" width="5%">Count</th>
   				</thead>
   				{{#each PPRData}}
   					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%">{{#if catEntry}}<strong>{{cat}}{{/if}}</strong></td>
-						<td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
-						<td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
-						<td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
-						<td width="8%">{{reviewID}}</td>
-						<td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">a{{Name}}</a></td>
-						<td width="10%">{{DocSubType}}</td>
-						<td width="10%">{{reportDate}}</td>
-						{{{ratingDisplayView rating 6}}}
-						<td width="7%">{{numRecommendationsTotal}}</td>
-						<td width="7%">{{numRecommendationsOpen}}</td>
-						<td width="5%">{{count}}</td>
+  						<td width="5%">{{#if catEntry}}<strong>{{cat}}{{/if}}</strong></td>
+  						<td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
+  						<td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
+  						<td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
+  						<td width="8%">{{reviewID}}</td>
+  						<td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">a{{Name}}</a></td>
+  						<td width="10%">{{DocSubType}}</td>
+  						<td width="10%">{{reportDate}}</td>
+  						{{{ratingDisplayView rating 6}}}
+  						<td width="7%">{{numRecommendationsTotal}}</td>
+  						<td width="7%">{{numRecommendationsOpen}}</td>
+  						<td width="5%">{{count}}</td>
   					</tr>
   				{{/each}}
   			</table>
@@ -137,15 +137,15 @@
   		</td>
   	</tr>
   	<tr class="audit-review-content">
-  		<td>
-			<span class="audit-review-header"><b>Other Audits and Reviews</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="OtherAudits-link-export" id="OtherAudits-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-    		<span class="ibm-sep">&nbsp;</span>
-    		<a href="javascript:void(0);" value="Export to Open Office" name="OtherAudits-link-export2" id="OtherAudits-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
-			<br /><br />
-  			<table id="OtherAudits_treeview" width="100%" class="table_with_scroll">
-  				<thead>
-					<th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
+      <td>
+        <span class="audit-review-header"><b>Other Audits and Reviews</b></span><br /><br />
+        <a href="javascript:void(0);" value="Export to Excel" name="OtherAudits-link-export" id="OtherAudits-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="OtherAudits-link-export2" id="OtherAudits-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="OtherAudits_treeview" width="100%" class="table_with_scroll">
+          <thead>
+            <th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Type</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Rating/Status</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">IMT</th>
@@ -156,18 +156,18 @@
   					<th class="audit-review-viewheader" scope="col" width="5%">Size</th>
   					<th class="audit-review-viewheader" scope="col" width="20%">Comments</th>
   				</thead>
-				{{#each OtherAuditsData}}
-  					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="5%">{{#if catEntry}}<strong>{{cat}}{{/if}}</strong></td>
-						<td width="8%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
-						{{{ratingDisplayView PeriodRating 8}}}
-						<td width="8%">{{imt}}</td>
-						<td width="8%">{{reportDate}}</td>
-						<td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-						<td width="8%">{{DocSubType}}</td>
-						{{{ratingDisplayView PeriodRatingPrev 5}}}
-						<td width="5%">{{CUSize}}</td>
-						<td width="20%">{{comments}}</td>
+          {{#each OtherAuditsData}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="5%">{{#if catEntry}}<strong>{{cat}}{{/if}}</strong></td>
+              <td width="8%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
+              {{{ratingDisplayView PeriodRating 8}}}
+              <td width="8%">{{imt}}</td>
+              <td width="8%">{{reportDate}}</td>
+              <td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="8%">{{DocSubType}}</td>
+              {{{ratingDisplayView PeriodRatingPrev 5}}}
+              <td width="5%">{{CUSize}}</td>
+              <td width="20%">{{comments}}</td>
   					</tr>
   				{{/each}}
   			</table>
@@ -192,12 +192,12 @@
   {{else}} <!-- Read Mode  -->
     <tr class="audit-review-content">
       <td>
-			<span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-  			<span class="ibm-sep">&nbsp;</span>
-  			<a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
-			<br /><br />
-  			<table id="InternalAudit_treeview" width="100%" class="table_with_scroll">
+        <span class="audit-review-header"><b>Internal Audits</b></span><br /><br />
+        <a href="javascript:void(0);" value="Export to Excel" name="InternalAudit-link-export" id="InternalAudit-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="InternalAudit-link-export2" id="InternalAudit-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="InternalAudit_treeview" width="100%" class="table_with_scroll">
           <thead>
             <th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
   					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
@@ -236,42 +236,42 @@
     </tr>
     <tr class="audit-review-content">
       <td>
-			<span class="audit-review-header"><b>Proactive Reviews - Quarterly Recommendation Status</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-    		<span class="ibm-sep">&nbsp;</span>
-    		<a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
-			<br /><br />
-  			<table id="ppr_treeview" width="100%" class="table_with_scroll">
-				<thead>
-					<th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Type</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Pd</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Sts</th>
-					<th class="audit-review-viewheader" scope="col" width="8%">Review ID</th>
-					<th class="audit-review-viewheader" scope="col" width="25%">Assessable Unit</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">Type</th>
-					<th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
-					<th class="audit-review-viewheader" scope="col" width="6%">Rating</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Total Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="7%">Open Recs</th>
-					<th class="audit-review-viewheader" scope="col" width="5%">Count</th>
-				</thead>
-				{{#each PPRData}}
-  				<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-            <td width="5%">{{#if catEntry}}<strong>{{cat}}{{/if}}</strong></td>
-            <td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
-            <td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
-            <td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
-					<td width="8%">{{reviewID}}</td>
-					<td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-					<td width="10%">{{DocSubType}}</td>
-					<td width="10%">{{reportDate}}</td>
-					{{{ratingDisplayView rating 6}}}
-					<td width="7%">{{numRecommendationsTotal}}</td>
-					<td width="7%">{{numRecommendationsOpen}}</td>
-					<td width="5%">{{count}}</td>
-  				</tr>
-  				{{/each}}
+        <span class="audit-review-header"><b>Proactive Reviews - Quarterly Recommendation Status</b></span><br /><br />
+        <a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="ppr_treeview" width="100%" class="table_with_scroll">
+          <thead>
+            <th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
+            <th class="audit-review-viewheader" scope="col" width="7%">Type</th>
+            <th class="audit-review-viewheader" scope="col" width="5%">Pd</th>
+            <th class="audit-review-viewheader" scope="col" width="5%">Sts</th>
+            <th class="audit-review-viewheader" scope="col" width="8%">Review ID</th>
+            <th class="audit-review-viewheader" scope="col" width="25%">Assessable Unit</th>
+            <th class="audit-review-viewheader" scope="col" width="10%">Type</th>
+            <th class="audit-review-viewheader" scope="col" width="10%">Report Date</th>
+            <th class="audit-review-viewheader" scope="col" width="6%">Rating</th>
+            <th class="audit-review-viewheader" scope="col" width="7%">Total Recs</th>
+            <th class="audit-review-viewheader" scope="col" width="7%">Open Recs</th>
+            <th class="audit-review-viewheader" scope="col" width="5%">Count</th>
+          </thead>
+          {{#each PPRData}}
+            <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+              <td width="5%">{{#if catEntry}}<strong>{{cat}}{{/if}}</strong></td>
+              <td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
+              <td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
+              <td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
+              <td width="8%">{{reviewID}}</td>
+              <td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
+              <td width="10%">{{DocSubType}}</td>
+              <td width="10%">{{reportDate}}</td>
+              {{{ratingDisplayView rating 6}}}
+              <td width="7%">{{numRecommendationsTotal}}</td>
+              <td width="7%">{{numRecommendationsOpen}}</td>
+              <td width="5%">{{count}}</td>
+            </tr>
+          {{/each}}
         </table>
         <table width="100%" class="ibm-data-table">
           <tr>
@@ -283,14 +283,14 @@
     </tr>
     <tr class="audit-review-content">
       <td>
-			<span class="audit-review-header"><b>Other Audits and Reviews</b></span><br /><br />
-			<a href="javascript:void(0);" value="Export to Excel" name="OtherAudits-link-export" id="OtherAudits-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
-    		<span class="ibm-sep">&nbsp;</span>
-    		<a href="javascript:void(0);" value="Export to Open Office" name="OtherAudits-link-export2" id="OtherAudits-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
-			<br /><br />
-  			<table id="OtherAudits_treeview" width="100%" class="table_with_scroll">
-				<thead>
-					<th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
+        <span class="audit-review-header"><b>Other Audits and Reviews</b></span><br /><br />
+        <a href="javascript:void(0);" value="Export to Excel" name="OtherAudits-link-export" id="OtherAudits-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+        <span class="ibm-sep">&nbsp;</span>
+        <a href="javascript:void(0);" value="Export to Open Office" name="OtherAudits-link-export2" id="OtherAudits-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+        <br /><br />
+        <table id="OtherAudits_treeview" width="100%" class="table_with_scroll">
+          <thead>
+            <th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Type</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">Rating/Status</th>
   					<th class="audit-review-viewheader" scope="col" width="8%">IMT</th>
