@@ -422,7 +422,7 @@ var getDocs = {
 					for (var i = 0; i < countries.length; i++) {
 						countrynames.push(countries[i].name);
 					}
-					var imt = util.getIMTNameByCountry("USA");
+					// var imt = util.getIMTNameByCountry("USA");
 					var compObj = {
 						selector : {
 							"_id": {"$gt":0},
@@ -589,9 +589,9 @@ var getDocs = {
 									} else {}
 								}
 								else if (doc[0].MIRABusinessUnit == "GTS") {
-									comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 									if (comps[i].MIRABusinessUnit == "GTS") {
 										if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
+											// console.log(comps[i].MIRABusinessUnit + "," + comps[i].GPPARENT + "," + comps[i].IMT + "," + comps[i].numtest + "," + comps[i].numDefects + "," + comps[i]._id);
 											doc[0].SCTest1Data.push(comps[i]);
 										} else if (comps[i].reportingQuarter == doc[0].PrevQtrs[0]) {
 											doc[0].SCTestDataPQ1.push(comps[i]);
@@ -605,7 +605,6 @@ var getDocs = {
 									}
 								}
 								else if (doc[0].MIRABusinessUnit == "GTS Transformation") {
-									comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 									if (comps[i].MIRABusinessUnit == "GTS Transformation") {
 										if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
 											doc[0].SCTest1Data.push(comps[i]);
