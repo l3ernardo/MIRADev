@@ -105,7 +105,8 @@ var calculateARTab = {
           //console.log("Parent AU exists: "+parentAU);
           tmp.Name = parentAU.Name;
           //console.log("Name: "+tmp.Name);
-          //Country
+          //IMT & Country
+          tmp.imp = parentAU.IMT;
           tmp.country = parentAU.Country;
           if(parentAU.DocSubType == "Controllable Unit" && parentAU.Portfolio == "Yes") {
             tmp.DocSubType = "Portfolio CU";
@@ -354,7 +355,8 @@ var calculateARTab = {
       for(var key in parentAUs) {
         if (auditPPR.CU == parentAUs[key].Name) {
           tmp.Name = parentAUs[key].Name;
-          //Country
+          //IMT and Country
+          tmp.imt = parentAUs[key].IMT;
           tmp.country = parentAUs[key].Country;
           //Categorization for GTS: will cycle through all the IS Delivery and CRM docs to select one of those as category.
           if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
