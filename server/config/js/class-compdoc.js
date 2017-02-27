@@ -416,6 +416,7 @@ var getDocs = {
 					for (var i = 0; i < countries.length; i++) {
 						countrynames.push(countries[i].name);
 					}
+					var imt = util.getIMTNameByCountry("USA");
 					var compObj = {
 						selector : {
 							"_id": {"$gt":0},
@@ -435,9 +436,13 @@ var getDocs = {
 								// Sampled Country Testing tab
 								{ "$and": [{"compntType": "sampledCountry"}, {"IMT": doc[0].IMTName}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
 								{ "$and": [{"compntType": "sampledCountry"}, {"IMT": doc[0].IMTName}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
-								// Sampled Country Testing tab and reporting country testing tab
+								// Sampled Country Testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								{ "$and": [{"compntType": "controlSample"}, {"IMT": doc[0].IMTName}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+								// Reporting country testing tab
+								{ "$and": [{"compntType": "controlSample"}, {"reportingCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
+								{ "$and": [{"compntType": "controlSample"}, {"reportingCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+
 								// Audits and Reviews Tab
 								// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
@@ -486,14 +491,12 @@ var getDocs = {
 
 						for(var i = 0; i < comps.length; i++) {
 							if (comps[i].compntType == "countryControls"){
-
 								if (comps[i].controlReferenceNumber != undefined && comps[i].controlShortName != undefined) {
 									comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-								}else {
-
 								}
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								doc[0].TRExceptionControls.push(comps[i]);
+								doc[0].RCTest2Data.push(comps[i]);
 
 								if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
 									doc[0].CountryControlsData.push(comps[i]);
@@ -504,16 +507,19 @@ var getDocs = {
 								}
 							}
 							else if (comps[i].compntType == "controlSample") {
+								// calculate Control Name
+								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								// For Key Controls Testing Tab
-								//if (comps[i].reportingCountry == doc[0].Country) {
-								if (comps[i].remediationStatus == "Open") {
+								// if (comps[i].reportingCountry == doc[0].Country && comps[i].remediationStatus == "Open") {
+								// if (comps[i].reportingCountry == doc[0].Country) {
+								if (countrynames.indexOf(comps[i].reportingCountry)!=-1){
+								// if (comps[i].remediationStatus == "Open") {
 									doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab
-								if (comps[i].sampleCountry == doc[0].Country) {
-									// calculate Control Name
-									comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-									comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+								// if (comps[i].sampleCountry == doc[0].Country) {
+								if (countrynames.indexOf(comps[i].sampleCountry)!=-1){
 
 									if (doc[0].MIRABusinessUnit == "GBS") {
 										if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
@@ -691,8 +697,6 @@ var getDocs = {
 								// Sampled Country Testing tab and reporting country testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
-								// { "$and": [{"compntType": "controlSample"}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								// { "$and": [{"compntType": "controlSample"}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								{ "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
 								{ "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								// Audits and Reviews Tab
