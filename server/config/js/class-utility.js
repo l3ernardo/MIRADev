@@ -738,6 +738,15 @@ var util = {
 		return result;
 	},
 
+	getIMTNameByCountry: function (countryname){
+		for(country in global.hierarchy.countries){
+			if (countryname == country) {
+				return global.hierarchy.countries[country].IMT;
+			}
+		}
+		return "";
+	},
+
 	getCountryIDs: function (req,Countries){
 		var result = [];
 		var temp = {};
