@@ -2552,7 +2552,6 @@ var calculateRCTab = {
           var exportRCTest3 = [];
           var topCategory = 0;
           var objects = {};//object of objects for counting
-
           RCTest3.sort(function(a, b){
             var nameA=a.originalReportingQuarter.toLowerCase(), nameB=b.originalReportingQuarter.toLowerCase()
             if (nameA < nameB) //sort string ascending
@@ -2581,7 +2580,6 @@ var calculateRCTab = {
               return 1
             return 0 //default return value (no sorting)
           });
-
           for(var i = 0; i < RCTest3.length; i++){
             if(typeof RCTest3Category[RCTest3[i].originalReportingQuarter.replace(/ /g,'')] === "undefined"){
               topCategory++;
@@ -2690,7 +2688,6 @@ var calculateRCTab = {
             }
           }
           doc[0].RCTest3Data = RCTest3List;
-
           // END OF IRVING'S CODE FOR REPORTING COUNTRY TAB****************
           ///////////////////////////////////////////////////////
 
