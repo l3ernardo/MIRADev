@@ -614,6 +614,7 @@ var calculatefield = {
 						// doc[0].AUDocs = asmtsdata.body.docs;
 						doc[0].AUDocs = [];
 						var unitdocs = asmtsdata.body.docs;
+						doc[0].auditableAUIds = [];
 						doc[0].ExcludedCountryNames = [];
 						doc[0].ExcludedCountryIDs = [];
 						doc[0].AUDocsObj = {};
