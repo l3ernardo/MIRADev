@@ -241,24 +241,24 @@
 					<th class="processrating-viewheader" scope="col" width="10%">Explanations</th>
 				</thead>
 				{{#each BUCAsmtDataPRview2}}
-					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">						
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
 						{{#if name}}
-						<td class="asmt-viewdata" scope="col">&nbsp;</td>
+						<td class="asmt-viewdata" scope="col" width="20%">&nbsp;</td>
 						{{else}}
-						<td class="asmt-viewdata" scope="col">{{country}}</td>
-						{{/if}}				
-						<td class="asmt-viewdata" scope="col">{{{category}}}</td>
-						{{#if name}}
-							<td class="asmt-viewdata" scope="col"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
-						{{else}}
-							<td class="asmt-viewdata" scope="col">&nbsp;</td>
+						<td class="asmt-viewdata" scope="col" width="20%">{{country}}</td>
 						{{/if}}
-						<td class="asmt-viewdata" scope="col">{{count}}</td>
-						<td class="asmt-viewdata" scope="col">{{percent}}{{#if percent}}%{{/if}}</td>
-						{{{ratingDisplayView ratingPQ1}}}
-						{{{ratingDisplayView ratingCQ}}}
-						<td class="asmt-viewdata" scope="col">{{targettosat}}</td>
-						<td class="asmt-viewdata" scope="col">{{reviewcomments}}</td>
+						<td class="asmt-viewdata" scope="col" width="10%">{{{category}}}</td>
+						{{#if name}}
+							<td class="asmt-viewdata" scope="col" width="20%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+						{{else}}
+							<td class="asmt-viewdata" scope="col" width="20%">&nbsp;</td>
+						{{/if}}
+						<td class="asmt-viewdata" scope="col" width="5%">{{count}}</td>
+						<td class="asmt-viewdata" scope="col" width="5%">{{percent}}{{#if percent}}%{{/if}}</td>
+						{{{ratingDisplayView ratingPQ1 10}}}
+						{{{ratingDisplayView ratingCQ 10}}}
+						<td class="asmt-viewdata" scope="col" width="10%">{{targettosat}}</td>
+						<td class="asmt-viewdata" scope="col" width="10%">{{reviewcomments}}</td>
 					</tr>
 				{{/each}}
 				<tr>

@@ -159,7 +159,8 @@ var calculatePRTab = {
 				{
 				    tot=catList2[category].count;
 					look=catList2[category].id;
-                       for(var category in catList2)
+					catList2[category].percent = (tot / doc[0].BUCAsmtDataPRview2.length*100).toFixed(0);
+          for(var category in catList2)
 						{
 							if(catList2[category].percent!='100' && catList2[category].parent==look){
 								catList2[category].percent=(catList2[category].count*100/tot).toFixed(0);
@@ -320,7 +321,8 @@ var calculatePRTab = {
 				{
 				    tot=catList2[category].count;
 					look=catList2[category].id;
-                       for(var category in catList2)
+					catList2[category].percent = (tot / doc[0].BUCAsmtDataPRview2.length*100).toFixed(0);
+          for(var category in catList2)
 						{
 							if(catList2[category].percent!='100' && catList2[category].parent==look){
 								catList2[category].percent=(catList2[category].count*100/tot).toFixed(0);
@@ -476,7 +478,8 @@ var calculatePRTab = {
 				{
 				    tot=catList[category].count;
 					look=catList[category].id;
-                       for(var category in catList)
+					catList[category].percent = (tot / doc[0].BUCAsmtDataPRview.length * 100).toFixed(0);
+        	for(var category in catList)
 						{
 							if(catList[category].percent!='100' && catList[category].parent==look){
 								catList[category].percent=(catList[category].count*100/tot).toFixed(0);
