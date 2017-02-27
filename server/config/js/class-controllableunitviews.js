@@ -172,6 +172,7 @@ var calculateCUTab = {
 	    var countryaux;
 	    if(doc[0].BUCAsmtDataCURview2[i].country=="" ){
 			countryaux='(Not Categorized)';
+      doc[0].BUCAsmtDataCURview2[i].country = countryaux;
 		}
 		else
 		{  countryaux=doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'');}
@@ -201,7 +202,6 @@ var calculateCUTab = {
       	default:
       	id_aux2=doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'');parent_aux2=doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'');
       }
-
       if (doc[0].MIRABusinessUnit == "GTS") {
         if(typeof catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')] === "undefined"){
           var tmp2= {
@@ -277,11 +277,11 @@ var calculateCUTab = {
       var exportTmp2 = {};
         exportTmp2.blank = " ";
         if (doc[0].MIRABusinessUnit == "GTS") {
-          exportTmp2.catP = doc[0].BUCAsmtDataCURview2[i].catP  || " ";
+          exportTmp2.catP = doc[0].BUCAsmtDataCURview2[i].catP  || " "; 
         }
         exportTmp2.ratingcategory = doc[0].BUCAsmtDataCURview2[i].ratingcategory || " ";
         exportTmp2.name = doc[0].BUCAsmtDataCURview2[i].name || " ";
-		exportTmp2.country = doc[0].BUCAsmtDataPRview2[i].country || " ",
+	    exportTmp2.country = doc[0].BUCAsmtDataCURview2[i].country || " ";
         exportTmp2.count = doc[0].BUCAsmtDataCURview2[i].count || " ";
         exportTmp2.percent = doc[0].BUCAsmtDataCURview2[i].percent || " ";
         exportTmp2.ratingPQ1 = doc[0].BUCAsmtDataCURview2[i].ratingPQ1 || " ";
@@ -300,19 +300,21 @@ var calculateCUTab = {
         catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].count++;
         if(doc[0].BUCAsmtDataCURview2[i].maxscore!=''){
           catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
-          topEntry2.maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore); //corregir
-		  catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
-          catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
+          topEntry2.maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
+		  catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore); 
+          catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
         }
         if(doc[0].BUCAsmtDataCURview2[i].cqscore!=''){
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+           catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
            topEntry2.cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+           catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+		   catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
          }
         if(doc[0].BUCAsmtDataCURview2[i].pqscore!=''){
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
+           catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
            topEntry2.pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
+          catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
+		   catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
          }
       }else{
 		catList2[doc[0].BUCAsmtDataCURview2[i].country.replace(/ /g,'')].count++;
@@ -336,7 +338,7 @@ var calculateCUTab = {
       topEntry2.count++;
       doc[0].BUCAsmtDataCURview2[i].id = doc[0].BUCAsmtDataCURview2[i]["docid"];
 
-    if (doc[0].MIRABusinessUnit == "GTS") {
+    if (doc[0].MIRABusinessUnit == "GTS") { 
 		    doc[0].BUCAsmtDataCURview2[i].parent=countryaux.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP+id_aux2;
 	   }
 	   else{
@@ -506,7 +508,7 @@ var calculateCUTab = {
     for(var i = 0; i < doc[0].BUCAsmtDataCURview2.length; i++){
 	    var countryaux;
 	    if(doc[0].BUCAsmtDataCURview2[i].imt=="" ){
-			countryaux='(Not Categorized)';
+			countryaux='(Not Categorized)'; 
 		}
 		else
 		{  countryaux=doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'');}
@@ -616,6 +618,7 @@ var calculateCUTab = {
         }
         exportTmp2.ratingcategory = doc[0].BUCAsmtDataCURview2[i].ratingcategory || " ";
         exportTmp2.name = doc[0].BUCAsmtDataCURview2[i].name || " ";
+        //exportTmp2.country = doc[0].BUCAsmtDataCURview2[i].country || " ";
 		exportTmp2.imt = doc[0].BUCAsmtDataPRview2[i].imt || " ",
         exportTmp2.count = doc[0].BUCAsmtDataCURview2[i].count || " ";
         exportTmp2.percent = doc[0].BUCAsmtDataCURview2[i].percent || " ";
@@ -635,19 +638,21 @@ var calculateCUTab = {
         catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].count++;
         if(doc[0].BUCAsmtDataCURview2[i].maxscore!=''){
           catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
-          topEntry2.maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore); //corregir
+          topEntry2.maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
 		  catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
-          catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
+          catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].maxscore += parseInt(doc[0].BUCAsmtDataCURview2[i].maxscore);
         }
         if(doc[0].BUCAsmtDataCURview2[i].cqscore!=''){
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+           catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].cqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
            topEntry2.cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+		   catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
+           catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].cqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].cqscore);
          }
         if(doc[0].BUCAsmtDataCURview2[i].pqscore!=''){
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
+           catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].ratingcategory.replace(/ /g,'')].pqscore +=  parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
            topEntry2.pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
-           catList2[doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
+		   catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
+           catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')].pqscore += parseInt(doc[0].BUCAsmtDataCURview2[i].pqscore);
          }
       }else{
 		catList2[doc[0].BUCAsmtDataCURview2[i].imt.replace(/ /g,'')].count++;
@@ -747,7 +752,7 @@ var calculateCUTab = {
 		}
       //to categorize sort
       doc[0].BUCAsmtDataCURview[i].ratingcategory = fieldCalc.getRatingCategory(doc[0].BUCAsmtDataCURview[i].ratingCQ,doc[0].BUCAsmtDataCURview[i].ratingPQ1);
-      switch (doc[0].BUCAsmtDataCURview[i].ratingcategory) {
+      switch (doc[0].BUCAsmtDataCURview[i].ratingcategory) { 
         case "NR":
         doc[0].BUCAsmtDataCURview[i].ratingcategorysort = 1;
         break;
@@ -874,8 +879,8 @@ var calculateCUTab = {
       	id_aux=doc[0].BUCAsmtDataCURview[i].ratingcategory.replace(/ /g,'');parent_aux=doc[0].BUCAsmtDataCURview[i].ratingcategory.replace(/ /g,'');
       }
 
-      if (doc[0].MIRABusinessUnit == "GTS") {
-        if(typeof catList[doc[0].BUCAsmtDataCURview[i].catP.replace(/ /g,'')] === "undefined"){
+      if (doc[0].MIRABusinessUnit == "GTS") { 
+        if(typeof catList[doc[0].BUCAsmtDataCURview[i].catP.replace(/ /g,'')] === "undefined"){ 
 
           var tmp= {
             id: doc[0].BUCAsmtDataCURview[i].catP.replace(/ /g,''),
