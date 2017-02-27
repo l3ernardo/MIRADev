@@ -348,7 +348,11 @@ var calculateCUTab = {
         tmpAccountList2.push(doc[0].BUCAsmtDataCURview2[i]);
       }
   	  for(var category2 in catList2){
-        catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+        if(catList2[category2].parent && catList2[category2].parent != "topEntry2"){
+          catList2[category2].percent = (catList2[category2].count/ catList2[catList2[category2].parent].count *100).toFixed(0);
+        }else{
+            catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+        }
       }
       //Adding padding
       if (1 < defViewRow) {
@@ -686,7 +690,11 @@ var calculateCUTab = {
       tmpAccountList2.push(doc[0].BUCAsmtDataCURview2[i]);
     }
 	 for(var category2 in catList2){
-      catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+     if(catList2[category2].parent && catList2[category2].parent != "topEntry2"){
+       catList2[category2].percent = (catList2[category2].count/ catList2[catList2[category2].parent].count *100).toFixed(0);
+     }else{
+         catList2[category2].percent = (catList2[category2].count/doc[0].BUCAsmtDataCURview2.length*100).toFixed(0);
+     }
     }
     //Adding padding
     if (1 < defViewRow) {
@@ -990,7 +998,11 @@ var calculateCUTab = {
       tmpAccountList.push(doc[0].BUCAsmtDataCURview[i]);
     }
     for(var category in catList){
-      catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataCURview.length*100).toFixed(0);
+      if(catList[category].parent && catList[category].parent != "topEntry"){
+        catList[category].percent = (catList[category].count/ catList[catList[category].parent].count *100).toFixed(0);
+      }else{
+          catList[category].percent = (catList[category].count/doc[0].BUCAsmtDataCURview.length*100).toFixed(0);
+      }
       catList[category].cqscore = catList[category].cqscore.toFixed(1);
     }
 
