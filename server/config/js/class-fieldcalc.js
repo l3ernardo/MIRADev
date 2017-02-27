@@ -542,6 +542,19 @@ var calculatefield = {
 					}};
 					break;
 					case "BU IOT":
+					var CountryCodes = [];
+					var countriesCode = {};
+					for (var i = 0; i < global.hierarchy.IOT.length; i++) {
+						if(global.hierarchy.IOT[i].name == doc[0].IOT){
+							for (var j = 0; j < global.hierarchy.IOT[i].IMTs.length; j++) {
+								//global.hierarchy.countries[global.hierarchy.IMT[global.hierarchy.IOT[i].IMTs[j]][j]].id
+								for (var k = 0; k < global.hierarchy.IMT[global.hierarchy.IOT[i].IMTs[j]].length; k++) {
+									CountryCodes.push(global.hierarchy.countries[global.hierarchy.IMT[global.hierarchy.IOT[i].IMTs[j]][k]].id);
+									countriesCode[global.hierarchy.countries[global.hierarchy.IMT[global.hierarchy.IOT[i].IMTs[j]][k]].id] = true;
+								}
+							}
+						}
+					}
 					var asmts = {
 						selector:{
 							"_id": {"$gt":0},
@@ -555,7 +568,7 @@ var calculatefield = {
 								{"$and": [{"DocSubType":"Country Process"},{"IOT":doc[0].IOT}]},
 								{"$and": [{"DocSubType":"BU Reporting Group"},{"_id":{"$in":doc[0].RGRollup.split(",")}}]},
 								//{"$and": [{"DocSubType":"BU Country"},{"_id":{"$in":doc[0].BUCountryIOT.split(",")}},{"ExcludeGeo":{"$ne": "Yes"}}]}
-								{"$and": [{"DocSubType":"BU Country"}]}
+								{"$and": [{"DocSubType":"BU Country"},{"Country": {"$in":CountryCodes}}]}
 						]//or
 					}};
 					break;
@@ -615,7 +628,7 @@ var calculatefield = {
 				// Populate View Data
 				switch (doc[0].ParentDocSubType) {
 					case "Global Process":
-						
+
 						doc[0].asmtsdocs = [];
 						doc[0].auditableAUIds = [];
 						var asmtsdocs = asmtsdata.body.docs;
@@ -783,10 +796,10 @@ var calculatefield = {
 							console.log("[class-fieldcalc][getAssessments] - " + err.error.reason);
 							deferred.reject({"status": 500, "error": err.error.reason});
 						});
-						
-						
-						
-					
+
+
+
+
 					break;
 					case "BU IOT":
 						// doc[0].AUDocs = asmtsdata.body.docs;
@@ -829,7 +842,7 @@ var calculatefield = {
 									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
 									doc[0].AUDocs.push(unitdocs[i]);
 								}
-								if (unitdocs[i].DocSubType == "BU Country" && unitdocs[i].parentid == doc[0].parentid) {
+								if (unitdocs[i].DocSubType == "BU Country" ) {
 									$or.push({parentid: unitdocs[i]["_id"]});
 									doc[0].AUDocsObj[unitdocs[i]["_id"]] = unitdocs[i];
 									doc[0].AUDocs.push(unitdocs[i]);
