@@ -34,9 +34,9 @@ var assessableunit = {
 					/* Get access and roles */
 					//accessrules.getRules(req,editors);
 					accessrules.getRules(req,docid,db,doc[0]).then(function (result){
-						
+
 					accessrules.rules = result.rules;
-					
+
 					doc[0].editor = accessrules.rules.editor;
 					doc[0].admin = accessrules.rules.admin;
 					doc[0].grantaccess = accessrules.rules.grantaccess;
@@ -558,12 +558,12 @@ var assessableunit = {
 						console.log("[assessableunit][constituents]" + err.error.reason);
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
-					
+
 					}).catch(function(err) {
 						console.log("[assessableunit][accessRules]" + err.error.reason);
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
-					
+
 				}
 				else{
 					deferred.reject({"status": 500, "error": data.error});
@@ -593,9 +593,9 @@ var assessableunit = {
 					/* Check if user is admin to the parent doc where the new unit is created from */
 					//accessrules.getRules(req,peditors);
 					accessrules.getRules(req,pid,db,pdoc[0]).then(function (result){
-						
+
 						accessrules.rules = result.rules;
-						
+
 					if (accessrules.rules.admin) {
 						var tmpdoc = {
 							"key": "Assessable Unit",
@@ -786,17 +786,17 @@ var assessableunit = {
 						console.log("[assessableunit][validateAdmin] - " + "Access denied!");
 						deferred.reject({"status": 500, "error": "Access denied!"});
 					}
-					
-					
+
+
 					}).catch(function(err) {
 						console.log("[assessableunit][accessRules] - " + err.error.reason);
 						deferred.reject({"status": 500, "error": err.error.reason});
 					});
-					
+
 					//here
 				}
-			
-				
+
+
 				else {
 					console.log("[assessableunit][getParent] - " + data.error);
 					deferred.reject({"status": 500, "error": data.error});
@@ -984,6 +984,7 @@ var assessableunit = {
 									doc[0].CUFlag = req.body.CUFlag;
 									doc[0].AuditProgram = req.body.AuditProgram;
 									doc[0].CUSize = req.body.CUSize;
+									doc[0].CUCat = req.body.CUCat;
 									doc[0].OpMetricKey = req.body.OpMetricKey;
 									if(req.body.InternalAuditsData != undefined){//IA Data
 										if(doc[0].InternalAuditsData != req.body.InternalAuditsData){
