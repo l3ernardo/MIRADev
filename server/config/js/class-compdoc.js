@@ -153,7 +153,6 @@ var getDocs = {
 					var imts = util.getIOTChildren(doc[0].IOTid, "IOT");
 					var countries;
 					for (var i = 0; i < imts.length; i++) {
-						console.log("imts[i].name: " + imts[i].name);
 						countries = util.getIOTChildren(imts[i].name, "IMT");
 						for (var j = 0; j < countries.length; j++) {
 							countrynames.push(countries[j].name);

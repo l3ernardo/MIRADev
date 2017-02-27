@@ -614,6 +614,7 @@ var calculatefield = {
 						// doc[0].AUDocs = asmtsdata.body.docs;
 						doc[0].AUDocs = [];
 						var unitdocs = asmtsdata.body.docs;
+						doc[0].auditableAUIds = [];
 						doc[0].ExcludedCountryNames = [];
 						doc[0].ExcludedCountryIDs = [];
 						doc[0].AUDocsObj = {};
@@ -774,7 +775,8 @@ var calculatefield = {
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
 									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
 									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
-									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
+									//doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
+									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].asmtsdocs[i].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
 									doc[0].AUData.push(doc[0].asmtsdocs[i]);
 								}
 								if (doc[0].MIRABusinessUnit == "GTS") {
@@ -967,7 +969,8 @@ var calculatefield = {
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
 									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
 									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
-									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
+									//doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
+									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].asmtsdocs[i].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
 									doc[0].AUData.push(doc[0].asmtsdocs[i]);
 								}
 								if (doc[0].MIRABusinessUnit == "GTS") {
