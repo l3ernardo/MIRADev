@@ -1099,7 +1099,6 @@ var calculateARTab = {
 
           //Iterate over found PPRs
           for(var i = 0; i < auditPPR.length; i++) {
-            console.log("IMT: "+auditPPR[i].IMT);
             var tmp={};
             tmp.id = auditPPR[i]._id;
             tmp.auditOrReview = auditPPR[i].auditOrReview;

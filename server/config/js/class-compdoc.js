@@ -400,12 +400,11 @@ var getDocs = {
 					var imts = util.getIOTChildren(doc[0].IOTid, "IOT");
 					var countries;
 					for (var i = 0; i < imts.length; i++) {
-						countries = util.getIOTChildren(imts[i].name, "IMT");
+						countries = util.getIOTChildren(imts[i].docid, "IMT");
 						for (var j = 0; j < countries.length; j++) {
 							countrynames.push(countries[j].name);
 						}
 					}
-
 					var $or = [];
 					// For CHQ Internal Audits - Local
 					if(doc[0].asmtsdocs != undefined){
@@ -413,7 +412,6 @@ var getDocs = {
 							$or.push({parentid: doc[0].asmtsdocs[i]["_id"]});
 						}
 					}
-
 					var compObj = {
 						selector : {
 							"_id": {"$gt":0},
@@ -433,12 +431,20 @@ var getDocs = {
 								{ "$and": [{"compntType": "sampledCountry"}, {"IOT": doc[0].IOT}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
 								{ "$and": [{"compntType": "sampledCountry"}, {"IOT": doc[0].IOT}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
 								// Sampled Country Testing tab and reporting country testing tab
+								// { "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
+								// { "$and": [{"compntType": "controlSample"}, {"IOT": doc[0].IOT}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },								// Audits and Reviews Tab
+								// Sampled Country Testing tab
 								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
-								{ "$and": [{"compntType": "controlSample"}, {"IOT": doc[0].IOT}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },								// Audits and Reviews Tab
+								{ "$and": [{"compntType": "controlSample"}, {"sampleCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+								// Reporting country testing tab
+								{ "$and": [{"compntType": "controlSample"}, {"reportingCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":{"$in": doc[0].PrevQtrs}}, {"status": {"$ne": "Retired"}}] },
+								{ "$and": [{"compntType": "controlSample"}, {"reportingCountry": {"$in": countrynames}}, {"owningBusinessUnit": doc[0].BusinessUnit}, {"reportingQuarter":doc[0].CurrentPeriod}, {"status": {"$ne": "Retired"}}] },
+
+
 								// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
 								// For proactive reviews (PPR)
-								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IOT": doc[0].IOT}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IOT": doc[0].IOT}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 							 ]
@@ -482,6 +488,7 @@ var getDocs = {
 								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								doc[0].TRExceptionControls.push(comps[i]);
+								doc[0].RCTest2Data.push(comps[i]);
 
 								if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
 									doc[0].CountryControlsData.push(comps[i]);
@@ -492,16 +499,15 @@ var getDocs = {
 								}
 							}
 							else if (comps[i].compntType == "controlSample") {
+								// calculate Control Name
+								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
+								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								// For Key Controls Testing Tab
-								//if (comps[i].reportingCountry == doc[0].Country) {
-								if (comps[i].remediationStatus == "Open") {
+								if (countrynames.indexOf(comps[i].reportingCountry)!=-1){
 									doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab
-								if (comps[i].sampleCountry == doc[0].Country) {
-									// calculate Control Name
-									comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
-									comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+								if (countrynames.indexOf(comps[i].sampleCountry)!=-1){
 
 									if (doc[0].MIRABusinessUnit == "GBS") {
 										if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
@@ -633,7 +639,8 @@ var getDocs = {
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)
 							else if (comps[i].compntType == "PPR") {
-								doc[0].PPRData.push(comps[i]);
+								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+								if (doc[0].MIRABusinessUnit == comps[i].MIRABusinessUnit) doc[0].PPRData.push(comps[i]);
 							}
 							// Local Audits (used by the view 1 and view 3 for Audits & Reviews)
 							else if (comps[i].compntType == "localAudit") {
@@ -699,7 +706,8 @@ var getDocs = {
 								// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
 								// For proactive reviews (PPR)
-								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IMT": doc[0].IMT}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IMT": doc[0].IMT}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}}] },
+
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 						   ]
@@ -901,7 +909,8 @@ var getDocs = {
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)
 							else if (comps[i].compntType == "PPR") {
-								doc[0].PPRData.push(comps[i]);
+								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+								if (doc[0].MIRABusinessUnit == comps[i].MIRABusinessUnit) doc[0].PPRData.push(comps[i]);
 							}
 							// Local Audits (used by the view 1 and view 3 for Audits & Reviews)
 							else if (comps[i].compntType == "localAudit") {
@@ -954,7 +963,7 @@ var getDocs = {
 								// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
 								// For proactive reviews (PPR)
-								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"country": doc[0].Country}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}}, {"reportingQuarter": doc[0].CurrentPeriod}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 							]
@@ -1152,7 +1161,8 @@ var getDocs = {
 							}
 							// For Audits and Reviews Tab - view 2 (Proactive Reviews)
 							else if (comps[i].compntType == "PPR") {
-								doc[0].PPRData.push(comps[i]);
+								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
+								if (doc[0].MIRABusinessUnit == comps[i].MIRABusinessUnit) doc[0].PPRData.push(comps[i]);
 							}
 							// Local Audits (used by the view 1 and view 3 for Audits & Reviews)
 							else if (comps[i].compntType == "localAudit") {
