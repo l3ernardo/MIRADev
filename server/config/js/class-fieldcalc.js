@@ -180,30 +180,31 @@ var calculatefield = {
 		switch (doc.compntType) {
 			case "openIssue":
 			case "sampledCountry":
+			case "PPR":
 			case "controlSample":
-			if (doc.BUPARENT == "BSU300000027") {
-				MIRABusinessUnit = "GBS";
-			}
-			else if ((doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") || (doc.CUCategory == "GTS TRANSFORMATION" || doc.CUCategory == "GTS Transf. Hybrid")) {
-				MIRABusinessUnit = "GTS Transformation";
-			}
-			else {
-				MIRABusinessUnit = "GTS";
-			}
-			break;
+				if (doc.BUPARENT == "BSU300000027") {
+					MIRABusinessUnit = "GBS";
+				}
+				else if ((doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") || (doc.CUCategory == "GTS TRANSFORMATION" || doc.CUCategory == "GTS Transf. Hybrid")) {
+					MIRABusinessUnit = "GTS Transformation";
+				}
+				else {
+					MIRABusinessUnit = "GTS";
+				}
+				break;
 			case "countryControls":
-			if (doc.BUPARENT == "BSU300000027") {
-				MIRABusinessUnit = "GBS";
-			}
-			else if (doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") {
-				MIRABusinessUnit = "GTS Transformation";
-			}
-			else {
-				MIRABusinessUnit = "GTS";
-			}
-			break;
+				if (doc.BUPARENT == "BSU300000027") {
+					MIRABusinessUnit = "GBS";
+				}
+				else if (doc.BUPARENT == "BSU300000028" && doc.GPPARENT == "GPC100000114") {
+					MIRABusinessUnit = "GTS Transformation";
+				}
+				else {
+					MIRABusinessUnit = "GTS";
+				}
+				break;
 			default:
-			MIRABusinessUnit = "";
+				MIRABusinessUnit = "";
 		}
 		return MIRABusinessUnit;
 	},
@@ -1126,7 +1127,7 @@ var calculatefield = {
 							for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
 								//DATA RPTG Country Testing
 								if (doc[0].asmtsdocs[i].key == "Assessment"){
-									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1 ) {
 										// Format Defect Rate
 										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
 										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
@@ -1757,7 +1758,7 @@ var calculatefield = {
 				else { // For BU Country, BU IOT, BU IMT, BU Reporting Group and Business Unit which needs to process ratings profile for both CU and CP
 					var podatactr = 0;
 					for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
+						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1) {
 							// Process Audit Universe Data here
 
 							// Process Ratings Tab embedded views
