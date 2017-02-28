@@ -1465,49 +1465,91 @@ var calculatefield = {
 					for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
 						switch (doc[0].ParentDocSubType) {
 							case "Global Process":
-							// PO tab performance indicators view
-							toadd = {
-								"docid":doc[0].asmtsdocs[i]._id,
-								"name":doc[0].asmtsdocs[i].AssessableUnitName,
-								"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-								"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-								"ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-								"ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-								"ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-								"kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-								"kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-								"msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-								"msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount
-							};
-							doc[0].CPAsmtDataPIview.push(toadd);
-							// PO tab other indicators view
-							toadd = {
-								"docid":doc[0].asmtsdocs[i]._id,
-								"name":doc[0].asmtsdocs[i].AssessableUnitName,
-								"bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount
-							};
-							doc[0].CPAsmtDataOIview.push(toadd);
-							if (doc[0].asmtsdocs[i].OpMetric != undefined) {
-								for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; ++j) {
-									doc[0].CPAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+								// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
+
+								try{
+
+															
+
+									//get MSAC missed commitments
+									doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
+									//get Open Issue count per child assessment
+									doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+
+
+									if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+										doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+
+									if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+										doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
+
+									toadd = {
+										"docid":doc[0].asmtsdocs[i]._id,
+										"name":doc[0].asmtsdocs[i].AssessableUnitName,
+										"ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+										"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+										"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+										"ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+										"ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+										"ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+										"kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+										"kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+										"auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
+										"msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+										"msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
+										"treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
+									};
+
+
+									doc[0].BUCAsmtDataPIview.push(toadd);
+
+
+									// PO tab other indicators view
+
+									toadd = {
+										"docid":doc[0].asmtsdocs[i]._id,
+										"name":doc[0].asmtsdocs[i].AssessableUnitName,
+										"ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+										"bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount,
+										"treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
+									};
+
+
+									if (doc[0].asmtsdocs[i].OpMetric != undefined) {
+
+										for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; j++) {
+
+											toadd[doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+											toadd["docid"] = doc[0].asmtsdocs[i]._id;
+											toadd["name"] = doc[0].asmtsdocs[i].AssessableUnitName;
+											toadd["ParentDocSubType"] = doc[0].asmtsdocs[i].ParentDocSubType;
+											toadd["bocExCount"] = doc[0].asmtsdocs[i].BOCExceptionCount;
+
+
+											// doc[0].BUCAsmtDataOIview[i] = {};
+											//doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+											//  console.log(doc[0].asmtsdocs[i].OpMetric[j].id+"Rating");
+										}
+
+
+									}
+									doc[0].BUCAsmtDataOIview.push(toadd);
+
+									// Basics of Control Exception Counter
+									if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
+										bocEx = bocEx + 1;
+									}
+
+
+
+
+								}catch(e){
+									console.log("[class-fieldcalc][getRatingProfile][Global Process Tab] - " + e.stack);
+
 								}
-							}
-							// Process Ratings tab first embedded view
-							toadd = {
-								"docid":doc[0].asmtsdocs[i]._id,
-								"country":doc[0].asmtsdocs[i].Country,
-								"iot":doc[0].asmtsdocs[i].IOT,
-								"ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
-								"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-								"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-								"targettosat":doc[0].asmtsdocs[i].Target2Sat,
-								"targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
-								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
-							};
-							doc[0].CPAsmtDataPR1view.push(toadd);
-							// Basics of Control Exception Counter
-							if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) bocEx = bocEx + 1;
-							break;
+								
+								
+								break;
 							case "Controllable Unit":
 							if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
 								// Process Ratings Tab embedded views
