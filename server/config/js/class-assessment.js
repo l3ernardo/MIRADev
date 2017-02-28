@@ -142,7 +142,7 @@ var assessment = {
 
 								doc[0].BOCExceptionCountCRM = 0;
 								doc[0].BOCExceptionCountSOD = 0;
-							
+
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
 							// doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
 							// doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
@@ -160,22 +160,24 @@ var assessment = {
 							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPR1view = [];
 							doc[0].CUAsmtDataPR1view = [];
-							
-							
+
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
-							
+
 								comp.getCompDocs(db,doc).then(function(dataComp){
-									
+
 									fieldCalc.getRatingProfile(doc);
-									
+
 									console.log("assessment docs: "+doc[0].asmtsdocs.length);
 									console.log("audata: "+doc[0].AUData.length);
-								
-								
-								
-								
+									//open risks
+									ort.processORTab(doc,defViewRow,req);
+									// Process Audit Universe Tab
+									aut.processAUTab(doc,defViewRow);
+
+
 								/*
-								
+
 								if (doc[0].CPAsmtDataPIview.length < defViewRow) {
 									if (doc[0].CPAsmtDataPIview.length == 0) {
 										doc[0].CPAsmtDataPIview = fieldCalc.addTestViewData(10,defViewRow);
@@ -197,9 +199,9 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(defViewRow-doc[0].CPAsmtDataPR1view.length));
 									}
 								}
-								
+
 								*/
-								
+
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
@@ -643,7 +645,7 @@ var assessment = {
 									totalTests: parentdoc[0].TotalTests,
 									defects: parentdoc[0].Defects,
 									defectsRate: parentdoc[0].DefectsRate
-								};								
+								};
 								doc[0].CTRT = ctrtValues;
 							}
 
