@@ -206,7 +206,7 @@ var calculateCUTab = {
             var tmp2= {
               id: countryaux.replace(/ /g,''),
               parent: "topEntry2",
-  			      country: countryaux,
+  			      country2: countryaux,
               count: 0 ,
     		      maxscore: 0,
           	  cqscore: 0,
@@ -247,7 +247,7 @@ var calculateCUTab = {
             var tmp2= {
               id: countryaux.replace(/ /g,''),
               parent: "topEntry2",
-  			      country: countryaux,
+  			      country2: countryaux,
               count: 0 ,
     		      maxscore: 0,
           	  cqscore: 0,
@@ -338,7 +338,7 @@ var calculateCUTab = {
         doc[0].BUCAsmtDataCURview2[i].id = doc[0].BUCAsmtDataCURview2[i]["docid"];
 
         if (doc[0].MIRABusinessUnit == "GTS") {
-    		  doc[0].BUCAsmtDataCURview2[i].parent=countryaux.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP+id_aux2;
+    		  doc[0].BUCAsmtDataCURview2[i].parent=countryaux.replace(/ /g,'')+doc[0].BUCAsmtDataCURview2[i].catP.replace(/ /g,'')+id_aux2;
     	  }
     	  else{
     		  doc[0].BUCAsmtDataCURview2[i].parent=countryaux.replace(/ /g,'')+id_aux2;
@@ -549,7 +549,7 @@ var calculateCUTab = {
           var tmp2= {
             id: countryaux.replace(/ /g,''),
             parent: "topEntry2",
-			imt: countryaux,
+			imt2: countryaux,
             count: 0 ,
   		      maxscore: 0,
         	  cqscore: 0,
@@ -591,7 +591,7 @@ var calculateCUTab = {
           var tmp2= {
             id: countryaux.replace(/ /g,''),
             parent: "topEntry2",
-			imt: countryaux,
+			imt2: countryaux,
             count: 0 ,
   		      maxscore: 0,
         	  cqscore: 0,
