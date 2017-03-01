@@ -120,23 +120,65 @@ var assessment = {
 					}
 					switch (doc[0].ParentDocSubType) {
 						case "Global Process":
-							doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
-							doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-							doc[0].OtherAuditsData = doc[0].InternalAuditData;
-							doc[0].KCTest1Data = fieldCalc.addTestViewData(7,defViewRow);
-							doc[0].KCTest2Data = fieldCalc.addTestViewData(9,defViewRow);
-							doc[0].KCTest3Data = fieldCalc.addTestViewData(10,defViewRow);
-							doc[0].KC2Test1Data = fieldCalc.addTestViewData(4,defViewRow);
-							doc[0].KC2Test2Data = fieldCalc.addTestViewData(8,defViewRow);
-							doc[0].KC2Test3Data = fieldCalc.addTestViewData(10,defViewRow);
-							doc[0].RiskView1Data = fieldCalc.addTestViewData(5,defViewRow);
-							doc[0].RiskView2Data = fieldCalc.addTestViewData(13,defViewRow);
-							doc[0].AUData = fieldCalc.addTestViewData(17,10);
-							doc[0].CPAsmtDataOIview = [];
+								/*doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
+								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
+								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);*/
+							//	doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
+							//	doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+								doc[0].BUCAsmtDataPIviewCRM = [];
+								doc[0].BUCAsmtDataPIviewDelivery = [];
+								doc[0].BUCAsmtDataOIviewCRM = [];
+								doc[0].BUCAsmtDataOIviewDelivery = [];
+
+								doc[0].MissedMSACSatCountDeliveryDoc = 0;
+								doc[0].MissedOpenIssueCountDeliveryDoc =0;
+								doc[0].MissedOpenIssueCountCRMDoc = 0;
+								doc[0].MissedMSACSatCountCRMDoc = 0;
+
+								doc[0].AUDataMSACCRM = [];
+								doc[0].MissedMSACSatCountCRM = "";
+								doc[0].AUDataMSACSOD = [];
+								doc[0].MissedMSACSatCountSOD = "";
+
+								doc[0].BOCExceptionCountCRM = 0;
+								doc[0].BOCExceptionCountSOD = 0;
+
+							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
+							// doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
+							// doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
+							// doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
+
+							doc[0].BUCAsmtDataPRview = [];
+							doc[0].BUCAsmtDataCURview = [];
+							doc[0].BUCAsmtDataPIview = [];
+							doc[0].BUCAsmtDataOIview = [];
+							doc[0].AUData = [];
+							doc[0].RiskView1Data = [];
+							doc[0].RiskView2Data = [];
+							doc[0].AUDataMSAC = [];
 							doc[0].CPAsmtDataPIview = [];
+							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPR1view = [];
+							doc[0].CUAsmtDataPR1view = [];
+
+
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
-								fieldCalc.getRatingProfile(doc);
+
+								comp.getCompDocs(db,doc).then(function(dataComp){
+
+									fieldCalc.getRatingProfile(doc);
+
+									//Performance tab
+									performanceTab.buildPerformanceTabGP(db,doc,defViewRow,fieldCalc);
+
+									//open risks
+									ort.processORTab(doc,defViewRow,req);
+									// Process Audit Universe Tab
+									aut.processAUTab(doc,defViewRow);
+
+
+								/*
+
 								if (doc[0].CPAsmtDataPIview.length < defViewRow) {
 									if (doc[0].CPAsmtDataPIview.length == 0) {
 										doc[0].CPAsmtDataPIview = fieldCalc.addTestViewData(10,defViewRow);
@@ -158,8 +200,15 @@ var assessment = {
 										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(defViewRow-doc[0].CPAsmtDataPR1view.length));
 									}
 								}
-								var obj = doc[0]; // For Merge
-								deferred.resolve({"status": 200, "doc": obj});
+
+								*/
+
+									var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
+								}).catch(function(err) {
+									console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error);
+									deferred.reject({"status": 500, "error": err.error});
+								});
 							}).catch(function(err) {
 								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error);
 								deferred.reject({"status": 500, "error": err.error});
@@ -356,6 +405,8 @@ var assessment = {
 									aut.processAUTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
+									// Process Audits & Reviews tab
+									aar.processARTab(doc,defViewRow);
 
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
@@ -584,6 +635,20 @@ var assessment = {
 							doc[0].AuditTrustedData = [];
 							doc[0].CUAsmtDataPR1view = [];
 							doc[0].AuditLocalData = [];
+							//FOR GTS TRANSFORM ONLY: CTRT calculations
+							if(doc[0].MIRABusinessUnit == "GTS Transformation") {
+								console.log("Entered a GTS Transformation CU");
+								var ctrtValues = {
+									reportingQuarter: doc[0].CurrentPeriod,
+									geo: parentdoc[0].Geo,
+									process: parentdoc[0].ControllableUnit,
+									rating: parentdoc[0].PeriodRating,
+									totalTests: parentdoc[0].TotalTests,
+									defects: parentdoc[0].Defects,
+									defectsRate: parentdoc[0].DefectsRate
+								};
+								doc[0].CTRT = ctrtValues;
+							}
 
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
 								fieldCalc.getRatingProfile(doc);

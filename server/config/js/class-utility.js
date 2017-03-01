@@ -687,7 +687,7 @@ var util = {
 						iterator = global.hierarchy.IOT;
 						for (var key in iterator){
 							if(iterator.hasOwnProperty(key)){
-								if(iterator[key].name==entityName){ console.log("getimtids")
+								if(iterator[key].name==entityName){
 									return util.getIMTIDs(req,iterator[key].IMTs);
 								}
 							}
@@ -736,6 +736,15 @@ var util = {
 			}
 		}
 		return result;
+	},
+
+	getIMTNameByCountry: function (countryname){
+		for(country in global.hierarchy.countries){
+			if (countryname == country) {
+				return global.hierarchy.countries[country].IMT;
+			}
+		}
+		return "";
 	},
 
 	getCountryIDs: function (req,Countries){

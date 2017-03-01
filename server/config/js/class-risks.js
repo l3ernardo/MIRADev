@@ -73,10 +73,11 @@ var calculateORTab = {
         };
         doc[0].openrisks = openrisks;
         break;
+      case "Global Process":
       case "BU IOT":
       case "BU IMT":
       case "BU Country":
-         if(doc[0].MIRABusinessUnit == "GBS"){
+         if(doc[0].MIRABusinessUnit == "GBS" || doc[0].ParentDocSubType == "Global Process"){
           //count the category issues
           doc[0].totalRisks = {
             PrevQtr1: 0,

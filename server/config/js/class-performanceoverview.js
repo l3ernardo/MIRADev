@@ -216,6 +216,37 @@ var performanceoverviewcountry = {
 
 		return result.toFixed(1).toString();
 	},
+	
+ buildPerformanceTabGP : function(db, doc,defViewRow,fieldCalc) {
+	 
+	 	performanceoverviewcountry.getKFCRDefectRate(db,doc);
+		performanceoverviewcountry.getKCODefectRate(db,doc);
+		performanceoverviewcountry.getMissedRisks(db,doc);
+		performanceoverviewcountry.getMSACCommitmentsCount(db,doc);
+		
+		performanceoverviewcountry.getCPANDCUPerformanceIndicators(db,doc);
+		performanceoverviewcountry.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+		
+		if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
+
+			if (doc[0].BUCAsmtDataPIview.length == 0) {
+				doc[0].BUCAsmtDataPIview = fieldCalc.addTestViewData(8,defViewRow);
+			} else {
+
+				fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataPIview,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIview)));
+
+			}
+		}
+
+		if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIview) < defViewRow) {
+			if (doc[0].BUCAsmtDataOIview.length == 0) {
+				doc[0].BUCAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
+			} else {
+				fieldCalc.addTestViewDataPadding(doc[0].BUCAsmtDataOIview,8,(defViewRow-performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataOIview)));
+			}
+		}
+	 
+ },
 
   buildPerformanceTab : function(db, doc,defViewRow,fieldCalc) {
 
@@ -319,7 +350,7 @@ var performanceoverviewcountry = {
 		try {
 
 			// Calculate for GTS
-			if (doc[0].MIRABusinessUnit == "GTS") {
+			if (doc[0].MIRABusinessUnit == "GTS" && doc[0].ParentDocSubType !="Global Process") {
 
 				// obtain defect and test count from the
 				// components(countryControls) for CRM
@@ -379,7 +410,7 @@ var performanceoverviewcountry = {
 
 				doc[0].KCFRDefectRateSOD = KCFRDefectRateSOD;
 
-			}
+			}else{
 
 			// Calculate for GBS and GBS
 
@@ -410,6 +441,7 @@ var performanceoverviewcountry = {
 				KFCRDefectRate = "";
 			}
 			doc[0].KCFRDefectRate = KFCRDefectRate;
+			}//else
 
 		} catch (e) {
 			console
@@ -436,8 +468,11 @@ var performanceoverviewcountry = {
 		var testPerformed = false;
 
 		try {
+			
+		
+			
 
-			if (doc[0].MIRABusinessUnit == "GTS") {
+			if (doc[0].MIRABusinessUnit == "GTS" && doc[0].ParentDocSubType !="Global Process" ) {
 
 				// obtain defect and test count from the
 				// components(countryControls) for CRM
@@ -497,14 +532,17 @@ var performanceoverviewcountry = {
 
 				doc[0].KCODefectRateSOD = KCODefectRateSOD;
 
-			}
+			}else{
 
 			// Calculate total KCO and KCFR for GBS and GTS
 			// obtain defect and test count from the
 			// components(countryControls)
 			for (var i = 0; i < doc[0].CountryControlsData.length; i++) {
+				
+			
 
 				if (doc[0].CountryControlsData[i].controlType == 'KCO') {
+					
 
 					if (!isNaN(parseInt(doc[0].CountryControlsData[i].numDefects)))
 						KCODefectCount += parseInt(doc[0].CountryControlsData[i].numDefects);
@@ -523,11 +561,12 @@ var performanceoverviewcountry = {
 				} else
 					KCODefectRate = "0";
 
-			} else {
+				} else {
 				KCODefectRate = "";
-			}
+				}
 
-			doc[0].KCODefectRate = KCODefectRate;
+				doc[0].KCODefectRate = KCODefectRate;
+			}//else
 
 		} catch (e) {
 			console.log("error at [class-performanceoverview][getKCODefectRate]: "+ e);
@@ -606,7 +645,7 @@ var performanceoverviewcountry = {
 
 		try {
 
-			if (doc[0].MIRABusinessUnit == "GTS") {
+			if (doc[0].MIRABusinessUnit == "GTS" && doc[0].ParentDocSubType !="Global Process") {
 
 				// obtain defect and test count from the components(Open issue)
 				// for CRM
@@ -751,7 +790,7 @@ var performanceoverviewcountry = {
 		var AUDataMSAC = [];
 		try {
 
-			if (doc[0].MIRABusinessUnit == "GTS") {
+			if (doc[0].MIRABusinessUnit == "GTS" && doc[0].ParentDocSubType !="Global Process") {
 				for (var i = 0; i < doc[0].RiskView1DataCRM.length; i++) {
 
 					if (doc[0].RiskView1DataCRM[i].PeriodRating == "Marg"
@@ -849,7 +888,7 @@ var performanceoverviewcountry = {
 				}
 
 			}
-			// For GBS
+			// For GBS and global process
 			else {
 
 				for (var i = 0; i < doc[0].asmtsdocs.length; i++) {
@@ -1411,7 +1450,7 @@ var performanceoverviewcountry = {
 
 	getCPANDCUPerformanceIndicators : function(db, doc) {
 		// Sort for correct display
-		var POCountryFlag = 0, POCUFlag = 0, POBUCFlag = 0, POIMTFlag = 0, POIOTFlag = 0;
+		var POCountryFlag = 0, POCUFlag = 0, POBUCFlag = 0, POIMTFlag = 0, POIOTFlag = 0,POGPFlag = 0;
 		var tempArray = [];
 		var head = {};
 
@@ -1451,6 +1490,31 @@ var performanceoverviewcountry = {
 
 			// Create the treetable array
 			for (var i = 0; i < doc[0].BUCAsmtDataPIview.length; i++) {
+				
+				if (doc[0].BUCAsmtDataPIview[i].ParentDocSubType == "Global Process"
+					&& POIMTFlag == 0) {
+				head = {
+					"docid" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType
+							.replace(/ /g, ''),
+					"name" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType,
+					"ParentDocSubType" : doc[0].BUCAsmtDataPIview[i].ParentDocSubType,
+					"ratingCQ" : "",
+					"ratingPQ1" : "",
+					"ratingPQ2" : "",
+					"ratingPQ3" : "",
+					"ratingPQ4" : "",
+					"kcfrDR" : "",
+					"kcoDR" : "",
+					"auditScore" : doc[0].WeightedAuditScore,
+					"msdRisk" : getCatSumRisk(doc[0].BUCAsmtDataPIview,
+							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
+					"msdMSAC" : getCatSumMSAC(doc[0].BUCAsmtDataPIview,
+							doc[0].BUCAsmtDataPIview[i].ParentDocSubType),
+					"treeParent" : i
+				};
+				POGPFlag = 1;
+				tempArray.push(head);
+			}
 
 				if (doc[0].BUCAsmtDataPIview[i].ParentDocSubType == "BU IMT"
 					&& POIMTFlag == 0) {

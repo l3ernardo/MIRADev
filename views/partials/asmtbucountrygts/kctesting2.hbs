@@ -43,7 +43,7 @@
 					<td class="kc-test-viewsubheader" width="4%">CQF</td>
 					<td class="kc-test-viewsubheader" width="4%">CQO</td>
 				</tr>
-				{{#KCProcessFIN}}
+				{{#KCProcessFINSCT}}
 					{{#members}}
 						<tr class="asmt-viewdata">
 							{{#if @first}}
@@ -70,7 +70,7 @@
 							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
-				{{/KCProcessFIN}}
+				{{/KCProcessFINSCT}}
 				<tr class="kc-test-viewheader">
 					<td colspan="20"></td>
 				</tr>
@@ -117,7 +117,7 @@
 					<td class="kc-test-viewsubheader" width="4%">CQF</td>
 					<td class="kc-test-viewsubheader" width="4%">CQO</td>
 				</tr>
-				{{#KCProcessOPS}}
+				{{#KCProcessOPSSCT}}
 					{{#members}}
 						<tr class="asmt-viewdata">
 							{{#if @first}}
@@ -144,7 +144,7 @@
 							<td class="asmt-viewdata-centered">{{cqo}}</td>
 						</tr>
 					{{/members}}
-				{{/KCProcessOPS}}
+				{{/KCProcessOPSSCT}}
 				<tr class="kc-test-viewheader">
 					<td colspan="20"></td>
 				</tr>
@@ -255,7 +255,7 @@
 				{{#each CPDRException}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%">{{category}}</td>
-						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%" >{{AUDefectCount}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}

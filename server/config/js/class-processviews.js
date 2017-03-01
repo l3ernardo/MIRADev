@@ -112,7 +112,8 @@ var calculatePRTab = {
 						id: doc[0].BUCAsmtDataPRview2[j].country.replace(/ /g,''),
 						country: doc[0].BUCAsmtDataPRview2[j].country,
 						count: 0,
-						percent: 100,
+						percent: 0,
+						top: true,
 						MetricsValue: 0
 					}
 					tmpAccountList2.push(tmp2);
@@ -155,13 +156,14 @@ var calculatePRTab = {
 			for(var category in catList2)
 			{
 			    var tot, look;
-				if(catList2[category].percent=='100')
+				if(catList2[category].top)
 				{
 				    tot=catList2[category].count;
 					look=catList2[category].id;
-                       for(var category in catList2)
+					catList2[category].percent = (tot / doc[0].BUCAsmtDataPRview2.length*100).toFixed(0);
+          for(var category in catList2)
 						{
-							if(catList2[category].percent!='100' && catList2[category].parent==look){
+							if(!catList2[category].top && catList2[category].parent==look){
 								catList2[category].percent=(catList2[category].count*100/tot).toFixed(0);
 								//console.log('%'+catList[category].percent);
 							}
@@ -274,7 +276,8 @@ var calculatePRTab = {
 						id: doc[0].BUCAsmtDataPRview2[j].imt.replace(/ /g,''),
 						imt: doc[0].BUCAsmtDataPRview2[j].imt,
 						count: 0,
-						percent: 100,
+						percent: 0,
+						top: true,
 						MetricsValue: 0
 					}
 					tmpAccountList2.push(tmp2);
@@ -316,13 +319,14 @@ var calculatePRTab = {
 			for(var category in catList2)
 			{
 			    var tot, look;
-				if(catList2[category].percent=='100')
+				if(catList2[category].top)
 				{
 				    tot=catList2[category].count;
 					look=catList2[category].id;
-                       for(var category in catList2)
+					catList2[category].percent = (tot / doc[0].BUCAsmtDataPRview2.length*100).toFixed(0);
+          for(var category in catList2)
 						{
-							if(catList2[category].percent!='100' && catList2[category].parent==look){
+							if(!catList2[category].top && catList2[category].parent==look){
 								catList2[category].percent=(catList2[category].count*100/tot).toFixed(0);
 								//console.log('%'+catList[category].percent);
 							}
@@ -431,7 +435,8 @@ var calculatePRTab = {
 						id: id_aux,
 						category: doc[0].BUCAsmtDataPRview[i].ratingcategory,
 						count: 0,
-						percent: 100,
+						percent: 0,
+						top: true,
 						MetricsValue: 0
 					}
 					tmpAccountList.push(tmp);
@@ -472,13 +477,14 @@ var calculatePRTab = {
 			for(var category in catList)
 			{
 			    var tot, look;
-				if(catList[category].percent=='100')
+				if(catList[category].top)
 				{
 				    tot=catList[category].count;
 					look=catList[category].id;
-                       for(var category in catList)
+					catList[category].percent = (tot / doc[0].BUCAsmtDataPRview.length * 100).toFixed(0);
+        	for(var category in catList)
 						{
-							if(catList[category].percent!='100' && catList[category].parent==look){
+							if(!catList[category].top && catList[category].parent==look){
 								catList[category].percent=(catList[category].count*100/tot).toFixed(0);
 								//console.log('%'+catList[category].percent);
 							}
