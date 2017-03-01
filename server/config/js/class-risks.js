@@ -162,6 +162,9 @@ var calculateORTab = {
                 id:risks[i].scorecardCategory.replace(/ /g,''),
                 type:risks[i].scorecardCategory,
                 numOpenIssues: 0,
+                numTasks: 0,
+                numTasksOpen: 0,
+                numMissedTasks: 0
               };
               openrisks.push(tmp);
               objects[tmp.id] = tmp;
@@ -191,6 +194,9 @@ var calculateORTab = {
             risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
             //do counting for category
             objects[risks[i].parent].numOpenIssues++ ;
+            objects[risks[i].parent].numTasks += parseInt(risks[i].numTasks);
+            objects[risks[i].parent].numTasksOpen += parseInt(risks[i].numTasksOpen);
+            objects[risks[i].parent].numMissedTasks += parseInt(risks[i].numMissedTasks);
             openrisks.push(risks[i]);
           }
           doc[0].exportOpenRisks2 = exportOpenRisks2;
