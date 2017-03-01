@@ -439,6 +439,12 @@ var calculatefield = {
 					// evaluate BusinessUnitOLD formula
 					if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
 					if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
+
+					if(doc[0].KCProcessFIN != undefined) doc[0].KCProcessFINSCT = JSON.parse(JSON.stringify(doc[0].KCProcessFIN));
+          else doc[0].KCProcessFINSCT = [];
+          if(doc[0].KCProcessOPS != undefined) doc[0].KCProcessOPSSCT = JSON.parse(JSON.stringify(doc[0].KCProcessOPS));
+          else doc[0].KCProcessOPSSCT = [];
+
 					deferred.resolve(doc);
 				} else {
 					console.log("[class-fieldcalc][getDocParams][getListParams] - " + dataParam.error);
