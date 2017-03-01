@@ -168,8 +168,9 @@ var assessment = {
 
 									fieldCalc.getRatingProfile(doc);
 
-									console.log("assessment docs: "+doc[0].asmtsdocs.length);
-									console.log("audata: "+doc[0].AUData.length);
+									//Performance tab
+									performanceTab.buildPerformanceTabGP(db,doc,defViewRow,fieldCalc);
+
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
 									// Process Audit Universe Tab
