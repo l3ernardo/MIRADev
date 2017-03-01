@@ -19,7 +19,7 @@ var calculatefield = {
 			//Create a copy of asmtsdocs so other processes that change it won't interfere with AU's list of Assessments
 			doc[0].AuditsReviewsAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
 			//Create a copy of AU Docs so other processes that change it won't interfere with AU's list of Assessable Units
-			if (doc[0].ParentDocSubType == "BU Country") {
+			if (doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Global Process") {
 				doc[0].AuditsReviewsAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
 			}
 			else {
@@ -785,18 +785,8 @@ var calculatefield = {
 								}
 							}
 							//** Additional calculations for BU Country's asmt Audits & Reviews tab
-							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
-							doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
-							//Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
-							doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
-							if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
-								//Create a copy of the asmt CRM docs (GTS use only) for BU Country
-								doc[0].BUCountryCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
-								//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
-								doc[0].BUCountryISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
-							}
 							//For Audits & Reviews
-							//calculatefield.createAuditsReviewsSupportDocs(doc);
+							calculatefield.createAuditsReviewsSupportDocs(doc);
 							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
@@ -807,7 +797,7 @@ var calculatefield = {
 
 
 
-					break;
+						break;
 					case "BU IOT":
 						// doc[0].AUDocs = asmtsdata.body.docs;
 						doc[0].AUDocs = [];
@@ -1352,16 +1342,6 @@ var calculatefield = {
 								}
 							}
 							//** Additional calculations for BU Country's asmt Audits & Reviews tab
-							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
-							doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
-							//Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
-							doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
-							if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
-								//Create a copy of the asmt CRM docs (GTS use only) for BU Country
-								doc[0].BUCountryCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
-								//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
-								doc[0].BUCountryISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
-							}
 							//For Audits & Reviews
 							calculatefield.createAuditsReviewsSupportDocs(doc);
 							//Successful resolve
