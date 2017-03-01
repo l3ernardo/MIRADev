@@ -206,7 +206,7 @@ var calculateCUTab = {
             var tmp2= {
               id: countryaux.replace(/ /g,''),
               parent: "topEntry2",
-  			      country2: countryaux,
+  			      country2: doc[0].BUCAsmtDataCURview2[i].country,
               count: 0 ,
     		      maxscore: 0,
           	  cqscore: 0,
@@ -247,7 +247,7 @@ var calculateCUTab = {
             var tmp2= {
               id: countryaux.replace(/ /g,''),
               parent: "topEntry2",
-  			      country2: countryaux,
+  			      country2: doc[0].BUCAsmtDataCURview2[i].country,
               count: 0 ,
     		      maxscore: 0,
           	  cqscore: 0,
@@ -549,7 +549,7 @@ var calculateCUTab = {
           var tmp2= {
             id: countryaux.replace(/ /g,''),
             parent: "topEntry2",
-			imt2: countryaux,
+			imt2: doc[0].BUCAsmtDataCURview2[i].imt,
             count: 0 ,
   		      maxscore: 0,
         	  cqscore: 0,
@@ -591,7 +591,7 @@ var calculateCUTab = {
           var tmp2= {
             id: countryaux.replace(/ /g,''),
             parent: "topEntry2",
-			imt2: countryaux,
+			imt2: doc[0].BUCAsmtDataCURview2[i].imt,
             count: 0 ,
   		      maxscore: 0,
         	  cqscore: 0,
