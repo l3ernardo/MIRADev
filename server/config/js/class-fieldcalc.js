@@ -1475,7 +1475,7 @@ var calculatefield = {
 
 								try{
 
-															
+
 
 									//get MSAC missed commitments
 									doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
@@ -1553,8 +1553,8 @@ var calculatefield = {
 									console.log("[class-fieldcalc][getRatingProfile][Global Process Tab] - " + e.stack);
 
 								}
-								
-								
+
+
 								break;
 							case "Controllable Unit":
 							if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
@@ -1895,20 +1895,16 @@ var calculatefield = {
 								}
 							}
 						}else if(doc[0].ParentDocSubType=='BU IOT'){
-							//console.log(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid);
-							//console.log(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].key);
-							//console.log(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].DocSubType);
 							if (doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid]) {
-								//console.log("Found");
-								//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].key);
-								//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].DocSubType);
+								if (doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].Country) {
+									toadd.imt = global.hierarchy.countries[util.resolveGeo(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].Country, "Country")].IMT;
+								}else if (doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].IMT) {
+									toadd.imt = util.resolveGeo(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].IMT, "IMT");
+								}
 							}else {
 								//console.log("Not found");
 							}
-							//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].key);
-							//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].DocSubType);
 						}
-
 
 						doc[0].BUCAsmtDataCURview.push(toadd);
 						if(doc[0].MIRABusinessUnit == "GBS"){
