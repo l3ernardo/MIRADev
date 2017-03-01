@@ -23,16 +23,6 @@ var calculateSCTab = {
         case "BU IMT":
         case "BU Country":
           //** Calculate for Defect Rate - START **//
-          if(doc[0].KCProcessFIN != undefined){
-            doc[0].KCProcessFINSCT = JSON.parse(JSON.stringify(doc[0].KCProcessFIN));
-          }else{
-            doc[0].KCProcessFINSCT = [];
-          }
-        if(doc[0].KCProcessOPS != undefined){
-           doc[0].KCProcessOPSSCT = JSON.parse(JSON.stringify(doc[0].KCProcessOPS));
-         }else {
-           doc[0].KCProcessOPSSCT = [];
-         }
 
           // Calculate for Current Quarter
           for (var i = 0; i < doc[0].SCTest1Data.length; i++) {
@@ -82,6 +72,9 @@ var calculateSCTab = {
                         doc[0].KCProcessOPSSCT[j].members[k].defect += parseInt(doc[0].SCTest1Data[i].numDefects);
                       }
                     }
+                    // if (doc[0].SCTest1Data[i].GPPARENT == "GPC300000142") {
+                      // console.log(doc[0].SCTest1Data[i].numtest + "," + doc[0].SCTest1Data[i].numDefects + "," + doc[0].SCTest1Data[i]._id);
+                    // }
                   }
                 }
               }

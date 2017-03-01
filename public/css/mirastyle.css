@@ -5,6 +5,7 @@ table.ibm-data-table tbody tr.ibm-alt-row td, table.ibm-data-table tbody tr.ibm-
 
 /*Overrides for the mouse over behavior inherited from the v17 standard.*/
 /* -- Starts from here -- */
+
 table.ibm-data-table tbody tr:hover td, table.ibm-data-table tbody tr:hover th,
 table.ibm-data-table tbody tr.ibm-alt-row:hover td, table.ibm-data-table tbody tr.ibm-alt-row:hover th,
 table.ibm-data-table tbody tr:hover td.ibm-alt-col,
@@ -530,6 +531,14 @@ table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-alt
 table.ibm-data-table.ibm-alternating-col tr:hover .op-metric-label.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .op-metric-label.ibm-alt-col.ibm-sort-column,
 table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .op-metric-label.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .op-metric-label.ibm-sort-column {
 	background-color: #e0e0ff;
+}
+table.ibm-data-table tbody tr:hover .other-viewheader-al, table.ibm-data-table tbody tr.ibm-alt-row:hover .other-viewheader-al,
+table.ibm-data-table tbody tr:hover .other-viewheader-al.ibm-alt-col, table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .other-viewheader-al,
+table.ibm-data-table tbody tr.ibm-alt-row.ibm-alt-row-checked:hover .other-viewheader-al,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .other-viewheader-al.ibm-alt-col, table.ibm-data-table tbody tr:hover .other-viewheader-al.ibm-sort-column,
+table.ibm-data-table.ibm-alternating-col tr:hover .other-viewheader-al.ibm-sort-column, table.ibm-data-table.ibm-alternating-col tr:hover .other-viewheader-al.ibm-alt-col.ibm-sort-column,
+table.ibm-data-table tbody tr.ibm-alt-row-checked:hover .other-viewheader-al.ibm-sort-column, table.ibm-data-table tbody tr.ibm-alt-row:hover .other-viewheader-al.ibm-sort-column {
+	background-color: #dadada;
 }
 /* -- Hover override ends here*/
 

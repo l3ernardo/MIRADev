@@ -20,21 +20,21 @@
           <td class="asmt-viewdata" width="20%">{{SummaryISDelivery.countUNSAT}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryISDelivery.countScore}}</td>
         </tr>
-        <tr class="audit-review-viewheader-ar" width="20%">
-          <td class="audit-review-viewheader-al">GTS - IS</td>
+        <tr class="audit-review-viewheader-ar">
+          <td class="audit-review-viewheader-al" width="20%">GTS - IS</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMIS.countComplete}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMIS.countSAT}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMIS.countUNSAT}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMIS.countScore}}</td>
         </tr>
-        <tr class="audit-review-viewheader-ar" width="20%">
-          <td class="audit-review-viewheader-al">GTS - OTHER</td>
+        <tr class="audit-review-viewheader-ar">
+          <td class="audit-review-viewheader-al" width="20%">GTS - OTHER</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMOther.countComplete}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMOther.countSAT}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMOther.countUNSAT}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryCRMOther.countScore}}</td>
         </tr>
-        <tr class="audit-review-viewheader-ar" width="20%">
+        <tr class="audit-review-viewheader-ar">
           <td class="audit-review-viewheader-al" width="20%"><strong>TOTAL</strong></td>
           <td class="asmt-viewdata" width="20%">{{SummaryTotal.countComplete}}</td>
           <td class="asmt-viewdata" width="20%">{{SummaryTotal.countSAT}}</td>
@@ -247,6 +247,7 @@
         <span class="ibm-sep">&nbsp;</span>
         <a href="javascript:void(0);" value="Export to Open Office" name="ppr-link-export2" id="ppr-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
         <br /><br />
+        <table id="ppr_treeview" width="100%" class="table_with_scroll">
           <thead>
             <th class="audit-review-viewheader" scope="col" width="5%">Cat</th>
             <th class="audit-review-viewheader" scope="col" width="7%">Type</th>
@@ -270,7 +271,7 @@
   						<td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
               <td width="5%">{{country}}</td>
   						<td width="8%">{{reviewID}}</td>
-  						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">a{{Name}}</a></td>
+  						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
   						<td width="10%">{{DocSubType}}</td>
   						<td width="10%">{{reportDate}}</td>
   						{{{ratingDisplayView rating 6}}}
