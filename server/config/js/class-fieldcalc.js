@@ -1808,7 +1808,7 @@ var calculatefield = {
 				else { // For BU Country, BU IOT, BU IMT, BU Reporting Group and Business Unit which needs to process ratings profile for both CU and CP
 					var podatactr = 0;
 					for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1) {
+						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames != undefined && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1) {
 							// Process Audit Universe Data here
 
 							// Process Ratings Tab embedded views
