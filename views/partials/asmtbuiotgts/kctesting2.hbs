@@ -254,7 +254,7 @@
 				{{#each CPDRException}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%">{{category}}</td>
-						<td width="40%"><a target="_blank" href="/assessment`?id={{_id}}">{{AssessableUnitName}}</a></td>
+						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%" >{{AUDefectCount}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
