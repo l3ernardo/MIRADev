@@ -214,25 +214,25 @@ var calculateARTab = {
             tmp.DocSubType = parentAU.DocSubType;
             //If the audit is GTS, then we need to add the corresponding category
             if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-              //If it is a Country Process then its category is supposed to be the CP's "Category" field in Cloudant
+              //If it is a Country Process then its category is supposed to be the CP's "CUCat" field in Cloudant
               if (tmp.DocSubType == "Country Process") {
                 //Review IS categories
                 for(var key in doc[0].AuditCUIS.options){
-                  if (parentAU.Category == doc[0].AuditCUIS.options[key]) {
+                  if (parentAU.CUCat == doc[0].AuditCUIS.options[key]) {
                     tmp.cat = "IS";
                     break;
                   }
                 }
                 //Review Other categories
                 for (var key in doc[0].AuditCUOTHER.options) {
-                  if (parentAU.Category == doc[0].AuditCUOTHER.options[key]) {
+                  if (parentAU.CUCat == doc[0].AuditCUOTHER.options[key]) {
                     tmp.cat = "Other";
                     break;
                   }
                 }
                 //Review Delivery categories
                 for (var key in doc[0].DeliveryCU.options) {
-                  if (parentAU.Category == doc[0].AuditCUOTHER.options[key]) {
+                  if (parentAU.CUCat == doc[0].DeliveryCU.options[key]) {
                     tmp.cat = "IS Delivery";
                     break;
                   }
@@ -961,7 +961,6 @@ var calculateARTab = {
           //Then all BU IMT's constituent asmts and AUs are stored
           var parentAsmts = doc[0].AuditsReviewsAssessments;
           var parentAUs = doc[0].AuditsReviewsAssessableUnits;
-          //console.log("Number of parentAUs: "+Object.keys(parentAUs).length);
           //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
           var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
           var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
@@ -1092,6 +1091,7 @@ var calculateARTab = {
           doc[0].PPRData = [];
 
           //Iterate over found PPRs
+          //console.log("Number of PPRs: "+auditPPR.length);
           for(var i = 0; i < auditPPR.length; i++) {
             var tmp={};
             tmp.id = auditPPR[i]._id;
@@ -1154,6 +1154,7 @@ var calculateARTab = {
           doc[0].OtherAuditsData = [];
 
           //Iterate over the Other Audit list
+          //console.log("Number of Other Audits: "+auditOther.length);
           for (var i = 0; i < auditOther.length; i++) {
             var tmp = {};
             tmp.id = auditOther[i]._id;
