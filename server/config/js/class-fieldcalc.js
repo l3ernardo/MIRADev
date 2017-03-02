@@ -19,7 +19,7 @@ var calculatefield = {
 			//Create a copy of asmtsdocs so other processes that change it won't interfere with AU's list of Assessments
 			doc[0].AuditsReviewsAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
 			//Create a copy of AU Docs so other processes that change it won't interfere with AU's list of Assessable Units
-			if (doc[0].ParentDocSubType == "BU Country") {
+			if (doc[0].ParentDocSubType == "BU Country" || doc[0].ParentDocSubType == "Global Process") {
 				doc[0].AuditsReviewsAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
 			}
 			else {
@@ -439,6 +439,12 @@ var calculatefield = {
 					// evaluate BusinessUnitOLD formula
 					if (dataParam.parameters.GTSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GTSInstanceDesign[0].options[0].name);
 					if (dataParam.parameters.GBSInstanceDesign) doc[0].BusinessUnitOLD = eval(dataParam.parameters.GBSInstanceDesign[0].options[0].name);
+
+					if(doc[0].KCProcessFIN != undefined) doc[0].KCProcessFINSCT = JSON.parse(JSON.stringify(doc[0].KCProcessFIN));
+          else doc[0].KCProcessFINSCT = [];
+          if(doc[0].KCProcessOPS != undefined) doc[0].KCProcessOPSSCT = JSON.parse(JSON.stringify(doc[0].KCProcessOPS));
+          else doc[0].KCProcessOPSSCT = [];
+
 					deferred.resolve(doc);
 				} else {
 					console.log("[class-fieldcalc][getDocParams][getListParams] - " + dataParam.error);
@@ -779,18 +785,8 @@ var calculatefield = {
 								}
 							}
 							//** Additional calculations for BU Country's asmt Audits & Reviews tab
-							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
-							doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
-							//Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
-							doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
-							if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
-								//Create a copy of the asmt CRM docs (GTS use only) for BU Country
-								doc[0].BUCountryCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
-								//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
-								doc[0].BUCountryISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
-							}
 							//For Audits & Reviews
-							//calculatefield.createAuditsReviewsSupportDocs(doc);
+							calculatefield.createAuditsReviewsSupportDocs(doc);
 							//Successful resolve
 							deferred.resolve({"status": 200, "doc": doc});
 						}).catch(function(err) {
@@ -801,7 +797,7 @@ var calculatefield = {
 
 
 
-					break;
+						break;
 					case "BU IOT":
 						// doc[0].AUDocs = asmtsdata.body.docs;
 						doc[0].AUDocs = [];
@@ -1346,16 +1342,6 @@ var calculatefield = {
 								}
 							}
 							//** Additional calculations for BU Country's asmt Audits & Reviews tab
-							//Create a copy of asmtsdocs so other processes that change it won't interfere with BU Country's list of Assessments
-							doc[0].BUCountryAssessments = JSON.parse(JSON.stringify(doc[0].asmtsdocs));
-							//Create a copy of AU Docs so other processes that change it won't interfere with BU Country's list of Assessable Units
-							doc[0].BUCountryAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocs));
-							if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit) {
-								//Create a copy of the asmt CRM docs (GTS use only) for BU Country
-								doc[0].BUCountryCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
-								//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
-								doc[0].BUCountryISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
-							}
 							//For Audits & Reviews
 							calculatefield.createAuditsReviewsSupportDocs(doc);
 							//Successful resolve
@@ -1469,7 +1455,7 @@ var calculatefield = {
 
 								try{
 
-															
+
 
 									//get MSAC missed commitments
 									doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
@@ -1547,8 +1533,8 @@ var calculatefield = {
 									console.log("[class-fieldcalc][getRatingProfile][Global Process Tab] - " + e.stack);
 
 								}
-								
-								
+
+
 								break;
 							case "Controllable Unit":
 							if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
@@ -1802,7 +1788,7 @@ var calculatefield = {
 				else { // For BU Country, BU IOT, BU IMT, BU Reporting Group and Business Unit which needs to process ratings profile for both CU and CP
 					var podatactr = 0;
 					for (var i = 0; i < doc[0].asmtsdocs.length; ++i) {
-						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1) {
+						if (doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames != undefined && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1) {
 							// Process Audit Universe Data here
 
 							// Process Ratings Tab embedded views
@@ -1889,20 +1875,16 @@ var calculatefield = {
 								}
 							}
 						}else if(doc[0].ParentDocSubType=='BU IOT'){
-							//console.log(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid);
-							//console.log(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].key);
-							//console.log(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].DocSubType);
 							if (doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid]) {
-								//console.log("Found");
-								//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].key);
-								//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].DocSubType);
+								if (doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].Country) {
+									toadd.imt = global.hierarchy.countries[util.resolveGeo(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].Country, "Country")].IMT;
+								}else if (doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].IMT) {
+									toadd.imt = util.resolveGeo(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].IMT, "IMT");
+								}
 							}else {
 								//console.log("Not found");
 							}
-							//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].key);
-							//console.log(doc[0].AUDocsObj[doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].parentid].DocSubType);
 						}
-
 
 						doc[0].BUCAsmtDataCURview.push(toadd);
 						if(doc[0].MIRABusinessUnit == "GBS"){
