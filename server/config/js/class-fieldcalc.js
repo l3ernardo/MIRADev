@@ -1526,6 +1526,19 @@ var calculatefield = {
 										bocEx = bocEx + 1;
 									}
 
+									// Process Ratings tab data for GlobalProcess
+									toadd = {
+										"docid":doc[0].asmtsdocs[i]._id,
+										"country":doc[0].asmtsdocs[i].Country,
+										"iot":doc[0].asmtsdocs[i].IOT,
+										"ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+										"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+										"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+										"targettosat":doc[0].asmtsdocs[i].Target2Sat,
+										"targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+										"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+									};
+									doc[0].CPAsmtDataPR1view.push(toadd);
 
 
 
