@@ -16,7 +16,7 @@ var calculatePRTab = {
 			var catList = {};
 			var tmpAccountList = [];
 			var exportList = [];
-			doc[0].BUCAsmtDataPRview2 = clone(doc[0].BUCAsmtDataPRview);		
+			doc[0].BUCAsmtDataPRview2 = clone(doc[0].BUCAsmtDataPRview);
 			doc[0].CPAsmtDataPR1view2 = clone(doc[0].CPAsmtDataPR1view);
 
 			//for BU IMT (Process by Country table)
@@ -505,7 +505,7 @@ var calculatePRTab = {
 			doc[0].BUCAsmtDataPRview = tmpAccountList;
 			}
 					   //for Global Process (Process by rating table)
-			if(doc[0].ParentDocSubType=='Global Process'){ 
+			if(doc[0].ParentDocSubType=='Global Process'){
 			//categorization for
 			for(var i = 0; i < doc[0].CPAsmtDataPR1view.length; i++){
 				doc[0].CPAsmtDataPR1view[i].ratingcategory = fieldCalc.getRatingCategory(doc[0].CPAsmtDataPR1view[i].ratingCQ, doc[0].CPAsmtDataPR1view[i].ratingPQ1);
@@ -610,7 +610,7 @@ var calculatePRTab = {
 					category:doc[0].CPAsmtDataPR1view[i].ratingcategory  || " ",
 					country:doc[0].CPAsmtDataPR1view[i].country || " ",
 					ratingCQ:doc[0].CPAsmtDataPR1view[i].ratingCQ || " ",
-					ratingPQ1:doc[0].CPAsmtDataPR1view[i].ratingPQ1 || " ",					
+					ratingPQ1:doc[0].CPAsmtDataPR1view[i].ratingPQ1 || " ",
 					targettosatprev:doc[0].CPAsmtDataPR1view[i].targettosatprev || " ",
 					targettosat:doc[0].CPAsmtDataPR1view[i].targettosat || " ",
 					reviewcomments:doc[0].CPAsmtDataPR1view[i].reviewcomments
@@ -619,10 +619,10 @@ var calculatePRTab = {
 			doc[0].exportProcessRatings = exportList;
 
 			for(var category in catList)
-			{   
+			{
 			    var tot, look;
-				    tot=catList[category].count; 
-					look=catList[category].id;   
+				    tot=catList[category].count;
+					look=catList[category].id;
 							if(catList[category].percent!='100'){
 								catList[category].percent=(catList[category].count*100/doc[0].CPAsmtDataPR1view.length).toFixed(1);
 							}
@@ -637,7 +637,7 @@ var calculatePRTab = {
 				}
 			}
 				doc[0].CPAsmtDataPR1view = tmpAccountList;
-				
+
 			//second table for Global Process
 			var catList2 = {};
 			var tmpAccountList2 = [];
@@ -753,14 +753,14 @@ var calculatePRTab = {
 					tmpAccountList2.push(tmp2);
 					catList2[doc[0].CPAsmtDataPR1view2[j].iot.replace(/ /g,'')+doc[0].CPAsmtDataPR1view2[j].ratingcategory.replace(/ /g,'')] = tmp2;
 				}
-				
+
 				catList2[doc[0].CPAsmtDataPR1view2[j].iot.replace(/ /g,'')].count++;
 				catList2[doc[0].CPAsmtDataPR1view2[j].iot.replace(/ /g,'')+doc[0].CPAsmtDataPR1view2[j].ratingcategory.replace(/ /g,'')].count++;
 				catList2[doc[0].CPAsmtDataPR1view2[j].iot.replace(/ /g,'')+doc[0].CPAsmtDataPR1view2[j].ratingcategory.replace(/ /g,'')].helper=doc[0].CPAsmtDataPR1view2[j].iot;
 				doc[0].CPAsmtDataPR1view2[j].id = doc[0].CPAsmtDataPR1view2[j]["docid"];
 				doc[0].CPAsmtDataPR1view2[j].parent =doc[0].CPAsmtDataPR1view2[j].iot.replace(/ /g,'')+id_aux2;
 				tmpAccountList2.push(doc[0].CPAsmtDataPR1view2[j]);
-				exportList2.push({					
+				exportList2.push({
 					iot:doc[0].CPAsmtDataPR1view2[j].iot || " ",
 					category:doc[0].CPAsmtDataPR1view2[j].ratingcategory  || " ",
 					country:doc[0].CPAsmtDataPR1view2[j].country  || " ",
@@ -775,29 +775,31 @@ var calculatePRTab = {
 			for(var category in catList2)
 			{
 			    if(catList2[category].MetricsValue=='0'){
-					
+
 								catList2[category].percent=(catList2[category].count*100/doc[0].CPAsmtDataPR1view2.length).toFixed(1);
-					
+
+				}else {
+					catList2[category].percent = (catList2[category].count/catList2[catList2[category].parent].count*100).toFixed(1);
 				}
 			}
 			/*for(var category in catList2)
 			{
 			    var tot2, look2,look3;
 				if(catList2[category].percent!='100')
-				{    			        
-				    tot2=catList2[iot].count;					
-					look2=catList2[category].parent; 
+				{
+				    tot2=catList2[iot].count;
+					look2=catList2[category].parent;
 					look3=catList2[category].helper; console.log('helper:'+catList2[category].helper);
                        for(var category in catList2)
-						{   
+						{
 							if(catList2[category].MetricsValue=='1'&& look3==look2){//console.log('vamos');console.log('tot2:'+tot2+'  count:'+catList2[category].count+'parent:'+catList2[category].parent);
-							
+
 								catList2[category].percent=(catList2[category].count*100/tot2).toFixed(0);
 							}
 						}
 				}
 			}*/
-			
+
 			//Adding padding
 			if (topEntriesCount2 < defViewRow) {
 				if (tmpAccountList2.length == 0) {
@@ -806,8 +808,8 @@ var calculatePRTab = {
 					fieldCalc.addTestViewDataPadding(tmpAccountList2,9,(defViewRow-topEntriesCount2));
 				}
 			}
-				doc[0].CPAsmtDataPR1view2 = tmpAccountList2;			
-			
+				doc[0].CPAsmtDataPR1view2 = tmpAccountList2;
+
 			}
 		}
 		catch(e){
