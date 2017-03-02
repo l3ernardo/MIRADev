@@ -77,6 +77,7 @@ var report = {
 							//"_id": { "$gt": 0 },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
+              "CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"MIRABusinessUnit": req.session.businessunit
 					},
@@ -89,6 +90,7 @@ var report = {
 						//"_id": { "$gt": 0 },
 						"Name": { "$gt": null },
 						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
 						"Status": "Active",
 						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 						"MIRABusinessUnit": req.session.businessunit
@@ -157,6 +159,7 @@ var report = {
 							//"_id": { "$gt": 0 },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
+              "CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or": [{"DocSubType":"Controllable Unit"},{"DocSubType":"Country Process", "CUFlag": "Yes"}],
 							"MIRABusinessUnit": req.session.businessunit
@@ -170,6 +173,7 @@ var report = {
 						//"_id": { "$gt": 0 },
 						"Name": { "$gt": null },
 						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
 						"Status": "Active",
 						"$or": [{"DocSubType":"Controllable Unit"},{"DocSubType":"Country Process", "CUFlag": "Yes"}],
 						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
@@ -239,6 +243,7 @@ var report = {
 						    "LevelTypeSE": { "$gt": null },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
+              "CurrentPeriod": req.session.quarter,
 							"$or":[{"$not": {"MIRAAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Reviewed"}}],
 							"$not": {"Status": "Complete" },
 							"MIRABusinessUnit": req.session.businessunit
@@ -253,6 +258,7 @@ var report = {
 						"LevelTypeSE": { "$gt": null },
 						"Name": { "$gt": null },
 						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
 					    "$or":[{"$not": {"MIRAAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Reviewed"}}],
 						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 						"MIRABusinessUnit": req.session.businessunit
@@ -368,6 +374,7 @@ for (i=0;i<len;i++)
 						    "LevelTypeAUF": { "$gt": null },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
+              "CurrentPeriod": req.session.quarter,
 							"Status": "Active",
 							"$or": [{"DocSubType":"Controllable Unit"},{"DocSubType":"Country Process"},{"DocSubType":"BU Country"},{"DocSubType":"Total"}],
 					        "AuditableFlag": "Yes",
@@ -382,6 +389,7 @@ for (i=0;i<len;i++)
 						"LevelTypeAUF": { "$gt": null },
 						"Name": { "$gt": null },
 						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
 						"Status": "Active",
 						"$or": [{"DocSubType":"Controllable Unit"},{"DocSubType":"Country Process"},{"DocSubType":"BU Country"},{"DocSubType":"Total"}],
 					    "AuditableFlag": "Yes",
@@ -684,7 +692,7 @@ for (i=0;i<len;i++)
 				var objCUALL = {
 					"selector": {
 						    "AssessableUnitName": { "$gt": null },
-					        "CurrentPeriod": { "$gt": null },
+					        "CurrentPeriod": req.session.quarter,
 							"key": "Assessment",
 							"ParentDocSubType":"Controllable Unit",
 							"$not":{"AUStatus":"Retired"},
@@ -697,7 +705,7 @@ for (i=0;i<len;i++)
 				var objCUALL = {
 					"selector": {
 						    "AssessableUnitName": { "$gt": null },
-					        "CurrentPeriod": { "$gt": null },
+					        "CurrentPeriod": req.session.quarter,
 							"key": "Assessment",
 							"ParentDocSubType":"Controllable Unit",
 							"$not":{"AUStatus":"Retired"},

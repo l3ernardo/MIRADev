@@ -115,7 +115,7 @@ var auditlesson = {
 										console.log("[assessableunit][LessonsList] - " + err.error.reason);
 										deferred.reject({"status": 500, "error": err.error.reason});
 									});
-									
+
 								}
 								else {
 									deferred.resolve({"status": 200, "doc": doc});
@@ -345,18 +345,33 @@ var auditlesson = {
 			db.find(obj).then(function(data){
 				var objGP = {
 					"selector": {
-						"Name": { "$gt": null },
-						"key": "Assessable Unit",
-						"DocSubType":"Global Process",
-						"Status": "Active",
-						"MIRABusinessUnit": req.session.businessunit
-					},
-					fields: [
-						"Name","WWBCITKey"
-					]
+						"_id": {"$gt":0},
+						"$or": [
+							{ "$and": [
+								{"Name": { "$gt": null }}, {"key": "Assessable Unit"}, {"DocSubType":"Global Process"},	{"Status": "Active"},	{"MIRABusinessUnit": req.session.businessunit}
+							]},
+							{ "$and": [
+								{"keyName": req.session.businessunit.replace(" ","")+"LessonsLearnedKey"}
+							]}
+						]
+					}//,					fields: [						"Name","WWBCITKey"					]
 				};
+				//req.session.businessunit
 				db.find(objGP).then(function(datagp){
 					var gpList = datagp.body.docs;
+					var tmpGPList = [];
+					var ALLKeys = {};
+					for (var i = 0; i < gpList.length; i++) {
+						if(gpList[i].docType){
+							for (var j = 0; j < gpList[i].value.length; j++) {
+								ALLKeys[gpList[i].value[j].id] = gpList[i].value[j].option;
+							}
+						//console.log(gpList[i].value);
+						}else {
+							tmpGPList.push(gpList[i]);
+						}
+					}
+					gpList = tmpGPList;
 					var uniqueBUs = {};
 					var uniquePeriods = {};
 					var uniquePrograms = {};
@@ -375,7 +390,7 @@ var auditlesson = {
 							}
 						}
 						docs[i].globalProcess = gpKey;
-						
+
 						if(typeof uniqueBUs[docs[i].businessUnit] === "undefined"){
 							uniqueBUs[docs[i].businessUnit] = true;
 							list.push({id: docs[i].businessUnit.replace(/ /g,''), name: docs[i].businessUnit});
@@ -390,6 +405,13 @@ var auditlesson = {
 							uniquePrograms[docs[i].AuditType+""+docs[i].reportingPeriod] = true;
 							list.push({id: docs[i].AuditType.replace(/ /g,'')+""+docs[i].reportingPeriod.replace(/ /g,''), name: docs[i].AuditType, parent: docs[i].reportingPeriod.replace(/ /g,'')});
 						}
+						if (docs[i].AuditLessonsKey != undefined && docs[i].AuditLessonsKey != "") {
+							var tmpValue = docs[i].AuditLessonsKey.split(",");
+							for (var x = 0; x < tmpValue.length; x++) {
+								tmpValue[x] = ALLKeys[tmpValue[x]];
+							}
+							docs[i].AuditLessonsKey = tmpValue;
+						}
 						list.push({
 							"_id": docs[i]["_id"],
 							id: docs[i]["_id"],
@@ -401,26 +423,46 @@ var auditlesson = {
 							country: docs[i].country,
 							process: docs[i].globalProcess,
 							subprocess: docs[i].subprocess,
+							AuditLessonsKey: docs[i].AuditLessonsKey,
 							observationCategory: docs[i].observationCategory,
 							summary: docs[i].summary
 						});
-						dataExport.push({
-							BU: docs[i].businessUnit,
-							period: docs[i].reportingPeriod,
-							type: docs[i].AuditType,
-							engagementID: docs[i].engagementIDone+"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum,
-							IOT: docs[i].IOT,
-							IMT: docs[i].IMT,
-							country: docs[i].country,
-							process: docs[i].globalProcess,
-							subprocess: docs[i].subprocess,
-							observationCategory: docs[i].observationCategory,
-							summary: docs[i].summary
-						});
+						var summaryvar = docs[i].summary || "";
+						summaryvar = summaryvar.replace(/<br>/g,' ');
+						if(req.session.businessunit == "GBS"){
+							dataExport.push({
+								BU: docs[i].businessUnit || "",
+								period: docs[i].reportingPeriod || "",
+								type: docs[i].AuditType || "",
+								engagementID: docs[i].engagementIDone+"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum || "",
+								IOT: docs[i].IOT || "",
+								IMT: docs[i].IMT || "",
+								country: docs[i].country || "",
+								process: docs[i].globalProcess || "",
+								subprocess: docs[i].subprocess || "",
+								observationCategory: docs[i].observationCategory || "",
+								summary: summaryvar
+							});
+						}else{
+							dataExport.push({
+								BU: docs[i].businessUnit || "",
+								period: docs[i].reportingPeriod || "",
+								type: docs[i].AuditType || "",
+								engagementID: docs[i].engagementIDone+"-"+docs[i].engagementIDtwo+"-"+docs[i].engagementIDthree+" "+docs[i].recommendationNum || "",
+								IOT: docs[i].IOT || "",
+								IMT: docs[i].IMT || "",
+								country: docs[i].country || "",
+								process: docs[i].globalProcess || "",
+								subprocess: docs[i].subprocess || "",
+								ALLkey: docs[i].AuditLessonsKey || "",
+								observationCategory: docs[i].observationCategory || "",
+								summary: summaryvar
+							});
+						}
 					}
-					deferred.resolve({"status": 200, "dataExport": dataExport,"doc": list});
+					deferred.resolve({"status": 200, "dataExport": dataExport,"doc": list, "EnteredBU": req.session.businessunit});
 					//cierra
-				
+
 				}).catch(function(err){
 					console.log("[auditlesson][getAllLessons][Audit Lessons] - " + err.error.reason);
 					deferred.reject({"status": 500, "error": err.error.reason});
@@ -510,7 +552,7 @@ var auditlesson = {
 					data.body.docs[0].globalProcess = req.body.globalProcess;
 					data.body.docs[0].subprocess = req.body.subprocess;
 					data.body.docs[0].summary = req.body.Notes;
-					
+
 					if(req.body.BU != "GBS")
 						data.body.docs[0].AuditLessonsKey = req.body.AuditLessonsKey;
 
