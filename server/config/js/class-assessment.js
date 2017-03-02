@@ -175,8 +175,8 @@ var assessment = {
 									ort.processORTab(doc,defViewRow,req);
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
-
-
+									// Process Audits & Reviews tab
+									aar.processARTab(doc,defViewRow);
 								/*
 
 								if (doc[0].CPAsmtDataPIview.length < defViewRow) {
