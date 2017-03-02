@@ -32,8 +32,15 @@
 						<th style="width:5%;">Country</th>
 						<th style="width:10%;">Process</th>
 						<th style="width:5%;">Subprocess</th>
+						{{#if_not_equal EnteredBU "GBS"}}
+						<th style="width:10%;">Lessons Learned Key</th>
+						<th style="width:5%;">Observation Category</th>
+						<th style="width:35%;">Summary of Issue / Recommendation</th>
+						{{else}}
 						<th style="width:5%;">Observation Category</th>
 						<th style="width:45%;">Summary of Issue / Recommendation</th>
+						{{/if_not_equal}}
+
 					</tr>
 				</thead>
 				<tbody>
@@ -48,8 +55,14 @@
 						<td style="width:5%;">{{country}}</td>
 						<td style="width:10%;">{{process}}</td>
 						<td style="width:5%;">{{subprocess}}</td>
+						{{#if_not_equal ../EnteredBU "GBS"}}
+						<td style="width:10%;">{{AuditLessonsKey}}</td>
+						<td style="width:5%;">{{observationCategory}}</td>
+						<td style="width:35%;">{{{summary}}}</td>
+						{{else}}
 						<td style="width:5%;">{{observationCategory}}</td>
 						<td style="width:45%;">{{{summary}}}</td>
+						{{/if_not_equal}}
 					</tr>
 				{{/each}}
 				</tbody>
