@@ -2,8 +2,9 @@
  *
  * MIRA Audits and Reviews Code
  * Date: 4 January 2017
- * By: genonms@ph.ibm.com
- *
+ * By:  genonms@ph.ibm.com
+ *      chrispan@mx1.ibm.com
+ *      irvingav@mx1.ibm.com
  */
 
 var fieldCalc = require('./class-fieldcalc.js');
@@ -28,10 +29,14 @@ var calculateARTab = {
   //Auxiliar function that adds the number of SAT or UNSAT audits for BU Country, IMT or IOT
   addSummaryAuditCount: function(summaryCountObject, audit) {
     try {
+      console.log("Executing addSummaryAuditCount");
       if (audit.PeriodRating == "Sat" || audit.PeriodRating == "Satisfactory" || audit.PeriodRating == "Favorable" || audit.PeriodRating == "Unqualified" || audit.PeriodRating == "Positive") {
+        console.log("PeriodRating is SAT");
         summaryCountObject.countSAT++;
+        console.log("summaryCountObject SAT: "+summaryCountObject.countSAT);
       }
       if (audit.PeriodRating == "Unsat" || audit.PeriodRating == "Unsatisfactory" || audit.PeriodRating == "Qualified" || audit.PeriodRating == "Unfavorable" || audit.PeriodRating == "Negative") {
+        console.log("PeriodRating is UNSAT");
         summaryCountObject.countUNSAT++;
       }
       return summaryCountObject;
@@ -95,16 +100,12 @@ var calculateARTab = {
   //Function that iterates over parent assessments for Internal Audits
   categorizeInternalAudits: function(doc, auditInter, parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs) {
     try {
-      //console.log("Audit ID: "+tmp.id);
       //Iterate all over the AU children assessments to find the children AUs, thus the correct parent of the Internal Audit
       for(var j = 0; j < parentAsmts.length; j++) {
         //If the audit's parent is found, get all the info from it
         if (auditInter.parentid == parentAsmts[j]._id || auditInter.parentid == parentAsmts[j].parentid) {
-          //console.log("Found parent, ID: "+auditInter.parentid);
           var parentAU = parentAUs[parentAsmts[j].parentid];
-          //console.log("Parent AU exists: "+parentAU);
           tmp.Name = parentAU.Name;
-          //console.log("Name: "+tmp.Name);
           //IMT & Country
           tmp.imp = parentAU.IMT;
           tmp.country = parentAU.Country;
@@ -245,19 +246,20 @@ var calculateARTab = {
               //break;
             }
           }
+          //Rating and Last MSAC (PeriodRating and PeriodRatingPrev)
           tmp.PeriodRatingPrev = parentAU.PeriodRatingPrev;
           tmp.PeriodRating = parentAsmts[j].PeriodRating;
-          if (auditInter.CUSize == undefined || auditInter.CUSize == "") {
+          //CU Scores for Internal Audit
+          if (typeof auditInter.CUSize === "undefined" || auditInter.CUSize == "") {
             tmp.CUSize = parentAU.CUSize;
           } else {
             tmp.CUSize = auditInter.CUSize;
           }
           tmp.CUMaxScore = fieldCalc.getCUMaxScore(tmp.CUSize);
+          //console.log("Max Score: "+tmp.CUMaxScore);
           tmp.CUScore = fieldCalc.getCUScore(tmp.PeriodRating,tmp.CUMaxScore);
+          //console.log("CU Score: "+tmp.CUScore);
           break;
-        }
-        else {
-          //console.log("PARENT NOT FOUND, here's the ID: "+auditInter.parentid);
         }
       }
       return tmp;
@@ -281,7 +283,7 @@ var calculateARTab = {
             return -1
           }
           if (nameA > nameB){
-            if (nameB =="(uncategorized)") {
+            if (nameB == "(uncategorized)") {
               return -1
             }
             return 1
@@ -351,6 +353,10 @@ var calculateARTab = {
 
   //Function that iterates over parent AUs for PPR Audits
   categorizePPRAudits: function(doc, auditPPR, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs) {
+    //Review if auditPPR is not empty or undefined, then use the countryProcess.
+    if (typeof auditPPR.CU === "undefined" || auditPPR.CU == "" || auditPPR.CU == "Not Categorized") {
+      auditPPR.CU = auditPPR.countryProcess;
+    }
     try {
       for(var key in parentAUs) {
         if (auditPPR.CU == parentAUs[key].Name) {
@@ -360,22 +366,16 @@ var calculateARTab = {
           tmp.country = parentAUs[key].Country;
           //Categorization for GTS: will cycle through all the IS Delivery and CRM docs to select one of those as category.
           if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-            //If the assessment matches the parentid of the asmtsdocsDelivery, then its category is "IS Delivery"
-            for(var j = 0; j < parentISDeliveryDocs.length; j++) {
-              if (parentAUs[key]._id == parentISDeliveryDocs[j].parentid) {
-                tmp.cat = "IS Delivery";
-                break;
-              }
+            //If the assessment process matches an entry in doc[0].DeliveryProcess, then its category is "IS Delivery"
+            if (doc[0].DeliveryProcessObj[auditPPR.process]) {
+              tmp.cat = "IS Delivery";
             }
-            //If the assessment matches the parentid of the asmtsdocsCRM, then its category is "CRM/Other"
-            for(var j = 0; j < parentCRMDocs.length; j++) {
-              if (parentAUs[key]._id == parentCRMDocs[j].parentid) {
-                tmp.cat = "CRM/Other";
-                break;
-              }
+            //If the assessment process matches an entry in doc[0].CRMProcess, then its category is "CRM/Other"
+            else if (doc[0].CRMProcessObj[auditPPR.process]) {
+              tmp.cat = "CRM/Other";
             }
-            //If there's no category after cycling both asmtsdocsDelivery and asmtsdocsCRM, then it should be labeled as uncategorized
-            if (typeof tmp.cat === "undefined" || tmp.cat == "") {
+            //If not found in either doc[0].CRMProcess or doc[0].DeliveryProcess, it's uncategorized
+            else {
               tmp.cat = "(uncategorized)";
             }
           }
@@ -982,7 +982,6 @@ var calculateARTab = {
           var totalMaxScore = "";
 
           //Iterate over found Internal Audits
-          //console.log("Number of intenal audits: "+auditInter.length);
           for(var i = 0; i < auditInter.length; i++) {
             var tmp = {};
             tmp.id = auditInter[i]._id;
@@ -1091,7 +1090,6 @@ var calculateARTab = {
           doc[0].PPRData = [];
 
           //Iterate over found PPRs
-          //console.log("Number of PPRs: "+auditPPR.length);
           for(var i = 0; i < auditPPR.length; i++) {
             var tmp={};
             tmp.id = auditPPR[i]._id;
@@ -1099,13 +1097,6 @@ var calculateARTab = {
             tmp.reportingQuarter = auditPPR[i].reportingQuarter;
             tmp.status = auditPPR[i].status;
             tmp.reviewID = auditPPR[i].id;
-            if ((typeof auditPPR[i].CU === "undefined" || auditPPR[i].CU == "" || auditPPR[i].CU == "Not Applicable" || auditPPR[i].CU == undefined)
-            && (typeof auditPPR[i].countryProcess !== "undefined" || auditPPR[i].countryProcess != "" || auditPPR[i].countryProcess != "Not Applicable" || auditPPR[i].countryProcess != undefined)) {
-              auditPPR[i].CU = auditPPR[i].countryProcess;
-            }
-            else {
-              auditPPR[i].CU = "PARENT ASSESSABLE UNIT NOT FOUND";
-            }
             //Add the rest of the PPR parent fields through the categorizePPRAudits function
             tmp = calculateARTab.categorizePPRAudits(doc, auditPPR[i], parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
 
@@ -1154,7 +1145,6 @@ var calculateARTab = {
           doc[0].OtherAuditsData = [];
 
           //Iterate over the Other Audit list
-          //console.log("Number of Other Audits: "+auditOther.length);
           for (var i = 0; i < auditOther.length; i++) {
             var tmp = {};
             tmp.id = auditOther[i]._id;
@@ -1207,7 +1197,6 @@ var calculateARTab = {
           //Then all BU IOT's constituent asmts and AUs are stored
           var parentAsmts = doc[0].AuditsReviewsAssessments;
           var parentAUs = doc[0].AuditsReviewsAssessableUnits;
-          //console.log("Number of parentAUs: "+Object.keys(parentAUs).length);
           //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
           var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
           var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
@@ -1229,7 +1218,6 @@ var calculateARTab = {
           var totalMaxScore = "";
 
           //Iterate over found Internal Audits
-          //console.log("Number of intenal audits: "+auditInter.length);
           for(var i = 0; i < auditInter.length; i++) {
             var tmp = {};
             tmp.id = auditInter[i]._id;
@@ -1345,13 +1333,6 @@ var calculateARTab = {
             tmp.reportingQuarter = auditPPR[i].reportingQuarter;
             tmp.status = auditPPR[i].status;
             tmp.reviewID = auditPPR[i].id;
-            if ((typeof auditPPR[i].CU === "undefined" || auditPPR[i].CU == "" || auditPPR[i].CU == "Not Applicable" || auditPPR[i].CU == undefined)
-            && (typeof auditPPR[i].countryProcess !== "undefined" || auditPPR[i].countryProcess != "" || auditPPR[i].countryProcess != "Not Applicable" || auditPPR[i].countryProcess != undefined)) {
-              auditPPR[i].CU = auditPPR[i].countryProcess;
-            }
-            else {
-              auditPPR[i].CU = "PARENT ASSESSABLE UNIT NOT FOUND";
-            }
             //Add the rest of the PPR parent fields through the categorizePPRAudits function
             tmp = calculateARTab.categorizePPRAudits(doc, auditPPR[i], parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
 
@@ -1448,7 +1429,6 @@ var calculateARTab = {
           //Then all BU IMT's constituent asmts and AUs are stored
           var parentAsmts = doc[0].AuditsReviewsAssessments;
           var parentAUs = doc[0].AuditsReviewsAssessableUnits;
-          //console.log("Number of parentAUs: "+Object.keys(parentAUs).length);
           //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
           var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
           var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
@@ -1470,7 +1450,6 @@ var calculateARTab = {
           var totalMaxScore = "";
 
           //Iterate over found Internal Audits
-          //console.log("Number of intenal audits: "+auditInter.length);
           for(var i = 0; i < auditInter.length; i++) {
             var tmp = {};
             tmp.id = auditInter[i]._id;
@@ -1586,13 +1565,6 @@ var calculateARTab = {
             tmp.reportingQuarter = auditPPR[i].reportingQuarter;
             tmp.status = auditPPR[i].status;
             tmp.reviewID = auditPPR[i].id;
-            if ((typeof auditPPR[i].CU === "undefined" || auditPPR[i].CU == "" || auditPPR[i].CU == "Not Applicable" || auditPPR[i].CU == undefined)
-            && (typeof auditPPR[i].countryProcess !== "undefined" || auditPPR[i].countryProcess != "" || auditPPR[i].countryProcess != "Not Applicable" || auditPPR[i].countryProcess != undefined)) {
-              auditPPR[i].CU = auditPPR[i].countryProcess;
-            }
-            else {
-              auditPPR[i].CU = "PARENT ASSESSABLE UNIT NOT FOUND";
-            }
             //Add the rest of the PPR parent fields through the categorizePPRAudits function
             tmp = calculateARTab.categorizePPRAudits(doc, auditPPR[i], parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
 
@@ -1748,7 +1720,6 @@ var calculateARTab = {
           //Then all BU Country's constituent asmts and AUs are stored
           var parentAsmts = doc[0].AuditsReviewsAssessments;
           var parentAUs = doc[0].AuditsReviewsAssessableUnits;
-          //console.log("Number of parentAUs: "+Object.keys(parentAUs).length);
           //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
           var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
           var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
@@ -1785,18 +1756,24 @@ var calculateARTab = {
             if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
               if (tmp.cat == "IS Delivery") {
                 summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
+                //console.log("ISDelivery SAT: "+summaryISDeliveryAllCounts.countSAT);
+                //console.log("ISDelivery UNSAT: "+summaryISDeliveryAllCounts.countUNSAT);
                 //For IS Delivery WeightedAuditScore
                 if (!isNaN(tmp.CUScore)) totalISDeliveryCUScore += tmp.CUScore;
                 if (!isNaN(tmp.CUMaxScore)) totalISDeliveryMaxScore += tmp.CUMaxScore;
               }
               else if (tmp.cat == "IS") {
                 summaryCRMISAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMISAllCounts, tmp);
+                //console.log("IS SAT: "+summaryCRMISAllCounts.countSAT);
+                //console.log("IS UNSAT: "+summaryCRMISAllCounts.countUNSAT);
                 //For CRM IS WeightedAuditScore
                 if (!isNaN(tmp.CUScore)) totalCRMISCUScore += tmp.CUScore;
                 if (!isNaN(tmp.CUMaxScore)) totalCRMISMaxScore += tmp.CUMaxScore;
               }
               else if (tmp.cat == "Other") {
                 summaryCRMOtherAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMOtherAllCounts, tmp);
+                //console.log("Other SAT: "+summaryCRMOtherAllCounts.countSAT);
+                //console.log("Other UNSAT: "+summaryCRMOtherAllCounts.countUNSAT);
                 //For CRM Other WeightedAuditScore
                 if (!isNaN(tmp.CUScore)) totalCRMOtherCUScore += tmp.CUScore;
                 if (!isNaN(tmp.CUMaxScore)) totalCRMOtherMaxScore += tmp.CUMaxScore;
@@ -1884,13 +1861,6 @@ var calculateARTab = {
             tmp.reportingQuarter = auditPPR[i].reportingQuarter;
             tmp.status = auditPPR[i].status;
             tmp.reviewID = auditPPR[i].id;
-            if ((typeof auditPPR[i].CU === "undefined" || auditPPR[i].CU == "" || auditPPR[i].CU == "Not Applicable" || auditPPR[i].CU == undefined)
-            && (typeof auditPPR[i].countryProcess !== "undefined" || auditPPR[i].countryProcess != "" || auditPPR[i].countryProcess != "Not Applicable" || auditPPR[i].countryProcess != undefined)) {
-              auditPPR[i].CU = auditPPR[i].countryProcess;
-            }
-            else {
-              auditPPR[i].CU = "PARENT ASSESSABLE UNIT NOT FOUND";
-            }
             //Add the rest of the PPR parent fields through the categorizePPRAudits function
             tmp = calculateARTab.categorizePPRAudits(doc, auditPPR[i], parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
 
