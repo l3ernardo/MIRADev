@@ -167,7 +167,10 @@ var assessment = {
 								comp.getCompDocs(db,doc).then(function(dataComp){
 
 									fieldCalc.getRatingProfile(doc);
-
+		
+									// Process Country Process Ratings tab
+									prt.processProTab(doc,defViewRow);
+									
 									//Performance tab
 									performanceTab.buildPerformanceTabGP(db,doc,defViewRow,fieldCalc);
 
