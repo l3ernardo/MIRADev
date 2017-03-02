@@ -296,9 +296,25 @@ var performanceoverviewcountry = {
 				}
 			}
 
-
-
-
+					//Summary tab calculations for KFCR and KCO
+				if(doc[0].KCFRDefectRateCRM != "" && doc[0].KCFRDefectRateSOD != "")
+					doc[0].KCFRDefectRate = (parseInt(doc[0].KCFRDefectRateCRM) + parseInt(doc[0].KCFRDefectRateSOD)).toString();
+				else
+					if(doc[0].KCFRDefectRateCRM != "" )
+						doc[0].KCFRDefectRate = (parseInt(doc[0].KCFRDefectRateCRM) + 0).toString();
+					else
+						doc[0].KCFRDefectRate = (0 + parseInt(doc[0].KCFRDefectRateSOD)).toString();
+						
+					
+					doc[0].KCODefectRate =  (parseInt(doc[0].KCODefectRateCRM) + parseInt(doc[0].KCODefectRateSOD)).toString();
+					
+					if(doc[0].KCODefectRateCRM != "" && doc[0].KCODefectRateSOD != "")
+						doc[0].KCODefectRate = (parseInt(doc[0].KCODefectRateCRM) + parseInt(doc[0].KCODefectRateSOD)).toString();
+					else
+						if(doc[0].KCODefectRateCRM != "" )
+							doc[0].KCODefectRate = (parseInt(doc[0].KCODefectRateCRM) + 0).toString();
+						else
+							doc[0].KCODefectRate = (0 + parseInt(doc[0].KCODefectRateSOD)).toString();
 
 		} else{// GBS and GTS trans
 
