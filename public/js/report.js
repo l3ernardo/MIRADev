@@ -107,9 +107,7 @@ $(document).ready(function() {
 	});
 	$('#reports_table').DataTable({
 		select: true,
-		"paginate": false,
 		"scrollX": true,
-		"scrollY": 250,
 		"ordering":false
 	});
 	$('#reports_table2').DataTable({
