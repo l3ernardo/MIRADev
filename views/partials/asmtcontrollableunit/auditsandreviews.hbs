@@ -3,7 +3,7 @@
 <textarea name="textarea" id="InternalAuditDataExport" cols="100" style="display:none">{{valuesToString AuditTrustedRCUData}}</textarea>
 <table id="auditreview_table" class="ibm-data-table">
 	<tr class="audit-review-content">
-		
+
 		<td>
 			<span class="audit-review"><b>Audits & Reviews (data from trusted sources)</b></span><br /><br />
 			<a href="javascript:void(0);" value="Export to Excel" name="ppr-link-export" id="ppr-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
@@ -80,7 +80,11 @@
 						{{{ratingDisplayView rating 7}}}
 						<td width="10%">{{numRecommendationsTotal}}</td>
 						<td width="9%">{{numRecommendationsOpen}}</td>
-						<td width="10%">{{targetCloseOriginal}}</td>
+						{{#if targetCloseCurrent}}
+							<td width="10%">{{targetCloseCurrent}}</td>
+						{{else}}
+							<td width="10%">{{targetCloseOriginal}}</td>
+						{{/if}}
 						<td width="30%">{{comments}}</td>
 					</tr>
 					</tr>
