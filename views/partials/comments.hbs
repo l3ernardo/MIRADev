@@ -1,7 +1,7 @@
 {{#if editmode}}
 {{!-- Comments section - Edit Mode --}}
 	<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-		<tr>
+		<tr id="notes_area">
 			<td width="20%"><label for="Notes">Notes:</label></td>
 			<td>
 				<div class='yui-skin-sam'>
@@ -20,7 +20,7 @@
 {{else}}
 {{!-- Comments section - Read Mode --}}
 	<table id="notes_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-		<tr>
+		<tr id="notes_area">
 			<td width="20%"><label for="Notes">Notes:</label></td>
 			<td>
 				<input type="hidden" name="NotesRO" value="{{Notes}}">
