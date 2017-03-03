@@ -27,7 +27,10 @@ var register = function(Handlebars) {
 				'</ul></div></dd></dl>';
 			return ddEle;
 		},
-		uniqueSelect: function(idSelect, list, optvalue, optname, optsel) {
+		uniqueSelect: function(idSelect, list, optvalue, optname, optsel, mandatory) {
+			if(mandatory == "undefined")
+				mandatory = '';
+			
 			var dataSel = list;
 			var arr='';
 			var listvalue, listname;
@@ -41,7 +44,7 @@ var register = function(Handlebars) {
 				}
 			}
 
-			var selElem = '<select id="'+idSelect+'" name="'+idSelect+'">'+
+			var selElem = '<select id="'+idSelect+'" name="'+idSelect+'" '+ mandatory + '>'+
 				arr +
 				'</select>';
 
@@ -141,11 +144,11 @@ var register = function(Handlebars) {
 					}
 					ratinghtml += '></td>';
 			} else {
-				if (rating == "Sat" || rating == "Satisfactory" || rating == "Favorable" || rating == "Unqualified" || rating == "Positive")
+				if (rating == "Sat" || rating == "Satisfactory" || rating == "Favorable" || rating == "Unqualified" || rating == "Positive" || rating == "Completed-Ready")
 					ratinghtml += 'asmt-viewdata-green" style="background-color: #00FF00; text-align: center; !important;"';
 				else if (rating == "Marg" || rating == "Marginal")
 					ratinghtml += 'asmt-viewdata-yellow"  style="background-color: yellow; text-align: center; !important;"';
-				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative")
+				else if (rating == "Unsat" || rating == "Unsatisfactory" || rating == "Qualified" || rating == "Unfavorable" || rating == "Negative" || rating == "Completed-NotReady")
 					ratinghtml += 'asmt-viewdata-red" style="background-color: red; color: #ffffff; text-align: center; !important;"';
 				else
 					ratinghtml += 'asmt-viewdata-centered" style="text-align: center; !important;"';
@@ -415,15 +418,16 @@ var register = function(Handlebars) {
 				}
 			return datehtml;
 		},
+				
 		statusRatingLclAdt: function(rating) {
-				var rateHTML;
-			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Qualified") {
+			var rateHTML;
+			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Unqualified" || rating == "Completed-Ready") {
 				rateHTML = '<span style="background-color: #00ff00; padding-left:1em; padding-right:1em">'+rating+'</span>';
 			} else {
-				if (rating == "Unsatisfactory" || rating == "unsat" || rating == "Unfavorable" || rating == "Negative" || rating == "Unqualified") {
+				if (rating == "Unsatisfactory" || rating == "Unsat" || rating == "Unfavorable" || rating == "Negative" || rating == "Qualified" || rating == "Completed-NotReady") {
 					rateHTML = '<span style="background-color: #ff0000; padding-left:1em; padding-right:1em; color: #ffffff">'+rating+'</span>';
 				} else {
-					if (rating == "Marginal") {
+					if (rating == "Marg" || rating == "Marginal") {
 						rateHTML = '<span style="background-color: yellow; padding-left:1em; padding-right:1em; color: #000000">'+rating+'</span>';
 					} else {
 						rateHTML = rating;
