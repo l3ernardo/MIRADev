@@ -167,10 +167,10 @@ var assessment = {
 								comp.getCompDocs(db,doc).then(function(dataComp){
 
 									fieldCalc.getRatingProfile(doc);
-		
+
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
-									
+
 									//Performance tab
 									performanceTab.buildPerformanceTabGP(db,doc,defViewRow,fieldCalc);
 
@@ -596,12 +596,15 @@ var assessment = {
 									// Process Audit Universe Tab
 									aut.processAUTab(doc,defViewRow);
 									// create a space for performance Tab
+									console.log("1doc[0].KCFRDefectRate: " + doc[0].KCFRDefectRate);
 									performanceTab.buildPerformanceTab(db,doc,defViewRow,fieldCalc);
+									console.log("2doc[0].KCFRDefectRate: " + doc[0].KCFRDefectRate);
 									// Process Audits & Reviews tab
 									aar.processARTab(doc,defViewRow);
+									console.log("3doc[0].KCFRDefectRate: " + doc[0].KCFRDefectRate);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
-
+									console.log("4doc[0].KCFRDefectRate: " + doc[0].KCFRDefectRate);
 									//console.log(doc[0].BUCAsmtDataPIviewCRM);
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
