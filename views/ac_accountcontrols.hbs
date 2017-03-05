@@ -15,7 +15,7 @@
 </script>
 <div class="ibm-container" style="width:80%">
   <p style="text-align:right">
-		{{#unless newunit}}
+		{{#unless new}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
 		{{/unless}}
 	</p>
@@ -36,14 +36,14 @@
 				<td width="25%">Reporting quarter:</td><td><b class="ibm-important">{{reportingQuarter}}</b></td>
 			</tr>
 			<tr>
-				<td>Process:</td>
+				<td>Process<span class="ibm-required">*</span>:</td>
 				<td>
-					{{{uniqueSelect "process" RelevantGPs "name" "name" process}}}
+					{{{uniqueSelect "process" RelevantGPs "name" "name" process "required"}}}
 				</td>
 			</tr>
 			<tr>
-				<td>Event date:</td><td>
-				<input type="text" id="eventDate" name="eventDate" value="{{eventDate}}" class="ibm-calendar-link">
+				<td>Event date<span class="ibm-required">*</span>:</td><td>
+				<input type="text" id="eventDate" name="eventDate" value="{{eventDate}}" class="ibm-calendar-link" required>
 				</td>
 			</tr>
 		</table>

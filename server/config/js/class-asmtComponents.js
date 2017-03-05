@@ -846,7 +846,7 @@ var components = {
 				obj.targetCloseOriginal = req.body.targetCloseOriginal;
 				obj.targetCloseCurrent = req.body.targetCloseCurrent;
 				obj.comments = req.body.comments;
-				obj.Notes = req.body.Notes;
+				//obj.Notes = req.body.Notes;
 				obj.Links = req.body.attachIDs;
 				obj.parentid = req.body.parentid;
 
@@ -876,7 +876,7 @@ var components = {
 					obj.numRecommendationsOpen = req.body.numRecommendationsOpen;
 					obj.targetCloseCurrent = req.body.targetCloseCurrent;
 					obj.comments = req.body.comments;
-					obj.Notes = req.body.Notes;
+					//obj.Notes = req.body.Notes;
 					obj.Links = req.body.attachIDs;
 
 					db.save(obj).then(function(data){
@@ -1001,6 +1001,7 @@ var components = {
 				obj.targetCloseCurrent = req.body.targetCloseCurrent;
 				obj.comments = req.body.comments;
 				obj.parentid = req.body.parentid;
+				obj.Links = req.body.attachIDs;
 
 				db.save(obj).then(function(data){
 					deferred.resolve({"status": 200, "data": data.body});
@@ -1030,6 +1031,7 @@ var components = {
 					obj.targetCloseOriginal = req.body.targetCloseOriginal;
 					obj.targetCloseCurrent = req.body.targetCloseCurrent;
 					obj.comments = req.body.comments;
+					obj.Links = req.body.attachIDs;
 
 					db.save(obj).then(function(data){
 						deferred.resolve({"status": 200, "data": data.body});
@@ -1068,7 +1070,7 @@ var components = {
 					//obj.Log.push(addlog);
 					obj.size = req.body.size;
 					obj.comments = req.body.comments;
-					obj.Notes = req.body.Notes;
+					//obj.Notes = req.body.Notes;
 					obj.Links = req.body.attachIDs;
 					obj.rating = req.body.rating;
 					db.save(obj).then(function(data){

@@ -1,10 +1,9 @@
 <link href='./css/fullcalendar.min.css' rel='stylesheet' />
 <link href="./css/jquery-ui.css" rel="stylesheet">
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
+
 <script src='./lib/moment.min.js'></script>
 <script src='./lib/fullcalendar.min.js'></script>
-
-<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="./css/style.css">
 <script src='/js/asmtComponentsAudits.js'></script>
 <script src="./js/common_routines.js"></script>
 <script src="./js/attachments.js"></script>
@@ -29,7 +28,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 </script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
-		{{#unless newunit}}
+		{{#unless new}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
 		{{/unless}}
 	</p>
@@ -48,14 +47,15 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			</tr>
 			{{#if editmode}}
 			<tr>
-				<td>Audit or Review<span class="ibm-required">*</span>:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
+				<td>Audit or Review<span class="ibm-required">*</span>:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview "required"}}}</td>
 			</tr>
 			<tr id="auditIDTD2">
 				<div ><td >ID:</td><td ><input type="text" name="auditID" value="{{auditID}}" ></td></div>
 			</tr>
 			<tr>
-				<td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td><td>
-					<input type="text" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link">
+				<td><span  id="reportDateSpan"></span><span class="ibm-required">*</span>:</td>
+				<td>
+					<input type="date" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link" required>
 				</td>
 			</tr>
 			<tr>
@@ -73,18 +73,18 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			</tr>
 			<tr>
 				<td># Recommendations<span class="ibm-required">*</span>:</td><td>
-				<span style="display: inline-block; width: 75px;">Total:</span><input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}"><br/>
-				<span style="display: inline-block; width: 75px;">Open:</span><input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+				<span style="display: inline-block; width: 75px;">Total:</span><input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}" required><br/><br />
+				<span style="display: inline-block; width: 75px;">Open:</span><input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" required></td>
 			</tr>
 			<tr>
 				<td>Target to close:</td><td>
-					<span style="display: inline-block; width: 72px;">Original:</span>
 					{{#if new}}
-						<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
+						<span style="display: inline-block; width: 75px;">Original:</span><input type="date" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
 					{{else}}
-						{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}
+						<span style="display: inline-block; width: 75px;">Original:</span>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}
 					{{/if}}
-					<br /><span style="display: inline-block; width: 72px;">Current:</span> <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}"class="ibm-calendar-link">
+					<br /><br />
+					<span style="display: inline-block; width: 75px;">Current:</span><input type="date" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}"class="ibm-calendar-link">
 				</td>
 			</tr>
 			<tr>
@@ -113,7 +113,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			<tr>
 				<td># Recommendations:</td>
 				<td>
-					<span style="display: inline-block; width: 75px;">Total:</span>{{numRecommendationsTotal}}<br/>
+					<span style="display: inline-block; width: 75px;">Total:</span>{{numRecommendationsTotal}}<br/><br />
 					<span style="display: inline-block; width: 75px;">Open:</span>{{numRecommendationsOpen}}
 					<input type="hidden" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}">
 				</td>
@@ -121,9 +121,9 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			<tr>
 				<td>Target to close:</td>
 				<td>
-					<span style="display: inline-block; width: 72px;">Original:</span>
-					{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>
-					<span id="targetCloseCurrentSpan"><span style="display: inline-block; width: 72px;">Current:</span>
+					<span style="display: inline-block; width: 75px;">Original:</span>
+					{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/><br />
+					<span id="targetCloseCurrentSpan"><span style="display: inline-block; width: 75px;">Current:</span>
 					{{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</span>
 				</td>
 			</tr>
@@ -140,57 +140,57 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 </div>
 <script>
 $(document).ready(function(){
-  $('#reportDate').datepicker({
-    changeMonth: true
-  });
-  $( "#reportDate" ).on( "change", function() {
-    $( "#reportDate" ).datepicker( "option", "dateFormat", "M dd, yy" );
-  });
-  $('#reportDate2').datepicker({
-    changeMonth: true
-  });
-  $( "#reportDate2" ).on( "change", function() {
-    $( "#reportDate2" ).datepicker( "option", "dateFormat", "M dd, yy" );
-  });
-  $('#reportDate3').datepicker({
-    changeMonth: true,
-    minDate: 0
-  });
-  $( "#reportDate3" ).on( "change", function() {
-    $( "#reportDate3" ).datepicker( "option", "dateFormat", "M dd, yy" );
-  });
+	$('#reportDate').datepicker({
+		changeMonth: true
+	});
+	$( "#reportDate" ).on( "change", function() {
+		$( "#reportDate" ).datepicker( "option", "dateFormat", "M dd, yy" );
+	});
+	$('#reportDate2').datepicker({
+		changeMonth: true
+	});
+	$( "#reportDate2" ).on( "change", function() {
+		$( "#reportDate2" ).datepicker( "option", "dateFormat", "M dd, yy" );
+	});
+	$('#reportDate3').datepicker({
+		changeMonth: true,
+		minDate: 0
+	});
+	$( "#reportDate3" ).on( "change", function() {
+		$( "#reportDate3" ).datepicker( "option", "dateFormat", "M dd, yy" );
+	});
 
-  if ($("#editmode").val() == undefined) {
-    if ($("#numRecommendationsOpen").val() !== undefined && $("#numRecommendationsOpen").val() !== "" && $("#numRecommendationsOpen").val() < 1) {
-      $("#targetCloseCurrentSpan").hide();
-    } else {
-      $("#targetCloseCurrentSpan").show();
-    }
-  }
-  var val = $("#auditOrReview").val();
-  var tmpList = JSON.parse($("#ratingList").val());
-  $("#rating").html($("#rating").html()+tmpList[val]);
-  if(val == "CHQ Internal Audit"){
-    $("#auditIDTD2").show();
+	if ($("#editmode").val() == undefined) {
+		if ($("#numRecommendationsOpen").val() !== undefined && $("#numRecommendationsOpen").val() !== "" && $("#numRecommendationsOpen").val() < 1) {
+			$("#targetCloseCurrentSpan").hide();
+		} else {
+			$("#targetCloseCurrentSpan").show();
+		}
+	}
+	
+	var val = $("#auditOrReview").val();
+	var tmpList = JSON.parse($("#ratingList").val());
+	$("#rating").html($("#rating").html()+tmpList[val]);
+	if(val == "CHQ Internal Audit"){
+		$("#auditIDTD2").show();
+		$("#reportDateSpan").text("Added to AQ DB");
+	}else{
+		$("#auditIDTD2").hide();
+		$("#reportDateSpan").text("Report date");
+	}
 
-    $("#reportDateSpan").text("Added to AQ DB");
-  }else{
-    $("#auditIDTD2").hide();
-    $("#reportDateSpan").text("Report date");
-  }
-
-  $("#auditOrReview").change(function () {
-    var val = $(this).val();
-    var tmpList = JSON.parse($("#ratingList").val());
-    $("#rating").html(tmpList[val]);
-    if(val == "CHQ Internal Audit"){
-      $("#auditIDTD2").show();;
-      $("#reportDateSpan").text("Added to AQ DB");
-    }else{
-      $("#auditIDTD2").hide();
-      $("#reportDateSpan").text("Report date");
-    }
-  });
+	$("#auditOrReview").change(function () {
+		var val = $(this).val();
+		var tmpList = JSON.parse($("#ratingList").val());
+		$("#rating").html(tmpList[val]);
+		if(val == "CHQ Internal Audit"){
+			$("#auditIDTD2").show();;
+			$("#reportDateSpan").text("Added to AQ DB");
+		}else{
+			$("#auditIDTD2").hide();
+			$("#reportDateSpan").text("Report date");
+		}
+	});
 	
 });
 
