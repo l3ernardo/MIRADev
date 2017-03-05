@@ -428,40 +428,36 @@ var performanceoverviewcountry = {
 
 			}
 
-			// else{
 
-				// Calculate for GBS and GTS
+			// Calculate for GBS and GTS
 
-				// obtain defect and test count from the
-				// components(countryControls)
-				for (var i = 0; i < doc[0].CountryControlsData.length; i++) {
-					//  console.log(doc[0].CountryControlsData[i]);
-					if (doc[0].CountryControlsData[i].controlType == 'KCFR') {
-						// console.log("KCFR numDefects: " + doc[0].CountryControlsData[i].numDefects);
-						// console.log("KCFR numActualTests: " + doc[0].CountryControlsData[i].numActualTests);
-						if (!isNaN(parseInt(doc[0].CountryControlsData[i].numDefects)))
-							KCFRDefectCount += parseInt(doc[0].CountryControlsData[i].numDefects);
+			// obtain defect and test count from the
+			// components(countryControls)
+			for (var i = 0; i < doc[0].CountryControlsData.length; i++) {
+				//  console.log(doc[0].CountryControlsData[i]);
+				if (doc[0].CountryControlsData[i].controlType == 'KCFR') {
+					// console.log("KCFR numDefects: " + doc[0].CountryControlsData[i].numDefects);
+					// console.log("KCFR numActualTests: " + doc[0].CountryControlsData[i].numActualTests);
+					if (!isNaN(parseInt(doc[0].CountryControlsData[i].numDefects)))
+						KCFRDefectCount += parseInt(doc[0].CountryControlsData[i].numDefects);
 
-						if (!isNaN(parseInt(doc[0].CountryControlsData[i].numActualTests))) {
-							KCFRTestCount += parseInt(doc[0].CountryControlsData[i].numActualTests);
-							testPerformed = true;
-						}
+					if (!isNaN(parseInt(doc[0].CountryControlsData[i].numActualTests))) {
+						KCFRTestCount += parseInt(doc[0].CountryControlsData[i].numActualTests);
+						testPerformed = true;
 					}
 				}
+			}
 
-				if (testPerformed == true) {
-					if (KCFRTestCount > 0) {
-						KFCRDefectRate = ((KCFRDefectCount / KCFRTestCount) * 100).toFixed(1).toString();
-					} else
-						KFCRDefectRate = "0";
+			if (testPerformed == true) {
+				if (KCFRTestCount > 0) {
+					KFCRDefectRate = ((KCFRDefectCount / KCFRTestCount) * 100).toFixed(1).toString();
+				} else
+					KFCRDefectRate = "0";
 
-				} else {
-					KFCRDefectRate = "";
-				}
-				doc[0].KCFRDefectRate = KFCRDefectRate;
-
-				console.log("doc[0].KCFRDefectRate PO: " + doc[0].KCFRDefectRate);
-			// }//else
+			} else {
+				KFCRDefectRate = "";
+			}
+			doc[0].KCFRDefectRate = KFCRDefectRate;
 
 		} catch (e) {
 			console
@@ -554,8 +550,6 @@ var performanceoverviewcountry = {
 
 			}
 
-			// else{
-
 			// Calculate total KCO and KCFR for GBS and GTS
 			// obtain defect and test count from the
 			// components(countryControls)
@@ -588,7 +582,6 @@ var performanceoverviewcountry = {
 				}
 
 				doc[0].KCODefectRate = KCODefectRate;
-			// }//else
 
 		} catch (e) {
 			console.log("error at [class-performanceoverview][getKCODefectRate]: "+ e);
