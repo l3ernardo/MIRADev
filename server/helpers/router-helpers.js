@@ -30,7 +30,7 @@ var register = function(Handlebars) {
 		uniqueSelect: function(idSelect, list, optvalue, optname, optsel, mandatory) {
 			if(mandatory == "undefined")
 				mandatory = '';
-			
+
 			var dataSel = list;
 			var arr='';
 			var listvalue, listname;
@@ -418,7 +418,7 @@ var register = function(Handlebars) {
 				}
 			return datehtml;
 		},
-				
+
 		statusRatingLclAdt: function(rating) {
 			var rateHTML;
 			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Unqualified" || rating == "Completed-Ready") {
