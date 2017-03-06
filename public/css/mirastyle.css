@@ -1216,16 +1216,17 @@ table.table_with_scroll tbody tr th{
 }
 table.table_with_scroll tbody tr td{
 	table-layout:fixed;
-	text-align:center;
+	text-align:left;
 	font-size: 10px !important;
 }
-table.table_with_scroll tbody tr.branch{
+table.table_with_scroll tbody tr.branch td{
 	white-space: nowrap;
-}
-table.table_with_scroll tbody tr.branch td:nth-child(1){
 	text-align:left;
 }
-/*table.table_with_scroll tbody tr[data-tt-parent-id=""]{
+/*table.table_with_scroll tbody tr.branch td:nth-child(1){
+	text-align:left;
+}
+table.table_with_scroll tbody tr[data-tt-parent-id=""]{
 	white-space: nowrap;
 }*/
 table.table_with_scroll tbody tr {
