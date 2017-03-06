@@ -182,8 +182,8 @@ var register = function(Handlebars) {
 		defectRateDisplayView: function(dr, margThreshold, unsatThreshold, percent) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
-				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%"></td>';
-				else drhtml = '<td class="asmt-viewdata-centered"></td>';
+				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">&nbsp;</td>';
+				else drhtml = '<td class="asmt-viewdata-centered">&nbsp;</td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
 				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+dr+'</td>';
 				else drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
