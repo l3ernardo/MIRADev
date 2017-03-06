@@ -8,6 +8,7 @@
  */
 
 var fieldCalc = require('./class-fieldcalc.js');
+var util = require('./class-utility.js');
 
 var calculateARTab = {
   //Auxiliar function that creates the object for the summary counts (used by BU Country, IMT, and IOT)
@@ -366,18 +367,25 @@ var calculateARTab = {
           tmp.country = parentAUs[key].Country;
           //Categorization for GTS: will cycle through all the IS Delivery and CRM docs to select one of those as category.
           if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-            //If the assessment process matches an entry in doc[0].DeliveryProcess, then its category is "IS Delivery"
-            if (doc[0].DeliveryProcessObj[auditPPR.process]) {
-              tmp.cat = "IS Delivery";
-            }
-            //If the assessment process matches an entry in doc[0].CRMProcess, then its category is "CRM/Other"
-            else if (doc[0].CRMProcessObj[auditPPR.process]) {
+            if (util.getIndex(doc[0].DeliveryProcess[0].options, "name", auditPPR.GPPARENT) != -1) {
+              tmp.cat = "Delivery";
+            } else if (util.getIndex(doc[0].CRMProcess[0].options, "name", auditPPR.GPPARENT) != -1) {
               tmp.cat = "CRM/Other";
-            }
-            //If not found in either doc[0].CRMProcess or doc[0].DeliveryProcess, it's uncategorized
-            else {
+            } else {
               tmp.cat = "(uncategorized)";
             }
+            //If the assessment process matches an entry in doc[0].DeliveryProcess, then its category is "IS Delivery"
+            // if (doc[0].DeliveryProcessObj[auditPPR.process]) {
+            //   tmp.cat = "IS Delivery";
+            // }
+            //If the assessment process matches an entry in doc[0].CRMProcess, then its category is "CRM/Other"
+            // else if (doc[0].CRMProcessObj[auditPPR.process]) {
+            //   tmp.cat = "CRM/Other";
+            // }
+            //If not found in either doc[0].CRMProcess or doc[0].DeliveryProcess, it's uncategorized
+            // else {
+            //   tmp.cat = "(uncategorized)";
+            // }
           }
           //Doc Type
           if(parentAUs[key].DocSubType == "Controllable Unit" && parentAUs[key].Portfolio == "Yes") {
