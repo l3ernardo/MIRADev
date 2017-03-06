@@ -232,7 +232,7 @@ var calculateARTab = {
               //If the assessment matches the parentid of the asmtsdocsCRM, then its category is either "IS" or "Other"
               for(var k = 0; k < parentCRMDocs.length; k++) {
                 if (parentAU._id == parentCRMDocs[k].parentid) {
-					//If the category is found in doc[0].AuditCUISObj, then it's "IS"
+                  //If the category is found in doc[0].AuditCUISObj, then it's "IS"
                   if (doc[0].AuditCUISObj[parentAU.Category]) {
                     console.log("Entered Parent CRM docs - CHQ Internal audit with cat: IS");
                     tmp.cat = "IS";
@@ -265,7 +265,7 @@ var calculateARTab = {
                       break;
                     }
                   }
-				*/
+                  */
                 }
               }
             }
@@ -276,7 +276,7 @@ var calculateARTab = {
             if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
               //If it is a Country Process then its category is supposed to be the CP's "CUCat" field in Cloudant
               if (tmp.DocSubType == "Country Process") {
-				  //If the CUCat is found in doc[0].AuditCUISObj, then it's "IS"
+                //If the CUCat is found in doc[0].AuditCUISObj, then it's "IS"
                 if (doc[0].AuditCUISObj[parentAU.CUCat]) {
                   console.log("Entered Country Process - cat: IS");
                   tmp.cat = "IS";
@@ -318,14 +318,15 @@ var calculateARTab = {
                     break;
                   }
                 }
-				
+
               }
               //Else if it's something else, it is not categorized (Check with Minnie if this is true)
               else {
                 tmp.cat = "(uncategorized)";
               }
               //break;
-			  */
+              */
+              }
             }
           }
           //Rating and Last MSAC (PeriodRating and PeriodRatingPrev)
