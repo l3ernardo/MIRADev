@@ -27,7 +27,7 @@ var getDocs = {
 								{ "$and": [{"compntType": "controlSample"}, {"reportingCountry": doc[0].Country}, {"processSampled": doc[0].GlobalProcess}, {"status": {"$ne": "Retired"}}] },
 								{ "$and": [{"compntType": "sampledCountry"}, {"CPParentIntegrationKeyWWBCIT": doc[0].WWBCITKey}, {"status": {"$ne": "Retired"}}] },
 								// Audits and Reviews Tab
-								{ "$and": [{"compntType": "PPR"},{"countryProcess" : doc[0].AssessableUnitName}] },
+								{ "$and": [{"compntType": "PPR"}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}}, {"countryProcess" : doc[0].AssessableUnitName}] },
 								{ "$and": [{"compntType": "internalAudit"},{"parentid":doc[0].parentid}] },
 								{ "$and": [{"compntType": "internalAudit"},{"parentid": {"$in": doc[0].CURelevantAUID}}] },
 								{ "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
@@ -175,7 +175,7 @@ var getDocs = {
 								// For CHQ Internal Audits - from Audit DB
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
 								// For proactive reviews (PPR)
-								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"GPParentWWBCITKey": doc[0].WWBCITKey}, {"reportingQuarter": doc[0].CurrentPeriod}] },
+								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"GPParentWWBCITKey": doc[0].WWBCITKey}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}}, {"reportingQuarter": doc[0].CurrentPeriod}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 							]
@@ -1317,7 +1317,7 @@ var getDocs = {
 								{ "$and": [{"compntType": "CUSummarySample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
 								{ "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
 								// Audits and Reviews Tab
-								{ "$and": [{"compntType": "PPR"},{"AssessableUnitName" : doc[0].AssessableUnitName}] },
+								{ "$and": [{"compntType": "PPR"}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}},{"AssessableUnitName" : doc[0].AssessableUnitName}] },
 								{ "$and": [{"compntType": "internalAudit"},{"parentid":doc[0].parentid}] },
 								{ "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
 							]

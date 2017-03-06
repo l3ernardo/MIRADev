@@ -30,7 +30,7 @@ var register = function(Handlebars) {
 		uniqueSelect: function(idSelect, list, optvalue, optname, optsel, mandatory) {
 			if(mandatory == "undefined")
 				mandatory = '';
-			
+
 			var dataSel = list;
 			var arr='';
 			var listvalue, listname;
@@ -182,8 +182,8 @@ var register = function(Handlebars) {
 		defectRateDisplayView: function(dr, margThreshold, unsatThreshold, percent) {
 			var drhtml;
 			if (dr == undefined || dr == "") {
-				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%"></td>';
-				else drhtml = '<td class="asmt-viewdata-centered"></td>';
+				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">&nbsp;</td>';
+				else drhtml = '<td class="asmt-viewdata-centered">&nbsp;</td>';
 			} else if (margThreshold == undefined || unsatThreshold ==  undefined) {
 				if(percent) drhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+dr+'</td>';
 				else drhtml = '<td class="asmt-viewdata-centered">'+dr+'</td>';
@@ -418,7 +418,7 @@ var register = function(Handlebars) {
 				}
 			return datehtml;
 		},
-				
+
 		statusRatingLclAdt: function(rating) {
 			var rateHTML;
 			if (rating == "Satisfactory" || rating == "Sat" || rating == "Favorable" || rating == "Positive" || rating == "Unqualified" || rating == "Completed-Ready") {
