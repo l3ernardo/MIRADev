@@ -1,5 +1,4 @@
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="./css/style.css">
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <script src="./js/attachments.js"></script>
 <script src="./js/asmtComponentsAudits.js"></script>
@@ -23,9 +22,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 </script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
-		{{#unless newunit}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
-		{{/unless}}
 	</p>
 	<form id="asmtcomponentform" class="ibm-column-form" name="form" method="POST" action="/saveinternalaudit">
 		<input type="hidden" name="_id" value="{{_id}}">
@@ -37,10 +34,10 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 		<table id="sample_information" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 			<caption class="mira-caption"><em>Basics</em></caption>
 			<tr>
-				<td width="25%">{{parentdocsubtype}}:</td><td><b>{{parentname}}</b></td>
+				<td width="20%">{{parentdocsubtype}}:</td><td><b>{{parentname}}</b></td>
 			</tr>
 			<tr>
-				<td width="25%">ID:</td><td><b>{{engagement}}</b></td>
+				<td width="20%">ID:</td><td><b>{{engagement}}</b></td>
 			</tr>
 			<tr>
 				<td>Audit or Review:</td><td>CHQ Internal Audit</td>
@@ -71,7 +68,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			</tr>
 			{{#if RatingEditable}}
 			<tr>
-				<td>Rating:</td><td >{{{uniqueSelect "rating" parameters.PeriodRatingIntAudit.0.options "name" "name" rating}}}</td>
+				<td>Rating:</td><td >{{{uniqueSelect "rating" parameters.PeriodRatingIntAudit.0.options "name" "name" rating "required"}}}</td>
 			</tr>
 			{{else}}
 			<tr>
@@ -87,10 +84,15 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			<tr>
 				<td>Reply required:</td><td>{{replyRequired}}</td>
 			</tr>
-			<tr>
-				<td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
-			</tr>
+			
 			{{#if editmode}}
+			<tr>
+				<td># Recommendations<span class="ibm-required">*</span>:</td>
+				<td>
+					<span style="display: inline-block; width: 75px;">Total:</span><input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}" required><br/><br/>
+					<span style="display: inline-block; width: 75px;">Open:</span><input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" required>
+				</td>
+			</tr>
 			<tr>
 				<td>Comments:</td><td>
 					<textarea name="comments" cols="100">{{comments}}</textarea>
@@ -98,10 +100,13 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			</tr>
 			<tr>
 				<td>Size<span class="ibm-required">*</span>:</td><td>
-					{{{uniqueSelect "size" sizes "name" "name" size}}}
+					{{{uniqueSelect "size" sizes "name" "name" size required}}}
 				</td>
 			</tr>
 			{{else}}
+			<tr>
+				<td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/><br/>Open:{{numRecommendationsOpen}}</td>
+			</tr>
 			<tr>
 				<td>Comments:</td><td>{{comments}}</td>
 			</tr>
