@@ -10,6 +10,7 @@ var q  = require("q");
 var moment = require('moment');
 var mtz = require('moment-timezone');
 var accessrules = require('./class-accessrules.js');
+var util = require('./class-utility.js');
 var recordindex;
 var parentindex;
 var indexp;
@@ -44,7 +45,7 @@ function parentidf (parentkey,G){
    }
    return indexp
 }
-
+/*
 function findtl(level,parentkey,F){
     for(k=F.length-1;k>=parentindex;k--)
 	{
@@ -63,7 +64,7 @@ function findtl(level,parentkey,F){
 	   }
 	}
 	return result2
-}
+}*/
 
 var report = {
 	assessableunitfile: function(req, db) {
@@ -233,88 +234,211 @@ var report = {
 		return deferred.promise;
 	},
  statusexception: function(req, db) {
-		var deferred = q.defer();
-		var F=[];
-		try{
+   var deferred = q.defer();
+   var F=[];
+   try{
+     if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
+       var objSE = {
+         "selector":{
+           "Name": { "$gt": null },
+           "key": "Assessable Unit",
+           "DocType": { "$gt": 0 },
+           "CurrentPeriod": req.session.quarter,
+           "MIRABusinessUnit": req.session.businessunit
+         }
+       };
+     }else {
 
-			if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
+     }
+			/*if(req.session.BG.indexOf("MIRA-ADMIN") > '-1'){
 				var objSE = {
 					"selector": {
-						    "LevelTypeSE": { "$gt": null },
 							"Name": { "$gt": null },
 							"key": "Assessable Unit",
+              "DocSubType": {"$gt":0 },
               "CurrentPeriod": req.session.quarter,
 							"$or":[{"$not": {"MIRAAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Reviewed"}}],
 							"$not": {"Status": "Complete" },
 							"MIRABusinessUnit": req.session.businessunit
 					},
 					//"sort": [{"LevelTypeSE":"asc"}]
-					"sort": [{"LevelTypeSE":"asc"},{"Name":"asc"}]
+					"sort": [{"DocSubType":"asc"},{"Name":"asc"}]
 				};
 			}
 			else{
 				var objSE = {
 					"selector": {
-						"LevelTypeSE": { "$gt": null },
 						"Name": { "$gt": null },
 						"key": "Assessable Unit",
+            "DocSubType": {"$gt":0 },
             "CurrentPeriod": req.session.quarter,
-					    "$or":[{"$not": {"MIRAAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Reviewed"}}],
+				    "$or":[{"$not": {"MIRAAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Complete"}},{"$not": {"WWBCITAssessmentStatus": "Reviewed"}}],
+            "$not": {"Status": "Complete" },
 						"$or": [{"AllEditors":{"$in":[req.session.user.mail]}},{"AllReaders":{"$in":[req.session.user.mail]}}],
 						"MIRABusinessUnit": req.session.businessunit
 					},
 					//"sort": [{"LevelTypeSE":"asc"}]
-					"sort": [{"LevelTypeSE":"asc"},{"Name":"asc"}]
+					"sort": [{"DocSubType":"asc"},{"Name":"asc"}]
 				};
-			}
+			}*/
 			db.find(objSE).then(function(data){
 				var doc = data.body.docs;
-				var len= doc.length;
-				var view_statExcReport = [];
-				if(len > 0){
+				var finalList = [];
+        var exportInfo = [];
+        var AccountList = [];
+        var BUCountryList = [];
+        var BUIMTList = [];
+        var BUIOTList = [];
+        var BURptGrpList = [];
+        var CUList = [];
+        var CUIOTList = [];
+        var CPList = [];
+        var GPList = [];
+        var CPIOTList = {};
+        var parentsObj = {};
+        finalList.push({GroupingName: "Business Units", id: "BusinessUnit"});
+        finalList.push({IOTName: "(Not Categorized)", id: "BusinessUnit(NotCategorized)", parent:"BusinessUnit"});
+        for (var i = 0; i < doc.length; i++) {
+          if(doc[i].DocSubType == "Business Unit" && doc[i].Status != "Complete" && doc[i].MIRAAssessmentStatus != "Complete" && doc[i].WWBCITAssessmentStatus != "Complete" && doc[i].WWBCITAssessmentStatus != "Reviewed"){
+            doc[i].parent = "BusinessUnit(NotCategorized)";
+            doc[i].id = doc[i]["_id"];
+            finalList.push(doc[i]);
+          }else{
+            if (doc[i].parentid) {
+              if (parentsObj[doc[i].parentid]) {
+                parentsObj[doc[i].parentid].push(doc[i]);
+              }else {
+                parentsObj[doc[i].parentid] = [doc[i]];
+              }
+            }
+            if(doc[i].DocSubType == "Account"){
+              doc[i].sortlevel = 6;
+              AccountList.push(doc[i]);
+            }else if (doc[i].DocSubType == "BU Country") {
+              doc[i].sortlevel = 3;
+              BUCountryList.push(doc[i]);
+            }else if (doc[i].DocSubType == "BU IMT") {
+              doc[i].sortlevel = 2;
+              BUIMTList.push(doc[i]);
+            }else if (doc[i].DocSubType == "BU IOT") {
+              doc[i].sortlevel = 1;
+              BUIOTList.push(doc[i]);
+            }else if (doc[i].DocSubType == "BU Reporting Group") {
+              doc[i].sortlevel = 8;
+              BURptGrpList.push(doc[i]);
+            }else if (doc[i].DocSubType == "Controllable Unit") {
+              if (doc[i].Portfolio == "Yes") {
+                doc[i].cutype = "Portfolio CU";
+                doc[i].sortlevel = 4;
+              }else{
+                doc[i].cutype = "Standalone CU";
+                doc[i].sortlevel = 5;
+              }
+              CUList.push(doc[i]);
+              if (doc[i].ParentDocSubType == "BU IOT") {
+                CUIOTList.push(doc[i]);
+              }
+            }else if (doc[i].DocSubType == "Country Process") {
+              doc[i].sortlevel = 7;
+              if (CPIOTList[doc[i].IOT]) {
+                CPIOTList[doc[i].IOT].push(doc[i]);
+              }else {
+                  CPIOTList[doc[i].IOT] = [doc[i]];
+              }
+              CPList.push(doc[i]);
+            }else if (doc[i].DocSubType == "Global Process") {
+              GPList.push(doc[i]);
+            }
+          }
+        }
+        finalList.push({GroupingName: "Geo-Aligned Entities", id:"GeoEntities"});
+        for (var i = 0; i < BUIOTList.length; i++) {
+          var tmpArray = [];
+          BUIOTList[i].IOT = util.resolveGeo(BUIOTList[i].IOT, "IOT");
+          finalList.push({IOTName: BUIOTList[i].IOT, id:BUIOTList[i]["_id"], parent: "GeoEntities"});
+          BUIOTList[i].parent = BUIOTList[i]["_id"];
+          BUIOTList[i].id = "dummy";
+          tmpArray.push(JSON.parse(JSON.stringify(BUIOTList[i])));
+          if (parentsObj[BUIOTList[i]["_id"]]) {
+            for (var j = 0; j < parentsObj[BUIOTList[i]["_id"]].length; j++) {
+              var imtlevel = parentsObj[BUIOTList[i]["_id"]][j];
+              imtlevel.parent = BUIOTList[i]["_id"];
+              imtlevel.id = "dummy";
+              tmpArray.push(JSON.parse(JSON.stringify(imtlevel)));
+              if (parentsObj[imtlevel["_id"]]) {
+                for (var k = 0; k < parentsObj[imtlevel["_id"]].length; k++) {
+                  var countrylevel = parentsObj[imtlevel["_id"]][k];
+                  countrylevel.parent = BUIOTList[i]["_id"];
+                  countrylevel.id = "dummy";
+                  tmpArray.push(JSON.parse(JSON.stringify(countrylevel)));
+                  if (parentsObj[countrylevel["_id"]]) {
+                    for (var l = 0; l < parentsObj[countrylevel["_id"]].length; l++) {
+                      var culevel = parentsObj[countrylevel["_id"]][l];
+                      culevel.parent = BUIOTList[i]["_id"];
+                      culevel.id = "dummy";
+                      tmpArray.push(JSON.parse(JSON.stringify(culevel)));
+                      if (parentsObj[culevel["_id"]]) {
+                        for (var m = 0; m < parentsObj[culevel["_id"]].length; m++) {
+                          var accountlevel = parentsObj[culevel["_id"]][m];
+                          accountlevel.parent = BUIOTList[i]["_id"];
+                          accountlevel.id = "dummy";
+                          tmpArray.push(JSON.parse(JSON.stringify(accountlevel)));
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
 
-				   //sorting
-            var n ;
-            var result;
-			var result2;
-			var lenF=0;
-if(F!= undefined)
-	{
-for (i=0;i<len;i++)
-{       lenF=F.length;
-         if(i==0)
-			{
-			   F[0]=doc[0];
-			}
-	     else if (i!=0 && doc[i].LevelTypeSE=='1')
-	          {
-				F[n]=doc[i];
-				//F.sort();
-	          }
-              else
-	     {   //
-	             if(existparentid(doc[i].parentidrse,F)=='1' && findtl(doc[i].LevelTypeSE,doc[i].parentidrse,F)=='1')
-	                {
-						for(l=lenF;l>recordindex;l--)
-								{
-									 F[l]=F[l-1];
-								}
-								F[recordindex+1]=doc[i];
-					}
-
-	                else if(existparentid(doc[i].parentidrse,F)=='1' && findtl(doc[i].LevelTypeSE,doc[i].parentidrse,F)=='0')
-	                {
-						for(l=lenF;l>parentindex;l--)
-						{
-							F[l]=F[l-1];
-						}
-							F[parentindex+1]=doc[i];
-					}
-	         }
-         n=lenF+1;
-
-	}
-}
+          if (CPIOTList[BUIOTList[i].IOT]) {
+            for (var j = 0; j < CPIOTList[BUIOTList[i].IOT].length; j++) {
+              CPIOTList[BUIOTList[i].IOT][j].parent = BUIOTList[i]["_id"];
+              CPIOTList[BUIOTList[i].IOT][j].id = "dummy";
+              tmpArray.push(JSON.parse(JSON.stringify(CPIOTList[BUIOTList[i].IOT][j])));
+            }
+          }
+          tmpArray.sort(function(a, b){
+            var nameA=a.sortlevel, nameB=b.sortlevel
+            if (nameA < nameB){ //sort string ascending
+              return -1
+            }
+            if (nameA > nameB){
+              return 1
+            }
+            return 0 //default return value (no sorting)
+          });
+          finalList = finalList.concat(tmpArray);
+        }
+        finalList.push({GroupingName: "Global Processes", id:"GlobalProcesses"});
+        finalList.push({IOTName: "(Not Categorized)", id:"GlobalProcesses(NotCategorized)", parent:"GlobalProcesses"});
+        for (var i = 0; i < GPList.length; i++) {
+          if (GPList[i].Status != "Complete" && GPList[i].MIRAAssessmentStatus != "Complete" && GPList[i].WWBCITAssessmentStatus != "Complete" && GPList[i].WWBCITAssessmentStatus != "Reviewed") {
+            GPList[i].parent = "GlobalProcesses(NotCategorized)";
+            GPList[i].id = GPList[i]["_id"];
+            finalList.push(GPList[i]);
+          }
+        }
+        finalList.push({GroupingName: "IOT level CUs", id:"IOTlevelCUs"});
+        finalList.push({IOTName: "(Not Categorized)", id:"IOTlevelCUs(NotCategorized)", parent:"IOTlevelCUs"});
+        for (var i = 0; i < CUIOTList.length; i++) {
+          if (CUIOTList[i].Status != "Complete" && CUIOTList[i].MIRAAssessmentStatus != "Complete" && CUIOTList[i].WWBCITAssessmentStatus != "Complete" && CUIOTList[i].WWBCITAssessmentStatus != "Reviewed") {
+            CUIOTList[i].parent = "IOTlevelCUs(NotCategorized)";
+            CUIOTList[i].id = CUIOTList[i]["_id"];
+            finalList.push(CUIOTList[i]);
+          }
+        }
+        finalList.push({GroupingName: "Reporting Group", id:"ReportingGroup"});
+        finalList.push({IOTName: "(Not Categorized)", id:"ReportingGroup(NotCategorized)", parent:"ReportingGroup"});
+        for (var i = 0; i < BURptGrpList.length; i++) {
+          if (BURptGrpList[i].Status != "Complete" && BURptGrpList[i].MIRAAssessmentStatus != "Complete" && BURptGrpList[i].WWBCITAssessmentStatus != "Complete" && BURptGrpList[i].WWBCITAssessmentStatus != "Reviewed") {
+            BURptGrpList[i].parent = "ReportingGroup(NotCategorized)";
+            BURptGrpList[i].id = BURptGrpList[i]["_id"];
+            finalList.push(BURptGrpList[i]);
+          }
+        }
+				/*
           var exportInfo = [];
 					for (var i = 0; i < F.length; i++){
             var tmp = {
@@ -330,7 +454,7 @@ for (i=0;i<len;i++)
 							Target2Sat:F[i].Target2Sat
 						}
             exportInfo.push(tmp);
-						view_statExcReport.push({
+						finalList.push({
 							_id: F[i]._id,
 							//LevelTypeSE:doc[i].LevelTypeSE,
 						    Name: F[i].Name,
@@ -349,11 +473,8 @@ for (i=0;i<len;i++)
 							Portafolio: F[i].Portafolio,
 							AuditableFlag: F[i].AuditableFlag,
 							AuditProgram: F[i].AuditProgram
-						});
-					}
-				}
-				view=JSON.stringify(view_statExcReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_statExcReport, "exportInfo": exportInfo});
+						});*/
+				deferred.resolve({"status": 200, "doc":finalList, "exportInfo": exportInfo});
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
