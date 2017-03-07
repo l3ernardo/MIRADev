@@ -31,11 +31,11 @@ var calculateARTab = {
   addSummaryAuditCount: function(summaryCountObject, audit) {
     try {
       if (audit.PeriodRating == "Sat" || audit.PeriodRating == "Satisfactory" || audit.PeriodRating == "Favorable" || audit.PeriodRating == "Unqualified" || audit.PeriodRating == "Positive") {
-        console.log("PeriodRating is SAT");
+        //console.log("PeriodRating is SAT");
         summaryCountObject.countSAT++;
       }
       if (audit.PeriodRating == "Unsat" || audit.PeriodRating == "Unsatisfactory" || audit.PeriodRating == "Qualified" || audit.PeriodRating == "Unfavorable" || audit.PeriodRating == "Negative") {
-        console.log("PeriodRating is UNSAT");
+        //console.log("PeriodRating is UNSAT");
         summaryCountObject.countUNSAT++;
       }
       return summaryCountObject;
