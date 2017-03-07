@@ -125,7 +125,7 @@ var calculatefield = {
 
 	getPrevQtr: function(currentQtr) {
 		var prevQtr;
-		var current = currentQtr.split("Q");
+		var current = currentQtr.split(" Q");
 		var prevYr = current[0]-1;
 		switch (current[1]) {
 			case "1":
