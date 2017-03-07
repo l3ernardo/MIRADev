@@ -26,9 +26,9 @@ var calculatefield = {
 				doc[0].AuditsReviewsAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocsObj));
 			}
 			if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transform") {
-				//Create a copy of the asmt CRM docs (GTS use only) for BU Country
+				//Create a copy of the asmt CRM docs (GTS use only)
 				doc[0].AuditsReviewsCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
-				//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
+				//Create a copy of the asmt IS Delivery docs (GTS use only)
 				doc[0].AuditsReviewsISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
 			}
 		}
@@ -390,20 +390,20 @@ var calculatefield = {
 						for (var j = 0; j < dataParam.parameters.AuditCUIS[0].options.length; ++j) {
 							doc[0].CUCatList.push(dataParam.parameters.AuditCUIS[0].options[j]);
 							if (doc[0].DocType == "Assessment") {
-								doc[0].AuditCUISObj[dataParam.parameters.AuditCUIS[0].options[j]] = true;
+								doc[0].AuditCUISObj[dataParam.parameters.AuditCUIS[0].options[j].name] = true;
 							}
 						}
 					}
-					console.log(doc[0].AuditCUISObj);
+					//console.log(doc[0].AuditCUISObj);
 					if (dataParam.parameters.AuditCUOTHER) {
 						doc[0].AuditCUOTHER = dataParam.parameters.AuditCUOTHER;
 						for (var j = 0; j < dataParam.parameters.AuditCUOTHER[0].options.length; ++j) {
 							doc[0].CUCatList.push(dataParam.parameters.AuditCUOTHER[0].options[j]);
 							if (doc[0].DocType == "Assessment") {
-								doc[0].AuditCUOTHERObj[dataParam.parameters.AuditCUOTHER[0].options[j]] = true;
+								doc[0].AuditCUOTHERObj[dataParam.parameters.AuditCUOTHER[0].options[j].name] = true;
 							}
 						}
-						console.log(doc[0].AuditCUOTHERObj);
+						//console.log(doc[0].AuditCUOTHERObj);
 						doc[0].CUCatList.sort(function(a, b){
 					    var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase()
 					    if (nameA < nameB) //sort string ascending
