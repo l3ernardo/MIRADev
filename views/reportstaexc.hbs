@@ -23,23 +23,20 @@
 				<thead>
 					<tr>
 						<!--<th style="width:1%;" scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>-->
-						<th style="width:10%;" scope="col"></th>
+						<th style="width:10%;" scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
 						<th style="width:10%;" scope="col">BU IOT</th>
 						<th style="width:10%;" scope="col">Type</th>
 						<th style="width:10%;" scope="col">Assessable Unit</th>
 						<th style="width:10%;" scope="col">MIRA</th>
 						<th style="width:10%;" scope="col">WWBCIT</th>
-						<th style="width:10%;" scope="col">PriorQ</th>
 						<th style="width:10%;" scope="col">CurrentQ</th>
-						<th style="width:10%;" scope="col">Outlook</th>
-						<th style="width:10%;" scope="col">Target to Sat</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{#each doc}}
 					<tr data-tt-id={{id}} data-tt-parent-id={{parent}}>
 						<!--<td style="width:1%;" nowrap><input type="checkbox" class="mira_checkbox_tree"/></td>-->
-					    <td style="width:10%;" nowrap>{{GroupingName}}</td>
+					    <td style="width:10%;" nowrap>{{#unless catEntry}}<input type="checkbox" class="mira_checkbox_tree"/>{{/unless}} {{GroupingName}}</td>
 						<td style="width:10%;" nowrap>{{IOTName}}</td>
 						{{#if cutype}}
 							<td style="width:10%;">{{cutype}}</td>
@@ -49,10 +46,7 @@
 						<td style="width:10%;"><a href="/assessableunit?id={{_id}}">{{Name}}</a></td>
 						<td style="width:10%;">{{MIRAAssessmentStatus}}</td>
 						<td style="width:10%;">{{WWBCITAssessmentStatus}}</td>
-						<td style="width:10%;">{{PeriodRatingPrev}}</td>
 						<td style="width:10%;">{{PeriodRating}}</td>
-						<td style="width:10%;">{{AUNextQtrRating}}</td>
-						<td style="width:10%;">{{Target2Sat}}</td>
 					</tr>
 				{{/each}}
 				</tbody>
