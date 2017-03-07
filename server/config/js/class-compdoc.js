@@ -1317,7 +1317,7 @@ var getDocs = {
 								{ "$and": [{"compntType": "CUSummarySample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
 								{ "$and": [{"compntType": "controlSample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": doc[0].AssessableUnitName}] },
 								// Audits and Reviews Tab
-								{ "$and": [{"compntType": "PPR"}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}},{"AssessableUnitName" : doc[0].AssessableUnitName}] },
+								{ "$and": [{"compntType": "PPR"}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}},{"CU" : doc[0].AssessableUnitName}] },
 								{ "$and": [{"compntType": "internalAudit"},{"parentid":doc[0].parentid}] },
 								{ "$and": [{"compntType": "localAudit"},{"parentid": doc[0]._id}] }
 							]
