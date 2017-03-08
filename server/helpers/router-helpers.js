@@ -51,7 +51,12 @@ var register = function(Handlebars) {
 			return selElem;
 		},
 		//Display icon on Dashboards for each document based on the status field
-		statusIcon:function(amstValue, statusValue){
+		statusIcon:function(amstValue, statusValue, isWWBCIT){
+			if(isWWBCIT == "undefined")
+				isWWBCIT = false;
+			else
+				isWWBCIT = true;
+			
 			if(statusValue == "Retired"){
 				return "td_icon_empty";
 			}
@@ -59,10 +64,10 @@ var register = function(Handlebars) {
 				if(amstValue == "Draft"){
 					return "td_icon_edit";
 				}
-				else if(amstValue == "Final"){
+				else if(amstValue == "Complete" || amstValue == "Reviewed" || (amstValue == "Final" && !isWWBCIT)){
 					return "td_icon_check";
 				}
-				else if(amstValue == "Ready for Review"){
+				else if(amstValue == "Ready for Review" || (amstValue == "Final" && isWWBCIT)){
 					return "td_icon_readyreview";
 				}
 				else if(amstValue == ""){

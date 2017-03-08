@@ -96,6 +96,81 @@ var calculateARTab = {
 		}
   },
 
+  //Auxiliar function that follows the logic for categorization of the CU Internal Audits
+  categorizeCULogic: function(doc, auditInter, parentAsmts, parentAU, tmp, parentISDeliveryDocs, parentCRMDocs) {
+    try {
+      //If the audit is GTS, then we need to add the corresponding category at a Portfolio CU level
+      if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+        //If the assessment matches the parentid of the asmtsdocsDelivery, then its category is "IS Delivery"
+        for(var k = 0; k < parentISDeliveryDocs.length; k++) {
+          //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsDelivery id
+          if(auditInter.auditOrReview == "CHQ Internal Audit") {
+            if (parentAsmts._id == parentISDeliveryDocs[k]._id) {
+              tmp.cat = "IS Delivery";
+              break;
+            }
+          }
+          //Else it's an Internal Audit, then a comparison must be made with asmtsdocsDelivery parentid
+          else {
+            if (parentAU._id == parentISDeliveryDocs[k].parentid) {
+              tmp.cat = "IS Delivery"; //Still an IS Delivery cat since it matches parentISDeliveryDocs
+              break;
+            }
+          }
+        }
+        //If the assessment matches the parentid of the asmtsdocsCRM, then its category is either "IS" or "Other"
+        for(var k = 0; k < parentCRMDocs.length; k++) {
+          //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsCRM parentid
+          if(auditInter.auditOrReview == "CHQ Internal Audit") {
+            if (parentAsmts._id == parentCRMDocs[k]._id) {
+              //If the category is found in doc[0].AuditCUISObj, then it's "IS"
+              if (doc[0].AuditCUISObj[parentAU.Category]) {
+                //console.log("Entered Parent CRM docs - CHQ Internal audit with cat: IS");
+                tmp.cat = "IS";
+                break;
+              }
+              //If the category is found in doc[0].AuditCUOtherObj, then it's "Other"
+              else if (doc[0].AuditCUOTHERObj[parentAU.Category]) {
+                tmp.cat = "Other";
+                break;
+              }
+              //If not found in either AuditCUISObj or AuditCUOtherObj, then it's "uncategorized"
+              else {
+                tmp.cat = "(uncategorized)";
+                break;
+              }
+              break;
+            }
+          }
+          //Else it's an Internal Audit, then a comparison must be made with amstsdocsCRM parentid
+          else {
+            if (parentAU._id == parentCRMDocs[k].parentid) {
+              //If the category is found in doc[0].AuditCUISObj, then it's "IS"
+              if (doc[0].AuditCUISObj[parentAU.Category]) {
+                tmp.cat = "IS";
+                break;
+              }
+              //If the category is found in doc[0].AuditCUOtherObj, then it's "Other"
+              else if (doc[0].AuditCUOTHERObj[parentAU.Category]) {
+                tmp.cat = "Other";
+                break;
+              }
+              //If not found in either AuditCUISObj or AuditCUOtherObj, then it's "uncategorized"
+              else {
+                tmp.cat = "(uncategorized)";
+                break;
+              }
+            }
+          }
+        }
+        return tmp;
+      }
+    }
+    catch(e){
+      console.log("[class-auditsandreviews][categorizeCULogic] - " + e.stack);
+		}
+  },
+
   //Function that iterates over parent assessments for Internal Audits
   categorizeInternalAudits: function(doc, auditInter, parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs) {
     try {
@@ -110,161 +185,13 @@ var calculateARTab = {
           tmp.country = parentAU.Country;
           if(parentAU.DocSubType == "Controllable Unit" && parentAU.Portfolio == "Yes") {
             tmp.DocSubType = "Portfolio CU";
-            //If the audit is GTS, then we need to add the corresponding category at a Portfolio CU level
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-              //If the assessment matches the parentid of the asmtsdocsDelivery, then its category is "IS Delivery"
-              for(var k = 0; k < parentISDeliveryDocs.length; k++) {
-                //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsDelivery id
-                if(auditInter.auditOrReview == "CHQ Internal Audit") {
-                  if (parentAsmts[j]._id == parentISDeliveryDocs[k]._id) {
-                    tmp.cat = "IS Delivery";
-                    break;
-                  }
-                }
-                //Else it's an Internal Audit, then a comparison must be made with asmtsdocsDelivery parentid
-                else {
-                  if (parentAU._id == parentISDeliveryDocs[k].parentid) {
-                    tmp.cat = "IS Delivery"; //Still an IS Delivery cat since it matches parentISDeliveryDocs
-                    break;
-                  }
-                }
-              }
-              //If the assessment matches the parentid of the asmtsdocsCRM, then its category is either "IS" or "Other"
-              for(var k = 0; k < parentCRMDocs.length; k++) {
-                //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsCRM parentid
-                if(auditInter.auditOrReview == "CHQ Internal Audit") {
-                  if (parentAsmts[j]._id == parentCRMDocs[k]._id) {
-                    /*console.log("Portfolio CU CHQ Internal AuditCUISObj: "+JSON.stringify(doc[0].AuditCUISObj));
-                    console.log("Portfolio CU CHQ Internal AuditCUOTHERObj: "+JSON.stringify(doc[0].AuditCUOTHERObj));
-                    console.log("Portfolio CU CHQ Internal Parent AU Cat: "+parentAU.Category);*/
-                    //If the category is found in doc[0].AuditCUISObj, then it's "IS"
-                    if (doc[0].AuditCUISObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - CHQ Internal audit with cat: IS");
-                      tmp.cat = "IS";
-                      break;
-                    }
-                    //If the category is found in doc[0].AuditCUOtherObj, then it's "Other"
-                    else if (doc[0].AuditCUOTHERObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - CHQ Internal audit with cat: Other");
-                      tmp.cat = "Other";
-                      break;
-                    }
-                    //If not found in either AuditCUISObj or AuditCUOtherObj, then it's "uncategorized"
-                    else {
-                      //console.log("Entered Parent CRM docs - CHQ Internal audit with cat: uncategorized");
-                      tmp.cat = "(uncategorized)";
-                      break;
-                    }
-                    break;
-                  }
-                }
-                //Else it's an Internal Audit, then a comparison must be made with amstsdocsCRM parentid
-                else {
-                  if (parentAU._id == parentCRMDocs[k].parentid) {
-                    /*console.log("Portfolio CU internalAudit AuditCUISObj: "+JSON.stringify(doc[0].AuditCUISObj));
-                    console.log("Portfolio CU internalAudit AuditCUOTHERObj: "+JSON.stringify(doc[0].AuditCUOTHERObj));
-                    console.log("Portfolio CU internalAudit Parent AU Cat: "+parentAU.Category);*/
-                    //If the category is found in doc[0].AuditCUISObj, then it's "IS"
-                    if (doc[0].AuditCUISObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - internal audit with cat: IS");
-                      tmp.cat = "IS";
-                      break;
-                    }
-                    //If the category is found in doc[0].AuditCUOtherObj, then it's "Other"
-                    else if (doc[0].AuditCUOTHERObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - internal audit with cat: Other");
-                      tmp.cat = "Other";
-                      break;
-                    }
-                    //If not found in either AuditCUISObj or AuditCUOtherObj, then it's "uncategorized"
-                    else {
-                      //console.log("Entered Parent CRM docs - internal audit with cat: uncategorized");
-                      tmp.cat = "(uncategorized)";
-                      break;
-                    }
-                  }
-                }
-              }
-            }
+            //Run auxiliar function to categorize the Portfolio CUs audits
+            tmp = calculateARTab.categorizeCULogic(doc, auditInter, parentAsmts[j], parentAU, tmp, parentISDeliveryDocs, parentCRMDocs);
           }
           else if (parentAU.DocSubType == "Controllable Unit" && (parentAU.Portfolio == "No" || parentAU.Portfolio == "" || parentAU.Portfolio == undefined)){
             tmp.DocSubType = "Standalone CU";
-            //If the audit is GTS, then we need to add the corresponding category at a Standalone CU level
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
-              //If the assessment matches the parentid of the asmtsdocsDelivery, then its category is "IS Delivery"
-              for(var k = 0; k < parentISDeliveryDocs.length; k++) {
-                //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsDelivery id
-                if(auditInter.auditOrReview == "CHQ Internal Audit") {
-                  if (parentAsmts[j]._id == parentISDeliveryDocs[k]._id) {
-                    tmp.cat = "IS Delivery";
-                    break;
-                  }
-                }
-                //Else it's an Internal Audit, then a comparison must be made with asmtsdocsDelivery parentid
-                else {
-                  if (parentAU._id == parentISDeliveryDocs[k].parentid) {
-                    tmp.cat = "IS Delivery"; //Still an IS Delivery cat since it matches parentISDeliveryDocs
-                    break;
-                  }
-                }
-              }
-              //If the assessment matches the parentid of the asmtsdocsCRM, then its category is either "IS" or "Other"
-              for(var k = 0; k < parentCRMDocs.length; k++) {
-                //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsCRM parentid
-                if(auditInter.auditOrReview == "CHQ Internal Audit") {
-                  if (parentAsmts[j]._id == parentCRMDocs[k]._id) {
-                    /*console.log("Standalone CU CHQ Internal AuditCUISObj: "+JSON.stringify(doc[0].AuditCUISObj));
-                    console.log("Standalone CU CHQ Internal AuditCUOTHERObj: "+JSON.stringify(doc[0].AuditCUOTHERObj));
-                    console.log("Standalone CU CHQ Internal Parent AU Cat: "+parentAU.Category);*/
-                    //If the category is found in doc[0].AuditCUISObj, then it's "IS"
-                    if (doc[0].AuditCUISObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - CHQ Internal audit with cat: IS");
-                      tmp.cat = "IS";
-                      break;
-                    }
-                    //If the category is found in doc[0].AuditCUOtherObj, then it's "Other"
-                    else if (doc[0].AuditCUOTHERObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - CHQ Internal audit with cat: Other");
-                      tmp.cat = "Other";
-                      break;
-                    }
-                    //If not found in either AuditCUISObj or AuditCUOtherObj, then it's "uncategorized"
-                    else {
-                      //console.log("Entered Parent CRM docs - CHQ Internal audit with cat: uncategorized");
-                      tmp.cat = "(uncategorized)";
-                      break;
-                    }
-                    break;
-                  }
-                }
-                //Else it's an Internal Audit, then a comparison must be made with amstsdocsCRM parentid
-                else {
-                  if (parentAU._id == parentCRMDocs[k].parentid) {
-                    /*console.log("Standalone CU internalAudit AuditCUISObj: "+JSON.stringify(doc[0].AuditCUISObj));
-                    console.log("Standalone CU internalAudit AuditCUOTHERObj: "+JSON.stringify(doc[0].AuditCUOTHERObj));
-                    console.log("Standalone CU internalAudit Parent AU Cat: "+parentAU.Category);*/
-                    //If the category is found in doc[0].AuditCUISObj, then it's "IS"
-                    if (doc[0].AuditCUISObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - internal audit with cat: IS");
-                      tmp.cat = "IS";
-                      break;
-                    }
-                    //If the category is found in doc[0].AuditCUOtherObj, then it's "Other"
-                    else if (doc[0].AuditCUOTHERObj[parentAU.Category]) {
-                      //console.log("Entered Parent CRM docs - internal audit with cat: Other");
-                      tmp.cat = "Other";
-                      break;
-                    }
-                    //If not found in either AuditCUISObj or AuditCUOtherObj, then it's "uncategorized"
-                    else {
-                      //console.log("Entered Parent CRM docs - internal audit with cat: uncategorized");
-                      tmp.cat = "(uncategorized)";
-                      break;
-                    }
-                  }
-                }
-              }
-            }
+            //Run auxiliar function to categorize the Standalone CUs audits
+            tmp = calculateARTab.categorizeCULogic(doc, auditInter, parentAsmts[j], parentAU, tmp, parentISDeliveryDocs, parentCRMDocs);
           }
           else {
             tmp.DocSubType = parentAU.DocSubType;
@@ -272,27 +199,20 @@ var calculateARTab = {
             if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
               //If it is a Country Process then its category is supposed to be the CP's "CUCat" field in Cloudant
               if (tmp.DocSubType == "Country Process") {
-                /*console.log("Country Process AuditCUISObj: "+JSON.stringify(doc[0].AuditCUISObj));
-                console.log("Country Process AuditCUOTHERObj: "+JSON.stringify(doc[0].AuditCUOTHERObj));
-                console.log("Country Process parentAU CUCat: "+parentAU.CUCat);*/
                 //If the CUCat is found in doc[0].AuditCUISObj, then it's "IS"
                 if (doc[0].AuditCUISObj[parentAU.CUCat]) {
-                  //console.log("Entered Country Process - cat: IS");
                   tmp.cat = "IS";
                 }
                 //If the CUCat is found in doc[0].AuditCUOtherObj, then it's "Other"
                 else if (doc[0].AuditCUOTHERObj[parentAU.CUCat]) {
-                  //console.log("Entered Country Process - cat: Other");
                   tmp.cat = "Other";
                 }
                 //If the CUCat is found in doc[0].DeliveryCUObj, then it's "IS Delivery"
                 else if (doc[0].DeliveryCUObj[parentAU.CUCat]) {
-                  //console.log("Entered Country Process - cat: IS Delivery");
                   tmp.cat = "IS Delivery";
                 }
                 //If the CUCat not found in either AuditCUISObj or AuditCUOtherObj, then it's "uncategorized"
                 else {
-                  //console.log("Entered Country Process - cat: uncategorized");
                   tmp.cat = "(uncategorized)";
                 }
               }
@@ -1813,24 +1733,18 @@ var calculateARTab = {
             if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
               if (tmp.cat == "IS Delivery") {
                 summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
-                //console.log("ISDelivery SAT: "+summaryISDeliveryAllCounts.countSAT);
-                //console.log("ISDelivery UNSAT: "+summaryISDeliveryAllCounts.countUNSAT);
                 //For IS Delivery WeightedAuditScore
                 if (!isNaN(tmp.CUScore)) totalISDeliveryCUScore += tmp.CUScore;
                 if (!isNaN(tmp.CUMaxScore)) totalISDeliveryMaxScore += tmp.CUMaxScore;
               }
               else if (tmp.cat == "IS") {
                 summaryCRMISAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMISAllCounts, tmp);
-                //console.log("IS SAT: "+summaryCRMISAllCounts.countSAT);
-                //console.log("IS UNSAT: "+summaryCRMISAllCounts.countUNSAT);
                 //For CRM IS WeightedAuditScore
                 if (!isNaN(tmp.CUScore)) totalCRMISCUScore += tmp.CUScore;
                 if (!isNaN(tmp.CUMaxScore)) totalCRMISMaxScore += tmp.CUMaxScore;
               }
               else if (tmp.cat == "Other") {
                 summaryCRMOtherAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMOtherAllCounts, tmp);
-                //console.log("Other SAT: "+summaryCRMOtherAllCounts.countSAT);
-                //console.log("Other UNSAT: "+summaryCRMOtherAllCounts.countUNSAT);
                 //For CRM Other WeightedAuditScore
                 if (!isNaN(tmp.CUScore)) totalCRMOtherCUScore += tmp.CUScore;
                 if (!isNaN(tmp.CUMaxScore)) totalCRMOtherMaxScore += tmp.CUMaxScore;
