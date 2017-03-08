@@ -1608,11 +1608,12 @@ var assessableunit = {
 			var doc = [];
 			var iaObj = {
 				"selector":{
-					"$and": [
-						{"engagement": { "$gt": null }},
-						{"docType": "asmtComponent"},
-						{"compntType": "internalAudit"}
-					]
+					"engagement": { "$gt": null },
+					"docType": "asmtComponent",
+					"compntType": "internalAudit",
+					"auditReviewName":"CHQ Internal Audit",
+					"status":"Final",
+					"auditYear": req.session.quarter.split(" ")[0]
 				},
 				"fields": [
 					"_id",
@@ -1637,7 +1638,7 @@ var assessableunit = {
 					var docList = [];
 					if(data.body.docs.length > 0){
 						var docs = data.body.docs;
-
+						//Separate internal audit with parentid null to display in list. The ones with parent is for display only if it was selected
 						for (var i = 0; i < docs.length; ++i) {
 							if(docs[i].parentid != null && docs[i].parentid != "")
 								docList.push(docs[i]);
