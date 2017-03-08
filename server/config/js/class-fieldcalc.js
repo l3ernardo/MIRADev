@@ -175,6 +175,22 @@ var calculatefield = {
 		return cuscore;
 	},
 
+	addConstiDocData: function(doc, constiDocArr, constiAsmtDoc, prevQtr) {
+		for (var j = 0; j < doc[0][constiDocArr].length; j++) {
+			// Current qtr asmt doc
+			// console.log(constiAsmtDoc.CurrentPeriod + "::" + doc[0].CurrentPeriod + " || " + doc[0][constiDocArr][j].docid + "::" +  constiAsmtDoc._id);
+			if (doc[0][constiDocArr][j].docid == constiAsmtDoc.parentid && constiAsmtDoc.CurrentPeriod == doc[0].CurrentPeriod) {
+				doc[0][constiDocArr][j].PeriodRating = constiAsmtDoc.PeriodRating;
+				doc[0][constiDocArr][j].AUNextQtrRating = constiAsmtDoc.NextQtrRating;
+				doc[0][constiDocArr][j].Target2Sat = constiAsmtDoc.Target2Sat;
+			}
+			// previous qtr asmt doc
+			if (doc[0][constiDocArr][j].docid == constiAsmtDoc.parentid && constiAsmtDoc.CurrentPeriod == prevQtr) {
+				doc[0][constiDocArr][j].PeriodRatingPrev = constiAsmtDoc.PeriodRating;
+			}
+		}
+	},
+
 	getCompMIRABusinessUnit: function(doc) {
 		var MIRABusinessUnit;
 		switch (doc.compntType) {
