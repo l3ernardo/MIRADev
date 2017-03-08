@@ -168,6 +168,9 @@ var assessment = {
 
 									fieldCalc.getRatingProfile(doc);
 
+									// Process Country Process Ratings tab
+									prt.processProTab(doc,defViewRow);
+
 									//Performance tab
 									performanceTab.buildPerformanceTabGP(db,doc,defViewRow,fieldCalc);
 
@@ -598,7 +601,6 @@ var assessment = {
 									aar.processARTab(doc,defViewRow);
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
-
 									//console.log(doc[0].BUCAsmtDataPIviewCRM);
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});

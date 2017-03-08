@@ -84,7 +84,8 @@
 			<table width="100%" class="ibm-data-table">
 				<tr>
 					<td class="audit-review-viewheader-al" width="10%"><b>Explanations</b></td>
-					<td class="asmt-viewdata" width="90%"><input type="text" name="IAExplanations" id="IAExplanations" value="{{IAExplanations}}" size="167"></td>
+					<td class="asmt-viewdata" width="90%"><input type="text" name="IAExplanations" id="IAExplanations" value="{{IAExplanations}}"
+            class="mira-field" for="Explanations for Audits and Reviews - Internal Audits" size="167"></td>
 				</tr>
 			</table>
   		</td>
@@ -118,7 +119,7 @@
   						<td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
   						<td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
   						<td width="8%">{{reviewID}}</td>
-  						<td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">a{{Name}}</a></td>
+  						<td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
   						<td width="10%">{{DocSubType}}</td>
   						<td width="10%">{{reportDate}}</td>
   						{{{ratingDisplayView rating 6}}}
@@ -131,7 +132,8 @@
 			<table width="100%" class="ibm-data-table">
 				<tr>
 					<td class="audit-review-viewheader-al" width="10%"><b>Explanations</b></td>
-					<td class="asmt-viewdata" width="90%"><input type="text" name="PRExplanations" id="PRExplanations" value="{{PRExplanations}}" size="167"></td>
+					<td class="asmt-viewdata" width="90%"><input type="text" name="PRExplanations" id="PRExplanations" value="{{PRExplanations}}"
+            class="mira-field" for="Explanations for Audits and Reviews - Proactive Reviews" size="167"></td>
 				</tr>
 			</table>
   		</td>
@@ -174,7 +176,8 @@
 			<table width="100%" class="ibm-data-table">
 				<tr>
 					<td class="audit-review-viewheader-al" width="10%"><b>Explanations</b></td>
-					<td class="asmt-viewdata" width="90%"><input type="text" name="ARRExplanations" id="ARRExplanations" value="{{ARRExplanations}}" size="167"></td>
+					<td class="asmt-viewdata" width="90%"><input type="text" name="ARRExplanations" id="ARRExplanations" value="{{ARRExplanations}}"
+            class="mira-field" for="Explanations for Audits and Reviews - Other Audits and Reviews" size="167"></td>
 				</tr>
 			</table>
   		</td>
@@ -184,7 +187,8 @@
         <span class="audit-review-header"><b>Focus items, key changes, open items, comments for current &amp; next quarter</b></span><br /><br />
         <table width="100%" class="ibm-data-table">
           <tr class="asmt-viewdata">
-            <td><input type="text" name="AuditFocusText" id="AuditFocusText" value="{{AuditFocusText}}" size="186"></td>
+            <td><input type="text" name="AuditFocusText" id="AuditFocusText" value="{{AuditFocusText}}"
+              class="mira-field" for="Audits and Reviews - Focus items, key changes, open items, comments for current and next quarter" size="186"></td>
           </tr>
         </table>
       </td>

@@ -26,9 +26,9 @@ var calculatefield = {
 				doc[0].AuditsReviewsAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocsObj));
 			}
 			if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transform") {
-				//Create a copy of the asmt CRM docs (GTS use only) for BU Country
+				//Create a copy of the asmt CRM docs (GTS use only)
 				doc[0].AuditsReviewsCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
-				//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
+				//Create a copy of the asmt IS Delivery docs (GTS use only)
 				doc[0].AuditsReviewsISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
 			}
 		}
@@ -125,7 +125,7 @@ var calculatefield = {
 
 	getPrevQtr: function(currentQtr) {
 		var prevQtr;
-		var current = currentQtr.split("Q");
+		var current = currentQtr.split(" Q");
 		var prevYr = current[0]-1;
 		switch (current[1]) {
 			case "1":
@@ -173,6 +173,22 @@ var calculatefield = {
 		}
 		cuscore = ratingscore * cumaxscore
 		return cuscore;
+	},
+
+	addConstiDocData: function(doc, constiDocArr, constiAsmtDoc, prevQtr) {
+		for (var j = 0; j < doc[0][constiDocArr].length; j++) {
+			// Current qtr asmt doc
+			// console.log(constiAsmtDoc.CurrentPeriod + "::" + doc[0].CurrentPeriod + " || " + doc[0][constiDocArr][j].docid + "::" +  constiAsmtDoc._id);
+			if (doc[0][constiDocArr][j].docid == constiAsmtDoc.parentid && constiAsmtDoc.CurrentPeriod == doc[0].CurrentPeriod) {
+				doc[0][constiDocArr][j].PeriodRating = constiAsmtDoc.PeriodRating;
+				doc[0][constiDocArr][j].AUNextQtrRating = constiAsmtDoc.NextQtrRating;
+				doc[0][constiDocArr][j].Target2Sat = constiAsmtDoc.Target2Sat;
+			}
+			// previous qtr asmt doc
+			if (doc[0][constiDocArr][j].docid == constiAsmtDoc.parentid && constiAsmtDoc.CurrentPeriod == prevQtr) {
+				doc[0][constiDocArr][j].PeriodRatingPrev = constiAsmtDoc.PeriodRating;
+			}
+		}
 	},
 
 	getCompMIRABusinessUnit: function(doc) {
@@ -295,6 +311,8 @@ var calculatefield = {
 			}
 			// Get Parameters for Assessments
 			else {
+				doc[0].AuditCUISObj = {};
+				doc[0].AuditCUOTHERObj = {};
 				if (doc[0].MIRABusinessUnit == "GTS") {
 					// GTS Assessment Doc Parameters
 					if (doc[0].ParentDocSubType == "Controllable Unit") {
@@ -387,13 +405,21 @@ var calculatefield = {
 						doc[0].AuditCUIS = dataParam.parameters.AuditCUIS;
 						for (var j = 0; j < dataParam.parameters.AuditCUIS[0].options.length; ++j) {
 							doc[0].CUCatList.push(dataParam.parameters.AuditCUIS[0].options[j]);
+							if (doc[0].DocType == "Assessment") {
+								doc[0].AuditCUISObj[dataParam.parameters.AuditCUIS[0].options[j].name] = true;
+							}
 						}
 					}
+					//console.log(doc[0].AuditCUISObj);
 					if (dataParam.parameters.AuditCUOTHER) {
 						doc[0].AuditCUOTHER = dataParam.parameters.AuditCUOTHER;
 						for (var j = 0; j < dataParam.parameters.AuditCUOTHER[0].options.length; ++j) {
 							doc[0].CUCatList.push(dataParam.parameters.AuditCUOTHER[0].options[j]);
+							if (doc[0].DocType == "Assessment") {
+								doc[0].AuditCUOTHERObj[dataParam.parameters.AuditCUOTHER[0].options[j].name] = true;
+							}
 						}
+						//console.log(doc[0].AuditCUOTHERObj);
 						doc[0].CUCatList.sort(function(a, b){
 					    var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase()
 					    if (nameA < nameB) //sort string ascending
@@ -1526,6 +1552,19 @@ var calculatefield = {
 										bocEx = bocEx + 1;
 									}
 
+									// Process Ratings tab data for GlobalProcess
+									toadd = {
+										"docid":doc[0].asmtsdocs[i]._id,
+										"country":doc[0].asmtsdocs[i].Country,
+										"iot":doc[0].asmtsdocs[i].IOT,
+										"ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+										"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+										"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+										"targettosat":doc[0].asmtsdocs[i].Target2Sat,
+										"targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+										"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+									};
+									doc[0].CPAsmtDataPR1view.push(toadd);
 
 
 

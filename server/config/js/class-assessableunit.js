@@ -222,6 +222,7 @@ var assessableunit = {
 						if(constidata.status==200 && !constidata.error) {
 							var constidocs = constidata.body.docs;
 							doc[0].AssessmentData = [];
+							var constiAsmtsIds = [];
 							var hasCurQAsmt = false;
 							for (var i = 0; i < constidocs.length; ++i) {
 								if (constidocs[i].DocType == "Assessment") { //Assessments
@@ -247,6 +248,7 @@ var assessableunit = {
 									}
 								}
 								else { //Constituents documents
+									constiAsmtsIds.push(constidocs[i]._id) // used in getting the current quarter asmts of the constituent asmts
 									if(constidocs[i].DocSubType == "BU IOT"){
 											constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
 									}else if(constidocs[i].DocSubType == "BU IMT"){
@@ -258,10 +260,10 @@ var assessableunit = {
 										"docid": constidocs[i]._id,
 										"Name": constidocs[i].Name,
 										"Status": constidocs[i].Status,
-										"PeriodRatingPrev": constidocs[i].PeriodRatingPrev,
-										"PeriodRating": constidocs[i].PeriodRating,
-										"AUNextQtrRating": constidocs[i].AUNextQtrRating,
-										"Target2Sat": constidocs[i].Target2Sat
+										"PeriodRatingPrev": "",
+										"PeriodRating": "",
+										"AUNextQtrRating": "",
+										"Target2Sat": ""
 									};
 									if(constidocs[i].DocSubType == "Global Process") doc[0].GPData.push(toadd);
 									else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
@@ -289,255 +291,292 @@ var assessableunit = {
 							//console.log("BU session: " + req.session.businessunit);
 
 							doc[0].EnteredBU = doc[0].MIRABusinessUnit;
-							fieldCalc.getDocParams(req, db, doc).then(function(data) {
-								if(!data.error){
-									/* Define if ARCFrequency is displayed */
-									if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit" && (doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS")) {
-										doc[0].showARCFreq = 1;
-									}
-									/* Define if document is in edit mode */
-									if(req.query.edit != undefined && doc[0].editor)	doc[0].editmode = 1;
-									/* Get Reporting Groups */
-									//doc[0].admin = false;
-									assessableunit.getReportingGroups(req, db, doc[0].MIRABusinessUnit).then(function(resdata) {
-										if(resdata.status==200 && !resdata.error){
-											//Load Reporting groups list - for edit/read mode
-											doc[0].ReportingGroupList = [];
-											doc[0].ReportingGroupList = resdata.doc;
-											switch (doc[0].DocSubType) {
-												case "Business Unit":
-													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid","name");
-													}
-													deferred.resolve({"status": 200, "doc": doc});
-													break;
-												case "Global Process":
-												case "Sub-process":
-													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid","name");
-														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-													}
-													deferred.resolve({"status": 200, "doc": doc});
-													break;
-												case "Country Process":
-													//Get IA Data
-													assessableunit.getInternalAudits(req, db).then(function(dataIntAud) {
-														if(dataIntAud.status==200 && !dataIntAud.error){
-															doc[0].IntAud = [];
-															doc[0].IntAud = dataIntAud.doc;
-															//IA Data
-															doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
-															//Edit but not Admin - Reader
-															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
+							// Get current qtr and previous qtr assessments of constituent units
+							var prevQtr = fieldCalc.getPrevQtr(doc[0].CurrentPeriod);
+							var constiasmtsobj = {
+								selector:{
+									"_id": {"$gt":0},
+									"parentid": {"$in":constiAsmtsIds},
+									"key": "Assessment",
+									"CurrentPeriod": {"$in":[doc[0].CurrentPeriod,prevQtr]}
+								}
+							};
+							db.find(constiasmtsobj).then(function(constiasmtdata) {
+								if(constiasmtdata.status==200 && !constiasmtdata.error) {
+									var constiasmtdocs = constiasmtdata.body.docs;
+									// Get data from asmts of constituent units
 
-																deferred.resolve({"status": 200, "doc": doc});
+									for (var i = 0; i < constiasmtdocs.length; ++i) {
+										if (doc[0].CPData !== undefined) fieldCalc.addConstiDocData(doc, "CPData", constiasmtdocs[i], prevQtr);
+										if (doc[0].CUData !== undefined) fieldCalc.addConstiDocData(doc, "CUData", constiasmtdocs[i], prevQtr);
+										if (doc[0].GPData !== undefined) fieldCalc.addConstiDocData(doc, "GPData", constiasmtdocs[i], prevQtr);
+										if (doc[0].BUIOTData !== undefined) fieldCalc.addConstiDocData(doc, "BUIOTData", constiasmtdocs[i], prevQtr);
+										if (doc[0].BUIMTData !== undefined) fieldCalc.addConstiDocData(doc, "BUIMTData", constiasmtdocs[i], prevQtr);
+										if (doc[0].BUCountryData !== undefined) fieldCalc.addConstiDocData(doc, "BUCountryData", constiasmtdocs[i], prevQtr);
+										if (doc[0].RGData !== undefined) fieldCalc.addConstiDocData(doc, "RGData", constiasmtdocs[i], prevQtr);
+										if (doc[0].AccountData !== undefined) fieldCalc.addConstiDocData(doc, "AccountData", constiasmtdocs[i], prevQtr);
+										if (doc[0].SPData !== undefined) fieldCalc.addConstiDocData(doc, "SPData", constiasmtdocs[i], prevQtr);
+									}
+
+									fieldCalc.getDocParams(req, db, doc).then(function(data) {
+										if(!data.error){
+											/* Define if ARCFrequency is displayed */
+											if (doc[0].BusinessUnitOLD == "GTS" && doc[0].DocSubType == "Controllable Unit") {
+												if ((doc[0].Category == "SO" || doc[0].Category == "IS" || doc[0].Category == "ITS" || doc[0].Category == "TSS" || doc[0].Category == "GPS"))
+													doc[0].showARCFreq = 1;
+											}
+											/* Define if document is in edit mode */
+											if(req.query.edit != undefined && doc[0].editor)	doc[0].editmode = 1;
+											/* Get Reporting Groups */
+											//doc[0].admin = false;
+											assessableunit.getReportingGroups(req, db, doc[0].MIRABusinessUnit).then(function(resdata) {
+												if(resdata.status==200 && !resdata.error){
+													//Load Reporting groups list - for edit/read mode
+													doc[0].ReportingGroupList = [];
+													doc[0].ReportingGroupList = resdata.doc;
+													switch (doc[0].DocSubType) {
+														case "Business Unit":
+															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
+																doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid","name");
 															}
-															else{
-																deferred.resolve({"status": 200, "doc": doc});
+															deferred.resolve({"status": 200, "doc": doc});
+															break;
+														case "Global Process":
+														case "Sub-process":
+															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
+																doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid","name");
+																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
 															}
-														}
-														else{
-															deferred.reject({"status": 500, "error": dataIntAud.error});
-														}
-													}).catch(function(err) { // end assessableunit.getInternalAudits
-														console.log("[assessableunit][getInternalAudits]" + err.error.reason);
-														deferred.reject({"status": 500, "error": err.error.reason});
-													});
-													break;
-												case "Account":
-													//CUPList
-													assessableunit.getPortfolioCUs(req, db, doc[0].MIRABusinessUnit).then(function(cudata) {
-														if(cudata.status==200 && !cudata.error){
-															doc[0].CUPList = cudata.doc;
-															//Load CU name read mode
-															if(req.query.edit == undefined){
-																doc[0].ControllableUnit = assessableunit.getNames(doc[0].CUPList, doc[0].parentid, "_id", "Name");
-															}
-															//ALL Key List not for GBS
-															if(doc[0].BusinessUnit != "GBS"){
-																//ALL Key List
-																assessableunit.getALLKey(req, db, doc[0].MIRABusinessUnit).then(function(adata) {
-																	if(adata.status==200 && !adata.error){
-																		doc[0].lessonsList = adata.doc;
-																		//AuditLessonsKey for read mode - or edit non admin user
-																		if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-																			doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
-																		}
+															deferred.resolve({"status": 200, "doc": doc});
+															break;
+														case "Country Process":
+															//Get IA Data
+															assessableunit.getInternalAudits(req, db).then(function(dataIntAud) {
+																if(dataIntAud.status==200 && !dataIntAud.error){
+																	doc[0].IntAud = [];
+																	doc[0].IntAud = dataIntAud.doc;
+																	//IA Data
+																	doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
+																	//Edit but not Admin - Reader
+																	if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
+																		doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
+
 																		deferred.resolve({"status": 200, "doc": doc});
 																	}
 																	else{
-																		deferred.reject({"status": 500, "error": adata.error});
+																		deferred.resolve({"status": 200, "doc": doc});
 																	}
-																}).catch(function(err) { // end assessableunit.getALLKey
-																	console.log("[assessableunit][getALLKey]" + err.error.reason);
-																	deferred.reject({"status": 500, "error": err.error.reason});
-																});
-															}
-															else{
-																deferred.resolve({"status": 200, "doc": doc});
-															}
-														}
-														else{
-															deferred.reject({"status": 500, "error": cudata.error});
-														}
-													}).catch(function(err) { // end assessableunit.getPortfolioCUs
-														console.log("[assessableunit][getPortfolioCUs]" + err.error.reason);
-														deferred.reject({"status": 500, "error": err.error.reason});
-													});
-													break;
-												case "Controllable Unit":
-													//Get Parent Document
-													assessableunit.getParentCU(req, db, doc[0].parentid).then(function(pcudata) {
-														if(pcudata.status==200 && !pcudata.error){
-															var resdoc = pcudata.doc[0];
-															doc[0].ParentSubject = resdoc.Name;
-															doc[0].ParentDocSubType = resdoc.DocSubType;
-															if (resdoc.DocSubType != "Business Unit") {
-																doc[0].IOT = resdoc.IOT;
-																if(doc[0].ParentDocSubType == "BU IMT"){
-																	doc[0].IMT = resdoc.IMT;
 																}
-																if(doc[0].ParentDocSubType == "BU Country"){
-																	doc[0].IMT = resdoc.IMT;
-																	doc[0].Country = resdoc.Country;
-																	doc[0].CountryDisp = util.resolveGeo(doc[0].Country, "Country", req)
+																else{
+																	deferred.reject({"status": 500, "error": dataIntAud.error});
 																}
-															}
-															//Get ALL Keys
-															assessableunit.getALLKey(req, db, doc[0].MIRABusinessUnit).then(function(adata) {
-																if(adata.status==200 && !adata.error){
-																	doc[0].lessonsList = adata.doc;
+															}).catch(function(err) { // end assessableunit.getInternalAudits
+																console.log("[assessableunit][getInternalAudits]" + err.error.reason);
+																deferred.reject({"status": 500, "error": err.error.reason});
+															});
+															break;
+														case "Account":
+															//CUPList
+															assessableunit.getPortfolioCUs(req, db, doc[0].MIRABusinessUnit).then(function(cudata) {
+																if(cudata.status==200 && !cudata.error){
+																	doc[0].CUPList = cudata.doc;
+																	//Load CU name read mode
+																	if(req.query.edit == undefined){
+																		doc[0].ControllableUnit = assessableunit.getNames(doc[0].CUPList, doc[0].parentid, "_id", "Name");
+																	}
+																	//ALL Key List not for GBS
+																	if(doc[0].BusinessUnit != "GBS"){
+																		//ALL Key List
+																		assessableunit.getALLKey(req, db, doc[0].MIRABusinessUnit).then(function(adata) {
+																			if(adata.status==200 && !adata.error){
+																				doc[0].lessonsList = adata.doc;
+																				//AuditLessonsKey for read mode - or edit non admin user
+																				if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
+																					doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
+																				}
+																				deferred.resolve({"status": 200, "doc": doc});
+																			}
+																			else{
+																				deferred.reject({"status": 500, "error": adata.error});
+																			}
+																		}).catch(function(err) { // end assessableunit.getALLKey
+																			console.log("[assessableunit][getALLKey]" + err.error.reason);
+																			deferred.reject({"status": 500, "error": err.error.reason});
+																		});
+																	}
+																	else{
+																		deferred.resolve({"status": 200, "doc": doc});
+																	}
+																}
+																else{
+																	deferred.reject({"status": 500, "error": cudata.error});
+																}
+															}).catch(function(err) { // end assessableunit.getPortfolioCUs
+																console.log("[assessableunit][getPortfolioCUs]" + err.error.reason);
+																deferred.reject({"status": 500, "error": err.error.reason});
+															});
+															break;
+														case "Controllable Unit":
+															//Get Parent Document
+															assessableunit.getParentCU(req, db, doc[0].parentid).then(function(pcudata) {
+																if(pcudata.status==200 && !pcudata.error){
+																	var resdoc = pcudata.doc[0];
+																	doc[0].ParentSubject = resdoc.Name;
+																	doc[0].ParentDocSubType = resdoc.DocSubType;
+																	if (resdoc.DocSubType != "Business Unit") {
+																		doc[0].IOT = resdoc.IOT;
+																		if(doc[0].ParentDocSubType == "BU IMT"){
+																			doc[0].IMT = resdoc.IMT;
+																		}
+																		if(doc[0].ParentDocSubType == "BU Country"){
+																			doc[0].IMT = resdoc.IMT;
+																			doc[0].Country = resdoc.Country;
+																			doc[0].CountryDisp = util.resolveGeo(doc[0].Country, "Country", req)
+																		}
+																	}
 																	//Get ALL Keys
-																	assessableunit.getSubprocess(req, db, doc[0].MIRABusinessUnit).then(function(spdata) {
-																		if(spdata.status==200 && !spdata.error){
-																			doc[0].subprocessList = spdata.doc;
-																			//Get IA Data
-																			assessableunit.getInternalAudits(req, db).then(function(dataIntAud) {
-																				if(dataIntAud.status==200 && !dataIntAud.error){
-																					doc[0].IntAud = [];
-																					doc[0].IntAud = dataIntAud.doc;
-																					//IA Data
-																					doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
-																					//Edit && Admin
-																					if(req.query.edit != undefined && doc[0].editor && doc[0].admin){
-																						//Get CU Parents List
-																						assessableunit.getCUParents(req, db, doc[0].MIRABusinessUnit).then(function(dataCP) {
-																							if(dataCP.status==200 && !dataCP.error){
-																								doc[0].CUParents = [];
-																								doc[0].CUParents = dataCP.doc;
+																	assessableunit.getALLKey(req, db, doc[0].MIRABusinessUnit).then(function(adata) {
+																		if(adata.status==200 && !adata.error){
+																			doc[0].lessonsList = adata.doc;
+																			//Get ALL Keys
+																			assessableunit.getSubprocess(req, db, doc[0].MIRABusinessUnit).then(function(spdata) {
+																				if(spdata.status==200 && !spdata.error){
+																					doc[0].subprocessList = spdata.doc;
+																					//Get IA Data
+																					assessableunit.getInternalAudits(req, db).then(function(dataIntAud) {
+																						if(dataIntAud.status==200 && !dataIntAud.error){
+																							doc[0].IntAud = [];
+																							doc[0].IntAud = dataIntAud.doc;
+																							//IA Data
+																							doc[0].InternalAuditsDataDisp = assessableunit.getIADisplay(dataIntAud.docList, doc[0].InternalAuditsData);
+																							//Edit && Admin
+																							if(req.query.edit != undefined && doc[0].editor && doc[0].admin){
+																								//Get CU Parents List
+																								assessableunit.getCUParents(req, db, doc[0].MIRABusinessUnit).then(function(dataCP) {
+																									if(dataCP.status==200 && !dataCP.error){
+																										doc[0].CUParents = [];
+																										doc[0].CUParents = dataCP.doc;
+																										deferred.resolve({"status": 200, "doc": doc});
+																									}
+																									else{
+																										deferred.reject({"status": 500, "error": dataCP.error});
+																									}
+																								}).catch(function(err) {
+																									console.log("[assessableunit][CUParentList]" + err.error.reason);
+																									deferred.reject({"status": 500, "error": err.error.reason});
+																								});
+																							}
+																							//Edit non admin - Read
+																							else{
+																								//ALL keys
+																								if(doc[0].MIRABusinessUnit != "GBS"){
+																									doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
+																								}
+																								//Sub-process keys
+																								if(doc[0].MIRABusinessUnit == "GTS Transformation"){
+																									doc[0].SubprocessDisp = assessableunit.getNames(doc[0].subprocessList, doc[0].subprocess, "WWBCITKey", "Name");
+																								}
+
+																								//BU reporting groups
+																								doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
+
 																								deferred.resolve({"status": 200, "doc": doc});
 																							}
-																							else{
-																								deferred.reject({"status": 500, "error": dataCP.error});
-																							}
-																						}).catch(function(err) {
-																							console.log("[assessableunit][CUParentList]" + err.error.reason);
-																							deferred.reject({"status": 500, "error": err.error.reason});
-																						});
-																					}
-																					//Edit non admin - Read
-																					else{
-																						//ALL keys
-																						if(doc[0].MIRABusinessUnit != "GBS"){
-																							doc[0].AuditLessonsKey = assessableunit.getNames(doc[0].lessonsList, doc[0].AuditLessonsKey, "id", "option");
 																						}
-																						//Sub-process keys
-																						if(doc[0].MIRABusinessUnit == "GTS Transformation"){
-																							doc[0].SubprocessDisp = assessableunit.getNames(doc[0].subprocessList, doc[0].subprocess, "WWBCITKey", "Name");
+																						else{
+																							deferred.reject({"status": 500, "error": dataIntAud.error});
 																						}
-
-																						//BU reporting groups
-																						doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-
-																						deferred.resolve({"status": 200, "doc": doc});
-																					}
+																					}).catch(function(err) { // end assessableunit.getInternalAudits
+																						console.log("[assessableunit][getInternalAudits]" + err.error.reason);
+																						deferred.reject({"status": 500, "error": err.error.reason});
+																					});
 																				}
 																				else{
-																					deferred.reject({"status": 500, "error": dataIntAud.error});
+																					deferred.reject({"status": 500, "error": spdata.error});
 																				}
-																			}).catch(function(err) { // end assessableunit.getInternalAudits
-																				console.log("[assessableunit][getInternalAudits]" + err.error.reason);
+																			}).catch(function(err) { // end assessableunit.getSubprocess
+																				console.log("[assessableunit][getSubprocess]" + err.error.reason);
 																				deferred.reject({"status": 500, "error": err.error.reason});
 																			});
 																		}
 																		else{
-																			deferred.reject({"status": 500, "error": spdata.error});
+																			deferred.reject({"status": 500, "error": adata.error});
 																		}
-																	}).catch(function(err) { // end assessableunit.getSubprocess
-																		console.log("[assessableunit][getSubprocess]" + err.error.reason);
+																	}).catch(function(err) { // end assessableunit.getALLKey
+																		console.log("[assessableunit][getALLKey]" + err.error.reason);
 																		deferred.reject({"status": 500, "error": err.error.reason});
 																	});
 																}
 																else{
-																	deferred.reject({"status": 500, "error": adata.error});
+																	deferred.reject({"status": 500, "error": pcudata.error});
 																}
-															}).catch(function(err) { // end assessableunit.getALLKey
-																console.log("[assessableunit][getALLKey]" + err.error.reason);
+															}).catch(function(err) { // end assessableunit.getParentCU
+																console.log("[assessableunit][getParentCU]" + err.error.reason);
 																deferred.reject({"status": 500, "error": err.error.reason});
 															});
-														}
-														else{
-															deferred.reject({"status": 500, "error": pcudata.error});
-														}
-													}).catch(function(err) { // end assessableunit.getParentCU
-														console.log("[assessableunit][getParentCU]" + err.error.reason);
-														deferred.reject({"status": 500, "error": err.error.reason});
-													});
-													break;
-												case "BU IOT":
-													//Get BU Country list
-													doc[0].BUCountryList = [];
-													assessableunit.getBUCountry(req, db, doc[0].MIRABusinessUnit).then(function(bucdata) {
-														if(bucdata.status==200 && !bucdata.error){
-															doc[0].BUCountryList = bucdata.doc;
-															doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
-															doc[0].Name = req.session.buname + " - " + doc[0].IOT;
+															break;
+														case "BU IOT":
+															//Get BU Country list
+															doc[0].BUCountryList = [];
+															assessableunit.getBUCountry(req, db, doc[0].MIRABusinessUnit).then(function(bucdata) {
+																if(bucdata.status==200 && !bucdata.error){
+																	doc[0].BUCountryList = bucdata.doc;
+																	doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT",req);
+																	doc[0].Name = req.session.buname + " - " + doc[0].IOT;
 
+																	if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
+																		doc[0].BUCountryIOTDisp = assessableunit.getNames(doc[0].BUCountryList, doc[0].BUCountryIOT, "docid", "name");
+																		doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
+																		doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid", "name");
+																	}
+																	deferred.resolve({"status": 200, "doc": doc});
+																}
+																else{
+																	deferred.reject({"status": 500, "error": bucdata.error});
+																}
+															}).catch(function(err) { // end assessableunit.getBUCountry
+																console.log("[assessableunit][getBUCountry]" + err.error.reason);
+																deferred.reject({"status": 500, "error": err.error.reason});
+															});
+															break;
+														case "BU IMT":
+														case "BU Country":
+															doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT", req);
+															doc[0].IMT = util.resolveGeo(doc[0].IMT, "IMT", req);
+															if (doc[0].DocSubType == "BU IMT") {
+																doc[0].Name = req.session.buname + " - " + doc[0].IMT;
+																doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
+															} else {
+																doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
+																doc[0].BUIMT = req.session.buname + " - " + doc[0].IMT;
+																doc[0].Name = req.session.buname + " - " + doc[0].Country;
+															}
 															if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-																doc[0].BUCountryIOTDisp = assessableunit.getNames(doc[0].BUCountryList, doc[0].BUCountryIOT, "docid", "name");
 																doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-																doc[0].RGRollupDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].RGRollup, "docid", "name");
 															}
 															deferred.resolve({"status": 200, "doc": doc});
-														}
-														else{
-															deferred.reject({"status": 500, "error": bucdata.error});
-														}
-													}).catch(function(err) { // end assessableunit.getBUCountry
-														console.log("[assessableunit][getBUCountry]" + err.error.reason);
-														deferred.reject({"status": 500, "error": err.error.reason});
-													});
-													break;
-												case "BU IMT":
-												case "BU Country":
-													doc[0].IOT = util.resolveGeo(doc[0].IOT, "IOT", req);
-													doc[0].IMT = util.resolveGeo(doc[0].IMT, "IMT", req);
-													if (doc[0].DocSubType == "BU IMT") {
-														doc[0].Name = req.session.buname + " - " + doc[0].IMT;
-														doc[0].BUIOT = req.session.buname + " - " + doc[0].IOT;
-													} else {
-														doc[0].Country = util.resolveGeo(doc[0].Country,"Country",req);
-														doc[0].BUIMT = req.session.buname + " - " + doc[0].IMT;
-														doc[0].Name = req.session.buname + " - " + doc[0].Country;
-													}
-													if(req.query.edit == undefined || ( req.query.edit != undefined && doc[0].editor && !doc[0].admin)){
-														doc[0].BRGMembershipDisp = assessableunit.getNames(doc[0].ReportingGroupList, doc[0].BRGMembership, "docid", "name");
-													}
-													deferred.resolve({"status": 200, "doc": doc});
-													break;
+															break;
 
-												default:
-													deferred.resolve({"status": 200, "doc": doc});
-													break;
-											}
+														default:
+															deferred.resolve({"status": 200, "doc": doc});
+															break;
+													}
+												}
+												else{
+													deferred.reject({"status": 500, "error": resdata.error});
+												}
+
+											}).catch(function(err) { // end assessableunit.getReportingGroups
+												console.log("[assessableunit][ReportingGroupList]" + err.error.reason);
+												deferred.reject({"status": 500, "error": err.error.reason});
+											});
+
 										}
 										else{
-											deferred.reject({"status": 500, "error": resdata.error});
+											deferred.reject({"status": 500, "error": data.error});
 										}
-
-									}).catch(function(err) { // end assessableunit.getReportingGroups
-										console.log("[assessableunit][ReportingGroupList]" + err.error.reason);
+									}).catch(function(err) { //end fieldCalc.getDocParams
+										console.log("[assessableunit][getDocParams]" + err.error.reason);
 										deferred.reject({"status": 500, "error": err.error.reason});
 									});
 
@@ -545,8 +584,8 @@ var assessableunit = {
 								else{
 									deferred.reject({"status": 500, "error": data.error});
 								}
-							}).catch(function(err) { //end fieldCalc.getDocParams
-								console.log("[assessableunit][getDocParams]" + err.error.reason);
+							}).catch(function(err) {
+								console.log("[assessableunit][getconstiasmtsobj]" + err.error.reason);
 								deferred.reject({"status": 500, "error": err.error.reason});
 							});
 
@@ -1569,11 +1608,12 @@ var assessableunit = {
 			var doc = [];
 			var iaObj = {
 				"selector":{
-					"$and": [
-						{"engagement": { "$gt": null }},
-						{"docType": "asmtComponent"},
-						{"compntType": "internalAudit"}
-					]
+					"engagement": { "$gt": null },
+					"docType": "asmtComponent",
+					"compntType": "internalAudit",
+					"auditReviewName":"CHQ Internal Audit",
+					"status":"Final",
+					"auditYear": req.session.quarter.split(" ")[0]
 				},
 				"fields": [
 					"_id",
@@ -1598,7 +1638,7 @@ var assessableunit = {
 					var docList = [];
 					if(data.body.docs.length > 0){
 						var docs = data.body.docs;
-
+						//Separate internal audit with parentid null to display in list. The ones with parent is for display only if it was selected
 						for (var i = 0; i < docs.length; ++i) {
 							if(docs[i].parentid != null && docs[i].parentid != "")
 								docList.push(docs[i]);

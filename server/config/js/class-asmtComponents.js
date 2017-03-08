@@ -9,6 +9,7 @@
 var q  = require("q");
 var utility = require('./class-utility.js');
 var accessrules = require('./class-accessrules.js');
+var fieldCalc = require('./class-fieldcalc.js');
 
 var components = {
 	getComponent: function(req, db){
@@ -300,9 +301,9 @@ var components = {
 				}).catch(function(err) {
 				  deferred.reject({"status": 500, "error": err.error.reason});
 				});
-		  }
-		  // existing document
-		  else{
+			}
+			// existing document
+			else{
 				var obj = {
 					"selector" : {
 						"_id": req.query.id,
@@ -319,7 +320,7 @@ var components = {
 					obj = {
 						"selector" : {
 							"_id": {"$gt":0},
-							"keyName": req.session.businessunit+ratingKey
+							"keyName": req.session.businessunit.replace(" ","")+ratingKey
 						}
 					};
 					db.find(obj).then(function(data2){
@@ -485,6 +486,16 @@ var components = {
 			db.find(obj).then(function(data){
 				var internal = data.body.docs[0];
 				internal["_id"] = req.query.id;
+				
+				//Validate if undefined - comes from AU edit mode when adding it before save
+				var hasParent = true;
+				if(internal.parentid == undefined){
+					
+					internal.parentid = req.query.pid;
+					hasParent = false;	
+					console.log("aqui undefined " + internal.parentid)					
+				}
+					
 				// get parent doc
 				db.get(internal.parentid).then(function(data){
 					var pdoc = data.body;
@@ -494,6 +505,10 @@ var components = {
 						// get fields from parent assessable unit
 						internal.parentdocsubtype = pdoc.DocSubType;
 						internal.parentname = pdoc.Name;
+						internal.reportingQuarter =  pdoc.CurrentPeriod;
+						if(!hasParent){
+							internal.size = pdoc.CUSize;
+						}
 						// ** Edit Mode **//
 						if(typeof req.query.edit !== "undefined"){
 							//Validate rating
@@ -846,7 +861,7 @@ var components = {
 				obj.targetCloseOriginal = req.body.targetCloseOriginal;
 				obj.targetCloseCurrent = req.body.targetCloseCurrent;
 				obj.comments = req.body.comments;
-				obj.Notes = req.body.Notes;
+				//obj.Notes = req.body.Notes;
 				obj.Links = req.body.attachIDs;
 				obj.parentid = req.body.parentid;
 
@@ -876,7 +891,7 @@ var components = {
 					obj.numRecommendationsOpen = req.body.numRecommendationsOpen;
 					obj.targetCloseCurrent = req.body.targetCloseCurrent;
 					obj.comments = req.body.comments;
-					obj.Notes = req.body.Notes;
+					//obj.Notes = req.body.Notes;
 					obj.Links = req.body.attachIDs;
 
 					db.save(obj).then(function(data){
@@ -1001,6 +1016,7 @@ var components = {
 				obj.targetCloseCurrent = req.body.targetCloseCurrent;
 				obj.comments = req.body.comments;
 				obj.parentid = req.body.parentid;
+				obj.Links = req.body.attachIDs;
 
 				db.save(obj).then(function(data){
 					deferred.resolve({"status": 200, "data": data.body});
@@ -1030,6 +1046,7 @@ var components = {
 					obj.targetCloseOriginal = req.body.targetCloseOriginal;
 					obj.targetCloseCurrent = req.body.targetCloseCurrent;
 					obj.comments = req.body.comments;
+					obj.Links = req.body.attachIDs;
 
 					db.save(obj).then(function(data){
 						deferred.resolve({"status": 200, "data": data.body});
@@ -1068,9 +1085,17 @@ var components = {
 					//obj.Log.push(addlog);
 					obj.size = req.body.size;
 					obj.comments = req.body.comments;
-					obj.Notes = req.body.Notes;
+					//obj.Notes = req.body.Notes;
 					obj.Links = req.body.attachIDs;
 					obj.rating = req.body.rating;
+					obj.numRecommendationsTotal = req.body.numRecommendationsTotal;
+					obj.numRecommendationsOpen = req.body.numRecommendationsOpen;
+					obj.parentid = req.body.parentid;
+					
+					var CUScore = fieldCalc.getCUMaxScore(req.body.size);
+					var finalscore = fieldCalc.getCUScore(req.body.rating, CUScore);
+					obj.score = finalscore;
+					
 					db.save(obj).then(function(data){
 						deferred.resolve({"status": 200, "data": data.body});
 					}).catch(function(err){
