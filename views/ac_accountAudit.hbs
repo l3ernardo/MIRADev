@@ -3,8 +3,8 @@
 <script src='./lib/moment.min.js'></script>
 <script src='./lib/fullcalendar.min.js'></script>
 <link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="./css/style.css">
-<script src='/js/asmtComponentsNonAudits.js'></script>
+<script src='/js/asmtComponentsAudits.js'></script>
+<script src="./js/attachments.js"></script>
 
 <input type="hidden" id="docTitle" value="{{reportingQuarter}}">
 <input type="hidden" id="ratingList" value="{{valuesToString ratingList}}">
@@ -15,7 +15,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 </script>
 <div class="ibm-container" style="width:80%">
 	<p style="text-align:right">
-		{{#unless newunit}}
+		{{#unless new}}
 		<span style="color: #5C87C4">Created by</span> {{Log.0.name}} <span style="color: #5C87C4">on</span> {{Log.0.date}} <span style="color: #5C87C4">at</span> {{Log.0.time}}<br>
 		{{/unless}}
 	</p>
@@ -31,15 +31,15 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			{{#if editmode}}
 
 			<tr>
-				<td width="25%">Account:</td><td><b>{{AssessableUnitName}}</b></td>
+				<td width="20%">Account:</td><td><b>{{AssessableUnitName}}</b></td>
 			</tr>
 			<tr>
-				<td>Audit or Review:</td><td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview}}}</td>
+				<td>Audit or Review<span class="ibm-required">*</span>:</td>
+				<td>{{{uniqueSelect "auditOrReview" auditList "name" "name" auditOrReview "required"}}}</td>
 			</tr>
 			<tr>
-				<td>Report date:</td><td>
-				<input type="text" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link">
-				</td>
+				<td>Report date<span class="ibm-required">*</span>:</td>
+				<td><input type="date" id="reportDate" name="reportDate" value="{{reportDate}}" class="ibm-calendar-link" required></td>
 			</tr>
 			{{#if procesDisplay}}
 			<tr>
@@ -47,25 +47,29 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			</tr>
 			{{/if}}
 			<tr>
-				<td>Rating:</td><td><select id="rating" name="rating"><option value='{{rating}}' selected>{{rating}}</option></select></td>
+				<td>Status/Rating<span class="ibm-required">*</span>:</td>
+				<td><select id="rating" name="rating" required><option value='{{rating}}' selected>{{rating}}</option></select></td>
 			</tr>
 			<tr>
-				<td>Recommendations:</td><td>Total:<input type="text" name="numRecommendationsTotal" value="{{numRecommendationsTotal}}" ><br/>Open:<input type="text" name="numRecommendationsOpen" value="{{numRecommendationsOpen}}" ></td>
+				<td># Recommendations<span class="ibm-required">*</span>:</td><td>
+				<span style="display: inline-block; width: 75px;">Total:</span><input type="text" name="numRecommendationsTotal" id="numRecommendationsTotal" value="{{numRecommendationsTotal}}" required><br/><br/>
+				<span style="display: inline-block; width: 75px;">Open:</span><input type="text" name="numRecommendationsOpen" id="numRecommendationsOpen" value="{{numRecommendationsOpen}}" required></td>
 			</tr>
 			<tr>
-				<td>Target to close:</td><td>Original:
-					{{#if new}}<input type="text" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
+				<td>Target to close:</td><td>
+					<span style="display: inline-block; width: 72px;">Original:</span>
+					{{#if new}}<input type="date" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
 					{{else}}<input type="hidden" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}">
-					<br/>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: <input type="text" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}" class="ibm-calendar-link">
+					{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/><br/><span style="display: inline-block; width: 72px;">Current:</span><input type="date" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}" class="ibm-calendar-link">
 					{{/if}}
 				</td>
 			</tr>
 			<tr>
-				<td>Comments:</td><td><input type="text" name="comments" value="{{comments}}" ></td>
+				<td>Comments:</td><td><textarea name="comments" cols="100">{{comments}}</textarea></td>
 			</tr>
 			{{else}}
 			<tr>
-				<td width="25%">Account:</td><td><b>{{AssessableUnitName}}</b></td>
+				<td width="20%">Account:</td><td><b>{{AssessableUnitName}}</b></td>
 			</tr>
 			<tr>
 				<td>Audit or Review:</td><td>{{auditOrReview}}</td>
@@ -82,17 +86,18 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 				<td>Rating:</td><td>{{{ rating}}}</td>
 			</tr>
 			<tr>
-				<td>Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/>Open:{{numRecommendationsOpen}}</td>
+				<td>Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/><br/>Open:{{numRecommendationsOpen}}</td>
 			</tr>
 			<tr>
-				<td>Target to close:</td><td>Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/>Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>
+				<td>Target to close:</td><td>Original: {{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}<br/><br/>Current: {{{openRiskDisplay numRecommendationsOpen targetCloseCurrent}}}</td>
 			</tr>
 			<tr>
 				<td>Comments:</td><td>{{comments}}</td>
 			</tr>
 			{{/if}}
 		</table>
-
+		<!-- NOTES & LINKS SECTION -->
+		{{>comments}}
 		<!-- BUTTONS AREA -->
 		{{>buttons}}
 	</form>

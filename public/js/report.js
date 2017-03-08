@@ -6,7 +6,7 @@ function tableToReport(table){
 	var line = "";
 	var tab = $(table);
 	var theader=$('#'+table+' tr:eq(0) th');
-	for (c=1;c<theader.length;c++){
+	for (c=0;c<theader.length;c++){
 		test='#'+table+' tr:eq(0) th:eq('+c+')';
 		line=line+"<th>"+$(test).text()+"</th>";
 	}
@@ -38,7 +38,7 @@ function tableToReport(table){
 
 		for(j = 1; j<=array2.length; j++){
 			var index=array2[j-1];
-			var r1= field4rows[index-2];
+			var r1= field4rows[index-1];
 			line="<tr>";
 
 			for(var obj1 in r1){
@@ -86,18 +86,18 @@ $(document).ready(function() {
 	y=url.indexOf("reportcuauditlessons");
 	$("#reports_treeview1").treetable({expandable: true });
 	$("#reports_treeview2").treetable({expandable: true });
-
+/*
 	$('#reports_treeview1').DataTable({
 		select: true,
 		"paginate": false,
 		"scrollX": true,
-		"scrollY": 250,
+		//"scrollY": 250,
 		order: [],
 		 columnDefs: [ {
 			targets: [0,1,2,3,6,7,8,9],
 			orderable: false
 		} ]
-	});
+	});*/
 	$('#reports_treeview2').DataTable({
 		select: true,
 		"paginate": false,
@@ -107,16 +107,12 @@ $(document).ready(function() {
 	});
 	$('#reports_table').DataTable({
 		select: true,
-		"paginate": false,
 		"scrollX": true,
-		"scrollY": 250,
 		"ordering":false
 	});
 	$('#reports_table2').DataTable({
 		select: true,
-		"paginate": false,
 		"scrollX": true,
-		"scrollY": 250,
 		order: [],
 		 columnDefs: [ {
 			targets: [2,3,4,5,6,7],
@@ -134,12 +130,11 @@ $(document).ready(function() {
 			tableReport = tableToReport('reports_table2');
 		}
 		else{
-
-		tableReport = tableToReport('reports_table');
-
+			tableReport = tableToReport('reports_table');
+		}
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 		//generateReport($(this), "xls");
-	}});
+	});
 	$('#lnk_exportods').click(function(){
 		//generateReport($(this), "ods");
 		if(t!=-1){

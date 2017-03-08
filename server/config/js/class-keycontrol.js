@@ -76,16 +76,20 @@ var calculateKCTab = {
           }
           break;
         case "Country Process":
-          doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(1);
-          if (doc[0].AUDefectRate == 0) {
-            doc[0].AUDefectRate = parseInt(doc[0].AUDefectRate).toFixed(0);
-          }
-          if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
-            doc[0].RAGStatus = "Unsat";
-          } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
-            doc[0].RAGStatus = "Sat";
+          if (doc[0].AUDefectRate == undefined || doc[0].AUDefectRate=="") {
+            doc[0].RAGStatus = "";
           } else {
-            doc[0].RAGStatus = "Marg";
+            doc[0].AUDefectRate = parseFloat(doc[0].AUDefectRate).toFixed(1);
+            if (doc[0].AUDefectRate == 0) {
+              doc[0].AUDefectRate = parseFloat(doc[0].AUDefectRate).toFixed(0);
+            }
+            if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
+              doc[0].RAGStatus = "Unsat";
+            } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
+              doc[0].RAGStatus = "Sat";
+            } else {
+              doc[0].RAGStatus = "Marg";
+            }
           }
           // *** Start of Reporting Country Testing Data (1st embedded view in Testing tab) *** //
           //Sorting for RCTest_treeview

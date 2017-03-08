@@ -1,39 +1,41 @@
-<link href="./css/jquery.treetable.css" rel="stylesheet" type="text/css" />
+<link href="./css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+<script src="./lib/jquery.dataTables.js"></script>
 
-<div class="ibm-container" style="width:100%">
+<div class="ibm-container">
 	<div class="ibm-container-body">
-	<p>
-	<h3>Please select an engagement from the list</h3>
-	</p>
-		<table id="EngagementbyId" cellspacing="0" cellpadding="0" border="0" class="mira-dashboard-table" >
+		<p>
+		<h3>Please select an engagement from the list</h3>
+		</p>
+		<br/>
+		<table id="EngagementbyId" cellspacing="0" cellpadding="0" border="0" width="100%" class="display">
 			<thead>
 					<tr>
-						<th scope="col">&nbsp;</th>
-						<th scope="col">Engagement</th>
-						<th scope="col">Location</th>
-						<th scope="col">Location Description</th>
-						<th scope="col">Organization</th>
-						<th scope="col">Process</th>
-						<th scope="col">Added to AQ DB</th>
-						<th scope="col">Rating</th>
+						<th style="width:5%">&nbsp;</th>
+						<th style="width:10%">Engagement</th>
+						<th style="width:16%">Location</th>
+						<th style="width:16%">Location Description</th>
+						<th style="width:16%">Organization</th>
+						<th style="width:16%">Process</th>
+						<th style="width:11%">Added to AQ DB</th>
+						<th style="width:10%">Rating</th>
 					</tr>
 			</thead>
 			<tbody>
 			{{#each IntAud}}
 				<tr data-tt-id={{_id}} data-tt-parent-id={{parentid}}>
-					<td><input type="radio" name="IntAud" id="IAID_{{_id}}" value="{{engagement}}" idintaud="{{_id}}" addedToAQDB="{{addedToAQDB}}" rating="{{rating}}" size1="{{size}}"  score="{{score}}"{{#if (eq _id ../parentid)}}checked {{/if}}/></td>
-					<td>{{engagement}}</td>
-					<td>{{location}}</td>
-					<td>{{locationdescription}}</td>
-					<td>{{organization}}</td>
-					<td>{{RPTG_PROCESS}}</td>
-					<td>{{addedToAQDB}}</td>
-					{{{ratingDisplayView rating "rating"}}}
+					<td style="width:5%"><input type="radio" name="IntAud" id="IAID_{{_id}}" value="{{engagement}}" idintaud="{{_id}}" addedToAQDB="{{addedToAQDB}}" rating="{{rating}}" size1="{{size}}"  score="{{score}}" {{#if (eq _id ../parentid)}}checked {{/if}}/></td>
+					<td style="width:10%">{{engagement}}</td>
+					<td style="width:16%">{{location}}</td>
+					<td style="width:16%">{{locationDescription}}</td>
+					<td style="width:16%">{{organization}}</td>
+					<td style="width:16%">{{RPTG_PROCESS}}</td>
+					<td style="width:11%">{{addedToAQDB}}</td>
+					{{{ratingDisplayView rating "rating" 10}}}
 				</tr>
 			{{/each}}
 		  </tbody>
 		</table>
-		<div class="ibm-buttons-row" style="box-sizing: border-box; width:95%" >
+		<div class="ibm-buttons-row" style="box-sizing: border-box;" >
 		<p>
 			<input class="ibm-btn-pri" type="button" id="btn_okIntAudId" value="OK"/>
 			<span class="ibm-sep">&nbsp;</span>
@@ -44,6 +46,17 @@
 </div>
 <script>
 	$(document).ready(function() {
+		$('#EngagementbyId').DataTable({
+			select:true,
+			"scrollX": true,
+			"scrollY": 250,
+			"paginate": false,
+			order: [],
+			columnDefs: [ {
+				targets: [0],
+				orderable: false
+			} ]
+		});
 		var listdel=$('#InternalAuditsDataDel').val();
 		if($("#btn_okIntAudId").length > 0){
 			$("#btn_okIntAudId").click(function() {
