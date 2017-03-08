@@ -83,7 +83,6 @@ var calculateKCTab = {
             if (doc[0].AUDefectRate == 0) {
               doc[0].AUDefectRate = parseFloat(doc[0].AUDefectRate).toFixed(0);
             }
-            console.log("2doc[0].AUDefectRate: " + doc[0].AUDefectRate);
             if (doc[0].AUDefectRate >= doc[0].UnsatThresholdPercent) {
               doc[0].RAGStatus = "Unsat";
             } else if (doc[0].AUDefectRate < doc[0].MargThresholdPercent) {
