@@ -8,7 +8,7 @@
 		<tr>
 			{{#if RatingEditable}}
 				<td><label for="PeriodRating">Holistic Rating:<span class="ibm-required">*</span></label></td>
-				<td>		
+				<td>
 					<span>{{{uniqueSelect "PeriodRating" parameters.PeriodRating.0.options "name" "name" PeriodRating}}}</span><br />
 					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 				</td>
@@ -16,13 +16,13 @@
 				<td>Holistic Rating:</td>
 				<td>
 					<input type="hidden" name="PeriodRating" id="PeriodRating" value="{{PeriodRating}}">
-					{{PeriodRating}}<br />
+					{{{ratingDisplay PeriodRating "PeriodRating"}}}<br />
 					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 				</td>
 			{{/if}}
 		</tr>
 		<tr>
-			{{#if RJandT2SEditable}} 
+			{{#if RJandT2SEditable}}
 				<td><label for="MIRARatingJustification">Rating Justification:</label></td>
 				<td>
 					<span><input type="text" name="MIRARatingJustification" id="MIRARatingJustification" value="{{MIRARatingJustification}}" size="135"></span>
