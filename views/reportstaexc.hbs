@@ -36,7 +36,7 @@
 				{{#each doc}}
 					<tr data-tt-id={{id}} data-tt-parent-id={{parent}}>
 						<!--<td style="width:1%;" nowrap><input type="checkbox" class="mira_checkbox_tree"/></td>-->
-					    <td style="width:10%;" nowrap>{{#unless catEntry}}<input type="checkbox" class="mira_checkbox_tree"/>{{/unless}} {{GroupingName}}</td>
+					    <td style="width:10%;" nowrap>{{#unless catEntry}}<input type="checkbox" class="mira_checkbox_tree"/>{{/unless}} {{#if catEntry}}{{GroupingName}}{{/if}}</td>
 						<td style="width:10%;" nowrap>{{IOTName}}</td>
 						{{#if cutype}}
 							<td style="width:10%;">{{cutype}}</td>
