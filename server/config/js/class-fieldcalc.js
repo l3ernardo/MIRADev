@@ -661,7 +661,6 @@ var calculatefield = {
 				// Populate View Data
 				switch (doc[0].ParentDocSubType) {
 					case "Global Process":
-
 						doc[0].asmtsdocs = [];
 						doc[0].auditableAUIds = [];
 						var asmtsdocs = asmtsdata.body.docs;
@@ -672,7 +671,8 @@ var calculatefield = {
 						var CPassmts = {};
 						doc[0].AUDocs = {};
 						// For Current Quarter Country Process Defect Rate Exceptions
-						doc[0].CPDRException = [];
+						//kct2
+						doc[0].KC2Test1Data = [];
 						// For CP Financial Process Defect Rates that are Marg counter
 						var margCPDRFin = 0;
 						// For CP Financial Process Defect Rates that are Unsat counter
@@ -714,7 +714,7 @@ var calculatefield = {
 									asmtsdocs[i].processCategory = calculatefield.getProcessCategory(asmtsdocs[i].GPWWBCITKey, doc);
 									if (asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
 										asmtsdocs[i].RAGStatus = "Unsat";
-										doc[0].CPDRException.push(asmtsdocs[i]);
+										doc[0].KC2Test1Data.push(asmtsdocs[i]);
 										if (asmtsdocs[i].processCategory == "Financial") {
 											unsatCPDRFin += 1;
 										}else {
@@ -724,7 +724,7 @@ var calculatefield = {
 										asmtsdocs[i].RAGStatus = "Sat";
 									} else {
 										asmtsdocs[i].RAGStatus = "Marg";
-										doc[0].CPDRException.push(asmtsdocs[i]);
+										doc[0].KC2Test1Data.push(asmtsdocs[i]);
 										if (asmtsdocs[i].processCategory == "Financial") {
 											margCPDRFin += 1;
 										}else {
