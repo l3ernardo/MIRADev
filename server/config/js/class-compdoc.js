@@ -187,8 +187,8 @@ var getDocs = {
 						doc[0].CountryControlsData = [];
 						doc[0].RiskView1Data =  [];
 						doc[0].RiskView2Data = [];
-						doc[0].RCTest2Data = [];
-						doc[0].RCTest3Data = [];
+						doc[0].KC2Test2Data = [];
+						doc[0].KC2Test3Data = [];
 						// For BU Country Audits & Reviews Tab
 						doc[0].InternalAuditData = [];
 						doc[0].PPRData = [];
@@ -236,7 +236,8 @@ var getDocs = {
 							else if (comps[i].compntType == "countryControls"){
 								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
-								doc[0].RCTest2Data.push(comps[i]);
+								doc[0].KC2Test2Data.push(comps[i]);
+								//doc[0].RCTest2Data.push(comps[i]);
 								// this is dummy content only while waiting for correct data so that Irving can help work on the treeables
 								// doc[0].TRExceptionControls.push(comps[i]);
 								if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
@@ -261,7 +262,8 @@ var getDocs = {
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								// For Key Controls Testing Tab
 								if (comps[i].reportingCountry == doc[0].Country) {
-									doc[0].RCTest3Data.push(comps[i]);
+									doc[0].KC2Test2Data.push(comps[i]);
+									//doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab
 								if (comps[i].sampleCountry == doc[0].Country) {

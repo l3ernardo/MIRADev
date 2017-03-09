@@ -78,6 +78,7 @@ var assessableunit = {
 						case "Business Unit":
 							constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
 									"$or":
@@ -91,10 +92,10 @@ var assessableunit = {
 														]
 													}
 												]
-											},
-											{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+											}
 										]
-								}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 							doc[0].GPData = [];
 							doc[0].BUIOTData = [];
@@ -104,14 +105,15 @@ var assessableunit = {
 						case "Global Process":
 							var constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
 									"GlobalProcess": doc[0].GlobalProcess,
 									"$or": [
-										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["Country Process","Sub-process"]}}] },
-										{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Global Process"},{"parentid": doc[0]._id}] }
+										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["Country Process","Sub-process"]}}] }
 									]
-								}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 							doc[0].CPData = [];
 							doc[0].SPData = [];
@@ -130,13 +132,14 @@ var assessableunit = {
 						case "BU IOT":
 							var constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
-									"$or": [
-										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["BU IMT","Controllable Unit"]}}] },
-										{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
-									]
-								}
+									"key": "Assessable Unit",
+									"parentid": doc[0]._id,
+									"DocSubType": {"$or":["BU IMT","Controllable Unit"]}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 							doc[0].BUIMTData = [];
 							doc[0].CUData = [];
@@ -144,13 +147,14 @@ var assessableunit = {
 						case "BU IMT":
 							var constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
 									"$or": [
-										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["BU Country","Controllable Unit"]}}] },
-										{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": {"$or":["BU Country","Controllable Unit"]}}] }
 									]
-								}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 							doc[0].BUCountryData = [];
 							doc[0].CUData = [];
@@ -158,14 +162,15 @@ var assessableunit = {
 						case "BU Country":
 							var constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
 									"$or": [
 										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": "Controllable Unit"}] },
-										{ "$and": [{"key": "Assessable Unit"},{"Country": util.resolveGeo(doc[0].Country, "Country",req)},{"DocSubType": "Country Process"}] },
-										{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+										{ "$and": [{"key": "Assessable Unit"},{"Country": util.resolveGeo(doc[0].Country, "Country",req)},{"DocSubType": "Country Process"}] }
 									]
-								}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 							doc[0].CPData = [];
 							doc[0].CUData = [];
@@ -173,27 +178,29 @@ var assessableunit = {
 						case "Controllable Unit":
 							var constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
 									"parentid": doc[0]._id,
 									"$or": [
-										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": "Account"}] },
-										{ "$and": [{"key": "Assessment"}] }
+										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": "Account"}] }
 									]
-								}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 							doc[0].AccountData = [];
 							break;
 						case "Country Process":
 							var constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
 									"$or": [
-										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": "Controllable Unit"},{"RelevantCP": {"$in": [doc[0].Name]}}] },
-										{ "$and": [{"key": "Assessment"},{"ParentDocSubType": "Country Process"},{"parentid": doc[0]._id}] }
+										{ "$and": [{"key": "Assessable Unit"},{"parentid": doc[0]._id},{"DocSubType": "Controllable Unit"},{"RelevantCP": {"$in": [doc[0].Name]}}] }
 									]
-								}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 
 							doc[0].ControlData = [];
@@ -202,13 +209,14 @@ var assessableunit = {
 						case "BU Reporting Group":
 							var constiobj = {
 								selector:{
+									"Name": {"$gt":0},
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
 									"$or": [
-										{ "$and": [ {"key": "Assessable Unit"},{"DocSubType": {"$or":["Controllable Unit","Country Process","BU Country","BU IMT","BU IOT","GlobalProcess"]}},{"BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}} ] },
-										{ "$and": [{"key": "Assessment"},{"parentid": doc[0]._id}] }
+										{ "$and": [ {"key": "Assessable Unit"},{"DocSubType": {"$or":["Controllable Unit","Country Process","BU Country","BU IMT","BU IOT","GlobalProcess"]}},{"BRGMembership": {"$regex": "(?i)"+doc[0]._id+"(?i)"}} ] }
 									]
-								}
+								},
+								"sort": [{"Name": "asc"}]
 							};
 							doc[0].GPData = [];
 							doc[0].BUIOTData = [];
@@ -276,23 +284,11 @@ var assessableunit = {
 									else doc[0].SPData.push(toadd);
 								}
 							}
-							/* Check if user can create assessment */
-							if (
-									(doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") &&
-									doc[0].Status == "Active" &&
-									hasCurQAsmt == false &&
-									(doc[0].editor || doc[0].admin) &&
-									(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group" || doc[0].DocSubType == "Account")
-								 ) {
-								doc[0].CreateAsmt = true;
-							}
 							/* Calculate for Instance Design Specifics and parameters*/
-							//console.log("MBU: "+doc[0].MIRABusinessUnit);
-							//console.log("BU session: " + req.session.businessunit);
-
 							doc[0].EnteredBU = doc[0].MIRABusinessUnit;
 							// Get current qtr and previous qtr assessments of constituent units
 							var prevQtr = fieldCalc.getPrevQtr(doc[0].CurrentPeriod);
+							constiAsmtsIds.push(doc[0]._id) // for the assessments of the assessable unit
 							var constiasmtsobj = {
 								selector:{
 									"_id": {"$gt":0},
@@ -307,6 +303,28 @@ var assessableunit = {
 									// Get data from asmts of constituent units
 
 									for (var i = 0; i < constiasmtdocs.length; ++i) {
+										if (doc[0]._id == constiasmtdocs[i].parentid) {
+											toadd = {
+												"docid": constiasmtdocs[i]._id,
+												"CurrentPeriod": constiasmtdocs[i].CurrentPeriod,
+												"PeriodRating": constiasmtdocs[i].PeriodRating,
+												"Owner": constiasmtdocs[i].Owner,
+												"Target2Sat": constiasmtdocs[i].Target2Sat
+											};
+											doc[0].AssessmentData.push(toadd);
+											if (constiasmtdocs[i].CurrentPeriod ==  doc[0].CurrentPeriod) {
+												hasCurQAsmt = true;
+												if (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") {
+													doc[0].RatingJustification = constiasmtdocs[i].MIRARatingJustification;
+												} else {
+													if (constiasmtdocs[i].WWBCITStatus != "Draft") {
+														doc[0].RatingJustification = constiasmtdocs[i].WWBCITRatingJustification;
+													} else {
+														doc[0].RatingJustification = constiasmtdocs[i].MIRARatingJustification;
+													}
+												}
+											}
+										}
 										if (doc[0].CPData !== undefined) fieldCalc.addConstiDocData(doc, "CPData", constiasmtdocs[i], prevQtr);
 										if (doc[0].CUData !== undefined) fieldCalc.addConstiDocData(doc, "CUData", constiasmtdocs[i], prevQtr);
 										if (doc[0].GPData !== undefined) fieldCalc.addConstiDocData(doc, "GPData", constiasmtdocs[i], prevQtr);
@@ -316,6 +334,17 @@ var assessableunit = {
 										if (doc[0].RGData !== undefined) fieldCalc.addConstiDocData(doc, "RGData", constiasmtdocs[i], prevQtr);
 										if (doc[0].AccountData !== undefined) fieldCalc.addConstiDocData(doc, "AccountData", constiasmtdocs[i], prevQtr);
 										if (doc[0].SPData !== undefined) fieldCalc.addConstiDocData(doc, "SPData", constiasmtdocs[i], prevQtr);
+									}
+
+									/* Check if user can create assessment */
+									if (
+											(doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") &&
+											doc[0].Status == "Active" &&
+											hasCurQAsmt == false &&
+											(doc[0].editor || doc[0].admin) &&
+											(doc[0].DocSubType == "BU Country" || doc[0].DocSubType == "BU IMT" || doc[0].DocSubType == "BU IOT" || doc[0].DocSubType == "BU Reporting Group" || doc[0].DocSubType == "Account")
+										 ) {
+										doc[0].CreateAsmt = true;
 									}
 
 									fieldCalc.getDocParams(req, db, doc).then(function(data) {
