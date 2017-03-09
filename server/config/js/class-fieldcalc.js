@@ -96,7 +96,7 @@ var calculatefield = {
 		var prevYr = current[0]-1;
 		switch (current[1]) {
 			case "1":
-			p4Qtrs.push(prevYr1+" Q1");
+			p4Qtrs.push(prevYr+" Q1");
 			p4Qtrs.push(prevYr+" Q2");
 			p4Qtrs.push(prevYr+" Q3");
 			p4Qtrs.push(prevYr+" Q4");
