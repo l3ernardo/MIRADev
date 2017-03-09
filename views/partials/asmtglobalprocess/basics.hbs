@@ -15,7 +15,7 @@
 			{{else}}
 				<td>Holistic Rating:</td>
 				<td><input type="hidden" name="PeriodRating" id="PeriodRating" value="{{PeriodRating}}">
-				    {{PeriodRating}}<br>
+						{{{ratingDisplay PeriodRating "PeriodRating"}}}<br />
 					<span class="mira-subdata">Rating last changed from {{PrevRatingUpdate}} to {{PeriodRating}} by: </span><span class="mira-subdatablue">{{RatingChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{RatingChangeWhen}}</span>
 				</td>
 			{{/if}}
