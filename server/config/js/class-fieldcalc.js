@@ -26,9 +26,9 @@ var calculatefield = {
 				doc[0].AuditsReviewsAssessableUnits = JSON.parse(JSON.stringify(doc[0].AUDocsObj));
 			}
 			if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transform") {
-				//Create a copy of the asmt CRM docs (GTS use only) for BU Country
+				//Create a copy of the asmt CRM docs (GTS use only)
 				doc[0].AuditsReviewsCRMDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsCRM));
-				//Create a copy of the asmt IS Delivery docs (GTS use only) for BU Country
+				//Create a copy of the asmt IS Delivery docs (GTS use only)
 				doc[0].AuditsReviewsISDeliveryDocs = JSON.parse(JSON.stringify(doc[0].asmtsdocsDelivery));
 			}
 		}
@@ -92,7 +92,7 @@ var calculatefield = {
 
 	getPrev4Qtrs: function(currentQtr) {
 		var p4Qtrs = [];
-		var current = currentQtr.split("Q");
+		var current = currentQtr.split(" Q");
 		var prevYr = current[0]-1;
 		switch (current[1]) {
 			case "1":
@@ -125,7 +125,7 @@ var calculatefield = {
 
 	getPrevQtr: function(currentQtr) {
 		var prevQtr;
-		var current = currentQtr.split("Q");
+		var current = currentQtr.split(" Q");
 		var prevYr = current[0]-1;
 		switch (current[1]) {
 			case "1":
@@ -173,6 +173,22 @@ var calculatefield = {
 		}
 		cuscore = ratingscore * cumaxscore
 		return cuscore;
+	},
+
+	addConstiDocData: function(doc, constiDocArr, constiAsmtDoc, prevQtr) {
+		for (var j = 0; j < doc[0][constiDocArr].length; j++) {
+			// Current qtr asmt doc
+			// console.log(constiAsmtDoc.CurrentPeriod + "::" + doc[0].CurrentPeriod + " || " + doc[0][constiDocArr][j].docid + "::" +  constiAsmtDoc._id);
+			if (doc[0][constiDocArr][j].docid == constiAsmtDoc.parentid && constiAsmtDoc.CurrentPeriod == doc[0].CurrentPeriod) {
+				doc[0][constiDocArr][j].PeriodRating = constiAsmtDoc.PeriodRating;
+				doc[0][constiDocArr][j].AUNextQtrRating = constiAsmtDoc.NextQtrRating;
+				doc[0][constiDocArr][j].Target2Sat = constiAsmtDoc.Target2Sat;
+			}
+			// previous qtr asmt doc
+			if (doc[0][constiDocArr][j].docid == constiAsmtDoc.parentid && constiAsmtDoc.CurrentPeriod == prevQtr) {
+				doc[0][constiDocArr][j].PeriodRatingPrev = constiAsmtDoc.PeriodRating;
+			}
+		}
 	},
 
 	getCompMIRABusinessUnit: function(doc) {
@@ -295,6 +311,8 @@ var calculatefield = {
 			}
 			// Get Parameters for Assessments
 			else {
+				doc[0].AuditCUISObj = {};
+				doc[0].AuditCUOTHERObj = {};
 				if (doc[0].MIRABusinessUnit == "GTS") {
 					// GTS Assessment Doc Parameters
 					if (doc[0].ParentDocSubType == "Controllable Unit") {
@@ -387,13 +405,21 @@ var calculatefield = {
 						doc[0].AuditCUIS = dataParam.parameters.AuditCUIS;
 						for (var j = 0; j < dataParam.parameters.AuditCUIS[0].options.length; ++j) {
 							doc[0].CUCatList.push(dataParam.parameters.AuditCUIS[0].options[j]);
+							if (doc[0].DocType == "Assessment") {
+								doc[0].AuditCUISObj[dataParam.parameters.AuditCUIS[0].options[j].name] = true;
+							}
 						}
 					}
+					//console.log(doc[0].AuditCUISObj);
 					if (dataParam.parameters.AuditCUOTHER) {
 						doc[0].AuditCUOTHER = dataParam.parameters.AuditCUOTHER;
 						for (var j = 0; j < dataParam.parameters.AuditCUOTHER[0].options.length; ++j) {
 							doc[0].CUCatList.push(dataParam.parameters.AuditCUOTHER[0].options[j]);
+							if (doc[0].DocType == "Assessment") {
+								doc[0].AuditCUOTHERObj[dataParam.parameters.AuditCUOTHER[0].options[j].name] = true;
+							}
 						}
+						//console.log(doc[0].AuditCUOTHERObj);
 						doc[0].CUCatList.sort(function(a, b){
 					    var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase()
 					    if (nameA < nameB) //sort string ascending
@@ -635,7 +661,6 @@ var calculatefield = {
 				// Populate View Data
 				switch (doc[0].ParentDocSubType) {
 					case "Global Process":
-
 						doc[0].asmtsdocs = [];
 						doc[0].auditableAUIds = [];
 						var asmtsdocs = asmtsdata.body.docs;
@@ -646,7 +671,8 @@ var calculatefield = {
 						var CPassmts = {};
 						doc[0].AUDocs = {};
 						// For Current Quarter Country Process Defect Rate Exceptions
-						doc[0].CPDRException = [];
+						//kct2
+						doc[0].KC2Test1Data = [];
 						// For CP Financial Process Defect Rates that are Marg counter
 						var margCPDRFin = 0;
 						// For CP Financial Process Defect Rates that are Unsat counter
@@ -688,7 +714,7 @@ var calculatefield = {
 									asmtsdocs[i].processCategory = calculatefield.getProcessCategory(asmtsdocs[i].GPWWBCITKey, doc);
 									if (asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
 										asmtsdocs[i].RAGStatus = "Unsat";
-										doc[0].CPDRException.push(asmtsdocs[i]);
+										doc[0].KC2Test1Data.push(asmtsdocs[i]);
 										if (asmtsdocs[i].processCategory == "Financial") {
 											unsatCPDRFin += 1;
 										}else {
@@ -698,7 +724,7 @@ var calculatefield = {
 										asmtsdocs[i].RAGStatus = "Sat";
 									} else {
 										asmtsdocs[i].RAGStatus = "Marg";
-										doc[0].CPDRException.push(asmtsdocs[i]);
+										doc[0].KC2Test1Data.push(asmtsdocs[i]);
 										if (asmtsdocs[i].processCategory == "Financial") {
 											margCPDRFin += 1;
 										}else {
@@ -764,7 +790,7 @@ var calculatefield = {
 							for (var i = 0; i < asmts.body.docs.length; i++) {
 								if(CUauditables[asmts.body.docs[i].parentid]){
 
-									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
+									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize;
 									asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
 									asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
 									if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
@@ -961,7 +987,7 @@ var calculatefield = {
 								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
-									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
+									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize;
 									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
 									//doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
 									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].asmtsdocs[i].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
@@ -1156,7 +1182,7 @@ var calculatefield = {
 								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
-									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
+									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize;
 									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
 									//doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
 									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].asmtsdocs[i].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
@@ -1297,7 +1323,7 @@ var calculatefield = {
 						doc[0].margCPDROps = margCPDROps;
 						doc[0].unsatCPDROps = unsatCPDROps;
 						for(var key in CPauditables){
-							CPassmts[key].CUSize = CPauditables[key].CUSize
+							CPassmts[key].CUSize = CPauditables[key].CUSize;
 							CPassmts[key].CUMaxScore = calculatefield.getCUMaxScore(CPassmts[key].CUSize);
 							CPassmts[key].CUScore = calculatefield.getCUScore(CPassmts[key].PeriodRating, CPassmts[key].CUMaxScore);
 							doc[0].AUData.push(CPassmts[key]);
@@ -1321,7 +1347,7 @@ var calculatefield = {
 							for (var i = 0; i < asmts.body.docs.length; i++) {
 								if(CUauditables[asmts.body.docs[i].parentid]){
 
-									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
+									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize;
 									asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
 									asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
 									if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
@@ -1526,6 +1552,19 @@ var calculatefield = {
 										bocEx = bocEx + 1;
 									}
 
+									// Process Ratings tab data for GlobalProcess
+									toadd = {
+										"docid":doc[0].asmtsdocs[i]._id,
+										"country":doc[0].asmtsdocs[i].Country,
+										"iot":doc[0].asmtsdocs[i].IOT,
+										"ratingcategory":doc[0].asmtsdocs[i].RatingCategory,
+										"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+										"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+										"targettosat":doc[0].asmtsdocs[i].Target2Sat,
+										"targettosatprev":doc[0].asmtsdocs[i].Target2SatPrev,
+										"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
+									};
+									doc[0].CPAsmtDataPR1view.push(toadd);
 
 
 
