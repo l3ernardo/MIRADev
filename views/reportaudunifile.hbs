@@ -26,7 +26,7 @@
 				<thead>
 					<tr>
 						<!--<th style="width:1%;" scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>-->
-						<th scope="col"></th>
+						<th scope="col"><input type="checkbox" class="mira_checkbox_tree" id="mira_checkbox_tree" name="mira_checkbox "/></th>
 					  <th scope="col">Auditable Unit Name</th>
 						<th scope="col" FF0808>Count</th>
 						<th scope="col">Type</th>
@@ -48,7 +48,7 @@
 				<tbody>
 				{{#each doc}}
 					<tr data-tt-id={{id}} data-tt-parent-id={{parent}}>
-						<td nowrap><font COLOR="red">{{catName}}</font></td>
+						<td nowrap>{{#unless catEntry}}<input type="checkbox" class="mira_checkbox_tree"/>{{/unless}}<font COLOR="red">{{catName}}</font></td>
 						<td><a href="/assessment?id={{id}}">{{AssessableUnitName}}</a></td>
 						<td>{{total}}</td>
 						<td>{{{ParentDocSubType}}}</td>
@@ -66,24 +66,7 @@
 						<td>{{CUScore}}</td>
 						<td>{{ReviewComments}}</td>
 								<!--<td><input type="checkbox" class="mira_checkbox_tree"/></td>
-							<th><font COLOR="red">{{catName}}</font></th>
-						<th>{{total}}</font></th>
-						<td><a href="/assessableunit?id='{{id}}'">{{Name}}</a></td>
-						<td>{{Count}}</td>
-						<td>{{{in_Type DocSubType DocSubType}}}</td>
-					    <td>{{AuditableProcess}}</td>
-                        <td>{{AuditReadiness}}</td>
-                        <td>{{CQ4}}</td>
-						<td>{{CQ3}}</td>
-                        <td>{{CQ2}}</td>
-                        <td>{{CQ1}}</td>
-						<td>{{AUNextQtrRating}}</td>
-						<td>{{Target2Sat}}</td>
-                        <td></td>
-						<td>{{MIRAAssessmentStatus}}</td>
-						<td>{{WWBCITAssessmentStatus}}</td>
-						<td>{{PeriodRatingPrev}}</td>
-						<td>{{PeriodRating}}</td>-->
+							-->
 					</tr>
 				{{/each}}
 				</tbody>
