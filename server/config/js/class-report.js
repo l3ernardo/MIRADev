@@ -680,17 +680,25 @@ var report = {
           var catList = {};
           var exportInfo = [];
           var asmtsids = {};
-          finalList.push({catName: "Total", total: doc.length, id: "Total"});
+          finalList.push({catName: "Total", total: doc.length, id: "Total", catEntry: true});
           for (var i = 0; i < doc.length; i++) {
             if (!catList[doc[i].PeriodRating]) {
               var tmp = {
                 id: doc[i].PeriodRating,
                 catName: doc[i].PeriodRating,
                 parent: "Total",
-                total: 0
+                total: 0,
+                catEntry: true
               };
               finalList.push(tmp);
               catList[doc[i].PeriodRating] = tmp;
+            }
+            if (doc[i].ParentDocSubType == "Controllable Unit") {
+              if(doc[i].Portfolio == "Yes"){
+                doc[i].ParentDocSubType = "Portfolio CU";
+              }else{
+                doc[i].ParentDocSubType = "Standalone CU";
+              }
             }
             doc[i].CUSize = audocs[doc[i].parentid].CUSize;
             doc[i].CUMaxScore = fieldCalc.getCUMaxScore(doc[i].CUSize);
@@ -729,6 +737,29 @@ var report = {
               if(asmtsids[audits[i].parentid]){
                 asmtsids[audits[i].parentid].AuditReadiness = asmtsids[audits[i].parentid].CurrentPeriod+" "+ audits[i].rating;
                 delete asmtsids[audits[i].parentid];
+              }
+            }
+            for (var i = 0; i < finalList.length; i++) {
+              if(!finalList[i].catEntry){
+                exportInfo.push({
+                    catName: finalList[i].PeriodRating || " ",
+                    AssessableUnitName: finalList[i].AssessableUnitName || " ",
+                    total: finalList[i].total || " ",
+                    ParentDocSubType: finalList[i].ParentDocSubType || " ",
+                    AuditProgram: finalList[i].AuditProgram || " ",
+                    AuditReadiness: finalList[i].AuditReadiness || " ",
+                    PeriodRatingPrev4: finalList[i].PeriodRatingPrev4 || " ",
+                    PeriodRatingPrev3: finalList[i].PeriodRatingPrev3 || " ",
+                    PeriodRatingPrev2: finalList[i].PeriodRatingPrev2 || " ",
+                    PeriodRatingPrev1: finalList[i].PeriodRatingPrev1 || " ",
+                    PeriodRating: finalList[i].PeriodRating || " ",
+                    NextQtrRating: finalList[i].NextQtrRating || " ",
+                    Target2Sat: finalList[i].Target2Sat || " ",
+                    CUSize: finalList[i].CUSize || " ",
+                    CUMaxScore: finalList[i].CUMaxScore || " ",
+                    CUScore: finalList[i].CUScore || " ",
+                    ReviewComments: finalList[i].ReviewComments || " "
+                });
               }
             }
     				deferred.resolve({"status": 200, "doc":finalList, "exportInfo": exportInfo});
