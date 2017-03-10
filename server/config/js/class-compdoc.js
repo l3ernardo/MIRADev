@@ -262,7 +262,7 @@ var getDocs = {
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								// For Key Controls Testing Tab
 								if (comps[i].reportingCountry == doc[0].Country) {
-									doc[0].KC2Test2Data.push(comps[i]);
+									doc[0].KC2Test3Data.push(comps[i]);
 									//doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab
