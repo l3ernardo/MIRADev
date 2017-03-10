@@ -145,13 +145,10 @@ var assessment = {
 								doc[0].BOCExceptionCountSOD = 0;
 
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
-							// doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
-							// doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
-							// doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
-
-							//doc[0].KC2Test1Data = fieldCalc.addTestViewData(5,defViewRow)
-							doc[0].KC2Test2Data = fieldCalc.addTestViewData(5,defViewRow)
-							doc[0].KC2Test3Data = fieldCalc.addTestViewData(5,defViewRow)
+							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
+							doc[0].KC2Test1Data = [];
+							doc[0].KC2Test2Data = [];
+							doc[0].KC2Test3Data = [];
 
 							doc[0].BUCAsmtDataPRview = [];
 							doc[0].BUCAsmtDataCURview = [];
