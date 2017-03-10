@@ -26,24 +26,19 @@ function tableToReport(table, isDatatable){
 
 			class_name='mira_checkbox_tree';
 
-
-		var name_table='input:checkbox[class='+class_name+']';
-		$(name_table).each(function(index) {checkboxes.push( this.checked);});
-		for (j=1;j<=checkboxes.length;j++){
-			if (checkboxes[j] == true){
-				array2[aux]=j;
-				aux++;
+		if (isDatatable) {
+			var name_table='input:checkbox[class='+class_name+']';
+		$(name_table).each(function(index) {
+			if(this.checked){
+				if (!isNaN(this.value)) {
+					array2.push(this.value);
+				}
 			}
-		}
+		});
 
-		for(j = 1; j<=array2.length; j++){
-			var index=array2[j-1];
-			var r1;
-			if (isDatatable) {
-				r1= field4rows[index-2];
-			}else{
-				r1= field4rows[index-1];
-			}
+		for(j = 0; j<array2.length; j++){
+			var index=array2[j];
+			var r1 = field4rows[index];
 			line="<tr>";
 
 			for(var obj1 in r1){
@@ -54,6 +49,31 @@ function tableToReport(table, isDatatable){
 				line = line+"<td>"+r2+"</td>";
 			} //end for obj1
 			tab_text=tab_text+line+"</tr>";
+		}
+		}else{
+			var name_table='input:checkbox[class='+class_name+']';
+			$(name_table).each(function(index) {checkboxes.push( this.checked);});
+			for (j=1;j<=checkboxes.length;j++){
+				if (checkboxes[j] == true){
+					array2[aux]=j;
+					aux++;
+				}
+			}
+
+			for(j = 1; j<=array2.length; j++){
+				var index=array2[j-1];
+				var r1= field4rows[index-1];
+				line="<tr>";
+
+				for(var obj1 in r1){
+					var r2 = r1[obj1];
+					if(r2 == "undefined"){
+						r2="";
+					}
+					line = line+"<td>"+r2+"</td>";
+				} //end for obj1
+				tab_text=tab_text+line+"</tr>";
+			}
 		}
 	}
 	tab_text=tab_text+"</tbody></table>";
