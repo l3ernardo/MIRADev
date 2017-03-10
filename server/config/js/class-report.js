@@ -105,9 +105,16 @@ var report = {
 				var len = doc.length;
         var exportInfo = [];
         var view_auFileReport = [];
+        var parentsids = {};
 				if(len > 0){
 					for (var i = 0; i < len; i++){
+            if (parentsids[doc[i].parentid]) {
+              parentsids[doc[i].parentid].push(doc[i]);
+            }else{
+              parentsids[doc[i].parentid] =[doc[i]];
+            }
             var tmp={
+              nothing: " ",
               Name: ""+doc[i].Name,
               DocSubType: ""+doc[i].DocSubType,
               Status: ""+doc[i].Status,
@@ -138,9 +145,52 @@ var report = {
 						view_auFileReport.push(doc[i]);
 					}
 				}
-        //console.log(view_auFileReport.doc);
-        //view_auFileReport.exportInfo = exportInfo;
-				deferred.resolve({"status": 200, "doc":view_auFileReport,"exportInfo": exportInfo});
+        var objparents = {
+					"selector": {
+            "Name": { "$gt": 0 },
+						"_id": { "$in": Object.keys(parentsids) },
+						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
+						"MIRABusinessUnit": req.session.businessunit
+					},
+					"fields": ["_id","DocSubType","Country","IMT","IOT"]
+				};
+
+			  db.find(objparents).then(function(data){
+
+          var parents = data.body.docs;
+          for (var i = 0; i < parents.length; i++) {
+            if(parents[i].Country){
+              var tmpCountry = util.resolveGeo(parents[i].Country, "Country");
+              var tmpIOT = "";
+              var tmpIMT = "";
+              if (global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")]) {
+                tmpIOT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IOT;
+                tmpIMT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IMT;
+              }
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+                parentsids[parents[i]["_id"]][j].Country = tmpCountry;
+              }
+            }else if(parents[i].IMT){
+              var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
+              var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+              }
+            }else if(parents[i].IOT){
+              var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+              }
+            }
+          }
+				  deferred.resolve({"status": 200, "doc":view_auFileReport,"exportInfo": exportInfo});
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -189,9 +239,16 @@ var report = {
 				var len= doc.length;
 				var view_cuFileReport = [];
         var exportInfo = [];
+        var parentsids = {};
 				if(len > 0){
 					for (var i = 0; i < len; i++){
+            if (parentsids[doc[i].parentid]) {
+              parentsids[doc[i].parentid].push(doc[i]);
+            }else{
+              parentsids[doc[i].parentid] =[doc[i]];
+            }
             var tmp={
+              nothing: " ",
               Name: ""+doc[i].Name,
               IOT: ""+doc[i].IOT,
               IMT: ""+doc[i].IMT,
@@ -223,8 +280,53 @@ var report = {
 						view_cuFileReport.push(doc[i]);
 					}
 				}
-				view=JSON.stringify(view_cuFileReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_cuFileReport,"exportInfo":exportInfo});
+
+        var objparents = {
+					"selector": {
+            "Name": { "$gt": 0 },
+						"_id": { "$in": Object.keys(parentsids) },
+						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
+						"MIRABusinessUnit": req.session.businessunit
+					},
+					"fields": ["_id","DocSubType","Country","IMT","IOT"]
+				};
+
+			  db.find(objparents).then(function(data){
+
+          var parents = data.body.docs;
+          for (var i = 0; i < parents.length; i++) {
+            if(parents[i].Country){
+              var tmpCountry = util.resolveGeo(parents[i].Country, "Country");
+              var tmpIOT = "";
+              var tmpIMT = "";
+              if (global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")]) {
+                tmpIOT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IOT;
+                tmpIMT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IMT;
+              }
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+                parentsids[parents[i]["_id"]][j].Country = tmpCountry;
+              }
+            }else if(parents[i].IMT){
+              var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
+              var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+              }
+            }else if(parents[i].IOT){
+              var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+              }
+            }
+          }
+  				deferred.resolve({"status": 200, "doc":view_cuFileReport,"exportInfo":exportInfo});
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
