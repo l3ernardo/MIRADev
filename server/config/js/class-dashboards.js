@@ -124,7 +124,8 @@ var dashboard = {
 										"PeriodRatingPrev",
 										"PeriodRating",
 										"AUNextQtrRating",
-										"Target2Sat",
+										"Target2Sat",										
+										"NextQtrRating",
 										"MIRAAssessmentStatus",
 										"WWBCITAssessmentStatus",
 										"IOT",
@@ -176,7 +177,8 @@ var dashboard = {
 										"PeriodRatingPrev",
 										"PeriodRating",
 										"AUNextQtrRating",
-										"Target2Sat",
+										"Target2Sat",																			
+										"NextQtrRating",
 										"MIRAAssessmentStatus",
 										"WWBCITAssessmentStatus",
 										"Portfolio",
@@ -323,6 +325,7 @@ var dashboard = {
 												 doctest[j].priorQ = doctest[l].PeriodRatingPrev1;
 												 doctest[j].currentQ = doctest[l].PeriodRating;
 												 doctest[j].nextQtr = doctest[l].NextQtrRating;
+												 doctest[j].Target2Sat = doctest[l].Target2Sat;	
 												 l=doctest.length;
 											}
 										}

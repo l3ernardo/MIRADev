@@ -100,7 +100,7 @@ var calculateARTab = {
   categorizeCULogic: function(doc, auditInter, parentAsmts, parentAU, tmp, parentISDeliveryDocs, parentCRMDocs) {
     try {
       //If the audit is GTS, then we need to add the corresponding category at a Portfolio CU level
-      if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+      if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
         //If the assessment matches the parentid of the asmtsdocsDelivery, then its category is "IS Delivery"
         for(var k = 0; k < parentISDeliveryDocs.length; k++) {
           //Check it's a local audit with "CHQ Audit Internal", then a comparison must be made with asmtsdocsDelivery id
@@ -196,7 +196,7 @@ var calculateARTab = {
           else {
             tmp.DocSubType = parentAU.DocSubType;
             //If the audit is GTS, then we need to add the corresponding category
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               //If it is a Country Process then its category is supposed to be the CP's "CUCat" field in Cloudant
               if (tmp.DocSubType == "Country Process") {
                 //If the CUCat is found in doc[0].AuditCUISObj, then it's "IS"
@@ -243,7 +243,7 @@ var calculateARTab = {
   sortInternalAuditList: function(doc) {
     try {
       // Begin sort
-      if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+      if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
         doc[0].InternalAuditData.sort(function(a,b) {
           var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase()
           if (nameA < nameB){ //sort string ascending
@@ -289,7 +289,7 @@ var calculateARTab = {
       //Populate the Internal Audits. Also, create treetable structure
       for (var i = 0; i < tmpList.length; i++) {
         //Treetable will only be created if GTS or GTS Transform
-        if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+        if(doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
           if(typeof categoryList[tmpList[i].cat.replace(/ /g,'')] === "undefined"){
             var tmp2 ={
               id: tmpList[i].cat.replace(/ /g,''),
@@ -335,7 +335,7 @@ var calculateARTab = {
           tmp.imt = parentAUs[key].IMT;
           tmp.country = parentAUs[key].Country;
           //Categorization for GTS: will cycle through all the IS Delivery and CRM docs to select one of those as category.
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             if (util.getIndex(doc[0].DeliveryProcess[0].options, "name", auditPPR.GPPARENT) != -1) {
               tmp.cat = "IS Delivery";
             } else if (util.getIndex(doc[0].CRMProcess[0].options, "name", auditPPR.GPPARENT) != -1) {
@@ -380,7 +380,7 @@ var calculateARTab = {
   sortPPRAuditList: function(doc) {
     try {
       // Begin sort
-      if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+      if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
         doc[0].PPRData.sort(function(a, b){
           var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase()
           if (nameA < nameB){ //sort string ascending
@@ -456,7 +456,7 @@ var calculateARTab = {
       //Populate the PPRs. Also, create treetable structure
       for (var i = 0; i < tmpList.length; i++) {
         //Categorization exclusive to GTS adds a new layer to the treetable
-        if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+        if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
           if(typeof categoryList[tmpList[i].cat.replace(/ /g,'')] === "undefined") {
             topCounter++;
             var tmp2 ={
@@ -548,14 +548,14 @@ var calculateARTab = {
         categoryList[categoryList[tmpList[i].parent].parent].count++;
         categoryList[categoryList[categoryList[tmpList[i].parent].parent].parent].count++;
         //If it's GTS or GTS Transform, it also needs to count an additional layer for the categories.
-        if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+        if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
           categoryList[categoryList[categoryList[categoryList[tmpList[i].parent].parent].parent].parent].count++;
         }
         //Add all the Internal Audits to the list
         doc[0].PPRData.push(tmpList[i]);
         ////TMP2 is for Excel and ODS export
         var tmp2 = {};
-        if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+        if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
           tmp2 = {
             cat: tmpList[i].cat || " "
           };
@@ -590,7 +590,7 @@ var calculateARTab = {
           var parentAU = parentAUs[parentAsmts[j].parentid];
           tmp.Name = parentAU.Name;
           //Categorization for GTS: will cycle through all the IS Delivery and CRM docs to select one of those as category.
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //If the assessment matches the parentid of the asmtsdocsDelivery, then its category is "IS Delivery"
             for(var k = 0; k < parentISDeliveryDocs.length; k++) {
               if (parentAU._id == parentISDeliveryDocs[k].parentid) {
@@ -640,7 +640,7 @@ var calculateARTab = {
   sortOtherAuditList: function(doc) {
     try {
       // Begin sort
-      if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+      if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
         doc[0].OtherAuditsData.sort(function(a, b){
           var nameA=a.cat.toLowerCase(), nameB=b.cat.toLowerCase();
           if (nameA < nameB) //sort string ascending
@@ -678,7 +678,7 @@ var calculateARTab = {
       //Populate the Other Audits. Also, create treetable structure
       for (var i = 0; i < tmpList.length; i++) {
         //Categorization exclusive to GTS adds a new layer to the treetable
-        if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+        if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
           if(typeof categoryList[tmpList[i].cat.replace(/ /g,'')] === "undefined"){
             topCounter++;
             var tmp2 ={
@@ -719,7 +719,7 @@ var calculateARTab = {
         doc[0].OtherAuditsData.push(tmpList[i]);
         //For Excel and ODS export
         var tmp2 = {};
-        if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+        if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
           tmp2 = {
             cat: tmpList[i].cat || ""
           };
@@ -972,7 +972,7 @@ var calculateARTab = {
             if (!isNaN(tmp.CUScore)) totalCUScore += tmp.CUScore;
             if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
             //Summary count
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if (tmp.cat == "IS Delivery") {
                 summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
                 //For IS Delivery WeightedAuditScore
@@ -996,7 +996,7 @@ var calculateARTab = {
               }
             }
             //For treeview's parent (have to ask Irving how this actually works)
-            if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if(doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if(!tmp.cat) tmp.cat = "(uncategorized)";
               tmp.parent = tmp.cat.replace(/ /g,'');
             }
@@ -1018,7 +1018,7 @@ var calculateARTab = {
 
           //Calculate WeightedAuditScore using the calculateWeightedAuditScore function
           //GTS and GTS Transform need to calculate WeightedAuditScore per category
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //IS Delivery
             summaryISDeliveryAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalISDeliveryCUScore, totalISDeliveryMaxScore);
             //CRM IS
@@ -1034,7 +1034,239 @@ var calculateARTab = {
           doc[0].WeightedAuditScore = weightedScore;
 
           //If GTS or GTS Transform, calculate all summary counts
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
+            //Complete: sum of all SAT and UNSAT audits.
+            summaryISDeliveryAllCounts.countComplete = summaryISDeliveryAllCounts.countSAT + summaryISDeliveryAllCounts.countUNSAT;
+            summaryCRMISAllCounts.countComplete = summaryCRMISAllCounts.countSAT + summaryCRMISAllCounts.countUNSAT;
+            summaryCRMOtherAllCounts.countComplete = summaryCRMOtherAllCounts.countSAT + summaryCRMOtherAllCounts.countUNSAT;
+            //Total: add all the categories:
+            summaryTotalAllCounts.countComplete = summaryISDeliveryAllCounts.countComplete + summaryCRMISAllCounts.countComplete + summaryCRMOtherAllCounts.countComplete;
+            summaryTotalAllCounts.countSAT = summaryISDeliveryAllCounts.countSAT + summaryCRMISAllCounts.countSAT + summaryCRMOtherAllCounts.countSAT;
+            summaryTotalAllCounts.countUNSAT = summaryISDeliveryAllCounts.countUNSAT + summaryCRMISAllCounts.countUNSAT + summaryCRMOtherAllCounts.countUNSAT;
+            //Export all summary to Handlebars view
+            doc[0].SummaryISDelivery = summaryISDeliveryAllCounts;
+            doc[0].SummaryCRMIS = summaryCRMISAllCounts;
+            doc[0].SummaryCRMOther = summaryCRMOtherAllCounts;
+            doc[0].SummaryTotal = summaryTotalAllCounts;
+          }
+          //Add padding
+          if (Object.keys(categoryList).length < defViewRow) {
+            if (doc[0].InternalAuditData.length == 0) {
+              doc[0].InternalAuditData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].InternalAuditData,10,(defViewRow-Object.keys(categoryList).length));
+            }
+          };
+          //End of view 1
+
+          //VIEW 2 - Proactive Reviews
+
+          //PPRData is populated on class-compdoc.js after querying all BU IMT's Proactive Reviews
+          var auditPPR = doc[0].PPRData;
+          //List that will export all PPRs. Currently empty; to be populated below.
+          doc[0].PPRData = [];
+
+          //Iterate over found PPRs
+          for(var i = 0; i < auditPPR.length; i++) {
+            var tmp={};
+            tmp.id = auditPPR[i]._id;
+            tmp.auditOrReview = auditPPR[i].auditOrReview;
+            tmp.reportingQuarter = auditPPR[i].reportingQuarter;
+            tmp.status = auditPPR[i].status;
+            tmp.reviewID = auditPPR[i].id;
+            //Add the rest of the PPR parent fields through the categorizePPRAudits function
+            tmp = calculateARTab.categorizePPRAudits(doc, auditPPR[i], parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
+
+            if((typeof tmp.Name === "undefined" || tmp.Name == "")&&(typeof tmp.cat === "undefined" || tmp.cat == "")) {
+              tmp.Name = auditPPR[i].CU;
+              tmp.cat = "(uncategorized)";
+            }
+            tmp.reportDate = auditPPR[i].reportDate;
+            tmp.rating = auditPPR[i].rating;
+            tmp.numRecommendationsTotal = auditPPR[i].numRecommendationsTotal;
+            tmp.numRecommendationsOpen = auditPPR[i].numRecommendationsOpen;
+            //Push all the data to the PPRData list.
+            doc[0].PPRData.push(tmp);
+          }
+          // Begin sort
+          calculateARTab.sortPPRAuditList(doc);
+          // End sort
+
+          //Category list for treetable
+          var categoryList = {};
+          var tmpList = doc[0].PPRData;
+          doc[0].PPRData = [];
+          var exportPPRData = [];
+          var topCounter = 0;
+          //Create treetable using the createCategoryListPPRs function
+          exportPPRData = calculateARTab.createCategoryListPPRs(doc, categoryList, tmpList, exportPPRData, topCounter);
+
+          //Export Proactive Reviews data to the Handlebars view
+          doc[0].exportPPRData = exportPPRData;
+
+          //Adding padding
+          if (topCounter < defViewRow) {
+            if (doc[0].PPRData.length == 0) {
+              doc[0].PPRData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].PPRData,10,(defViewRow- topCounter));
+            }
+          };
+          //End of view 2
+
+          //VIEW 3 - Other Audits
+
+          //OtherAuditsData is populated on class-compdoc.js after querying all BU IMT's local Audits that aren't Internal.
+          var auditOther = doc[0].OtherAuditsData;
+          //List that will export all local audits. Currently empty; to be populated below.
+          doc[0].OtherAuditsData = [];
+
+          //Iterate over the Other Audit list
+          for (var i = 0; i < auditOther.length; i++) {
+            var tmp = {};
+            tmp.id = auditOther[i]._id;
+            tmp.auditOrReview = auditOther[i].auditOrReview;
+            //Add the rest of the Other Audit parent fields through the categorizeOtherAudits function
+            tmp = calculateARTab.categorizeOtherAudits(doc, auditOther[i], parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
+
+            tmp.reportDate = auditOther[i].reportDate;
+            tmp.comments = auditOther[i].comments;
+            //Push all the data to the OtherAuditsData
+            doc[0].OtherAuditsData.push(tmp);
+          }
+          // Begin sort
+          calculateARTab.sortOtherAuditList(doc);
+          // EndSort
+
+          //Category list for treetable
+          var exportOtherAuditsData = [];
+          var tmpList = doc[0].OtherAuditsData;
+          doc[0].OtherAuditsData = [];
+          var categoryList = {};
+          var topCounter = 0;
+          //Create treetable using the createCategoryListOtherAudits function
+          exportOtherAuditsData = calculateARTab.createCategoryListOtherAudits(doc, categoryList, tmpList, exportOtherAuditsData, topCounter);
+
+          //Export Proactive Reviews data to the Handlebars view
+          doc[0].exportOtherAuditsData = exportOtherAuditsData;
+
+          //Add padding
+          if (topCounter < defViewRow) {
+            if (doc[0].OtherAuditsData.length == 0) {
+              doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].OtherAuditsData,10,(defViewRow- topCounter));
+            }
+          };
+          //End of view 3
+
+          // *** End of Audits and Reviews embedded view *** //
+          break;
+        case "Subprocess":
+          // *** Start of Audits and Reviews embedded view *** //
+          //View 1 - Internal Audit Data
+          //InternalAuditData is populated on class-compdoc.js after querying all Global Processes' Internal Audits
+          var auditInter = doc[0].InternalAuditData;
+          //Then all BU IMT's constituent asmts and AUs are stored
+          var parentAsmts = doc[0].AuditsReviewsAssessments;
+          var parentAUs = doc[0].AuditsReviewsAssessableUnits;
+          //FOR GTS AND GTS TRANSFORM ONLY - IS Delivery and CRM asmt docs
+          var parentISDeliveryDocs = doc[0].AuditsReviewsISDeliveryDocs;
+          var parentCRMDocs = doc[0].AuditsReviewsCRMDocs;
+          //FOR GTS AND GTS TRANSFORM ONLY - summary objects of all Internal Audits
+          var summaryISDeliveryAllCounts = calculateARTab.createSummaryCountObject();
+              summaryCRMISAllCounts = calculateARTab.createSummaryCountObject();
+              summaryCRMOtherAllCounts = calculateARTab.createSummaryCountObject();
+              summaryTotalAllCounts = calculateARTab.createSummaryCountObject();
+          //For weighted scores:
+          var totalISDeliveryCUScore = 0; totalISDeliveryMaxScore = 0;
+              totalCRMISCUScore = 0; totalCRMISMaxScore = 0;
+              totalCRMOtherCUScore = 0; totalCRMOtherMaxScore = 0;
+
+          //List that will export all Internal Audits. Pointing to empty memory so it can be recreated.
+          doc[0].InternalAuditData = [];
+
+          //Total Score (CU and Max) variables. To be calculated below.
+          var totalCUScore = "";
+          var totalMaxScore = "";
+
+          //Iterate over found Internal Audits
+          for(var i = 0; i < auditInter.length; i++) {
+            var tmp = {};
+            tmp.id = auditInter[i]._id;
+            //Set the plannedStartDate
+            tmp = calculateARTab.setInternalAuditPlannedStartDate(auditInter[i], tmp);
+
+            //Add the rest of the Internal Audit parent fields through the categorizeInternalAudits function
+            tmp = calculateARTab.categorizeInternalAudits(doc, auditInter[i], parentAsmts, parentAUs, tmp, parentISDeliveryDocs, parentCRMDocs);
+
+            //Calculate total scores (CU and MAX) for later WeightedAuditScore calculation
+            if (!isNaN(tmp.CUScore)) totalCUScore += tmp.CUScore;
+            if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
+            //Summary count
+            if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
+              if (tmp.cat == "IS Delivery") {
+                summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
+                //For IS Delivery WeightedAuditScore
+                if (!isNaN(tmp.CUScore)) totalISDeliveryCUScore += tmp.CUScore;
+                if (!isNaN(tmp.CUMaxScore)) totalISDeliveryMaxScore += tmp.CUMaxScore;
+              }
+              else if (tmp.cat == "IS") {
+                summaryCRMISAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMISAllCounts, tmp);
+                //For CRM IS WeightedAuditScore
+                if (!isNaN(tmp.CUScore)) totalCRMISCUScore += tmp.CUScore;
+                if (!isNaN(tmp.CUMaxScore)) totalCRMISMaxScore += tmp.CUMaxScore;
+              }
+              else if (tmp.cat == "Other") {
+                summaryCRMOtherAllCounts = calculateARTab.addSummaryAuditCount(summaryCRMOtherAllCounts, tmp);
+                //For CRM Other WeightedAuditScore
+                if (!isNaN(tmp.CUScore)) totalCRMOtherCUScore += tmp.CUScore;
+                if (!isNaN(tmp.CUMaxScore)) totalCRMOtherMaxScore += tmp.CUMaxScore;
+              }
+              else {
+                totalISDeliveryMaxScore, totalCRMISMaxScore, totalCRMOtherMaxScore = 0;
+              }
+            }
+            //For treeview's parent (have to ask Irving how this actually works)
+            if(doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
+              if(!tmp.cat) tmp.cat = "(uncategorized)";
+              tmp.parent = tmp.cat.replace(/ /g,'');
+            }
+            //Add all the tmp fields to InternalAuditData
+            doc[0].InternalAuditData.push(tmp);
+          }
+          // Begin sort
+          calculateARTab.sortInternalAuditList(doc);
+          // End sort
+
+          //Category list for treetable
+          var categoryList = {};
+          var tmpList = doc[0].InternalAuditData;
+          //Create list for view, and another one for Excel and ODS export
+          doc[0].InternalAuditData = [];
+          var exportInternalAuditData = [];
+          //Create treetable using the createCategoryListInternalAudits function
+          exportInternalAuditData = calculateARTab.createCategoryListInternalAudits(doc, categoryList, tmpList, exportInternalAuditData);
+
+          //Calculate WeightedAuditScore using the calculateWeightedAuditScore function
+          //GTS and GTS Transform need to calculate WeightedAuditScore per category
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
+            //IS Delivery
+            summaryISDeliveryAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalISDeliveryCUScore, totalISDeliveryMaxScore);
+            //CRM IS
+            summaryCRMISAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalCRMISCUScore, totalCRMISMaxScore);
+            //CRM Other
+            summaryCRMOtherAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalCRMOtherCUScore, totalCRMOtherMaxScore);
+          }
+          //WeightedAuditScore for all audits
+          var weightedScore = calculateARTab.calculateWeightedAuditScore(totalCUScore, totalMaxScore);
+
+          //Export Internal Audit data and the Weighted Score to the Handlebars view
+          doc[0].exportInternalAuditData = exportInternalAuditData;
+          doc[0].WeightedAuditScore = weightedScore;
+
+          //If GTS or GTS Transform, calculate all summary counts
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //Complete: sum of all SAT and UNSAT audits.
             summaryISDeliveryAllCounts.countComplete = summaryISDeliveryAllCounts.countSAT + summaryISDeliveryAllCounts.countUNSAT;
             summaryCRMISAllCounts.countComplete = summaryCRMISAllCounts.countSAT + summaryCRMISAllCounts.countUNSAT;
@@ -1208,7 +1440,7 @@ var calculateARTab = {
             if (!isNaN(tmp.CUScore)) totalCUScore += tmp.CUScore;
             if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
             //Summary count
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if (tmp.cat == "IS Delivery") {
                 summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
                 //For IS Delivery WeightedAuditScore
@@ -1232,7 +1464,7 @@ var calculateARTab = {
               }
             }
             //For treeview's parent (have to ask Irving how this actually works)
-            if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if(doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if(!tmp.cat) tmp.cat = "(uncategorized)";
               tmp.parent = tmp.cat.replace(/ /g,'');
             }
@@ -1254,7 +1486,7 @@ var calculateARTab = {
 
           //Calculate WeightedAuditScore using the calculateWeightedAuditScore function
           //GTS and GTS Transform need to calculate WeightedAuditScore per category
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //IS Delivery
             summaryISDeliveryAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalISDeliveryCUScore, totalISDeliveryMaxScore);
             //CRM IS
@@ -1270,7 +1502,7 @@ var calculateARTab = {
           doc[0].WeightedAuditScore = weightedScore;
 
           //If GTS or GTS Transform, calculate all summary counts
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //Complete: sum of all SAT and UNSAT audits.
             summaryISDeliveryAllCounts.countComplete = summaryISDeliveryAllCounts.countSAT + summaryISDeliveryAllCounts.countUNSAT;
             summaryCRMISAllCounts.countComplete = summaryCRMISAllCounts.countSAT + summaryCRMISAllCounts.countUNSAT;
@@ -1440,7 +1672,7 @@ var calculateARTab = {
             if (!isNaN(tmp.CUScore)) totalCUScore += tmp.CUScore;
             if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
             //Summary count
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if (tmp.cat == "IS Delivery") {
                 summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
                 //For IS Delivery WeightedAuditScore
@@ -1464,7 +1696,7 @@ var calculateARTab = {
               }
             }
             //For treeview's parent (have to ask Irving how this actually works)
-            if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if(doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if(!tmp.cat) tmp.cat = "(uncategorized)";
               tmp.parent = tmp.cat.replace(/ /g,'');
             }
@@ -1486,7 +1718,7 @@ var calculateARTab = {
 
           //Calculate WeightedAuditScore using the calculateWeightedAuditScore function
           //GTS and GTS Transform need to calculate WeightedAuditScore per category
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //IS Delivery
             summaryISDeliveryAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalISDeliveryCUScore, totalISDeliveryMaxScore);
             //CRM IS
@@ -1502,7 +1734,7 @@ var calculateARTab = {
           doc[0].WeightedAuditScore = weightedScore;
 
           //If GTS or GTS Transform, calculate all summary counts
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //Complete: sum of all SAT and UNSAT audits.
             summaryISDeliveryAllCounts.countComplete = summaryISDeliveryAllCounts.countSAT + summaryISDeliveryAllCounts.countUNSAT;
             summaryCRMISAllCounts.countComplete = summaryCRMISAllCounts.countSAT + summaryCRMISAllCounts.countUNSAT;
@@ -1730,7 +1962,7 @@ var calculateARTab = {
             if (!isNaN(tmp.CUScore)) totalCUScore += tmp.CUScore;
             if (!isNaN(tmp.CUMaxScore)) totalMaxScore += tmp.CUMaxScore;
             //Summary count
-            if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if (tmp.cat == "IS Delivery") {
                 summaryISDeliveryAllCounts = calculateARTab.addSummaryAuditCount(summaryISDeliveryAllCounts, tmp);
                 //For IS Delivery WeightedAuditScore
@@ -1754,7 +1986,7 @@ var calculateARTab = {
               }
             }
             //For treeview's parent (have to ask Irving how this actually works)
-            if(doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+            if(doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
               if(!tmp.cat) tmp.cat = "(uncategorized)";
               tmp.parent = tmp.cat.replace(/ /g,'');
             }
@@ -1776,7 +2008,7 @@ var calculateARTab = {
 
           //Calculate WeightedAuditScore using the calculateWeightedAuditScore function
           //GTS and GTS Transform need to calculate WeightedAuditScore per category
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //IS Delivery
             summaryISDeliveryAllCounts.countScore = calculateARTab.calculateWeightedAuditScore(totalISDeliveryCUScore, totalISDeliveryMaxScore);
             //CRM IS
@@ -1792,7 +2024,7 @@ var calculateARTab = {
           doc[0].WeightedAuditScore = weightedScore;
 
           //If GTS or GTS Transform, calculate all summary counts
-          if (doc[0].MIRABusinessUnit == "GTS" || doc[0].MIRABusinessUnit == "GTS Transformation") {
+          if (doc[0].MIRABusinessUnit == "GTS" || (doc[0].MIRABusinessUnit == "GTS Transformation" && doc[0].ParentDocSubType != "Subprocess")) {
             //Complete: sum of all SAT and UNSAT audits.
             summaryISDeliveryAllCounts.countComplete = summaryISDeliveryAllCounts.countSAT + summaryISDeliveryAllCounts.countUNSAT;
             summaryCRMISAllCounts.countComplete = summaryCRMISAllCounts.countSAT + summaryCRMISAllCounts.countUNSAT;
