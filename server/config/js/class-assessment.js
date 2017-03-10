@@ -123,6 +123,22 @@ var assessment = {
 						}
 					}
 					switch (doc[0].ParentDocSubType) {
+						case "Sub-process":
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
+
+								comp.getCompDocs(db,doc).then(function(dataComp){
+									console.log("exits compdocs");
+									var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
+								}).catch(function(err) {
+									console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error);
+									deferred.reject({"status": 500, "error": err.error});
+								});
+							}).catch(function(err) {
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error);
+								deferred.reject({"status": 500, "error": err.error});
+							});
+						break;
 						case "Global Process":
 								/*doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
