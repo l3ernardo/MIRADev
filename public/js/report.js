@@ -1,5 +1,5 @@
 /*Function to generate dashboard table to export*/
-function tableToReport(table){
+function tableToReport(table, isDatatable){
 	var field4rows = $.parseJSON($('textarea#dataForExport').val());
 	var table=table;
 	var tab_text="<table border='2px'><thead><tr bgcolor='#87AFC6'>";
@@ -38,7 +38,12 @@ function tableToReport(table){
 
 		for(j = 1; j<=array2.length; j++){
 			var index=array2[j-1];
-			var r1= field4rows[index-1];
+			var r1;
+			if (isDatatable) {
+				r1= field4rows[index-2];
+			}else{
+				r1= field4rows[index-1];
+			}
 			line="<tr>";
 
 			for(var obj1 in r1){
@@ -127,10 +132,10 @@ $(document).ready(function() {
 			tableReport = tableToReport('reports_treeview2');
 		}
 		else if(y!=-1){
-			tableReport = tableToReport('reports_table2');
+			tableReport = tableToReport('reports_table2',true);
 		}
 		else{
-			tableReport = tableToReport('reports_table');
+			tableReport = tableToReport('reports_table',true);
 		}
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 		//generateReport($(this), "xls");
