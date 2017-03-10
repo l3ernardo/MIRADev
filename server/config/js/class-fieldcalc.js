@@ -92,11 +92,11 @@ var calculatefield = {
 
 	getPrev4Qtrs: function(currentQtr) {
 		var p4Qtrs = [];
-		var current = currentQtr.split("Q");
+		var current = currentQtr.split(" Q");
 		var prevYr = current[0]-1;
 		switch (current[1]) {
 			case "1":
-			p4Qtrs.push(prevYr1+" Q1");
+			p4Qtrs.push(prevYr+" Q1");
 			p4Qtrs.push(prevYr+" Q2");
 			p4Qtrs.push(prevYr+" Q3");
 			p4Qtrs.push(prevYr+" Q4");
@@ -790,7 +790,7 @@ var calculatefield = {
 							for (var i = 0; i < asmts.body.docs.length; i++) {
 								if(CUauditables[asmts.body.docs[i].parentid]){
 
-									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
+									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize;
 									asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
 									asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
 									if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {
@@ -987,7 +987,7 @@ var calculatefield = {
 								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
-									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
+									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize;
 									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
 									//doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
 									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].asmtsdocs[i].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
@@ -1182,7 +1182,7 @@ var calculatefield = {
 								//END OF DATA RPTG Country Testing
 								doc[0].asmtsdocsObj[doc[0].asmtsdocs[i]["_id"]] = doc[0].asmtsdocs[i];
 								if(doc[0].AUAuditables[doc[0].asmtsdocs[i].parentid]){
-									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize
+									doc[0].asmtsdocs[i].CUSize = doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].CUSize;
 									doc[0].asmtsdocs[i].CUMaxScore = calculatefield.getCUMaxScore(doc[0].asmtsdocs[i].CUSize);
 									//doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].AUDocsObj[doc[0].asmtsdocs[i].parentid].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
 									doc[0].asmtsdocs[i].CUScore = calculatefield.getCUScore(doc[0].asmtsdocs[i].PeriodRating, doc[0].asmtsdocs[i].CUMaxScore);
@@ -1323,7 +1323,7 @@ var calculatefield = {
 						doc[0].margCPDROps = margCPDROps;
 						doc[0].unsatCPDROps = unsatCPDROps;
 						for(var key in CPauditables){
-							CPassmts[key].CUSize = CPauditables[key].CUSize
+							CPassmts[key].CUSize = CPauditables[key].CUSize;
 							CPassmts[key].CUMaxScore = calculatefield.getCUMaxScore(CPassmts[key].CUSize);
 							CPassmts[key].CUScore = calculatefield.getCUScore(CPassmts[key].PeriodRating, CPassmts[key].CUMaxScore);
 							doc[0].AUData.push(CPassmts[key]);
@@ -1347,7 +1347,7 @@ var calculatefield = {
 							for (var i = 0; i < asmts.body.docs.length; i++) {
 								if(CUauditables[asmts.body.docs[i].parentid]){
 
-									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize
+									asmts.body.docs[i].CUSize = CUauditables[asmts.body.docs[i].parentid].CUSize;
 									asmts.body.docs[i].CUMaxScore = calculatefield.getCUMaxScore(asmts.body.docs[i].CUSize);
 									asmts.body.docs[i].CUScore = calculatefield.getCUScore(asmts.body.docs[i].PeriodRating, asmts.body.docs[i].CUMaxScore);
 									if(CUauditables[asmts.body.docs[i].parentid].Portfolio == "Yes") {

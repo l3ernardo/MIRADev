@@ -97,14 +97,14 @@ $(document).ready(function() {
 			targets: [0,1,2,3,6,7,8,9],
 			orderable: false
 		} ]
-	});*/
+	});
 	$('#reports_treeview2').DataTable({
 		select: true,
 		"paginate": false,
 		"scrollX": true,
 		"scrollY": 250,
 		"ordering":false
-	});
+	});*/
 	$('#reports_table').DataTable({
 		select: true,
 		"scrollX": true,

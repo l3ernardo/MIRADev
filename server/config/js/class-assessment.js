@@ -45,9 +45,6 @@ var assessment = {
 					doc.push(newdoc);
 				}
 				global.doc1 = newdoc; // Temporary store the doc using the ID as the attribute, so easy to check if it exists
-				/* Format Links */
-				doc[0].Links = JSON.stringify(doc[0].Links);
-				doc[0].EnteredBU = req.session.businessunit;
 			} catch(e) {
 				console.log("[assessment][getAsmtbyID]" + e.stack);
 				console.log(e.stack);
