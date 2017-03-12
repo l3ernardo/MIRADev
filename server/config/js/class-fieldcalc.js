@@ -96,7 +96,7 @@ var calculatefield = {
 		var prevYr = current[0]-1;
 		switch (current[1]) {
 			case "1":
-			p4Qtrs.push(prevYr1+" Q1");
+			p4Qtrs.push(prevYr+" Q1");
 			p4Qtrs.push(prevYr+" Q2");
 			p4Qtrs.push(prevYr+" Q3");
 			p4Qtrs.push(prevYr+" Q4");
@@ -525,6 +525,23 @@ var calculatefield = {
 		var deferred = q.defer();
 		try {
 			switch (doc[0].ParentDocSubType) {
+				case "Sub-process":
+				var asmts = {
+					selector : {
+						"_id": {"$gt":0},
+						"BusinessUnit": doc[0].BusinessUnit,
+						"$or": [
+							//Getting all country process and controllable unit assessment
+							//{"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"GPWWBCITKey": doc[0].WWBCITKey} ]},
+							//{"$and": [{"key": "Assessment"},{"AUStatus": "Active"},{"ParentDocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"RelevantGPs":{"$elemMatch" :  {"$eq": doc[0].GlobalProcess }}} ]},
+							//Getting all  Country Process  assessable units
+							//{"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Country Process"},{"CurrentPeriod": doc[0].CurrentPeriod},{"GPPARENT":doc[0].WWBCITKey} ]},
+							//Getting allcontrollable units  assessable units
+							//{"$and": [{"key": "Assessable Unit"},{"Status": "Active"},{"DocSubType": "Controllable Unit"},{"CurrentPeriod": doc[0].CurrentPeriod},{"RelevantGPs":{"$elemMatch" :  {"$eq":  doc[0].GlobalProcess }}} ]}
+						]}
+					};
+				deferred.resolve({"status": 200, "doc": doc});
+				break;
 				case "Global Process":
 				var asmts = {
 					selector : {

@@ -45,9 +45,6 @@ var assessment = {
 					doc.push(newdoc);
 				}
 				global.doc1 = newdoc; // Temporary store the doc using the ID as the attribute, so easy to check if it exists
-				/* Format Links */
-				doc[0].Links = JSON.stringify(doc[0].Links);
-				doc[0].EnteredBU = req.session.businessunit;
 			} catch(e) {
 				console.log("[assessment][getAsmtbyID]" + e.stack);
 				console.log(e.stack);
@@ -126,12 +123,29 @@ var assessment = {
 						}
 					}
 					switch (doc[0].ParentDocSubType) {
+						case "Sub-process":
+							fieldCalc.getAssessments(db, doc, req).then(function(data){
+
+								comp.getCompDocs(db,doc).then(function(dataComp){
+									console.log("exits compdocs");
+									var obj = doc[0]; // For Merge
+									deferred.resolve({"status": 200, "doc": obj});
+								}).catch(function(err) {
+									console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error);
+									deferred.reject({"status": 500, "error": err.error});
+								});
+							}).catch(function(err) {
+								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error);
+								deferred.reject({"status": 500, "error": err.error});
+							});
+						break;
 						case "Global Process":
 								/*doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
 								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);*/
 							//	doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
 							//	doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+
 								doc[0].BUCAsmtDataPIviewCRM = [];
 								doc[0].BUCAsmtDataPIviewDelivery = [];
 								doc[0].BUCAsmtDataOIviewCRM = [];
@@ -151,9 +165,10 @@ var assessment = {
 								doc[0].BOCExceptionCountSOD = 0;
 
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
-							// doc[0].RCTest1Data = fieldCalc.addTestViewData(5,defViewRow);
-							// doc[0].RCTest2Data = fieldCalc.addTestViewData(8,defViewRow);
-							// doc[0].RCTest3Data = fieldCalc.addTestViewData(11,defViewRow);
+							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
+							doc[0].KC2Test1Data = [];
+							doc[0].KC2Test2Data = [];
+							doc[0].KC2Test3Data = [];
 
 							doc[0].BUCAsmtDataPRview = [];
 							doc[0].BUCAsmtDataCURview = [];
@@ -187,6 +202,10 @@ var assessment = {
 									aut.processAUTab(doc,defViewRow);
 									// Process Audits & Reviews tab
 									aar.processARTab(doc,defViewRow);
+									// KCT 1 Rptg Country Testing tab
+									rcc.processRCTab(doc,defViewRow);
+									// KCT 2 Process Sampled Country Testing Tab
+									sct.processSCTab(doc,defViewRow);
 								/*
 
 								if (doc[0].CPAsmtDataPIview.length < defViewRow) {

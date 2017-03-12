@@ -105,9 +105,16 @@ var report = {
 				var len = doc.length;
         var exportInfo = [];
         var view_auFileReport = [];
+        var parentsids = {};
 				if(len > 0){
 					for (var i = 0; i < len; i++){
+            if (parentsids[doc[i].parentid]) {
+              parentsids[doc[i].parentid].push(doc[i]);
+            }else{
+              parentsids[doc[i].parentid] =[doc[i]];
+            }
             var tmp={
+              nothing: " ",
               Name: ""+doc[i].Name,
               DocSubType: ""+doc[i].DocSubType,
               Status: ""+doc[i].Status,
@@ -138,9 +145,52 @@ var report = {
 						view_auFileReport.push(doc[i]);
 					}
 				}
-        //console.log(view_auFileReport.doc);
-        //view_auFileReport.exportInfo = exportInfo;
-				deferred.resolve({"status": 200, "doc":view_auFileReport,"exportInfo": exportInfo});
+        var objparents = {
+					"selector": {
+            "Name": { "$gt": 0 },
+						"_id": { "$in": Object.keys(parentsids) },
+						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
+						"MIRABusinessUnit": req.session.businessunit
+					},
+					"fields": ["_id","DocSubType","Country","IMT","IOT"]
+				};
+
+			  db.find(objparents).then(function(data){
+
+          var parents = data.body.docs;
+          for (var i = 0; i < parents.length; i++) {
+            if(parents[i].Country){
+              var tmpCountry = util.resolveGeo(parents[i].Country, "Country");
+              var tmpIOT = "";
+              var tmpIMT = "";
+              if (global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")]) {
+                tmpIOT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IOT;
+                tmpIMT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IMT;
+              }
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+                parentsids[parents[i]["_id"]][j].Country = tmpCountry;
+              }
+            }else if(parents[i].IMT){
+              var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
+              var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+              }
+            }else if(parents[i].IOT){
+              var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+              }
+            }
+          }
+				  deferred.resolve({"status": 200, "doc":view_auFileReport,"exportInfo": exportInfo});
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -189,9 +239,16 @@ var report = {
 				var len= doc.length;
 				var view_cuFileReport = [];
         var exportInfo = [];
+        var parentsids = {};
 				if(len > 0){
 					for (var i = 0; i < len; i++){
+            if (parentsids[doc[i].parentid]) {
+              parentsids[doc[i].parentid].push(doc[i]);
+            }else{
+              parentsids[doc[i].parentid] =[doc[i]];
+            }
             var tmp={
+              nothing: " ",
               Name: ""+doc[i].Name,
               IOT: ""+doc[i].IOT,
               IMT: ""+doc[i].IMT,
@@ -223,8 +280,53 @@ var report = {
 						view_cuFileReport.push(doc[i]);
 					}
 				}
-				view=JSON.stringify(view_cuFileReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_cuFileReport,"exportInfo":exportInfo});
+
+        var objparents = {
+					"selector": {
+            "Name": { "$gt": 0 },
+						"_id": { "$in": Object.keys(parentsids) },
+						"key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
+						"MIRABusinessUnit": req.session.businessunit
+					},
+					"fields": ["_id","DocSubType","Country","IMT","IOT"]
+				};
+
+			  db.find(objparents).then(function(data){
+
+          var parents = data.body.docs;
+          for (var i = 0; i < parents.length; i++) {
+            if(parents[i].Country){
+              var tmpCountry = util.resolveGeo(parents[i].Country, "Country");
+              var tmpIOT = "";
+              var tmpIMT = "";
+              if (global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")]) {
+                tmpIOT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IOT;
+                tmpIMT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IMT;
+              }
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+                parentsids[parents[i]["_id"]][j].Country = tmpCountry;
+              }
+            }else if(parents[i].IMT){
+              var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
+              var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+              }
+            }else if(parents[i].IOT){
+              var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
+              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+              }
+            }
+          }
+  				deferred.resolve({"status": 200, "doc":view_cuFileReport,"exportInfo":exportInfo});
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
 			}).catch(function(err) {
 				deferred.reject({"status": 500, "error": err.error.reason});
 			});
@@ -426,17 +528,19 @@ var report = {
           finalList.push({IOTName: "(Not Categorized)", id:"ReportingGroup(NotCategorized)", parent:"ReportingGroup", catEntry: true});
           for (var i = 0; i < BURptGrpList.length; i++) {
             if (BURptGrpList[i].MIRAAssessmentStatus != "Final") {
-              CUIOTList[i].GroupingName = "Reporting Group";
+              BURptGrpList[i].GroupingName = "Reporting Group";
               BURptGrpList[i].parent = "ReportingGroup(NotCategorized)";
               BURptGrpList[i].id = BURptGrpList[i]["_id"];
               finalList.push(BURptGrpList[i]);
             }
           }
+          //no admin
             }else{
               finalList.push({GroupingName: "Business Units", id: "BusinessUnit", catEntry: true});
               finalList.push({IOTName: "(Not Categorized)", id: "BusinessUnit(NotCategorized)", parent:"BusinessUnit", catEntry: true});
               for (var i = 0; i < doc.length; i++) {
                 if(doc[i].DocSubType == "Business Unit" && (doc[i].MIRAAssessmentStatus != "Final" || (doc[i].WWBCITAssessmentStatus != "Complete" && doc[i].WWBCITAssessmentStatus != "Reviewed"&& doc[i].WWBCITAssessmentStatus != "")) && ((doc[i].AllEditors.indexOf(req.session.user.mail) > -1) || (doc[i].AllReaders.indexOf(req.session.user.mail) > -1))){
+                  doc[i].GroupingName = "Business Unit";
                   doc[i].parent = "BusinessUnit(NotCategorized)";
                   doc[i].id = doc[i]["_id"];
                   finalList.push(doc[i]);
@@ -494,6 +598,7 @@ var report = {
                 BUIOTList[i].IOT = util.resolveGeo(BUIOTList[i].IOT, "IOT");
                 finalList.push({IOTName: BUIOTList[i].IOT, id:BUIOTList[i]["_id"], parent: "GeoEntities", catEntry: true});
                 if (BUIOTList[i].MIRAAssessmentStatus != "Final" && ((BUIOTList[i].AllEditors.indexOf(req.session.user.mail) > -1) || (BUIOTList[i].AllReaders.indexOf(req.session.user.mail) > -1))) {
+                  BUIOTList[i].GroupingName = "Geo-Aligned Entities";
                   BUIOTList[i].parent = BUIOTList[i]["_id"];
                   BUIOTList[i].id = "dummy";
                   tmpArray.push(JSON.parse(JSON.stringify(BUIOTList[i])));
@@ -502,6 +607,8 @@ var report = {
                   for (var j = 0; j < parentsObj[BUIOTList[i]["_id"]].length; j++) {
                     var imtlevel = parentsObj[BUIOTList[i]["_id"]][j];
                     if (imtlevel.MIRAAssessmentStatus != "Final" && ((imtlevel.AllEditors.indexOf(req.session.user.mail) > -1) || (imtlevel.AllReaders.indexOf(req.session.user.mail) > -1))) {
+                      imtlevel.GroupingName = "Geo-Aligned Entities";
+                      imtlevel.IOT = BUIOTList[i].IOT;
                       imtlevel.parent = BUIOTList[i]["_id"];
                       imtlevel.id = "dummy";
                       tmpArray.push(JSON.parse(JSON.stringify(imtlevel)));
@@ -510,14 +617,18 @@ var report = {
                       for (var k = 0; k < parentsObj[imtlevel["_id"]].length; k++) {
                         var countrylevel = parentsObj[imtlevel["_id"]][k];
                           if (countrylevel.MIRAAssessmentStatus != "Final" && ((countrylevel.AllEditors.indexOf(req.session.user.mail) > -1) || (countrylevel.AllReaders.indexOf(req.session.user.mail) > -1))) {
-                          countrylevel.parent = BUIOTList[i]["_id"];
-                          countrylevel.id = "dummy";
-                          tmpArray.push(JSON.parse(JSON.stringify(countrylevel)));
+                            countrylevel.GroupingName = "Geo-Aligned Entities";
+                            countrylevel.IOT = BUIOTList[i].IOT;
+                            countrylevel.parent = BUIOTList[i]["_id"];
+                            countrylevel.id = "dummy";
+                            tmpArray.push(JSON.parse(JSON.stringify(countrylevel)));
                         }
                         if (parentsObj[countrylevel["_id"]]) {
                           for (var l = 0; l < parentsObj[countrylevel["_id"]].length; l++) {
                             var culevel = parentsObj[countrylevel["_id"]][l];
                             if (culevel.MIRAAssessmentStatus != "Final" && ((culevel.AllEditors.indexOf(req.session.user.mail) > -1) || (culevel.AllReaders.indexOf(req.session.user.mail) > -1))) {
+                              culevel.GroupingName = "Geo-Aligned Entities";
+                              culevel.IOT = BUIOTList[i].IOT;
                               culevel.parent = BUIOTList[i]["_id"];
                               culevel.id = "dummy";
                               tmpArray.push(JSON.parse(JSON.stringify(culevel)));
@@ -526,6 +637,8 @@ var report = {
                               for (var m = 0; m < parentsObj[culevel["_id"]].length; m++) {
                                 var accountlevel = parentsObj[culevel["_id"]][m];
                                 if (accountlevel.MIRAAssessmentStatus != "Final" && ((accountlevel.AllEditors.indexOf(req.session.user.mail) > -1) || (accountlevel.AllReaders.indexOf(req.session.user.mail) > -1))) {
+                                  accountlevel.GroupingName = "Geo-Aligned Entities";
+                                  accountlevel.IOT = BUIOTList[i].IOT;
                                   accountlevel.parent = BUIOTList[i]["_id"];
                                   accountlevel.id = "dummy";
                                   tmpArray.push(JSON.parse(JSON.stringify(accountlevel)));
@@ -542,6 +655,8 @@ var report = {
                 if (CPIOTList[BUIOTList[i].IOT]) {
                   for (var j = 0; j < CPIOTList[BUIOTList[i].IOT].length; j++) {
                     if (CPIOTList[BUIOTList[i].IOT][j].MIRAAssessmentStatus != "Final" || (CPIOTList[BUIOTList[i].IOT][j].WWBCITAssessmentStatus != "Complete" && CPIOTList[BUIOTList[i].IOT][j].WWBCITAssessmentStatus != "Reviewed"&& CPIOTList[BUIOTList[i].IOT][j].WWBCITAssessmentStatus != "") && ((CPIOTList[BUIOTList[i].IOT][j].AllEditors.indexOf(req.session.user.mail) > -1) || (CPIOTList[BUIOTList[i].IOT][j].AllReaders.indexOf(req.session.user.mail) > -1))) {
+                      CPIOTList[BUIOTList[i].IOT][j].GroupingName = "Geo-Aligned Entities";
+                      CPIOTList[BUIOTList[i].IOT][j].IOT = BUIOTList[i].IOT;
                       CPIOTList[BUIOTList[i].IOT][j].parent = BUIOTList[i]["_id"];
                       CPIOTList[BUIOTList[i].IOT][j].id = "dummy";
                       tmpArray.push(JSON.parse(JSON.stringify(CPIOTList[BUIOTList[i].IOT][j])));
@@ -564,6 +679,7 @@ var report = {
               finalList.push({IOTName: "(Not Categorized)", id:"GlobalProcesses(NotCategorized)", parent:"GlobalProcesses", catEntry: true});
               for (var i = 0; i < GPList.length; i++) {
                 if (GPList[i].MIRAAssessmentStatus != "Final" || (GPList[i].WWBCITAssessmentStatus != "Complete" && GPList[i].WWBCITAssessmentStatus != "Reviewed"&& GPList[i].WWBCITAssessmentStatus != "") && ((GPList[i].AllEditors.indexOf(req.session.user.mail) > -1) || (GPList[i].AllReaders.indexOf(req.session.user.mail) > -1))) {
+                  GPList[i].GroupingName = "Global Processes";
                   GPList[i].parent = "GlobalProcesses(NotCategorized)";
                   GPList[i].id = GPList[i]["_id"];
                   finalList.push(GPList[i]);
@@ -573,6 +689,7 @@ var report = {
               finalList.push({IOTName: "(Not Categorized)", id:"IOTlevelCUs(NotCategorized)", parent:"IOTlevelCUs", catEntry: true});
               for (var i = 0; i < CUIOTList.length; i++) {
                 if (CUIOTList[i].MIRAAssessmentStatus != "Final" || (CUIOTList[i].WWBCITAssessmentStatus != "Complete" && CUIOTList[i].WWBCITAssessmentStatus != "Reviewed"&& CUIOTList[i].WWBCITAssessmentStatus != "") && ((CUIOTList[i].AllEditors.indexOf(req.session.user.mail) > -1) || (CUIOTList[i].AllReaders.indexOf(req.session.user.mail) > -1))) {
+                  CUIOTList[i].GroupingName = "IOT level CUs";
                   CUIOTList[i].parent = "IOTlevelCUs(NotCategorized)";
                   CUIOTList[i].id = CUIOTList[i]["_id"];
                   finalList.push(CUIOTList[i]);
@@ -582,6 +699,7 @@ var report = {
               finalList.push({IOTName: "(Not Categorized)", id:"ReportingGroup(NotCategorized)", parent:"ReportingGroup", catEntry: true});
               for (var i = 0; i < BURptGrpList.length; i++) {
                 if (BURptGrpList[i].MIRAAssessmentStatus != "Final" && ((BURptGrpList[i].AllEditors.indexOf(req.session.user.mail) > -1) || (BURptGrpList[i].AllReaders.indexOf(req.session.user.mail) > -1))) {
+                  BURptGrpList[i].GroupingName = "Reporting Group";
                   BURptGrpList[i].parent = "ReportingGroup(NotCategorized)";
                   BURptGrpList[i].id = BURptGrpList[i]["_id"];
                   finalList.push(BURptGrpList[i]);
@@ -680,17 +798,25 @@ var report = {
           var catList = {};
           var exportInfo = [];
           var asmtsids = {};
-          finalList.push({catName: "Total", total: doc.length, id: "Total"});
+          finalList.push({catName: "Total", total: doc.length, id: "Total", catEntry: true});
           for (var i = 0; i < doc.length; i++) {
             if (!catList[doc[i].PeriodRating]) {
               var tmp = {
                 id: doc[i].PeriodRating,
                 catName: doc[i].PeriodRating,
                 parent: "Total",
-                total: 0
+                total: 0,
+                catEntry: true
               };
               finalList.push(tmp);
               catList[doc[i].PeriodRating] = tmp;
+            }
+            if (doc[i].ParentDocSubType == "Controllable Unit") {
+              if(doc[i].Portfolio == "Yes"){
+                doc[i].ParentDocSubType = "Portfolio CU";
+              }else{
+                doc[i].ParentDocSubType = "Standalone CU";
+              }
             }
             doc[i].CUSize = audocs[doc[i].parentid].CUSize;
             doc[i].CUMaxScore = fieldCalc.getCUMaxScore(doc[i].CUSize);
@@ -729,6 +855,29 @@ var report = {
               if(asmtsids[audits[i].parentid]){
                 asmtsids[audits[i].parentid].AuditReadiness = asmtsids[audits[i].parentid].CurrentPeriod+" "+ audits[i].rating;
                 delete asmtsids[audits[i].parentid];
+              }
+            }
+            for (var i = 0; i < finalList.length; i++) {
+              if(!finalList[i].catEntry){
+                exportInfo.push({
+                    catName: finalList[i].PeriodRating || " ",
+                    AssessableUnitName: finalList[i].AssessableUnitName || " ",
+                    total: finalList[i].total || " ",
+                    ParentDocSubType: finalList[i].ParentDocSubType || " ",
+                    AuditProgram: finalList[i].AuditProgram || " ",
+                    AuditReadiness: finalList[i].AuditReadiness || " ",
+                    PeriodRatingPrev4: finalList[i].PeriodRatingPrev4 || " ",
+                    PeriodRatingPrev3: finalList[i].PeriodRatingPrev3 || " ",
+                    PeriodRatingPrev2: finalList[i].PeriodRatingPrev2 || " ",
+                    PeriodRatingPrev1: finalList[i].PeriodRatingPrev1 || " ",
+                    PeriodRating: finalList[i].PeriodRating || " ",
+                    NextQtrRating: finalList[i].NextQtrRating || " ",
+                    Target2Sat: finalList[i].Target2Sat || " ",
+                    CUSize: finalList[i].CUSize || " ",
+                    CUMaxScore: finalList[i].CUMaxScore || " ",
+                    CUScore: finalList[i].CUScore || " ",
+                    ReviewComments: finalList[i].ReviewComments || " "
+                });
               }
             }
     				deferred.resolve({"status": 200, "doc":finalList, "exportInfo": exportInfo});
