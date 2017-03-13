@@ -492,8 +492,7 @@ var components = {
 				if(internal.parentid == undefined){
 					
 					internal.parentid = req.query.pid;
-					hasParent = false;	
-					console.log("aqui undefined " + internal.parentid)					
+					hasParent = false;
 				}
 					
 				// get parent doc
@@ -1090,6 +1089,7 @@ var components = {
 					obj.rating = req.body.rating;
 					obj.numRecommendationsTotal = req.body.numRecommendationsTotal;
 					obj.numRecommendationsOpen = req.body.numRecommendationsOpen;
+					obj.targetClose = req.body.targetClose;
 					obj.parentid = req.body.parentid;
 					
 					var CUScore = fieldCalc.getCUMaxScore(req.body.size);
