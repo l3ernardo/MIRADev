@@ -11,12 +11,16 @@ function tableToReport(table, isDatatable){
 		line=line+"<th>"+$(test).text()+"</th>";
 	}
 	tab_text=tab_text+line+"</tr>"+"</thead><tbody>";
-	if(($("#mira_checkbox").is(':checked'))){
-		for(j = 0; j<=field4rows.length; j++){
+	if(($("#mira_checkbox_tree").is(':checked'))){
+		for(j = 0; j<Object.keys(field4rows).length; j++){
 			var r1 = field4rows[j];
 			line="<tr>";
 			for(var obj1 in r1){
-				var r2 = r1[obj1];line = line+"<td>"+r2+"</td>";
+				var r2 = r1[obj1];
+				if(r2 == "undefined"){
+					r2="";
+				}
+				line = line+"<td>"+r2+"</td>";
 			} //end for obj1
 			tab_text=tab_text+line+"</tr>";
 		}
