@@ -102,6 +102,11 @@ $(document).ready(function(){
 		validation();
 	});
 
+	// Code for reset status button - reset MIRA status to Draft
+	$('#btn_resetstatus').click(function() {
+		window.location.href = "assessment?id=" + $("input[name='docid']").val() + "&edit&resetstatus";
+	});
+
 	//Code for Save button
 	$('#btn_save').click(function(evt) {
 		myEditor.saveHTML();
@@ -857,7 +862,7 @@ function counter(name) {
 
 
 // Validation for the validation button
-	function validation(){ 
+	function validation(){
 	$('#validationmsg').focus();
 	var req_flds = "";
 	var frm = $("input[name='DocType']").val()
@@ -926,7 +931,7 @@ if (($("#MIRAStatus").val() == "Draft" && ($("#PeriodRating").val() == "Marg" ||
 					}
 				}
 			}
-		} 
+		}
 		if (!$("#BoCResponse2Yes").is(':checked') && !$("#BoCResponse2No").is(':checked')){
 				$("#validationmsg").text("");
 				$("#validationmsg").append('<li class="valimesg">Require entries on the Tab Basics of Controls (Row2) are incomplete.<a class="validmsg">Click Here.</a></li>');
@@ -1192,7 +1197,7 @@ if ( $( "#OMID2Rating" ).length ) {
 	if ( $( "#OMID4Rating" ).length ) {
 		if (!$('#OMID4Rating').val()) {
 				$("#validationmsg").text("");
-				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Current Asset Inventory.</li>");				
+				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Current Asset Inventory.</li>");
 					$('#OMID4Rating').focus();
 					return false;
 			} else {
@@ -1230,7 +1235,7 @@ if ( $( "#OMID2Rating" ).length ) {
 		}
 	}
 
-//Labour Claiming	
+//Labour Claiming
 	if ( $( "#OMID7Rating" ).length ) {
 		if (!$('#OMID7Rating').val()) {
 				$("#validationmsg").text("");
@@ -1357,7 +1362,7 @@ if ( $( "#OMID2Rating" ).length ) {
 	}
 
 // SOD
-	if ( $( "#OMID12Rating" ).length ) { 
+	if ( $( "#OMID12Rating" ).length ) {
 		if (!$('#OMID12Rating').val()) {
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on SOD.</li>");
@@ -1399,7 +1404,7 @@ if ( $( "#OMID2Rating" ).length ) {
 	}
 
 //Access Mgmt
-	if ( $( "#OMID1Rating" ).length ) { 
+	if ( $( "#OMID1Rating" ).length ) {
 		console.log("entrou");
 		if (!$('#OMID1Rating').val()) {
 				$("#validationmsg").text("");
@@ -1437,11 +1442,11 @@ if ( $( "#OMID2Rating" ).length ) {
 						}
 					}
 				}
-			}	
+			}
 		}
 	}
-//Workplace Security - Violations	
-	if ( $( "#OMID16Rating" ).length ) { 
+//Workplace Security - Violations
+	if ( $( "#OMID16Rating" ).length ) {
 		if (!$('#OMID16Rating').val()) {
 				$("#validationmsg").text("");
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Workplace Security - Violations.</li>");
@@ -1488,7 +1493,7 @@ if ( $( "#OMID2Rating" ).length ) {
 				$("#validationmsg").append("<li>Tab Operational Metrics: Require entries on Workplace Security - Disciplinary Action.</li>");
 				$('#OMID15Rating').focus();
 					return false;
-			} else {		
+			} else {
 				if ($('#OMID15Rating').val() =='Marg' || $('#OMID15Rating').val() =='Unsat') {
 				  if (!$("#OMID15TargetSatDate").val()) {
 						$("#validationmsg").text("");

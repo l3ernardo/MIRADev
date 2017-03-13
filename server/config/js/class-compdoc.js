@@ -16,6 +16,10 @@ var getDocs = {
 		var deferred = q.defer();
 		try {
 			switch (doc[0].ParentDocSubType) {
+				case "Sub-process":
+				console.log("enters compdocs");
+					deferred.resolve({"status": 200, "doc": doc});
+					break;
 				case "Country Process":
 					var compObj = {
 						selector : {
@@ -262,7 +266,7 @@ var getDocs = {
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								// For Key Controls Testing Tab
 								if (comps[i].reportingCountry == doc[0].Country) {
-									doc[0].KC2Test2Data.push(comps[i]);
+									doc[0].KC2Test3Data.push(comps[i]);
 									//doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab
