@@ -16,6 +16,10 @@ var getDocs = {
 		var deferred = q.defer();
 		try {
 			switch (doc[0].ParentDocSubType) {
+				case "Sub-process":
+				console.log("enters compdocs");
+					deferred.resolve({"status": 200, "doc": doc});
+					break;
 				case "Country Process":
 					var compObj = {
 						selector : {

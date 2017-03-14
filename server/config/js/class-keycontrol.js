@@ -539,6 +539,18 @@ var calculateKCTab = {
 
           break;
         case "Global Process":
+          if (doc[0].AUDefectRate !== undefined || doc[0].AUDefectRate != "") {
+            doc[0].AUDefectRate = (parseFloat(doc[0].AUDefectRate) * 100).toFixed(1);
+            if (doc[0].AUDefectRate == 0) {
+              doc[0].AUDefectRate = parseFloat(doc[0].AUDefectRate).toFixed(0);
+            }
+          }
+          if (doc[0].AUTestingRatio !== undefined || doc[0].AUTestingRatio != "") {
+            doc[0].AUTestingRatio = (parseFloat(doc[0].AUTestingRatio) * 100).toFixed(1);
+            if (doc[0].AUTestingRatio == 0) {
+              doc[0].AUTestingRatio = parseFloat(doc[0].AUTestingRatio).toFixed(0);
+            }
+          }
           break;
         case "BU Reporting Group":
           break;

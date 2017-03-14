@@ -1,5 +1,5 @@
 /*Function to generate dashboard table to export*/
-function tableToReport(table){
+function tableToReport(table, isDatatable){
 	var field4rows = $.parseJSON($('textarea#dataForExport').val());
 	var table=table;
 	var tab_text="<table border='2px'><thead><tr bgcolor='#87AFC6'>";
@@ -11,12 +11,16 @@ function tableToReport(table){
 		line=line+"<th>"+$(test).text()+"</th>";
 	}
 	tab_text=tab_text+line+"</tr>"+"</thead><tbody>";
-	if(($("#mira_checkbox").is(':checked'))){
-		for(j = 0; j<=field4rows.length; j++){
+	if(($("#mira_checkbox_tree").is(':checked'))){
+		for(j = 0; j<Object.keys(field4rows).length; j++){
 			var r1 = field4rows[j];
 			line="<tr>";
 			for(var obj1 in r1){
-				var r2 = r1[obj1];line = line+"<td>"+r2+"</td>";
+				var r2 = r1[obj1];
+				if(r2 == "undefined"){
+					r2="";
+				}
+				line = line+"<td>"+r2+"</td>";
 			} //end for obj1
 			tab_text=tab_text+line+"</tr>";
 		}
@@ -26,19 +30,19 @@ function tableToReport(table){
 
 			class_name='mira_checkbox_tree';
 
-
-		var name_table='input:checkbox[class='+class_name+']';
-		$(name_table).each(function(index) {checkboxes.push( this.checked);});
-		for (j=1;j<=checkboxes.length;j++){
-			if (checkboxes[j] == true){
-				array2[aux]=j;
-				aux++;
+		if (isDatatable) {
+			var name_table='input:checkbox[class='+class_name+']';
+		$(name_table).each(function(index) {
+			if(this.checked){
+				if (!isNaN(this.value)) {
+					array2.push(this.value);
+				}
 			}
-		}
+		});
 
-		for(j = 1; j<=array2.length; j++){
-			var index=array2[j-1];
-			var r1= field4rows[index-1];
+		for(j = 0; j<array2.length; j++){
+			var index=array2[j];
+			var r1 = field4rows[index];
 			line="<tr>";
 
 			for(var obj1 in r1){
@@ -49,6 +53,31 @@ function tableToReport(table){
 				line = line+"<td>"+r2+"</td>";
 			} //end for obj1
 			tab_text=tab_text+line+"</tr>";
+		}
+		}else{
+			var name_table='input:checkbox[class='+class_name+']';
+			$(name_table).each(function(index) {checkboxes.push( this.checked);});
+			for (j=1;j<=checkboxes.length;j++){
+				if (checkboxes[j] == true){
+					array2[aux]=j;
+					aux++;
+				}
+			}
+
+			for(j = 1; j<=array2.length; j++){
+				var index=array2[j-1];
+				var r1= field4rows[index-1];
+				line="<tr>";
+
+				for(var obj1 in r1){
+					var r2 = r1[obj1];
+					if(r2 == "undefined"){
+						r2="";
+					}
+					line = line+"<td>"+r2+"</td>";
+				} //end for obj1
+				tab_text=tab_text+line+"</tr>";
+			}
 		}
 	}
 	tab_text=tab_text+"</tbody></table>";
@@ -127,10 +156,10 @@ $(document).ready(function() {
 			tableReport = tableToReport('reports_treeview2');
 		}
 		else if(y!=-1){
-			tableReport = tableToReport('reports_table2');
+			tableReport = tableToReport('reports_table2',true);
 		}
 		else{
-			tableReport = tableToReport('reports_table');
+			tableReport = tableToReport('reports_table',true);
 		}
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 		//generateReport($(this), "xls");
