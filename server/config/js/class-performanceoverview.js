@@ -219,8 +219,21 @@ var performanceoverviewcountry = {
 
  buildPerformanceTabGP : function(db, doc,defViewRow,fieldCalc) {
 
-	 	performanceoverviewcountry.getKFCRDefectRate(db,doc);
-		performanceoverviewcountry.getKCODefectRate(db,doc);
+		// 	performanceoverviewcountry.getKFCRDefectRate(db,doc);
+		// performanceoverviewcountry.getKCODefectRate(db,doc);
+		if (doc[0].KCODefectRate !== undefined && doc[0].KCODefectRate !== "") {
+			doc[0].KCODefectRate = (parseFloat(doc[0].KCODefectRate) * 100).toFixed(1);
+			if (doc[0].KCODefectRate == 0) {
+				doc[0].KCODefectRate = parseFloat(doc[0].KCODefectRate).toFixed(0);
+			}
+		}
+		if (doc[0].KCFRDefectRate !== undefined && doc[0].KCFRDefectRate !== "") {
+			doc[0].KCFRDefectRate = (parseFloat(doc[0].KCFRDefectRate) * 100).toFixed(1);
+			if (doc[0].KCFRDefectRate == 0) {
+				doc[0].KCFRDefectRate = parseFloat(doc[0].KCFRDefectRate).toFixed(0);
+			}
+		}
+
 		performanceoverviewcountry.getMissedRisks(db,doc);
 		performanceoverviewcountry.getMSACCommitmentsCount(db,doc);
 
@@ -316,7 +329,8 @@ var performanceoverviewcountry = {
 				// 		else
 				// 			doc[0].KCODefectRate = (0 + parseInt(doc[0].KCODefectRateSOD)).toString();
 
-		} else{// GBS and GTS trans
+		}
+		else{// GBS and GTS trans
 
 			performanceoverviewcountry.getCPANDCUPerformanceIndicators(db,doc);
 			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
