@@ -147,7 +147,7 @@ var assessment = {
 								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error);
 								deferred.reject({"status": 500, "error": err.error});
 							});
-						break;
+							break;
 						case "Global Process":
 								/*doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
@@ -211,10 +211,13 @@ var assessment = {
 									aut.processAUTab(doc,defViewRow);
 									// Process Audits & Reviews tab
 									aar.processARTab(doc,defViewRow);
+									// Key Controls Tesing tab
+									kct.processKCTab(doc,defViewRow);
+
 									// KCT 1 Rptg Country Testing tab
-									rcc.processRCTab(doc,defViewRow);
+									// rcc.processRCTab(doc,defViewRow);
 									// KCT 2 Process Sampled Country Testing Tab
-									sct.processSCTab(doc,defViewRow);
+									// sct.processSCTab(doc,defViewRow);
 								/*
 
 								if (doc[0].CPAsmtDataPIview.length < defViewRow) {
