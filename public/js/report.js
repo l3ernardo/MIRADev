@@ -120,21 +120,20 @@ $(document).ready(function() {
 		"scrollY": 250,
 		"ordering":false
 	});*/
-	var table = $('#reports_table').DataTable({
+	var table;
+	table = $('#reports_table').DataTable({
 		select: true,
 		"scrollX": true,
 		"ordering":false
 	});
+	if(y!=-1){
+		table = $('#reports_table2').DataTable({
+			select: true,
+			"scrollX": true,
+			"ordering":false
+		});
+	}
 	var rows = table.rows({ 'search': 'applied' }).nodes();
-	$('#reports_table2').DataTable({
-		select: true,
-		"scrollX": true,
-		order: [],
-		 columnDefs: [ {
-			targets: [2,3,4,5,6,7],
-			orderable: false
-		} ]
-	});
 	$('#lnk_exportxls').click(function(){
 		if(t!=-1){
 			tableReport = tableToReport('reports_treeview1');
