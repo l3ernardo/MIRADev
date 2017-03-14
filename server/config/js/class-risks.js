@@ -154,8 +154,21 @@ var calculateORTab = {
               return -1
             if (nameA < nameB)
               return 1
+            if (doc[0].ParentDocSubType == "Global Process") {
+              var nameA=a.IMT.toLowerCase(), nameB=b.IMT.toLowerCase()
+              if (nameA > nameB) //sort string descending
+                return -1
+              if (nameA < nameB)
+                return 1
+              var nameA=a.country.toLowerCase(), nameB=b.country.toLowerCase()
+              if (nameA > nameB) //sort string descending
+                return -1
+              if (nameA < nameB)
+                return 1
+            }
             return 0 //default return value (no sorting)
           });
+          
           for(var i = 0; i < risks.length; i++){
             if(typeof riskCategory[risks[i].scorecardCategory] === "undefined"){
               var tmp = {
@@ -170,6 +183,39 @@ var calculateORTab = {
               objects[tmp.id] = tmp;
               riskCategory[risks[i].scorecardCategory] = true;
             }
+            if (doc[0].ParentDocSubType == "Global Process") {
+              if(typeof riskCategory[risks[i].IMT] === "undefined"){
+                var tmp = {
+                  id:risks[i].IMT.replace(/ /g,''),
+                  parent: risks[i].scorecardCategory.replace(/ /g,''),
+                  IMT:risks[i].IMT,
+                  numOpenIssues: 0,
+                  numTasks: 0,
+                  numTasksOpen: 0,
+                  numMissedTasks: 0
+                };
+                openrisks.push(tmp);
+                objects[tmp.id] = tmp;
+                riskCategory[risks[i].IMT] = true;
+              }
+              if(typeof riskCategory[risks[i].country] === "undefined"){
+                var tmp = {
+                  id:risks[i].country.replace(/ /g,''),
+                  parent: risks[i].IMT.replace(/ /g,''),
+                  country:risks[i].country,
+                  numOpenIssues: 0,
+                  numTasks: 0,
+                  numTasksOpen: 0,
+                  numMissedTasks: 0
+                };
+                openrisks.push(tmp);
+                objects[tmp.id] = tmp;
+                riskCategory[risks[i].country] = true;
+              }
+              risks[i].parent = risks[i].country.replace(/ /g,'');
+            }else {
+              risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
+            }
             if((risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0) && risks[i].status != "Closed"){
             // if(risks[i].FlagTodaysDate == "1"||risks[i].ctrg > 0 || risks[i].numMissedTasks > 0){
               risks[i].missedFlag = true;
@@ -180,6 +226,10 @@ var calculateORTab = {
             risks[i].numOpenIssues = 1;
             var tmp = {};
             tmp.scorecardCategory = risks[i].scorecardCategory || " ";
+            if (doc[0].ParentDocSubType == "Global Process") {
+              tmp.IMT = risks[i].IMT || " ";
+              tmp.country = risks[i].country || " ";
+            }
             tmp.id = risks[i].id || " ";
             tmp.status = risks[i].status || " ";
             tmp.originalTargetDate = risks[i].originalTargetDate || " ";
@@ -191,12 +241,25 @@ var calculateORTab = {
             tmp.missedFlag = risks[i].missedFlag || " ";
             tmp.riskAbstract = risks[i].riskAbstract || " ";
             exportOpenRisks2.push(tmp);
-            risks[i].parent = risks[i].scorecardCategory.replace(/ /g,'');
+
             //do counting for category
             objects[risks[i].parent].numOpenIssues++ ;
             objects[risks[i].parent].numTasks += parseInt(risks[i].numTasks);
             objects[risks[i].parent].numTasksOpen += parseInt(risks[i].numTasksOpen);
             objects[risks[i].parent].numMissedTasks += parseInt(risks[i].numMissedTasks);
+            if (doc[0].ParentDocSubType == "Global Process") {
+
+              objects[objects[risks[i].parent].parent].numOpenIssues++ ;
+              objects[objects[risks[i].parent].parent].numTasks += parseInt(risks[i].numTasks);
+              objects[objects[risks[i].parent].parent].numTasksOpen += parseInt(risks[i].numTasksOpen);
+              objects[objects[risks[i].parent].parent].numMissedTasks += parseInt(risks[i].numMissedTasks);
+
+              objects[objects[objects[risks[i].parent].parent].parent].numOpenIssues++ ;
+              objects[objects[objects[risks[i].parent].parent].parent].numTasks += parseInt(risks[i].numTasks);
+              objects[objects[objects[risks[i].parent].parent].parent].numTasksOpen += parseInt(risks[i].numTasksOpen);
+              objects[objects[objects[risks[i].parent].parent].parent].numMissedTasks += parseInt(risks[i].numMissedTasks);
+
+            }
             openrisks.push(risks[i]);
           }
           doc[0].exportOpenRisks2 = exportOpenRisks2;
