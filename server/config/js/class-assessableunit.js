@@ -1641,8 +1641,8 @@ var assessableunit = {
 					"docType": "asmtComponent",
 					"compntType": "internalAudit",
 					"auditReviewName":"CHQ Internal Audit",
-					"status":"Final",
-					"auditYear": req.session.quarter.split(" ")[0]
+					"status":"Final" //,
+					//"auditYear": req.session.quarter.split(" ")[0]
 				},
 				"fields": [
 					"_id",
