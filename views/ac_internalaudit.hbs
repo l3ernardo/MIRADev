@@ -94,6 +94,11 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 				</td>
 			</tr>
 			<tr>
+				<td>Target to close:</td><td>
+					<input type="date" id="reportDate" name="targetClose" value="{{targetClose}}" class="ibm-calendar-link">
+				</td>
+			</tr>
+			<tr>
 				<td>Comments:</td><td>
 					<textarea name="comments" cols="100">{{comments}}</textarea>
 				</td>
@@ -106,6 +111,9 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 			{{else}}
 			<tr>
 				<td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/><br/>Open:{{numRecommendationsOpen}}</td>
+			</tr>
+			<tr>
+				<td>Target to close:</td><td>{{{openRiskDisplay numRecommendationsOpen targetClose}}}</td>
 			</tr>
 			<tr>
 				<td>Comments:</td><td>{{comments}}</td>
@@ -123,3 +131,14 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 		{{>buttons}}
 	</form>
 </div>
+<script>
+$(document).ready(function(){
+	$('#reportDate').datepicker({
+		changeMonth: true
+	});
+	$( "#reportDate" ).on( "change", function() {
+		$( "#reportDate" ).datepicker( "option", "dateFormat", "M dd, yy" );
+	});	
+});
+
+</script>

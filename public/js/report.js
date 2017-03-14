@@ -1,5 +1,5 @@
 /*Function to generate dashboard table to export*/
-function tableToReport(table, isDatatable){
+function tableToReport(table, isDatatable, rows){
 	var field4rows = $.parseJSON($('textarea#dataForExport').val());
 	var table=table;
 	var tab_text="<table border='2px'><thead><tr bgcolor='#87AFC6'>";
@@ -11,30 +11,21 @@ function tableToReport(table, isDatatable){
 		line=line+"<th>"+$(test).text()+"</th>";
 	}
 	tab_text=tab_text+line+"</tr>"+"</thead><tbody>";
-	if(($("#mira_checkbox").is(':checked'))){
-		for(j = 0; j<=field4rows.length; j++){
-			var r1 = field4rows[j];
-			line="<tr>";
-			for(var obj1 in r1){
-				var r2 = r1[obj1];line = line+"<td>"+r2+"</td>";
-			} //end for obj1
-			tab_text=tab_text+line+"</tr>";
-		}
-	}
-	else{
+	//enf od header
+
 		var checkboxes=[];var array2=[]; var aux=0;
 
 			class_name='mira_checkbox_tree';
 
 		if (isDatatable) {
 			var name_table='input:checkbox[class='+class_name+']';
-		$(name_table).each(function(index) {
-			if(this.checked){
-				if (!isNaN(this.value)) {
-					array2.push(this.value);
+			rows.each(function(index) {
+				if($('td input[type=checkbox]', index).prop("checked")){
+					if (!isNaN($('td input[type=checkbox]', index).prop("value"))) {
+						array2.push($('td input[type=checkbox]', index).prop("value"));
+					}
 				}
-			}
-		});
+			});
 
 		for(j = 0; j<array2.length; j++){
 			var index=array2[j];
@@ -75,7 +66,6 @@ function tableToReport(table, isDatatable){
 				tab_text=tab_text+line+"</tr>";
 			}
 		}
-	}
 	tab_text=tab_text+"</tbody></table>";
 	return (tab_text);
 }
@@ -130,11 +120,12 @@ $(document).ready(function() {
 		"scrollY": 250,
 		"ordering":false
 	});*/
-	$('#reports_table').DataTable({
+	var table = $('#reports_table').DataTable({
 		select: true,
 		"scrollX": true,
 		"ordering":false
 	});
+	var rows = table.rows({ 'search': 'applied' }).nodes();
 	$('#reports_table2').DataTable({
 		select: true,
 		"scrollX": true,
@@ -152,10 +143,12 @@ $(document).ready(function() {
 			tableReport = tableToReport('reports_treeview2');
 		}
 		else if(y!=-1){
-			tableReport = tableToReport('reports_table2',true);
+			rows = table.rows({ 'search': 'applied' }).nodes();
+			tableReport = tableToReport('reports_table2',true, rows);
 		}
 		else{
-			tableReport = tableToReport('reports_table',true);
+		rows = table.rows({ 'search': 'applied' }).nodes();
+			tableReport = tableToReport('reports_table',true, rows);
 		}
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
 		//generateReport($(this), "xls");
@@ -169,15 +162,22 @@ $(document).ready(function() {
 			tableReport = tableToReport('reports_treeview2');
 		}
 		else if(y!=-1){
-			tableReport = tableToReport('reports_table2');
+			rows = table.rows({ 'search': 'applied' }).nodes();
+			tableReport = tableToReport('reports_table2', true, rows);
 		}
 		else{
-		tableReport = tableToReport('reports_table');
+			rows = table.rows({ 'search': 'applied' }).nodes();
+		tableReport = tableToReport('reports_table', true, rows);
 
 	fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 }});
 	$("#mira_checkbox_tree").click(function(){
-	  $(".mira_checkbox_tree").prop('checked', $(this).prop('checked'));
+		if(v!=-1 || t!=-1){
+			$(".mira_checkbox_tree").prop('checked', $(this).prop('checked'));
+		}else{
+			rows = table.rows({ 'search': 'applied' }).nodes();
+	      // Check/uncheck checkboxes for all rows in the table
+	      $('input[type="checkbox"]', rows).prop('checked', this.checked);
+		}
 	});
-
 });

@@ -9,17 +9,16 @@
 				{{/unless}}
 			{{/unless}}
 			<input class="ibm-btn-arrow-pri" type="button" id="btn_save" value="Save"/>
-			<span class="ibm-sep">&nbsp;</span>			
+			<span class="ibm-sep">&nbsp;</span>
 			<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
 			{{#if_equal ParentDocSubType "Controllable Unit"}}
-			<span class="ibm-sep">&nbsp;</span>	
+			<span class="ibm-sep">&nbsp;</span>
 			<input class="ibm-btn-arrow-pri" type="button" id="btn_validate" value="Validate Results" />
 			{{/if_equal}}
 			{{#if_equal ParentDocSubType "Country Process"}}
-			<span class="ibm-sep">&nbsp;</span>	
+			<span class="ibm-sep">&nbsp;</span>
 			<input class="ibm-btn-arrow-pri" type="button" id="btn_validate" value="Validate Results" />
 			{{/if_equal}}
-		
 		</p>
 	</div>
 {{else}}
@@ -32,6 +31,10 @@
 				<input class="ibm-btn-cancel-sec" type="button" id="btn_cancel" value="Close" />
 			{{else}}
 				<input class="ibm-btn-arrow-pri" type="button" id="btn_cancel" value="Close" />
+			{{/if}}
+			{{#if canresetstatus}}
+				<span class="ibm-sep">&nbsp;</span>
+				<input class="ibm-btn-arrow-pri" type="button" id="btn_resetstatus" value="Reset Status to Draft" />
 			{{/if}}
 		</p>
 	</div>

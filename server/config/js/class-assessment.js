@@ -88,6 +88,15 @@ var assessment = {
 				doc[0].editor = accessrules.rules.editor;
 				doc[0].admin = accessrules.rules.admin;
 				doc[0].resetstatus = accessrules.rules.resetstatus;
+				if ((doc[0].admin || doc[0].resetstatus) && doc[0].MIRAStatus == "Final")  {
+					if(req.query.resetstatus != undefined) {
+						doc[0].MIRAStatus = "Draft";
+					}
+					else {
+						doc[0].canresetstatus = true;
+						doc[0].editor = false
+					}
+				}
 				// Get inherited fields from parent assessable unit
 				if (parentdoc[0].OpMetricKey == undefined || parentdoc[0].OpMetricKey == "") parentdoc[0].OpMetricKey = "OMKID0";
 				// OMKID0 - Operational Metric ID for Other Metrics as a default metric
@@ -138,7 +147,7 @@ var assessment = {
 								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error);
 								deferred.reject({"status": 500, "error": err.error});
 							});
-						break;
+							break;
 						case "Global Process":
 								/*doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
 								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
@@ -202,10 +211,13 @@ var assessment = {
 									aut.processAUTab(doc,defViewRow);
 									// Process Audits & Reviews tab
 									aar.processARTab(doc,defViewRow);
+									// Key Controls Tesing tab
+									kct.processKCTab(doc,defViewRow);
+
 									// KCT 1 Rptg Country Testing tab
-									rcc.processRCTab(doc,defViewRow);
+									// rcc.processRCTab(doc,defViewRow);
 									// KCT 2 Process Sampled Country Testing Tab
-									sct.processSCTab(doc,defViewRow);
+									// sct.processSCTab(doc,defViewRow);
 								/*
 
 								if (doc[0].CPAsmtDataPIview.length < defViewRow) {

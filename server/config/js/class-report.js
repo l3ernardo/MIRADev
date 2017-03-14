@@ -174,16 +174,20 @@ var report = {
                 parentsids[parents[i]["_id"]][j].Country = tmpCountry;
               }
             }else if(parents[i].IMT){
-              var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
-              var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
-              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
-                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
-                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+              if (global.hierarchy.BU_IMT[parents[i].IMT]) {
+                var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
+                var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
+                for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                  parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                  parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+                }
               }
             }else if(parents[i].IOT){
-              var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
-              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
-                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+              if (global.hierarchy.BU_IOT[parents[i].IOT]) {
+                var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
+                for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                  parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                }
               }
             }
           }
@@ -310,16 +314,20 @@ var report = {
                 parentsids[parents[i]["_id"]][j].Country = tmpCountry;
               }
             }else if(parents[i].IMT){
-              var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
-              var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
-              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
-                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
-                parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+              if (global.hierarchy.BU_IMT[parents[i].IMT]) {
+                var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
+                var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
+                for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                  parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                  parentsids[parents[i]["_id"]][j].IMT = tmpIMT;
+                }
               }
             }else if(parents[i].IOT){
-              var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
-              for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
-                parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+              if (global.hierarchy.BU_IOT[parents[i].IOT]) {
+                var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
+                for (var j = 0; j < parentsids[parents[i]["_id"]].length; j++) {
+                  parentsids[parents[i]["_id"]][j].IOT = tmpIOT;
+                }
               }
             }
           }
