@@ -368,6 +368,10 @@ var calculateARTab = {
           }
           break;
         }
+        else {
+          tmp.DocSubType = "Controllable Unit";
+          break;
+        }
       }
       return tmp;
     }
