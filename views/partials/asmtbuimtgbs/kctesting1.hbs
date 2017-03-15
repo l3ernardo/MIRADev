@@ -52,19 +52,19 @@
 					<tr class="asmt-viewdata">
 						<td>{{name}}</td>
 						{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP4 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
-						
+
 						{{{defectRateDisplayView defectRateP3 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP3 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
-						
+
 						{{{defectRateDisplayView defectRateP2 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP2 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
-						
+
 						{{{defectRateDisplayView defectRateP1 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP1 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 						{{{TestingRatioDisplay testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
@@ -84,17 +84,17 @@
 					</tr>
 					{{/KCProcessFIN}}
 				<tr class="kc-test-viewheader">
-					<td colspan="25"></td>
+					<td colspan="24"></td>
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
-					<td class="kc-test-viewsubheader-al" colspan="10">Total Country Financial Processes with Defect Rate &gt; 2% / 4%</td>
+					<td class="kc-test-viewsubheader-al" colspan="9">Total Country Financial Processes with Defect Rate &gt; 2% / 4%</td>
 					<td class="marg-bg">{{#if_not_equal margCPDRFin 0}}{{margCPDRFin}}{{/if_not_equal}}</td>
 					<td class="unsat-bg">{{#if_not_equal unsatCPDRFin 0}}{{unsatCPDRFin}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
 				<tr class="kc-test-viewheader">
-					<td colspan="13" rowspan="2"></td>
+					<td colspan="12" rowspan="2"></td>
 					<td colspan="12" rowspan="2">
 						{{#if editmode}}
 							<textarea name="SOXProcessTestingExplanations" id="SOXProcessTestingExplanations" rows="2" cols="85">{{SOXProcessTestingExplanations}}</textarea><br />
@@ -106,7 +106,7 @@
 				<tr class="kc-test-viewheader">
 				</tr>
 				<tr class="kc-test-viewheader">
-					<td colspan="25"></td>
+					<td colspan="24"></td>
 				</tr>
 				<tr class="kc-test-viewheader">
 					<td class="kc-test-viewheader" width="21%">Operational Processes</td>
@@ -163,17 +163,17 @@
 					</tr>
 				{{/each}}
 				<tr class="kc-test-viewheader">
-					<td colspan="25"></td>
+					<td colspan="24"></td>
 				</tr>
 				<tr class="kc-test-viewsubheader-al">
-					<td class="kc-test-viewsubheader-al" colspan="10">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
+					<td class="kc-test-viewsubheader-al" colspan="9">Total Country Operational Processes with Defect Rate &gt; 2% / 4%</td>
 						<td class="marg-bg">{{#if_not_equal margCPDROps 0}}{{margCPDROps}}{{/if_not_equal}}</td>
 						<td class="unsat-bg">{{#if_not_equal unsatCPDROps 0}}{{unsatCPDROps}}{{/if_not_equal}}</td>
 					<td class="kc-test-viewheader-cell"></td>
 					<td colspan="12" class="kc-test-viewheader">Explanations for current quarter entries</td>
 				</tr>
 				<tr class="kc-test-viewheader">
-					<td colspan="13" rowspan="2"></td>
+					<td colspan="12" rowspan="2"></td>
 					<td colspan="12" rowspan="2">
 						{{#if editmode}}
 							<textarea name="OpsProcessTestingExplanations" id="OpsProcessTestingExplanations" rows="2" cols="85">{{OpsProcessTestingExplanations}}</textarea><br />
@@ -185,9 +185,9 @@
 				<tr class="kc-test-viewheader">
 				</tr>
 				<tr class="kc-test-viewheader">
-					<td colspan="25"></td>
+					<td colspan="24"></td>
 				</tr>
-			</table> 
+			</table>
 			<table width="100%" class="ibm-data-table">
 				<tr class="kc-test-cell">
 					<td class="kc-test-cell" width="65%">
@@ -359,5 +359,3 @@
 	$("#RCTest_treeview").treetable({expandable: true });
 	$("#Rptg2_treeview").treetable({expandable: true });
 </script>
-
-

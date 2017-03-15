@@ -229,10 +229,12 @@
 	<tr class="kc-test-content">
 		<td colspan="4">
 			<span class="kc-test-header"><b>Current Quarter Defect Rate Exceptions</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+			<span class="ibm-sep">&nbsp;</span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+			<br /><br />
 				<table id="KCT1_treeview" width="100%" class="table_with_scroll">
 				<thead>
-					<th class="kc-test-viewheader" scope="col" width="2%"></th>
 					<th class="kc-test-viewheader" scope="col" width="40%">Country</th>
 					<th class="kc-test-viewheader" scope="col" width="15%"># Tests</th>
 					<th class="kc-test-viewheader" scope="col" width="15%"># Defects</th>
@@ -240,11 +242,10 @@
 				</thead>
 				{{#each KC2Test1Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{reportingCountry}}</a></td>
+						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{Country}}</a></td>
 						<td width="15%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%" >{{AUDefectCount}}</td>
-						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
-						<td width="10%">{{count}}</td>
+						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 20}}}
 					</tr>
 				{{/each}}
 			</table>
@@ -260,20 +261,21 @@
 			<table id="KCT2_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
-					<th class="kc-test-viewheader" scope="col" width="5%"></th>
+					<th class="kc-test-viewheader" scope="col" width="20%"></th>
 					<th class="kc-test-viewheader" scope="col" width="20%">Control</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Req'd Samples</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">Samples Tested</th>
-					<th class="kc-test-viewheader" scope="col" width="10%">TR %</th>
+					<th class="kc-test-viewheader" scope="col" width="5%">Req'd Samples</th>
+					<th class="kc-test-viewheader" scope="col" width="5%">Samples Tested</th>
+					<th class="kc-test-viewheader" scope="col" width="5%">TR %</th>
 					<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
 					<th class="kc-test-viewheader" scope="col" width="25%">Action plan to meet full year req'd samples</th>
 				</thead>
 				{{#each KC2Test2Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="15%">{{controlTypeName}}</td>
+						<td width="5%">{{controlType}}</td>
+						<td width="20%">{{process}}</td>
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
-						<td width="10%">{{numRequiredTests}}</td>
-						<td width="10%">{{numActualTests}}</td>
+						<td width="5%">{{numRequiredTests}}</td>
+						<td width="5%">{{numActualTests}}</td>
 						{{{TestingRatioDisplay testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name 5}}}
 						<td width="20%">{{reasonTested}}</td>
 						<td width="25%">{{actionPlan}}</td>
@@ -284,8 +286,10 @@
 	</tr>
 	<tr class="kc-test-content">
 		<td colspan="4">
-			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
-			<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+			<a href="javascript:void(0);" value="Export to Excel" name="RCTest-link-export" id="RCTest-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+			<span class="ibm-sep">&nbsp;</span>
+			<a href="javascript:void(0);" value="Export to Open Office" name="RCTest-link-export2" id="RCTest-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+			<br /><br />
 			<table id="KCT3_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="kc-test-viewheader" scope="col" width="5%"></th>
