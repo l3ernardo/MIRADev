@@ -1086,14 +1086,15 @@ var components = {
 					obj.comments = req.body.comments;
 					//obj.Notes = req.body.Notes;
 					obj.Links = req.body.attachIDs;
-					obj.rating = req.body.rating;
+					if(req.body.rating != undefined)
+						obj.rating = req.body.rating;
 					obj.numRecommendationsTotal = req.body.numRecommendationsTotal;
 					obj.numRecommendationsOpen = req.body.numRecommendationsOpen;
 					obj.targetClose = req.body.targetClose;
 					obj.parentid = req.body.parentid;
 					
 					var CUScore = fieldCalc.getCUMaxScore(req.body.size);
-					var finalscore = fieldCalc.getCUScore(req.body.rating, CUScore);
+					var finalscore = fieldCalc.getCUScore(obj.rating, CUScore);
 					obj.score = finalscore;
 					
 					db.save(obj).then(function(data){

@@ -61,7 +61,7 @@
 				<td>Rating:</td><td>{{rating}}</td>
 			</tr>
 			<tr>
-				<td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}&nbsp;Open:{{numRecommendationsOpen}}</td>
+				<td># Recommendations:</td><td>Total:{{numRecommendationsTotal}}<br/><br/>Open:{{numRecommendationsOpen}}</td>
 			</tr>
 			<tr>
 				<td>Target to close:</td><td>{{{openRiskDisplay numRecommendationsOpen targetClose}}}</td>
@@ -70,7 +70,7 @@
 				<td>Comments:</td>
 				<td>
 				{{#if editmode}}
-					<input type="text" name="comments" value="{{comments}}" >
+					<textarea name="comments" cols="100">{{comments}}</textarea>
 				{{else}}
 					{{comments}}
 				{{/if}}
