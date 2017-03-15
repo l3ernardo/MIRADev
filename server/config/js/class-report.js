@@ -106,42 +106,21 @@ var report = {
         var exportInfo = [];
         var view_auFileReport = [];
         var parentsids = {};
+        var accountlist = [];
+        var CUParents = {};
 				if(len > 0){
 					for (var i = 0; i < len; i++){
+            if (doc[i].DocSubType == "Account") {
+              accountlist.push(doc[i]);
+            }
+            if (doc[i].DocSubType == "Controllable Unit") {
+              CUParents[doc[i]._id] = doc[i];
+            }
             if (parentsids[doc[i].parentid]) {
               parentsids[doc[i].parentid].push(doc[i]);
             }else{
               parentsids[doc[i].parentid] =[doc[i]];
             }
-            var tmp={
-              nothing: " ",
-              Name: ""+doc[i].Name,
-              DocSubType: ""+doc[i].DocSubType,
-              Status: ""+doc[i].Status,
-              Portfolio: ""+doc[i].Portfolio,
-              AuditableFlag: ""+doc[i].AuditableFlag,
-              AuditProgram: ""+doc[i].AuditProgram,
-              IOT: ""+doc[i].IOT,
-              IMT: ""+doc[i].IMT,
-              Country: ""+doc[i].Country,
-              CUSize: ""+doc[i].CUSize,
-              MetricsValue: ""+doc[i].MetricsValue,
-              ARCFrequency: ""+doc[i].ARCFrequency,
-              PeriodRatingPrev4: ""+doc[i].PeriodRatingPrev4,
-              PeriodRatingPrev3: ""+doc[i].PeriodRatingPrev3,
-              PeriodRatingPrev2: ""+doc[i].PeriodRatingPrev2,
-              PeriodRatingPrev: ""+doc[i].PeriodRatingPrev,
-              PeriodRating: ""+doc[i].PeriodRating,
-              AUNextQtrRating: ""+doc[i].AUNextQtrRating,
-              Target2Sat: ""+doc[i].Target2Sat,
-              Owner: ""+doc[i].Owner,
-              Focals: ""+doc[i].Focals,
-              Coordinators: ""+doc[i].Coordinators,
-              Readers: ""+doc[i].Readers,
-              AdditionalEditors: ""+doc[i].AdditionalEditors,
-              AdditionalReaders: ""+doc[i].AdditionalReaders
-            }
-            exportInfo.push(tmp);
 						view_auFileReport.push(doc[i]);
 					}
 				}
@@ -190,6 +169,44 @@ var report = {
                 }
               }
             }
+          }
+          for (var i = 0; i < accountlist.length; i++) {
+            if (CUParents[accountlist[i].parentid]) {
+              accountlist[i].Country = CUParents[accountlist[i].parentid].Country;
+              accountlist[i].IOT = CUParents[accountlist[i].parentid].IOT;
+              accountlist[i].IMT = CUParents[accountlist[i].parentid].IMT;
+            }
+          }
+          for (var i = 0; i < doc.length; i++) {
+            var tmp={
+              nothing: " ",
+              Name: ""+doc[i].Name,
+              DocSubType: ""+doc[i].DocSubType,
+              Status: ""+doc[i].Status,
+              Portfolio: ""+doc[i].Portfolio,
+              AuditableFlag: ""+doc[i].AuditableFlag,
+              AuditProgram: ""+doc[i].AuditProgram,
+              IOT: ""+doc[i].IOT,
+              IMT: ""+doc[i].IMT,
+              Country: ""+doc[i].Country,
+              CUSize: ""+doc[i].CUSize,
+              MetricsValue: ""+doc[i].MetricsValue,
+              ARCFrequency: ""+doc[i].ARCFrequency,
+              PeriodRatingPrev4: ""+doc[i].PeriodRatingPrev4,
+              PeriodRatingPrev3: ""+doc[i].PeriodRatingPrev3,
+              PeriodRatingPrev2: ""+doc[i].PeriodRatingPrev2,
+              PeriodRatingPrev: ""+doc[i].PeriodRatingPrev,
+              PeriodRating: ""+doc[i].PeriodRating,
+              AUNextQtrRating: ""+doc[i].AUNextQtrRating,
+              Target2Sat: ""+doc[i].Target2Sat,
+              Owner: ""+doc[i].Owner,
+              Focals: ""+doc[i].Focals,
+              Coordinators: ""+doc[i].Coordinators,
+              Readers: ""+doc[i].Readers,
+              AdditionalEditors: ""+doc[i].AdditionalEditors,
+              AdditionalReaders: ""+doc[i].AdditionalReaders
+            }
+            exportInfo.push(tmp);
           }
 				  deferred.resolve({"status": 200, "doc":view_auFileReport,"exportInfo": exportInfo});
         }).catch(function(err) {
@@ -940,35 +957,112 @@ var report = {
 				var len= doc.length;
 				var view_cuALLReport = [];
 				var exportInfo = [];
-				if(len > 0){
+        var parentsids = {};
 					for (var i = 0; i < len; i++){
-						var a=doc[i]._id; var b=doc[i].AssessableUnitName;var c=doc[i].IOT;
-						var tmp = {
-							IOT: doc[i].IOT,
-							IMT: doc[i].IMT,
-							AssessableUnitName: doc[i].AssessableUnitName,
-							Quarter: doc[i].CurrentPeriod,
-							Response:doc[i].ARALLResponse,
-							Findings:doc[i].ARALLQtrRating,
-							Target2Sat:doc[i].ARALLTarget2Sat,
-							Explanation: doc[i].ARALLExplanation
-						};
-						exportInfo.push(tmp);
-						view_cuALLReport.push({
-							IOT: doc[i].IOT,
-							IMT: doc[i].IMT,
-							AssessableUnitName: doc[i].AssessableUnitName,
-							Quarter: doc[i].CurrentPeriod,
-							Response:doc[i].ARALLResponse,
-							Findings:doc[i].ARALLQtrRating,
-							Target2Sat:doc[i].ARALLTarget2Sat,
-							Explanation: doc[i].ARALLExplanation,
-							_id: doc[i]._id
-						});
+            parentsids[doc[i].parentid] = doc[i];
 					}
-				}
-				view=JSON.stringify(view_cuALLReport, 'utf8');
-				deferred.resolve({"status": 200, "doc":view_cuALLReport});
+        var objparents = {
+          "selector": {
+            "Name": { "$gt": 0 },
+            "_id": { "$in": Object.keys(parentsids) },
+            "key": "Assessable Unit",
+            "CurrentPeriod": req.session.quarter,
+            "MIRABusinessUnit": req.session.businessunit
+          },
+          "fields": ["_id","parentid"]
+        };
+
+        db.find(objparents).then(function(data){
+          var aus = data.body.docs;
+          var parentkeys = {};
+          for (var i = 0; i < aus.length; i++) {
+            if (parentkeys[aus[i].parentid]) {
+              parentkeys[aus[i].parentid].push(aus[i]._id);
+            }else{
+              parentkeys[aus[i].parentid] =[aus[i]._id];
+            }
+          }
+          var objparents2 = {
+            "selector": {
+              "Name": { "$gt": 0 },
+              "_id": { "$in": Object.keys(parentkeys) },
+              "key": "Assessable Unit",
+              "CurrentPeriod": req.session.quarter,
+              "MIRABusinessUnit": req.session.businessunit
+            },
+            "fields": ["_id","DocSubType","Country","IMT","IOT"]
+          };
+
+          db.find(objparents2).then(function(data){
+            var parents = data.body.docs;
+            var actualizados = 0;
+            for (var i = 0; i < parents.length; i++) {
+              if(parents[i].Country){
+                var tmpCountry = util.resolveGeo(parents[i].Country, "Country");
+                var tmpIOT = "";
+                var tmpIMT = "";
+                if (global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")]) {
+                  tmpIOT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IOT;
+                  tmpIMT = global.hierarchy.countries[util.resolveGeo(parents[i].Country, "Country")].IMT;
+                }
+                for (var j = 0; j < parentkeys[parents[i]._id].length; j++) {
+                  actualizados++;
+                  parentsids[parentkeys[parents[i]._id][j]].Country = tmpCountry;
+                  parentsids[parentkeys[parents[i]._id][j]].IMT = tmpIMT;
+                  parentsids[parentkeys[parents[i]._id][j]].IOT = tmpIOT;
+                }
+              }else if(parents[i].IMT){
+                if (global.hierarchy.BU_IMT[parents[i].IMT]) {
+                  var tmpIMT = global.hierarchy.BU_IMT[parents[i].IMT].IMT;
+                  var tmpIOT = global.hierarchy.BU_IMT[parents[i].IMT].IOT;
+                  for (var j = 0; j < parentkeys[parents[i]._id].length; j++) {
+                    actualizados++;
+                    parentsids[parentkeys[parents[i]._id][j]].IMT = tmpIMT;
+                    parentsids[parentkeys[parents[i]._id][j]].IOT = tmpIOT;
+                  }
+                }
+              }else if(parents[i].IOT){
+                if (global.hierarchy.BU_IOT[parents[i].IOT]) {
+                  var tmpIOT = global.hierarchy.BU_IOT[parents[i].IOT].IOT;
+                  for (var j = 0; j < parentkeys[parents[i]._id].length; j++) {
+                    actualizados++;
+                    parentsids[parentkeys[parents[i]._id][j]].IOT = tmpIOT;
+                  }
+                }
+              }
+            }
+            for (var i = 0; i < doc.length; i++){
+              parentsids[doc[i].parentid] = doc[i];
+  						var tmp = {
+  							IOT: doc[i].IOT || " ",
+  							IMT: doc[i].IMT || " ",
+  							AssessableUnitName: doc[i].AssessableUnitName || " ",
+  							Quarter: doc[i].CurrentPeriod || " ",
+  							Response:doc[i].ARALLResponse || " ",
+  							Findings:doc[i].ARALLQtrRating || " ",
+  							Target2Sat:doc[i].ARALLTarget2Sat || " ",
+  							Explanation: doc[i].ARALLExplanation || " "
+  						};
+  						exportInfo.push(tmp);
+  						view_cuALLReport.push({
+  							IOT: doc[i].IOT || " ",
+  							IMT: doc[i].IMT || " ",
+  							AssessableUnitName: doc[i].AssessableUnitName || " ",
+  							Quarter: doc[i].CurrentPeriod || " ",
+  							Response:doc[i].ARALLResponse || " ",
+  							Findings:doc[i].ARALLQtrRating || " ",
+  							Target2Sat:doc[i].ARALLTarget2Sat || " ",
+  							Explanation: doc[i].ARALLExplanation || " ",
+  							_id: doc[i]._id || " "
+  						});
+  					}
+            deferred.resolve({"status": 200, "doc":view_cuALLReport, "exportInfo": exportInfo});
+          }).catch(function(err) {
+            deferred.reject({"status": 500, "error": err.error.reason});
+          });
+        }).catch(function(err) {
+          deferred.reject({"status": 500, "error": err.error.reason});
+        });
 			}).catch(function(err) {
 				console.log("[report][cuauditlessonslearned]" + err.error.reason);
 				deferred.reject({"status": 500, "error": err.error.reason});
