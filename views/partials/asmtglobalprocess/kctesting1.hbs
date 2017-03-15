@@ -14,10 +14,10 @@
 					</thead>
 					{{#each KCTest1Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="10%" >{{RAGStatus}}</td>
+						<td width="10%" >{{RAGStatusCat}}</td>
 						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{Country}}</a></td>
-						<td width="10%" >{{#if _id}}{{AUTestCount}}{{else}}&nbsp;{{/if}}</td>
-						<td width="10%" >{{AUDefectCount}}</td>
+						<td width="10%" >{{count}}</td>
+						<td width="10%" >{{percent}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
 						<td width="15%" >{{KCFRDefectCount}}</td>
 						<td width="15%" >{{KCODefectRate}}</td>
