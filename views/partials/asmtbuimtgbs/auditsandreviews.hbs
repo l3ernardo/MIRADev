@@ -174,7 +174,7 @@
             <tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
               <td width="10%">{{plannedStartDate}}</td>
               <td width="10%">{{country}}</td>
-              <td width="8%">{{engagement}}</td>
+              <td width="8%">{{#if engagement}}{{engagement}}{{else}}&nbsp;{{/if}}</td>
               <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
               <td width="16%">{{DocSubType}}</td>
               {{{ratingDisplayView PeriodRatingPrev 7}}}
