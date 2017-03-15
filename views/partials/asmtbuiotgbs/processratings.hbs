@@ -242,10 +242,10 @@
 				</thead>
 				{{#each BUCAsmtDataPRview2}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}"  class="asmt-viewdata">
-						{{#if imt}}
-						<td class="asmt-viewdata" scope="col" width="10%">{{imt}}</td>
-						{{else}}
+						{{#if name}}
 						<td class="asmt-viewdata" scope="col" width="10%">&nbsp;</td>
+						{{else}}
+						<td class="asmt-viewdata" scope="col" width="10%">{{imt}}</td>
 						{{/if}}
 						<td class="asmt-viewdata" scope="col" width="25%">{{{category}}}</td>
 						{{#if name}}
