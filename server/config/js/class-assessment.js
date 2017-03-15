@@ -138,14 +138,14 @@ var assessment = {
 								//fieldCalc.getRatingProfile(doc);
 								// Process CU Ratings tab
 								//cut.processCUTab(doc,defViewRow);		
-								comp.getCompDocs(db,doc).then(function(dataComp){
+							/*	comp.getCompDocs(db,doc).then(function(dataComp){
 									console.log("exits compdocs");
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
 									console.log("[assessment][getAsmtbyID][getCompDocs]" + err.error);
 									deferred.reject({"status": 500, "error": err.error});
-								});
+								});*/
 							}).catch(function(err) {
 								console.log("[assessment][getAsmtbyID][getAssessments]" + err.error);
 								deferred.reject({"status": 500, "error": err.error});
