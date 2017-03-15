@@ -231,8 +231,10 @@
 			<table id="open_risks2_treeview" width="100%" class="table_with_scroll">
 				<thead>
 					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Type</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="10%">ID</th>
-					<th class="risk-msdcommit-viewheader" scope="col" width="15%">Status</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="6%">IMT</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="6%">Country</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="7%">ID</th>
+					<th class="risk-msdcommit-viewheader" scope="col" width="6%">Status</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">Target Date (Orig)</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="8%">Target Date (Current)</th>
 					<th class="risk-msdcommit-viewheader" scope="col" width="5%"># Tasks</th>
@@ -246,8 +248,10 @@
 				{{#each RiskView2Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="15%" >{{#unless parent}}{{type}}{{/unless}}</td>
-						<td width="10%">{{#if parent}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a>{{/if}}</td>
-						<td width="15%">{{#if _id}}{{status}}{{else}}&nbsp;{{/if}}</td>
+						<td width="6%" >{{#unless _id}}{{IMT}}{{/unless}}</td>
+						<td width="6%" >{{#unless _id}}{{country}}{{/unless}}</td>
+						<td width="7%">{{#if _id}}<a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{id}}</a>{{/if}}</td>
+						<td width="6%">{{#if _id}}{{status}}{{else}}&nbsp;{{/if}}</td>
 						<td width="8%">{{originalTargetDate}}</td>
 						<td width="8%">{{currentTargetDate}}</td>
 						<td width="5%">{{numTasks}}</td>

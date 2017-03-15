@@ -134,7 +134,10 @@ var assessment = {
 					switch (doc[0].ParentDocSubType) {
 						case "Sub-process":
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
-
+                                // Get rating profiles
+								//fieldCalc.getRatingProfile(doc);
+								// Process CU Ratings tab
+								//cut.processCUTab(doc,defViewRow);		
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									console.log("exits compdocs");
 									var obj = doc[0]; // For Merge
