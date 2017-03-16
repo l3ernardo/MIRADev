@@ -19,7 +19,7 @@
 				<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-						{{{uniqueSelect "OpMetricKey" parameters.GTSOpMetricKeys.0.options "id" "name" OpMetricKey}}}
+						{{{uniqueSelect "OpMetricKey" parameters.GTSOpMetricKeys.0.options "id" "name" OpMetricKey "required"}}}
 					</span>
 				</td>
 			</tr>
@@ -28,7 +28,7 @@
 			<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 			<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
 			<tr>
-				<td>Operational Metric Key:</td>
+				<td>Operational Metric Key:<span class="ibm-required">*</span></td>
 				<td>
 					{{#each parameters.GTSOpMetricKeys.0.options}}
 						{{#if_equal id ../OpMetricKey}}
@@ -43,7 +43,7 @@
 		<tr><td width="25%">{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 		<tr><td>Audit Lessons Key:</td><td>{{AuditLessonsKey}}</td></tr>
 		<tr>
-			<td>Operational Metric Key:</td>
+			<td>Operational Metric Key:<span class="ibm-required">*</span></td>
 			<td>
 				{{#each parameters.GTSOpMetricKeys.0.options}}
 					{{#if_equal id ../OpMetricKey}}
