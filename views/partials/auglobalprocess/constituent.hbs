@@ -1,9 +1,10 @@
 {{!-- AU Global Process form - Constituent section - Edit/Read Mode --}}
-<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
-	<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
-</table>
-<div class="ibm-columns ibm-graphic-tabs">
-	{{#if_equal EnteredBU "GBS"}}
+
+{{#if_equal EnteredBU "GTS Transformation"}}
+	<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Constituent Assessable Units</em></caption>
+	</table>
+	<div class="ibm-columns ibm-graphic-tabs">
 		<div class="ibm-tab-section">
 			<ul class="ibm-tabs">
 				<li id="CPs-li" class="ibm-active"><a href="#constituents">Country Processes</a></li>
@@ -54,7 +55,12 @@
 				{{/each}}
 			</table>
 		</div>
-	{{else}}
+	</div>
+{{else}}
+	<table id="constiheader_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+		<caption class="mira-caption"><em>Constituent Country Processes</em></caption>
+	</table>
+	<div class="ibm-columns ibm-graphic-tabs">
 		<table id="countryprocess_table" cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 			<thead class="mira-subtable">
 				<th scope="col">Name</th>
@@ -75,5 +81,6 @@
 			</tr>
 			{{/each}}
 		</table>
-	{{/if_equal}}
-</div>
+	</div>
+{{/if_equal}}
+

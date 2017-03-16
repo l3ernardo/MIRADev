@@ -15,7 +15,7 @@
 				<td><label for="CUSize">Size:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-					{{{uniqueSelect "CUSize" parameters.UnitSizes.0.options "name" "name" CUSize}}}
+					{{{uniqueSelect "CUSize" parameters.UnitSizes.0.options "name" "name" CUSize "required"}}}
 					</span>
 				</td>
 			</tr>
@@ -27,7 +27,7 @@
 				<td><label for="OpMetricKey">Operational Metric Key:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-						{{{uniqueSelect "OpMetricKey" parameters.GBSOpMetricKeysCU.0.options "id" "name" OpMetricKey}}}
+						{{{uniqueSelect "OpMetricKey" parameters.GBSOpMetricKeysCU.0.options "id" "name" OpMetricKey "required"}}}
 					</span>
 				</td>
 			</tr>
@@ -35,7 +35,7 @@
 				<td><label for="AuditProgram">Audit Program:<span class="ibm-required">*</span></label></td>
 				<td>
 					<span>
-						{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram}}}
+						{{{uniqueSelect "AuditProgram" parameters.GBSAuditPrograms.0.options "name" "name" AuditProgram "required"}}}
 					</span>
 				</td>
 			</tr>
@@ -67,10 +67,10 @@
 		{{else}}
 			<!-- Non-Admin Edit Mode - Fields are not Editable -->
 			<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
-			<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+			<tr><td>Size:<span class="ibm-required">*</span></td><td>{{CUSize}}</td></tr>
 			<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 			<tr>
-				<td>Operational Metric Key:</td>
+				<td>Operational Metric Key:<span class="ibm-required">*</span></td>
 				<td>
 					{{#each parameters.GBSOpMetricKeysCU.0.options}}
 						{{#if_equal id ../OpMetricKey}}
@@ -79,8 +79,8 @@
 					{{/each}}
 				</td>
 			</tr>
-			<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
-			<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+			<tr><td>Audit Program:<span class="ibm-required">*</span></td><td>{{AuditProgram}}</td></tr>
+			<tr><td>Auditable Unit?:<span class="ibm-required">*</span></td><td>{{AuditableFlag}}</td></tr>
 			{{#if_equal showARCFreq 1}}
 				<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 			{{/if_equal}}
@@ -91,10 +91,10 @@
 	{{else}}
 		<!-- Read Mode -->
 		<tr><td width="25%">BU reporting groups:</td><td>{{BRGMembershipDisp}}</td></tr>
-		<tr><td>Size:</td><td>{{CUSize}}</td></tr>
+		<tr><td>Size:<span class="ibm-required">*</span></td><td>{{CUSize}}</td></tr>
 		<tr><td>{{MetricsCriteria}} ($M USD):</td><td><font class="td_tcv">{{MetricsValue}}</font> (planning purposes only)</td></tr>
 		<tr>
-			<td>Operational Metric Key:</td>
+			<td>Operational Metric Key:<span class="ibm-required">*</span></td>
 			<td>
 				{{#each parameters.GBSOpMetricKeysCU.0.options}}
 					{{#if_equal id ../OpMetricKey}}
@@ -103,8 +103,8 @@
 				{{/each}}
 			</td>
 		</tr>
-		<tr><td>Audit Program:</td><td>{{AuditProgram}}</td></tr>
-		<tr><td>Auditable Unit?:</td><td>{{AuditableFlag}}</td></tr>
+		<tr><td>Audit Program:<span class="ibm-required">*</span></td><td>{{AuditProgram}}</td></tr>
+		<tr><td>Auditable Unit?:<span class="ibm-required">*</span></td><td>{{AuditableFlag}}</td></tr>
 		{{#if_equal showARCFreq 1}}
 			<tr><td>Audit Readiness Checklist (ARC) frequency:</td><td>{{ARCFrequency}}</td></tr>
 		{{/if_equal}}

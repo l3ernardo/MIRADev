@@ -1,8 +1,8 @@
 function validation (){
 	var valid = true;
-	$(':required').each(function(){
+	$(":required").each(function(){
 		if(this.value === ""){
-			alert("Please enter all the required fields.");
+			alert("Fields with (*) are required!");
 			valid =  false;
 			return false;
 		}
