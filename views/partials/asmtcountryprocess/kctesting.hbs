@@ -57,7 +57,7 @@
 						<td width="40%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{numActualTests}}</td>
 						<td width="10%">{{numDefects}}</td>
-						<td width="10%">{{{compDocDRDisplayView RAGStatus defectRate}}}</td>
+						{{{compDocDRDisplayView RAGStatus defectRate 10}}}
 						<td width="20%">{{#if remFinImpact}}$ {{/if}}{{remFinImpact}}</td>
 					</tr>
 				{{/each}}

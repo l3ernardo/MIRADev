@@ -646,7 +646,30 @@ function addEventsCompBU(){
 		document.getElementById('audituniverse-li').className="ibm-active";
 	},true);
 }
+function AllTableToReportMultiple(table, nameTable){
+	var field4rows = $.parseJSON($('textarea#'+nameTable+'DataExport').val());
+	var table=table;
+	var tab_text="<table border='2px'><thead><tr bgcolor='#87AFC6'>";
+	var line = "";
+	var tab = $(table);
+	var theader=$('#'+table+' tr:eq(0) th');
+	for (c=0;c<theader.length;c++){
+		test='#'+table+' tr:eq(0) th:eq('+c+')';
+		line=line+"<th>"+$(test).text()+"</th>";
+	}
+	tab_text=tab_text+line+"</tr>"+"</thead><tbody>";
+		for(j = 0; j<=field4rows.length; j++){
+			var r1 = field4rows[j];
+			line="<tr>";
+			for(var obj1 in r1){
+				var r2 = r1[obj1];line = line+"<td>"+r2+"</td>";
+			} //end for obj1
+			tab_text=tab_text+line+"</tr>";
+		}
 
+	tab_text=tab_text+"</tbody></table>";
+	return (tab_text);
+}
 // Display the selected tab
 function displaySelectedBUCompTab(){
   var url = parent.location.href;
@@ -704,6 +727,47 @@ function displaySelectedBUCompTab(){
 
 /* main */
 $(document).ready(function() {
+	$('#OpenRisks-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('open_risks_treeview', "OpenRisks");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#OpenRisks-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('open_risks_treeview', "OpenRisks");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	$('#OpenRisks2-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('open_risks2_treeview', "OpenRisks2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#OpenRisks2-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('open_risks2_treeview', "OpenRisks2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	$('#KC2Test1-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('KCT1_treeview', "KC2Test1");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#KC2Test1-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('KCT1_treeview', "KC2Test1");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	$('#KC2Test2-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('KCT2_treeview', "KC2Test2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#KC2Test2-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('KCT2_treeview', "KC2Test2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	$('#KC2Test3-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('KCT3_treeview', "KC2Test3");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#KC2Test3-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('KCT3_treeview', "KC2Test3");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+
   switch ($("input[name='parentdocsubtype']").val()) {
 		case "Global Process":
       addEventsCompGP();
