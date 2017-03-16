@@ -551,6 +551,362 @@ var calculateKCTab = {
               doc[0].AUTestingRatio = parseFloat(doc[0].AUTestingRatio).toFixed(0);
             }
           }
+
+
+          //tables
+          //START KCT 1 - FIRST TABLE
+          /*var kctlist = doc[0].KCTest1Data;
+          var objects = {};
+          var finalList = [];
+          var topCat = 0;
+          doc[0].exportKC1Test1 = [];
+          kctlist.sort(function(a, b){
+            var nameA=a.RAGStatus.toLowerCase(), nameB=b.RAGStatus.toLowerCase()
+            if (nameA > nameB) //sort string ascending
+              return -1
+            if (nameA < nameB)
+              return 1
+            return 0
+          });
+          for (var i = 0; i < kctlist.length; i++) {
+            if (!objects[kctlist[i].RAGStatus.replace(/ /g,'')]) {
+              topCat++;
+              tmp = {
+                id: kctlist[i].RAGStatus.replace(/ /g,''),
+                RAGStatusCat: kctlist[i].RAGStatus,
+                count: 0,
+                percent: 0
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].RAGStatus.replace(/ /g,'')] = tmp;
+            }
+
+            kctlist[i].parent = kctlist[i].RAGStatus.replace(/ /g,'');
+            kctlist[i].id = kctlist[i]._id;
+            finalList.push(kctlist[i]);
+
+            objects[kctlist[i].parent].count++;
+
+            doc[0].exportKC1Test1.push({
+              RAGStatus:kctlist[i].RAGStatus || "",
+              Country:kctlist[i].Country || "",
+              count:kctlist[i].count || "",
+              percent:kctlist[i].percent || "",
+              AUDefectRate:kctlist[i].AUDefectRate || "",
+              KCFRDefectCount:kctlist[i].KCFRDefectCount || "",
+              KCODefectRate:kctlist[i].KCODefectRate || ""
+            });
+          }
+          for(var key in objects){
+            objects[key].percent = (objects[key].count / kctlist.length * 100).toFixed(2);
+          }
+          // add padding for RCT Data
+          if (topCat < defViewRow) {
+            if (finalList.length == 0) {
+              finalList = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(finalList,10,(defViewRow- topCat));
+            }
+          }
+          doc[0].KC2Test2Data = finalList;*/
+          //START KCT 1 - SECOND TABLE
+        /*  var kctlist = doc[0].KCTest2Data;
+          var objects = {};
+          var finalList = [];
+          var topCat = 0;
+          doc[0].exportKC1Test2 = [];
+          kctlist.sort(function(a, b){
+            var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+
+            return 0
+          });
+          for (var i = 0; i < kctlist.length; i++) {
+            if (!objects[kctlist[i].controlType.replace(/ /g,'')]) {
+              topCat++;
+              tmp = {
+                id: kctlist[i].controlType.replace(/ /g,''),
+                controlCat: kctlist[i].controlType,
+                numRequiredTests: 0,
+                numActualTests: 0
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].controlType.replace(/ /g,'')] = tmp;
+            }
+            if (!objects[kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,'')]) {
+              tmp = {
+                id: kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,''),
+                parent: kctlist[i].controlType.replace(/ /g,''),
+                processCat: kctlist[i].process,
+                numRequiredTests: 0,
+                numActualTests: 0
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,'')] = tmp;
+            }
+            if (!objects[kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')]) {
+              tmp = {
+                id: kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,''),
+                parent: kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,''),
+                processCat: "&nbsp;" +kctlist[i].reportingCountry,
+                numRequiredTests: 0,
+                numActualTests: 0
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')] = tmp;
+            }
+
+            kctlist[i].parent = kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'');
+            kctlist[i].id = kctlist[i]._id;
+            finalList.push(kctlist[i]);
+
+            if (!isNaN(kctlist[i].numRequiredTests) && kctlist[i].numRequiredTests != "") {
+              objects[kctlist[i].parent].numRequiredTests += parseInt(kctlist[i].numRequiredTests);
+              objects[objects[kctlist[i].parent].parent].numRequiredTests += parseInt(kctlist[i].numRequiredTests);
+              objects[objects[objects[kctlist[i].parent].parent].parent].numRequiredTests += parseInt(kctlist[i].numRequiredTests);
+            }
+            if (!isNaN(kctlist[i].numActualTests) && kctlist[i].numActualTests != "") {
+              objects[kctlist[i].parent].numActualTests += parseInt(kctlist[i].numActualTests);
+              objects[objects[kctlist[i].parent].parent].numActualTests += parseInt(kctlist[i].numActualTests);
+              objects[objects[objects[kctlist[i].parent].parent].parent].numActualTests += parseInt(kctlist[i].numActualTests);
+            }
+
+            doc[0].exportKC2Test2.push({
+              controlType:kctlist[i].controlType || "",
+              process:kctlist[i].process || "",
+              reportingCountry: kctlist[i].reportingCountry || " ",
+              controlName:kctlist[i].controlName || "",
+              numRequiredTests:kctlist[i].numRequiredTests || "",
+              numActualTests:kctlist[i].numActualTests || "",
+              testingRatio:kctlist[i].testingRatio || "",
+              reasonTested:kctlist[i].reasonTested || "",
+              actionPlan:kctlist[i].actionPlan || ""
+            });
+          }
+          // add padding for RCT Data
+          if (topCat < defViewRow) {
+            if (finalList.length == 0) {
+              finalList = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(finalList,10,(defViewRow- topCat));
+            }
+          }
+          doc[0].KCTest2Data = finalList;*/
+          //START KCT 2 - FIRST TABLE
+          doc[0].exportKC2Test1 = [];
+          var kctlist = doc[0].KC2Test1Data;
+          for (var i = 0; i < kctlist.length; i++) {
+            doc[0].exportKC2Test1.push({
+              Country:kctlist[i].Country || "",
+              AUTestCount:kctlist[i].AUTestCount || "",
+              AUDefectCount: kctlist[i].AUDefectCount || " ",
+              AUDefectRate:kctlist[i].AUDefectRate || ""
+            });
+          }
+
+          if (doc[0].KC2Test1Data.length < defViewRow) {
+            if (doc[0].KC2Test1Data.length == 0) {
+              finalList = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(doc[0].KC2Test1Data,10,(defViewRow- doc[0].KC2Test1Data.length));
+            }
+          }
+          //START KCT 2 - SECOND TABLE
+          var kctlist = doc[0].KC2Test2Data;
+          var objects = {};
+          var finalList = [];
+          var topCat = 0;
+          doc[0].exportKC2Test2 = [];
+          kctlist.sort(function(a, b){
+            var nameA=a.controlType.toLowerCase(), nameB=b.controlType.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            var nameA=a.process.toLowerCase(), nameB=b.process.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            var nameA=a.reportingCountry.toLowerCase(), nameB=b.reportingCountry.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            return 0
+          });
+          for (var i = 0; i < kctlist.length; i++) {
+            if (!objects[kctlist[i].controlType.replace(/ /g,'')]) {
+              topCat++;
+              tmp = {
+                id: kctlist[i].controlType.replace(/ /g,''),
+                controlCat: kctlist[i].controlType,
+                numRequiredTests: 0,
+                numActualTests: 0
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].controlType.replace(/ /g,'')] = tmp;
+            }
+            if (!objects[kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,'')]) {
+              tmp = {
+                id: kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,''),
+                parent: kctlist[i].controlType.replace(/ /g,''),
+                processCat: kctlist[i].process,
+                numRequiredTests: 0,
+                numActualTests: 0
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,'')] = tmp;
+            }
+            if (!objects[kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')]) {
+              tmp = {
+                id: kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,''),
+                parent: kctlist[i].controlType.replace(/ /g,'')+kctlist[i].process.replace(/ /g,''),
+                processCat: "&nbsp;" +kctlist[i].reportingCountry,
+                numRequiredTests: 0,
+                numActualTests: 0
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')] = tmp;
+            }
+
+            kctlist[i].parent = kctlist[i].process.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'');
+            kctlist[i].id = kctlist[i]._id;
+            finalList.push(kctlist[i]);
+
+            if (!isNaN(kctlist[i].numRequiredTests) && kctlist[i].numRequiredTests != "") {
+              objects[kctlist[i].parent].numRequiredTests += parseInt(kctlist[i].numRequiredTests);
+              objects[objects[kctlist[i].parent].parent].numRequiredTests += parseInt(kctlist[i].numRequiredTests);
+              objects[objects[objects[kctlist[i].parent].parent].parent].numRequiredTests += parseInt(kctlist[i].numRequiredTests);
+            }
+            if (!isNaN(kctlist[i].numActualTests) && kctlist[i].numActualTests != "") {
+              objects[kctlist[i].parent].numActualTests += parseInt(kctlist[i].numActualTests);
+              objects[objects[kctlist[i].parent].parent].numActualTests += parseInt(kctlist[i].numActualTests);
+              objects[objects[objects[kctlist[i].parent].parent].parent].numActualTests += parseInt(kctlist[i].numActualTests);
+            }
+
+            doc[0].exportKC2Test2.push({
+              controlType:kctlist[i].controlType || "",
+              process:kctlist[i].process || "",
+              reportingCountry: kctlist[i].reportingCountry || " ",
+              controlName:kctlist[i].controlName || "",
+              numRequiredTests:kctlist[i].numRequiredTests || "",
+              numActualTests:kctlist[i].numActualTests || "",
+              testingRatio:kctlist[i].testingRatio || "",
+              reasonTested:kctlist[i].reasonTested || "",
+              actionPlan:kctlist[i].actionPlan || ""
+            });
+          }
+          // add padding for RCT Data
+          if (topCat < defViewRow) {
+            if (finalList.length == 0) {
+              finalList = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(finalList,10,(defViewRow- topCat));
+            }
+          }
+          doc[0].KC2Test2Data = finalList;
+          //START KCT 2 - THIRD table
+          var kctlist = doc[0].KC2Test3Data;
+          var objects = {};
+          var finalList = [];
+          var topCat = 0;
+          doc[0].exportKC2Test3 = [];
+          kctlist.sort(function(a, b){
+            var nameA=a.originalReportingQuarter.toLowerCase(), nameB=b.originalReportingQuarter.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            var nameA=a.testType.toLowerCase(), nameB=b.testType.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            var nameA=a.reportingCountry.toLowerCase(), nameB=b.reportingCountry.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            var nameA=a.controlName.toLowerCase(), nameB=b.controlName.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            return 0
+          });
+          for (var i = 0; i < kctlist.length; i++) {
+            if (!objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')]) {
+              topCat++;
+              tmp = {
+                id: kctlist[i].originalReportingQuarter.replace(/ /g,''),
+                originalReportingQuarter: kctlist[i].originalReportingQuarter,
+                catEntry: true
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')] = tmp;
+            }
+            if (!objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')]) {
+              tmp = {
+                id: kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,''),
+                parent: kctlist[i].originalReportingQuarter.replace(/ /g,''),
+                testType: kctlist[i].testType,
+                catEntry: true
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')] = tmp;
+            }
+            if (!objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')]) {
+              tmp = {
+                id: kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,''),
+                parent: kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,''),
+                reportingCountry: kctlist[i].reportingCountry,
+                catEntry: true
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')] = tmp;
+            }
+            if (!objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')+kctlist[i].controlName.replace(/ /g,'')]) {
+              tmp = {
+                id: kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')+kctlist[i].controlName.replace(/ /g,''),
+                parent: kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,''),
+                controlName: kctlist[i].controlName,
+                catEntry: true
+              };
+              finalList.push(tmp);
+              objects[kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')+kctlist[i].controlName.replace(/ /g,'')] = tmp;
+            }
+
+            kctlist[i].parent = kctlist[i].originalReportingQuarter.replace(/ /g,'')+kctlist[i].testType.replace(/ /g,'')+kctlist[i].reportingCountry.replace(/ /g,'')+kctlist[i].controlName.replace(/ /g,'');
+            kctlist[i].id = kctlist[i]._id;
+            finalList.push(kctlist[i]);
+
+            doc[0].exportKC2Test3.push({
+              originalReportingQuarter:kctlist[i].originalReportingQuarter || "",
+              testType:kctlist[i].testType || "",
+              reportingCountry: kctlist[i].reportingCountry || " ",
+              controlName:kctlist[i].controlName || "",
+              controllableUnit:kctlist[i].controllableUnit || "",
+              sampleUniqueID:kctlist[i].sampleUniqueID || "",
+              originalTargetDate:kctlist[i].originalTargetDate || "",
+              targetClose:kctlist[i].targetClose || "",
+              count:kctlist[i].count || "",
+              defectType:kctlist[i].defectType || ""
+            });
+
+          }
+          // add padding for RCT Data
+          if (topCat < defViewRow) {
+            if (finalList.length == 0) {
+              finalList = fieldCalc.addTestViewData(10,defViewRow);
+            } else {
+              fieldCalc.addTestViewDataPadding(finalList,10,(defViewRow- topCat));
+            }
+          }
+          doc[0].KC2Test3Data = finalList;
           break;
         case "BU Reporting Group":
           break;
