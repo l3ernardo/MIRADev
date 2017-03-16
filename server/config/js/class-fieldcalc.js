@@ -2059,10 +2059,10 @@ var calculatefield = {
 								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
 
 								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
-									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseFloat(doc[0].asmtsdocs[i].KCFRDefectRate * 100).toFixed(1).toString();
 
 								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
+									doc[0].asmtsdocs[i].KCODefectRate = parseFloat(doc[0].asmtsdocs[i].KCODefectRate * 100).toFixed(1).toString();
 
 
 								toadd = {
