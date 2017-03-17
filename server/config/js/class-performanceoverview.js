@@ -309,6 +309,26 @@ var performanceoverviewcountry = {
 				}
 			}
 
+			//Summary tab calculations for KFCR and KCO
+			 if(doc[0].MissedOpenIssueCountSOD != "" && doc[0].MissedOpenIssueCountCRM != "")
+					doc[0].MissedOpenIssueCount =  (parseInt(doc[0].MissedOpenIssueCountSOD ) + parseInt(doc[0].MissedOpenIssueCountCRM)).toString();
+			 else
+			 	if(doc[0].MissedOpenIssueCountCRM != "" )
+			 		doc[0].MissedOpenIssueCount = (parseInt(doc[0].MissedOpenIssueCountCRM) + 0).toString();
+			 	else
+			 		doc[0].MissedOpenIssueCount = (0 + parseInt(doc[0].MissedOpenIssueCountSOD)).toString();
+			 
+			 if(doc[0].MissedMSACSatCountSOD != "" && doc[0].MissedMSACSatCountCRM != "")
+					doc[0].MissedMSACSatCount =  (parseInt(doc[0].MissedMSACSatCountSOD ) + parseInt(doc[0].MissedMSACSatCountCRM)).toString();
+			 else
+			 	if(doc[0].MissedOpenIssueCountCRM != "" )
+			 		doc[0].MissedMSACSatCount = (parseInt(doc[0].MissedMSACSatCountCRM) + 0).toString();
+			 	else
+			 		doc[0].MissedMSACSatCount = (0 + parseInt(doc[0].MissedMSACSatCountSOD)).toString();
+		
+			
+			
+			
 					//Summary tab calculations for KFCR and KCO
 				// if(doc[0].KCFRDefectRateCRM != "" && doc[0].KCFRDefectRateSOD != "")
 				// 	doc[0].KCFRDefectRate = (parseInt(doc[0].KCFRDefectRateCRM) + parseInt(doc[0].KCFRDefectRateSOD)).toString();
