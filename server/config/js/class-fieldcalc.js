@@ -708,7 +708,7 @@ var calculatefield = {
 						for (var i = 0; i < asmtsdocs.length; ++i) {
 							if (asmtsdocs[i].key == "Assessment"){
 								doc[0].asmtsdocs.push(asmtsdocs[i]);
-								doc[0].KCTest1Data.push(asmtsdocs[i]);KCTest1Data
+								doc[0].KCTest1Data.push(asmtsdocs[i]);
 								//asmtsdocs[i].Type = "Country Process";
 								CPassmts[asmtsdocs[i].parentid] = asmtsdocs[i];
 								if (doc[0].MIRABusinessUnit == "GTS") {
