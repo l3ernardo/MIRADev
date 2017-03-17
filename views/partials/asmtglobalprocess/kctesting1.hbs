@@ -22,13 +22,7 @@
 						<td width="15%" >{{KCFRDefectCount}}</td>
 						<td width="15%" >{{KCODefectRate}}</td>
 					</tr>
-				{{/each}}
-				</table>
-				<table width="100%" class="ibm-data-table">
-					<tr>
-						<td class="kc-test-viewheader-al" width="10%"><b>Explanations</b></td>
-						<td class="asmt-viewdata" width="90%">{{KCT1Section1Explanations}}</td>
-					</tr>
+					{{/each}}
 				</table>
 			</td>
 		</tr>
@@ -48,18 +42,18 @@
 						<th class="kc-test-viewheader" scope="col" width="25%">Defect Abstract</th>
 					</thead>
 					{{#each KCTest2Data}}
-						<tr class="asmt-viewdata">
-							{{#each col}}
-									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/each}}
-						</tr>
-					{{/each}}
-				</table>
-				<table width="100%" class="ibm-data-table">
-					<tr>
-						<td class="kc-test-viewheader-al" width="10%"><b>Explanations</b></td>
-						<td class="asmt-viewdata" width="90%">{{KCT1Section2Explanations}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%" >{{reportingCountry}}</td>
+						<td width="10%" >{{Control}}</td>
+						<td width="10%"><a target="_blank" href="/assessment?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td width="5%" >{{numDefects}}</td>
+						<td width="10%" >{{defectType}}</td>
+						<td width="10%" >{{remediationStatus}}</td>
+						<td width="10%" >{{remainingFinancialImpact}}</td>
+						<td width="10%" >{{targetClose}}</td>
+						<td width="25%" >{{defectsAbstract}}</td>
 					</tr>
+					{{/each}}
 				</table>
 			</td>
 		</tr>
@@ -68,30 +62,29 @@
 				<span class="kc-test-header"><b>Unremediated Samples from Prior Periods (includes all test types)</b></span><br /><br />
 				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
 					<thead>
-						<th class="kc-test-viewheader" scope="col" width="5%"></th>
+						<th class="kc-test-viewheader" scope="col" width="10%"></th>
 						<th class="kc-test-viewheader" scope="col" width="10%">Country</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Control</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Sample ID</th>
+						<th class="kc-test-viewheader" scope="col" width="10%">Control</th>
+						<th class="kc-test-viewheader" scope="col" width="10%">Sample ID</th>
 						<th class="kc-test-viewheader" scope="col" width="5%">Defects</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Defect Type</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Remed. Status</th>
+						<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
 						<th class="kc-test-viewheader" scope="col" width="10%">Remaining Fin. Impact</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Target to Close</th>
+						<th class="kc-test-viewheader" scope="col" width="10%">Target to Close</th>
 						<th class="kc-test-viewheader" scope="col" width="25%">Defect Abstract</th>
 					</thead>
 					{{#each KCTest3Data}}
-						<tr class="asmt-viewdata">
-							{{#each col}}
-									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/each}}
-						</tr>
-					{{/each}}
-				</table>
-				<table width="100%" class="ibm-data-table">
-					<tr>
-						<td class="kc-test-viewheader-al" width="10%"><b>Explanations</b></td>
-						<td class="asmt-viewdata" width="90%">{{KCT1Section3Explanations}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%" >{{originalReportingQuarter}}</td>
+						<td width="10%" >{{reportingCountry}}</td>
+						<td width="10%" >{{Control}}</td>
+						<td width="10%"><a target="_blank" href="/assessment?id={{_id}}">{{sampleUniqueID}}</a></td>
+						<td width="5%" >{{numDefects}}</td>
+						<td width="10%" >{{defectType}}</td>
+						<td width="10%" >{{remainingFinancialImpact}}</td>
+						<td width="10%" >{{targetClose}}</td>
+						<td width="25%" >{{defectsAbstract}}</td>
 					</tr>
+					{{/each}}
 				</table>
 			</td>
 		</tr>
