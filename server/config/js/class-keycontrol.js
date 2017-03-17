@@ -539,7 +539,7 @@ var calculateKCTab = {
 
           break;
         case "Global Process":
-
+		try{
           var cappedtest;
           doc[0].TRExceptionControls = [];
           //** Calculate for Defect Rate and Testing Ratio - START **//
@@ -597,6 +597,21 @@ var calculateKCTab = {
 
           doc[0].exportKC2Test1 = [];
           var kctlist = doc[0].KC2Test1Data;
+		  kctlist.sort(function(a, b){
+			   console.log(a)
+			   console.log(b)
+            var nameA=a.AUDefectRate, nameB=b.AUDefectRate
+            if (nameA < nameB) //sort string descending numbers
+              return -1
+            if (nameA > nameB)
+              return 1
+            var nameA=a.Country.toLowerCase(), nameB=b.Country.toLowerCase()
+            if (nameA < nameB) //sort string ascending
+              return -1
+            if (nameA > nameB)
+              return 1
+            return 0
+          });
           for (var i = 0; i < kctlist.length; i++) {
             doc[0].exportKC2Test1.push({
               Country:kctlist[i].Country || "",
@@ -613,7 +628,7 @@ var calculateKCTab = {
               fieldCalc.addTestViewDataPadding(doc[0].KC2Test1Data,10,(defViewRow- doc[0].KC2Test1Data.length));
             }
           }
-          //START KCT 2 - SECOND TABLE
+		  //START KCT 2 - SECOND TABLE
           var kctlist = doc[0].TRExceptionControls;
           var objects = {};
           var finalList = [];
@@ -806,6 +821,9 @@ var calculateKCTab = {
             }
           }
           doc[0].KC2Test3Data = finalList;
+		}catch(e){
+			console.log("[class-keycontrol][calcDefectRate][Global Process] - " + e.stack);
+		}
           break;
         case "BU Reporting Group":
           break;
@@ -1171,7 +1189,7 @@ var calculateKCTab = {
         break;
       }
     }catch(e){
-      console.log("[class-keycontrol][calcDefectRate] - " + err.error);
+      console.log("[class-keycontrol][calcDefectRate] - " + e.stack);
 		}
 	}
 
