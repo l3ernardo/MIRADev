@@ -137,7 +137,7 @@ var assessment = {
                                 // Get rating profiles
 								//fieldCalc.getRatingProfile(doc);
 								// Process CU Ratings tab
-								//cut.processCUTab(doc,defViewRow);		
+								//cut.processCUTab(doc,defViewRow);
 								comp.getCompDocs(db,doc).then(function(dataComp){
 									console.log("exits compdocs");
 									var obj = doc[0]; // For Merge
@@ -152,29 +152,23 @@ var assessment = {
 							});
 							break;
 						case "Global Process":
-								/*doc[0].InternalAuditData = fieldCalc.addTestViewData(9,defViewRow);
-								doc[0].PPRData = fieldCalc.addTestViewData(12,defViewRow);
-								doc[0].OtherAuditsData = fieldCalc.addTestViewData(10,defViewRow);*/
-							//	doc[0].RiskView1Data = fieldCalc.addTestViewData(6,defViewRow);
-							//	doc[0].RiskView2Data = fieldCalc.addTestViewData(14,defViewRow);
+							doc[0].BUCAsmtDataPIviewCRM = [];
+							doc[0].BUCAsmtDataPIviewDelivery = [];
+							doc[0].BUCAsmtDataOIviewCRM = [];
+							doc[0].BUCAsmtDataOIviewDelivery = [];
 
-								doc[0].BUCAsmtDataPIviewCRM = [];
-								doc[0].BUCAsmtDataPIviewDelivery = [];
-								doc[0].BUCAsmtDataOIviewCRM = [];
-								doc[0].BUCAsmtDataOIviewDelivery = [];
+							doc[0].MissedMSACSatCountDeliveryDoc = 0;
+							doc[0].MissedOpenIssueCountDeliveryDoc =0;
+							doc[0].MissedOpenIssueCountCRMDoc = 0;
+							doc[0].MissedMSACSatCountCRMDoc = 0;
 
-								doc[0].MissedMSACSatCountDeliveryDoc = 0;
-								doc[0].MissedOpenIssueCountDeliveryDoc =0;
-								doc[0].MissedOpenIssueCountCRMDoc = 0;
-								doc[0].MissedMSACSatCountCRMDoc = 0;
+							doc[0].AUDataMSACCRM = [];
+							doc[0].MissedMSACSatCountCRM = "";
+							doc[0].AUDataMSACSOD = [];
+							doc[0].MissedMSACSatCountSOD = "";
 
-								doc[0].AUDataMSACCRM = [];
-								doc[0].MissedMSACSatCountCRM = "";
-								doc[0].AUDataMSACSOD = [];
-								doc[0].MissedMSACSatCountSOD = "";
-
-								doc[0].BOCExceptionCountCRM = 0;
-								doc[0].BOCExceptionCountSOD = 0;
+							doc[0].BOCExceptionCountCRM = 0;
+							doc[0].BOCExceptionCountSOD = 0;
 
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
 							doc[0].AUData2 = fieldCalc.addTestViewData(19,defViewRow);
@@ -194,20 +188,13 @@ var assessment = {
 							doc[0].CPAsmtDataOIview = [];
 							doc[0].CPAsmtDataPR1view = [];
 							doc[0].CUAsmtDataPR1view = [];
-
-
 							fieldCalc.getAssessments(db, doc, req).then(function(data){
-
 								comp.getCompDocs(db,doc).then(function(dataComp){
-
 									fieldCalc.getRatingProfile(doc);
-
 									// Process Country Process Ratings tab
 									prt.processProTab(doc,defViewRow);
-
 									//Performance tab
 									performanceTab.buildPerformanceTabGP(db,doc,defViewRow,fieldCalc);
-
 									//open risks
 									ort.processORTab(doc,defViewRow,req);
 									// Process Audit Universe Tab
@@ -216,37 +203,6 @@ var assessment = {
 									aar.processARTab(doc,defViewRow);
 									// Key Controls Tesing tab
 									kct.processKCTab(doc,defViewRow);
-
-									// KCT 1 Rptg Country Testing tab
-									// rcc.processRCTab(doc,defViewRow);
-									// KCT 2 Process Sampled Country Testing Tab
-									// sct.processSCTab(doc,defViewRow);
-								/*
-
-								if (doc[0].CPAsmtDataPIview.length < defViewRow) {
-									if (doc[0].CPAsmtDataPIview.length == 0) {
-										doc[0].CPAsmtDataPIview = fieldCalc.addTestViewData(10,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPIview,10,(defViewRow-doc[0].CPAsmtDataPIview.length));
-									}
-								}
-								if (doc[0].CPAsmtDataOIview.length < defViewRow) {
-									if (doc[0].CPAsmtDataOIview.length == 0) {
-										doc[0].CPAsmtDataOIview = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataOIview,8,(defViewRow-doc[0].CPAsmtDataOIview.length));
-									}
-								}
-								if (doc[0].CPAsmtDataPR1view.length < defViewRow) {
-									if (doc[0].CPAsmtDataPR1view.length == 0) {
-										doc[0].CPAsmtDataPR1view = fieldCalc.addTestViewData(8,defViewRow);
-									} else {
-										fieldCalc.addTestViewDataPadding(doc[0].CPAsmtDataPR1view,8,(defViewRow-doc[0].CPAsmtDataPR1view.length));
-									}
-								}
-
-								*/
-
 									var obj = doc[0]; // For Merge
 									deferred.resolve({"status": 200, "doc": obj});
 								}).catch(function(err) {
@@ -680,7 +636,6 @@ var assessment = {
 							doc[0].AuditLocalData = [];
 							//FOR GTS TRANSFORM ONLY: CTRT calculations
 							if(doc[0].MIRABusinessUnit == "GTS Transformation") {
-								console.log("Entered a GTS Transformation CU");
 								var ctrtValues = {
 									reportingQuarter: doc[0].CurrentPeriod,
 									geo: parentdoc[0].Geo,
