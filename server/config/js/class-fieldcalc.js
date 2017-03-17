@@ -688,6 +688,8 @@ var calculatefield = {
 						var CPassmts = {};
 						doc[0].AUDocs = {};
 						// For Current Quarter Country Process Defect Rate Exceptions
+						//kct
+						doc[0].KCTest1Data = [];
 						//kct2
 						doc[0].KC2Test1Data = [];
 						// For CP Financial Process Defect Rates that are Marg counter
@@ -706,6 +708,7 @@ var calculatefield = {
 						for (var i = 0; i < asmtsdocs.length; ++i) {
 							if (asmtsdocs[i].key == "Assessment"){
 								doc[0].asmtsdocs.push(asmtsdocs[i]);
+								doc[0].KCTest1Data.push(asmtsdocs[i]);KCTest1Data
 								//asmtsdocs[i].Type = "Country Process";
 								CPassmts[asmtsdocs[i].parentid] = asmtsdocs[i];
 								if (doc[0].MIRABusinessUnit == "GTS") {
@@ -743,7 +746,7 @@ var calculatefield = {
 										asmtsdocs[i].RAGStatus = "Sat";
 									} else {
 										asmtsdocs[i].RAGStatus = "Marg";
-										doc[0].KC2Test1Data.push(asmtsdocs[i]);
+										doc[0].KC2Test1Data.push(asmtsdocs[i]);KCTest1Data
 										if (asmtsdocs[i].processCategory == "Financial") {
 											margCPDRFin += 1;
 										}else {

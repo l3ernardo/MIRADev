@@ -176,6 +176,10 @@ var assessment = {
 							doc[0].KC2Test2Data = [];
 							doc[0].KC2Test3Data = [];
 
+							doc[0].KCTest1Data = [];
+							doc[0].KCTest2Data = [];
+							doc[0].KCTest3Data = [];
+
 							doc[0].BUCAsmtDataPRview = [];
 							doc[0].BUCAsmtDataCURview = [];
 							doc[0].BUCAsmtDataPIview = [];
