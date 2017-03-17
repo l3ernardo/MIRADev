@@ -6,7 +6,7 @@
 		<tr>
 			<td><label for="Name">Name:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span><input type="text" name="Name" value="{{Name}}" size="100" maxlength="300"></span>
+				<span><input type="text" name="Name" value="{{Name}}" size="100" maxlength="300" required></span>
 			</td>
 		</tr>
 		<tr>
@@ -15,19 +15,19 @@
 		<tr>
 			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span>{{{uniqueSelect "Status" parameters.AssessableUnitStatus.0.options "name" "name" Status}}}</span>
+				<span>{{{uniqueSelect "Status" parameters.AssessableUnitStatus.0.options "name" "name" Status "required"}}}</span>
 				<br />
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
 			</td>
 		</tr>
 	{{else}}
 		<tr><td width="25%">Parent Business Unit:</td><td>{{BusinessUnit}}</td></tr>
-		<tr><td>Name:</td><td>{{Name}}</td></tr>
+		<tr><td>Name:<span class="ibm-required">*</span></td><td>{{Name}}</td></tr>
 		<tr>
 			<td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td>
 		</tr>
 		<tr>
-			<td>Status:</td>
+			<td>Status:<span class="ibm-required">*</span></td>
 			<td>
 				<b class="ibm-important">{{Status}}</b><br />
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>

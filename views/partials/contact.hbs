@@ -5,10 +5,10 @@
 		{{#if grantaccess}}
 			{{#if MIRAunit}}
 			<tr>
-				<td width="25%">MIRA Owner:</td>
+				<td width="25%">MIRA Owner:<span class="ibm-required">*</span></td>
 				<td>
 					<div class="Owner">
-						<input id="ownername" name="ownername" size="95" class="ui-autocomplete-input" autocomplete="off" value="{{Owner}}">
+						<input id="ownername" name="ownername" size="95" class="ui-autocomplete-input" autocomplete="off" value="{{Owner}}" required>
 						<script>$(document).ready(function() {bpLookup('#ownername','#ownername');});</script>
 					</div>
 				</td>
@@ -64,7 +64,7 @@
 		{{!-- AUBUSINESSUNIT form - Contact/Access section - Read Mode --}}
 		{{#if MIRAunit}}
 		<tr>
-			<td width="25%">MIRA Owner:</td>
+			<td width="25%">MIRA Owner:<span class="ibm-required">*</span></td>
 			<td><div id="Owner">{{Owner}}</div>
 				<script>$(document).ready(function() {updateOwner();});</script>
 			</td>

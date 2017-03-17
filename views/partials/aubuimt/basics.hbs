@@ -10,7 +10,7 @@
 					<span>
 						<!-- <input type="hidden" name="IMT" id="IMT" value="{{IMT}}"> -->
 						<!-- <input type="hidden" name="IMTid" id="IMTid" value="{{IMTid}}"> -->
-						{{{uniqueSelect "IMT" IMTList "docid" "name" IMT}}}
+						{{{uniqueSelect "IMT" IMTList "docid" "name" IMT "required"}}}
 					</span>
 				</td>
 			{{else}}
@@ -24,7 +24,7 @@
 		<tr>
 			<td><label for="Status">Status:<span class="ibm-required">*</span></label></td>
 			<td>
-				<span>{{{uniqueSelect "Status" parameters.AssessableUnitStatus.0.options "name" "name" Status}}}</span>
+				<span>{{{uniqueSelect "Status" parameters.AssessableUnitStatus.0.options "name" "name" Status "required"}}}</span>
 				<br />
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
 			</td>
@@ -35,11 +35,11 @@
 	<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
 	<caption class="mira-caption"><em>Basics</em></caption>
 		<tr><td width="25%">Parent BU IOT:</td><td>{{Name}}</td></tr>
-		<tr><td>BU IMT:</td><td>{{IMT}}</td></tr>
+		<tr><td>BU IMT:<span class="ibm-required">*</span></td><td>{{IMT}}</td></tr>
 		<tr><td>BU IOT:</td><td>{{IOT}}</td></tr>
 		<tr><td>Current reporting period:</td><td><b class="ibm-important">{{CurrentPeriod}}</b></td></tr>
 		<tr>
-			<td>Status:</td>
+			<td>Status:<span class="ibm-required">*</span></td>
 			<td>
 				<b class="ibm-important">{{Status}}</b><br />
 				<span class="mira-subdata">Status last changed by: </span><span class="mira-subdatablue">{{StatusChangeWho}}</span><span class="mira-subdata"> on </span><span class="mira-subdatablue">{{StatusChangeWhen}}</span>
