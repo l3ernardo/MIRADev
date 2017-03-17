@@ -127,6 +127,8 @@ var dashboard = {
 										"Target2Sat",										
 										"NextQtrRating",
 										"MIRAAssessmentStatus",
+										"MIRAStatus",
+										"WWBCITStatus",
 										"WWBCITAssessmentStatus",
 										"IOT",
 										"IMT",
@@ -179,6 +181,8 @@ var dashboard = {
 										"AUNextQtrRating",
 										"Target2Sat",																			
 										"NextQtrRating",
+										"MIRAStatus",
+										"WWBCITStatus",
 										"MIRAAssessmentStatus",
 										"WWBCITAssessmentStatus",
 										"Portfolio",
@@ -321,11 +325,13 @@ var dashboard = {
 									{    
 										for(var l=0;l<doctest.length;l++)
 										{   
-											if(doctest[l].DocType=='Assessment' && doctest[l].parentid==doctest[j]._id ){ 
+											if(doctest[l].DocType=='Assessment' && doctest[l].parentid==doctest[j]._id ){
 												 doctest[j].priorQ = doctest[l].PeriodRatingPrev1;
 												 doctest[j].currentQ = doctest[l].PeriodRating;
 												 doctest[j].nextQtr = doctest[l].NextQtrRating;
 												 doctest[j].Target2Sat = doctest[l].Target2Sat;	
+												 doctest[j].MIRAStatus = doctest[l].MIRAStatus;	
+												 doctest[j].WWBCITStatus = doctest[l].WWBCITStatus;
 												 l=doctest.length;
 											}
 										}
@@ -337,7 +343,7 @@ var dashboard = {
 								var doc=[]; var count=0;
 								for(var p = 0; p < doctest.length; p++){
 									if(doctest[p].DocType == 'Assessable Unit')
-									{
+									{  
 										doc.push(doctest[p]);
 									}							
 								}
@@ -472,7 +478,7 @@ var dashboard = {
 											else if(brglist === idRGroup){ // ==groupName
 												addDoc = true;
 											}
-											if(addDoc){
+											if(addDoc){ 
 												F.push({"id": tmplevel2["id"],
 														"_id":tmplevel2["_id"],
 														"Name":tmplevel2["Name"],
@@ -483,7 +489,7 @@ var dashboard = {
 														"currentQ":tmplevel2["currentQ"],
 														"nextQtr":tmplevel2["nextQtr"],
 														"Target2Sat":tmplevel2["Target2Sat"],
-														"MIRAAssessmentStatus":tmplevel2["MIRAAssessmentStatus"],
+														"MIRAStatus":tmplevel2["MIRAStatus"],
 														"WWBCITAssessmentStatus":tmplevel2["WWBCITAssessmentStatus"],
 														"Portfolio":tmplevel2["Portfolio"]
 													});
@@ -501,8 +507,8 @@ var dashboard = {
 										currentQ: F[i].currentQ,
 										nextQtr: F[i].nextQtr,
 										targetToSat:F[i].Target2Sat,
-										mira:F[i].MIRAAssessmentStatus,
-										wwBcit:F[i].WWBCITAssessmentStatus,
+										mira:F[i].MIRAStatus,
+										wwBcit:F[i].WWBCITStatus,
 										type:F[i].DocSubType
 									});
 								  }				
@@ -517,8 +523,8 @@ var dashboard = {
 										currentQ: F[i].currentQ,
 										nextQtr: F[i].nextQtr,
 										targetToSat:F[i].Target2Sat,
-										mira:F[i].MIRAAssessmentStatus,
-										wwBcit:F[i].WWBCITAssessmentStatus								
+										mira:F[i].MIRAStatus,
+										wwBcit:F[i].WWBCITStatus								
 									});
 								  }
 								}					

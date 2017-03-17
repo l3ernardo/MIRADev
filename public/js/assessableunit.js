@@ -9,7 +9,7 @@ $(document).ready(function(){
 	});
 	//Code for Save button
 	$('#btn_save').click(function(evt) {
-		if (valid_au()) {
+		if (valid_au() && validation()) {
 			myEditor.saveHTML();
 			var YmyEditor = myEditor.get('element').value;
 			$('#Notes').val(YmyEditor);
@@ -21,7 +21,7 @@ $(document).ready(function(){
 	});
 	//Code for Save & Close button
 	$('#btn_save_close').click(function(evt) {
-		if (valid_au()) {
+		if (valid_au() && validation()) {
 			myEditor.saveHTML();
 			var YmyEditor = myEditor.get('element').value;
 			$('#Notes').val(YmyEditor);
@@ -62,6 +62,7 @@ function hide_divs(){
 
 function valid_au() {
 	var valid = true;
+	var validEmail = true;
 	var req_flds = "";
 	switch ($("input[name='docsubtype']").val()) {
 		case "Country Process":
@@ -71,24 +72,6 @@ function valid_au() {
 			}
 			if ($("input[name='AuditableFlag']").val() == "Yes" && $("input[name='AuditProgram']").val() == "") {
 				req_flds = req_flds + "  - Audit Program\n";
-				valid = false;
-			}
-			break;
-		case "BU IOT":
-			if ($("input[name='iotname']").val() == "") {
-				req_flds = req_flds + "  - BU IOT\n";
-				valid = false;
-			}
-			break;
-		case "BU IMT":
-			if ($("input[name='imtname']").val() == "") {
-				req_flds = req_flds + "  - BU IMT\n";
-				valid = false;
-			}
-			break;
-		case "BU Country":
-			if ($("input[name='countryname']").val() == "") {
-				req_flds = req_flds + "  - Country\n";
 				valid = false;
 			}
 			break;
@@ -112,16 +95,19 @@ function valid_au() {
 			}
 			break;
 		case "BU Reporting Group":
+		case "BU IOT":
+		case "BU IMT":
+		case "BU Country":
 		case "Account":
-			if ($("input[name='Name']").val() == "") {
-				req_flds = req_flds + "  - Name\n";
-				valid = false;
-			}
+			var ownerName = $("#ownername").val();
+			var emailFormat = /(\S+\ )+\(\S+@\S+\.\ibm.com\)/;
+			valid = validEmail = emailFormat.test(ownerName);
 			break;
 		default:
 			valid = true;
 	}
-	if (!valid) alert("Fields with (*) are required!\n" + req_flds)
+	if (!validEmail) alert("Incorrect Owner name. Look for the name again and pick the correct one from the result list." + req_flds)
+	else	if (!valid) alert("Fields with (*) are required!\n" + req_flds)
 	return valid;
 };
 

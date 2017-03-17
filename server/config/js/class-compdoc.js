@@ -16,6 +16,9 @@ var getDocs = {
 		var deferred = q.defer();
 		try {
 			switch (doc[0].ParentDocSubType) {
+				case "Sub-process":
+					deferred.resolve({"status": 200, "doc": doc});
+					break;
 				case "Country Process":
 					var compObj = {
 						selector : {
@@ -237,7 +240,6 @@ var getDocs = {
 								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								doc[0].KC2Test2Data.push(comps[i]);
-								//doc[0].RCTest2Data.push(comps[i]);
 								// this is dummy content only while waiting for correct data so that Irving can help work on the treeables
 								// doc[0].TRExceptionControls.push(comps[i]);
 								if (comps[i].reportingQuarter == doc[0].CurrentPeriod) {
@@ -262,8 +264,8 @@ var getDocs = {
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 								// For Key Controls Testing Tab
 								if (comps[i].reportingCountry == doc[0].Country) {
+									doc[0].KC2Test3Data.push(comps[i]);
 									doc[0].KC2Test2Data.push(comps[i]);
-									//doc[0].RCTest3Data.push(comps[i]);
 								}
 								// For Sampled Country Testing Tab
 								if (comps[i].sampleCountry == doc[0].Country) {
