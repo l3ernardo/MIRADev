@@ -746,7 +746,7 @@ var calculatefield = {
 										asmtsdocs[i].RAGStatus = "Sat";
 									} else {
 										asmtsdocs[i].RAGStatus = "Marg";
-										doc[0].KC2Test1Data.push(asmtsdocs[i]);KCTest1Data
+										doc[0].KC2Test1Data.push(asmtsdocs[i]);
 										if (asmtsdocs[i].processCategory == "Financial") {
 											margCPDRFin += 1;
 										}else {
