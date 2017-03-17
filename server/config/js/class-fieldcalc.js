@@ -726,9 +726,11 @@ var calculatefield = {
 								// Get Current Quarter Country Process Defect Rate Exceptions
 								if ( asmtsdocs[i].ParentDocSubType == "Country Process") {
 									// Format Defect Rate
-									asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
-									if (asmtsdocs[i].AUDefectRate == 0) {
-										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+									if (!isNaN(asmtsdocs[i].AUDefectRate) && asmtsdocs[i].AUDefectRate != "") {
+										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
+										if (asmtsdocs[i].AUDefectRate == 0) {
+											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+										}
 									}
 									// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
 									asmtsdocs[i].processCategory = calculatefield.getProcessCategory(asmtsdocs[i].GPWWBCITKey, doc);
@@ -977,9 +979,11 @@ var calculatefield = {
 									//DATA RPTG Country Testing
 									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process") {
 										// Format Defect Rate
-										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
-										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
-											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
+										if (!isNaN(doc[0].asmtsdocs[i].AUDefectRate) && doc[0].asmtsdocs[i].AUDefectRate != "") {
+											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
+											if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
+												doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
+											}
 										}
 										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
 										doc[0].asmtsdocs[i].processCategory = calculatefield.getProcessCategory(doc[0].asmtsdocs[i].GPWWBCITKey, doc);
@@ -1172,10 +1176,12 @@ var calculatefield = {
 								if (doc[0].asmtsdocs[i].key == "Assessment"){
 									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1 ) {
 										// Format Defect Rate
+										if (!isNaN(doc[0].asmtsdocs[i].AUDefectRate) && doc[0].asmtsdocs[i].AUDefectRate != "") {
 										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
 										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
 											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
 										}
+									}
 										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
 										doc[0].asmtsdocs[i].processCategory = calculatefield.getProcessCategory(doc[0].asmtsdocs[i].GPWWBCITKey, doc);
 										if (doc[0].asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
@@ -1283,10 +1289,13 @@ var calculatefield = {
 								// Get Current Quarter Country Process Defect Rate Exceptions
 								if ( asmtsdocs[i].ParentDocSubType == "Country Process") {
 									// Format Defect Rate
-									asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
-									if (asmtsdocs[i].AUDefectRate == 0) {
-										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+									if (!isNaN(asmtsdocs[i].AUDefectRate) && asmtsdocs[i].AUDefectRate != "") {
+										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
+										if (asmtsdocs[i].AUDefectRate == 0) {
+											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+										}
 									}
+
 									// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
 									asmtsdocs[i].processCategory = calculatefield.getProcessCategory(asmtsdocs[i].GPWWBCITKey, doc);
 									if (asmtsdocs[i].AUDefectRate >= doc[0].UnsatThresholdPercent) {
@@ -1431,9 +1440,11 @@ var calculatefield = {
 									// Get Current Quarter Country Process Defect Rate Exceptions
 									if ( asmtsdocs[i].ParentDocSubType == "Country Process") {
 										// Format Defect Rate
-										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
-										if (asmtsdocs[i].AUDefectRate == 0) {
-											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+										if (!isNaN(asmtsdocs[i].AUDefectRate) && asmtsdocs[i].AUDefectRate != "") {
+											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
+											if (asmtsdocs[i].AUDefectRate == 0) {
+												asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+											}
 										}
 										// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
 										asmtsdocs[i].processCategory = calculatefield.getProcessCategory(asmtsdocs[i].GPWWBCITKey, doc);
@@ -1510,10 +1521,10 @@ var calculatefield = {
 
 
 									if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
-										doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+										doc[0].asmtsdocs[i].KCFRDefectRate = parseFloat(doc[0].asmtsdocs[i].KCFRDefectRate * 100).toFixed(1).toString();
 
 									if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-										doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
+										doc[0].asmtsdocs[i].KCODefectRate = parseFloat(doc[0].asmtsdocs[i].KCODefectRate * 100).toFixed(1).toString();
 
 									toadd = {
 										"docid":doc[0].asmtsdocs[i]._id,
@@ -1866,10 +1877,10 @@ var calculatefield = {
 								"reviewcomments":doc[0].asmtsdocs[i].ReviewComments
 							};
 							doc[0].BUCAsmtDataPRview.push(toadd);
-                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
+              var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							// Rating Category Counters
 							switch (calculatedRatingCategory) {
-							//switch (doc[0].asmtsdocs[i].RatingCategory) {
+								//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (doc[0].asmtsdocs[i].processCategory == "Financial") satUpFin = satUpFin + 1;
 								else satUpOps = satUpOps + 1;
@@ -1993,9 +2004,9 @@ var calculatefield = {
 									}
 								}
 							}
-                            var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
+              var calculatedRatingCategory=calculatefield.getRatingCategory(doc[0].asmtsdocs[i].PeriodRating,doc[0].asmtsdocs[i].PeriodRatingPrev1);
 							switch (calculatedRatingCategory) {
-							//switch (doc[0].asmtsdocs[i].RatingCategory) {
+								//switch (doc[0].asmtsdocs[i].RatingCategory) {
 								case "Sat &#9650;":
 								if (isCRM>0) satUpCUCrm = satUpCUCrm + 1;
 								else satUpCUDel = satUpCUDel + 1;
@@ -2051,10 +2062,10 @@ var calculatefield = {
 								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
 
 								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
-									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseFloat(doc[0].asmtsdocs[i].KCFRDefectRate * 100).toFixed(1).toString();
 
 								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
+									doc[0].asmtsdocs[i].KCODefectRate = parseFloat(doc[0].asmtsdocs[i].KCODefectRate * 100).toFixed(1).toString();
 
 
 								toadd = {
@@ -2137,10 +2148,10 @@ var calculatefield = {
 								doc[0].asmtsdocs[i].WeightedAuditScore = performanceTab.calculateCHQInternalAuditScoreAssessmentLevel(doc,doc[0].asmtsdocs[i],calculatefield);
 
 								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
-									doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseFloat(doc[0].asmtsdocs[i].KCFRDefectRate * 100).toFixed(1).toString();
 
 								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-									doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
+									doc[0].asmtsdocs[i].KCODefectRate = parseFloat(doc[0].asmtsdocs[i].KCODefectRate * 100).toFixed(1).toString();
 
 								toadd = {
 									"docid":doc[0].asmtsdocs[i]._id,
@@ -2208,90 +2219,90 @@ var calculatefield = {
 							}
 							break;
 						case "BU Country":
-						// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
+							// PO tab performance indicators view for table Country Process and CU Performance Indicators && Country Process and CU Operational and Indicators
 
-						try{
-
-
-							//GBS and GTS Transformation, GTS its been calculated on createTablesData
-
-							//get MSAC missed commitments
-							doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
-							//get Open Issue count per child assessment
-							doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
+							try{
 
 
-							if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
-								doc[0].asmtsdocs[i].KCFRDefectRate = parseInt(doc[0].asmtsdocs[i].KCFRDefectRate).toFixed(1).toString();
+								//GBS and GTS Transformation, GTS its been calculated on createTablesData
 
-							if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
-								doc[0].asmtsdocs[i].KCODefectRate = parseInt(doc[0].asmtsdocs[i].KCODefectRate).toFixed(1).toString();
-
-							toadd = {
-								"docid":doc[0].asmtsdocs[i]._id,
-								"name":doc[0].asmtsdocs[i].AssessableUnitName,
-								"ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-								"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
-								"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
-								"ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
-								"ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
-								"ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
-								"kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
-								"kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
-								"auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
-								"msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
-								"msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
-								"treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-							};
+								//get MSAC missed commitments
+								doc[0].asmtsdocs[i].MissedMSACSatCount= performanceTab.getMSACCOmmitmentsIndividual(doc[0].asmtsdocs[i]);
+								//get Open Issue count per child assessment
+								doc[0].asmtsdocs[i].MissedOpenIssueCount = performanceTab.getMissedRisksIndividual(doc[0].RiskView1Data, doc[0].asmtsdocs[i]);
 
 
-							doc[0].BUCAsmtDataPIview.push(toadd);
+								if(doc[0].asmtsdocs[i].KCFRDefectRate != undefined && doc[0].asmtsdocs[i].KCFRDefectRate != "" )
+									doc[0].asmtsdocs[i].KCFRDefectRate = parseFloat(doc[0].asmtsdocs[i].KCFRDefectRate * 100).toFixed(1).toString();
+
+								if(doc[0].asmtsdocs[i].KCODefectRate != undefined && doc[0].asmtsdocs[i].KCODefectRate != "")
+									doc[0].asmtsdocs[i].KCODefectRate = parseFloat(doc[0].asmtsdocs[i].KCODefectRate * 100).toFixed(1).toString();
+
+								toadd = {
+									"docid":doc[0].asmtsdocs[i]._id,
+									"name":doc[0].asmtsdocs[i].AssessableUnitName,
+									"ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+									"ratingCQ":doc[0].asmtsdocs[i].PeriodRating,
+									"ratingPQ1":doc[0].asmtsdocs[i].PeriodRatingPrev1,
+									"ratingPQ2":doc[0].asmtsdocs[i].PeriodRatingPrev2,
+									"ratingPQ3":doc[0].asmtsdocs[i].PeriodRatingPrev3,
+									"ratingPQ4":doc[0].asmtsdocs[i].PeriodRatingPrev4,
+									"kcfrDR":doc[0].asmtsdocs[i].KCFRDefectRate,
+									"kcoDR":doc[0].asmtsdocs[i].KCODefectRate,
+									"auditScore":doc[0].asmtsdocs[i].WeightedAuditScore,
+									"msdRisk":doc[0].asmtsdocs[i].MissedOpenIssueCount,
+									"msdMSAC":doc[0].asmtsdocs[i].MissedMSACSatCount,
+									"treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
+								};
 
 
-							// PO tab other indicators view
-
-							toadd = {
-								"docid":doc[0].asmtsdocs[i]._id,
-								"name":doc[0].asmtsdocs[i].AssessableUnitName,
-								"ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
-								"bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount,
-								"treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
-							};
+								doc[0].BUCAsmtDataPIview.push(toadd);
 
 
-							if (doc[0].asmtsdocs[i].OpMetric != undefined) {
+								// PO tab other indicators view
 
-								for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; j++) {
+								toadd = {
+									"docid":doc[0].asmtsdocs[i]._id,
+									"name":doc[0].asmtsdocs[i].AssessableUnitName,
+									"ParentDocSubType":doc[0].asmtsdocs[i].ParentDocSubType,
+									"bocExCount":doc[0].asmtsdocs[i].BOCExceptionCount,
+									"treeParent" :doc[0].asmtsdocs[i].ParentDocSubType.replace(/ /g,'')
+								};
 
-									toadd[doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
-									toadd["docid"] = doc[0].asmtsdocs[i]._id;
-									toadd["name"] = doc[0].asmtsdocs[i].AssessableUnitName;
-									toadd["ParentDocSubType"] = doc[0].asmtsdocs[i].ParentDocSubType;
-									toadd["bocExCount"] = doc[0].asmtsdocs[i].BOCExceptionCount;
+
+								if (doc[0].asmtsdocs[i].OpMetric != undefined) {
+
+									for (var j = 0; j < doc[0].asmtsdocs[i].OpMetric.length; j++) {
+
+										toadd[doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+										toadd["docid"] = doc[0].asmtsdocs[i]._id;
+										toadd["name"] = doc[0].asmtsdocs[i].AssessableUnitName;
+										toadd["ParentDocSubType"] = doc[0].asmtsdocs[i].ParentDocSubType;
+										toadd["bocExCount"] = doc[0].asmtsdocs[i].BOCExceptionCount;
 
 
-									// doc[0].BUCAsmtDataOIview[i] = {};
-									//doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
-									//  console.log(doc[0].asmtsdocs[i].OpMetric[j].id+"Rating");
+										// doc[0].BUCAsmtDataOIview[i] = {};
+										//doc[0].BUCAsmtDataOIview[i][doc[0].asmtsdocs[i].OpMetric[j].id+"Rating"] = doc[0].asmtsdocs[i].OpMetric[j].rating;
+										//  console.log(doc[0].asmtsdocs[i].OpMetric[j].id+"Rating");
+									}
+
+
+								}
+								doc[0].BUCAsmtDataOIview.push(toadd);
+
+								// Basics of Control Exception Counter
+								if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
+									bocEx = bocEx + 1;
 								}
 
 
+
+
+							}catch(e){
+								console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
+
 							}
-							doc[0].BUCAsmtDataOIview.push(toadd);
-
-							// Basics of Control Exception Counter
-							if (doc[0].asmtsdocs[i].BOCExceptionCount == 1) {
-								bocEx = bocEx + 1;
-							}
-
-
-
-
-						}catch(e){
-							console.log("[class-fieldcalc][getRatingProfile][BU Country Performance Tab] - " + e.stack);
-
-						}
-						break;
+							break;
 						// }
 					}
 				}
