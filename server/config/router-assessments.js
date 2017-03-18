@@ -18,10 +18,12 @@ assessments.get('/assessment', isAuthenticated, function(req, res) {
 					// Temporary save the original document status
 					if(global.userdoc!="") {
 						var docOrig = Object.assign({},global.userdoc);
+						req.app.locals.doc1= docOrig;
 						global.doc1 = docOrig;
 						global.userdoc="";
 					} else {
 						var docOrig = Object.assign({},data.doc);
+						req.app.locals.doc1=  docOrig[0];
 						global.doc1 = docOrig[0];
 					}
 				} catch(e) {
