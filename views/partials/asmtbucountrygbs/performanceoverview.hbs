@@ -241,12 +241,12 @@
 				{{#each BUCAsmtDataPIview}}
 					<tr class="asmt-viewdata" data-tt-id={{docid}} data-tt-parent-id="{{treeParent}}">
 						{{#if_equal name ""}}
-							<td class="asmt-viewdata" width="33%">&nbsp;</td>
+							<td  width="33%">&nbsp;</td>
 						{{else}}
 							{{#if_greater treeParent "-1"}}
-								<td class="asmt-viewdata" width="33%">{{name}}</td>
+								<td  width="33%">{{name}}</td>
 							{{else}}
-								<td class="asmt-viewdata" width="33%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+								<td style="text-align:left; width="33%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 							{{/if_greater}}
 
 						{{/if_equal}}
@@ -283,12 +283,12 @@
 				{{#each BUCAsmtDataOIview}}
 					<tr class="asmt-viewdata" data-tt-id={{docid}} data-tt-parent-id="{{treeParent}}">
 						{{#if_equal name ""}}
-							<td class="asmt-viewdata" width="37%">&nbsp;</td>
+							<td  width="37%">&nbsp;</td>
 						{{else}}
 							{{#if_greater treeParent "-1"}}
-								<td class="asmt-viewdata" width="37%">{{name}}</td>
+								<td  width="37%">{{name}}</td>
 							{{else}}
-								<td class="asmt-viewdata" width="37%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
+								<td  width="37%"><a target="_blank" href="/assessment?id={{docid}}">{{name}}</a></td>
 							{{/if_greater}}
 
 						{{/if_equal}}
@@ -307,6 +307,16 @@
 		</td>
 	</tr>
 </table>
+
+<style>
+
+    table.treetable span.indenter {
+      float: left;
+    }
+    table.treetable span.content {
+      display: inline-block; 
+      }
+</style>
 
 <script>
 
