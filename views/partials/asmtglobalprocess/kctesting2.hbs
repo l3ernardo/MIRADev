@@ -277,7 +277,7 @@
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%">{{controlCat}}</td>
 						<td width="10%">{{{processCat}}}</td>
-						<td width="10%"></td>
+						<td width="10%">{{controlName}}</td>
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="5%">{{numRequiredTests}}</td>
 						<td width="5%">{{numActualTests}}</td>
@@ -318,7 +318,7 @@
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="7%">{{originalTargetDate}}</td>
 						<td width="7%">{{targetClose}}</td>
-						<td width="5%">{{count}}</td>
+						<td width="5%">{{numDefects}}</td>
 						<td width="13%">{{defectType}}</td>
 					</tr>
 				{{/each}}

@@ -262,10 +262,16 @@ var getDocs = {
 								// calculate Control Name
 								comps[i].controlName = comps[i].controlReferenceNumber.split("-")[2] + " - " + comps[i].controlShortName;
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
-								// For Key Controls Testing Tab
-								if (comps[i].reportingCountry == doc[0].Country) {
+
 									doc[0].KC2Test3Data.push(comps[i]);
-									doc[0].KC2Test2Data.push(comps[i]);
+								// Key Control Testing
+								if (comps[i].numDefects > 0 && comps[i].status=="Active" ) { 
+									if(comps[i].remediationStatus > doc[0].CurrentPeriod){
+										doc[0].KCTest2Data.push(comps[i]);
+										if (comps[i].remediationStatus == "Open") {
+											doc[0].KCTest3Data.push(comps[i]);
+										}
+									}
 								}
 								// For Sampled Country Testing Tab
 								if (comps[i].sampleCountry == doc[0].Country) {
