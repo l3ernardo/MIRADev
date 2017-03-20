@@ -45,6 +45,8 @@ var assessment = {
 					doc.push(newdoc);
 				}
 				global.doc1 = newdoc; // Temporary store the doc using the ID as the attribute, so easy to check if it exists
+				req.app.locals.doc1= newdoc;
+				
 			} catch(e) {
 				console.log("[assessment][getAsmtbyID]" + e.stack);
 				console.log(e.stack);
@@ -2251,7 +2253,9 @@ var assessment = {
 
 					// Change to mergesave
 					doc[0].fieldslist = req.body.fieldslist;
-					db.mergesave(global.doc1, doc[0]).then(function(data){
+					//console.log("global doc");
+					//console.log(global.doc1);
+					db.mergesave(req.app.locals.doc1, doc[0]).then(function(data){
 						if(data.status==999) {
 							deferred.resolve({"status": 999, "id": data.id, "parentid": doc[0].parentid, "userdoc": data.body, "conflictfields":data.conflictfields});
 						} else {
