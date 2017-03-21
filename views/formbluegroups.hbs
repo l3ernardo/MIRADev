@@ -1,71 +1,76 @@
-<link  href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
-<script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="./css/style.css">
+<link href="/css/mirastyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="./css/jquery-ui.css">
-<script src="/lib/jquery.dataTables.js"></script>
+<script src="./js/bluepages.js" type="text/javascript" charset="utf-8"></script>
 <script src="./js/bluegroups.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/utility.js" type="text/javascript" charset="utf-8"></script>
 <script>
 //added by Carlos R.
-
-$('h1#pageTitle').text("Bluegroups");
-$('form input').on('keypress', function(e) {
-    return e.which !== 13;
-
-
+	$('h1#pageTitle').text("Bluegroups");
+	$('form input').on('keypress', function(e) {
+		return e.which !== 13;
 });
 
-
-
-
 </script>
-	<style>
-		.ui-autocomplete-loading {
-			background: white url("./images/animated-progress-20x20b.gif") right center no-repeat;
-		}
-	</style>
+<style>
+	.ui-autocomplete-loading {
+		background: white url("./images/animated-progress-20x20b.gif") right center no-repeat;
+	}
+</style>
 <div class="ibm-container" style="width:100%">
 	<div class="ibm-container-body">
-		<br/>
-		<br/>
-		<div class="ibm-buttons-row">
+		<span><br/></span>
+		<div id="eventLinks" name="eventLinks" class="ibm-buttons-row">
+			<p>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Excel" name="lnk_exportxls" id="lnk_exportxls" class="ibm-symp-spreadsheet">Export to Excel</a>
+				<span class="ibm-sep"> </span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="lnk_exportods" id="lnk_exportods" class="ibm-symp-spreadsheet">Export to Open Office</a>
+				<textarea name="textarea" id="dataForExport" cols="100" style="display:none">{{valuesToString exportInfo}}</textarea>
+			</p>
+			<br/>
 		</div>
-		<div class="ibm-title ibm-subtitle">
-			<h2 id="titlehead">BlueGroup: {{bgname}}</h2>
-		</div>
-		<div class="ibm-rule"><hr/></div>
-		<div class="ibm-container ibm-alternate ibm-buttons-last">
-			<div class="ibm-container-body">
-				<div id="bodyContent" title="Bluegroup Details" style="display:;">
-					<form id="form" class="ibm-column-form" name="form" method="POST" action="/processbg">
-						<input type="hidden" id="finalmembers" name="finalmembers">
-						<input type="hidden" id="group" name="group" value="{{bgname}}">
-						<p style="text-align:left" class="ui-widget">
-							<label for="bpname">Lookup:<span class="ibm-required">&nbsp;</span></label>
-							<span><input id="bpname" class="ui-autocomplete-input" autocomplete="off" size=40></span>
-							<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>
+		<div class="ibm-container-body">
+			<div id="bodyContent" title="Bluegroup Details" style="display:;">
+				<form id="form" class="ibm-column-form" name="form" method="POST" action="/processbg">
+					<input type="hidden" id="finalmembers" name="finalmembers">
+					<input type="hidden" id="group" name="group" value="{{bgname}}">
+					<table id="basics_table" cellspacing="0" cellpadding="0" border="0" width="100%" class="ibm-data-table">
+						<caption class="mira-caption"><em>BlueGroup: {{bgname}}</em></caption>
+						<tr>
+							<td width="25%">Lookup:</td>
+							<td>
+								<div class="Owner">
+									<input id="bpname" name="bpname" size="62" class="ui-autocomplete-input" autocomplete="off">
+									<script>$(document).ready(function() {bpLookup('#bpname','#bplist');});</script>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td width="25%">Name: <a class="ibm-add1-link" href="javascript:void(0);" onclick="add($('#bplist'));return false;">Add</a></td>
+							<td>
+								<textarea id="bplist" rows="1" cols="70" readonly></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td width="25%">Members: <a class="ibm-delete-link" href="javascript:void(0);" onclick="del($('#mySelect'));return false;">Remove</a></td>
+							<td>
+								<select name="mySelect" id="mySelect" size="10" multiple>
+								{{#each alldata}}
+									<option value="{{uid}}">{{member}}</option>
+								{{/each }}
+								</select>
+							</td>
+						</tr>
+					</table>
+					<div class="ibm-buttons-row">
+						<p>
+							<input class="ibm-btn-arrow-pri" type="button" id="btn_submit" value="Submit" onclick="submitForm($('#form'));" />
+							<span class="ibm-sep">&nbsp;</span>
+							<input class="ibm-btn-cancel-sec" onclick="location.href = '/bluegroups';"  type="button" id="btn_cancel" value="Cancel" />
 						</p>
-						<p style="text-align:left">
-							<label for="bpname">Name:<span class="ibm-required">&nbsp;</span><a class="ibm-add1-link" href="#" onclick="add($('#bplist'));return false;">Add</a></label><span>
-							<textarea id="bplist" rows="1" cols="52" readonly></textarea></span>
-						</p>
-						<p style="text-align:left">
-							<label for="title">Members:<span class="ibm-required">&nbsp;</span><a class="ibm-delete-link" href="#" onclick="del($('#mySelect'));return false;">Remove</a></label>
-							<span><select name="mySelect" id="mySelect" size="10" multiple>
-							{{#each alldata}}
-								<option value="{{uid}}">{{member}}</option>
-							{{/each }}
-							</select>
-							</span>
-						</p>
-						<div class="ibm-buttons-row">
-							<p>
-								<input class="ibm-btn-arrow-pri" type="button" id="btn_submit" value="Submit" onclick="submitForm($('#form'));" />
-								<span class="ibm-sep">&nbsp;</span>
-								<input class="ibm-btn-cancel-sec" onclick="location.href = '/bluegroups';"  type="button" id="btn_cancel" value="Cancel" />
-							</p>
-						</div>
-					</form>
-				</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
