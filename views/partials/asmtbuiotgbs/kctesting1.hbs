@@ -52,19 +52,19 @@
 					<tr class="asmt-viewdata">
 						<td>{{name}}</td>
 						{{{defectRateDisplayView defectRateP4 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP4 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
-						
+
 						{{{defectRateDisplayView defectRateP3 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP3 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
-						
+
 						{{{defectRateDisplayView defectRateP2 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP2 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
-						
+
 						{{{defectRateDisplayView defectRateP1 ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
-						
+
 						{{{TestingRatioDisplay testingRatioP1 ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
 						{{{defectRateDisplayView defectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name}}}
 						{{{TestingRatioDisplay testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name}}}
@@ -187,7 +187,7 @@
 				<tr class="kc-test-viewheader">
 					<td colspan="25"></td>
 				</tr>
-			</table> 
+			</table>
 			<table width="100%" class="ibm-data-table">
 				<tr class="kc-test-cell">
 					<td class="kc-test-cell" width="65%">
@@ -306,7 +306,7 @@
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{numRequiredTests}}</td>
 						<td width="10%">{{numActualTests}}</td>
-						{{{TestingRatioDisplay testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name 5}}}
+						{{{TestingRatioDisplayWpercent testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name 5}}}
 						<td width="20%">{{reasonTested}}</td>
 						<td width="20%">{{actionPlan}}</td>
 					</tr>
@@ -359,5 +359,3 @@
 	$("#RCTest_treeview").treetable({expandable: true });
 	$("#RCTest3_treeview").treetable({expandable: true });
 </script>
-
-

@@ -1177,7 +1177,7 @@ var calculatefield = {
 									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1 ) {
 										// Format Defect Rate
 										if (!isNaN(doc[0].asmtsdocs[i].AUDefectRate) && doc[0].asmtsdocs[i].AUDefectRate != "") {
-										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
+										doc[0].asmtsdocs[i].AUDefectRate = parseFloat(doc[0].asmtsdocs[i].AUDefectRate).toFixed(2);
 										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
 											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
 										}
