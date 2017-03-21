@@ -539,9 +539,14 @@ var calculateKCTab = {
 
           break;
         case "Global Process":
-		try{
+		      try{
           var cappedtest;
           doc[0].TRExceptionControls = [];
+
+          // For CP Defect Rate Exceptions counters
+          doc[0].margCPDR = doc[0].margCPDRFin + doc[0].margCPDROps;
+          doc[0].unsatCPDR = doc[0].unsatCPDRFin + doc[0].unsatCPDROps;
+
           //** Calculate for Defect Rate and Testing Ratio - START **//
           // Calculate for Current Quarter
           for (var i = 0; i < doc[0].KC2Test2Data.length; i++) {
