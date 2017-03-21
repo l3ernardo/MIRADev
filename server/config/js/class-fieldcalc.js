@@ -727,9 +727,9 @@ var calculatefield = {
 								if ( asmtsdocs[i].ParentDocSubType == "Country Process") {
 									// Format Defect Rate
 									if (!isNaN(asmtsdocs[i].AUDefectRate) && asmtsdocs[i].AUDefectRate != "") {
-										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
+										asmtsdocs[i].AUDefectRate = parseFloat(asmtsdocs[i].AUDefectRate).toFixed(2);
 										if (asmtsdocs[i].AUDefectRate == 0) {
-											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+											asmtsdocs[i].AUDefectRate = parseFloat(asmtsdocs[i].AUDefectRate).toFixed(0);
 										}
 									}
 									// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
