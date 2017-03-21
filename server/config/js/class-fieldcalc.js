@@ -849,6 +849,7 @@ var calculatefield = {
 					case "BU IOT":
 						// doc[0].AUDocs = asmtsdata.body.docs;
 						doc[0].AUDocs = [];
+						doc[0].CUNames = [];
 						var unitdocs = asmtsdata.body.docs;
 						doc[0].auditableAUIds = [];
 						doc[0].ExcludedCountryNames = [];
@@ -900,6 +901,9 @@ var calculatefield = {
 							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
 								if(unitdocs[i].AuditableFlag == "Yes"){
 									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
+								}
+								if (unitdocs[i].DocSubType == "Controllable Unit") {
+									doc[0].CUNames.push(unitdocs[i].ControllableUnit);
 								}
 							}
 
@@ -1044,6 +1048,7 @@ var calculatefield = {
 						break;
 					case "BU IMT":
 					// doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].CUNames = [];
 						doc[0].auditableAUIds = [];
 						doc[0].AUDocs = [];
 						var unitdocs = asmtsdata.body.docs;
@@ -1097,6 +1102,9 @@ var calculatefield = {
 							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
 								if(unitdocs[i].AuditableFlag != undefined && unitdocs[i].AuditableFlag == "Yes"){
 									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
+								}
+								if (unitdocs[i].DocSubType == "Controllable Unit") {
+									doc[0].CUNames.push(unitdocs[i].ControllableUnit);
 								}
 							}
 							if (doc[0].MIRABusinessUnit == "GTS") {

@@ -302,7 +302,7 @@
 				{{#each TRExceptionControls}}   <!--RCTest2Data-->
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%">{{controlTypeName}}</td>
-						<td width="10%">{{processName}}</td>
+						<td width="10%">{{#if processName}}{{processName}}{{else}}&nbsp;{{/if}}</td>
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{numRequiredTests}}</td>
 						<td width="10%">{{numActualTests}}</td>
@@ -342,7 +342,7 @@
 						<td width="10%">{{#if catEntry}}{{processSampled}}{{/if}}</td>
 						<td width="5%">{{#if catEntry}}{{reportingCountry}}{{/if}}</td>
 						<td width="18%">{{#if catEntry}}{{controlName}}{{/if}}</td>
-						<td width="20%">{{controllableUnit}}</td>
+						<td width="20%">{{#if controllableUnit}}{{controllableUnit}}{{else}}&nbsp;{{/if}}</td>
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="7%">{{originalTargetDate}}</td>
 						<td width="7%">{{targetClose}}</td>
