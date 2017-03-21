@@ -118,7 +118,7 @@
   						<td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
   						<td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
   						<td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
-  						<td width="8%">{{reviewID}}</td>
+              <td width="8%">{{#if reviewID}}{{reviewID}}{{else}}&nbsp;{{/if}}</td>
   						<td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
   						<td width="10%">{{DocSubType}}</td>
   						<td width="10%">{{reportDate}}</td>
@@ -166,7 +166,7 @@
               <td width="8%">{{imt}}</td>
               <td width="8%">{{reportDate}}</td>
               <td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-              <td width="8%">{{DocSubType}}</td>
+              <td width="8%">{{#if DocSubType}}{{DocSubType}}{{else}}&nbsp;{{/if}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               <td width="5%">{{CUSize}}</td>
               <td width="20%">{{comments}}</td>
@@ -266,7 +266,7 @@
               <td width="7%">{{#if catEntry}}{{auditOrReview}}{{/if}}</td>
               <td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
               <td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
-              <td width="8%">{{reviewID}}</td>
+              <td width="8%">{{#if reviewID}}{{reviewID}}{{else}}&nbsp;{{/if}}</td>
               <td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
               <td width="10%">{{DocSubType}}</td>
               <td width="10%">{{reportDate}}</td>
@@ -313,7 +313,7 @@
               <td width="8%">{{imt}}</td>
               <td width="8%">{{reportDate}}</td>
               <td width="25%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-              <td width="8%">{{DocSubType}}</td>
+              <td width="8%">{{#if DocSubType}}{{DocSubType}}{{else}}&nbsp;{{/if}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               <td width="5%">{{CUSize}}</td>
               <td width="20%">{{comments}}</td>

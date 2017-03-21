@@ -13,8 +13,6 @@ var calculateRCTab = {
   processRCTab: function(doc, defViewRow) {
 		try {
       switch (doc[0].ParentDocSubType) {
-        case "Global Process":
-          break;
         case "BU Reporting Group":
           break;
         case "Business Unit":
@@ -87,9 +85,9 @@ var calculateRCTab = {
                         doc[0].RCTest2Data[i].testingRatio == "";
                       } else {
                         if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                          doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                          doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(2);
                           if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
-                            doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                            doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(2);
                           }
                         }
                       }
@@ -155,9 +153,9 @@ var calculateRCTab = {
                         doc[0].RCTest2Data[i].testingRatio == "";
                       } else {
                         if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                          doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                          doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(2);
                           if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
-                            doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                            doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(2);
                           }
                         }
                       }
@@ -224,9 +222,9 @@ var calculateRCTab = {
                       doc[0].RCTest2Data[i].testingRatio == "";
                     } else {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(2);
                         if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
-                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(2);
                         }
                       }
                     }
@@ -290,9 +288,9 @@ var calculateRCTab = {
                       doc[0].RCTest2Data[i].testingRatio == "";
                     } else {
                       if (!isNaN(doc[0].RCTest2Data[i].numRequiredTests)) {
-                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(1);
+                        doc[0].RCTest2Data[i].testingRatio = ((cappedtest / doc[0].RCTest2Data[i].numRequiredTests) * 100).toFixed(2);
                         if (doc[0].RCTest2Data[i].testingRatio == 0 || doc[0].RCTest2Data[i].testingRatio == 100) {
-                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(0);
+                          doc[0].RCTest2Data[i].testingRatio = parseInt(doc[0].RCTest2Data[i].testingRatio).toFixed(2);
                         }
                       }
                     }

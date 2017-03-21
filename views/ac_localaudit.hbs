@@ -82,6 +82,7 @@ $('h1#pageTitle').html('<b class="ibm-important">'+$('input#docTitle').val()+"</
 						<span style="display: inline-block; width: 75px;">Original:</span><input type="date" id="reportDate2" name="targetCloseOriginal" value="{{targetCloseOriginal}}" class="ibm-calendar-link">
 					{{else}}
 						<span style="display: inline-block; width: 75px;">Original:</span>{{{openRiskDisplay numRecommendationsOpen targetCloseOriginal}}}
+						<input type="hidden" id="reportDateTCO" name="targetCloseOriginal" value="{{targetCloseOriginal}}">
 					{{/if}}
 					<br /><br />
 					<span style="display: inline-block; width: 75px;">Current:</span><input type="date" id="reportDate3" name="targetCloseCurrent" value="{{targetCloseCurrent}}"class="ibm-calendar-link">
@@ -151,6 +152,13 @@ $(document).ready(function(){
 	});
 	$( "#reportDate2" ).on( "change", function() {
 		$( "#reportDate2" ).datepicker( "option", "dateFormat", "M dd, yy" );
+		//Validate currentdate > original date
+		if($("#reportDate3").val() != ""){
+			if($("#reportDate2").val() > $("#reportDate3").val()){
+				alert("Original date could not be later than Current date.");
+				$("#reportDate2").val("");
+			}
+		}
 	});
 	$('#reportDate3').datepicker({
 		changeMonth: true,
@@ -158,8 +166,33 @@ $(document).ready(function(){
 	});
 	$( "#reportDate3" ).on( "change", function() {
 		$( "#reportDate3" ).datepicker( "option", "dateFormat", "M dd, yy" );
+		//Validate currentdate > original date
+		if($("#reportDate2").length > 0){
+			if($("#reportDate2").val() != ""){
+				if($("#reportDate2").val() > $("#reportDate3").val()){
+					alert("Current date could not be prior than Original date.");
+					$("#reportDate3").val("");
+				}
+			}
+			else{
+				alert("Original Target to close date is missing.");
+			}
+		}
+		else{
+			if($("#reportDateTCO").val() != ""){
+				if($("#reportDateTCO").val() > $("#reportDate3").val()){
+					alert("Current Target to close date could not be prior than Original date.");
+					$("#reportDate3").val("");
+				}
+			}
+			else{
+				alert("Original Target to close date is missing.");
+			}
+		}
 	});
 
+		
+	
 	if ($("#editmode").val() == undefined) {
 		if ($("#numRecommendationsOpen").val() !== undefined && $("#numRecommendationsOpen").val() !== "" && $("#numRecommendationsOpen").val() < 1) {
 			$("#targetCloseCurrentSpan").hide();
