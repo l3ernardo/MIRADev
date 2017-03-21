@@ -309,7 +309,7 @@
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{numRequiredTests}}</td>
 						<td width="10%">{{numActualTests}}</td>
-						<td width="10%">{{testingRatio}}</td>
+						{{{TestingRatioDisplayWpercent testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name 10}}}
 						<td width="20%">{{reasonTested}}</td>
 						<td width="20%">{{actionPlan}}</td>
 					</tr>
