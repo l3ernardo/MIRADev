@@ -146,6 +146,60 @@ var getOpenIssuePerAssessment = function(RiskView1Data, reviewParam,
 
 }
 
+var getCUDefectRates = function(cupts, cudoc) {
+	var numTestsTotalKCO = 0;
+	var DefectCountTotalKCO = 0;
+	var numTestsTotalKCFR = 0;
+	var DefectCountTotalKCFR = 0;
+	try {
+		for (var i = 0; i < cupts.length; i++) {
+			if (cudoc.AssessableUnitName == cupts[i].controllableUnit) {
+				// Used to calculate for Defect Rates
+				if (cupts[i].controlType == "KCO") {
+					if (cupts[i].numTests != undefined && cupts[i].numTests != "") {
+						numTestsTotalKCO = numTestsTotalKCO + parseFloat(cupts[i].numTests);
+					}
+
+					if (cupts[i].DefectCount != undefined && cupts[i].DefectCount != "") {
+						DefectCountTotalKCO = DefectCountTotalKCO + parseFloat(cupts[i].DefectCount);
+					}
+
+				} else {
+					if (cupts[i].numTests != undefined && cupts[i].numTests != "") {
+						numTestsTotalKCFR = numTestsTotalKCFR + parseFloat(cupts[i].numTests);
+					}
+
+					if (cupts[i].DefectCount != undefined && cupts[i].DefectCount != "") {
+						DefectCountTotalKCFR = DefectCountTotalKCFR + parseFloat(cupts[i].DefectCount);
+					}
+
+				}
+			}
+		}
+
+		// Calculate for KCO Defect Rate
+		if (numTestsTotalKCO == 0) {
+			cudoc.KCODefectRate = "";
+		} else {
+			cudoc.KCODefectRate = ((DefectCountTotalKCO/numTestsTotalKCO) * 100).toFixed(1);
+		}
+
+		// Calculate for KCFR Defect Rate
+		if (numTestsTotalKCFR == 0) {
+			cudoc.KCFRDefectRate = "";
+		} else {
+			cudoc.KCFRDefectRate = ((DefectCountTotalKCFR/numTestsTotalKCFR) * 100).toFixed(1);
+		}
+
+		return true;
+
+	} catch (e) {
+		console.log("error at [class-performanceoverview][getCUDefectRates]: "
+				+ e);
+		return 0;
+	}
+
+}
 
 var performanceoverviewcountry = {
 
@@ -317,7 +371,7 @@ var performanceoverviewcountry = {
 			 		doc[0].MissedOpenIssueCount = (parseInt(doc[0].MissedOpenIssueCountCRM) + 0).toString();
 			 	else
 			 		doc[0].MissedOpenIssueCount = (0 + parseInt(doc[0].MissedOpenIssueCountSOD)).toString();
-			 
+
 			 if(doc[0].MissedMSACSatCountSOD != "" && doc[0].MissedMSACSatCountCRM != "")
 					doc[0].MissedMSACSatCount =  (parseInt(doc[0].MissedMSACSatCountSOD ) + parseInt(doc[0].MissedMSACSatCountCRM)).toString();
 			 else
@@ -325,10 +379,10 @@ var performanceoverviewcountry = {
 			 		doc[0].MissedMSACSatCount = (parseInt(doc[0].MissedMSACSatCountCRM) + 0).toString();
 			 	else
 			 		doc[0].MissedMSACSatCount = (0 + parseInt(doc[0].MissedMSACSatCountSOD)).toString();
-		
-			
-			
-			
+
+
+
+
 					//Summary tab calculations for KFCR and KCO
 				// if(doc[0].KCFRDefectRateCRM != "" && doc[0].KCFRDefectRateSOD != "")
 				// 	doc[0].KCFRDefectRate = (parseInt(doc[0].KCFRDefectRateCRM) + parseInt(doc[0].KCFRDefectRateSOD)).toString();
@@ -974,7 +1028,9 @@ var performanceoverviewcountry = {
 		try {
 
 			for (var i = 0; i < doc[0].asmtsdocsCRM.length; i++) {
-
+				if (doc[0].asmtsdocsCRM[i].ParentDocSubType == "Controllable Unit") {
+					getCUDefectRates(doc[0].CUSamples, doc[0].asmtsdocsCRM[i]);
+				}
 				// get Open Issue count per child assessment for CRM
 				doc[0].asmtsdocsCRM[i].MissedOpenIssueCount = performanceoverviewcountry
 						.getMissedRisksIndividual(doc[0].RiskView1DataCRM,
@@ -1047,6 +1103,10 @@ var performanceoverviewcountry = {
 
 			}
 			for (var i = 0; i < doc[0].asmtsdocsDelivery.length; i++) {
+
+				if (doc[0].asmtsdocsDelivery[i].ParentDocSubType == "Controllable Unit") {
+					getCUDefectRates(doc[0].CUSamples, doc[0].asmtsdocsDelivery[i]);
+				}
 
 				// get Open Issue count per child assessment for Delivery
 				doc[0].asmtsdocsDelivery[i].MissedOpenIssueCount = performanceoverviewcountry

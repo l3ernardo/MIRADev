@@ -407,6 +407,8 @@ var getDocs = {
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
 								// For proactive reviews (PPR)
 								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IOT": doc[0].IOT}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}}] },
+								// For PO Tab CU KCO and KCFR Defect Rates - CUNames
+								{ "$and": [{"compntType": "CUSummarySample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": {"$in":doc[0].CUNames}}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 							 ]
@@ -439,6 +441,9 @@ var getDocs = {
 						doc[0].SCTest2DataPQ3 = [];
 						doc[0].SCTest2DataPQ4 = [];
 
+						// For PO tab KCO and KCFR defect rate calc of CU
+						doc[0].CUSamples = [];
+
 						if (doc[0].MIRABusinessUnit == "GTS") {
 							doc[0].RiskView1DataCRM = [];
 							doc[0].RiskView1DataDelivery = [];
@@ -459,6 +464,9 @@ var getDocs = {
 										else doc[0].CountryControlsDataDelivery.push(comps[i]);
 									}
 								}
+							}
+							else if (comps[i].compntType == "CUSummarySample") {
+								doc[0].CUSamples.push(comps[i]);
 							}
 							else if (comps[i].compntType == "controlSample") {
 								// calculate Control Name
@@ -669,7 +677,8 @@ var getDocs = {
 								{ "$and": [{"compntType": "internalAudit"}, {"parentid": {"$in":doc[0].auditableAUIds}}] },
 								// For proactive reviews (PPR)
 								{ "$and": [{"compntType": "PPR"}, {"BusinessUnit": doc[0].BusinessUnit}, {"IMT": doc[0].IMT}, {"reportingQuarter": doc[0].CurrentPeriod}, {"status": {"$in":["Draft","Pending reviewee action plans","Pending review","Open","Closed"]}}] },
-
+								// For PO Tab CU KCO and KCFR Defect Rates - CUNames
+								{ "$and": [{"compntType": "CUSummarySample"},{"reportingQuarter": doc[0].CurrentPeriod},{"controllableUnit": {"$in":doc[0].CUNames}}] },
 								// For Local Audits
 								{ "$and": [{"compntType": "localAudit"}, {"reportingQuarter": doc[0].CurrentPeriod}, {$or}] }
 						   ]
@@ -704,6 +713,9 @@ var getDocs = {
 						doc[0].SCTest2DataPQ3 = [];
 						doc[0].SCTest2DataPQ4 = [];
 
+						// For PO tab KCO and KCFR defect rate calc of CU
+						doc[0].CUSamples = [];
+
 						if (doc[0].MIRABusinessUnit == "GTS") {
 							doc[0].RiskView1DataCRM = [];
 							doc[0].RiskView1DataDelivery = [];
@@ -727,6 +739,9 @@ var getDocs = {
 										else doc[0].CountryControlsDataDelivery.push(comps[i]);
 									}
 								}
+							}
+							else if (comps[i].compntType == "CUSummarySample") {
+								doc[0].CUSamples.push(comps[i]);
 							}
 							else if (comps[i].compntType == "controlSample") {
 								// calculate Control Name
