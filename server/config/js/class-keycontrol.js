@@ -11,7 +11,7 @@ var fieldCalc = require('./class-fieldcalc.js');
 var calculateKCTab = {
 
   processKCTab: function(doc, defViewRow) {
-		try {
+    try {
       switch (doc[0].ParentDocSubType) {
         case "Account":
           //Functionality to export the Account's Key Controls Testing to Excel and ODS.
@@ -539,7 +539,7 @@ var calculateKCTab = {
 
           break;
         case "Global Process":
-		      try{
+          try{
           var cappedtest;
           doc[0].TRExceptionControls = [];
 
@@ -600,11 +600,67 @@ var calculateKCTab = {
             }
           }
 
+          // *** Start of Key Ctrl Testing(2) Data tab (1st embedded view in Testing tab) *** //
+          //Export Excel. KCT
+          doc[0].exportKCTest1 = [];
+          var kctlist = doc[0].KCTest1Data;
+
+          for (var i = 0; i < kctlist.length; i++) {
+            doc[0].exportKCTest1.push({
+
+              RAGStatus:kctlist[i].RAGStatus || "",
+              Country:kctlist[i].Country || "",
+              count: kctlist[i].count || " ",
+              percent:kctlist[i].percent || "",
+              AUDefectRate:kctlist[i].AUDefectRate || "",
+              AUDefectCount:kctlist[i].AUDefectCount || "",
+              AUDefectRate:kctlist[i].AUDefectRate || ""
+            });
+          }
+
+                    //Export Excel. KCT#2
+          doc[0].exportKCTest2 = [];
+          var kctlist = doc[0].KCTest2Data;
+
+          for (var i = 0; i < kctlist.length; i++) {
+            doc[0].exportKCTest2.push({
+
+              reportingCountry: kctlist[i].reportingCountry || " ",
+              controlType:kctlist[i].controlType || "",
+              sampleUniqueID:kctlist[i].sampleUniqueID || "",
+              numDefects:kctlist[i].numDefects || "",
+              defectType:kctlist[i].defectType || "",
+              remediationStatus:kctlist[i].remediationStatus || "",
+              remainingFinancialImpact:kctlist[i].remainingFinancialImpact || "",
+              targetClose:kctlist[i].targetClose || "",
+              defectsAbstract:kctlist[i].defectsAbstract || ""
+            });
+          }
+
+          //Export Excel. KCT#3
+          doc[0].exportKCTest3 = [];
+          var kctlist = doc[0].KCTest3Data;
+
+          for (var i = 0; i < kctlist.length; i++) {
+            doc[0].exportKCTest3.push({
+
+              originalReportingQuarter:kctlist[i].originalReportingQuarter || "",
+              reportingCountry:kctlist[i].reportingCountry || "",
+              controlName: kctlist[i].controlName || " ",
+              sampleUniqueID:kctlist[i].sampleUniqueID || "",
+              numDefects:kctlist[i].numDefects || "",
+              defectType:kctlist[i].defectType || "",
+              remainingFinancialImpact:kctlist[i].remainingFinancialImpact || "",
+              targetClose:kctlist[i].targetClose || "",
+              defectsAbstract:kctlist[i].defectsAbstract || ""
+            });
+          }
+
           doc[0].exportKC2Test1 = [];
           var kctlist = doc[0].KC2Test1Data;
-		  kctlist.sort(function(a, b){
-			   console.log(a)
-			   console.log(b)
+      kctlist.sort(function(a, b){
+         console.log(a)
+         console.log(b)
             var nameA=a.AUDefectRate, nameB=b.AUDefectRate
             if (nameA < nameB) //sort string descending numbers
               return -1
@@ -633,7 +689,7 @@ var calculateKCTab = {
               fieldCalc.addTestViewDataPadding(doc[0].KC2Test1Data,10,(defViewRow- doc[0].KC2Test1Data.length));
             }
           }
-		  //START KCT 2 - SECOND TABLE
+      //START KCT 2 - SECOND TABLE
           var kctlist = doc[0].TRExceptionControls;
           var objects = {};
           var finalList = [];
@@ -826,9 +882,9 @@ var calculateKCTab = {
             }
           }
           doc[0].KC2Test3Data = finalList;
-		}catch(e){
-			console.log("[class-keycontrol][calcDefectRate][Global Process] - " + e.stack);
-		}
+    }catch(e){
+      console.log("[class-keycontrol][calcDefectRate][Global Process] - " + e.stack);
+    }
           break;
         case "BU Reporting Group":
           break;
@@ -1195,8 +1251,8 @@ var calculateKCTab = {
       }
     }catch(e){
       console.log("[class-keycontrol][calcDefectRate] - " + e.stack);
-		}
-	}
+    }
+  }
 
 }
 module.exports = calculateKCTab;
