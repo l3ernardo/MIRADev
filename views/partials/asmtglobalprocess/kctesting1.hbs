@@ -22,12 +22,12 @@
 					{{#each KCTest1Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%" >{{RAGStatus}}</td>
-						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{Country}}</a></td>
+						<td width="40%">{{#if _id}}<a target="_blank" href="/assessment?id={{_id}}">{{Country}}</a>{{else}}&nbsp;{{/if}}</td>
 						<td width="10%" >{{count}}</td>
 						<td width="10%" >{{percent}}</td>
-						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
+						<td width="10%" >{{AUTestCount}}</td>
 						<td width="10%" >{{AUDefectCount}}</td>
-						<td width="10%" >{{AUDefectRate}}</td>
+						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
 					</tr>
 					{{/each}}
 				</table>
@@ -55,7 +55,7 @@
 					{{#each KCTest2Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="10%" >{{reportingCountry}}</td>
-						<td width="10%" >{{controlName}}</td>
+						<td width="10%">{{#if controlName}}{{controlName}}{{else}}&nbsp;{{/if}}</td>
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="5%" >{{numDefects}}</td>
 						<td width="10%" >{{defectType}}</td>
@@ -91,7 +91,7 @@
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="8%" >{{originalReportingQuarter}}</td>
 						<td width="15%" >{{reportingCountry}}</td>
-						<td width="15%" >{{controlName }}</td>
+						<td width="15%">{{#if controlName}}{{controlName}}{{else}}&nbsp;{{/if}}</td>
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="3%" >{{numDefects}}</td>
 						<td width="10%" >{{defectType}}</td>
