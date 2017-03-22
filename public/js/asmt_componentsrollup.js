@@ -743,6 +743,30 @@ $(document).ready(function() {
 		tableReport = AllTableToReportMultiple('open_risks2_treeview', "OpenRisks2");
 		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
 	});
+	$('#KCTest1-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('KCT1_treeview', "KCTest1");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#KCTest1-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('KCT1_treeview', "KCTest1");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	$('#KCTest2-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('KCT2_treeview', "KCTest2");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#KCTest2-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('KCT2_treeview', "KCTest2");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
+	$('#KCTest3-link-export').click(function(){
+		tableReport = AllTableToReportMultiple('KCT3_treeview', "KCTest3");
+		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());
+	});
+	$('#KCTest3-link-export2').click(function(){
+		tableReport = AllTableToReportMultiple('KCT3_treeview', "KCTest3");
+		fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
+	});
 	$('#KC2Test1-link-export').click(function(){
 		tableReport = AllTableToReportMultiple('KCT1_treeview', "KC2Test1");
 		fnReport($(this), tableReport, "xls", $('h1#pageTitle').text());

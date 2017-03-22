@@ -56,7 +56,7 @@ var register = function(Handlebars) {
 				isWWBCIT = false;
 			else
 				isWWBCIT = true;
-			
+
 			if(statusValue == "Retired"){
 				return "td_icon_empty";
 			}
@@ -281,6 +281,33 @@ var register = function(Handlebars) {
 					else trhtml = '<td class="asmt-viewdata-red">'+tr+'</td>';
 				}
 				else {
+					if(percent) trhtml = '<td class="asmt-viewdata-yellow" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-yellow">'+tr+'</td>';
+				}
+			}
+			return trhtml;
+		},
+		TestingRatioDisplayWpercent: function(tr, margThresholdTR, unsatThresholdTR, percent) {
+			var trhtml;
+			if (tr == undefined || tr == "") {
+				if(percent) trhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%"></td>';
+				else trhtml = '<td class="asmt-viewdata-centered"></td>';
+			} else if (margThresholdTR == undefined || unsatThresholdTR ==  undefined) {
+				if(percent) trhtml = '<td class="asmt-viewdata-centered" width="'+percent+'%">'+tr+'</td>';
+				else trhtml = '<td class="asmt-viewdata-centered">'+tr+'</td>';
+			} else {
+				if (tr >= margThresholdTR) {
+					tr = tr.toString() + "%";
+					if(percent) trhtml = '<td class="asmt-viewdata-green" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-green">'+tr+'</td>';
+				}
+				else if (tr < unsatThresholdTR) {
+					tr = tr.toString() + "%";
+					if(percent) trhtml = '<td class="asmt-viewdata-red" width="'+percent+'%">'+tr+'</td>';
+					else trhtml = '<td class="asmt-viewdata-red">'+tr+'</td>';
+				}
+				else {
+					tr = tr.toString() + "%";
 					if(percent) trhtml = '<td class="asmt-viewdata-yellow" width="'+percent+'%">'+tr+'</td>';
 					else trhtml = '<td class="asmt-viewdata-yellow">'+tr+'</td>';
 				}

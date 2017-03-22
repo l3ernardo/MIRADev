@@ -87,7 +87,7 @@ var calculateCUTab = {
 						}
 				  }
       	}
-        //to categorize sort      
+        //to categorize sort
         switch (doc[0].BUCAsmtDataCURview2[i].ratingcategory) {
           case "NR":
           doc[0].BUCAsmtDataCURview2[i].ratingcategorysort = 1;
@@ -733,7 +733,7 @@ var calculateCUTab = {
 							}
 				}
 				if(isDel>'0')
-				{       console.log('ratingcategory:'+doc[0].BUCAsmtDataCURview[i].ratingcategory);
+				{       
 						if (doc[0].BUCAsmtDataCURview[i].maxscore !== undefined && doc[0].BUCAsmtDataCURview[i].maxscore !== "" && doc[0].BUCAsmtDataCURview[i].ratingcategory!='NR' && doc[0].BUCAsmtDataCURview[i].ratingcategory!='Exempt') {
 								if (!isNaN(doc[0].BUCAsmtDataCURview[i].maxscore)) {
 									totalmaxscoreDel += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
@@ -798,20 +798,20 @@ var calculateCUTab = {
       }
       // For CU Weighted Score calculation
       if (doc[0].BUCAsmtDataCURview[i].maxscore !== undefined && doc[0].BUCAsmtDataCURview[i].maxscore !== "" && doc[0].BUCAsmtDataCURview[i].ratingcategory!='NR' && doc[0].BUCAsmtDataCURview[i].ratingcategory!='Exempt') {
-		  
+
         if (!isNaN(doc[0].BUCAsmtDataCURview[i].maxscore)) {
           totalmaxscore += parseInt(doc[0].BUCAsmtDataCURview[i].maxscore);
           withmaxscore = true;
         }
       }
-	
+
       if (doc[0].BUCAsmtDataCURview[i].cqscore !== undefined && doc[0].BUCAsmtDataCURview[i].cqscore !== "" && doc[0].BUCAsmtDataCURview[i].ratingcategory!='NR' && doc[0].BUCAsmtDataCURview[i].ratingcategory!='Exempt') {
         if (!isNaN(doc[0].BUCAsmtDataCURview[i].cqscore)) {
           totalcqscore += parseInt(doc[0].BUCAsmtDataCURview[i].cqscore);
         }
       }
     }
-    
+
     // CU Weighted Score calculation
     if (withmaxscore && totalmaxscore !== 0) {
       doc[0].WeightedCUScore = ((totalcqscore/totalmaxscore) * 100).toFixed(1)

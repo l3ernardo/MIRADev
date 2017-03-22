@@ -1,8 +1,15 @@
+<textarea name="textarea" id="KCTest1DataExport" cols="100" style="display:none">{{valuesToString exportKCTest1}}</textarea>
+<textarea name="textarea" id="KCTest2DataExport" cols="100" style="display:none">{{valuesToString exportKCTest2}}</textarea>
+<textarea name="textarea" id="KCTest3DataExport" cols="100" style="display:none">{{valuesToString exportKCTest3}}</textarea>
 <table id="kctest_table" class="ibm-data-table" width="100%">
 		<tr class="kc-test-content">
 			<td>
 				<span class="kc-test-header"><b>Country Defect Rate Summary</b></span><br /><br />
-				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<a href="javascript:void(0);" value="Export to Excel" name="KCTest1-link-export" id="KCTest1-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+				<span class="ibm-sep">&nbsp;</span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="KCTest1-link-export2" id="KCTest1-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+				<br /><br />
+				<table id="KCT1_treeview" width="100%" class="table_with_scroll">
 					<thead>
 						<th class="kc-test-viewheader" scope="col" width="10%"></th>
 						<th class="kc-test-viewheader" scope="col" width="40%">Country</th>
@@ -14,28 +21,26 @@
 					</thead>
 					{{#each KCTest1Data}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="10%" >{{RAGStatusCat}}</td>
+						<td width="10%" >{{RAGStatus}}</td>
 						<td width="40%"><a target="_blank" href="/assessment?id={{_id}}">{{Country}}</a></td>
 						<td width="10%" >{{count}}</td>
 						<td width="10%" >{{percent}}</td>
 						{{{defectRateDisplayView AUDefectRate ../parameters.MargThresholdPercent.0.options.0.name ../parameters.UnsatThresholdPercent.0.options.0.name 10}}}
-						<td width="15%" >{{KCFRDefectCount}}</td>
-						<td width="15%" >{{KCODefectRate}}</td>
+						<td width="10%" >{{AUDefectCount}}</td>
+						<td width="10%" >{{AUDefectRate}}</td>
 					</tr>
-				{{/each}}
-				</table>
-				<table width="100%" class="ibm-data-table">
-					<tr>
-						<td class="kc-test-viewheader-al" width="10%"><b>Explanations</b></td>
-						<td class="asmt-viewdata" width="90%">{{KCT1Section1Explanations}}</td>
-					</tr>
+					{{/each}}
 				</table>
 			</td>
 		</tr>
 		<tr class="kc-test-content">
 			<td>
 				<span class="kc-test-header"><b>Current Period Samples with Defects (includes all test types)</b></span><br /><br />
-				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<a href="javascript:void(0);" value="Export to Excel" name="KCTest2-link-export" id="KCTest2-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+				<span class="ibm-sep">&nbsp;</span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="KCTest2-link-export2" id="KCTest2-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+				<br /><br />
+				<table id="KCT2_treeview" width="100%" class="table_with_scroll">
 					<thead>
 						<th class="kc-test-viewheader" scope="col" width="10%">Country</th>
 						<th class="kc-test-viewheader" scope="col" width="10%">Control</th>
@@ -48,51 +53,62 @@
 						<th class="kc-test-viewheader" scope="col" width="25%">Defect Abstract</th>
 					</thead>
 					{{#each KCTest2Data}}
-						<tr class="asmt-viewdata">
-							{{#each col}}
-									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/each}}
-						</tr>
-					{{/each}}
-				</table>
-				<table width="100%" class="ibm-data-table">
-					<tr>
-						<td class="kc-test-viewheader-al" width="10%"><b>Explanations</b></td>
-						<td class="asmt-viewdata" width="90%">{{KCT1Section2Explanations}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="10%" >{{reportingCountry}}</td>
+						<td width="10%" >{{controlName}}</td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
+						<td width="5%" >{{numDefects}}</td>
+						<td width="10%" >{{defectType}}</td>
+						<td width="10%" >{{remediationStatus}}</td>
+						<td width="10%" >{{remainingFinancialImpact}}</td>
+						<td width="10%" >{{targetClose}}</td>
+						<td width="25%" >{{defectsAbstract}}</td>
 					</tr>
+					{{/each}}
 				</table>
 			</td>
 		</tr>
 		<tr class="kc-test-content">
 			<td>
 				<span class="kc-test-header"><b>Unremediated Samples from Prior Periods (includes all test types)</b></span><br /><br />
-				<table cellspacing="0" cellpadding="0" border="0" width="100%" summary="Data table with alternating column example" class="ibm-data-table ibm-sortable-table ibm-alternating">
+				<a href="javascript:void(0);" value="Export to Excel" name="KCTest3-link-export" id="KCTest3-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
+				<span class="ibm-sep">&nbsp;</span>
+				<a href="javascript:void(0);" value="Export to Open Office" name="KCTest3-link-export2" id="KCTest3-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
+				<br /><br />
+				<table id="KCT3_treeview" width="100%" class="table_with_scroll">
 					<thead>
-						<th class="kc-test-viewheader" scope="col" width="5%"></th>
-						<th class="kc-test-viewheader" scope="col" width="10%">Country</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Control</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Sample ID</th>
-						<th class="kc-test-viewheader" scope="col" width="5%">Defects</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Defect Type</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Remed. Status</th>
-						<th class="kc-test-viewheader" scope="col" width="10%">Remaining Fin. Impact</th>
-						<th class="kc-test-viewheader" scope="col" width="9%">Target to Close</th>
+						<th class="kc-test-viewheader" scope="col" width="8%"></th>
+						<th class="kc-test-viewheader" scope="col" width="15%">Country</th>
+						<th class="kc-test-viewheader" scope="col" width="15%">Control</th>
+						<th class="kc-test-viewheader" scope="col" width="10%">Sample ID</th>
+						<th class="kc-test-viewheader" scope="col" width="3%">Defects</th>
+						<th class="kc-test-viewheader" scope="col" width="10%">Defect Type</th>
+						<th class="kc-test-viewheader" scope="col" width="5%">Remaining Fin. Impact</th>
+						<th class="kc-test-viewheader" scope="col" width="10%">Target to Close</th>
 						<th class="kc-test-viewheader" scope="col" width="25%">Defect Abstract</th>
 					</thead>
 					{{#each KCTest3Data}}
-						<tr class="asmt-viewdata">
-							{{#each col}}
-									<td>{{#if_equal this ""}}&nbsp;{{else}}{{this}}{{/if_equal}}</td>
-							{{/each}}
-						</tr>
-					{{/each}}
-				</table>
-				<table width="100%" class="ibm-data-table">
-					<tr>
-						<td class="kc-test-viewheader-al" width="10%"><b>Explanations</b></td>
-						<td class="asmt-viewdata" width="90%">{{KCT1Section3Explanations}}</td>
+					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
+						<td width="8%" >{{originalReportingQuarter}}</td>
+						<td width="15%" >{{reportingCountry}}</td>
+						<td width="15%" >{{controlName }}</td>
+						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
+						<td width="3%" >{{numDefects}}</td>
+						<td width="10%" >{{defectType}}</td>
+						<td width="5%" >{{remainingFinancialImpact}}</td>
+						<td width="10%" >{{targetClose}}</td>
+						<td width="25%" >{{defectsAbstract}}</td>
 					</tr>
+					{{/each}}
 				</table>
 			</td>
 		</tr>
 </table>
+<script>
+	$("#KCT1_treeview").treetable({expandable: true });
+	$("#KCT2_treeview").treetable({expandable: true });
+	$("#KCT3_treeview").treetable({expandable: true });
+
+	$(document).ready(function() {
+	});
+</script>

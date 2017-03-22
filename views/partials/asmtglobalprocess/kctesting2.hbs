@@ -83,8 +83,8 @@
 							<table width="100%" class="ibm-data-table">
 								<tr class="kc-test-cell">
 									<td class="kc-test-viewsubheader-al" width="80%">Total Country Processes with Defect Rate &ge; 2% / 4%</td>
-									<td class="marg-bg" width="10%"></td>
-									<td class="unsat-bg" width="10%"></td>
+									<td class="marg-bg" width="10%">{{margCPDR}}</td>
+									<td class="unsat-bg" width="10%">{{unsatCPDR}}</td>
 								</tr>
 								<tr><td class="kc-test-cell" colspan="3"></td></tr>
 								<tr>
@@ -159,8 +159,8 @@
 							<table width="100%" class="ibm-data-table">
 								<tr class="kc-test-cell">
 									<td class="kc-test-viewsubheader-al" width="80%">Total Country Processes with Defect Rate &ge; 2% / 4%</td>
-									<td class="marg-bg" width="10%"></td>
-									<td class="unsat-bg" width="10%"></td>
+									<td class="marg-bg" width="10%">{{margCPDR}}</td>
+									<td class="unsat-bg" width="10%">{{unsatCPDR}}</td>
 								</tr>
 								<tr><td class="kc-test-cell" colspan="3"></td></tr>
 								<tr>
@@ -273,11 +273,11 @@
 					<th class="kc-test-viewheader" scope="col" width="20%">Reason Under Tested</th>
 					<th class="kc-test-viewheader" scope="col" width="25%">Action plan to meet full year req'd samples</th>
 				</thead>
-				{{#each KC2Test2Data}}
+				{{#each TRExceptionControls}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%">{{controlCat}}</td>
 						<td width="10%">{{{processCat}}}</td>
-						<td width="10%"></td>
+						<td width="10%">{{controlName}}</td>
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="5%">{{numRequiredTests}}</td>
 						<td width="5%">{{numActualTests}}</td>
@@ -291,6 +291,7 @@
 	</tr>
 	<tr class="kc-test-content">
 		<td colspan="4">
+			<span class="kc-test-header"><b>Unremediated Defects by Quarter</b></span><br /><br />
 			<a href="javascript:void(0);" value="Export to Excel" name="KC2Test3-link-export" id="KC2Test3-link-export" class="ibm-symp-spreadsheet whiteanchor">Export to Excel</a>
 			<span class="ibm-sep">&nbsp;</span>
 			<a href="javascript:void(0);" value="Export to Open Office" name="KC2Test3-link-export2" id="KC2Test3-link-export2" class="ibm-symp-spreadsheet whiteanchor">Export to Open Office</a>
@@ -318,7 +319,7 @@
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="7%">{{originalTargetDate}}</td>
 						<td width="7%">{{targetClose}}</td>
-						<td width="5%">{{count}}</td>
+						<td width="5%">{{numDefects}}</td>
 						<td width="13%">{{defectType}}</td>
 					</tr>
 				{{/each}}

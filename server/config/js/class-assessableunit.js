@@ -63,17 +63,19 @@ var assessableunit = {
 					/* Format Links */
 					doc[0].Links = JSON.stringify(doc[0].Links);
 
-					/* Get Constituents and assessment Data*/
+					/* Get Constituents Data*/
 					switch (doc[0].DocSubType) {
+						case "Sub-process":
 						case "Account":
+							//Dummy queries cause those docTypes don't have constituent documents.
 							constiobj = {
 								selector:{
 									"_id": {"$gt":0},
 									"BusinessUnit": doc[0].BusinessUnit,
-									"$and": [{"key": "Assessment"},{"ParentDocSubType": "Account"},{"parentid": doc[0]._id}]
+									"key": "Assessable Unit",
+									"parentid": doc[0]._id
 								}
 							};
-							doc[0].AccountData = [];
 							break;
 						case "Business Unit":
 							constiobj = {
@@ -103,7 +105,7 @@ var assessableunit = {
 							doc[0].CUData = [];
 							break;
 						case "Global Process":
-							var constiobj = {
+							constiobj = {
 								selector:{
 									"Name": {"$gt":0},
 									"_id": {"$gt":0},
@@ -118,19 +120,8 @@ var assessableunit = {
 							doc[0].CPData = [];
 							doc[0].SPData = [];
 							break;
-						case "Sub-process":
-							var constiobj = {
-								selector:{
-									"_id": {"$gt":0},
-									"key": "Assessment",
-									"parentid": doc[0]._id
-								}
-							};
-							doc[0].CPData = [];
-							doc[0].SPData = [];
-							break;
 						case "BU IOT":
-							var constiobj = {
+							constiobj = {
 								selector:{
 									"Name": {"$gt":0},
 									"_id": {"$gt":0},
@@ -145,7 +136,7 @@ var assessableunit = {
 							doc[0].CUData = [];
 							break;
 						case "BU IMT":
-							var constiobj = {
+							constiobj = {
 								selector:{
 									"Name": {"$gt":0},
 									"_id": {"$gt":0},
@@ -160,7 +151,7 @@ var assessableunit = {
 							doc[0].CUData = [];
 							break;
 						case "BU Country":
-							var constiobj = {
+							constiobj = {
 								selector:{
 									"Name": {"$gt":0},
 									"_id": {"$gt":0},
@@ -176,7 +167,7 @@ var assessableunit = {
 							doc[0].CUData = [];
 							break;
 						case "Controllable Unit":
-							var constiobj = {
+							constiobj = {
 								selector:{
 									"Name": {"$gt":0},
 									"_id": {"$gt":0},
@@ -191,7 +182,7 @@ var assessableunit = {
 							doc[0].AccountData = [];
 							break;
 						case "Country Process":
-							var constiobj = {
+							constiobj = {
 								selector:{
 									"Name": {"$gt":0},
 									"_id": {"$gt":0},
@@ -207,7 +198,7 @@ var assessableunit = {
 							doc[0].CUData = [];
 							break;
 						case "BU Reporting Group":
-							var constiobj = {
+							constiobj = {
 								selector:{
 									"Name": {"$gt":0},
 									"_id": {"$gt":0},
@@ -233,60 +224,38 @@ var assessableunit = {
 							var constiAsmtsIds = [];
 							var hasCurQAsmt = false;
 							for (var i = 0; i < constidocs.length; ++i) {
-								if (constidocs[i].DocType == "Assessment") { //Assessments
-									toadd = {
-										"docid": constidocs[i]._id,
-										"CurrentPeriod": constidocs[i].CurrentPeriod,
-										"PeriodRating": constidocs[i].PeriodRating,
-										"Owner": constidocs[i].Owner,
-										"Target2Sat": constidocs[i].Target2Sat
-									};
-									doc[0].AssessmentData.push(toadd);
-									if (constidocs[i].CurrentPeriod ==  doc[0].CurrentPeriod) {
-										hasCurQAsmt = true;
-										if (doc[0].WWBCITKey == undefined || doc[0].WWBCITKey == "") {
-											doc[0].RatingJustification = constidocs[i].MIRARatingJustification;
-										} else {
-											if (constidocs[i].WWBCITStatus != "Draft") {
-												doc[0].RatingJustification = constidocs[i].WWBCITRatingJustification;
-											} else {
-												doc[0].RatingJustification = constidocs[i].MIRARatingJustification;
-											}
-										}
-									}
+								//Constituents documents
+								constiAsmtsIds.push(constidocs[i]._id) // used in getting the current quarter asmts of the constituent asmts
+								if(constidocs[i].DocSubType == "BU IOT"){
+										constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
+								}else if(constidocs[i].DocSubType == "BU IMT"){
+										constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IMT, "IMT",req);
+								}else if(constidocs[i].DocSubType == "BU Country"){
+										constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].Country, "Country",req);
 								}
-								else { //Constituents documents
-									constiAsmtsIds.push(constidocs[i]._id) // used in getting the current quarter asmts of the constituent asmts
-									if(constidocs[i].DocSubType == "BU IOT"){
-											constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IOT, "IOT",req);
-									}else if(constidocs[i].DocSubType == "BU IMT"){
-											constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].IMT, "IMT",req);
-									}else if(constidocs[i].DocSubType == "BU Country"){
-											constidocs[i].Name = req.session.buname + " - " + util.resolveGeo(constidocs[i].Country, "Country",req);
-									}
-									toadd = {
-										"docid": constidocs[i]._id,
-										"Name": constidocs[i].Name,
-										"Status": constidocs[i].Status,
-										"PeriodRatingPrev": "",
-										"PeriodRating": "",
-										"AUNextQtrRating": "",
-										"Target2Sat": ""
-									};
-									if(constidocs[i].DocSubType == "Global Process") doc[0].GPData.push(toadd);
-									else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
-									else if(constidocs[i].DocSubType == "BU IMT") doc[0].BUIMTData.push(toadd);
-									else if(constidocs[i].DocSubType == "BU Country") doc[0].BUCountryData.push(toadd);
-									else if(constidocs[i].DocSubType == "BU Reporting Group") doc[0].RGData.push(toadd);
-									else if(constidocs[i].DocSubType == "Account") doc[0].AccountData.push(toadd);
-									else if(constidocs[i].DocSubType == "Country Process") doc[0].CPData.push(toadd);
-									else if(constidocs[i].DocSubType == "Controllable Unit") doc[0].CUData.push(toadd);
-									else doc[0].SPData.push(toadd);
-								}
+								toadd = {
+									"docid": constidocs[i]._id,
+									"Name": constidocs[i].Name,
+									"Status": constidocs[i].Status,
+									"PeriodRatingPrev": "",
+									"PeriodRating": "",
+									"AUNextQtrRating": "",
+									"Target2Sat": ""
+								};
+								if(constidocs[i].DocSubType == "Global Process") doc[0].GPData.push(toadd);
+								else if(constidocs[i].DocSubType == "BU IOT") doc[0].BUIOTData.push(toadd);
+								else if(constidocs[i].DocSubType == "BU IMT") doc[0].BUIMTData.push(toadd);
+								else if(constidocs[i].DocSubType == "BU Country") doc[0].BUCountryData.push(toadd);
+								else if(constidocs[i].DocSubType == "BU Reporting Group") doc[0].RGData.push(toadd);
+								else if(constidocs[i].DocSubType == "Account") doc[0].AccountData.push(toadd);
+								else if(constidocs[i].DocSubType == "Country Process") doc[0].CPData.push(toadd);
+								else if(constidocs[i].DocSubType == "Controllable Unit") doc[0].CUData.push(toadd);
+								else doc[0].SPData.push(toadd);
 							}
+							
 							/* Calculate for Instance Design Specifics and parameters*/
 							doc[0].EnteredBU = doc[0].MIRABusinessUnit;
-							// Get current qtr and previous qtr assessments of constituent units
+							/* Get current qtr and previous qtr assessments of constituent units */
 							var prevQtr = fieldCalc.getPrevQtr(doc[0].CurrentPeriod);
 							constiAsmtsIds.push(doc[0]._id) // for the assessments of the assessable unit
 							var constiasmtsobj = {
@@ -301,8 +270,8 @@ var assessableunit = {
 								if(constiasmtdata.status==200 && !constiasmtdata.error) {
 									var constiasmtdocs = constiasmtdata.body.docs;
 									// Get data from asmts of constituent units
-
 									for (var i = 0; i < constiasmtdocs.length; ++i) {
+										//Get assessment information of current AU
 										if (doc[0]._id == constiasmtdocs[i].parentid) {
 											toadd = {
 												"docid": constiasmtdocs[i]._id,
@@ -325,6 +294,7 @@ var assessableunit = {
 												}
 											}
 										}
+										//Load information of Constituent AU's assessments
 										if (doc[0].CPData !== undefined) fieldCalc.addConstiDocData(doc, "CPData", constiasmtdocs[i], prevQtr);
 										if (doc[0].CUData !== undefined) fieldCalc.addConstiDocData(doc, "CUData", constiasmtdocs[i], prevQtr);
 										if (doc[0].GPData !== undefined) fieldCalc.addConstiDocData(doc, "GPData", constiasmtdocs[i], prevQtr);
