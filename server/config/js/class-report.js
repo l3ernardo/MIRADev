@@ -1034,6 +1034,7 @@ var report = {
             for (var i = 0; i < doc.length; i++){
               parentsids[doc[i].parentid] = doc[i];
   						var tmp = {
+                nothing: " ",
   							IOT: doc[i].IOT || " ",
   							IMT: doc[i].IMT || " ",
   							AssessableUnitName: doc[i].AssessableUnitName || " ",

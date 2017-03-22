@@ -167,9 +167,9 @@ $(document).ready(function() {
 		else{
 			rows = table.rows({ 'search': 'applied' }).nodes();
 		tableReport = tableToReport('reports_table', true, rows);
-
+	}
 	fnReport($(this), tableReport, "ods", $('h1#pageTitle').text());
-}});
+});
 	$("#mira_checkbox_tree").click(function(){
 		if(v!=-1 || t!=-1){
 			$(".mira_checkbox_tree").prop('checked', $(this).prop('checked'));
