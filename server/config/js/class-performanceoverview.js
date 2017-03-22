@@ -9,6 +9,181 @@
 var util = require('./class-utility.js');
 //var fieldCalc = require('./class-fieldcalc.js');
 
+var removeCUCP = function (view){
+	var result=[];
+	
+	try{
+	for(var i=0;i<view.length;i++){
+		
+		if (view[i].ParentDocSubType == "BU IMT" || view[i].ParentDocSubType == "BU IOT"){		
+		result.push(view[i]);	
+
+		}
+	}
+		return result;
+	}catch(e){console.log("error at [class-performanceoverview][removeCUCP]: "+ e);
+	return [];
+	}
+	
+}
+
+//Sort before displaying in the view
+var sortPOTab = function (unsorted){
+	var tempBUCountry = [];
+	var tempBUIMT = [];
+	var tempBUIOT = [];
+	var tempCP = [];
+	var tempCU = [];
+	var result = [];
+	
+	var tempBUCountryHead = -1;
+	var tempBUIMTHead = -1;
+	var tempBUIOTHead = -1;
+	var tempCPHead = -1;
+	var tempCUHead = -1;
+	
+
+	
+try{	
+	for(var i=0;i<unsorted.length;i++){
+		
+		if (unsorted[i].ParentDocSubType == "BU Country"){
+			if(unsorted[i].name == "BU Country")
+				tempBUCountryHead = i;
+				else{
+					tempBUCountry.push(unsorted[i]);
+				}
+		}
+		
+		if (unsorted[i].ParentDocSubType == "BU IOT"){
+			if(unsorted[i].name == "BU IOT")
+				tempBUIOTHead = i;
+				else{
+					tempBUIOT.push(unsorted[i]);
+				}
+		}
+		
+		if (unsorted[i].ParentDocSubType == "BU IMT"){
+			if(unsorted[i].name == "BU IMT")
+				tempBUIMTHead = i;
+				else{
+					tempBUIMT.push(unsorted[i]);
+				}
+		}
+		
+		if (unsorted[i].ParentDocSubType == "Country Process"){
+			if(unsorted[i].name == "Country Process")
+				tempCPHead = i;
+				else{
+					tempCP.push(unsorted[i]);
+				}
+		}
+		
+		if (unsorted[i].ParentDocSubType == "Controllable Unit"){
+			if(unsorted[i].name == "Controllable Unit")
+				tempCUHead = i;
+				else{
+					tempCU.push(unsorted[i]);
+				}
+		}
+	
+		
+	}
+	
+	
+if(tempCUHead != -1){
+	
+	if(tempBUCountryHead != -1){
+		
+		tempBUCountry.sort(function(a, b) {
+			var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+			if (nameA < nameB) //sort string ascending
+				return -1
+			if (nameA > nameB)
+				return 1
+			return 0 // default return value (no sorting)
+		});
+		result.push(unsorted[tempBUCountryHead]);
+		result = result.concat(tempBUCountry);
+		
+	}
+	
+	if(tempBUIMTHead != -1){
+		
+		tempBUIMT.sort(function(a, b) {
+			var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+			if (nameA < nameB) //sort string ascending
+				return -1
+			if (nameA > nameB)
+				return 1
+			return 0 // default return value (no sorting)
+		});
+		result.push(unsorted[tempBUIMTHead]);
+		result = result.concat(tempBUIMT);
+		
+		
+	}
+	
+	if(tempBUIOTHead != -1){
+		
+		tempBUIOT.sort(function(a, b) {
+			var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+			if (nameA < nameB) // sort string ascending
+				return -1
+			if (nameA > nameB)
+				return 1
+			return 0 // default return value (no sorting)
+		});
+		result.push(unsorted[tempBUIOTHead]);
+		result = result.concat(tempBUIOT);
+		
+		
+	}
+		
+	tempCU.sort(function(a, b) {
+			var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+			if (nameA < nameB) // sort string ascending
+				return -1
+			if (nameA > nameB)
+				return 1
+			return 0 // default return value (no sorting)
+		});
+	result.push(unsorted[tempCUHead]);
+	result = result.concat(tempCU);
+		
+	}
+	
+	if(tempCPHead != -1){
+		
+		tempCP.sort(function(a, b) {
+			var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+			if (nameA < nameB) // sort string ascending
+				return -1
+			if (nameA > nameB)
+				return 1
+			return 0 // default return value (no sorting)
+		});
+		result.push(unsorted[tempCPHead]);
+		result = result.concat(tempCP);
+		
+	}
+	
+	
+		
+		
+			
+			
+	return result;
+
+	
+}catch(e){console.log("error at [class-performanceoverview][sortPOTab]: "+ e);
+return [];
+}
+	
+	
+	
+}
+
 
 var calculateWeightedAuditScore =function (CUMaxScore, CUScore){
 	var WeightedAuditScore = 0;
@@ -329,6 +504,12 @@ var performanceoverviewcountry = {
 			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsGTS(db,doc);
 			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsAndOthersGTS(db,doc);
 
+		if(doc[0].ParentDocSubType =="BU IOT"){
+				doc[0].BUCAsmtDataPIviewCRM = removeCUCP(doc[0].BUCAsmtDataPIviewCRM);
+				doc[0].BUCAsmtDataPIviewDelivery = removeCUCP(doc[0].BUCAsmtDataPIviewDelivery);
+			}
+
+
 
 			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIviewCRM) < defViewRow) {
 				if (doc[0].BUCAsmtDataPIviewCRM.length == 0) {
@@ -408,6 +589,10 @@ var performanceoverviewcountry = {
 
 			performanceoverviewcountry.getCPANDCUPerformanceIndicators(db,doc);
 			performanceoverviewcountry.getCPANDCUPerformanceIndicatorsAndOthers(db,doc);
+
+			if(doc[0].ParentDocSubType =="BU IOT"){
+				doc[0].BUCAsmtDataPIview = removeCUCP(doc[0].BUCAsmtDataPIview);
+				}
 
 
 			if (performanceoverviewcountry.getCatSize(doc[0].BUCAsmtDataPIview) < defViewRow) {
@@ -1391,7 +1576,7 @@ var performanceoverviewcountry = {
 
 			}
 
-			doc[0].BUCAsmtDataPIviewCRM = tempArray;
+				doc[0].BUCAsmtDataPIviewCRM = sortPOTab(tempArray);
 
 			tempArray = [];
 			POCountryFlag = 0;
@@ -1545,7 +1730,7 @@ var performanceoverviewcountry = {
 
 			}
 
-			doc[0].BUCAsmtDataPIviewDelivery = tempArray;
+			doc[0].BUCAsmtDataPIviewDelivery = sortPOTab(tempArray);
 
 
 
@@ -1757,7 +1942,7 @@ var performanceoverviewcountry = {
 
 			}
 
-			doc[0].BUCAsmtDataPIview = tempArray;
+				doc[0].BUCAsmtDataPIview = sortPOTab(tempArray);
 
 		} catch (e) {
 			console
@@ -1837,7 +2022,7 @@ var performanceoverviewcountry = {
 
 			}
 			// console.log(tempArray);
-			doc[0].BUCAsmtDataOIviewCRM = tempArray;
+				doc[0].BUCAsmtDataOIviewCRM = sortPOTab(tempArray);
 
 			POCountryOtherFlag = 0;
 			POCUOtherFlag = 0;
@@ -1885,7 +2070,7 @@ var performanceoverviewcountry = {
 
 			}
 			// console.log(tempArray);
-			doc[0].BUCAsmtDataOIviewDelivery = tempArray;
+			doc[0].BUCAsmtDataOIviewDelivery = sortPOTab(tempArray);;
 
 		} catch (e) {
 			console
@@ -1969,7 +2154,7 @@ var performanceoverviewcountry = {
 
 			}
 			// console.log(tempArray);
-			doc[0].BUCAsmtDataOIview = tempArray;
+			doc[0].BUCAsmtDataOIview = sortPOTab(tempArray);
 
 		} catch (e) {
 			console
