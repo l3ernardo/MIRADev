@@ -727,9 +727,9 @@ var calculatefield = {
 								if ( asmtsdocs[i].ParentDocSubType == "Country Process") {
 									// Format Defect Rate
 									if (!isNaN(asmtsdocs[i].AUDefectRate) && asmtsdocs[i].AUDefectRate != "") {
-										asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(1);
+										asmtsdocs[i].AUDefectRate = parseFloat(asmtsdocs[i].AUDefectRate).toFixed(2);
 										if (asmtsdocs[i].AUDefectRate == 0) {
-											asmtsdocs[i].AUDefectRate = parseInt(asmtsdocs[i].AUDefectRate).toFixed(0);
+											asmtsdocs[i].AUDefectRate = parseFloat(asmtsdocs[i].AUDefectRate).toFixed(0);
 										}
 									}
 									// Get RAGStatus and if Marg or Unsat, push to list of Current Quarter Country Process Defect Rate Exception
@@ -849,6 +849,7 @@ var calculatefield = {
 					case "BU IOT":
 						// doc[0].AUDocs = asmtsdata.body.docs;
 						doc[0].AUDocs = [];
+						doc[0].CUNames = [];
 						var unitdocs = asmtsdata.body.docs;
 						doc[0].auditableAUIds = [];
 						doc[0].ExcludedCountryNames = [];
@@ -900,6 +901,9 @@ var calculatefield = {
 							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
 								if(unitdocs[i].AuditableFlag == "Yes"){
 									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
+								}
+								if (unitdocs[i].DocSubType == "Controllable Unit") {
+									doc[0].CUNames.push(unitdocs[i].ControllableUnit);
 								}
 							}
 
@@ -1044,6 +1048,7 @@ var calculatefield = {
 						break;
 					case "BU IMT":
 					// doc[0].AUDocs = asmtsdata.body.docs;
+						doc[0].CUNames = [];
 						doc[0].auditableAUIds = [];
 						doc[0].AUDocs = [];
 						var unitdocs = asmtsdata.body.docs;
@@ -1097,6 +1102,9 @@ var calculatefield = {
 							if(unitdocs[i].DocSubType == "Country Process" || unitdocs[i].DocSubType == "Controllable Unit"){
 								if(unitdocs[i].AuditableFlag != undefined && unitdocs[i].AuditableFlag == "Yes"){
 									doc[0].AUAuditables[unitdocs[i]["_id"]] = unitdocs[i];
+								}
+								if (unitdocs[i].DocSubType == "Controllable Unit") {
+									doc[0].CUNames.push(unitdocs[i].ControllableUnit);
 								}
 							}
 							if (doc[0].MIRABusinessUnit == "GTS") {
@@ -1177,7 +1185,7 @@ var calculatefield = {
 									if ( doc[0].asmtsdocs[i].ParentDocSubType == "Country Process" && doc[0].ExcludedCountryNames.indexOf(doc[0].asmtsdocs[i].Country) == -1 ) {
 										// Format Defect Rate
 										if (!isNaN(doc[0].asmtsdocs[i].AUDefectRate) && doc[0].asmtsdocs[i].AUDefectRate != "") {
-										doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(1);
+										doc[0].asmtsdocs[i].AUDefectRate = parseFloat(doc[0].asmtsdocs[i].AUDefectRate).toFixed(2);
 										if (doc[0].asmtsdocs[i].AUDefectRate == 0) {
 											doc[0].asmtsdocs[i].AUDefectRate = parseInt(doc[0].asmtsdocs[i].AUDefectRate).toFixed(0);
 										}

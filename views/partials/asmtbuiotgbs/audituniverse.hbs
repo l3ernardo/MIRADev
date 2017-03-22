@@ -31,7 +31,7 @@
 				<tbody>
 				{{#each AUData}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
-						<td width="6%">{{name}}</td>
+						<td width="6%">{{#if name}}{{name}}{{else}}&nbsp;{{/if}}</td>
 						<td width="15%" style="text-align:left; !important;"><a target="_blank" href="/assessment?id={{_id}}">{{AssessableUnitName}}</a></td>
 						<td width="5%">{{counter}}</td>
 						<td width="8%">{{Type}}</td>

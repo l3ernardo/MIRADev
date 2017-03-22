@@ -305,11 +305,11 @@
 				{{#each TRExceptionControls}}
 					<tr data-tt-id={{id}} data-tt-parent-id="{{parent}}" class="asmt-viewdata">
 						<td width="5%">{{controlTypeName}}</td>
-						<td width="5%">{{processName}}</td>
+						<td width="5%">{{#if _id}}{{processName}}{{else}}&nbsp;{{/if}}</td>
 						<td width="20%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{controlName}}</a></td>
 						<td width="10%">{{numRequiredTests}}</td>
 						<td width="10%">{{numActualTests}}</td>
-						<td width="10%">{{testingRatio}}</td>
+						{{{TestingRatioDisplayWpercent testingRatio ../parameters.MargThresholdPercentTR.0.options.0.name ../parameters.UnsatThresholdPercentTR.0.options.0.name 10}}}
 						<td width="20%">{{reasonTested}}</td>
 						<td width="20%">{{actionPlan}}</td>
 					</tr>
@@ -346,7 +346,7 @@
 						<td width="15%">{{#if catEntry}}{{processSampled}}{{/if}}</td>
 						<td width="10%">{{#if catEntry}}{{reportingCountry}}{{/if}}</td>
 						<td width="10%">{{#if catEntry}}{{controlName}}{{/if}}</td>
-						<td width="20%">{{controllableUnit}}</td>
+						<td width="20%">{{#if _id}}{{controllableUnit}}{{else}}&nbsp;{{/if}}</td>
 						<td width="10%"><a target="_blank" href="/asmtcomponents?id={{_id}}&pid={{../parentid}}">{{sampleUniqueID}}</a></td>
 						<td width="5%">{{originalTargetDate}}</td>
 						<td width="5%">{{targetClose}}</td>
