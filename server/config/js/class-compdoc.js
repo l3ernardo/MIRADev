@@ -260,8 +260,13 @@ var getDocs = {
 								comps[i].MIRABusinessUnit = fieldCalc.getCompMIRABusinessUnit(comps[i]);
 
 								// For Key Controls Testing Tab 2
+//								doc[0].KCTest2Data.push(comps[i]);
 								if (comps[i].remediationStatus == 'Open' && comps[i].numDefects > 0 && comps[i].status == 'Active') {
 									doc[0].KC2Test3Data.push(comps[i]);
+									doc[0].KCTest2Data.push(comps[i]);
+									if (comps[i].reportingQuarter > comps[i].originalReportingQuarter) {
+										doc[0].KCTest3Data.push(comps[i]);										
+									}
 								}
 								// Key Control Testing
 								// if (comps[i].numDefects > 0 && comps[i].status=="Active" ) {

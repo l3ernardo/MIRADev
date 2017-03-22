@@ -606,6 +606,9 @@ var calculateKCTab = {
           var kctlist = doc[0].KCTest1Data;
 
           for (var i = 0; i < kctlist.length; i++) {
+            if (kctlist[i].RAGStatus == "") {
+              kctlist[i].RAGStatus = "Not Tested";
+            }
             doc[0].exportKCTest1.push({
 
               RAGStatus:kctlist[i].RAGStatus || "",
@@ -659,8 +662,8 @@ var calculateKCTab = {
           doc[0].exportKC2Test1 = [];
           var kctlist = doc[0].KC2Test1Data;
       kctlist.sort(function(a, b){
-         console.log(a)
-         console.log(b)
+        //  console.log(a)
+        //  console.log(b)
             var nameA=a.AUDefectRate, nameB=b.AUDefectRate
             if (nameA < nameB) //sort string descending numbers
               return -1

@@ -707,8 +707,6 @@ var calculatefield = {
 						}
 						for (var i = 0; i < asmtsdocs.length; ++i) {
 							if (asmtsdocs[i].key == "Assessment"){
-								doc[0].asmtsdocs.push(asmtsdocs[i]);
-								doc[0].KCTest1Data.push(asmtsdocs[i]);
 								//asmtsdocs[i].Type = "Country Process";
 								CPassmts[asmtsdocs[i].parentid] = asmtsdocs[i];
 								if (doc[0].MIRABusinessUnit == "GTS") {
@@ -753,7 +751,11 @@ var calculatefield = {
 											margCPDROps += 1;
 										}
 									}
+									doc[0].KCTest1Data.push(asmtsdocs[i]);
 								}
+
+								doc[0].asmtsdocs.push(asmtsdocs[i]);
+								doc[0].KCTest1Data.push(asmtsdocs[i]);
 							}
 							else if (asmtsdocs[i].key == "Assessable Unit"){
 								doc[0].AUDocs[asmtsdocs[i]["_id"]] = asmtsdocs[i];
