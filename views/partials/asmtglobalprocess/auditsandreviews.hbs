@@ -29,7 +29,7 @@
               <td width="15%">{{imt}}</td>
               <td width="8%">{{engagement}}</td>
               <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-              <td width="15%">{{DocSubType}}</td>
+              <td width="15%">{{#if DocSubType}}{{DocSubType}}{{else}}&nbsp;{{/if}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               {{{ratingDisplayView PeriodRating 5}}}
               <td width="7%">{{CUSize}}</td>
@@ -123,7 +123,7 @@
               <td width="8%">{{imt}}</td>
               <td width="8%">{{reportDate}}</td>
               <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-              <td width="8%">{{DocSubType}}</td>
+              <td width="8%">{{#if DocSubType}}{{DocSubType}}{{else}}&nbsp;{{/if}}</td>
               {{{ratingDisplayView PeriodRatingPrev 5}}}
               <td width="5%">{{CUSize}}</td>
               <td width="20%">{{comments}}</td>
@@ -176,7 +176,7 @@
             <td width="15%">{{imt}}</td>
             <td width="8%">{{engagement}}</td>
             <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-            <td width="15%">{{DocSubType}}</td>
+            <td width="15%">{{#if DocSubType}}{{DocSubType}}{{else}}&nbsp;{{/if}}</td>
             {{{ratingDisplayView PeriodRatingPrev 5}}}
             {{{ratingDisplayView PeriodRating 5}}}
             <td width="7%">{{CUSize}}</td>
@@ -223,7 +223,7 @@
             <td width="5%">{{#if catEntry}}{{reportingQuarter}}{{/if}}</td>
             <td width="5%">{{#if catEntry}}{{status}}{{/if}}</td>
             <!--<td width="5%">{{LoB}}</td>--> <!--Line of Business is not used anymore. Need to know what to put here instead.-->
-            <td width="8%">{{reviewID}}</td>
+            <td width="8%">{{#if reviewID}}{{reviewID}}{{else}}&nbsp;{{/if}}</td>
             <td width="35%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
             <td width="10%">{{DocSubType}}</td>
             <td width="10%">{{reportDate}}</td>
@@ -268,7 +268,7 @@
             <td width="8%">{{imt}}</td>
             <td width="8%">{{reportDate}}</td>
             <td width="30%"><a target="_blank" href="/asmtcomponents?id={{id}}&pid={{../parentid}}">{{Name}}</a></td>
-            <td width="8%">{{DocSubType}}</td>
+            <td width="8%">{{#if DocSubType}}{{DocSubType}}{{else}}&nbsp;{{/if}}</td>
             {{{ratingDisplayView PeriodRatingPrev 5}}}
             <td width="5%">{{CUSize}}</td>
             <td width="20%">{{comments}}</td>
